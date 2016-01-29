@@ -1126,93 +1126,93 @@ static void gtex_write_end(FILE *f, grestyle_style style)
     }
 }
 
+static __inline void tex_escape_text(FILE *const f, const char *text)
+{
+    /* We escape these characters into \string\ddd (where ddd is the decimal
+     * ASCII value of the character) for most escapes, and into \string\n for
+     * newlines. We do it this way to get the "raw" string values through TeX
+     * and into Lua, where the sequences become \ddd and \n respectively and
+     * are translated into their byte values. Lua can then decide whether the
+     * full strings should be evaluated by TeX as TeX or as strings */
+    for (; *text; ++text) {
+        switch (*text) {
+        case '\\':
+        case '{':
+        case '}':
+        case '~':
+        case '%': /* currently, we'll never get %, but handle it anyway */
+        case '#':
+        case '"':
+            /* these characters have special meaning to TeX */
+            fprintf(f, "\\string\\%03d", *text);
+            break;
+        case '\n':
+            /* currently, we'll never get \n, but handle it anyway */
+            fprintf(f, "\\string\\n");
+            break;
+        case '\r':
+            /* ignore */
+            break;
+        default:
+            /* UTF-8 multibyte sequences will fall into here, which is fine */
+            fputc(*text, f);
+            break;
+        }
+    }
+}
+
+static __inline void tex_escape_wtext(FILE *const f, const grewchar *text)
+{
+    /* We escape these characters into \string\ddd (where ddd is the decimal
+     * ASCII value of the character) for most escapes, and into \string\n for
+     * newlines. We do it this way to get the "raw" string values through TeX
+     * and into Lua, where the sequences become \ddd and \n respectively and
+     * are translated into their byte values. Lua can then decide whether the
+     * full strings should be evaluated by TeX as TeX or as strings */
+    for (; *text; ++text) {
+        switch (*text) {
+        case L'\\':
+        case L'{':
+        case L'}':
+        case L'~':
+        case L'%': /* currently, we'll never get %, but handle it anyway */
+        case L'#':
+        case L'"':
+            /* these characters have special meaning to TeX */
+            fprintf(f, "\\string\\%03d", *text);
+            break;
+        case L'\n':
+            /* currently, we'll never get \n, but handle it anyway */
+            fprintf(f, "\\string\\n");
+            break;
+        case L'\r':
+            /* ignore */
+            break;
+        default:
+            gregorio_print_unichar(f, *text);
+            break;
+        }
+    }
+}
+
 /*
  * ! @brief Writes GregorioTeX special characters. This function takes the
  * special characters as input (i.e. from gabc representation), and writes them 
  * * in GregorioTeX form. 
  */
-static void gtex_write_special_char(FILE *f, grewchar *special_char)
+static void gtex_write_special_char(FILE *f, const grewchar *special_char)
 {
-    if (!gregorio_wcsbufcmp(special_char, "A/")) {
-        fprintf(f, "\\Abar{}");
-        return;
-    }
-    if (!gregorio_wcsbufcmp(special_char, "%")) {
-        fprintf(f, "\\%%{}");
-        return;
-    }
-    if (!gregorio_wcsbufcmp(special_char, "R/")) {
-        fprintf(f, "\\Rbar{}");
-        return;
-    }
-    if (!gregorio_wcsbufcmp(special_char, "V/")) {
-        fprintf(f, "\\Vbar{}");
-        return;
-    }
-    if (!gregorio_wcsbufcmp(special_char, ACCENTED_AE)) {
-        fprintf(f, "\\'\\ae{}");
-        return;
-    }
-    if (!gregorio_wcsbufcmp(special_char, "'ae")) {
-        fprintf(f, "\\'\\ae{}");
-        return;
-    }
-    if (!gregorio_wcsbufcmp(special_char, ACCENTED_OE)) {
-        fprintf(f, "\\'\\oe{}");
-        return;
-    }
-    if (!gregorio_wcsbufcmp(special_char, "'oe")) {
-        fprintf(f, "\\'\\oe{}");
-        return;
-    }
-    if (!gregorio_wcsbufcmp(special_char, "ae")) {
-        fprintf(f, "\\ae{}");
-        return;
-    }
-    if (!gregorio_wcsbufcmp(special_char, "oe")) {
-        fprintf(f, "\\oe{}");
-        return;
-    }
-    if (!gregorio_wcsbufcmp(special_char, "*")) {
-        fprintf(f, "\\GreStar{}");
-        return;
-    }
-    if (!gregorio_wcsbufcmp(special_char, "+")) {
-        fprintf(f, "\\GreDagger{}");
-        return;
-    }
-    if (!gregorio_wcsbufcmp(special_char, "-")) {
-        fprintf(f, "\\GreZeroHyph{}");
-        return;
-    }
-    if (!gregorio_wcsbufcmp(special_char, "\\")) {
-        fprintf(f, "\\textbackslash{}");
-        return;
-    }
-    if (!gregorio_wcsbufcmp(special_char, "&")) {
-        fprintf(f, "\\&{}");
-        return;
-    }
-    if (!gregorio_wcsbufcmp(special_char, "#")) {
-        fprintf(f, "\\#{}");
-        return;
-    }
-    if (!gregorio_wcsbufcmp(special_char, "_")) {
-        fprintf(f, "\\_{}");
-        return;
-    }
-    if (!gregorio_wcsbufcmp(special_char, "~")) {
-        fprintf(f, "\\GreTilde{}");
-        return;
-    }
+    fprintf(f, "\\GreSpecial{");
+    tex_escape_wtext(f, special_char);
+    fprintf(f, "}");
 }
 
-static void gtex_write_verb(FILE *f, grewchar *first_char)
+static void gtex_write_verb(FILE *f, const grewchar *first_char)
 {
     gregorio_print_unistring(f, first_char);
 }
 
-static void gtex_print_char(FILE *f, grewchar to_print)
+static void gtex_print_char(FILE *f, const grewchar to_print)
 {
     switch (to_print) {
     case L'*':
@@ -3622,50 +3622,14 @@ static void initialize_score(gregoriotex_status *const status,
     status->point_and_click = point_and_click;
 }
 
-static __inline void write_escapable_header_text(FILE *const f,
-        const char *text)
-{
-    /* We escape these characters into \string\ddd (where ddd is the decimal
-     * ASCII value of the character) for most escapes, and into \string\n for
-     * newlines. We do it this way to get the "raw" string values through TeX
-     * and into Lua, where the sequences become \ddd and \n respectively and
-     * are translated into their byte values. Lua can then decide whether the
-     * full strings should be evaluated by TeX as TeX or as strings */
-    for (; *text; ++text) {
-        switch (*text) {
-        case '\\':
-        case '{':
-        case '}':
-        case '~':
-        case '%': /* currently, we'll never get %, but handle it anyway */
-        case '#':
-        case '"':
-            /* these characters have special meaning to TeX */
-            fprintf(f, "\\string\\%03d", *text);
-            break;
-        case '\n':
-            /* currently, we'll never get \n, but handle it anyway */
-            fprintf(f, "\\string\\n");
-            break;
-        case '\r':
-            /* ignore */
-            break;
-        default:
-            /* UTF-8 multibyte sequences will fall into here, which is fine */
-            fputc(*text, f);
-            break;
-        }
-    }
-}
-
 static void write_header(FILE *const f, const char *const name,
         const char *const value)
 {
     if (value) {
         fprintf(f, "\\GreHeader{");
-        write_escapable_header_text(f, name);
+        tex_escape_text(f, name);
         fprintf(f, "}{");
-        write_escapable_header_text(f, value);
+        tex_escape_text(f, value);
         fprintf(f, "}%%\n");
     }
 }

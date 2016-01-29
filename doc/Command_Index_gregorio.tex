@@ -903,6 +903,14 @@ Typesets a slur.
   \#6 & integer & Height number of the pitch.\\
 \end{argtable}
 
+\macroname{\textbackslash GreSpecial}{\#1}{gregoriotex-symbols.tex}
+Typesets a special character.  If the \#1 special character wasn't defined by
+\verb=\gresetspecial=, the text of \#1 will be output directly.
+
+\begin{argtable}
+  \#1 & string & The text between \texttt{<sp>} and \texttt{</sp>}.\\
+\end{argtable}
+
 \macroname{\textbackslash GreStar}{}{gregoriotex-symbol.tex}
 Macro to typeset an asterisk (\GreStar).
 

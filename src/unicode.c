@@ -170,7 +170,7 @@ unsigned char gregorio_wcsbufcmp(grewchar *wstr, const char *buf)
     return 1;
 }
 
-void gregorio_print_unichar(FILE *f, grewchar to_print)
+void gregorio_print_unichar(FILE *f, const grewchar to_print)
 {
     if (to_print <= 0x7F) {
         fprintf(f, "%c", (unsigned char) to_print);
@@ -193,7 +193,7 @@ void gregorio_print_unichar(FILE *f, grewchar to_print)
     }
 }
 
-void gregorio_print_unistring(FILE *f, grewchar *first_char)
+void gregorio_print_unistring(FILE *f, const grewchar *first_char)
 {
     while (*first_char != 0) {
         gregorio_print_unichar(f, *first_char);

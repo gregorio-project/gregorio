@@ -664,8 +664,8 @@
 \def\gre@writemode#1#2#3{%
   \greannotation{%
     \gre@style@modeline #1\endgre@style@modeline %
-    \gre@style@modemodifier \directlua{gregoriotex.mode_part("\luaescapestring{#2}")}\endgre@style@modemodifier %
-    \gre@style@modedifferentia \directlua{gregoriotex.mode_part("\luaescapestring{#3}")}\endgre@style@modedifferentia %
+    \gre@style@modemodifier \directlua{gregoriotex.mode_part("\luatexluaescapestring{#2}")}\endgre@style@modemodifier %
+    \gre@style@modedifferentia \directlua{gregoriotex.mode_part("\luatexluaescapestring{#3}")}\endgre@style@modedifferentia %
     \relax %
   }%
   \relax %
