@@ -956,6 +956,10 @@
       \copy\gre@box@syllabletext%
       \kern\gre@skip@temp@one\relax%
       \kern\gre@dimen@temp@one\relax%
+      \ifdim\gre@skip@nextbegindifference > 0pt\relax%
+        %we need to move back to the start of the text for the next syllable
+        \kern-\gre@skip@nextbegindifference\relax%
+      \fi%
     \else%
       %text first
       \gre@debugmsg{spacing}{placing text then bar}%
@@ -974,12 +978,13 @@
       \copy\gre@box@syllablenotes%
       \kern\gre@skip@temp@two\relax%
       \kern\gre@dimen@temp@two\relax%
+      \ifdim\gre@skip@nextbegindifference < 0pt\relax%
+        %we need to move back to the start of the notes for the next syllable
+        \kern\gre@skip@nextbegindifference\relax%
+      \fi%
     \fi%		
-    %finally we end by moving the cursor to be where it needs to be for the start of the next syllable and add the penalty
-    \gre@debugmsg{spacing}{final cursor position after bar and penalty}%
-    \ifdim\gre@skip@nextbegindifference < 0pt\relax%
-      \kern\gre@skip@nextbegindifference\relax%
-    \fi%
+    %finally we end by adding the penalty
+    \gre@debugmsg{spacing}{after bar penalty}%
     \ifnum\gre@lastoflinecount=1\relax %
       \global\gre@lastoflinecount=2\relax %
       \gre@endafterbar{0}%
