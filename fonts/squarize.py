@@ -134,12 +134,17 @@ def main():
         pre, ext = os.path.splitext(inputfile)
         outfile = '%s.ttf' % pre
     oldfont = fontforge.open(inputfile)
-    font_name = oldfont.fontname + subspecies
+    if args.subspecies:
+        font_name = '%s-%s' % (oldfont.fontname, args.subspecies)
+        full_name = '%s-%s' % (oldfont.fullname, args.subspecies)
+    else:
+        font_name = oldfont.fontname
+        full_name = oldfont.fullname
     newfont = fontforge.font()
     # newfont.encoding = "UnicodeFull"
     newfont.encoding = "ISO10646-1"
-    newfont.fontname = oldfont.fontname
-    newfont.fullname = oldfont.fullname
+    newfont.fontname = font_name
+    newfont.fullname = full_name
     newfont.familyname = oldfont.familyname
     newfont.version = GREGORIO_VERSION
     newfont.copyright = oldfont.copyright.replace('<<GPLV3>>', GPLV3)
