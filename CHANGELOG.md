@@ -49,7 +49,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - With thanks to an anonymous contributor, the shape of the MetaPost-drawn curly brace has been improved (see [#797](https://github.com/gregorio-project/gregorio/issues/797)).
 - Support for elisions, text between `<e>` and `</e>` in gabc, styled according to the `elision` style, which are excluded when determining where to position the text under its notes (see [#838](https://github.com/gregorio-project/gregorio/issues/838)).
 - Special characters (between `<sp>` and `</sp>` in gabc) may now be customized using the `\gresetspecial` and `\greunsetspecial` commands.  See GregorioRef for details (for the change request, see [#846](https://github.com/gregorio-project/gregorio/issues/846)).
-
+- `\gresetbracerendering` can now take an optional argument to change the rendering of a single type of brace.  See GregorioRef for details (for the change request, see [#850](https://github.com/gregorio-project/gregorio/issues/850)).
 
 ### Deprecated
 - `initial-style` gabc header, supplanted by the `\gresetinitiallines` TeX command.

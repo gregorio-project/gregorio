@@ -981,7 +981,7 @@ Macro to determine the method used for aligning the clivis with its lyrics.
 
 \subsubsection{Braces}
 
-\macroname{\textbackslash gresetbracerendering}{\{\#1\}}{gregoriotex-signs.tex}
+\macroname{\textbackslash gresetbracerendering}{[\optional{\#1}]\{\#2\}}{gregoriotex-signs.tex}
 Macro to tell Gregorio\TeX{} whether to use \MP{} or fonts to render
 braces.  \MP{} braces, the default, are tailored to better maintain
 optical line weight when stretched.  \MP{} braces are designed to
@@ -989,8 +989,13 @@ harmonize (and thus match best) with greciliae, but they still look good
 with the other score fonts.
 
 \begin{argtable}
-  \#1 & \texttt{metapost} & \MP{} will be used to render braces (default)\\
-  & \texttt{font} & The score font will be used to render braces
+  \#1 & \textit{(omitted)} & change all braces\\
+      & \texttt{brace} & change round braces that appear over the staff\\
+      & \texttt{underbrace} & change round braces that appear under the staff\\
+      & \texttt{curlybrace} & change curly braces\\
+      & \texttt{barbrace} & change round braces that appear over divisio bars\\
+  \#2 & \texttt{metapost} & \MP{} will be used to render braces\\
+      & \texttt{font} & The score font will be used to render braces\\
 \end{argtable}
 
 \macroname{\textbackslash grebarbracewidth}{}{gregoriotex-signs.tex}
