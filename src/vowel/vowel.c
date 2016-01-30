@@ -144,7 +144,7 @@ static __inline void character_set_grow(character_set *const set) {
     set->mask = (set->mask << 1) | 0x01;
     set->table = gregorio_calloc(set->bins, sizeof(grewchar));
     if (old_next) {
-        set->table = gregorio_calloc(set->bins, sizeof(character_set *));
+        set->next = gregorio_calloc(set->bins, sizeof(character_set *));
     }
     for (i = 0; i < old_bins; ++i) {
         if (old_table[i]) {
