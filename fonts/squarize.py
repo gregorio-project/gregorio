@@ -635,10 +635,12 @@ def get_queue_shift(qtype, shape, liq, i=0, side='left', j=0):
     # kind of do-while loop...
     while not shift:
         shift = get_shift(qtype, queueshape, liq, i, j)
+        #print(shift)
         queueliq = liq
         while not shift and queueliq in STEM_LIQ_FALLBACKS:
             queueliq = STEM_LIQ_FALLBACKS[queueliq]
             shift = get_shift(qtype, queueshape, queueliq, i, j)
+            #print(shift)
         if queueshape in STEM_SHAPE_FALLBACKS:
             queueshape = STEM_SHAPE_FALLBACKS[queueshape]
         else:
@@ -1348,12 +1350,12 @@ def flexus():
                      L_DESCENDENS)
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "rvbase", 'auctusd1', S_FLEXUS,
-                     L_DESCENDENS)
+                     L_DESCENDENS, qtype='short')
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "rvbase",
-                     'auctusd1', S_FLEXUS_LONGQUEUE, L_DESCENDENS)
+                     'auctusd1', S_FLEXUS_LONGQUEUE, L_DESCENDENS, qtype='long')
     write_flexus(1, "rvbase",
-                 'auctusd1', S_FLEXUS_OPENQUEUE, L_DESCENDENS)
+                 'auctusd1', S_FLEXUS_OPENQUEUE, L_DESCENDENS, qtype='open')
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "osbase",
                      'auctusd1', S_FLEXUS_ORISCUS_SCAPUS,
