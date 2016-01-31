@@ -1,23 +1,24 @@
 # Stem length configuration for squarize.py
 
-def get_default_porrectus(font_config):
+def get_default_porrectus(font_config, add_suppl):
+    suppl = font_config['bottom-add'] if add_suppl else 0
     return {
             "Nothing": {
               "1": {
-                "short": font_config['bottom-porrectus-1'],
-                "long": font_config['bottom-porrectus-1-long']
+                "short": font_config['bottom-porrectus-1'] + suppl,
+                "long": font_config['bottom-porrectus-1-long'] + suppl
               },
               "2": {
-                "short": font_config['bottom-porrectus-2']
+                "short": font_config['bottom-porrectus-2'] + suppl
               },
               "3": {
-                "short": font_config['bottom-porrectus-3']
+                "short": font_config['bottom-porrectus-3'] + suppl
               },
               "4": {
-                "short": font_config['bottom-porrectus-4']
+                "short": font_config['bottom-porrectus-4'] + suppl
               },
               "5": {
-                "short": font_config['bottom-porrectus-5']
+                "short": font_config['bottom-porrectus-5'] + suppl
               }
             }
         }
@@ -67,14 +68,14 @@ def get_stem_schema_default(font_config):
               },
               "5": {
                 "short": top - 5*bh,
-                "long": top - 4*bh
+                "long": top - 5*bh
               }
             }
 
     bottom_virga = get_conf(font_config, 'bottom', '', False)
 
     return {
-          "ignore j": False,
+          "ignore j": True,
           "Virga": {
             "Nothing": {
               "short": bottom_virga - bh,
@@ -84,6 +85,7 @@ def get_stem_schema_default(font_config):
           },
           "Flexus": {
             "Nothing": get_basic(''),
+            "DeminutusFirst": get_basic('deminutus-first'),
             "Deminutus": {
               "1": {
                 "short": font_config['top'] - 3*bh,
@@ -103,7 +105,7 @@ def get_stem_schema_default(font_config):
                 "short": font_config['top-deminutus'] - 4*bh,
               },
               "5": {
-                "long": font_config['bottom'] - 3*bh,
+                "long": font_config['top-deminutus'] - 5*bh,
                 "short": font_config['top-deminutus'] - 5*bh,
               }
             }
@@ -114,7 +116,7 @@ def get_stem_schema_default(font_config):
           "PesQuassus": {
             "Nothing": get_basic('oriscus', False)
           },
-          "Porrectus": get_default_porrectus(font_config)
+          "Porrectus": get_default_porrectus(font_config, False)
         }
 
 def get_stem_schema_solesmes(font_config):
@@ -163,7 +165,8 @@ def get_stem_schema_solesmes(font_config):
           },
           "Flexus": {
             "Nothing": get_basic(''),
-            "Deminutus": get_basic('')
+            "Deminutus": get_basic(''),
+            "DeminutusFirst": get_basic('deminutus-first')
           },
           "PesQuilismaQuadratum": {
             "Nothing": get_basic('quilisma', False, 'lower')
@@ -171,7 +174,7 @@ def get_stem_schema_solesmes(font_config):
           "PesQuassus": {
             "Nothing": get_basic('oriscus', False)
           },
-          "Porrectus": get_default_porrectus(font_config)
+          "Porrectus": get_default_porrectus(font_config, True)
         }
 
 def get_stem_schema(schemaname, font_config):
