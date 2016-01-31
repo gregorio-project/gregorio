@@ -35,7 +35,6 @@ typedef uint32_t grewchar;
 
 void gregorio_print_unichar(FILE *f, grewchar to_print);
 void gregorio_print_unistring(FILE *f, const grewchar *first_char);
-unsigned char gregorio_wcsbufcmp(grewchar *wstr, const char *buf);
 grewchar *gregorio_build_grewchar_string_from_buf(const char *buf);
 
 static __inline size_t gregorio_wcstrlen(const grewchar *wstr)

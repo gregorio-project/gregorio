@@ -655,4 +655,4 @@ int main(int argc, char **argv)
     }
 
     exit(gregorio_get_return_value());
-}
+} /* due to exit on prior line, this will never be reached; LCOV_EXCL_LINE */

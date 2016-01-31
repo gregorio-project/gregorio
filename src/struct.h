@@ -35,6 +35,7 @@
 #include "enum_generator.h"
 #include "bool.h"
 #include "sha1.h"
+#include "messages.h"
 
 #ifdef __cplusplus
 #define ENUM_BITFIELD(TYPE) enum TYPE
@@ -868,9 +869,9 @@ static __inline gregorio_note *gregorio_glyph_last_note(
         const gregorio_glyph *const glyph)
 {
     gregorio_note *note;
-    if (!glyph || glyph->type != GRE_GLYPH) {
-        return NULL;
-    }
+    gregorio_assert(glyph && glyph->type == GRE_GLYPH, gregorio_glyph_last_note,
+            "trying to find the last note of something that is not a glyph",
+            return NULL);
     for (note = glyph->u.notes.first_note; note->next; note = note->next) {
         /* iterate to find the last note */
     }

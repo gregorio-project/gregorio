@@ -587,10 +587,8 @@ static gregorio_note *next_non_texverb_note(gregorio_note *first_note,
     }
 
     if (first_note == last_note) {
-        if (first_note->type == GRE_TEXVERB_GLYPH) {
-            gregorio_message(_("Unexpected texverb at start of iteration"),
-                    "next_non_texverb_note", VERBOSITY_ERROR, 0);
-        }
+        gregorio_assert_only(first_note->type != GRE_TEXVERB_GLYPH,
+                next_non_texverb_note, "Unexpected texverb at start of iteration");
         return first_note;
     }
 
@@ -601,10 +599,8 @@ static gregorio_note *next_non_texverb_note(gregorio_note *first_note,
         }
     }
 
-    if (first_note && first_note->type == GRE_TEXVERB_GLYPH) {
-        gregorio_message(_("Unexpected texverb at end of iteration"),
-                "next_non_texverb_note", VERBOSITY_ERROR, 0);
-    }
+    gregorio_assert_only(!first_note || first_note->type != GRE_TEXVERB_GLYPH,
+            next_non_texverb_note, "Unexpected texverb at end of iteration");
 
     return last_note;
 }
@@ -636,11 +632,9 @@ static gregorio_note *close_fusion_glyph(gregorio_glyph **last_glyph,
     int prev_shift = 0, shift, shift2;
     gregorio_note *result;
 
-    if ((*first_note)->type == GRE_TEXVERB_GLYPH) {
-        gregorio_message(_("Unexpected texverb at start of fusion"),
-                "close_fusion_glyph", VERBOSITY_ERROR, 0);
-        return real_last_note;
-    }
+    gregorio_assert((*first_note)->type != GRE_TEXVERB_GLYPH,
+            close_fusion_glyph, "Unexpected texverb at start of fusion",
+            return real_last_note);
 
     for (last_note = real_last_note;
             last_note != *first_note && last_note->type == GRE_TEXVERB_GLYPH;
@@ -658,19 +652,16 @@ static gregorio_note *close_fusion_glyph(gregorio_glyph **last_glyph,
                     (*first_note)->type, &((*first_note)->u.other), _NO_SIGN,
                     (*first_note)->texverb);
             (*first_note)->texverb = NULL;
-            if (*first_note == last_note) {
-                gregorio_message(_("Unexpected texverb at end of fusion"),
-                        "close_fusion_glyph", VERBOSITY_ERROR, 0);
-                return last_note;
-            }
+            gregorio_assert(*first_note != last_note,
+                    close_fusion_glyph, "Unexpected texverb at end of fusion",
+                    return last_note);
             gregorio_free_one_note(first_note);
         }
 
-        if (*first_note == last_note || !(next = (*first_note)->next)) {
-            gregorio_message(_("Unexpected single note during fusion"),
-                    "close_fusion_glyph", VERBOSITY_ERROR, 0);
-            return last_note;
-        }
+        gregorio_assert(
+                *first_note != last_note && (next = (*first_note)->next),
+                close_fusion_glyph, "Unexpected single note during fusion",
+                return last_note);
 
         next = next_non_texverb_note(*first_note, last_note);
 
@@ -690,11 +681,8 @@ static gregorio_note *close_fusion_glyph(gregorio_glyph **last_glyph,
         if (prev_shift >= 0 && shift < 0) {
             /* check for a porrectus-like flexus */
             gregorio_note *next_next = next_non_texverb_note(next, last_note);
-            if (!next_next) {
-                gregorio_message(_("Unexpected end of notes during fusion"),
-                        "close_fusion_glyph", VERBOSITY_ERROR, 0);
-                return last_note;
-            }
+            gregorio_assert(next_next, close_fusion_glyph,
+                    "Unexpected end of notes during fusion", return last_note);
             shift2 = next_next->u.note.pitch - next->u.note.pitch;
             if (shift2 > 0) {
                 if (next_next == last_note) {

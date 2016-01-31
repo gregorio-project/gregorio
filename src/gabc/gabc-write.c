@@ -44,12 +44,15 @@ static __inline char pitch_letter(const char height) {
     return result;
 }
 
-static __inline void unsupported(const char *fn, const char *type,
-        const char *value)
+/* not reachable unless there's a programming error */
+/* LCOV_EXCL_START */
+static __inline void unsupported(const char *fn, const int line,
+        const char *type, const char *value)
 {
-    gregorio_messagef(fn, VERBOSITY_ERROR, 0, _("unsupported %s %s"), type,
-            value);
+    gregorio_messagef(fn, VERBOSITY_ASSERTION, line, _("unsupported %s %s"),
+            type, value);
 }
+/* LCOV_EXCL_STOP */
 
 /*
  * Output one attribute, allowing for multi-line values 
@@ -113,9 +116,12 @@ static void gabc_write_begin(FILE *f, grestyle_style style)
         /* nothing should be emitted for these */
         break;
     default:
-        unsupported("gabc_write_begin", "style",
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
+        unsupported("gabc_write_begin", __LINE__, "style",
                 grestyle_style_to_string(style));
         break;
+        /* LCOV_EXCL_STOP */
     }
 }
 
@@ -160,9 +166,12 @@ static void gabc_write_end(FILE *f, grestyle_style style)
         /* nothing should be emitted for these */
         break;
     default:
-        unsupported("gabc_write_end", "style",
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
+        unsupported("gabc_write_end", __LINE__, "style",
                 grestyle_style_to_string(style));
         break;
+        /* LCOV_EXCL_STOP */
     }
 }
 
@@ -284,9 +293,12 @@ static void gabc_write_space(FILE *f, gregorio_space type, char *factor,
         fprintf(f, "!/[%s]", factor);
         break;
     default:
-        unsupported("gabc_write_space", "space type",
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
+        unsupported("gabc_write_space", __LINE__, "space type",
                 gregorio_space_to_string(type));
         break;
+        /* LCOV_EXCL_STOP */
     }
 }
 
@@ -339,9 +351,12 @@ static void gabc_write_bar(FILE *f, gregorio_bar type)
         fprintf(f, ";8");
         break;
     default:
-        unsupported("gabc_write_bar", "bar type",
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
+        unsupported("gabc_write_bar", __LINE__, "bar type",
                 gregorio_bar_to_string(type));
         break;
+        /* LCOV_EXCL_STOP */
     }
 }
 
@@ -363,9 +378,12 @@ static void gabc_write_bar_signs(FILE *f, gregorio_sign type)
         /* if there's no sign, don't emit anything */
         break;
     default:
-        unsupported("gabc_write_bar_signs", "bar signs",
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
+        unsupported("gabc_write_bar_signs", __LINE__, "bar signs",
                 gregorio_sign_to_string(type));
         break;
+        /* LCOV_EXCL_STOP */
     }
 }
 
@@ -390,9 +408,12 @@ static void gabc_hepisema(FILE *f, const char *prefix, bool connect,
         /* nothing to print */
         break;
     default:
-        unsupported("gabc_hepisema", "hepisema size",
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
+        unsupported("gabc_hepisema", __LINE__, "hepisema size",
                 grehepisema_size_to_string(size));
         break;
+        /* LCOV_EXCL_STOP */
     }
 }
 
@@ -417,9 +438,12 @@ static const char *mora_vposition(gregorio_note *note)
     case VPOS_BELOW:
         return "0";
     default:
-        unsupported("mora_vposition", "vposition",
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
+        unsupported("mora_vposition", __LINE__, "vposition",
                 gregorio_vposition_to_string(note->mora_vposition));
         return "";
+        /* LCOV_EXCL_STOP */
     }
 }
 
@@ -442,17 +466,10 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         char glyph_type)
 {
     char shape;
-    if (!note) {
-        gregorio_message(_("call with NULL argument"),
-                "gabc_write_gregorio_note", VERBOSITY_ERROR, 0);
-        return;
-    }
-    if (note->type != GRE_NOTE) {
-        gregorio_message(_("call with argument which type is not GRE_NOTE, "
-                    "wrote nothing"), "gabc_write_gregorio_note",
-                VERBOSITY_ERROR, 0);
-        return;
-    }
+    gregorio_assert(note, gabc_write_gregorio_note, "call with NULL argument",
+            return);
+    gregorio_assert(note->type == GRE_NOTE, gabc_write_gregorio_note,
+            "call with argument which type is not GRE_NOTE", return);
     if (glyph_type == G_PES_QUADRATUM) {
         shape = S_QUADRATUM;
     } else {
@@ -562,10 +579,13 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         fprintf(f, "%cq", pitch_letter(note->u.note.pitch));
         break;
     default:
-        unsupported("gabc_write_gregorio_note", "shape",
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
+        unsupported("gabc_write_gregorio_note", __LINE__, "shape",
                 gregorio_shape_to_string(shape));
         fprintf(f, "%c", pitch_letter(note->u.note.pitch));
         break;
+        /* LCOV_EXCL_STOP */
     }
     switch (note->signs) {
     case _PUNCTUM_MORA:
@@ -587,9 +607,12 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         /* if there's no sign, don't emit anything */
         break;
     default:
-        unsupported("gabc_write_gregorio_note", "shape signs",
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
+        unsupported("gabc_write_gregorio_note", __LINE__, "shape signs",
                 gregorio_sign_to_string(note->signs));
         break;
+        /* LCOV_EXCL_STOP */
     }
     switch (note->special_sign) {
     case _ACCENTUS:
@@ -611,9 +634,12 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         /* if there's no sign, don't emit anything */
         break;
     default:
-        unsupported("gabc_write_gregorio_note", "special sign",
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
+        unsupported("gabc_write_gregorio_note", __LINE__, "special sign",
                 gregorio_sign_to_string(note->special_sign));
         break;
+        /* LCOV_EXCL_STOP */
     }
     if (note->h_episema_above == HEPISEMA_AUTO
             && note->h_episema_below == HEPISEMA_AUTO) {
@@ -648,11 +674,8 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
 
     gregorio_note *current_note;
 
-    if (!glyph) {
-        gregorio_message(_("call with NULL argument"),
-                "gabc_write_gregorio_glyph", VERBOSITY_ERROR, 0);
-        return;
-    }
+    gregorio_assert(glyph, gabc_write_gregorio_glyph, "call with NULL argument",
+            return);
     switch (glyph->type) {
     case GRE_TEXVERB_GLYPH:
         if (glyph->texverb) {
@@ -669,13 +692,19 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
                 fprintf(f, "/0");
                 break;
             default:
-                gregorio_message(_("bad space"), "gabc_write_gregorio_glyph",
-                        VERBOSITY_ERROR, 0);
+                /* not reachable unless there's a programming error */
+                /* LCOV_EXCL_START */
+                unsupported("gabc_write_gregorio_glyph", __LINE__, "space type",
+                        gregorio_space_to_string(
+                            glyph->u.misc.unpitched.info.space));
                 break;
+                /* LCOV_EXCL_STOP */
             }
         } else {
-            gregorio_message(_("bad space"), "gabc_write_gregorio_glyph",
-                    VERBOSITY_ERROR, 0);
+            /* not reachable unless there's a programming error */
+            /* LCOV_EXCL_START */
+            gregorio_fail(gabc_write_gregorio_glyph, "bad space");
+            /* LCOV_EXCL_STOP */
         }
         break;
     case GRE_MANUAL_CUSTOS:
@@ -697,9 +726,12 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
         gabc_write_end_liquescentia(f, glyph->u.notes.liquescentia);
         break;
     default:
-        unsupported("gabc_write_gregorio_glyph", "glyph type",
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
+        unsupported("gabc_write_gregorio_glyph", __LINE__, "glyph type",
                 gregorio_type_to_string(glyph->type));
         break;
+        /* LCOV_EXCL_STOP */
     }
 }
 
@@ -715,11 +747,8 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
 static void gabc_write_gregorio_element(FILE *f, gregorio_element *element)
 {
     gregorio_glyph *current_glyph;
-    if (!element) {
-        gregorio_message(_("call with NULL argument"),
-                "gabc_write_gregorio_element", VERBOSITY_ERROR, 0);
-        return;
-    }
+    gregorio_assert(element, gabc_write_gregorio_element,
+            "call with NULL argument", return);
     current_glyph = element->u.first_glyph;
     switch (element->type) {
     case GRE_ELEMENT:
@@ -768,10 +797,30 @@ static void gabc_write_gregorio_element(FILE *f, gregorio_element *element)
             fprintf(f, "z0");
         }
         break;
+    case GRE_NLBA:
+        switch (element->u.misc.unpitched.info.nlba) {
+        case NLBA_BEGINNING:
+            fprintf(f, "<nlba>");
+            break;
+        case NLBA_END:
+            fprintf(f, "</nlba>");
+            break;
+        default:
+            /* not reachable unless there's a programming error */
+            /* LCOV_EXCL_START */
+            unsupported("gabc_write_gregorio_element", __LINE__, "nlba type",
+                    gregorio_nlba_to_string(element->u.misc.unpitched.info.nlba));
+            break;
+            /* LCOV_EXCL_STOP */
+        }
+        break;
     default:
-        unsupported("gabc_write_gregorio_element", "element type",
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
+        unsupported("gabc_write_gregorio_element", __LINE__, "element type",
                 gregorio_type_to_string(element->type));
         break;
+        /* LCOV_EXCL_STOP */
     }
 }
 
@@ -808,10 +857,13 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
         int number_of_voices)
 {
     int voice = 0;
-    if (!syllable) {
-        gregorio_message(_("call with NULL argument"), "gabc_write_syllable",
-                VERBOSITY_ERROR, 0);
-        return;
+    gregorio_assert(syllable, gabc_write_gregorio_syllable,
+            "call with NULL argument", return);
+    if (syllable->no_linebreak_area == NLBA_BEGINNING) {
+        fprintf(f, "<nlba>");
+    }
+    if (syllable->euouae == EUOUAE_BEGINNING) {
+        fprintf(f, "<eu>");
     }
     if (syllable->text) {
         /* we call the magic function (defined in struct_utils.c), that will
@@ -826,6 +878,12 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
                 &gabc_write_verb, &gabc_print_char, &gabc_write_begin,
                 &gabc_write_end, &gabc_write_special_char);
         fprintf(f, "]");
+    }
+    if (syllable->euouae == EUOUAE_END) {
+        fprintf(f, "</eu>");
+    }
+    if (syllable->no_linebreak_area == NLBA_END) {
+        fprintf(f, "</nlba>");
     }
     fprintf(f, "(");
     while (voice < number_of_voices - 1) {
@@ -861,9 +919,12 @@ void gabc_write_score(FILE *f, gregorio_score *score)
     gregorio_header *header;
 
     if (!f) {
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
         gregorio_message(_("call with NULL file"), "gregoriotex_write_score",
-                VERBOSITY_ERROR, 0);
+                VERBOSITY_FATAL, 0);
         return;
+        /* LCOV_EXCL_STOP */
     }
 
     for (header = score->headers; header; header = header->next) {

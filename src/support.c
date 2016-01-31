@@ -48,48 +48,36 @@ void gregorio_snprintf(char *s, size_t size, const char *format, ...)
     va_end(args);
 }
 
+static __inline void *assert_successful_allocation(void *ptr, char *funcname) {
+    if (!ptr) {
+        /* it's not realistic to test this for coverage  */
+        /* LCOV_EXCL_START */
+        gregorio_message(_("error in memory allocation"),
+                funcname, VERBOSITY_FATAL, 0);
+        exit(1);
+        /* LCOV_EXCL_STOP */
+    }
+    return ptr;
+}
+
 void *gregorio_malloc(size_t size)
 {
-    void *result = malloc(size);
-    if (!result) {
-        gregorio_message(_("error in memory allocation"),
-                "gregorio_malloc", VERBOSITY_FATAL, 0);
-        exit(1);
-    }
-    return result;
+    return assert_successful_allocation(malloc(size), "gregorio_malloc");
 }
 
 void *gregorio_calloc(size_t nmemb, size_t size)
 {
-    void *result = calloc(nmemb, size);
-    if (!result) {
-        gregorio_message(_("error in memory allocation"),
-                "gregorio_calloc", VERBOSITY_FATAL, 0);
-        exit(1);
-    }
-    return result;
+    return assert_successful_allocation(calloc(nmemb, size), "gregorio_calloc");
 }
 
 void *gregorio_realloc(void *ptr, size_t size)
 {
-    void *result = realloc(ptr, size);
-    if (!result) {
-        gregorio_message(_("error in memory allocation"),
-                "gregorio_realloc", VERBOSITY_FATAL, 0);
-        exit(1);
-    }
-    return result;
+    return assert_successful_allocation(realloc(ptr, size), "gregorio_realloc");
 }
 
 char *gregorio_strdup(const char *s)
 {
-    char *result = strdup(s);
-    if (!result) {
-        gregorio_message(_("error in memory allocation"),
-                "gregorio_strdup", VERBOSITY_FATAL, 0);
-        exit(1);
-    }
-    return result;
+    return (char *)assert_successful_allocation(strdup(s), "gregorio_strdup");
 }
 
 bool gregorio_readline(char **buf, size_t *bufsize, FILE *file)
@@ -100,9 +88,12 @@ bool gregorio_readline(char **buf, size_t *bufsize, FILE *file)
         *buf = (char *)gregorio_malloc(*bufsize);
     } else {
         if (*bufsize < 128) {
+            /* not reachable unless there's a programming error */
+            /* LCOV_EXCL_START */
             gregorio_message(_("invalid buffer size"), "gregorio_getline",
                     VERBOSITY_FATAL, 0);
             exit(1);
+            /* LCOV_EXCL_STOP */
         }
     }
     (*buf)[0] = '\0';
@@ -115,17 +106,24 @@ bool gregorio_readline(char **buf, size_t *bufsize, FILE *file)
                     file)
                 || (*buf)[*bufsize - 2] == '\0') {
             if (ferror(file)) {
+                /* it's not realistic to simulate the system error required to
+                 * cover this case */
+                /* LCOV_EXCL_START */
                 gregorio_message(_("Error reading from the file"),
                         "gregorio_getline", VERBOSITY_FATAL, 0);
                 exit(1);
+                /* LCOV_EXCL_STOP */
             }
             return (*buf)[0] != '\0';
         }
 
         if (*bufsize >= MAX_BUF_GROWTH) {
+            /* it's not realistic to test this case */
+            /* LCOV_EXCL_START */
             gregorio_message(_("Line too long"), "gregorio_getline",
                     VERBOSITY_FATAL, 0);
             exit(1);
+            /* LCOV_EXCL_STOP */
         }
 
         oldsize = *bufsize;
