@@ -458,7 +458,10 @@ L_INITIO_DEBILIS_DEMINUTUS  = 'InitioDebilisDeminutus'
 L_INITIO_DEBILIS_ASCENDENS  = 'InitioDebilisAscendens'
 L_INITIO_DEBILIS_DESCENDENS = 'InitioDebilisDescendens'
 L_INITIO_DEBILIS_UP         = 'InitioDebilisUp'
-
+# A very special case for stem length: when the queue of ancus must go to the
+# bottom of the second note (which is the first note of a deminutus), we use
+# this.
+L_DEMINUTUS_FIRST           = "DeminutusFirst"
 
 def simple_paste(src):
     "Copy and paste a glyph."
@@ -565,6 +568,7 @@ STEM_LIQ_FALLBACKS = {
     L_INITIO_DEBILIS_DESCENDENS: L_DESCENDENS,
     L_UP: L_NOTHING,
     L_DOWN: L_NOTHING,
+    L_DEMINUTUS_FIRST: L_NOTHING
 }
 
 STEM_SHAPE_FALLBACKS = {
@@ -577,8 +581,11 @@ STEM_SHAPE_FALLBACKS = {
     S_PES_QUILISMA_QUADRATUM: S_PES_QUADRATUM,
     S_UPPER_PES_QUADRATUM: S_PES_QUADRATUM,
     S_LOWER_PES_QUADRATUM: S_PES_QUADRATUM,
-    S_ANCUS: S_FLEXUS,
-    S_SALICUS: S_PES_QUADRATUM,
+    S_UPPER_PES_QUASSUS: S_PES_QUASSUS,
+    S_LOWER_PES_QUASSUS: S_PES_QUASSUS,
+    # 3 notes glyphs are handled in a different way, see get_default_shift
+    #S_ANCUS: S_FLEXUS,
+    #S_SALICUS: S_PES_QUASSUS,
     S_PORRECTUS: S_FLEXUS,
     S_PORRECTUS_FLEXUS: S_PORRECTUS,
 }
@@ -609,21 +616,35 @@ def get_shift(qtype, shape, liq, i, j):
     return False # Shouldn't happen
 
 def get_default_shift(qtype, shape, liq, i, j, side):
-    """Returns the default shift associated with the schema
+    """Returns the default shift associated with the schema. This
+       function should be used for ancus or salicus only. The idea
+       is to take i+j when reasonable, i otherwise.
     """
     global STEM_SCHEMA
     if i==0:
         print('fatal error, this should not happen!')
         exit()
-    # case of S_ANCUS
-    if j==0 or STEM_SCHEMA['ignore j']:
-        return get_shift(qtype, S_FLEXUS, L_NOTHING, i, 0)
-    else:
-        if MAX_INTERVAL > i+j:
-            return get_shift(qtype, S_FLEXUS, L_NOTHING, i, 0)
+    if shape == S_ANCUS:
+        if j==0 or STEM_SCHEMA['ignore j']:
+            return get_shift(qtype, S_FLEXUS, L_DEMINUTUS_FIRST, i, 0)
         else:
-            return get_shift(qtype, S_FLEXUS, liq, i+j, 0)
-
+            if MAX_INTERVAL < (i+j):
+                return get_shift(qtype, S_FLEXUS, L_DEMINUTUS_FIRST, i, 0)
+            else:
+                return get_shift(qtype, S_FLEXUS, L_DEMINUTUS, i+j, 0)
+    elif shape == S_SALICUS:
+        # for this shape, i is the second ambitus j is the first one
+        # so that it's just a mirror of ancus
+        if j==0 or STEM_SCHEMA['ignore j']:
+            return get_queue_shift(qtype, S_PES_QUASSUS, L_NOTHING, i, 'right', 0)
+        else:
+            if MAX_INTERVAL < (i+j):
+                return get_queue_shift(qtype, S_PES_QUASSUS, L_NOTHING, i, 'right', 0)
+            else:
+                return get_queue_shift(qtype, S_PES_QUADRATUM, L_NOTHING, i+j, 'right', 0)
+    else:
+        print('calling get_default_shift with shape %s, this should not happen!' % shape)
+        exit()
 
 def get_queue_shift(qtype, shape, liq, i=0, side='left', j=0):
     """ Returns the queue shift associated with the arguments in the queue
@@ -647,6 +668,7 @@ def get_queue_shift(qtype, shape, liq, i=0, side='left', j=0):
             break
     if not shift:
         shift = get_default_shift(qtype, shape, liq, i, j, side)
+        #print(shift)
     return shift
 
 def write_left_queue(i, qtype, stemshape, liq = L_NOTHING, j=0, length=0, shift=0):
@@ -2237,16 +2259,19 @@ def fusion():
                 L_UP)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'SalicusOriscus',
-                S_ORISCUS_SCAPUS, L_UP, qtype='short', stemshape=S_ORISCUS_SCAPUS)
+                S_ORISCUS_SCAPUS, L_UP, qtype='short', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'SalicusOriscus',
-                S_ORISCUS_SCAPUS_LONGQUEUE, L_UP, qtype='long', stemshape=S_ORISCUS_SCAPUS)
+                S_ORISCUS_SCAPUS_LONGQUEUE, L_UP, qtype='long', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
+    write_fusion_leading(1, 'SalicusOriscus',
+            S_ORISCUS_SCAPUS_OPENQUEUE, L_UP, qtype='open', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'odbase', S_ORISCUS, L_DOWN)
     for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, "osbase", S_ORISCUS_SCAPUS, L_DOWN, qtype='short', stemshape=S_ORISCUS_SCAPUS)
+        write_fusion_leading(i, "osbase", S_ORISCUS_SCAPUS, L_DOWN, qtype='short', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
     for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, "osbase", S_ORISCUS_SCAPUS_LONGQUEUE, L_DOWN, qtype='long', stemshape=S_ORISCUS_SCAPUS)
+        write_fusion_leading(i, "osbase", S_ORISCUS_SCAPUS_LONGQUEUE, L_DOWN, qtype='long', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
+    write_fusion_leading(1, "osbase", S_ORISCUS_SCAPUS_OPENQUEUE, L_DOWN, qtype='open', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'OriscusReversusLineTLBR', S_LOWER_ORISCUS,
                 L_DOWN)
@@ -2258,10 +2283,12 @@ def fusion():
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'mademinutus', S_LOWER_PUNCTUM, L_DOWN)
     for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'VirgaBaseLineBL', S_VIRGA_REVERSA, L_DOWN, qtype='short', stemshape=S_VIRGA_REVERSA)
+        write_fusion_leading(i, 'VirgaBaseLineBL', S_VIRGA_REVERSA, L_DOWN, qtype='short', stemshape=S_FLEXUS)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'VirgaBaseLineBL', S_VIRGA_REVERSA_LONGQUEUE,
-                L_DOWN, qtype='long', stemshape=S_VIRGA_REVERSA)
+                L_DOWN, qtype='long', stemshape=S_FLEXUS)
+    write_fusion_leading(1, 'VirgaBaseLineBL', S_VIRGA_REVERSA_OPENQUEUE,
+                    L_DOWN, qtype='open', stemshape=S_FLEXUS)
 
 # lique is only for initio debilis here
 def write_fusion_leading(i, first_glyph, glyph_type, lique, qtype = None, stemshape = None):
