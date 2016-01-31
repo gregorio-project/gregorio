@@ -85,7 +85,7 @@ static bool read_vowel_rules(char *const lang) {
     
     filenames = gregorio_malloc(capacity * sizeof(char *));
 
-    file = popen("kpsewhich " VOWEL_FILE, "r");
+    file = popen("kpsewhich -all " VOWEL_FILE, "r");
     if (!file) {
         gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
                 _("unable to run kpsewhich %s: %s"), VOWEL_FILE,
@@ -207,6 +207,8 @@ static __inline bool handle_elision(const gregorio_character *const ch,
         break;
 
     case ST_T_NOTHING:
+        /* not reachable unless there's a programming error */
+        assert(false); /* LCOV_EXCL_LINE */
         break;
     }
     return true;
@@ -506,7 +508,8 @@ void gregorio_write_first_letter_alignment_text(
             close_first_letter = first_letter_open != 0;
         } else switch (current_character->cos.s.type) {
         case ST_T_NOTHING:
-            assert(false);
+            /* not reachable unless there's a programming error */
+            assert(false); /* LCOV_EXCL_LINE */
             break;
         case ST_T_BEGIN:
             /* handle styles */
@@ -546,7 +549,8 @@ void gregorio_write_first_letter_alignment_text(
                 break;
             case ST_VERBATIM:
             case ST_SPECIAL_CHAR:
-                assert(false);
+                /* not reachable unless there's a programming error */
+                assert(false); /* LCOV_EXCL_LINE */
                 break;
             case ST_FIRST_WORD:
             case ST_FIRST_SYLLABLE:

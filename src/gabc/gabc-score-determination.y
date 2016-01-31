@@ -421,7 +421,7 @@ static void rebuild_characters(void)
             } else {
                 if (ch->cos.s.style == ST_ELISION) {
                     gregorio_message(
-                            _("score initial may not be in an elision "),
+                            _("score initial may not be in an elision"),
                             "rebuild_characters", VERBOSITY_ERROR, 0);
                     break;
                 }
@@ -696,9 +696,12 @@ gregorio_score *gabc_read_score(FILE *f_in)
     /* the input file that flex will parse */
     gabc_score_determination_in = f_in;
     if (!f_in) {
-        gregorio_message(_("can't read stream from argument, returning NULL "
-                "pointer"), "det_score", VERBOSITY_ERROR, 0);
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
+        gregorio_message(_("can't read stream from NULL"), "gabc_read_score",
+                VERBOSITY_FATAL, 0);
         return NULL;
+        /* LCOV_EXCL_STOP */
     }
     initialize_variables();
     /* the flex/bison main call, it will build the score (that we have
@@ -715,7 +718,7 @@ gregorio_score *gabc_read_score(FILE *f_in)
         gregorio_free_score(score);
         score = NULL;
         gregorio_message(_("unable to determine a valid score from file"),
-                "det_score", VERBOSITY_FATAL, 0);
+                "gabc_read_score", VERBOSITY_FATAL, 0);
     }
     sha1_finish_ctx(&digester, score->digest);
     return score;
@@ -749,8 +752,11 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
             current_element = elements[voice];
         }
         if (!current_element) {
+            /* not reachable unless there's a programming error */
+            /* LCOV_EXCL_START */
             gregorio_message(_("current_element is null, this shouldn't "
                     "happen!"), "gabc_y_add_notes", VERBOSITY_FATAL, 0);
+            /* LCOV_EXCL_STOP */
         }
         if (!current_element->nabc) {
             current_element->nabc = (char **) gregorio_calloc (nabc_lines,

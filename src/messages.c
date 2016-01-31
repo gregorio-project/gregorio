@@ -73,6 +73,12 @@ static const char *verbosity_to_str(const gregorio_verbosity verbosity)
     case VERBOSITY_ERROR:
         str = _("error:");
         break;
+    case VERBOSITY_ASSERTION:
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
+        str = _("assertion:");
+        break;
+        /* LCOV_EXCL_STOP */
     case VERBOSITY_FATAL:
         str = _("fatal error:");
         break;
@@ -158,6 +164,7 @@ void gregorio_messagef(const char *function_name,
 
     switch (verbosity) {
     case VERBOSITY_ERROR:
+    case VERBOSITY_ASSERTION:
         return_value = 1;
         break;
     case VERBOSITY_FATAL:

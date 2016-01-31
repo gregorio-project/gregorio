@@ -46,12 +46,18 @@ EOT
     rm -rv coverage.info coverage
     echo "generating report"
     lcov $extra_args --directory . --capture --output-file coverage.info &&
+        lcov --remove coverage.info '*-y.c' '*-l.c' --output-file coverage.info &&
         genhtml coverage.info -o coverage
 
     if test -f __gcovtool.sh
     then
         rm -v __gcovtool.sh
     fi
+    ;;
+reset)
+    echo "resetting coverage files"
+    rm -rv gcovtool.sh coverage coverage.info
+    find . -name '*.gcda' -exec rm -v {} +
     ;;
 clean)
     echo "deleting coverage files"
@@ -60,7 +66,7 @@ clean)
     find . -name '*.gcda' -exec rm -v {} +
     ;;
 '')
-    echo "Usage $0 report|clean"
+    echo "Usage $0 report|reset|clean"
     exit 1
     ;;
 *)
