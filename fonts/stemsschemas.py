@@ -42,7 +42,7 @@
       - base (int): font_config['base height']
 """
 
-def get_default_porrectus(font_config, add_suppl):
+def get_default_porrectus(font_config, add_suppl, one_bottom):
     """ Common subfunction, gets porrectus length.
     """
     suppl = font_config['bottom-add'] if add_suppl else 0
@@ -50,7 +50,7 @@ def get_default_porrectus(font_config, add_suppl):
         "Nothing": {
             "1": {
                 "short": font_config['bottom-porrectus-1'] + suppl,
-                "long": font_config['bottom-porrectus-1-long'] + suppl
+                "long": one_bottom
             },
             "2": {
                 "short": font_config['bottom-porrectus-2'] + suppl
@@ -193,7 +193,7 @@ def get_stem_schema_default(font_config):
         "PesQuassus": {
             "Nothing": get_basic('oriscus', False)
         },
-        "Porrectus": get_default_porrectus(font_config, False)
+        "Porrectus": get_default_porrectus(font_config, False, virga_long)
     }
 
 def get_stem_schema_solesmes(font_config):
@@ -257,7 +257,7 @@ def get_stem_schema_solesmes(font_config):
         "PesQuassus": {
             "Nothing": get_basic('oriscus', False)
         },
-        "Porrectus": get_default_porrectus(font_config, True)
+        "Porrectus": get_default_porrectus(font_config, True, bottom_virga - 2*base)
     }
 
 def get_stem_schema(schemaname, font_config):
