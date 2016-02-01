@@ -70,9 +70,15 @@ static void close_element(gregorio_element **current_element,
 {
     gregorio_add_element(current_element, *first_glyph);
     if (*first_glyph && (*first_glyph)->previous) {
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
+        gregorio_fail(close_element, "previous element was not closed");
         (*first_glyph)->previous->next = NULL;
         (*first_glyph)->previous = NULL;
     }
+    /* for some reason (optimization?), the previous line is not counted as
+     * covered even though the start of the condition IS covered */
+    /* LCOV_EXCL_STOP */
     *first_glyph = current_glyph->next;
 }
 
@@ -119,9 +125,8 @@ static gregorio_element *gabc_det_elements_from_glyphs(
     /* a char that is necesarry to determine the type of the current_glyph */
     char current_glyph_type;
 
-    if (!current_glyph) {
-        return NULL;
-    }
+    gregorio_assert(current_glyph, gabc_det_elements_from_glyphs,
+            "called with NULL glyph", return NULL);
     /* first we go to the first glyph in the chained list of glyphs (maybe to
      * suppress ?) */
     gregorio_go_to_first_glyph(&current_glyph);

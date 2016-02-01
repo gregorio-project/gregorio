@@ -158,12 +158,7 @@
     \ifcase#7%
       \gre@typesingleclef{#1}{#2}{#3}{#5}%
     \else %
-      \ifnum\numexpr (#7 - #2) * (#7 - #2) = 1 \relax %
-        \gre@typesingleclef{#1}{#2}{#3}{#5}%
-        \gre@skip@temp@two=\gre@space@skip@clefflatspace\relax%
-        \gre@hskip\gre@skip@temp@two %
-        \gre@typesingleclef{#6}{#7}{#3}{#8}%
-      \else %
+      \ifnum\numexpr (#7 - #2) * (#7 - #2) > 1 \relax %
         \setbox\gre@box@temp@clef=\hbox{\gre@typesingleclef{#1}{#2}{#3}{#5}}%
         \setbox\gre@box@temp@cleftwo=\hbox{\gre@typesingleclef{#6}{#7}{#3}{#8}}%
         \ifdim\wd\gre@box@temp@clef>\wd\gre@box@temp@cleftwo%
@@ -171,6 +166,11 @@
         \else %
           \hbox to 0pt{\copy\gre@box@temp@clef}\copy\gre@box@temp@cleftwo%
         \fi %
+      \else %
+        \gre@typesingleclef{#1}{#2}{#3}{#5}%
+        \gre@skip@temp@two=\gre@space@skip@clefflatspace\relax%
+        \gre@hskip\gre@skip@temp@two %
+        \gre@typesingleclef{#6}{#7}{#3}{#8}%
       \fi %
     \fi %
   }%

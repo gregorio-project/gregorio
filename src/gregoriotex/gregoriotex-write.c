@@ -908,7 +908,6 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
         break;
     case G_ONE_NOTE:
     case G_PUNCTUM_INCLINATUM:
-    case G_TRIGONUS:
     case G_PUNCTA_INCLINATA:
     case G_2_PUNCTA_INCLINATA_DESCENDENS:
     case G_3_PUNCTA_INCLINATA_DESCENDENS:
@@ -1678,7 +1677,6 @@ static void gregoriotex_write_punctum_mora(FILE *f, gregorio_glyph *glyph,
     }
     /* we enter here in any case */
     switch (glyph->u.notes.glyph_type) {
-    case G_TRIGONUS:
     case G_PUNCTA_INCLINATA:
     case G_2_PUNCTA_INCLINATA_DESCENDENS:
     case G_3_PUNCTA_INCLINATA_DESCENDENS:
@@ -2318,7 +2316,6 @@ static int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
                             }
                         }
                         continue;
-                    case G_TRIGONUS:
                     case G_PUNCTA_INCLINATA:
                     case G_2_PUNCTA_INCLINATA_DESCENDENS:
                     case G_3_PUNCTA_INCLINATA_DESCENDENS:
@@ -2675,7 +2672,6 @@ static void write_glyph(FILE *f, gregorio_syllable *syllable,
      * in general, and torculus resupinus and torculus resupinus flexus, so
      * we first divide the glyph into real gregoriotex glyphs */
     switch (glyph->u.notes.glyph_type) {
-    case G_TRIGONUS:
     case G_PUNCTA_INCLINATA:
     case G_2_PUNCTA_INCLINATA_DESCENDENS:
     case G_3_PUNCTA_INCLINATA_DESCENDENS:

@@ -463,22 +463,22 @@ static void write_note_heuristics(FILE *f, gregorio_note *note) {
  */
 
 static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
-        char glyph_type)
+        const bool is_quadratum)
 {
     char shape;
     gregorio_assert(note, gabc_write_gregorio_note, "call with NULL argument",
             return);
     gregorio_assert(note->type == GRE_NOTE, gabc_write_gregorio_note,
             "call with argument which type is not GRE_NOTE", return);
-    if (glyph_type == G_PES_QUADRATUM) {
-        shape = S_QUADRATUM;
-    } else {
-        shape = note->u.note.shape;
-    }
+    shape = note->u.note.shape;
     switch (shape) {
         /* first we write the letters that determine the shapes */
     case S_PUNCTUM:
-        fprintf(f, "%c", pitch_letter(note->u.note.pitch));
+        if (is_quadratum) {
+            fprintf(f, "%cq", pitch_letter(note->u.note.pitch));
+        } else {
+            fprintf(f, "%c", pitch_letter(note->u.note.pitch));
+        }
         break;
     case S_PUNCTUM_INCLINATUM:
         fprintf(f, "%c", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
@@ -491,11 +491,7 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         }
         break;
     case S_PUNCTUM_INCLINATUM_AUCTUS:
-        if (note->next) {
-            fprintf(f, "%c<", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
-        } else {
-            fprintf(f, "%c", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
-        }
+        fprintf(f, "%c", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
         break;
     case S_PUNCTUM_CAVUM_INCLINATUM:
         fprintf(f, "%cr", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
@@ -518,12 +514,6 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     case S_VIRGA_REVERSA:
         fprintf(f, "%cV", pitch_letter(note->u.note.pitch));
         break;
-    case S_BIVIRGA:
-        fprintf(f, "%cvv", pitch_letter(note->u.note.pitch));
-        break;
-    case S_TRIVIRGA:
-        fprintf(f, "%cvvv", pitch_letter(note->u.note.pitch));
-        break;
     case S_ORISCUS_ASCENDENS:
     case S_ORISCUS_DESCENDENS:
     case S_ORISCUS_DEMINUTUS:
@@ -537,7 +527,11 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         /* Note: the ASCENDENS, DESCENDENS, or DEMINUTUS is also in the liquescentia */
         break;
     case S_QUILISMA:
-        fprintf(f, "%cw", pitch_letter(note->u.note.pitch));
+        if (is_quadratum) {
+            fprintf(f, "%cW", pitch_letter(note->u.note.pitch));
+        } else {
+            fprintf(f, "%cw", pitch_letter(note->u.note.pitch));
+        }
         break;
     case S_LINEA:
         fprintf(f, "%c=", pitch_letter(note->u.note.pitch));
@@ -551,34 +545,17 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     case S_LINEA_PUNCTUM_CAVUM:
         fprintf(f, "%cr0", pitch_letter(note->u.note.pitch));
         break;
-    case S_QUILISMA_QUADRATUM:
-        fprintf(f, "%cW", pitch_letter(note->u.note.pitch));
-        break;
     case S_ORISCUS_SCAPUS:
         fprintf(f, "%cO", pitch_letter(note->u.note.pitch));
         break;
     case S_STROPHA:
-        fprintf(f, "%cs", pitch_letter(note->u.note.pitch));
-        break;
     case S_STROPHA_AUCTA:
         fprintf(f, "%cs", pitch_letter(note->u.note.pitch));
         break;
-    case S_DISTROPHA:
-        fprintf(f, "%css", pitch_letter(note->u.note.pitch));
-        break;
-    case S_DISTROPHA_AUCTA:
-        fprintf(f, "%css", pitch_letter(note->u.note.pitch));
-        break;
-    case S_TRISTROPHA:
-        fprintf(f, "%csss", pitch_letter(note->u.note.pitch));
-        break;
-    case S_TRISTROPHA_AUCTA:
-        fprintf(f, "%csss", pitch_letter(note->u.note.pitch));
-        break;
-    case S_QUADRATUM:
-        fprintf(f, "%cq", pitch_letter(note->u.note.pitch));
-        break;
     default:
+        /* includes S_BIVIRGA, S_TRIVIRGA, S_DISTROPHA, S_TRISTROPHA,
+         * S_DISTROPHA_AUCTA, and S_TRISTROPHA_AUCTA -- which are patched out
+         * during parsing */
         /* not reachable unless there's a programming error */
         /* LCOV_EXCL_START */
         unsupported("gabc_write_gregorio_note", __LINE__, "shape",
@@ -707,9 +684,6 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
             /* LCOV_EXCL_STOP */
         }
         break;
-    case GRE_MANUAL_CUSTOS:
-        fprintf(f, "%c+", pitch_letter(glyph->u.misc.pitched.pitch));
-        break;
     case GRE_GLYPH:
         if (is_initio_debilis(glyph->u.notes.liquescentia)) {
             fprintf(f, "-");
@@ -719,7 +693,9 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
 
         current_note = glyph->u.notes.first_note;
         while (current_note) {
-            gabc_write_gregorio_note(f, current_note, glyph->u.notes.glyph_type);
+            gabc_write_gregorio_note(f, current_note,
+                    glyph->u.notes.glyph_type == G_PES_QUADRATUM
+                    && current_note == glyph->u.notes.first_note);
             /* third argument necessary for the special shape pes quadratum */
             current_note = current_note->next;
         }
@@ -878,6 +854,8 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
                 &gabc_write_verb, &gabc_print_char, &gabc_write_begin,
                 &gabc_write_end, &gabc_write_special_char);
         fprintf(f, "]");
+    } else if (syllable->translation_type == TR_WITH_CENTER_END) {
+        fprintf(f, "[/]");
     }
     if (syllable->euouae == EUOUAE_END) {
         fprintf(f, "</eu>");
@@ -918,25 +896,15 @@ void gabc_write_score(FILE *f, gregorio_score *score)
     gregorio_syllable *syllable;
     gregorio_header *header;
 
-    if (!f) {
-        /* not reachable unless there's a programming error */
-        /* LCOV_EXCL_START */
-        gregorio_message(_("call with NULL file"), "gregoriotex_write_score",
-                VERBOSITY_FATAL, 0);
-        return;
-        /* LCOV_EXCL_STOP */
-    }
+    gregorio_assert(f, gabc_write_score, "call with NULL file", return);
 
     for (header = score->headers; header; header = header->next) {
         gabc_write_str_attribute(f, header->name, header->value);
     }
     /* And since the gabc is generated by this program, note this. */
     fprintf(f, "generated-by: %s %s;\n", "gregorio", GREGORIO_VERSION);
-    if (score->number_of_voices == 0) {
-        gregorio_message(_("gregorio_score seems to be empty"),
-                "gabc_write_score", VERBOSITY_ERROR, 0);
-        return;
-    }
+    gregorio_assert(score->number_of_voices > 0, gabc_write_score,
+            "gregorio_score seems to be empty", return);
     if (score->number_of_voices == 1) {
         fprintf(f, "%%%%\n");
     } else {

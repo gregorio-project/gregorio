@@ -184,10 +184,6 @@ void dump_write_score(FILE *f, gregorio_score *score)
                     syllable->position,
                     gregorio_word_position_to_string(syllable->position));
         }
-        if (syllable->special_sign) {
-            fprintf(f, "   special sign                       %s\n",
-                    gregorio_sign_to_string(syllable->special_sign));
-        }
         if (syllable->no_linebreak_area != NLBA_NORMAL) {
             fprintf(f, "   no line break area        %s\n",
                     gregorio_nlba_to_string(syllable->no_linebreak_area));
@@ -327,19 +323,6 @@ void dump_write_score(FILE *f, gregorio_score *score)
                                 glyph->u.misc.unpitched.info.space,
                                 gregorio_space_to_string(glyph->u.misc.
                                                          unpitched.info.space));
-                        break;
-
-                    case GRE_BAR:
-                        fprintf(f, "       glyph_type            %d (%s)\n",
-                                glyph->u.misc.unpitched.info.bar,
-                                gregorio_bar_to_string(glyph->u.misc.unpitched.
-                                                       info.bar));
-                        if (glyph->u.misc.unpitched.special_sign) {
-                            fprintf(f, "       special sign          %d (%s)\n",
-                                    glyph->u.misc.unpitched.special_sign,
-                                    gregorio_sign_to_string(glyph->
-                                            u.misc.unpitched.special_sign));
-                        }
                         break;
 
                     case GRE_GLYPH:

@@ -181,9 +181,8 @@ static void fix_custos(gregorio_score *score_to_check)
 
 static int check_score_integrity(gregorio_score *score_to_check)
 {
-    if (!score_to_check) {
-        return 0;
-    }
+    gregorio_assert(score_to_check, check_score_integrity, "score is NULL",
+            return 0);
     return 1;
 }
 
@@ -462,15 +461,17 @@ static void close_syllable(YYLTYPE *loc)
 
                 case ST_T_END:
                     --i;
-                    if (i < 0) {
-                        gregorio_message(_("elision end with no beginning"),
-                                "close_syllable", VERBOSITY_ERROR, 0);
-                    }
+                    /* the parser precludes this from failing here */
+                    gregorio_assert_only(i >= 0, close_syllable,
+                            "encountered elision end with no beginning");
                     break;
 
                 case ST_T_NOTHING:
-                    /* nothing */
+                    /* not reachable unless there's a programming error */
+                    /* LCOV_EXCL_START */
+                    gregorio_fail(close_syllable, "encountered ST_T_NOTHING");
                     break;
+                    /* LCOV_EXCL_STOP */
                 }
                 break;
 
@@ -487,10 +488,9 @@ static void close_syllable(YYLTYPE *loc)
             }
         }
     }
-    if (i > 0) {
-        gregorio_message(_("elision beginning with no end"), "close_syllable",
-                VERBOSITY_ERROR, 0);
-    }
+    /* the parser precludes this from failing here */
+    gregorio_assert_only(i == 0, close_syllable,
+            "encountered elision beginning with no end");
 
     gregorio_add_syllable(&current_syllable, number_of_voices, elements,
             first_text_character, first_translation_character, position,
@@ -621,10 +621,14 @@ static void determine_oriscus_orientation(gregorio_score *score) {
                                                     S_ORISCUS_CAVUM_DESCENDENS;
                                             break;
                                         default:
-                                            gregorio_message(_("bad shape"),
-                                                    "determine_oriscus_orientation",
-                                                    VERBOSITY_ERROR, 0);
+                                            /* not reachable unless there's a
+                                             * programming error */
+                                            /* LCOV_EXCL_START */
+                                            gregorio_fail(
+                                                    determine_oriscus_orientation,
+                                                    "bad_shape");
                                             break;
+                                            /* LCOV_EXCL_STOP */
                                         }
                                     } else { /* ascending or the same */
                                         switch(oriscus->u.note.shape) {
@@ -637,10 +641,14 @@ static void determine_oriscus_orientation(gregorio_score *score) {
                                                     S_ORISCUS_CAVUM_ASCENDENS;
                                             break;
                                         default:
-                                            gregorio_message(_("bad shape"),
-                                                    "determine_oriscus_orientation",
-                                                    VERBOSITY_ERROR, 0);
+                                            /* not reachable unless there's a
+                                             * programming error */
+                                            /* LCOV_EXCL_START */
+                                            gregorio_fail(
+                                                    determine_oriscus_orientation,
+                                                    "bad_shape");
                                             break;
+                                            /* LCOV_EXCL_STOP */
                                         }
                                     }
                                     oriscus = NULL;
@@ -673,9 +681,11 @@ static void determine_oriscus_orientation(gregorio_score *score) {
             oriscus->u.note.shape = S_ORISCUS_CAVUM_DESCENDENS;
             break;
         default:
-            gregorio_message(_("bad shape"), "determine_oriscus_orientation",
-                    VERBOSITY_ERROR, 0);
+            /* not reachable unless there's a programming error */
+            /* LCOV_EXCL_START */
+            gregorio_fail(determine_oriscus_orientation, "bad_shape");
             break;
+            /* LCOV_EXCL_STOP */
         }
     }
 }
@@ -695,14 +705,8 @@ gregorio_score *gabc_read_score(FILE *f_in)
     sha1_process_bytes(GREGORIO_VERSION, strlen(GREGORIO_VERSION), &digester);
     /* the input file that flex will parse */
     gabc_score_determination_in = f_in;
-    if (!f_in) {
-        /* not reachable unless there's a programming error */
-        /* LCOV_EXCL_START */
-        gregorio_message(_("can't read stream from NULL"), "gabc_read_score",
-                VERBOSITY_FATAL, 0);
-        return NULL;
-        /* LCOV_EXCL_STOP */
-    }
+    gregorio_assert(f_in, gabc_read_score, "can't read stream from NULL",
+            return NULL);
     initialize_variables();
     /* the flex/bison main call, it will build the score (that we have
      * initialized) */
@@ -712,6 +716,7 @@ gregorio_score *gabc_read_score(FILE *f_in)
     }
     gregorio_fix_initial_keys(score, gregorio_default_clef);
     fix_custos(score);
+    gabc_det_notes_finish();
     free_variables();
     /* the we check the validity and integrity of the score we have built. */
     if (!check_score_integrity(score)) {
@@ -751,13 +756,9 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
             gregorio_add_element(&elements[voice], NULL);
             current_element = elements[voice];
         }
-        if (!current_element) {
-            /* not reachable unless there's a programming error */
-            /* LCOV_EXCL_START */
-            gregorio_message(_("current_element is null, this shouldn't "
-                    "happen!"), "gabc_y_add_notes", VERBOSITY_FATAL, 0);
-            /* LCOV_EXCL_STOP */
-        }
+        gregorio_assert(current_element, gabc_y_add_notes,
+                "current_element is null, this shouldn't happen!",
+                return);
         if (!current_element->nabc) {
             current_element->nabc = (char **) gregorio_calloc (nabc_lines,
                     sizeof (char *));
