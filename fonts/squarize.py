@@ -1,7 +1,7 @@
 # This is a fontforge python script; use fontforge -lang=py -script to run it
 # coding=utf-8
 # pylint: disable=too-many-branches, too-many-arguments, too-many-lines
-# pylint: disable=import-error, no-member
+# pylint: disable=import-error, no-member, C0326
 
 """
     Python fontforge script to build a square notation font.
@@ -33,13 +33,13 @@
 
 from __future__ import print_function
 
-import getopt, sys
-import fontforge, psMat
-import subprocess
+import sys
 import os
-import argparse
 import os.path
 import json
+import argparse
+import fontforge
+import psMat
 import stemsschemas
 
 GPLV3 = """Gregorio is free software: you can redistribute it and/or
@@ -86,7 +86,7 @@ glyphnumber = 0xe000 - 1
 
 # see defaults in get_parser()
 FONT_CONFIG = None
-STEM_SCHEMA=None
+STEM_SCHEMA = None
 oldfont = None
 newfont = None
 font_name = None
@@ -125,20 +125,21 @@ def main():
     with open(args.config_file, 'r') as stream:
         font_config = json.load(stream)
     subspecies = '_%s' % args.subspecies if args.subspecies else ''
-    if not 'base height' in font_config:
+    if 'base height' not in font_config:
         font_config['base height'] = 157.5
-    if not 'hepisema additional width' in font_config:
+    if 'hepisema additional width' not in font_config:
         font_config['hepisema additional width'] = 5
-    if not 'deminutus vertical shift' in font_config:
+    if 'deminutus vertical shift' not in font_config:
         font_config['deminutus vertical shift'] = 10
-    if not 'additional upper queue height' in font_config:
+    if 'additional upper queue height' not in font_config:
         font_config['additional upper queue height'] = 10
     FONT_CONFIG = font_config
     STEM_SCHEMA = stemsschemas.get_stem_schema(args.stems_schema, font_config)
+    print(STEM_SCHEMA)
     outfile = args.outfile
     inputfile = args.base_font
     if not outfile:
-        pre, ext = os.path.splitext(inputfile)
+        pre = os.path.splitext(inputfile)
         outfile = '%s.ttf' % pre
     oldfont = fontforge.open(inputfile)
     font_name = oldfont.fontname + subspecies
@@ -182,6 +183,8 @@ def main():
     print('last code point in', font_name, 'is', hex(glyphnumber))
 
 def new_glyph():
+    """ Create a new glyph and select it.
+    """
     global newfont, glyphnumber
     glyphnumber += 1
     if glyphnumber > 0xf8ff:
@@ -189,6 +192,8 @@ def new_glyph():
     newfont.selection.select('u%05x' % glyphnumber)
 
 def set_glyph_name(name):
+    """ Sets the name of current glyph.
+    """
     global all_glyph_names, newfont, glyphnumber
     if name in all_glyph_names:
         print("ERROR: duplicate glyph name [%s]" % name, file=sys.stderr)
@@ -199,7 +204,7 @@ def set_glyph_name(name):
 
 def message(glyph_name):
     """Prints a message to stdout, so that the user gets less bored when
-    building the font
+    building the font.
     """
     print("generating", glyph_name, "for", font_name)
 
@@ -583,11 +588,11 @@ STEM_SHAPE_FALLBACKS = {
     S_LOWER_PES_QUADRATUM: S_PES_QUADRATUM,
     S_UPPER_PES_QUASSUS: S_PES_QUASSUS,
     S_LOWER_PES_QUASSUS: S_PES_QUASSUS,
+    S_PORRECTUS: S_FLEXUS,
+    S_PORRECTUS_FLEXUS: S_PORRECTUS,
     # 3 notes glyphs are handled in a different way, see get_default_shift
     #S_ANCUS: S_FLEXUS,
     #S_SALICUS: S_PES_QUASSUS,
-    S_PORRECTUS: S_FLEXUS,
-    S_PORRECTUS_FLEXUS: S_PORRECTUS,
 }
 
 def get_shift(qtype, shape, liq, i, j):
@@ -715,24 +720,42 @@ def write_virga(shape, lique=L_NOTHING, right_queue=False, firstglyph='rvirgabas
 def virga():
     "Creates virgas"
     message("virgas")
-    write_virga(S_VIRGA, L_NOTHING, True, 'virgabase', 'short', S_VIRGA)
-    write_virga(S_VIRGA_LONGQUEUE, L_NOTHING, True, 'virgabase', 'long', S_VIRGA)
-    write_virga(S_VIRGA_OPENQUEUE, L_NOTHING, True, 'virgabase', 'open', S_VIRGA)
-    write_virga(S_VIRGA_REVERSA, L_NOTHING, False, 'rvirgabase', 'short', S_VIRGA_REVERSA)
-    write_virga(S_VIRGA_REVERSA_LONGQUEUE, L_NOTHING, False, 'rvirgabase', 'long', S_VIRGA_REVERSA)
-    write_virga(S_VIRGA_REVERSA_OPENQUEUE, L_NOTHING, False, 'rvirgabase', 'open', S_VIRGA_REVERSA)
-    write_virga(S_VIRGA_REVERSA, L_DESCENDENS, False, 'PunctumAuctusLineBL', 'short', S_VIRGA)
-    write_virga(S_VIRGA_REVERSA_LONGQUEUE, L_DESCENDENS, False, 'PunctumAuctusLineBL', 'long', S_VIRGA)
-    write_virga(S_VIRGA_REVERSA_OPENQUEUE, L_DESCENDENS, False, 'PunctumAuctusLineBL', 'open', S_VIRGA)
-    write_virga(S_VIRGA_REVERSA, L_ASCENDENS, False, 'auctusa2', 'short', S_VIRGA)
-    write_virga(S_VIRGA_REVERSA_LONGQUEUE, L_ASCENDENS, False, 'auctusa2', 'long', S_VIRGA)
-    write_virga(S_VIRGA_REVERSA_OPENQUEUE, L_ASCENDENS, False, 'auctusa2', 'open', S_VIRGA)
-    write_virga(S_ORISCUS_SCAPUS, L_NOTHING, False, 'OriscusLineBL', 'short', S_ORISCUS_SCAPUS)
-    write_virga(S_ORISCUS_SCAPUS_LONGQUEUE, L_NOTHING, False, 'OriscusLineBL', 'long', S_ORISCUS_SCAPUS)
-    write_virga(S_ORISCUS_SCAPUS_OPENQUEUE, L_NOTHING, False, 'OriscusLineBL', 'open', S_ORISCUS_SCAPUS)
-    write_virga(S_ORISCUS_REVERSUS_SCAPUS, L_NOTHING, False, 'OriscusReversusLineBL', 'short', S_ORISCUS_REVERSUS_SCAPUS)
-    write_virga(S_ORISCUS_REVERSUS_SCAPUS_LONGQUEUE, L_NOTHING, False, 'OriscusReversusLineBL', 'long', S_ORISCUS_REVERSUS_SCAPUS)
-    write_virga(S_ORISCUS_REVERSUS_SCAPUS_OPENQUEUE, L_NOTHING, False, 'OriscusReversusLineBL', 'open', S_ORISCUS_REVERSUS_SCAPUS)
+    write_virga(S_VIRGA, L_NOTHING, True,
+                'virgabase', 'short', S_VIRGA)
+    write_virga(S_VIRGA_LONGQUEUE, L_NOTHING, True,
+                'virgabase', 'long', S_VIRGA)
+    write_virga(S_VIRGA_OPENQUEUE, L_NOTHING, True,
+                'virgabase', 'open', S_VIRGA)
+    write_virga(S_VIRGA_REVERSA, L_NOTHING, False,
+                'rvirgabase', 'short', S_VIRGA_REVERSA)
+    write_virga(S_VIRGA_REVERSA_LONGQUEUE, L_NOTHING, False,
+                'rvirgabase', 'long', S_VIRGA_REVERSA)
+    write_virga(S_VIRGA_REVERSA_OPENQUEUE, L_NOTHING, False,
+                'rvirgabase', 'open', S_VIRGA_REVERSA)
+    write_virga(S_VIRGA_REVERSA, L_DESCENDENS, False,
+                'PunctumAuctusLineBL', 'short', S_VIRGA)
+    write_virga(S_VIRGA_REVERSA_LONGQUEUE, L_DESCENDENS, False,
+                'PunctumAuctusLineBL', 'long', S_VIRGA)
+    write_virga(S_VIRGA_REVERSA_OPENQUEUE, L_DESCENDENS, False,
+                'PunctumAuctusLineBL', 'open', S_VIRGA)
+    write_virga(S_VIRGA_REVERSA, L_ASCENDENS, False,
+                'auctusa2', 'short', S_VIRGA)
+    write_virga(S_VIRGA_REVERSA_LONGQUEUE, L_ASCENDENS, False,
+                'auctusa2', 'long', S_VIRGA)
+    write_virga(S_VIRGA_REVERSA_OPENQUEUE, L_ASCENDENS, False,
+                'auctusa2', 'open', S_VIRGA)
+    write_virga(S_ORISCUS_SCAPUS, L_NOTHING, False,
+                'OriscusLineBL', 'short', S_ORISCUS_SCAPUS)
+    write_virga(S_ORISCUS_SCAPUS_LONGQUEUE, L_NOTHING, False,
+                'OriscusLineBL', 'long', S_ORISCUS_SCAPUS)
+    write_virga(S_ORISCUS_SCAPUS_OPENQUEUE, L_NOTHING, False,
+                'OriscusLineBL', 'open', S_ORISCUS_SCAPUS)
+    write_virga(S_ORISCUS_REVERSUS_SCAPUS, L_NOTHING, False,
+                'OriscusReversusLineBL', 'short', S_ORISCUS_REVERSUS_SCAPUS)
+    write_virga(S_ORISCUS_REVERSUS_SCAPUS_LONGQUEUE, L_NOTHING, False,
+                'OriscusReversusLineBL', 'long', S_ORISCUS_REVERSUS_SCAPUS)
+    write_virga(S_ORISCUS_REVERSUS_SCAPUS_OPENQUEUE, L_NOTHING, False,
+                'OriscusReversusLineBL', 'open', S_ORISCUS_REVERSUS_SCAPUS)
 
 def write_deminutus(i, j, length=0, tosimplify=0, firstbar=1):
     """As the glyph before a deminutus is not the same as a normal glyph,
@@ -755,13 +778,13 @@ def write_deminutus(i, j, length=0, tosimplify=0, firstbar=1):
     paste_and_move(first_glyph, length, i*FONT_CONFIG['base height'])
     if not first_glyph_is_complete:
         write_line(j, length+get_width(first_glyph)-get_width('line2'),
-               (i-j+1)*FONT_CONFIG['base height'])
+                   (i-j+1)*FONT_CONFIG['base height'])
     if tosimplify:
         simplify()
     if not first_glyph_is_complete:
         paste_and_move("deminutus",
-                   length+get_width(first_glyph)-get_width('deminutus'),
-                   (i-j)*FONT_CONFIG['base height'])
+                       length+get_width(first_glyph)-get_width('deminutus'),
+                       (i-j)*FONT_CONFIG['base height'])
     return get_width(first_glyph)
 
 def measures():
@@ -818,18 +841,18 @@ def hepisema():
     reduction = get_width('PunctumSmall')
     for i in range(1, MAX_INTERVAL+1):
         write_hepisema(get_width("porrectus%d"%i),
-                'HEpisemaPorrectus%s' % AMBITUS[i], reduction)
+                       'HEpisemaPorrectus%s' % AMBITUS[i], reduction)
     for i in range(1, MAX_INTERVAL+1):
         if glyph_exists("porrectusam1%d"%i):
             write_hepisema(get_width("porrectusam1%d"%i),
-                    'HEpisemaPorrectusAmOne%s' % AMBITUS[i], reduction)
+                           'HEpisemaPorrectusAmOne%s' % AMBITUS[i], reduction)
         else:
             write_hepisema(get_width("porrectus%d"%i),
-                    'HEpisemaPorrectusAmOne%s' % AMBITUS[i], reduction)
+                           'HEpisemaPorrectusAmOne%s' % AMBITUS[i], reduction)
     # porrectus flexus does not get reduced because the note after is to the right
     for i in range(1, MAX_INTERVAL+1):
         write_hepisema(get_width("porrectusflexus%d"%i),
-                'HEpisemaPorrectusFlexus%s' % AMBITUS[i])
+                       'HEpisemaPorrectusFlexus%s' % AMBITUS[i])
 
 def write_hepisema(shape_width, glyphname, reduction=0):
     "Writes the horizontal episema glyphs."
@@ -843,7 +866,7 @@ def write_hepisema(shape_width, glyphname, reduction=0):
         paste_and_move("hepisemaleft", -FONT_CONFIG['hepisema additional width'], 0)
     if glyph_exists('hepisemaright'):
         paste_and_move("hepisemaright",
-                   drawn_width + FONT_CONFIG['hepisema additional width'], 0)
+                       drawn_width + FONT_CONFIG['hepisema additional width'], 0)
     # use the original width for the glyph for the sake of ledger lines
     set_width(shape_width)
     end_glyph(glyphname)
@@ -863,18 +886,18 @@ def pes():
     precise_message("pes quilisma deminutus")
     for i in range(1, MAX_INTERVAL+1):
         write_pes_deminutus(i, "QuilismaLineTR", S_PES_QUILISMA,
-                L_DEMINUTUS)
+                            L_DEMINUTUS)
     precise_message("pes quassus deminutus")
     for i in range(1, MAX_INTERVAL+1):
         write_pes_deminutus(i, "OriscusLineTR", S_PES_QUASSUS,
-                L_DEMINUTUS)
+                            L_DEMINUTUS)
     precise_message("pes initio debilis")
     for i in range(1, MAX_INTERVAL+1):
         write_pes_debilis(i, S_PES, L_INITIO_DEBILIS)
     precise_message("pes initio debilis deminutus")
     for i in range(1, MAX_INTERVAL+1):
         write_pes_debilis_deminutus(i, S_PES,
-                L_INITIO_DEBILIS_DEMINUTUS)
+                                    L_INITIO_DEBILIS_DEMINUTUS)
 
 def fusion_pes():
     "Creates the fusion pes."
@@ -890,7 +913,7 @@ def fusion_pes():
     precise_message("fusion pes quassus deminutus")
     for i in range(1, MAX_INTERVAL+1):
         write_pes_deminutus(i, "SalicusOriscus", S_UPPER_PES_QUASSUS,
-                L_DEMINUTUS)
+                            L_DEMINUTUS)
 
 def write_pes(i, first_glyph, shape, lique=L_NOTHING):
     "Writes the pes glyphs."
@@ -1026,51 +1049,60 @@ def fusion_pes_quadratum():
     precise_message("fusion pes quadratum")
     for i in range(1, MAX_INTERVAL+1):
         write_pes_quadratum(i, "msdeminutus", "VirgaBaseLineBL",
-                S_UPPER_PES_QUADRATUM, stemshape=S_UPPER_PES_QUADRATUM, qtype='short')
+                            S_UPPER_PES_QUADRATUM,
+                            stemshape=S_UPPER_PES_QUADRATUM, qtype='short')
     for i in range(1, MAX_INTERVAL+1):
         write_pes_quadratum(i, "base6", "VirgaBaseLineBL",
-                S_LOWER_PES_QUADRATUM, stemshape=S_LOWER_PES_QUADRATUM, qtype='short')
+                            S_LOWER_PES_QUADRATUM,
+                            stemshape=S_LOWER_PES_QUADRATUM, qtype='short')
     for i in range(1, MAX_INTERVAL+1):
         write_pes_quadratum(i, "msdeminutus", "VirgaBaseLineBL",
-                S_UPPER_PES_QUADRATUM_LONGQUEUE, stemshape=S_UPPER_PES_QUADRATUM, qtype='long')
+                            S_UPPER_PES_QUADRATUM_LONGQUEUE,
+                            stemshape=S_UPPER_PES_QUADRATUM, qtype='long')
     write_pes_quadratum(1, "msdeminutus", "VirgaBaseLineBL",
-            S_UPPER_PES_QUADRATUM_OPENQUEUE, stemshape=S_UPPER_PES_QUADRATUM, qtype='open')
+                        S_UPPER_PES_QUADRATUM_OPENQUEUE,
+                        stemshape=S_UPPER_PES_QUADRATUM, qtype='open')
     for i in range(1, MAX_INTERVAL+1):
         write_pes_quadratum(i, "base6", "VirgaBaseLineBL",
-                S_LOWER_PES_QUADRATUM_LONGQUEUE, stemshape=S_LOWER_PES_QUADRATUM, qtype='long')
+                            S_LOWER_PES_QUADRATUM_LONGQUEUE,
+                            stemshape=S_LOWER_PES_QUADRATUM, qtype='long')
     write_pes_quadratum(1, "base6", "VirgaBaseLineBL",
-            S_LOWER_PES_QUADRATUM_OPENQUEUE, stemshape=S_LOWER_PES_QUADRATUM, qtype='open')
+                        S_LOWER_PES_QUADRATUM_OPENQUEUE,
+                        stemshape=S_LOWER_PES_QUADRATUM, qtype='open')
     precise_message("fusion pes quassus")
     for i in range(1, MAX_INTERVAL+1):
         write_pes_quadratum(i, "SalicusOriscus", "VirgaBaseLineBL",
-                S_UPPER_PES_QUASSUS, stemshape=S_UPPER_PES_QUASSUS, qtype='short')
+                            S_UPPER_PES_QUASSUS,
+                            stemshape=S_UPPER_PES_QUASSUS, qtype='short')
     for i in range(1, MAX_INTERVAL+1):
         write_pes_quadratum(i, "SalicusOriscus", "VirgaBaseLineBL",
-                S_UPPER_PES_QUASSUS_LONGQUEUE, stemshape=S_UPPER_PES_QUASSUS, qtype='long')
+                            S_UPPER_PES_QUASSUS_LONGQUEUE,
+                            stemshape=S_UPPER_PES_QUASSUS, qtype='long')
     write_pes_quadratum(1, "SalicusOriscus", "VirgaBaseLineBL",
-            S_UPPER_PES_QUASSUS_OPENQUEUE, stemshape=S_UPPER_PES_QUASSUS, qtype='open')
+                        S_UPPER_PES_QUASSUS_OPENQUEUE,
+                        stemshape=S_UPPER_PES_QUASSUS, qtype='open')
     precise_message("fusion pes auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
         write_pes_quadratum(i, "msdeminutus", "auctusa2",
-                S_UPPER_PES_QUADRATUM, L_ASCENDENS)
+                            S_UPPER_PES_QUADRATUM, L_ASCENDENS)
     for i in range(1, MAX_INTERVAL+1):
         write_pes_quadratum(i, "base6", "auctusa2",
-                S_LOWER_PES_QUADRATUM, L_ASCENDENS)
+                            S_LOWER_PES_QUADRATUM, L_ASCENDENS)
     precise_message("fusion pes quassus auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
         write_pes_quadratum(i, "SalicusOriscus", "auctusa2",
-                S_UPPER_PES_QUASSUS, L_ASCENDENS)
+                            S_UPPER_PES_QUASSUS, L_ASCENDENS)
     precise_message("fusion pes auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
         write_pes_quadratum(i, "msdeminutus", "PunctumAuctusLineBL",
-                S_UPPER_PES_QUADRATUM, L_DESCENDENS)
+                            S_UPPER_PES_QUADRATUM, L_DESCENDENS)
     for i in range(1, MAX_INTERVAL+1):
         write_pes_quadratum(i, "base6", "PunctumAuctusLineBL",
-                S_LOWER_PES_QUADRATUM, L_DESCENDENS)
+                            S_LOWER_PES_QUADRATUM, L_DESCENDENS)
     precise_message("fusion pes quassus auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
         write_pes_quadratum(i, "SalicusOriscus", "PunctumAuctusLineBL",
-                S_UPPER_PES_QUASSUS, L_DESCENDENS)
+                            S_UPPER_PES_QUASSUS, L_DESCENDENS)
 
 def write_pes_quadratum(i, first_glyph, last_glyph, shape, lique=L_NOTHING, stemshape=None, qtype=None):
     "Writes the pes quadratum glyphs."
@@ -1123,7 +1155,7 @@ def virga_strata():
     precise_message("virga strata")
     for i in range(1, MAX_INTERVAL+1):
         write_virga_strata(i, "PunctumLineTR", "OriscusLineBL",
-                S_VIRGA_STRATA)
+                           S_VIRGA_STRATA)
 
 def write_virga_strata(i, first_glyph, last_glyph, shape, lique=L_NOTHING):
     "Writes the virga strata glyphs."
@@ -1163,7 +1195,7 @@ def salicus():
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             write_salicus(i, j, "PunctumAuctusLineBL", S_SALICUS,
-                    L_DESCENDENS)
+                          L_DESCENDENS)
 
 def write_salicus(i, j, last_glyph, shape, lique=L_NOTHING, qtype=None):
     "Writes the salicus glyphs."
@@ -1176,6 +1208,8 @@ def write_salicus(i, j, last_glyph, shape, lique=L_NOTHING, qtype=None):
     end_glyph(glyph_name)
 
 def draw_salicus(i, j, last_glyph, lique=L_NOTHING, qtype=None):
+    """ Draw a salicus in current glyph.
+    """
     deminutus = last_glyph == 'rdeminutus'
     no_third_glyph = False
     if j == 1 and not deminutus and last_glyph == 'VirgaBaseLineBL':
@@ -1240,7 +1274,8 @@ def draw_salicus(i, j, last_glyph, lique=L_NOTHING, qtype=None):
             paste_and_move(last_glyph, length, (i+j)*FONT_CONFIG['base height'])
             length = length + get_width(last_glyph)
             if qtype:
-                write_right_queue(j, length-get_width('line2'), qtype, S_SALICUS, lique, i, (i+j)*FONT_CONFIG['base height'])
+                write_right_queue(j, length-get_width('line2'), qtype, S_SALICUS,
+                                  lique, i, (i+j)*FONT_CONFIG['base height'])
         else:
             length = length+get_width('line2')
             paste_and_move(last_glyph, (length-get_width(last_glyph)),
@@ -1271,7 +1306,7 @@ def write_salicus_flexus(i, j, k, last_glyph, lique=L_NOTHING):
     "Writes the salicus glyphs."
     new_glyph()
     glyph_name = '%s%s%s%s%s' % (S_SALICUS_FLEXUS, AMBITUS[i], AMBITUS[j],
-            AMBITUS[k], lique)
+                                 AMBITUS[k], lique)
     if copy_existing_glyph(glyph_name):
         return
     is_deminutus = last_glyph == 'deminutus'
@@ -1284,7 +1319,7 @@ def write_salicus_flexus(i, j, k, last_glyph, lique=L_NOTHING):
     length = draw_salicus(i, j, penult_glyph)
     if is_deminutus:
         width_dem = write_deminutus(j+i, k, length,
-                        firstbar = 0 if j == 1 else 1)
+                                    firstbar = 0 if j == 1 else 1)
         length = length + width_dem
     else:
         if k == 1 and not is_deminutus:
@@ -1318,11 +1353,13 @@ def flexus():
     write_flexus(1, "rvbase", 'PunctumLineTL', S_FLEXUS_OPENQUEUE, qtype='open')
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "osbase", 'PunctumLineTL',
-                S_FLEXUS_ORISCUS_SCAPUS, stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='short')
+                     S_FLEXUS_ORISCUS_SCAPUS, stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='short')
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "osbase", 'PunctumLineTL',
-                     S_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE, stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='long')
-    write_flexus(1, "osbase", 'PunctumLineTL', S_FLEXUS_ORISCUS_SCAPUS_OPENQUEUE, stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='open')
+                     S_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE,
+                     stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='long')
+    write_flexus(1, "osbase", 'PunctumLineTL', S_FLEXUS_ORISCUS_SCAPUS_OPENQUEUE,
+                 stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='open')
     precise_message("flexus deminutus")
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "mdeminutus", 'PunctumLineTL',
@@ -1352,7 +1389,7 @@ def flexus():
         write_flexus(i, "rvbase",
                      'auctusa1', S_FLEXUS_LONGQUEUE, L_ASCENDENS, qtype='long')
     write_flexus(1, "rvbase",
-                     'auctusa1', S_FLEXUS_OPENQUEUE, L_ASCENDENS, qtype='open')
+                 'auctusa1', S_FLEXUS_OPENQUEUE, L_ASCENDENS, qtype='open')
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "osbase",
                      'auctusa1', S_FLEXUS_ORISCUS_SCAPUS,
@@ -1381,13 +1418,17 @@ def flexus():
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "osbase",
                      'auctusd1', S_FLEXUS_ORISCUS_SCAPUS,
-                     L_DESCENDENS, S_FLEXUS_ORISCUS_SCAPUS, stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='short')
+                     L_DESCENDENS, S_FLEXUS_ORISCUS_SCAPUS,
+                     stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='short')
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "osbase",
                      'auctusd1', S_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE,
-                     L_DESCENDENS, S_FLEXUS_ORISCUS_SCAPUS, stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='long')
+                     L_DESCENDENS, S_FLEXUS_ORISCUS_SCAPUS,
+                     stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='long')
     write_flexus(1, "osbase",
-                 'auctusd1', S_FLEXUS_ORISCUS_SCAPUS_OPENQUEUE, L_DESCENDENS, S_FLEXUS_ORISCUS_SCAPUS, stemshape=S_FLEXUS_ORISCUS_SCAPUS,qtype='open')
+                 'auctusd1', S_FLEXUS_ORISCUS_SCAPUS_OPENQUEUE, L_DESCENDENS,
+                 S_FLEXUS_ORISCUS_SCAPUS,
+                 stemshape=S_FLEXUS_ORISCUS_SCAPUS,qtype='open')
 
 def fusion_flexus():
     "Creates the fusion flexus."
@@ -1397,42 +1438,42 @@ def fusion_flexus():
         write_flexus(i, "mademinutus", 'PunctumLineTL', S_LOWER_FLEXUS)
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "rvbase", 'PunctumLineTL',
-                S_UPPER_FLEXUS)
+                     S_UPPER_FLEXUS)
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "OriscusReversusLineTLBR", 'PunctumLineTL',
-                S_LOWER_FLEXUS_ORISCUS)
+                     S_LOWER_FLEXUS_ORISCUS)
     precise_message("fusion flexus deminutus")
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "mademinutus", 'deminutus', S_LOWER_FLEXUS,
-                L_DEMINUTUS)
+                     L_DEMINUTUS)
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "mdeminutus", 'deminutus', S_UPPER_FLEXUS,
-                L_DEMINUTUS)
+                     L_DEMINUTUS)
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "OriscusReversusLineTLBR", 'deminutus',
-                S_LOWER_FLEXUS_ORISCUS, L_DEMINUTUS)
+                     S_LOWER_FLEXUS_ORISCUS, L_DEMINUTUS)
     precise_message("fusion flexus auctus ascendens")
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "mademinutus", 'auctusa1', S_LOWER_FLEXUS,
-                L_ASCENDENS)
+                     L_ASCENDENS)
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "rvbase", 'auctusa1', S_UPPER_FLEXUS,
-                L_ASCENDENS)
+                     L_ASCENDENS)
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "OriscusReversusLineTLBR", 'auctusa1',
-                S_LOWER_FLEXUS_ORISCUS, L_ASCENDENS)
+                     S_LOWER_FLEXUS_ORISCUS, L_ASCENDENS)
     precise_message("fusion flexus auctus descendens")
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "mademinutus", 'auctusd1', S_LOWER_FLEXUS,
-                L_DESCENDENS)
+                     L_DESCENDENS)
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "rvbase", 'auctusd1', S_UPPER_FLEXUS,
-                L_DESCENDENS)
+                     L_DESCENDENS)
     for i in range(1, MAX_INTERVAL+1):
         write_flexus(i, "OriscusReversusLineTLBR", 'auctusd1',
-                S_LOWER_FLEXUS_ORISCUS, L_DESCENDENS)
+                     S_LOWER_FLEXUS_ORISCUS, L_DESCENDENS)
 
-def write_flexus(i, first_glyph, last_glyph, shape, lique=L_NOTHING, needsqueue=True, firstglyph_amone=None, lastglyph_amone=None, stemshape=S_FLEXUS, qtype=None):
+def write_flexus(i, first_glyph, last_glyph, shape, lique=L_NOTHING, firstglyph_amone=None, lastglyph_amone=None, stemshape=S_FLEXUS, qtype=None):
     # pylint: disable=too-many-statements
     "Writes the flexus glyphs."
     new_glyph()
@@ -1461,7 +1502,7 @@ def write_flexus(i, first_glyph, last_glyph, shape, lique=L_NOTHING, needsqueue=
     else:
         if qtype:
             write_left_queue(i, qtype, stemshape, lique)
-        if (i == 1 and first_glyph != 'OriscusReversusLineTLBR'):
+        if i == 1 and first_glyph != 'OriscusReversusLineTLBR':
             if last_glyph == 'PunctumLineTL':
                 last_glyph = 'Punctum'
             elif last_glyph == 'auctusa1':
@@ -1521,7 +1562,8 @@ def porrectus():
         for j in range(1, MAX_INTERVAL+1):
             write_porrectus(i, j, "PunctumAuctusLineBL", S_PORRECTUS, L_DESCENDENS, qtype='short')
     for j in range(1, MAX_INTERVAL+1):
-        write_porrectus(1, j, "PunctumAuctusLineBL", S_PORRECTUS_LONGQUEUE, L_DESCENDENS, qtype='long')
+        write_porrectus(1, j, "PunctumAuctusLineBL", S_PORRECTUS_LONGQUEUE,
+                        L_DESCENDENS, qtype='long')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             write_porrectus(i, j, "PunctumAuctusLineBL", S_PORRECTUS_NOBAR, L_DESCENDENS)
@@ -1542,6 +1584,7 @@ def porrectus():
         write_alt_porrectus_deminutus(1, j, qtype='long')
 
 def fusion_porrectus():
+    "Write fusion porrectus."
     precise_message("porrectus-like fusion")
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
@@ -1616,9 +1659,10 @@ def write_alt_porrectus_deminutus(i, j, qtype='short'):
                get_width(first_glyph)+get_width('mpdeminutus')-
                2*get_width('line2'), (-i+1)*FONT_CONFIG['base height'])
     paste_and_move('rdeminutus', (get_width(first_glyph)
-                                               + get_width('mpdeminutus') -
-                                               get_width('line2') -
-                                               get_width(('rdeminutus'))), (j-i)*FONT_CONFIG['base height'])
+                                  + get_width('mpdeminutus') -
+                                  get_width('line2') -
+                                  get_width(('rdeminutus'))),
+                   (j-i)*FONT_CONFIG['base height'])
     set_width(get_width(first_glyph)+get_width('mpdeminutus')-
               get_width('line2'))
     end_glyph(glyph_name)
@@ -1697,12 +1741,14 @@ def porrectusflexus():
             for k in range(1, MAX_INTERVAL+1):
                 write_porrectusflexus(i, j, k,
                                       "deminutus",
-                                      S_PORRECTUS_FLEXUS, L_DEMINUTUS, qtype='short')
+                                      S_PORRECTUS_FLEXUS, L_DEMINUTUS,
+                                      qtype='short')
     for j in range(1, MAX_INTERVAL+1):
         for k in range(1, MAX_INTERVAL+1):
             write_porrectusflexus(1, j, k,
                                   "deminutus",
-                                  S_PORRECTUS_FLEXUS_LONGQUEUE, L_DEMINUTUS, qtype='long')
+                                  S_PORRECTUS_FLEXUS_LONGQUEUE,
+                                  L_DEMINUTUS, qtype='long')
 
 def write_porrectusflexus(i, j, k, last_glyph,
                           shape, lique=L_NOTHING, qtype=None):
@@ -1724,7 +1770,7 @@ def write_porrectusflexus(i, j, k, last_glyph,
     write_line(j, length-get_width('line2'), (-i+1)*FONT_CONFIG['base height'])
     if last_glyph == "deminutus":
         width_dem = write_deminutus(j-i, k, length-get_width('line2'),
-                        qtype != None, firstbar=1)
+                                    qtype != None, firstbar=1)
         length = length+width_dem-get_width('line2')
     else:
         simplify()
@@ -2057,7 +2103,7 @@ def write_torculusresupinus(i, j, k, first_glyph, last_glyph, shape,
     end_glyph(glyph_name)
 
 def write_alt_torculusresupinusdeminutus(i, j, k, first_glyph,
-                                     shape, lique=L_NOTHING):
+                                         shape, lique=L_NOTHING):
     # pylint: disable=invalid-name
     "Writes the torculusresupinusdeminutus glyphs."
     new_glyph()
@@ -2198,7 +2244,7 @@ def write_ancus(i, j, first_glyph, glyph_type, qtype):
     if i != 1:
         write_line(i, length, (-i+1)*FONT_CONFIG['base height'])
     width_dem = write_deminutus(-i, j, length,
-                    firstbar = 0 if i == 1 else 2)
+                                firstbar = 0 if i == 1 else 2)
     set_width(length+width_dem)
     end_glyph(glyph_name)
 
@@ -2249,46 +2295,53 @@ def fusion():
         write_fusion_leading(i, 'base6', S_LOWER_PUNCTUM, L_UP)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'idebilis', S_PUNCTUM,
-                L_INITIO_DEBILIS_UP)
+                             L_INITIO_DEBILIS_UP)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'QuilismaLineTR', S_QUILISMA, L_UP)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'OriscusLineTR', S_ORISCUS, L_UP)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'SalicusOriscus', S_UPPER_ORISCUS,
-                L_UP)
+                             L_UP)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'SalicusOriscus',
-                S_ORISCUS_SCAPUS, L_UP, qtype='short', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
+                             S_ORISCUS_SCAPUS, L_UP, qtype='short',
+                             stemshape=S_FLEXUS_ORISCUS_SCAPUS)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'SalicusOriscus',
-                S_ORISCUS_SCAPUS_LONGQUEUE, L_UP, qtype='long', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
+                             S_ORISCUS_SCAPUS_LONGQUEUE, L_UP, qtype='long',
+                             stemshape=S_FLEXUS_ORISCUS_SCAPUS)
     write_fusion_leading(1, 'SalicusOriscus',
-            S_ORISCUS_SCAPUS_OPENQUEUE, L_UP, qtype='open', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
+                         S_ORISCUS_SCAPUS_OPENQUEUE, L_UP, qtype='open',
+                         stemshape=S_FLEXUS_ORISCUS_SCAPUS)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'odbase', S_ORISCUS, L_DOWN)
     for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, "osbase", S_ORISCUS_SCAPUS, L_DOWN, qtype='short', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
+        write_fusion_leading(i, "osbase", S_ORISCUS_SCAPUS, L_DOWN,
+                             qtype='short', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
     for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, "osbase", S_ORISCUS_SCAPUS_LONGQUEUE, L_DOWN, qtype='long', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
-    write_fusion_leading(1, "osbase", S_ORISCUS_SCAPUS_OPENQUEUE, L_DOWN, qtype='open', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
+        write_fusion_leading(i, "osbase", S_ORISCUS_SCAPUS_LONGQUEUE, L_DOWN,
+                             qtype='long', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
+    write_fusion_leading(1, "osbase", S_ORISCUS_SCAPUS_OPENQUEUE, L_DOWN,
+                         qtype='open', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'OriscusReversusLineTLBR', S_LOWER_ORISCUS,
-                L_DOWN)
+                             L_DOWN)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'PunctumLineBR', S_PUNCTUM, L_DOWN)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'PunctumLineBLBR', S_UPPER_PUNCTUM,
-                L_DOWN)
+                             L_DOWN)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'mademinutus', S_LOWER_PUNCTUM, L_DOWN)
     for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'VirgaBaseLineBL', S_VIRGA_REVERSA, L_DOWN, qtype='short', stemshape=S_FLEXUS)
+        write_fusion_leading(i, 'VirgaBaseLineBL', S_VIRGA_REVERSA, L_DOWN,
+                             qtype='short', stemshape=S_FLEXUS)
     for i in range(1, MAX_INTERVAL+1):
         write_fusion_leading(i, 'VirgaBaseLineBL', S_VIRGA_REVERSA_LONGQUEUE,
-                L_DOWN, qtype='long', stemshape=S_FLEXUS)
+                             L_DOWN, qtype='long', stemshape=S_FLEXUS)
     write_fusion_leading(1, 'VirgaBaseLineBL', S_VIRGA_REVERSA_OPENQUEUE,
-                    L_DOWN, qtype='open', stemshape=S_FLEXUS)
+                         L_DOWN, qtype='open', stemshape=S_FLEXUS)
 
 # lique is only for initio debilis here
 def write_fusion_leading(i, first_glyph, glyph_type, lique, qtype = None, stemshape = None):

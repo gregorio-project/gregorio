@@ -39,7 +39,7 @@
             than their reference height. The height difference is
             font_config[font_config['bottom-add']]
       - bmu(str): "bottom" or "middle" or "top"
-      - bh (int): font_config['base height']
+      - base (int): font_config['base height']
 """
 
 def get_default_porrectus(font_config, add_suppl):
@@ -47,25 +47,25 @@ def get_default_porrectus(font_config, add_suppl):
     """
     suppl = font_config['bottom-add'] if add_suppl else 0
     return {
-            "Nothing": {
-              "1": {
+        "Nothing": {
+            "1": {
                 "short": font_config['bottom-porrectus-1'] + suppl,
                 "long": font_config['bottom-porrectus-1-long'] + suppl
-              },
-              "2": {
+            },
+            "2": {
                 "short": font_config['bottom-porrectus-2'] + suppl
-              },
-              "3": {
+            },
+            "3": {
                 "short": font_config['bottom-porrectus-3'] + suppl
-              },
-              "4": {
+            },
+            "4": {
                 "short": font_config['bottom-porrectus-4'] + suppl
-              },
-              "5": {
+            },
+            "5": {
                 "short": font_config['bottom-porrectus-5'] + suppl
-              }
             }
         }
+    }
 
 def get_conf(font_config, bmu, suffix, add_suppl, second_suffix=''):
     """ Gets a value from font_config, with fallbacks if not present.
@@ -112,95 +112,95 @@ def get_stem_schema_default(font_config):
           - gd~(gd~) : AM 239,3
           - gc~(gc~) : AM 397,5
     """
-    bh = font_config['base height']
+    base = font_config['base height']
     # these are used for both virga and flexus deminutus with ambitus one, for coherence
-    virga_long = get_conf(font_config, 'bottom', '', False) - 2*bh
-    virga_short = get_conf(font_config, 'middle', '', False) - 2*bh
-    virga_open = get_conf(font_config, 'bottom', '', False) - bh
+    virga_long = get_conf(font_config, 'bottom', '', False) - 2*base
+    virga_short = get_conf(font_config, 'middle', '', False) - 2*base
+    virga_open = get_conf(font_config, 'bottom', '', False) - base
 
     def get_basic(suffix, add_suppl=False, second_suffix=''):
         """ Common function for flexus, pes quadratum, pes quassus, etc.
         """
         bottom = get_conf(font_config, 'bottom', suffix, add_suppl, second_suffix)
         middle = get_conf(font_config, 'middle', suffix, add_suppl, second_suffix)
-        top    = get_conf(font_config, 'top', suffix, add_suppl, second_suffix)
+        top = get_conf(font_config, 'top', suffix, add_suppl, second_suffix)
         # using lower version for bottom of quilisma when second is on a line
-        bottom_lower    = get_conf(font_config, 'bottom', suffix, add_suppl, 'lower')
+        bottom_lower = get_conf(font_config, 'bottom', suffix, add_suppl, 'lower')
         return {
-              "1": {
+            "1": {
                 # ignoring the suffix for coherence
                 "short": virga_long,
                 "long": virga_short,
                 "open": virga_open
-              },
-              "2": {
-                "short": bottom - 2*bh,
-                "long": bottom_lower - 2*bh
-              },
-              "3": {
-                "short": middle - 3*bh,
-                "long": bottom_lower - 3*bh
-              },
-              "4": {
-                "short": top - 4*bh,
-                "long": top - 4*bh
-              },
-              "5": {
-                "short": top - 5*bh,
-                "long": top - 5*bh
-              }
+            },
+            "2": {
+                "short": bottom - 2*base,
+                "long": bottom_lower - 2*base
+            },
+            "3": {
+                "short": middle - 3*base,
+                "long": bottom_lower - 3*base
+            },
+            "4": {
+                "short": top - 4*base,
+                "long": top - 4*base
+            },
+            "5": {
+                "short": top - 5*base,
+                "long": top - 5*base
             }
+        }
 
     return {
-          "ignore j": True,
-          "Virga": {
+        "ignore j": True,
+        "Virga": {
             "Nothing": {
-              "short": virga_short,
-              "open": virga_open,
-              "long": virga_long
+                "short": virga_short,
+                "open": virga_open,
+                "long": virga_long
             }
-          },
-          "Flexus": {
+        },
+        "Flexus": {
             "Nothing": get_basic(''),
             "DeminutusFirst": get_basic('deminutus-first'),
             "Deminutus": {
-              "1": {
-                "short": font_config['top'] - 3*bh,
-                "long": font_config['middle'] - 2*bh,
-                "open": font_config['bottom-deminutus'] - bh
-              },
-              "2": {
-                "short": font_config['bottom'] -2*bh,
-                "long": font_config['bottom'] - 2*bh,
-              },
-              "3": {
-                "long": font_config['top'] - 3*bh,
-                "short": font_config['top'] - 3*bh
-              },
-              "4": {
-                "long": font_config['top'] - 4*bh,
-                "short": font_config['top-deminutus'] - 4*bh,
-              },
-              "5": {
-                "long": font_config['top'] - 5*bh,
-                "short": font_config['top-deminutus'] - 5*bh,
-              }
+                "1": {
+                    "short": font_config['top'] - 3*base,
+                    "long": font_config['middle'] - 2*base,
+                    "open": font_config['bottom-deminutus'] - base
+                },
+                "2": {
+                    "short": font_config['bottom'] -2*base,
+                    "long": font_config['bottom'] - 2*base,
+                },
+                "3": {
+                    "long": font_config['top'] - 3*base,
+                    "short": font_config['top'] - 3*base
+                },
+                "4": {
+                    "long": font_config['top'] - 4*base,
+                    "short": font_config['top-deminutus'] - 4*base,
+                },
+                "5": {
+                    "long": font_config['top'] - 5*base,
+                    "short": font_config['top-deminutus'] - 5*base,
+                }
             }
-          },
-          "PesQuilismaQuadratum": {
+        },
+        "PesQuilismaQuadratum": {
             "Nothing": get_basic('quilisma', False, 'upper')
-          },
-          "PesQuassus": {
+        },
+        "PesQuassus": {
             "Nothing": get_basic('oriscus', False)
-          },
-          "Porrectus": get_default_porrectus(font_config, False)
-        }
+        },
+        "Porrectus": get_default_porrectus(font_config, False)
+    }
 
 def get_stem_schema_solesmes(font_config):
     """ This stem schema has been provided directly by a contact
         at Abbey of Solesmes.
     """
-    bh = font_config['base height']
+    base = font_config['base height']
 
     def get_bottom(suffix, add_suppl=True, second_suffix=''):
         """ Shortcut for get_config with common options
@@ -214,51 +214,51 @@ def get_stem_schema_solesmes(font_config):
         # for ambitus one, it must have the same height as the virga for coherece, so ignoing suffix
         bottom_one = get_bottom('', add_suppl, second_suffix)
         return {
-              "1": {
-                "short": bottom_one - 2*bh,
-                "long": bottom_one - bh,
-                "open": bottom_one - bh
-              },
-              "2": {
-                "short": bottom - 2*bh,
-                "long": bottom - 2*bh
-              },
-              "3": {
-                "short": bottom - 3*bh,
-                "long": bottom - 3*bh
-              },
-              "4": {
-                "short": bottom - 4*bh,
-                "long": bottom - 4*bh
-              },
-              "5": {
-                "short": bottom - 5*bh,
-                "long": bottom - 5*bh
-              }
+            "1": {
+                "short": bottom_one - 2*base,
+                "long": bottom_one - base,
+                "open": bottom_one - base
+            },
+            "2": {
+                "short": bottom - 2*base,
+                "long": bottom - 2*base
+            },
+            "3": {
+                "short": bottom - 3*base,
+                "long": bottom - 3*base
+            },
+            "4": {
+                "short": bottom - 4*base,
+                "long": bottom - 4*base
+            },
+            "5": {
+                "short": bottom - 5*base,
+                "long": bottom - 5*base
             }
+        }
     bottom_virga = get_bottom('')
     return {
-          "ignore j": True,
-          "Virga": {
+        "ignore j": True,
+        "Virga": {
             "Nothing": {
-              "short": bottom_virga - bh,
-              "open": bottom_virga - bh,
-              "long": bottom_virga - 2*bh
+                "short": bottom_virga - base,
+                "open": bottom_virga - base,
+                "long": bottom_virga - 2*base
             }
-          },
-          "Flexus": {
+        },
+        "Flexus": {
             "Nothing": get_basic(''),
             "Deminutus": get_basic(''),
             "DeminutusFirst": get_basic('deminutus-first')
-          },
-          "PesQuilismaQuadratum": {
+        },
+        "PesQuilismaQuadratum": {
             "Nothing": get_basic('quilisma', False, 'lower')
-          },
-          "PesQuassus": {
+        },
+        "PesQuassus": {
             "Nothing": get_basic('oriscus', False)
-          },
-          "Porrectus": get_default_porrectus(font_config, True)
-        }
+        },
+        "Porrectus": get_default_porrectus(font_config, True)
+    }
 
 def get_stem_schema(schemaname, font_config):
     """ Function called by squarize.py, returns the stem schema.
