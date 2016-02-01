@@ -158,12 +158,7 @@
     \ifcase#7%
       \gre@typesingleclef{#1}{#2}{#3}{#5}%
     \else %
-      \ifnum\numexpr (#7 - #2) * (#7 - #2) = 1 \relax %
-        \gre@typesingleclef{#1}{#2}{#3}{#5}%
-        \gre@skip@temp@two=\gre@space@skip@clefflatspace\relax%
-        \gre@hskip\gre@skip@temp@two %
-        \gre@typesingleclef{#6}{#7}{#3}{#8}%
-      \else %
+      \ifnum\numexpr (#7 - #2) * (#7 - #2) > 1 \relax %
         \setbox\gre@box@temp@clef=\hbox{\gre@typesingleclef{#1}{#2}{#3}{#5}}%
         \setbox\gre@box@temp@cleftwo=\hbox{\gre@typesingleclef{#6}{#7}{#3}{#8}}%
         \ifdim\wd\gre@box@temp@clef>\wd\gre@box@temp@cleftwo%
@@ -171,6 +166,11 @@
         \else %
           \hbox to 0pt{\copy\gre@box@temp@clef}\copy\gre@box@temp@cleftwo%
         \fi %
+      \else %
+        \gre@typesingleclef{#1}{#2}{#3}{#5}%
+        \gre@skip@temp@two=\gre@space@skip@clefflatspace\relax%
+        \gre@hskip\gre@skip@temp@two %
+        \gre@typesingleclef{#6}{#7}{#3}{#8}%
       \fi %
     \fi %
   }%
@@ -511,14 +511,32 @@
 %% macros for the typesetting of braces and other things above the score
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newif\ifgre@drawbraces\gre@drawbracestrue %
-\def\gresetbracerendering#1%
-{\IfStrEq{#1}{font}%
-  {\gre@drawbracesfalse}%
-  {\IfStrEq{#1}{metapost}%
-    {\gre@drawbracestrue}%
-    {\gre@error{Unrecognized option for \protect\gresetbracerendering}}%
-  }%
+\newif\ifgre@metapost@brace\gre@metapost@bracetrue %
+\newif\ifgre@metapost@underbrace\gre@metapost@underbracetrue %
+\newif\ifgre@metapost@curlybrace\gre@metapost@curlybracetrue %
+\newif\ifgre@metapost@barbrace\gre@metapost@barbracetrue %
+\def\gresetbracerendering{%
+  \@ifnextchar[{\gre@setbracerendering}{\gre@setallbracerendering}%
+}%
+\def\gre@setallbracerendering#1{%
+  \gre@@setbracerendering{brace}{#1}%
+  \gre@@setbracerendering{underbrace}{#1}%
+  \gre@@setbracerendering{curlybrace}{#1}%
+  \gre@@setbracerendering{barbrace}{#1}%
+}%
+\def\gre@setbracerendering[#1]#2{%
+  \IfStrEqCase{#1}{%
+    {brace}{\gre@@setbracerendering{#1}{#2}}%
+    {underbrace}{\gre@@setbracerendering{#1}{#2}}%
+    {curlybrace}{\gre@@setbracerendering{#1}{#2}}%
+    {barbrace}{\gre@@setbracerendering{#1}{#2}}%
+  }[\gre@error{Unrecognized option for \protect\gresetbracerendering}]%
+}%
+\def\gre@@setbracerendering#1#2{%
+  \IfStrEqCase{#2}{%
+    {font}{\csname gre@metapost@#1false\endcsname}%
+    {metapost}{\csname gre@metapost@#1true\endcsname}%
+  }[\gre@error{Unrecognized option for \protect\gresetbracerendering}]%
 }%
 
 \gdef\gre@fontchar@curlybrace{\gre@font@music\GreCPCurlyBrace}%
@@ -572,21 +590,28 @@
     \gre@skip@temp@four = #3\relax %
     \kern\gre@skip@temp@four %
     \raise\gre@dimen@glyphraisevalue\hbox{%
-      \ifgre@drawbraces%
-        \ifx#7\gre@fontchar@curlybrace %
+      \ifx#7\gre@fontchar@curlybrace %
+        \ifgre@metapost@curlybrace %
           \gre@draw@curlybrace{#1}%
         \else %
-          \ifx#7\gre@fontchar@brace %
+          \gre@draw@fontbrace{#1}{#7}%
+        \fi %
+      \else %
+        \ifx#7\gre@fontchar@brace %
+          \ifgre@metapost@brace %
             \gre@draw@brace{#1}%
           \else %
-            \ifx#7\gre@fontchar@underbrace %
+            \gre@draw@fontbrace{#1}{#7}%
+          \fi %
+        \else %
+          \ifx#7\gre@fontchar@underbrace %
+            \ifgre@metapost@underbrace %
               \gre@draw@underbrace{#1}%
+            \else %
+              \gre@draw@fontbrace{#1}{#7}%
             \fi %
           \fi %
         \fi %
-      \else %
-        \setbox\gre@box@temp@sign=\hbox{#7}%
-        \gre@resizebox{#1}{\ht\gre@box@temp@sign}{#7}%
       \fi %
     }%
     \hss %
@@ -603,6 +628,12 @@
     \kern\gre@dimen@temp@five %
   \fi %
   \relax %
+}%
+% #1 : the width
+% #2 : the brace character
+\def\gre@draw@fontbrace#1#2{%
+  \setbox\gre@box@temp@sign=\hbox{#2}%
+  \gre@resizebox{#1}{\ht\gre@box@temp@sign}{#2}%
 }%
 
 % #1: the width, or * for the bar brace width
@@ -1020,13 +1051,7 @@
   \or % choral sign
     \setbox\gre@box@temp@sign=\hbox{#7}%
   \or % brace above bar
-    \setbox\gre@box@temp@sign=\hbox{%
-      \ifgre@drawbraces %
-        \gre@draw@brace{*}%
-      \else %
-        \gre@fontchar@abovebarbrace %
-      \fi %
-    }%
+    \setbox\gre@box@temp@sign=\hbox{\gre@render@barbrace}%
   \fi %
   % we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
   \gre@dimen@temp@two=\dimexpr(\wd\gre@box@temp@sign / 2)\relax %
@@ -1082,13 +1107,18 @@
 
 \def\GreBarBrace#1{%
   \gre@vepisemaorrare{\gre@pitch@overbraceglyph}{#1}{%
-    \ifgre@drawbraces %
-      \hbox{\gre@draw@brace{*}}%
-    \else %
-      \GreCPBarBrace %
-    \fi %
+    \gre@render@barbrace%
   }{4}{}%
   \relax %
+}%
+\def\gre@render@barbrace{%
+  \hbox{%
+    \ifgre@metapost@barbrace %
+      \gre@draw@brace{*}%
+    \else %
+      \gre@fontchar@abovebarbrace %
+    \fi %
+  }%
 }%
 
 \def\GreBarVEpisema#1{%

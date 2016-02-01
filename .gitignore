@@ -9,6 +9,11 @@
 *.lo
 *.la
 
+# Coverage
+*.gcno
+*.gcda
+/coverage
+/coverage.info
 
 # Libraries
 *.lib

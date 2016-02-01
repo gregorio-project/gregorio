@@ -120,10 +120,7 @@ static __inline bool choral_sign_here_is_low(const gregorio_glyph *const glyph,
         if (kind_of_pes) {
             *kind_of_pes = true;
         }
-        if (note->u.note.shape != S_QUILISMA) {
-            return true;
-        }
-        break;
+        return true;
 
     default:
         break;

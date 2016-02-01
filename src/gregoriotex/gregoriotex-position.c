@@ -1537,11 +1537,11 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
     case S_FLAT:
     case S_SHARP:
     case S_NATURAL:
-        /* if this glyph starts with one of these, it's not fusable */
+        /* if this glyph starts with one of these, it's not fusible */
         return 0;
 
     default:
-        /* anything else is potentially fusable */
+        /* anything else is potentially fusible */
         break;
     }
 
@@ -1549,11 +1549,11 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
     case G_PUNCTUM:
     case G_FLEXA:
     case G_VIRGA_REVERSA:
-        /* these are potentially fusable to this note */
+        /* these are potentially fusible to this note */
         break;
 
     default:
-        /* everything else is not fusable */
+        /* everything else is not fusible */
         return 0;
     }
 
@@ -1576,7 +1576,7 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
         return 0;
 
     default:
-        /* anything else is potentially fusable */
+        /* anything else is potentially fusible */
         break;
     }
 
@@ -1592,9 +1592,10 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
     }
 
     /* the FLEXA check below checks for a porrectus-like flexus, which is not
-     * fusable from above */
+     * fusible from above */
     if (shift < 0 && ((next_is_fused && glyph->u.notes.glyph_type == G_FLEXA)
                 || glyph->u.notes.glyph_type == G_PORRECTUS
+                || glyph->u.notes.glyph_type == G_PODATUS
                 || (previous->u.notes.glyph_type == G_PUNCTUM
                     && is_initio_debilis(previous->u.notes.liquescentia)))) {
         /* may not be fused from above */

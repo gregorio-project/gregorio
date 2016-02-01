@@ -147,8 +147,10 @@ def main():
     oldfont = fontforge.open(inputfile)
     if args.font_name:
         font_name = args.font_name
+    elif args.subspecies:
+        font_name = '%s-%s' % (oldfont.fontname, args.subspecies)
     else:
-        font_name = oldfont.fontname + subspecies
+        font_name = oldfont.fontname
     newfont = fontforge.font()
     # newfont.encoding = "UnicodeFull"
     newfont.encoding = "ISO10646-1"

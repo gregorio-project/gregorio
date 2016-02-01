@@ -131,9 +131,12 @@ static __inline void character_set_grow(character_set *const set) {
     assert(set);
 
     if (set->bins >= 0x4000L) {
+        /* this should not realistically be reached */
+        /* LCOV_EXCL_START */
         gregorio_message(_("character set too large"), "character_set_grow",
                 VERBOSITY_FATAL, 0);
         return;
+        /* LCOV_EXCL_STOP */
     }
 
     old_table = set->table;
@@ -144,7 +147,7 @@ static __inline void character_set_grow(character_set *const set) {
     set->mask = (set->mask << 1) | 0x01;
     set->table = gregorio_calloc(set->bins, sizeof(grewchar));
     if (old_next) {
-        set->table = gregorio_calloc(set->bins, sizeof(character_set *));
+        set->next = gregorio_calloc(set->bins, sizeof(character_set *));
     }
     for (i = 0; i < old_bins; ++i) {
         if (old_table[i]) {
@@ -250,8 +253,12 @@ void gregorio_vowel_tables_load(const char *const filename,
         fclose(gregorio_vowel_rulefile_in);
         gregorio_vowel_rulefile_in = NULL;
     } else {
+        /* tests cannot be expected to simulate the system error that would
+         * cause gregorio_vowel_rulefile_in to be NULL */
+        /* LCOV_EXCL_START */
         gregorio_messagef("gregorio_vowel_tables_load", VERBOSITY_WARNING, 0,
                 _("unable to open %s: %s"), filename, strerror(errno));
+        /* LCOV_EXCL_STOP */
     }
 }
 
@@ -414,7 +421,11 @@ bool gregorio_find_vowel_group(const grewchar *const string, int *const start,
             break;
 
         default:
+            /* not reachable unless there's a programming error */
+            /* LCOV_EXCL_START */
             assert(false);
+            break;
+            /* LCOV_EXCL_STOP */
         }
 
         if (!*subject) {

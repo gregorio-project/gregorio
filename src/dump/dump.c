@@ -74,7 +74,8 @@ static const char *dump_pitch(const char height, const char highest_pitch) {
         }
         gregorio_snprintf(buf, 20, "%c", pitch);
     } else {
-        gregorio_snprintf(buf, 20, "?%d", height);
+        /* not reachable unless there's a programming error */
+        gregorio_snprintf(buf, 20, "?%d", height); /* LCOV_EXCL_LINE */
     }
     return buf;
 }
@@ -87,11 +88,8 @@ void dump_write_score(FILE *f, gregorio_score *score)
     gregorio_syllable *syllable;
     gregorio_header *header;
 
-    if (!f) {
-        gregorio_message(_("call with NULL file"), "gregoriotex_write_score",
-                VERBOSITY_ERROR, 0);
-        return;
-    }
+    gregorio_assert(f, dump_write_score, "call with NULL file", return);
+
     fprintf(f,
             "=====================================================================\n"
             " SCORE INFOS\n"
@@ -186,13 +184,13 @@ void dump_write_score(FILE *f, gregorio_score *score)
                     syllable->position,
                     gregorio_word_position_to_string(syllable->position));
         }
-        if (syllable->special_sign) {
-            fprintf(f, "   special sign                       %s\n",
-                    gregorio_sign_to_string(syllable->special_sign));
-        }
         if (syllable->no_linebreak_area != NLBA_NORMAL) {
             fprintf(f, "   no line break area        %s\n",
                     gregorio_nlba_to_string(syllable->no_linebreak_area));
+        }
+        if (syllable->euouae != EUOUAE_NORMAL) {
+            fprintf(f, "   euouae                    %s\n",
+                    gregorio_euouae_to_string(syllable->euouae));
         }
         if (syllable->text) {
             if (syllable->translation) {
@@ -327,19 +325,6 @@ void dump_write_score(FILE *f, gregorio_score *score)
                                                          unpitched.info.space));
                         break;
 
-                    case GRE_BAR:
-                        fprintf(f, "       glyph_type            %d (%s)\n",
-                                glyph->u.misc.unpitched.info.bar,
-                                gregorio_bar_to_string(glyph->u.misc.unpitched.
-                                                       info.bar));
-                        if (glyph->u.misc.unpitched.special_sign) {
-                            fprintf(f, "       special sign          %d (%s)\n",
-                                    glyph->u.misc.unpitched.special_sign,
-                                    gregorio_sign_to_string(glyph->
-                                            u.misc.unpitched.special_sign));
-                        }
-                        break;
-
                     case GRE_GLYPH:
                         fprintf(f, "       glyph_type            %d (%s)\n",
                                 glyph->u.notes.glyph_type,
@@ -354,8 +339,12 @@ void dump_write_score(FILE *f, gregorio_score *score)
                         break;
 
                     default:
-                        fprintf(f, "       !!! UNKNOWN !!!       !!!\n");
+                        /* not reachable unless there's a programming error */
+                        /* LCOV_EXCL_START */
+                        fprintf(f, "         !!! NOT ALLOWED !!!    %s\n",
+                                gregorio_type_to_string(glyph->type));
                         break;
+                        /* LCOV_EXCL_STOP */
                     }
                     if (glyph->type == GRE_GLYPH) {
                         for (note = glyph->u.notes.first_note; note;
@@ -388,8 +377,12 @@ void dump_write_score(FILE *f, gregorio_score *score)
                                 break;
 
                             default:
-                                fprintf(f, "         !!! NOT ALLOWED !!!    !!!\n");
+                                /* not reachable unless there's a programming error */
+                                /* LCOV_EXCL_START */
+                                fprintf(f, "         !!! NOT ALLOWED !!!    %s\n",
+                                        gregorio_type_to_string(note->type));
                                 break;
+                                /* LCOV_EXCL_STOP */
                             }
                             if (note->texverb) {
                                 fprintf(f, "         TeX string             \"%s\"\n",
@@ -466,8 +459,12 @@ void dump_write_score(FILE *f, gregorio_score *score)
                 break;
 
             default:
-                /* do nothing */
+                /* not reachable unless there's a programming error */
+                /* LCOV_EXCL_START */
+                fprintf(f, "         !!! NOT ALLOWED !!!    %s\n",
+                        gregorio_type_to_string(element->type));
                 break;
+                /* LCOV_EXCL_STOP */
             }
             if (element->nabc_lines) {
                 fprintf(f, "     nabc_lines              %d\n",

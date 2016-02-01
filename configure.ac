@@ -82,7 +82,7 @@ AS_IF([test "x$with_kpathsea" = "xyes"], [
     )
 ])
 
-AC_ARG_ENABLE([debug], AS_HELP_STRING([--enable-debug@<:@=sanitize@:>@], [Enable debugging options [with additional sanitize options].]), [
+AC_ARG_ENABLE([debug], AS_HELP_STRING([--enable-debug@<:@=sanitize,coverage@:>@], [Enable debugging options [with additional sanitize options].]), [
     AS_IF([test "x$enableval" != "xno"], [
         dnl AX_CHECK_COMPILE_FLAG([-g], [CFLAGS+=" -g"])
         AX_CHECK_COMPILE_FLAG([-Og], [CFLAGS+=" -Og"], [
@@ -90,6 +90,10 @@ AC_ARG_ENABLE([debug], AS_HELP_STRING([--enable-debug@<:@=sanitize@:>@], [Enable
         ])
         AS_IF([test "x$enableval" = "xsanitize"], [
             AX_CHECK_COMPILE_FLAG([-fsanitize=address,undefined], [CFLAGS+=" -fsanitize=address,undefined"])
+        ])
+        AS_IF([test "x$enableval" = "xcoverage"], [
+            AX_CHECK_COMPILE_FLAG([--coverage], [CFLAGS+=" --coverage"])
+            AX_CHECK_LINK_FLAG([--coverage], [LDFLAGS+=" --coverage"])
         ])
     ])
 ])

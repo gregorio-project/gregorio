@@ -35,6 +35,7 @@
 #include "enum_generator.h"
 #include "bool.h"
 #include "sha1.h"
+#include "messages.h"
 
 #ifdef __cplusplus
 #define ENUM_BITFIELD(TYPE) enum TYPE
@@ -249,7 +250,6 @@ ENUM(gregorio_vposition, GREGORIO_VPOSITION);
     E(G_3_PUNCTA_INCLINATA_ASCENDENS) \
     E(G_4_PUNCTA_INCLINATA_ASCENDENS) \
     E(G_5_PUNCTA_INCLINATA_ASCENDENS) \
-    E(G_TRIGONUS) \
     E(G_PUNCTA_INCLINATA) \
     /* !!! DO NOT CHANGE THE ENUM ORDERING BEFORE THIS LINE !!! */ \
     E(G_UNDETERMINED) \
@@ -628,8 +628,6 @@ typedef struct gregorio_syllable {
     /* a syllable can be a GRE_SYLLABLE, a GRE_*_KEY_CHANGE or a
      * GRE_BAR. It is useful when there is only that in a syllable. */
     ENUM_BITFIELD(gregorio_type) type:8;
-    /* again, an additional field to put some signs or other things... */
-    ENUM_BITFIELD(gregorio_sign) special_sign:8;
     /* type of translation (with center beginning or only center end) */
     ENUM_BITFIELD(gregorio_tr_centering) translation_type:2;
     /* beginning or end of area without linebreak? */
@@ -868,9 +866,9 @@ static __inline gregorio_note *gregorio_glyph_last_note(
         const gregorio_glyph *const glyph)
 {
     gregorio_note *note;
-    if (!glyph || glyph->type != GRE_GLYPH) {
-        return NULL;
-    }
+    gregorio_assert(glyph && glyph->type == GRE_GLYPH, gregorio_glyph_last_note,
+            "trying to find the last note of something that is not a glyph",
+            return NULL);
     for (note = glyph->u.notes.first_note; note->next; note = note->next) {
         /* iterate to find the last note */
     }

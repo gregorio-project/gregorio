@@ -47,10 +47,7 @@ static size_t gregorio_mbstowcs(grewchar *dest, const char *src, int n)
     grewchar result = 0;
     unsigned char c;
     size_t res = 0; /* number of bytes we've done so far */
-    if (!src) {
-        gregorio_message(_("call with a NULL argument"), "gregorio_mbstowcs",
-                VERBOSITY_ERROR, 0);
-    }
+    gregorio_assert_only(src, gregorio_mbstowcs, "call with a NULL argument");
     while (*src && ((int) res <= n || !dest)) {
         c = (unsigned char) (*src);
         if (c < 128) { /* 0100xxxx */
@@ -109,8 +106,9 @@ grewchar *gregorio_build_grewchar_string_from_buf(const char *const buf)
 {
     size_t len;
     grewchar *gwstring;
+    /* this doesn't currently happen, but it's safer to keep this check */
     if (buf == NULL) {
-        return NULL;
+        return NULL; /* LCOV_EXCL_LINE */
     }
     len = strlen(buf); /* to get the length of the syllable in ASCII */
     gwstring = (grewchar *) gregorio_malloc((len + 1) * sizeof(grewchar));
@@ -125,8 +123,9 @@ gregorio_character *gregorio_build_char_list_from_buf(const char *const buf)
     int i = 0;
     grewchar *gwstring;
     gregorio_character *current_character = NULL;
+    /* this doesn't currently happen, but it's safer to keep this check */
     if (buf == NULL) {
-        return NULL;
+        return NULL; /* LCOV_EXCL_LINE */
     }
     gwstring = gregorio_build_grewchar_string_from_buf(buf);
     /* we add the corresponding characters in the list of gregorio_characters */
@@ -139,38 +138,7 @@ gregorio_character *gregorio_build_char_list_from_buf(const char *const buf)
     return current_character;
 }
 
-/* the function to compare a grewchar * and a buf. Returns 1 if different, 0
- * if not. */
-
-unsigned char gregorio_wcsbufcmp(grewchar *wstr, const char *buf)
-{
-    int i = 0;
-    size_t len;
-    grewchar *gwbuf;
-    if (!buf || !wstr) {
-        return 1;
-    }
-    len = strlen(buf); /* to get the length of the syllable in ASCII */
-    gwbuf = (grewchar *) gregorio_malloc((len + 1) * sizeof(grewchar));
-    gregorio_mbstowcs(gwbuf, buf, len); /* converting into wchar_t */
-    /* we add the corresponding characters in the list of gregorio_characters */
-    while (gwbuf[i] && wstr[i]) {
-        if (gwbuf[i] != wstr[i]) {
-            free(gwbuf);
-            return 1;
-        }
-        i = i + 1;
-    }
-    /* we finished the two strings */
-    if (gwbuf[i] == 0 && wstr[i] == 0) {
-        free(gwbuf);
-        return 0;
-    }
-    free(gwbuf);
-    return 1;
-}
-
-void gregorio_print_unichar(FILE *f, grewchar to_print)
+void gregorio_print_unichar(FILE *f, const grewchar to_print)
 {
     if (to_print <= 0x7F) {
         fprintf(f, "%c", (unsigned char) to_print);
@@ -193,7 +161,7 @@ void gregorio_print_unichar(FILE *f, grewchar to_print)
     }
 }
 
-void gregorio_print_unistring(FILE *f, grewchar *first_char)
+void gregorio_print_unistring(FILE *f, const grewchar *first_char)
 {
     while (*first_char != 0) {
         gregorio_print_unichar(f, *first_char);

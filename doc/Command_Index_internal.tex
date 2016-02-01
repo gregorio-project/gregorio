@@ -269,6 +269,40 @@ macro is typically called by \verb=\GreMode= in the gtex file.
   \#3 & \TeX\ code & Arbitrary code to typeset, in the \texttt{modedifferentia} style, after \#2.\\
 \end{argtable}
 
+\macroname{\textbackslash gre@setallbracerendering}{\#1}{gregoriotex-signs.tex}
+Macro used by \verb=\gresetbracerendering= to change all braces.
+
+\begin{argtable}
+  \#1 & \texttt{metapost} & \MP{} will be used to render braces\\
+      & \texttt{font} & The score font will be used to render braces\\
+\end{argtable}
+
+\macroname{\textbackslash gre@setbracerendering}{[\#1]\#2}{gregoriotex-signs.tex}
+Macro used by \verb=\gresetbracerendering= to change a single type of brace.
+
+\begin{argtable}
+  \#1 & \texttt{brace} & change round braces that appear over the staff\\
+      & \texttt{underbrace} & change round braces that appear under the staff\\
+      & \texttt{curlybrace} & change curly braces\\
+      & \texttt{barbrace} & change round braces that appear over divisio bars\\
+  \#2 & \texttt{metapost} & \MP{} will be used to render braces\\
+      & \texttt{font} & The score font will be used to render braces\\
+\end{argtable}
+
+\macroname{\textbackslash gre@@setbracerendering}{\#1\#2}{gregoriotex-signs.tex}
+Secondary macro used by \verb=\gre@setallbracerendering= and
+\verb=\gre@setbracerendering= to change a single type of brace.  As a
+secondary macro, it doesn't check its first argument.
+
+\begin{argtable}
+  \#1 & \texttt{brace} & change round braces that appear over the staff\\
+      & \texttt{underbrace} & change round braces that appear under the staff\\
+      & \texttt{curlybrace} & change curly braces\\
+      & \texttt{barbrace} & change round braces that appear over divisio bars\\
+  \#2 & \texttt{metapost} & \MP{} will be used to render braces\\
+      & \texttt{font} & The score font will be used to render braces\\
+\end{argtable}
+
 \macroname{\textbackslash gre@brace@common}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-signs.tex}
 Common macro used internally to render braces.
 
@@ -283,6 +317,9 @@ Common macro used internally to render braces.
   \#6 & integer & The height number for the brace.\\
   \#7 & csname  & The control sequence name representing the brace.
 \end{argtable}
+
+\macroname{\textbackslash gre@render@barbrace}{}{gregoriotex-signs.tex}
+Draws a divisio brace.
 
 \macroname{\textbackslash grebracemetapostpreamble}{\#1}{gregoriotex-signs.tex}
 Returns the \MP{} preamble for braces.  The control sequence name does
@@ -304,6 +341,14 @@ Draws a round over-brace using \MP{}.
 
 \begin{argtable}
   \#1 & string & the width of the brace; if \texttt{*}, use the bar brace width.
+\end{argtable}
+
+\macroname{\textbackslash gre@render@fontbrace}{\#1\#2}{gregoriotex-signs.tex}
+Draws a brace using the score font.
+
+\begin{argtable}
+  \#1 & string & the width of the brace.\\
+  \#2 & \TeX\ code & \TeX\ code that renders the brace using the score font.\\
 \end{argtable}
 
 \macroname{\textbackslash gre@draw@underbrace}{\#1}{gregoriotex-signs.tex}
@@ -1321,8 +1366,20 @@ Boolean used to specify whether the staff lines behind an alteration should be h
 \macroname{\textbackslash ifgre@hepisemabridge}{}{gregoriotex-signs.tex}
 Boolean used to specify whether adjacent horizontal episemata should be joined together.
 
-\macroname{\textbackslash ifgre@drawbraces}{}{gregoriotex-signs.tex}
-Boolean used to specify whether braces should be drawn by \MP{} as
+\macroname{\textbackslash ifgre@metapost@brace}{}{gregoriotex-signs.tex}
+Boolean used to specify whether round over-the-staff braces should be drawn by
+\MP{} as opposed to rendered via the score font.
+
+\macroname{\textbackslash ifgre@metapost@underbrace}{}{gregoriotex-signs.tex}
+Boolean used to specify whether round under-the-staff braces should be drawn by
+\MP{} as opposed to rendered via the score font.
+
+\macroname{\textbackslash ifgre@metapost@curlybrace}{}{gregoriotex-signs.tex}
+Boolean used to specify whether curly braces should be drawn by \MP{} as
+opposed to rendered via the score font.
+
+\macroname{\textbackslash ifgre@metapost@barbrace}{}{gregoriotex-signs.tex}
+Boolean used to specify whether divisio braces should be drawn by \MP{} as
 opposed to rendered via the score font.
 
 \macroname{\textbackslash gre@biginitial}{}{gregoriotex-main.tex}
