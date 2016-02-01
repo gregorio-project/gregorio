@@ -138,7 +138,6 @@ def main():
         font_config['additional upper queue height'] = 10
     FONT_CONFIG = font_config
     STEM_SCHEMA = stemsschemas.get_stem_schema(args.stems_schema, font_config)
-    print(STEM_SCHEMA)
     outfile = args.outfile
     inputfile = args.base_font
     if not outfile:
