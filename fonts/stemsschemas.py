@@ -212,7 +212,7 @@ def get_stem_schema_solesmes(font_config):
         """
         bottom = get_bottom(suffix, add_suppl, second_suffix)
         # for ambitus one, it must have the same height as the virga for coherece, so ignoing suffix
-        bottom_one = get_bottom('', add_suppl, second_suffix)
+        bottom_one = get_bottom('', True, second_suffix)
         return {
             "1": {
                 "short": bottom_one - 2*base,
