@@ -24,6 +24,13 @@ You can change stem length schema in a font when building it, by passing the `-s
 
 If you want a version of a font build with solesmes schema, or would like to see a new schema implemented, please contact the developpers.
 
+As an example, here is how to use greciliae with solesmes schema:
+
+- cd in the `font/` directory (this one)
+- run `fontforge -script squarize.py greciliae-base.sfd -o greciliae-solesmes.ttf -c greciliae.json -n greciliae-solesmes -sc solesmes`
+- it will produce `gregorio-solesmes.ttf`, copy it in the same place as `greciliae.ttf`
+- use it in your TeX file: `\gresetgregoriofont{greciliae-solesmes}`
+
 # Ancient notation fonts
 
 The file [gregall.sfd](gregall.sfd) contains the images on which the author has drawn the fonts. The images come from:
