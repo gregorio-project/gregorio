@@ -108,6 +108,9 @@ convention, see gregorio-base.sfd.""")
     parser.add_argument('-c', '--config-font',
                         help='font-specific configuration',
                         action='store', dest='config_file')
+    parser.add_argument('-n', '--name',
+                        help='name of the font, should match output file name to be found by luaotfload',
+                        action='store', default=False, dest='font_name')
     parser.add_argument('-sc', '--stems-schema',
                         help='stem length schema, can be \'default\' or \'solesmes\'',
                         action='store', default='default', dest='stems_schema')
@@ -142,13 +145,16 @@ def main():
         pre = os.path.splitext(inputfile)
         outfile = '%s.ttf' % pre
     oldfont = fontforge.open(inputfile)
-    font_name = oldfont.fontname + subspecies
+    if args.font_name:
+        font_name = args.font_name
+    else:
+        font_name = oldfont.fontname + subspecies
     newfont = fontforge.font()
     # newfont.encoding = "UnicodeFull"
     newfont.encoding = "ISO10646-1"
-    newfont.fontname = oldfont.fontname
-    newfont.fullname = oldfont.fullname
-    newfont.familyname = oldfont.familyname
+    newfont.fontname = font_name
+    newfont.fullname = font_name
+    newfont.familyname = font_name
     newfont.version = GREGORIO_VERSION
     newfont.copyright = oldfont.copyright.replace('<<GPLV3>>', GPLV3)
     newfont.weight = "regular"
