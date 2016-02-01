@@ -114,7 +114,7 @@ void *sha1_finish_ctx(struct sha1_ctx *ctx, void *resbuf)
      */
     ctx->total[0] += bytes;
     if (ctx->total[0] < bytes)
-        ++ctx->total[1];
+        ++ctx->total[1]; /* data-sepcific; LCOV_EXCL_LINE */
 
     /*
      * Put the 64-bit file length in *bits* at the end of the buffer.  
@@ -165,6 +165,7 @@ void sha1_process_bytes(const void *buffer, size_t len, struct sha1_ctx *ctx)
      * Process available complete blocks.  
      */
     if (len >= 64) {
+        /* architecture and data-specific; LCOV_EXCL_START */
 #if !_STRING_ARCH_unaligned
 #define UNALIGNED_P(p) ((uintptr_t) (p) % alignof (uint32_t) != 0)
         if (UNALIGNED_P(buffer)) {
@@ -180,6 +181,7 @@ void sha1_process_bytes(const void *buffer, size_t len, struct sha1_ctx *ctx)
             buffer = (const char *) buffer + (len & ~63);
             len &= 63;
         }
+        /* LCOV_EXCL_STOP */
     }
 
     /*
@@ -191,10 +193,12 @@ void sha1_process_bytes(const void *buffer, size_t len, struct sha1_ctx *ctx)
         memcpy(&((char *) ctx->buffer)[left_over], buffer, len);
         left_over += len;
         if (left_over >= 64) {
+            /* data-specific; LCOV_EXCL_START */
             sha1_process_block(ctx->buffer, 64, ctx);
             left_over -= 64;
             memcpy(ctx->buffer, &ctx->buffer[16], left_over);
         }
+        /* LCOV_EXCL_STOP */
         ctx->buflen = left_over;
     }
 }

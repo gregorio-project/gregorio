@@ -30,6 +30,7 @@
 /* functions to read gabc */
 gregorio_note *gabc_det_notes_from_string(char *str, char *macros[10],
         gregorio_scanner_location *loc, const gregorio_score *score);
+void gabc_det_notes_finish(void);
 gregorio_element *gabc_det_elements_from_string(char *str, int *current_key,
         char *macros[10], gregorio_scanner_location *loc,
         const gregorio_score *const score);

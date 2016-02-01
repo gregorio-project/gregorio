@@ -56,12 +56,12 @@ EOT
     ;;
 reset)
     echo "resetting coverage files"
-    rm -rv gcovtool.sh coverage coverage.info
+    rm -frv coverage coverage.info
     find . -name '*.gcda' -exec rm -v {} +
     ;;
 clean)
     echo "deleting coverage files"
-    rm -rv gcovtool.sh coverage coverage.info
+    rm -frv coverage coverage.info
     find . -name '*.gcno' -exec rm -v {} +
     find . -name '*.gcda' -exec rm -v {} +
     ;;

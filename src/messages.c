@@ -80,8 +80,11 @@ static const char *verbosity_to_str(const gregorio_verbosity verbosity)
         break;
         /* LCOV_EXCL_STOP */
     case VERBOSITY_FATAL:
+        /* all fatal errors should not be reasonably testable */
+        /* LCOV_EXCL_START */
         str = _("fatal error:");
         break;
+        /* LCOV_EXCL_STOP */
     default:
         /* INFO, for example */
         str = " ";
@@ -97,7 +100,7 @@ void gregorio_messagef(const char *function_name,
     va_list args;
     const char *verbosity_str;
 
-    if (!debug_messages) {
+    if (!debug_messages && verbosity != VERBOSITY_ASSERTION) {
         line_number = 0;
         function_name = NULL;
     }
@@ -168,8 +171,11 @@ void gregorio_messagef(const char *function_name,
         return_value = 1;
         break;
     case VERBOSITY_FATAL:
+        /* all fatal errors should not be reasonably testable */
+        /* LCOV_EXCL_START */
         exit(1);
         break;
+        /* LCOV_EXCL_STOP */
     default:
         break;
     }

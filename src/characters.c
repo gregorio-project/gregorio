@@ -290,9 +290,8 @@ static bool go_to_end_initial(gregorio_character **param_character)
 static void style_push(det_style **current_style, grestyle_style style)
 {
     det_style *element;
-    if (!current_style) {
-        return;
-    }
+    gregorio_assert(current_style, style_push, "current_style may not be NULL",
+            return);
     element = (det_style *) gregorio_malloc(sizeof(det_style));
     element->style = style;
     element->previous_style = NULL;
@@ -309,9 +308,8 @@ static void style_push(det_style **current_style, grestyle_style style)
 
 static void style_pop(det_style **first_style, det_style *element)
 {
-    if (!element || !first_style || !*first_style) {
-        return;
-    }
+    gregorio_assert(element && first_style && *first_style, style_pop,
+            "invalid arguments", return);
     if (element->previous_style) {
         assert(*first_style != element);
         element->previous_style->next_style = element->next_style;
@@ -426,9 +424,8 @@ void gregorio_write_text(const gregorio_write_text_phase phase,
         void (*const end) (FILE *, grestyle_style),
         void (*const printspchar) (FILE *, const grewchar *))
 {
-    if (current_character == NULL) {
-        return;
-    }
+    gregorio_assert(current_character, gregorio_write_text,
+            "current_character may not be NULL", return);
     while (current_character) {
         if (current_character->is_character) {
             printchar(f, current_character->cos.character);
@@ -487,9 +484,9 @@ void gregorio_write_first_letter_alignment_text(
     det_style *last_style = NULL;
     int first_letter_open = (phase == WTP_FIRST_SYLLABLE)? 2 : 1;
 
-    if (!current_character) {
-        return;
-    }
+    gregorio_assert(current_character,
+            gregorio_write_first_letter_alignment_text,
+            "current_character may not be NULL", return);
 
     /* go to the first character */
     gregorio_go_to_first_character(&current_character);
@@ -611,85 +608,6 @@ void gregorio_write_first_letter_alignment_text(
     }
 
     free_styles(&first_style);
-}
-
-/* the default behaviour is to write only the initial, that is to say things
- * between the styles ST_INITIAL */
-void gregorio_write_initial(const gregorio_character *current_character,
-        FILE *const f, void (*const printverb) (FILE *, const grewchar *),
-        void (*const printchar) (FILE *, grewchar),
-        void (*const begin) (FILE *, grestyle_style),
-        void (*const end) (FILE *, grestyle_style),
-        void (*const printspchar) (FILE *, const grewchar *))
-{
-    /* we loop until we see the beginning of the initial style */
-    gregorio_go_to_first_character(&current_character);
-    while (current_character) {
-        if (!current_character->is_character
-                && current_character->cos.s.type == ST_T_BEGIN
-                && current_character->cos.s.style == ST_INITIAL) {
-            current_character = current_character->next_character;
-            break;
-        }
-
-        current_character = current_character->next_character;
-    }
-    /* then we loop until we see the end of the initial style, but we print */
-    while (current_character) {
-        if (current_character->is_character) {
-            printchar(f, current_character->cos.character);
-        } else {
-            if (current_character->cos.s.type == ST_T_BEGIN) {
-                switch (current_character->cos.s.style) {
-                case ST_VERBATIM:
-                    verb_or_sp(&current_character, ST_VERBATIM, f, printverb);
-                    break;
-                case ST_SPECIAL_CHAR:
-                    verb_or_sp(&current_character, ST_SPECIAL_CHAR, f,
-                            printspchar);
-                    break;
-                default:
-                    begin(f, current_character->cos.s.style);
-                    break;
-                }
-            } else { /* ST_T_END */
-                if (current_character->cos.s.style == ST_INITIAL) {
-                    return;
-                } else {
-                    end(f, current_character->cos.s.style);
-                }
-            }
-        }
-        current_character = current_character->next_character;
-    }
-}
-
-/*
- * 
- * A very simple function that returns the first text of a score, or the null
- * character if there is no such thing.
- * 
- */
-
-gregorio_character *gregorio_first_text(gregorio_score *score)
-{
-    gregorio_syllable *current_syllable;
-    if (!score || !score->first_syllable) {
-        gregorio_message(_("unable to find the first letter of the score"),
-                "gregorio_first_text", VERBOSITY_ERROR, 0);
-        return NULL;
-    }
-    current_syllable = score->first_syllable;
-    while (current_syllable) {
-        if (current_syllable->text) {
-            return current_syllable->text;
-        }
-        current_syllable = current_syllable->next_syllable;
-    }
-
-    gregorio_message(_("unable to find the first letter of the score"),
-            "gregorio_first_text", VERBOSITY_ERROR, 0);
-    return NULL;
 }
 
 /*
@@ -838,9 +756,8 @@ static void suppress_current_character(
 
 static void suppress_this_character(gregorio_character *to_suppress)
 {
-    if (!to_suppress) {
-        return;
-    }
+    gregorio_assert(to_suppress, suppress_this_character,
+            "to_suppress may not be NULL", return);
     if (to_suppress->previous_character) {
         assert(to_suppress->previous_character->next_character == to_suppress);
         to_suppress->previous_character->next_character =
@@ -1263,9 +1180,8 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
     /* first we look at the styles, to see if there is a FORCED_CENTER
      * somewhere and we also remove the CENTER styles if the syllable starts at
      * CENTER */
-    if (!param_character) {
-        return;
-    }
+    gregorio_assert(param_character, gregorio_rebuild_first_syllable,
+            "param_character may not be NULL", return);
     while (current_character) {
         if (!current_character->is_character) {
             if (current_character->cos.s.style == ST_FORCED_CENTER) {

@@ -257,6 +257,7 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
         break;
     case S_BIVIRGA:
         if (current_glyph_type == G_VIRGA && last_pitch == current_pitch) {
+            *end_of_glyph = DET_END_OF_CURRENT;
             next_glyph_type = G_TRIVIRGA;
         } else {
             *end_of_glyph = DET_END_OF_PREVIOUS;
@@ -315,7 +316,7 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
             if (last_pitch < current_pitch) {
                 next_glyph_type = G_3_PUNCTA_INCLINATA_ASCENDENS;
             } else {
-                next_glyph_type = G_TRIGONUS;
+                next_glyph_type = G_PUNCTA_INCLINATA;
             }
             break;
         case G_3_PUNCTA_INCLINATA_ASCENDENS:
@@ -334,7 +335,7 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
             break;
         case G_2_PUNCTA_INCLINATA_DESCENDENS:
             if (last_pitch < current_pitch) {
-                next_glyph_type = G_TRIGONUS;
+                next_glyph_type = G_PUNCTA_INCLINATA;
             } else {
                 next_glyph_type = G_3_PUNCTA_INCLINATA_DESCENDENS;
             }
@@ -392,7 +393,12 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
         next_glyph_type = G_TRISTROPHA;
         break;
     default:
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
+        gregorio_fail2(gregorio_add_note_to_a_glyph, "unexpected shape: %s",
+                gregorio_shape_to_string(shape));
         break;
+        /* LCOV_EXCL_STOP */
     }
     /* end of the main switch */
 
@@ -453,9 +459,6 @@ static gregorio_note *close_normal_glyph(gregorio_glyph **last_glyph,
 {
     gregorio_note *new_current_note = current_note;
     gregorio_scanner_location loc;
-    /* a variable necessary for the patch for G_BIVIRGA & co. */
-    gregorio_note *added_notes = NULL;
-    gregorio_note *next_note = NULL;
 
     /* patch to have good glyph type in the case where a glyph ends by a note
      * with shape S_QUADRATUM */
@@ -481,12 +484,16 @@ static gregorio_note *close_normal_glyph(gregorio_glyph **last_glyph,
             || glyph_type == G_TRISTROPHA_AUCTA) {
         gregorio_go_to_first_note(&current_note);
         while (current_note) {
+            /* a variable necessary for the patch for G_BIVIRGA & co. */
+            gregorio_note *added_notes = NULL;
+            gregorio_note *next_note = NULL;
             if (current_note->type == GRE_NOTE) {
                 switch (current_note->u.note.shape) {
                 case S_TRIVIRGA:
                     gregorio_add_note(&added_notes, current_note->u.note.pitch,
                             S_VIRGA, _NO_SIGN, L_NO_LIQUESCENTIA, current_note,
                             copy_note_location(current_note, &loc));
+                    /* fall through */
                 case S_BIVIRGA:
                     gregorio_add_note(&added_notes, current_note->u.note.pitch,
                             S_VIRGA, _NO_SIGN, L_NO_LIQUESCENTIA, current_note,
@@ -501,6 +508,7 @@ static gregorio_note *close_normal_glyph(gregorio_glyph **last_glyph,
                             S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,
                             current_note,
                             copy_note_location(current_note, &loc));
+                    /* fall through */
                 case S_DISTROPHA:
                     gregorio_add_note(&added_notes, current_note->u.note.pitch,
                             S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,
@@ -516,6 +524,7 @@ static gregorio_note *close_normal_glyph(gregorio_glyph **last_glyph,
                             S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,
                             current_note,
                             copy_note_location(current_note, &loc));
+                    /* fall through */
                 case S_DISTROPHA_AUCTA:
                     gregorio_add_note(&added_notes, current_note->u.note.pitch,
                             S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,
@@ -530,10 +539,15 @@ static gregorio_note *close_normal_glyph(gregorio_glyph **last_glyph,
                     break;
                 }
             }
-            /* this is the case of two separate virga that have been spotted
-             * as a bivirga */
             if (!added_notes) {
-                break;
+                /* nothing added, but we must go on in case it's
+                 * virga+bivirga = trivirga or stropa+bistropha = tristropha */
+                if (current_note->next) {
+                    current_note = current_note->next;
+                    continue;
+                } else {
+                    break;
+                }
             }
             next_note = current_note->next;
             /* now we have what we want, we set up the links and free the old
@@ -587,9 +601,12 @@ static gregorio_note *next_non_texverb_note(gregorio_note *first_note,
     }
 
     if (first_note == last_note) {
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
         gregorio_assert_only(first_note->type != GRE_TEXVERB_GLYPH,
                 next_non_texverb_note, "Unexpected texverb at start of iteration");
         return first_note;
+        /* LCOV_EXCL_STOP */
     }
 
     for (first_note = first_note->next; first_note && first_note != last_note;
@@ -842,9 +859,8 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
     gregorio_liquescentia head_liquescentia;
     bool autofuse = false, first_autofused_note = false;
 
-    if (current_note == NULL) {
-        return NULL;
-    }
+    gregorio_assert(current_note, gabc_det_glyphs_from_notes,
+            "current_note may not be NULL", return NULL);
 
     gregorio_go_to_first_note(&current_note);
 

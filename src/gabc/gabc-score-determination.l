@@ -130,7 +130,7 @@ semicolon. */
                 gregorio_strdup(gabc_score_determination_text);
         return ATTRIBUTE;
     }
-<attribute>;(;|[\n\r]+) {
+<attribute>;;?[\n\r]+ {
          BEGIN(INITIAL);
          return SEMICOLON;
     }
@@ -212,10 +212,10 @@ semicolon. */
                 gregorio_strdup(gabc_score_determination_text);
         return OTHER_HEADER;
     }
-<INITIAL>--(.*) {
+<INITIAL>--+(\n|\r)+ {
        return VOICE_CHANGE;
     }
-<INITIAL>%(%)*(\n|\r)+ {
+<INITIAL>%%+(\n|\r)+ {
        BEGIN(score);
        return END_OF_DEFINITIONS;
     }
@@ -434,6 +434,11 @@ semicolon. */
         } else {
             yyterminate();
         }
+    }
+.|\n {
+        gregorio_messagef("gabc_score_determination_lex", VERBOSITY_ERROR, 0,
+                _("unrecognized character: \"%c\""),
+                gabc_score_determination_text[0]);
     }
 %%
 
