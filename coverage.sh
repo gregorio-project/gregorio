@@ -43,7 +43,7 @@ EOT
         ;;
     esac
 
-    rm -rv coverage.info coverage
+    rm -frv coverage/* coverage.info
     echo "generating report"
     lcov $extra_args --directory . --capture --output-file coverage.info &&
         lcov --remove coverage.info '*-y.c' '*-l.c' --output-file coverage.info &&
@@ -56,7 +56,7 @@ EOT
     ;;
 reset)
     echo "resetting coverage files"
-    rm -frv coverage coverage.info
+    rm -frv coverage/* coverage.info
     find . -name '*.gcda' -exec rm -v {} +
     ;;
 clean)

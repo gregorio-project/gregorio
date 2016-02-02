@@ -214,8 +214,8 @@ static void initialize_variables(void)
     gregorio_add_voice_info(&current_voice_info);
     score->first_voice_info = current_voice_info;
     /* other initializations */
-    number_of_voices = 0;
-    voice = 1;
+    number_of_voices = 1;
+    voice = 0; /* first (and only) voice */
     current_character = NULL;
     first_translation_character = NULL;
     first_text_character = NULL;
@@ -246,40 +246,6 @@ static void free_variables(void)
     }
 }
 
-/* see whether a voice_info is empty */
-static int voice_info_is_not_empty(const gregorio_voice_info *voice_info)
-{
-    return (voice_info->initial_clef.line);
-}
-
-/*
- * a function called when we see "--\n" that end the infos for a certain voice 
- */
-static void next_voice_info(void)
-{
-    /* we must do this test in the case where there would be a "--" before
-     * first_declarations */
-    if (voice_info_is_not_empty(current_voice_info)) {
-        gregorio_add_voice_info(&current_voice_info);
-        voice++;
-    }
-}
-
-/*
- * Function that frees the voice_infos for voices > final_count. Useful if
- * there are too many voice_infos 
- */
-
-static void reajust_voice_infos(gregorio_voice_info *voice_info,
-        int final_count)
-{
-    int i = 1;
-    while (voice_info && i <= final_count) {
-        voice_info = voice_info->next_voice_info;
-    }
-    gregorio_free_voice_infos(voice_info);
-}
-
 /*
  * Function called when we have reached the end of the definitions, it tries to 
  * make the voice_infos coherent. 
@@ -288,39 +254,9 @@ static void end_definitions(void)
 {
     int i;
 
-    if (!check_infos_integrity(score)) {
-        gregorio_message(_("can't determine valid infos on the score"),
-                "det_score", VERBOSITY_ERROR, 0);
-    }
-    if (!number_of_voices) {
-        if (voice > MAX_NUMBER_OF_VOICES) {
-            voice = MAX_NUMBER_OF_VOICES;
-            reajust_voice_infos(score->first_voice_info, number_of_voices);
-        }
-        number_of_voices = voice;
-        score->number_of_voices = voice;
-    } else {
-        if (number_of_voices > voice) {
-            gregorio_messagef("det_score", VERBOSITY_WARNING, 0,
-                    ngt_("not enough voice infos found: %d found, %d waited, "
-                    "%d assumed", "not enough voice infos found: %d found, %d "
-                    "waited, %d assumed", voice), voice,
-                    number_of_voices, voice);
-            score->number_of_voices = voice;
-            number_of_voices = voice;
-        } else {
-            if (number_of_voices < voice) {
-                gregorio_messagef("det_score", VERBOSITY_WARNING, 0,
-                        ngt_("too many voice infos found: %d found, %d "
-                        "waited, %d assumed", "not enough voice infos found: "
-                        "%d found, %d waited, %d assumed",
-                        number_of_voices), voice, number_of_voices,
-                        number_of_voices);
-            }
-        }
-    }
-    /* voice is now voice-1, so that it can be the index of elements */
-    voice = 0;
+    gregorio_assert_only(check_infos_integrity(score), end_definitions,
+            "can't determine valid infos on the score");
+
     elements = (gregorio_element **) gregorio_malloc(number_of_voices *
             sizeof(gregorio_element *));
     for (i = 0; i < number_of_voices; i++) {
@@ -341,19 +277,6 @@ static void end_definitions(void)
 static char position = WORD_BEGINNING;
 static gregorio_syllable *current_syllable = NULL;
 static char *abovelinestext = NULL;
-
-/*
- * Function called when we see a ")", it completes the gregorio_element array
- * of the syllable with NULL pointers. Usefull in the cases where for example
- * you have two voices, but a voice that is silent on a certain syllable. 
- */
-static void complete_with_nulls(int last_voice)
-{
-    int i;
-    for (i = last_voice + 1; i < number_of_voices; i++) {
-        elements[i] = NULL;
-    }
-}
 
 /*
  * Function called each time we find a space, it updates the current position. 
@@ -718,13 +641,9 @@ gregorio_score *gabc_read_score(FILE *f_in)
     fix_custos(score);
     gabc_det_notes_finish();
     free_variables();
-    /* the we check the validity and integrity of the score we have built. */
-    if (!check_score_integrity(score)) {
-        gregorio_free_score(score);
-        score = NULL;
-        gregorio_message(_("unable to determine a valid score from file"),
-                "gabc_read_score", VERBOSITY_FATAL, 0);
-    }
+    /* then we check the validity and integrity of the score we have built. */
+    gregorio_assert_only(check_score_integrity(score), gabc_read_score,
+            "unable to determine a valid score from file");
     sha1_finish_ctx(&digester, score->digest);
     return score;
 }
@@ -779,11 +698,11 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
 }
 
 %token NAME AUTHOR GABC_COPYRIGHT SCORE_COPYRIGHT
-%token NUMBER_OF_VOICES LANGUAGE STAFF_LINES ORISCUS_ORIENTATION
+%token LANGUAGE STAFF_LINES ORISCUS_ORIENTATION
 %token DEF_MACRO OTHER_HEADER
 %token ANNOTATION MODE MODE_MODIFIER MODE_DIFFERENTIA
 %token INITIAL_STYLE /* DEPRECATED by 4.1 */
-%token VOICE_CUT VOICE_CHANGE END_OF_DEFINITIONS END_OF_FILE
+%token END_OF_DEFINITIONS END_OF_FILE
 %token COLON SEMICOLON SPACE CHARACTERS NOTES HYPHEN ATTRIBUTE
 %token OPENING_BRACKET CLOSING_BRACKET CLOSING_BRACKET_WITH_SPACE
 %token I_BEGIN I_END
@@ -829,17 +748,7 @@ attribute:
     ;
 
 definition:
-    NUMBER_OF_VOICES attribute {
-        gregorio_add_score_header(score, $1.text, $2.text);
-        number_of_voices=atoi($2.text);
-        if (number_of_voices > MAX_NUMBER_OF_VOICES) {
-            gregorio_messagef("det_score", VERBOSITY_WARNING, 0,
-                    _("can't define %d voices, maximum is %d"),
-                    number_of_voices, MAX_NUMBER_OF_VOICES);
-        }
-        score->number_of_voices = number_of_voices;
-    }
-    | DEF_MACRO attribute {
+    DEF_MACRO attribute {
         /* these definitions are not passed through */
         free(macros[$1.character - '0']);
         macros[$1.character - '0'] = $2.text;
@@ -931,9 +840,6 @@ definition:
     | OTHER_HEADER attribute {
         gregorio_add_score_header(score, $1.text, $2.text);
     }
-    | VOICE_CHANGE {
-        next_voice_info();
-    }
     ;
 
 notes:
@@ -942,62 +848,15 @@ notes:
 
 note:
     NOTES CLOSING_BRACKET {
-        if (voice<number_of_voices) {
-            gabc_y_add_notes($1.text, @1);
-            free($1.text);
-        }
-        else {
-            gregorio_messagef("det_score", VERBOSITY_ERROR, 0,
-                    ngt_("too many voices in note : %d found, %d expected",
-                    "too many voices in note : %d found, %d expected",
-                    number_of_voices), voice+1, number_of_voices);
-        }
-        if (voice<number_of_voices-1) {
-            gregorio_messagef("det_score", VERBOSITY_INFO, 0,
-                    ngt_("not enough voices in note : %d found, %d expected, "
-                    "completing with empty neume", "not enough voices in note "
-                    ": %d found, %d expected, completing with empty neume",
-                    voice+1), voice+1, number_of_voices);
-            complete_with_nulls(voice);
-        }
-        voice=0;
+        gabc_y_add_notes($1.text, @1);
+        free($1.text);
         nabc_state=0;
     }
     | NOTES closing_bracket_with_space {
-        if (voice<number_of_voices) {
-            gabc_y_add_notes($1.text, @1);
-            free($1.text);
-        }
-        else {
-            gregorio_messagef("det_score", VERBOSITY_ERROR, 0,
-                    ngt_("too many voices in note : %d found, %d expected",
-                    "too many voices in note : %d found, %d expected",
-                    number_of_voices), voice+1, number_of_voices);
-        }
-        if (voice<number_of_voices-1) {
-            gregorio_messagef("det_score", VERBOSITY_INFO, 0,
-                    ngt_("not enough voices in note : %d found, %d expected, "
-                    "completing with empty neume", "not enough voices in note "
-                    ": %d found, %d expected, completing with empty neume",
-                    voice+1), voice+1, number_of_voices);
-            complete_with_nulls(voice);
-        }
-        voice=0;
+        gabc_y_add_notes($1.text, @1);
+        free($1.text);
         nabc_state=0;
         update_position_with_space();
-    }
-    | NOTES VOICE_CUT {
-        if (voice<number_of_voices) {
-            gabc_y_add_notes($1.text, @1);
-            free($1.text);
-            voice++;
-        }
-        else {
-            gregorio_messagef("det_score", VERBOSITY_ERROR, 0,
-                    ngt_("too many voices in note : %d found, %d expected",
-                    "too many voices in note : %d found, %d expected",
-                    number_of_voices), voice+1, number_of_voices);
-        }
     }
     | NOTES NABC_CUT {
         if (!nabc_lines) {
@@ -1006,20 +865,16 @@ note:
                                "set it in your gabc header."),
                              "det_score", VERBOSITY_FATAL, 0);
         }
-        if (voice<number_of_voices) {
-            gabc_y_add_notes($1.text, @1);
-            free($1.text);
-            nabc_state = (nabc_state + 1) % (nabc_lines+1);
-        }
+        gabc_y_add_notes($1.text, @1);
+        free($1.text);
+        nabc_state = (nabc_state + 1) % (nabc_lines+1);
     }
     | CLOSING_BRACKET {
         elements[voice]=NULL;
-        voice=0;
         nabc_state=0;
     }
     | closing_bracket_with_space {
         elements[voice]=NULL;
-        voice=0;
         nabc_state=0;
         update_position_with_space();
     }
