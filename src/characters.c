@@ -87,10 +87,13 @@ static bool read_vowel_rules(char *const lang) {
 
     file = popen("kpsewhich -all " VOWEL_FILE, "r");
     if (!file) {
+        /* it's not reasonable to cause popen to fail */
+        /* LCOV_EXCL_START */
         gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
                 _("unable to run kpsewhich %s: %s"), VOWEL_FILE,
                 strerror(errno));
         return false;
+        /* LCOV_EXCL_STOP */
     }
     while (gregorio_readline(&buf, &bufsize, file)) {
         rtrim(buf);

@@ -125,8 +125,7 @@ static gregorio_element *gabc_det_elements_from_glyphs(
     /* a char that is necesarry to determine the type of the current_glyph */
     char current_glyph_type;
 
-    gregorio_assert(current_glyph, gabc_det_elements_from_glyphs,
-            "called with NULL glyph", return NULL);
+    gregorio_not_null(current_glyph, gabc_det_elements_from_glyphs, return NULL);
     /* first we go to the first glyph in the chained list of glyphs (maybe to
      * suppress ?) */
     gregorio_go_to_first_glyph(&current_glyph);
