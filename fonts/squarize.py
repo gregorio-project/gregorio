@@ -417,6 +417,8 @@ S_PORRECTUS_FLEXUS_NOBAR           = 'PorrectusFlexusNobar'
 S_PORRECTUS                        = 'Porrectus'
 S_PORRECTUS_LONGQUEUE              = 'PorrectusLongqueue'
 S_PORRECTUS_NOBAR                  = 'PorrectusNobar'
+# for stem length determination only:
+S_PORRECTUS_DEMINUTUS_ALT          = 'PorrectusDeminutus.alt'
 S_TORCULUS                         = 'Torculus'
 S_TORCULUS_RESUPINUS               = 'TorculusResupinus'
 S_TORCULUS_QUILISMA                = 'TorculusQuilisma'
@@ -598,6 +600,7 @@ STEM_SHAPE_FALLBACKS = {
     S_LOWER_PES_QUASSUS: S_PES_QUASSUS,
     S_PORRECTUS: S_FLEXUS,
     S_PORRECTUS_FLEXUS: S_PORRECTUS,
+    S_PORRECTUS_DEMINUTUS_ALT: S_FLEXUS,
     # 3 notes glyphs are handled in a different way, see get_default_shift
     #S_ANCUS: S_FLEXUS,
     #S_SALICUS: S_PES_QUASSUS,
@@ -1009,7 +1012,7 @@ def pes_quadratum():
                             stemshape=S_PES_QUADRATUM, qtype='long')
     write_pes_quadratum(1, "PunctumLineTR", "VirgaBaseLineBL",
                         S_PES_QUADRATUM_OPENQUEUE,
-                        stemshape=S_PES_QUADRATUM, qtype='short')
+                        stemshape=S_PES_QUADRATUM, qtype='open')
     precise_message("pes quassus")
     for i in range(1, MAX_INTERVAL+1):
         write_pes_quadratum(i, "OriscusLineTR", "VirgaBaseLineBL",
@@ -1602,8 +1605,9 @@ def porrectus():
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             write_porrectus(i, j, "rdeminutus", S_PORRECTUS, L_DEMINUTUS, qtype='short')
-    for j in range(1, MAX_INTERVAL+1):
-        write_porrectus(i, j, "rdeminutus", S_PORRECTUS_LONGQUEUE, L_DEMINUTUS, qtype='long')
+    for i in range(1, MAX_INTERVAL+1):
+        for j in range(1, MAX_INTERVAL+1):
+            write_porrectus(i, j, "rdeminutus", S_PORRECTUS_LONGQUEUE, L_DEMINUTUS, qtype='long')
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             write_porrectus(i, j, "rdeminutus", S_PORRECTUS_NOBAR, L_DEMINUTUS)
@@ -1611,8 +1615,9 @@ def porrectus():
     for i in range(1, MAX_INTERVAL+1):
         for j in range(1, MAX_INTERVAL+1):
             write_alt_porrectus_deminutus(i, j)
-    for j in range(1, MAX_INTERVAL+1):
-        write_alt_porrectus_deminutus(1, j, qtype='long')
+    for i in range(1, MAX_INTERVAL+1):
+        for j in range(1, MAX_INTERVAL+1):
+            write_alt_porrectus_deminutus(i, j, qtype='long')
 
 def fusion_porrectus():
     "Write fusion porrectus."
@@ -1671,12 +1676,12 @@ def write_alt_porrectus_deminutus(i, j, qtype='short'):
     "Writes the alternate porrectur deminutus glyphs."
     new_glyph()
     if qtype=='long':
-        glyph_name = 'Porrectus%s%sDeminutus.alt' % (AMBITUS[i], AMBITUS[j])
+        glyph_name = 'PorrectusLongqueue%s%sDeminutus.alt' % (AMBITUS[i], AMBITUS[j])
     else:
-        glyph_name = 'Porrectus%s%sDeminutusLongqueue.alt' % (AMBITUS[i], AMBITUS[j])
+        glyph_name = 'Porrectus%s%sDeminutus.alt' % (AMBITUS[i], AMBITUS[j])
     if copy_existing_glyph(glyph_name):
         return
-    write_left_queue(i, qtype, S_PORRECTUS, L_NOTHING)
+    write_left_queue(i, qtype, S_PORRECTUS_DEMINUTUS_ALT, L_NOTHING)
     if i == 1:
         first_glyph = 'PunctumLineBR'
     else:

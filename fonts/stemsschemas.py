@@ -53,16 +53,20 @@ def get_default_porrectus(font_config, add_suppl, one_bottom):
                 "long": one_bottom
             },
             "2": {
-                "short": font_config['bottom-porrectus-2'] + suppl
+                "short": font_config['bottom-porrectus-2'] + suppl,
+                "long": font_config['bottom-porrectus-2'] + suppl
             },
             "3": {
-                "short": font_config['bottom-porrectus-3'] + suppl
+                "short": font_config['bottom-porrectus-3'] + suppl,
+                "long": font_config['bottom-porrectus-3'] + suppl
             },
             "4": {
-                "short": font_config['bottom-porrectus-4'] + suppl
+                "short": font_config['bottom-porrectus-4'] + suppl,
+                "long": font_config['bottom-porrectus-4'] + suppl
             },
             "5": {
-                "short": font_config['bottom-porrectus-5'] + suppl
+                "short": font_config['bottom-porrectus-5'] + suppl,
+                "long": font_config['bottom-porrectus-5'] + suppl
             }
         }
     }
@@ -93,6 +97,7 @@ def get_stem_schema_default(font_config):
               to side. The longer form is used.
           - ih~ and similar have a slightly shorter queue (AM 400 l. 3)
           - small changes for ambitus generally, queues are slightly shorter
+          - treat similar figures with consistency (gv and ge for instance)
 
         List of some figures in the AM:
           - ih(ih) : AM 367, 3 (p. 367, l. 3)
@@ -134,8 +139,8 @@ def get_stem_schema_default(font_config):
                 "open": virga_open
             },
             "2": {
-                "short": bottom - 2*base,
-                "long": bottom_lower - 2*base
+                "short": virga_short,
+                "long": virga_long
             },
             "3": {
                 "short": middle - 3*base,
@@ -146,8 +151,8 @@ def get_stem_schema_default(font_config):
                 "long": top - 4*base
             },
             "5": {
-                "short": top - 5*base,
-                "long": top - 5*base
+                "short": top - 4*base,
+                "long": top - 4*base
             }
         }
 
@@ -182,8 +187,8 @@ def get_stem_schema_default(font_config):
                     "short": font_config['top-deminutus'] - 4*base,
                 },
                 "5": {
-                    "long": font_config['top'] - 5*base,
-                    "short": font_config['top-deminutus'] - 5*base,
+                    "long": font_config['top'] - 4*base,
+                    "short": font_config['top-deminutus'] - 4*base,
                 }
             }
         },
