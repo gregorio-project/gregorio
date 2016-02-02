@@ -179,7 +179,9 @@ void gregorio_add_clef_as_note(gregorio_note **current_note,
 void gregorio_add_secondary_clef_to_note(gregorio_note *current_note,
         gregorio_clef clef, signed char clef_line, bool flatted)
 {
-    if (!current_note || current_note->type != GRE_CLEF) {
+    gregorio_not_null(current_note, gregorio_add_secondary_clef_to_note,
+            return);
+    if (current_note->type != GRE_CLEF) {
         gregorio_message(_("trying to add a secondary clef to something that "
                     "is not a clef"), "gregorio_add_secondary_clef_to_note",
                 VERBOSITY_ERROR, 0);
@@ -219,8 +221,7 @@ void gregorio_add_texverb_as_note(gregorio_note **current_note, char *str,
         gregorio_type type, const gregorio_scanner_location *const loc)
 {
     gregorio_note *element;
-    gregorio_assert(str, gregorio_add_texverb_as_note, "str may not be NULL",
-            return);
+    gregorio_not_null(str, gregorio_add_texverb_as_note, return);
     element = create_and_link_note(current_note, loc);
     assert(type == GRE_TEXVERB_GLYPH || type == GRE_TEXVERB_ELEMENT
            || type == GRE_ALT);
@@ -254,8 +255,7 @@ void gregorio_add_texverb_to_note(gregorio_note *current_note, char *str)
 {
     size_t len;
     char *res;
-    gregorio_assert(str, gregorio_add_texverb_as_note, "str may not be NULL",
-            return);
+    gregorio_not_null(str, gregorio_add_texverb_as_note, return);
     if (current_note) {
         if (current_note->texverb) {
             len = strlen(current_note->texverb) + strlen(str) + 1;
@@ -282,7 +282,7 @@ void gregorio_add_cs_to_note(gregorio_note *const*const current_note,
 
 void gregorio_add_special_sign(gregorio_note *note, gregorio_sign sign)
 {
-    if (!note) {
+    if (!note || note->type != GRE_NOTE) {
         gregorio_message(_("trying to add a special sign to something that is "
                     "not a note"), "gregorio_add_special_sign", VERBOSITY_ERROR,
                 0);
@@ -529,14 +529,7 @@ static void apply_auto_h_episema(gregorio_note *const note,
 static void gregorio_activate_isolated_h_episema(gregorio_note *note,
         const grehepisema_size size, const bool disable_bridge, int n)
 {
-    if (!note) {
-        gregorio_message(ngt_("isolated horizontal episema at the beginning "
-                    "of a note sequence, ignored",
-                    "isolated horizontal episema at the beginning of a note "
-                    "sequence, ignored", n), "activate_h_isolated_episema",
-                VERBOSITY_ERROR, 0);
-        return;
-    }
+    gregorio_not_null(note, gregorio_activate_isolated_h_episema, return);
     if (note->type != GRE_NOTE) {
         gregorio_message(ngt_("isolated horizontal episema after something "
                     "that is not a note, ignored",
@@ -567,8 +560,7 @@ void gregorio_add_h_episema(gregorio_note *note,
                 VERBOSITY_ERROR, 0);
         return;
     }
-    gregorio_assert(nbof_isolated_episema, gregorio_add_h_episema,
-            "NULL argument nbof_isolated_episema", return);
+    gregorio_not_null(nbof_isolated_episema, gregorio_add_h_episema, return);
     if (vposition && *nbof_isolated_episema) {
         gregorio_message(_("trying to add a forced horizontal episema on a "
                     "note which already has an automatic horizontal "
@@ -660,8 +652,7 @@ void gregorio_add_sign(gregorio_note *note, gregorio_sign sign,
 void gregorio_go_to_first_note(gregorio_note **note)
 {
     gregorio_note *tmp;
-    gregorio_assert(note && *note, gregorio_go_to_first_note,
-            "note may not be NULL", return);
+    gregorio_not_null_ptr(note, gregorio_go_to_first_note, return);
     tmp = *note;
     while (tmp->previous) {
         tmp = tmp->previous;
@@ -682,8 +673,7 @@ static __inline void free_one_note(gregorio_note *note)
 void gregorio_free_one_note(gregorio_note **note)
 {
     gregorio_note *next = NULL;
-    gregorio_assert(note && *note, gregorio_free_one_note,
-            "note may not be NULL", return);
+    gregorio_not_null_ptr(note, gregorio_free_one_note, return);
     if ((*note)->next) {
         (*note)->next->previous = (*note)->previous;
         next = (*note)->next;
@@ -769,8 +759,7 @@ void gregorio_add_unpitched_element_as_glyph(gregorio_glyph **current_glyph,
 void gregorio_go_to_first_glyph(gregorio_glyph **glyph)
 {
     gregorio_glyph *tmp;
-    gregorio_assert(glyph && *glyph, gregorio_go_to_first_glyph,
-            "glyph may not be NULL", return);
+    gregorio_not_null_ptr(glyph, gregorio_go_to_first_glyph, return);
     tmp = *glyph;
     while (tmp->previous) {
         tmp = tmp->previous;
@@ -798,8 +787,7 @@ static __inline void free_one_glyph(gregorio_glyph *glyph)
 void gregorio_free_one_glyph(gregorio_glyph **glyph)
 {
     gregorio_glyph *next = NULL;
-    gregorio_assert(glyph && *glyph, gregorio_free_one_glyph,
-            "glyph may not be NULL", return);
+    gregorio_not_null_ptr(glyph, gregorio_free_one_glyph, return);
     if ((*glyph)->next) {
         (*glyph)->next->previous = NULL;
         next = (*glyph)->next;
@@ -814,8 +802,7 @@ void gregorio_free_one_glyph(gregorio_glyph **glyph)
 static void gregorio_free_glyphs(gregorio_glyph **glyph)
 {
     gregorio_glyph *next_glyph;
-    gregorio_assert(glyph && *glyph, gregorio_free_glyphs,
-            "glyph may not be NULL", return);
+    gregorio_not_null_ptr(glyph, gregorio_free_glyphs, return);
     while (*glyph) {
         next_glyph = (*glyph)->next;
         free_one_glyph(*glyph);
@@ -885,8 +872,7 @@ static __inline void free_one_element(gregorio_element *element)
 static void gregorio_free_one_element(gregorio_element **element)
 {
     gregorio_element *next = NULL;
-    gregorio_assert(element && *element, gregorio_free_one_element,
-            "element may not be NULL", return);
+    gregorio_not_null_ptr(element, gregorio_free_one_element, return);
     if ((*element)->next) {
         (*element)->next->previous = NULL;
         next = (*element)->next;
@@ -938,9 +924,7 @@ static void gregorio_free_one_character(gregorio_character *current_character)
 void gregorio_free_characters(gregorio_character *current_character)
 {
     gregorio_character *next_character;
-    if (!current_character) {
-        return;
-    }
+    gregorio_not_null(current_character, gregorio_free_characters, return);
     while (current_character) {
         next_character = current_character->next_character;
         gregorio_free_one_character(current_character);
@@ -951,8 +935,7 @@ void gregorio_free_characters(gregorio_character *current_character)
 void gregorio_go_to_first_character(const gregorio_character **character)
 {
     const gregorio_character *tmp;
-    gregorio_assert(character && *character, gregorio_free_characters,
-            "character may not be NULL", return);
+    gregorio_not_null_ptr(character, gregorio_free_characters, return);
     tmp = *character;
     while (tmp->previous_character) {
         tmp = tmp->previous_character;
@@ -1027,11 +1010,9 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
     gregorio_syllable *next;
     gregorio_element **tab;
     int i;
-    if (number_of_voices > MAX_NUMBER_OF_VOICES) {
-        gregorio_message(_("too many voices"), "add_syllable", VERBOSITY_FATAL,
-                0);
-        return;
-    }
+    gregorio_not_null(elements, gregorio_add_syllable, return);
+    gregorio_assert(number_of_voices == 1, gregorio_add_syllable,
+            "gregorio only supports one voice", return);
     next = gregorio_calloc(1, sizeof(gregorio_syllable));
     next->type = GRE_SYLLABLE;
     next->position = position;
@@ -1051,14 +1032,8 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
     next->previous_syllable = *current_syllable;
     tab = (gregorio_element **) gregorio_malloc(number_of_voices *
             sizeof(gregorio_element *));
-    if (elements) {
-        for (i = 0; i < number_of_voices; i++) {
-            tab[i] = elements[i];
-        }
-    } else {
-        for (i = 0; i < number_of_voices; i++) {
-            tab[i] = NULL;
-        }
+    for (i = 0; i < number_of_voices; i++) {
+        tab[i] = elements[i];
     }
     next->elements = tab;
     if (*current_syllable) {
@@ -1072,8 +1047,7 @@ static void gregorio_free_one_syllable(gregorio_syllable **syllable,
 {
     int i;
     gregorio_syllable *next;
-    gregorio_assert(syllable && *syllable, gregorio_free_one_syllable,
-            "function called with NULL argument", return);
+    gregorio_not_null_ptr(syllable, gregorio_free_one_syllable, return);
     for (i = 0; i < number_of_voices; i++) {
         gregorio_free_elements((struct gregorio_element **)
                                &((*syllable)->elements[i]));
@@ -1094,8 +1068,7 @@ static void gregorio_free_one_syllable(gregorio_syllable **syllable,
 static void gregorio_free_syllables(gregorio_syllable **syllable,
         int number_of_voices)
 {
-    gregorio_assert(syllable && *syllable, gregorio_free_one_syllable,
-            "function called with NULL argument", return);
+    gregorio_not_null_ptr(syllable, gregorio_free_one_syllable, return);
     while (*syllable) {
         gregorio_free_one_syllable(syllable, number_of_voices);
     }
@@ -1112,8 +1085,7 @@ gregorio_score *gregorio_new_score(void)
 
 static void gregorio_free_score_infos(gregorio_score *score)
 {
-    gregorio_assert(score, gregorio_free_score_infos,
-            "function called with NULL argument", return);
+    gregorio_not_null(score, gregorio_free_score_infos, return);
     /* don't free the strings coming from headers; they will be freed when the
      * headers themselves are freed */
     if (score->first_voice_info) {
@@ -1134,8 +1106,7 @@ static void free_headers(gregorio_score *score) {
 
 void gregorio_free_score(gregorio_score *score)
 {
-    gregorio_assert(score, gregorio_free_score,
-            "function called with NULL argument", return);
+    gregorio_not_null(score, gregorio_free_score, return);
     gregorio_free_syllables(&(score->first_syllable), score->number_of_voices);
     gregorio_free_score_infos(score);
     free_headers(score);
@@ -1145,17 +1116,16 @@ void gregorio_free_score(gregorio_score *score)
 void gregorio_add_voice_info(gregorio_voice_info **current_voice_info)
 {
     gregorio_voice_info *next = gregorio_calloc(1, sizeof(gregorio_voice_info));
-    if (*current_voice_info) {
-        (*current_voice_info)->next_voice_info = next;
-    }
+    gregorio_assert(!*current_voice_info, gregorio_add_voice_info,
+            "since gregorio only supports once voice, this should only be "
+            "called once", (*current_voice_info)->next_voice_info = next);
     *current_voice_info = next;
 }
 
 void gregorio_free_voice_infos(gregorio_voice_info *voice_info)
 {
     gregorio_voice_info *next;
-    gregorio_assert(voice_info, gregorio_free_voice_infos,
-            "function called with NULL argument", return);
+    gregorio_not_null(voice_info, gregorio_free_voice_infos, return);
     while (voice_info) {
         next = voice_info->next_voice_info;
         free(voice_info);
@@ -1166,8 +1136,7 @@ void gregorio_free_voice_infos(gregorio_voice_info *voice_info)
 void gregorio_set_score_annotation(gregorio_score *score, char *annotation)
 {
     int annotation_num;
-    gregorio_assert(score, gregorio_set_score_annotation,
-            "function called with NULL argument", return);
+    gregorio_not_null(score, gregorio_set_score_annotation, return);
     /* save the annotation in the first spare place. */
     for (annotation_num = 0; annotation_num < MAX_ANNOTATIONS; ++annotation_num) {
         if (score->annotation[annotation_num] == NULL) {
@@ -1184,8 +1153,7 @@ void gregorio_set_score_annotation(gregorio_score *score, char *annotation)
 void gregorio_set_score_staff_lines(gregorio_score *const score,
         const char staff_lines)
 {
-    gregorio_assert(score, gregorio_set_score_staff_lines,
-            "function called with NULL argument", return);
+    gregorio_not_null(score, gregorio_set_score_staff_lines, return);
     if (staff_lines < 2 || staff_lines > 5) {
         gregorio_message(_("invalid number of staff lines"),
                 "gregorio_set_score_staff_lines", VERBOSITY_ERROR, 0);
@@ -1199,8 +1167,7 @@ void gregorio_set_score_staff_lines(gregorio_score *const score,
 void gregorio_add_score_header(gregorio_score *score, char *name, char *value)
 {
     gregorio_header *header;
-    gregorio_assert(score, gregorio_add_score_header,
-            "function called with NULL argument", return);
+    gregorio_not_null(score, gregorio_add_score_header, return);
     header = (gregorio_header *)gregorio_malloc(sizeof(gregorio_header));
     header->name = name;
     header->value = value;
@@ -1256,8 +1223,7 @@ static signed char gregorio_syllable_first_note(gregorio_syllable *syllable)
 {
     gregorio_element *element;
     gregorio_glyph *glyph;
-    gregorio_assert(syllable, gregorio_syllable_first_note,
-            "called with a NULL argument", return 0);
+    gregorio_not_null(syllable, gregorio_syllable_first_note, return 0);
     element = syllable->elements[0];
     while (element) {
         if (element->type == GRE_CUSTOS) {
@@ -1284,8 +1250,10 @@ signed char gregorio_determine_next_pitch(gregorio_syllable *syllable,
         gregorio_element *element, gregorio_glyph *glyph)
 {
     signed char temp;
-    gregorio_assert(element && syllable, gregorio_determine_next_pitch,
-            "called with a NULL argument", return DUMMY_PITCH);
+    gregorio_not_null(element, gregorio_determine_next_pitch,
+            return DUMMY_PITCH);
+    gregorio_not_null(syllable, gregorio_determine_next_pitch,
+            return DUMMY_PITCH);
     /* we first explore the next glyphs to find a note, if there is one */
     if (glyph) {
         glyph = glyph->next;
@@ -1410,9 +1378,7 @@ void gregorio_fix_initial_keys(gregorio_score *score,
 
 bool gregorio_is_only_special(gregorio_element *element)
 {
-    if (!element) {
-        return 0;
-    }
+    gregorio_not_null(element, gregorio_is_only_special, return 0);
     while (element) {
         if (element->type == GRE_ELEMENT) {
             return 0;
@@ -1438,7 +1404,7 @@ ENUM_TO_STRING(grehepisema_size, GREHEPISEMA_SIZE)
 ENUM_TO_STRING(gregorio_vposition, GREGORIO_VPOSITION)
 ENUM_TO_STRING(gregorio_glyph_type, GREGORIO_GLYPH_TYPE)
 ENUM_TO_STRING(grestyle_style, GRESTYLE_STYLE)
-ENUM_TO_STRING(grestyle_type, GRESTYLE_TYPE) /* LCOV_EXCL_LINE */
+/* ENUM_TO_STRING(grestyle_type, GRESTYLE_TYPE) */
 ENUM_TO_STRING(gregorio_tr_centering, GREGORIO_TR_CENTERING)
 ENUM_TO_STRING(gregorio_nlba, GREGORIO_NLBA)
 ENUM_TO_STRING(gregorio_euouae, GREGORIO_EUOUAE)

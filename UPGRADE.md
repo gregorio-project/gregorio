@@ -60,6 +60,10 @@ The style for the mode number has been bold and small capitals for a long time, 
 
 If you were using `\scorereference`, `\GreScoreReference`, and/or `\grescorereference`, stop using them.  If you need to capture the `manuscript-reference` header, use the new header capture feature (see GregorioRef for details).
 
+### Three descending notes
+
+Three descending notes that have no other markings (such as liquescentia) will now be rendered as a clivis followed by a punctum.  The older, incorrect behavior was to group them as three punctums joined by `!`.  If you prefer this behavior, explicitly separate the notes with `!`.
+
 ## 4.0
 
 ### Font changes
