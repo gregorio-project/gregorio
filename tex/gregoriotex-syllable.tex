@@ -992,14 +992,8 @@
       \fi%
     \fi%		
     %finally we end by adding the penalty
-    \gre@debugmsg{spacing}{after bar penalty}%
-    \ifnum\gre@lastoflinecount=1\relax %
-      \global\gre@lastoflinecount=2\relax %
-      \gre@endafterbar{0}%
-    \else %
-      \global\gre@lastoflinecount=0\relax %
-      \gre@endafterbar{1}%
-    \fi %
+    \gre@debugmsg{barspacing}{after bar penalty}%
+    \gre@penalty{\greendafterbarpenalty }\relax %
   \else%
     %This is the old algorithm.  I've kept it in case people still want to use it.
     % then we check if there is something to write
