@@ -13,6 +13,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Interlinear spacing of annotations when font size was smaller than normal.  You should now see just the spacing specified by `annotationseparation`.
 - Spacing is now correct and ledger lines are now typeset for flats, sharps, and naturals above and below the staff (see [#790](https://github.com/gregorio-project/gregorio/issues/790)).
 - Forced hyphens at the end of words are no longer suppressed (see [#804](https://github.com/gregorio-project/gregorio/issues/804)).
+- Three descending, otherwise unmodified notes are now correctly grouped as a clivis followed by a punctum.  If you prefer three notes butted up against each other, separate them with `!`.
 
 ### Changed
 - Initial handling has been simplified.  The initial style should now be specified from TeX by using the `\gresetinitiallines` command, rather than from a gabc header.  Big initials and normal initials are now governed by a single `initial` style, meant to be changed between scores as appropriate.  See [UPGRADE.md](UPGRADE.md) and GregorioRef for details (for the change request, see [#632](https://github.com/gregorio-project/gregorio/issues/632)).  Deprecations for this change are listed in the Deprecation section, below.

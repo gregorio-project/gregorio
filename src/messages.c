@@ -118,6 +118,11 @@ void gregorio_messagef(const char *function_name,
     if (verbosity < verbosity_mode) {
         return;
     }
+    if (verbosity == VERBOSITY_ASSERTION && return_value) {
+        /* if something has already caused the system to fail, demote any
+         * assertions coming after to warnings */
+        verbosity = VERBOSITY_WARNING;
+    }
     verbosity_str = verbosity_to_str(verbosity);
     if (line_number) {
         if (function_name) {

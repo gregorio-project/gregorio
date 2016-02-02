@@ -188,8 +188,13 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
             if (current_pitch > last_pitch) {
                 next_glyph_type = G_PORRECTUS;
             } else {
-                *end_of_glyph = DET_END_OF_CURRENT;
-                next_glyph_type = G_ANCUS;
+                if (liquescentia & L_DEMINUTUS) {
+                    *end_of_glyph = DET_END_OF_CURRENT;
+                    next_glyph_type = G_ANCUS;
+                } else {
+                    *end_of_glyph = DET_END_OF_PREVIOUS;
+                    next_glyph_type = G_PUNCTUM;
+                }
             }
             break;
         case G_TORCULUS:

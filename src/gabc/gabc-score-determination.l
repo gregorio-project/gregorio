@@ -138,11 +138,6 @@ semicolon. */
          gabc_score_determination_lval.character = gabc_score_determination_text[5];
          return DEF_MACRO;
     }
-<INITIAL>number-of-voices {
-        gabc_score_determination_lval.text =
-                gregorio_strdup(gabc_score_determination_text);
-         return NUMBER_OF_VOICES;
-    }
 <INITIAL>name {
         gabc_score_determination_lval.text =
                 gregorio_strdup(gabc_score_determination_text);
@@ -211,9 +206,6 @@ semicolon. */
         gabc_score_determination_lval.text =
                 gregorio_strdup(gabc_score_determination_text);
         return OTHER_HEADER;
-    }
-<INITIAL>--+(\n|\r)+ {
-       return VOICE_CHANGE;
     }
 <INITIAL>%%+(\n|\r)+ {
        BEGIN(score);
@@ -412,9 +404,6 @@ semicolon. */
         gabc_score_determination_lval.text =
                 gregorio_strdup(gabc_score_determination_text);
         return NOTES;
-    }
-<notes>& {
-        return VOICE_CUT;
     }
 <notes>\| {
         return NABC_CUT;
