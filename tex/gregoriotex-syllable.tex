@@ -856,23 +856,24 @@
     \gre@debugmsg{barspacing}{calculate required widths}%
     % first we check the text width
     % we have to account for the spacing around the text as well as the text itself
-    % first we account for the spacing which is needed after the previous syllable (by using the syllablefinalskip left over from the previous syllable)
-    \gre@debugmsg{spacing}{previous syllable final skip: \the\gre@skip@syllablefinalskip}%
-    \gre@skip@temp@three = \glueexpr\wd\gre@box@syllabletext + \gre@skip@syllablefinalskip\relax%
-    %now we need to account for the spacing which goes after this syllable
-    %to do that we calculate syllablefinalskip for this syllable and add that to our width required for the text
-    % gre@count@temp@one holds 0 if next is a not bar, 1 if it is
-    \gre@count@temp@one=0%
-    \ifnum#7>9\relax %
-      \ifnum#7<20\relax %
-        \gre@count@temp@one=1\relax %
+    % first we account for the spacing which is needed after the previous syllable text (by using the minTextDistance left over from the previous syllablefinalskip calculation)
+    \gre@debugmsg{barspacing}{previous syllable final skip: \the\gre@skip@minTextDistance}%
+    \gre@skip@temp@three = \glueexpr\wd\gre@box@syllabletext + \gre@skip@minTextDistance\relax%
+    %now we need to account for the spacing which goes after this syllable (if there is text to this syllable)
+    \ifdim\wd\gre@box@syllabletext > 0pt\relax%
+      %this calculation is similar to what is done in \gre@calculate@syllablefinalskip, but is only for the text, so we'll use \gre@skip@syllablefinalskip to hold this value for now
+      \ifnum#4=1\relax %
+        \ifgre@in@euouae %
+          \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacetext@euouae\relax%
+        \else %
+          \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacetext\relax%
+        \fi %
       \else %
-        \gre@count@temp@one=2\relax %
+        \gre@skip@syllablefinalskip=0pt\relax%
       \fi %
-    \fi %
-    \gre@calculate@syllablefinalskip{#4}{\gre@count@temp@one}%
-    \gre@debugmsg{spacing}{this syllable final skip: \the\gre@skip@syllablefinalskip}%
-    \advance\gre@skip@temp@three by \gre@skip@syllablefinalskip\relax%
+      \gre@debugmsg{barspacing}{this syllable skip after text = \the\gre@skip@syllablefinalskip}%
+      \advance\gre@skip@temp@three by \gre@skip@syllablefinalskip\relax%
+    \fi%
     \ifdim\gre@skip@temp@one < 	\gre@skip@temp@three\relax%
       \advance\gre@skip@temp@two by \glueexpr(\gre@skip@temp@three - \gre@skip@temp@one)\relax%
       \gre@skip@temp@one = \gre@skip@temp@three\relax%
