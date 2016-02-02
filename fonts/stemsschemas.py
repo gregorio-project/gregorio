@@ -134,8 +134,8 @@ def get_stem_schema_default(font_config):
         return {
             "1": {
                 # ignoring the suffix for coherence
-                "short": virga_long,
-                "long": virga_short,
+                "short": virga_short,
+                "long": virga_long,
                 "open": virga_open
             },
             "2": {
@@ -170,8 +170,8 @@ def get_stem_schema_default(font_config):
             "DeminutusFirst": get_basic('deminutus-first'),
             "Deminutus": {
                 "1": {
-                    "short": font_config['top'] - 3*base,
-                    "long": font_config['middle'] - 2*base,
+                    "short": font_config['middle'] - 2*base,
+                    "long": font_config['top'] - 3*base,
                     "open": font_config['bottom-deminutus'] - base
                 },
                 "2": {
@@ -220,8 +220,8 @@ def get_stem_schema_solesmes(font_config):
         bottom_one = get_bottom('', True, second_suffix)
         return {
             "1": {
-                "short": bottom_one - 2*base,
-                "long": bottom_one - base,
+                "short": bottom_one - base,
+                "long": bottom_one - 2*base,
                 "open": bottom_one - base
             },
             "2": {
