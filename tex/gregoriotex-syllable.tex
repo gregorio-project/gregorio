@@ -962,52 +962,36 @@
     \gre@calculate@syllablefinalskip{#4}{\gre@count@temp@one}%
     \gre@debugmsg{barspacing}{syllablefinalskip: \the\gre@skip@syllablefinalskip}%
     %now we can place the text and bar
-    %we are going to place them from left to right and prohibit a line break between them
-    \ifdim\gre@dimen@begindifference > 0pt\relax%
-      %notes first
-      \gre@debugmsg{spacing}{placing bar then text}%
-      \ifdim\gre@dimen@previousenddifference < 0pt\relax%
-        %we need to move back to where the previous notes ended
-        \kern\gre@dimen@previousenddifference\relax%
-      \fi%
-      \kern\gre@skip@temp@two\relax%
-      \kern\gre@dimen@temp@two\relax%
-      \copy\gre@box@syllablenotes%
-      \GreNoBreak%
-      \kern-\wd\gre@box@syllablenotes\relax%
-      \GreNoBreak%
-      \kern\gre@dimen@begindifference\relax%
-      \GreNoBreak%
-      \copy\gre@box@syllabletext%
-      \kern\gre@skip@temp@one\relax%
-      \kern\gre@dimen@temp@one\relax%
-      \ifdim\gre@skip@nextbegindifference > 0pt\relax%
-        %we need to move back to the start of the text for the next syllable
-        \kern-\gre@skip@nextbegindifference\relax%
-      \fi%
-    \else%
-      %text first
-      \gre@debugmsg{spacing}{placing text then bar}%
-      \ifdim\gre@dimen@previousenddifference > 0pt\relax%
-        %we need to move back to where the previous text ended
-        \kern-\gre@dimen@previousenddifference\relax%
-      \fi%
-      \kern\gre@skip@temp@one\relax%
-      \kern\gre@dimen@temp@one\relax%
-      \copy\gre@box@syllabletext%
-      \GreNoBreak%
-      \kern-\wd\gre@box@syllabletext%
-      \GreNoBreak%
-      \kern-\gre@dimen@begindifference\relax%
-      \GreNoBreak%
-      \copy\gre@box@syllablenotes%
-      \kern\gre@skip@temp@two\relax%
-      \kern\gre@dimen@temp@two\relax%
-      \ifdim\gre@skip@nextbegindifference < 0pt\relax%
-        %we need to move back to the start of the notes for the next syllable
-        \kern\gre@skip@nextbegindifference\relax%
-      \fi%
-    \fi%		
+    %we're going to start with the bar line, place the text relative to that, and then use the position of the bar line to reposition the cursor for the next syllable
+    \ifdim\gre@dimen@previousenddifference < 0pt\relax%
+      %we need to move back to where the previous notes ended
+      \kern\gre@dimen@previousenddifference\relax%
+    \fi%
+    %now we move to the nominal start of the bar line
+    \kern\gre@skip@temp@two%
+    %move to the actual start of the bar line
+    \kern\gre@dimen@temp@two%
+    %print the bar line
+    #9%
+    \GreNoBreak%
+    %move back to the beginning of the bar line
+    \kern-\wd\gre@box@syllablenotes%
+    \GreNoBreak% probably redundant, but better safe than sorry
+    %move to the beginning of the text
+    \kern\gre@dimen@begindifference%
+    \GreNoBreak% probably redundant, but better safe than sorry
+    %print the text
+    \copy\gre@box@syllabletext%
+    %move back to the end of the notes%
+    \kern\gre@dimen@enddifference%
+    %move to the nominal end of the notes%
+    \kern-\gre@dimen@temp@two%
+    %move to the beginning of the notes of the next syllable
+    \kern\gre@skip@temp@two%
+    \ifdim\gre@skip@nextbegindifference < 0pt\relax%
+      %we need to move back to where the text for the next syllable should start
+      \kern\gre@skip@nextbegindifference\relax%
+    \fi%
     %finally we end by adding the penalty
     \gre@debugmsg{barspacing}{after bar penalty}%
     \gre@penalty{\greendafterbarpenalty }\relax %
