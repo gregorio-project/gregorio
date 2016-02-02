@@ -220,18 +220,17 @@ line (\textit{d}). Most of the time they will take a short form:
 But when a ledger line is drawn below these notes, they should take a long
 form. The problem is that many cases are ambiguous: for instance if a note
 is close to a ledger line, one may want to make it long, others may not.
-To solve this problem, you can add \texttt{[ll:0]} to a note to force its
-short form, or \texttt{[ll:1]} to force its long form:
+To solve this problem, you can add \texttt{[ll:0]} to any note of a glyph to
+force the stem of the glyph to get its short form, or \texttt{[ll:1]} to force
+its long form.
 
-\gabcsnippet{
-  (c3) dv<v>[</v>ll:1<v>]</v>(dv[ll:1]) ed<v>[</v>ll:1<v>]</v>(ed[ll:1])
-       ed<sp>~</sp><v>[</v>ll:1<v>]</v>(ed~[ll:1]) dcd<v>[</v>ll:1<v>]</v>(dcd[ll:1] Z)
-       b!dv<v>[</v>ll:0<v>]</v>(b!dv[ll:0]) b!ed<v>[</v>ll:0<v>]</v>(b!ed[ll:0])
-       b!ed<sp>~</sp><v>[</v>ll:0<v>]</v>(b!ed~[ll:0])
-  }
-
-% LuaTeX segfaults when appending dcd<v>[</v>ll:0<v>]</v>!b(dcd[ll:0]!b)
-% to previous example!
+% This snippet makes LuaTeX segfault!
+%\gabcsnippet{
+%  (c3) dv<v>[</v>ll:1<v>]</v>(dv[ll:1]) ed<v>[</v>ll:1<v>]</v>(ed[ll:1])
+%       ed<sp>~</sp><v>[</v>ll:1<v>]</v>(ed~[ll:1]) dcd<v>[</v>ll:1<v>]</v>(dcd[ll:1] Z)
+%       b!dv<v>[</v>ll:0<v>]</v>(b!dv[ll:0]) b!ed<v>[</v>ll:0<v>]</v>(b!ed[ll:0])
+%       b!ed<sp>~</sp><v>[</v>ll:0<v>]</v>(b!ed~[ll:0]) dcd<v>[</v>ll:0<v>]</v>!b(dcd[ll:0]!b)
+%  }
 
 \subsection{Custom Ledger Lines}
 
