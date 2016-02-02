@@ -937,14 +937,30 @@
       \gre@dimen@temp@two = 0pt\relax%
     \fi\fi%
     %at this point we're going to correct the values of enddifference and begindifference so that they are right for calculations which reference them in the next syllable
-    \gre@debugmsg{spacing}{Correcting enddifference}%
-    \gre@dimen@enddifference = \dimexpr(-\gre@dimen@begindifference + (\wd\gre@box@syllablenotes/2) - (\wd\gre@box@syllabletext/2))\relax%
-    \gre@debugmsg{spacing}{Correcting begindifference}%
-    \gre@dimen@begindifference = \dimexpr\gre@dimen@begindifference + (\wd\gre@box@syllablenotes/2) - (\wd\gre@box@syllabletext/2)\relax%
-    \gre@debugmsg{spacing}{begindifference: \the\gre@dimen@begindifference}%
-    \gre@debugmsg{spacing}{enddifference: \the\gre@dimen@enddifference}%
     \gre@debugmsg{barspacing}{bar width: \the\wd\gre@box@syllablenotes}%
     \gre@debugmsg{barspacing}{text width: \the\wd\gre@box@syllabletext}%
+    %we need to account for the widths of the elements and the offsets
+    %currently begindifference holds the kern from the nominal middle of the notes to the nominal middle of the text
+    %we thus need to increase it by the half the width of the bar line, decrease it by half the width of the text, decrease it by the kern from the nominal to the true center of the bar line, and increase it by the kern from the nominal to the true center of the text
+    \gre@debugmsg{barspacing}{Correcting begindifference}%
+    \gre@dimen@begindifference = \dimexpr\gre@dimen@begindifference + (\wd\gre@box@syllablenotes/2) - (\wd\gre@box@syllabletext/2) - \gre@dimen@temp@two + \gre@dimen@temp@two\relax%
+    \gre@debugmsg{barspacing}{begindifference: \the\gre@dimen@begindifference}%
+    %the end difference can be calculated from begindifference by decreasing begindifference by the width of the notes, increasing it by the width of the text, and then reversing the sign on the whole thing
+    \gre@debugmsg{barspacing}{Correcting enddifference}%
+    \gre@dimen@enddifference = \dimexpr-\gre@dimen@begindifference + \wd\gre@box@syllablenotes - \wd\gre@box@syllabletext\relax%
+    \gre@debugmsg{barspacing}{enddifference: \the\gre@dimen@enddifference}%
+    \gre@debugmsg{barspacing}{Correcting syllablefinalskip}%
+    % gre@count@temp@one holds 0 if next is a not bar, 1 if it is
+    \gre@count@temp@one=0%
+    \ifnum#7>9\relax %
+      \ifnum#7<20\relax %
+        \gre@count@temp@one=1\relax %
+      \else %
+        \gre@count@temp@one=2\relax %
+      \fi %
+    \fi %
+    \gre@calculate@syllablefinalskip{#4}{\gre@count@temp@one}%
+    \gre@debugmsg{barspacing}{syllablefinalskip: \the\gre@skip@syllablefinalskip}%
     %now we can place the text and bar
     %we are going to place them from left to right and prohibit a line break between them
     \ifdim\gre@dimen@begindifference > 0pt\relax%
