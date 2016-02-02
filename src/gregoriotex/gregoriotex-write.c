@@ -488,10 +488,10 @@ static const char *fusible_queued_shape(const gregorio_note *const note,
             switch (adjusted_queuetype_of(note,
                         glyph->u.notes.fuse_to_next_glyph)) {
             case Q_OPENSHORT:
+            case Q_OPENLONG:
                 name = openqueue_shape;
                 break;
             case Q_SHORT:
-            case Q_OPENLONG:
                 name = base_shape;
                 break;
             case Q_LONG:
@@ -508,10 +508,6 @@ static const char *fusible_queued_shape(const gregorio_note *const note,
             name = base_shape;
             break;
         case Q_OPENLONG:
-            if (!glyph->u.notes.fuse_to_next_glyph) {
-                name = openqueue_shape;
-            }
-            /* else fall through to next case */
         case Q_LONG:
             name = longqueue_shape;
             break;
@@ -698,13 +694,39 @@ static __inline const char *porrectus_shape(const gregorio_glyph *const glyph,
         switch (queuetype_of(first_note)) {
         case Q_OPENSHORT:
         case Q_SHORT:
-            return base_shape;
         case Q_OPENLONG:
+            return base_shape;
         case Q_LONG:
             return longqueue_shape;
         }
     }
     return base_shape;
+}
+
+static __inline const char *flexus_shape(const gregorio_glyph *const glyph,
+        const signed char ambitus, const char *base_shape,
+        const char *longqueue_shape, const char *openqueue_shape) {
+    switch (queuetype_of(second_note_of(glyph))) {
+    case Q_OPENSHORT:
+        if (ambitus == 1) {
+            return openqueue_shape;
+        }
+        /* else fall through */
+    case Q_SHORT:
+        return base_shape;
+    case Q_OPENLONG:
+        if (ambitus == 1) {
+            return openqueue_shape;
+        }
+        /* else fall through */
+    case Q_LONG:
+        return longqueue_shape;
+    }
+    /* not reachable unless there's a programming error */
+    /* LCOV_EXCL_START */
+    gregorio_fail(flexus_shape, "unexpected queue length");
+    return base_shape;
+    /* LCOV_EXCL_STOP */
 }
 
 static __inline const char *quadratum_shape(const gregorio_glyph *const glyph,
@@ -836,41 +858,16 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
 
         case S_ORISCUS_SCAPUS:
             *gtype = T_FLEXUS_ORISCUS_SCAPUS;
-            switch (queuetype_of(second_note_of(glyph))) {
-            case Q_OPENSHORT:
-                if (ambitus == 1) {
-                    shape = SHAPE_FlexusOriscusScapusOpenqueue;
-                    break;
-                }
-                /* else fall through */
-            case Q_SHORT:
-                shape = SHAPE_FlexusOriscusScapus;
-                break;
-            case Q_OPENLONG:
-            case Q_LONG:
-                shape = SHAPE_FlexusOriscusScapusLongqueue;
-                break;
-            }
+            shape = flexus_shape(glyph, ambitus, SHAPE_FlexusOriscusScapus,
+                    SHAPE_FlexusOriscusScapusLongqueue,
+                    SHAPE_FlexusOriscusScapusOpenqueue);
             ltype = LG_NO_INITIO;
             break;
 
         default:
             *gtype = glyph->u.notes.fuse_to_next_glyph? T_PORRECTUS : T_FLEXUS;
-            switch (queuetype_of(second_note_of(glyph))) {
-            case Q_OPENSHORT:
-                if (!glyph->u.notes.fuse_to_next_glyph && ambitus == 1) {
-                    shape = SHAPE_FlexusOpenqueue;
-                    break;
-                }
-                /* else fall through */
-            case Q_SHORT:
-                shape = SHAPE_Flexus;
-                break;
-            case Q_OPENLONG:
-            case Q_LONG:
-                shape = SHAPE_FlexusLongqueue;
-                break;
-            }
+            shape = flexus_shape(glyph, ambitus, SHAPE_Flexus,
+                    SHAPE_FlexusLongqueue, SHAPE_FlexusOpenqueue);
             ltype = LG_NO_INITIO;
             break;
         }
