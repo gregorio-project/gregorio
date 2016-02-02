@@ -774,11 +774,19 @@
     \GreNoBreak%
   \fi%
   \ifnum#1=1\relax %
-    % if the next syllable is a bar, then it will take care of adding syllablefinalskip, if it isn't, then we add it ourselves
+    \ifgre@newbarspacing%
+      %the new bar spacing algorithms take care of this for us when the next syllable is a bar
+      \relax%
+    \else%
+      \gre@hskip\gre@skip@syllablefinalskip\relax%
+    \fi%
     \ifnum#3=1\relax %
       \GreNoBreak %
     \else%
-      \gre@hskip\gre@skip@syllablefinalskip\relax%
+      \ifgre@newbarspacing%
+        %the new bar spacing algorithm still needs the syllablefinalskip when the next syllable is not a bar
+        \gre@hskip\gre@skip@syllablefinalskip\relax%
+      \fi%
     \fi %
   \fi %
   \relax%
