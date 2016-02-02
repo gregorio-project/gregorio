@@ -1287,6 +1287,9 @@
   \ifgre@scale@curlybraceaccentusshift%
     \gre@changeonedimenfactor{curlybraceaccentusshift}{#1}{#2}%
   \fi%
+  \ifgre@scale@maxbaroffset%
+    \gre@changeonedimenfactor{maxbaroffset}{#1}{#2}%
+  \fi%
   \ifgre@scale@stafflinefactor%
     \gre@count@temp@two = \numexpr((\gre@stafflinefactor * #2) / #1)\relax%
     \xdef\gre@stafflinefactor{\the\gre@count@temp@two}%
