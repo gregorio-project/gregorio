@@ -356,8 +356,8 @@ local offset_cases = {
   -- "virga" as first note, connected to next lower note
   {
     case = 'InitialConnectedVirga',
-    v = [[\gre@vepisemaorrareaux{0}{\GreCPVirga}{0}{0}{#2}{#3}{#4}]],
-    h = [[\gre@hepisorlineaux{0}{\gre@char@he@virga{#4}}{0}{#3}]],
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPVirgaBaseLineBL}{0}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{0}{\gre@char@he@virgabase@line@bl{#4}}{0}{#3}]],
   },
   -- quilisma as first note, connected to next higher note
   {
