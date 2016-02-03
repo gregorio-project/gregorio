@@ -323,7 +323,12 @@ def subspecies_of(glyph_name):
 
 def copy_existing_glyph(glyph_name):
     "copies the named glyph, if it exists, and returns whether it was copied"
-    if glyph_exists(glyph_name):
+    subglyph_name = subspecies_of(glyph_name)
+    if subglyph_name != glyph_name and glyph_exists(subglyph_name):
+        complete_paste(subglyph_name)
+        set_glyph_name(glyph_name)
+        return True
+    elif glyph_exists(glyph_name):
         complete_paste(glyph_name)
         set_glyph_name(glyph_name)
         return True
