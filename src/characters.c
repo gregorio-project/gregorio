@@ -85,12 +85,15 @@ static bool read_vowel_rules(char *const lang) {
     
     filenames = gregorio_malloc(capacity * sizeof(char *));
 
-    file = popen("kpsewhich " VOWEL_FILE, "r");
+    file = popen("kpsewhich -all " VOWEL_FILE, "r");
     if (!file) {
+        /* it's not reasonable to cause popen to fail */
+        /* LCOV_EXCL_START */
         gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
                 _("unable to run kpsewhich %s: %s"), VOWEL_FILE,
                 strerror(errno));
         return false;
+        /* LCOV_EXCL_STOP */
     }
     while (gregorio_readline(&buf, &bufsize, file)) {
         rtrim(buf);
@@ -190,29 +193,62 @@ static __inline gregorio_character *skip_verbatim_or_special(
     return ch;
 }
 
+static __inline bool handle_elision(const gregorio_character *const ch,
+        bool *in_elision)
+{
+    if (ch->cos.s.style != ST_ELISION) {
+        return false;
+    }
+
+    switch (ch->cos.s.type) {
+    case ST_T_BEGIN:
+        *in_elision = true;
+        break;
+
+    case ST_T_END:
+        *in_elision = false;
+        break;
+
+    case ST_T_NOTHING:
+        /* not reachable unless there's a programming error */
+        assert(false); /* LCOV_EXCL_LINE */
+        break;
+    }
+    return true;
+}
+
 static void determine_center(gregorio_character *character, int *start,
-        int *end) {
+        int *end)
+{
     int count;
     grewchar *subject;
     gregorio_character *ch;
+    bool in_elision;
 
     *start = *end = -1;
 
+    in_elision = false;
     for (count = 0, ch = character; ch; ch = ch->next_character) {
         if (ch->is_character) {
-            ++count;
-        } else {
+            if (!in_elision) {
+                ++count;
+            }
+        } else if (!handle_elision(ch, &in_elision)) {
             ch = skip_verbatim_or_special(ch);
         }
     }
     if (count == 0) {
         return;
     }
+
+    in_elision = false;
     subject = (grewchar *)gregorio_malloc((count + 1) * sizeof(grewchar));
     for (count = 0, ch = character; ch; ch = ch->next_character) {
         if (ch->is_character) {
-            subject[count ++] = ch->cos.character;
-        } else {
+            if (!in_elision) {
+                subject[count ++] = ch->cos.character;
+            }
+        } else if (!handle_elision(ch, &in_elision)) {
             ch = skip_verbatim_or_special(ch);
         }
     }
@@ -254,12 +290,11 @@ static bool go_to_end_initial(gregorio_character **param_character)
  * this element.
  */
 
-static void style_push(det_style **current_style, unsigned char style)
+static void style_push(det_style **current_style, grestyle_style style)
 {
     det_style *element;
-    if (!current_style) {
-        return;
-    }
+    gregorio_assert(current_style, style_push, "current_style may not be NULL",
+            return);
     element = (det_style *) gregorio_malloc(sizeof(det_style));
     element->style = style;
     element->previous_style = NULL;
@@ -276,9 +311,8 @@ static void style_push(det_style **current_style, unsigned char style)
 
 static void style_pop(det_style **first_style, det_style *element)
 {
-    if (!element || !first_style || !*first_style) {
-        return;
-    }
+    gregorio_assert(element && first_style && *first_style, style_pop,
+            "invalid arguments", return);
     if (element->previous_style) {
         assert(*first_style != element);
         element->previous_style->next_style = element->next_style;
@@ -325,7 +359,7 @@ static void free_styles(det_style **first_style)
  */
 static __inline void verb_or_sp(const gregorio_character **ptr_character,
         const grestyle_style style, FILE *const f,
-        void (*const function) (FILE *, grewchar *))
+        void (*const function) (FILE *, const grewchar *))
 {
     int i, j;
     grewchar *text;
@@ -387,15 +421,14 @@ static __inline void verb_or_sp(const gregorio_character **ptr_character,
  */
 void gregorio_write_text(const gregorio_write_text_phase phase,
         const gregorio_character *current_character, FILE *const f,
-        void (*const printverb) (FILE *, grewchar *),
+        void (*const printverb) (FILE *, const grewchar *),
         void (*const printchar) (FILE *, grewchar),
         void (*const begin) (FILE *, grestyle_style),
         void (*const end) (FILE *, grestyle_style),
-        void (*const printspchar) (FILE *, grewchar *))
+        void (*const printspchar) (FILE *, const grewchar *))
 {
-    if (current_character == NULL) {
-        return;
-    }
+    gregorio_assert(current_character, gregorio_write_text,
+            "current_character may not be NULL", return);
     while (current_character) {
         if (current_character->is_character) {
             printchar(f, current_character->cos.character);
@@ -443,20 +476,20 @@ void gregorio_write_text(const gregorio_write_text_phase phase,
 void gregorio_write_first_letter_alignment_text(
         const gregorio_write_text_phase phase,
         const gregorio_character *current_character, FILE *const f,
-        void (*const printverb) (FILE *, grewchar *),
+        void (*const printverb) (FILE *, const grewchar *),
         void (*const printchar) (FILE *, grewchar),
         void (*const begin) (FILE *, grestyle_style),
         void (*const end) (FILE *, grestyle_style),
-        void (*const printspchar) (FILE *, grewchar *))
+        void (*const printspchar) (FILE *, const grewchar *))
 {
     /* stack of styles to close and reopen */
     det_style *first_style = NULL;
     det_style *last_style = NULL;
     int first_letter_open = (phase == WTP_FIRST_SYLLABLE)? 2 : 1;
 
-    if (!current_character) {
-        return;
-    }
+    gregorio_assert(current_character,
+            gregorio_write_first_letter_alignment_text,
+            "current_character may not be NULL", return);
 
     /* go to the first character */
     gregorio_go_to_first_character(&current_character);
@@ -475,7 +508,8 @@ void gregorio_write_first_letter_alignment_text(
             close_first_letter = first_letter_open != 0;
         } else switch (current_character->cos.s.type) {
         case ST_T_NOTHING:
-            assert(false);
+            /* not reachable unless there's a programming error */
+            assert(false); /* LCOV_EXCL_LINE */
             break;
         case ST_T_BEGIN:
             /* handle styles */
@@ -515,7 +549,8 @@ void gregorio_write_first_letter_alignment_text(
                 break;
             case ST_VERBATIM:
             case ST_SPECIAL_CHAR:
-                assert(false);
+                /* not reachable unless there's a programming error */
+                assert(false); /* LCOV_EXCL_LINE */
                 break;
             case ST_FIRST_WORD:
             case ST_FIRST_SYLLABLE:
@@ -524,7 +559,8 @@ void gregorio_write_first_letter_alignment_text(
                 } /* else fall through */
             default:
                 /* pop the style from the stack */
-                assert(first_style && first_style->style
+                assert(first_style);
+                assert(first_style->style
                         == current_character->cos.s.style);
                 style_pop(&first_style, first_style);
                 end(f, current_character->cos.s.style);
@@ -575,85 +611,6 @@ void gregorio_write_first_letter_alignment_text(
     }
 
     free_styles(&first_style);
-}
-
-/* the default behaviour is to write only the initial, that is to say things
- * between the styles ST_INITIAL */
-void gregorio_write_initial(const gregorio_character *current_character,
-        FILE *const f, void (*const printverb) (FILE *, grewchar *),
-        void (*const printchar) (FILE *, grewchar),
-        void (*const begin) (FILE *, grestyle_style),
-        void (*const end) (FILE *, grestyle_style),
-        void (*const printspchar) (FILE *, grewchar *))
-{
-    /* we loop until we see the beginning of the initial style */
-    gregorio_go_to_first_character(&current_character);
-    while (current_character) {
-        if (!current_character->is_character
-                && current_character->cos.s.type == ST_T_BEGIN
-                && current_character->cos.s.style == ST_INITIAL) {
-            current_character = current_character->next_character;
-            break;
-        }
-
-        current_character = current_character->next_character;
-    }
-    /* then we loop until we see the end of the initial style, but we print */
-    while (current_character) {
-        if (current_character->is_character) {
-            printchar(f, current_character->cos.character);
-        } else {
-            if (current_character->cos.s.type == ST_T_BEGIN) {
-                switch (current_character->cos.s.style) {
-                case ST_VERBATIM:
-                    verb_or_sp(&current_character, ST_VERBATIM, f, printverb);
-                    break;
-                case ST_SPECIAL_CHAR:
-                    verb_or_sp(&current_character, ST_SPECIAL_CHAR, f,
-                            printspchar);
-                    break;
-                default:
-                    begin(f, current_character->cos.s.style);
-                    break;
-                }
-            } else { /* ST_T_END */
-                if (current_character->cos.s.style == ST_INITIAL) {
-                    return;
-                } else {
-                    end(f, current_character->cos.s.style);
-                }
-            }
-        }
-        current_character = current_character->next_character;
-    }
-}
-
-/*
- * 
- * A very simple function that returns the first text of a score, or the null
- * character if there is no such thing.
- * 
- */
-
-gregorio_character *gregorio_first_text(gregorio_score *score)
-{
-    gregorio_syllable *current_syllable;
-    if (!score || !score->first_syllable) {
-        gregorio_message(_("unable to find the first letter of the score"),
-                "gregorio_first_text", VERBOSITY_ERROR, 0);
-        return NULL;
-    }
-    current_syllable = score->first_syllable;
-    while (current_syllable) {
-        if (current_syllable->text) {
-            return current_syllable->text;
-        }
-        current_syllable = current_syllable->next_syllable;
-    }
-
-    gregorio_message(_("unable to find the first letter of the score"),
-            "gregorio_first_text", VERBOSITY_ERROR, 0);
-    return NULL;
 }
 
 /*
@@ -802,9 +759,8 @@ static void suppress_current_character(
 
 static void suppress_this_character(gregorio_character *to_suppress)
 {
-    if (!to_suppress) {
-        return;
-    }
+    gregorio_assert(to_suppress, suppress_this_character,
+            "to_suppress may not be NULL", return);
     if (to_suppress->previous_character) {
         assert(to_suppress->previous_character->next_character == to_suppress);
         to_suppress->previous_character->next_character =
@@ -988,6 +944,7 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
     /* determining the type of centering (forced or not) */
     grestyle_style center_type = ST_NO_STYLE;
     int start = -1, end = -1, index = -1; 
+    bool in_elision = false;
     /* so, here we start: we go to the first_character */
     if (go_to_end_initial(&current_character)) {
         if (!current_character->next_character) {
@@ -1018,27 +975,29 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
         /* the first part of the function deals with real characters (not
          * styles) */
         if (current_character->is_character) {
-            ++index;
-            /* the firstcase is if the user hasn't determined the middle, and
-             * we have only seen vowels so far (else center_is_determined
-             * would be DETERMINING_MIDDLE). The current_character is the
-             * first vowel, so we start the center here. */
-            if (!center_is_determined && index == start) {
-                begin_center(center_type, current_character, &first_style);
-                center_is_determined = CENTER_DETERMINING_MIDDLE;
-                end_c();
+            if (!in_elision) {
+                ++index;
+                /* the firstcase is if the user hasn't determined the middle, and
+                 * we have only seen vowels so far (else center_is_determined
+                 * would be DETERMINING_MIDDLE). The current_character is the
+                 * first vowel, so we start the center here. */
+                if (!center_is_determined && index == start) {
+                    begin_center(center_type, current_character, &first_style);
+                    center_is_determined = CENTER_DETERMINING_MIDDLE;
+                    end_c();
+                }
+                /* the case where the user has not determined the middle and we
+                 * are in the middle section of the syllable, but there we
+                 * encounter something that is not a vowel, so the center ends
+                 * there. */
+                if (center_is_determined == CENTER_DETERMINING_MIDDLE
+                        && index == end) {
+                    end_center(center_type, current_character, &first_style);
+                    center_is_determined = CENTER_FULLY_DETERMINED;
+                }
+                /* in the case where it is just a normal character... we simply
+                 * pass. */
             }
-            /* the case where the user has not determined the middle and we
-             * are in the middle section of the syllable, but there we
-             * encounter something that is not a vowel, so the center ends
-             * there. */
-            if (center_is_determined == CENTER_DETERMINING_MIDDLE
-                    && index == end) {
-                end_center(center_type, current_character, &first_style);
-                center_is_determined = CENTER_FULLY_DETERMINED;
-            }
-            /* in the case where it is just a normal character... we simply
-             * pass. */
             end_c();
         }
         /* there starts the second part of the function that deals with the
@@ -1046,10 +1005,11 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
         if (current_character->cos.s.type == ST_T_BEGIN
                 && current_character->cos.s.style != ST_CENTER
                 && current_character->cos.s.style != ST_FORCED_CENTER) {
+            det_style *current_style = NULL;
+            handle_elision(current_character, &in_elision);
             /* first, if it it the beginning of a style, which is not center.
              * We check if the style is not already in the stack. If it is the
              * case, we suppress the character and pass (with the good macro) */
-            det_style *current_style = NULL;
             for (current_style = first_style; current_style
                     && current_style->style != current_character->cos.s.style;
                     current_style = current_style->next_style) {
@@ -1107,6 +1067,7 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
         if (current_character->cos.s.type == ST_T_END
                 && current_character->cos.s.style != ST_CENTER
                 && current_character->cos.s.style != ST_FORCED_CENTER) {
+            handle_elision(current_character, &in_elision);
             /* the case of the end of a style (the most complex). First, we
              * have to see if the style is in the stack. If there is no stack,
              * we just suppress and continue. */
@@ -1222,9 +1183,8 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
     /* first we look at the styles, to see if there is a FORCED_CENTER
      * somewhere and we also remove the CENTER styles if the syllable starts at
      * CENTER */
-    if (!param_character) {
-        return;
-    }
+    gregorio_assert(param_character, gregorio_rebuild_first_syllable,
+            "param_character may not be NULL", return);
     while (current_character) {
         if (!current_character->is_character) {
             if (current_character->cos.s.style == ST_FORCED_CENTER) {

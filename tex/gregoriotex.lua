@@ -990,9 +990,7 @@ local function mode_part(part)
   end
 end
 
-dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
-dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))
-
+gregoriotex.number_to_letter     = number_to_letter
 gregoriotex.init                 = init
 gregoriotex.include_score        = include_score
 gregoriotex.atScoreEnd           = atScoreEnd
@@ -1024,3 +1022,7 @@ gregoriotex.save_pos             = save_pos
 gregoriotex.late_save_pos        = late_save_pos
 gregoriotex.is_ypos_different    = is_ypos_different
 gregoriotex.mode_part            = mode_part
+
+dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
+dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))
+dofile(kpse.find_file('gregoriotex-symbols.lua', 'lua'))

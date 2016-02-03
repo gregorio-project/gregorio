@@ -252,6 +252,13 @@ Macro to draw ledger lines.
   \#6 & distance   & The distance to end the line after \#2 from this point if \#3 is \texttt{2}. \\
 \end{argtable}
 
+\macroname{\textbackslash GreElision}{\#1}{gregoriotex-syllable.tex}
+Typesets \#1 using the \texttt{elision} style.
+
+\begin{argtable}
+  \#1 & string & Text to be typeset in the \texttt{elision} style.\\
+\end{argtable}
+
 \macroname{\textbackslash GreEmptyFirstSyllableHyphen}{}{gregoriotex-syllable.tex}
 Macro that indicates the position of an empty-first-syllable hyphen, should one be desired.
 
@@ -894,6 +901,14 @@ Typesets a slur.
   \#4 & string & The horizontal dimension of the slur.\\
   \#5 & string & The vertical dimension of the slur.\\
   \#6 & integer & Height number of the pitch.\\
+\end{argtable}
+
+\macroname{\textbackslash GreSpecial}{\#1}{gregoriotex-symbols.tex}
+Typesets a special character.  If the \#1 special character wasn't defined by
+\verb=\gresetspecial=, the text of \#1 will be output directly.
+
+\begin{argtable}
+  \#1 & string & The text between \texttt{<sp>} and \texttt{</sp>}.\\
 \end{argtable}
 
 \macroname{\textbackslash GreStar}{}{gregoriotex-symbol.tex}

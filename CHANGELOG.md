@@ -13,6 +13,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Interlinear spacing of annotations when font size was smaller than normal.  You should now see just the spacing specified by `annotationseparation`.
 - Spacing is now correct and ledger lines are now typeset for flats, sharps, and naturals above and below the staff (see [#790](https://github.com/gregorio-project/gregorio/issues/790)).
 - Forced hyphens at the end of words are no longer suppressed (see [#804](https://github.com/gregorio-project/gregorio/issues/804)).
+- Three descending, otherwise unmodified notes are now correctly grouped as a clivis followed by a punctum.  If you prefer three notes butted up against each other, separate them with `!`.
 
 ### Changed
 - Initial handling has been simplified.  The initial style should now be specified from TeX by using the `\gresetinitiallines` command, rather than from a gabc header.  Big initials and normal initials are now governed by a single `initial` style, meant to be changed between scores as appropriate.  See [UPGRADE.md](UPGRADE.md) and GregorioRef for details (for the change request, see [#632](https://github.com/gregorio-project/gregorio/issues/632)).  Deprecations for this change are listed in the Deprecation section, below.
@@ -47,7 +48,9 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\grecommentary` now takes an optional argument which will add extra space between the commentary and the score for just the next score.
 - The custos can now be selectively enabled/disabled at forced line breaks by appending `+` (to enable) or `-` (to disable) after the `z` or `Z` (see [#800](https://github.com/gregorio-project/gregorio/issues/800)).
 - With thanks to an anonymous contributor, the shape of the MetaPost-drawn curly brace has been improved (see [#797](https://github.com/gregorio-project/gregorio/issues/797)).
-
+- Support for elisions, text between `<e>` and `</e>` in gabc, styled according to the `elision` style, which are excluded when determining where to position the text under its notes (see [#838](https://github.com/gregorio-project/gregorio/issues/838)).
+- Special characters (between `<sp>` and `</sp>` in gabc) may now be customized using the `\gresetspecial` and `\greunsetspecial` commands.  See GregorioRef for details (for the change request, see [#846](https://github.com/gregorio-project/gregorio/issues/846)).
+- `\gresetbracerendering` can now take an optional argument to change the rendering of a single type of brace.  See GregorioRef for details (for the change request, see [#850](https://github.com/gregorio-project/gregorio/issues/850)).
 
 ### Deprecated
 - `initial-style` gabc header, supplanted by the `\gresetinitiallines` TeX command.

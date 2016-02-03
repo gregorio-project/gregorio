@@ -73,9 +73,18 @@ static const char *verbosity_to_str(const gregorio_verbosity verbosity)
     case VERBOSITY_ERROR:
         str = _("error:");
         break;
+    case VERBOSITY_ASSERTION:
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
+        str = _("assertion:");
+        break;
+        /* LCOV_EXCL_STOP */
     case VERBOSITY_FATAL:
+        /* all fatal errors should not be reasonably testable */
+        /* LCOV_EXCL_START */
         str = _("fatal error:");
         break;
+        /* LCOV_EXCL_STOP */
     default:
         /* INFO, for example */
         str = " ";
@@ -91,7 +100,7 @@ void gregorio_messagef(const char *function_name,
     va_list args;
     const char *verbosity_str;
 
-    if (!debug_messages) {
+    if (!debug_messages && verbosity != VERBOSITY_ASSERTION) {
         line_number = 0;
         function_name = NULL;
     }
@@ -108,6 +117,11 @@ void gregorio_messagef(const char *function_name,
     }
     if (verbosity < verbosity_mode) {
         return;
+    }
+    if (verbosity == VERBOSITY_ASSERTION && return_value) {
+        /* if something has already caused the system to fail, demote any
+         * assertions coming after to warnings */
+        verbosity = VERBOSITY_WARNING;
     }
     verbosity_str = verbosity_to_str(verbosity);
     if (line_number) {
@@ -158,11 +172,15 @@ void gregorio_messagef(const char *function_name,
 
     switch (verbosity) {
     case VERBOSITY_ERROR:
+    case VERBOSITY_ASSERTION:
         return_value = 1;
         break;
     case VERBOSITY_FATAL:
+        /* all fatal errors should not be reasonably testable */
+        /* LCOV_EXCL_START */
         exit(1);
         break;
+        /* LCOV_EXCL_STOP */
     default:
         break;
     }

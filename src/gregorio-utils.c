@@ -106,9 +106,12 @@ static char *define_path(char *current_directory, char *string)
         /* try to resolve it */
         file_name = gregorio_realpath(temp_name, NULL);
         if (!file_name) {
+            /* it's not reasonable to cover this failure in testing */
+            /* LCOV_EXCL_START */
             fprintf(stderr, "the directory %s for %s does not exist\n",
                     temp_name, base_name);
             exit(1);
+            /* LCOV_EXCL_STOP */
         }
     } else {
         /* no path was supplied */
@@ -655,4 +658,4 @@ int main(int argc, char **argv)
     }
 
     exit(gregorio_get_return_value());
-}
+} /* due to exit on prior line, this will never be reached; LCOV_EXCL_LINE */
