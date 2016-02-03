@@ -22,7 +22,7 @@ You can change stem length schema in a font when building it, by passing the `-s
 - default, adapted from the 1934 Antiphonale Monasticum, see comments in [stemsschema.py](stemsschema.py) for more information
 - solesmes, a schema provided by the Abbey of Solesmes
 
-If you want a version of a font build with solesmes schema, or would like to see a new schema implemented, please contact the developpers.
+If you want a version of a font built with Solesmes' schema, or would like to see a new schema implemented, please contact the developpers.
 
 As an example, here is how to use greciliae with solesmes schema:
 
