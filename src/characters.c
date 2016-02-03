@@ -391,11 +391,9 @@ static __inline void verb_or_sp(const gregorio_character **ptr_character,
     while (j < i) {
         if (current_character->is_character) {
             text[j] = current_character->cos.character;
-            current_character = current_character->next_character;
             j++;
-        } else {
-            current_character = current_character->next_character;
         }
+        current_character = current_character->next_character;
     }
     text[i] = 0;
     function(f, text);
@@ -725,53 +723,28 @@ static void insert_char_after(grewchar c,
 
 /*
  * 
- * This function suppresses the current character, updates the double chained
- * list, and updates current_character to the character after, if there is one.
+ * This function suppresses the character, updates the double chained
+ * list, and returns the character after, if there is one.
  * 
  */
 
-static void suppress_current_character(
-        gregorio_character **current_character)
+static gregorio_character *suppress_character(
+        gregorio_character *current_character)
 {
-    gregorio_character *thischaracter;
-    if (!current_character || !*current_character) {
-        return;
+    if (current_character) {
+        gregorio_character *thischaracter = current_character;
+        if (current_character->previous_character) {
+            current_character->previous_character->next_character =
+                    current_character->next_character;
+        }
+        if (current_character->next_character) {
+            current_character->next_character->previous_character =
+                    current_character->previous_character;
+        }
+        current_character = current_character->next_character;
+        free(thischaracter);
     }
-    thischaracter = *current_character;
-    if ((*current_character)->previous_character) {
-        (*current_character)->previous_character->next_character =
-                (*current_character)->next_character;
-    }
-    if ((*current_character)->next_character) {
-        (*current_character)->next_character->previous_character =
-                (*current_character)->previous_character;
-    }
-    (*current_character) = (*current_character)->next_character;
-    free(thischaracter);
-}
-
-/*
- * 
- * This function suppresses the corresponding character, updates the double
- * chained list, but does not touch to current_character.
- * 
- */
-
-static void suppress_this_character(gregorio_character *to_suppress)
-{
-    gregorio_assert(to_suppress, suppress_this_character,
-            "to_suppress may not be NULL", return);
-    if (to_suppress->previous_character) {
-        assert(to_suppress->previous_character->next_character == to_suppress);
-        to_suppress->previous_character->next_character =
-                to_suppress->next_character;
-    }
-    if (to_suppress->next_character) {
-        assert(to_suppress->next_character->previous_character == to_suppress);
-        to_suppress->next_character->previous_character =
-                to_suppress->previous_character;
-    }
-    free(to_suppress);
+    return current_character;
 }
 
 /*
@@ -793,7 +766,7 @@ static __inline void close_style(gregorio_character *current_character,
          * we suppose that there is a previous_character, because there is a
          * current_style
          */
-        suppress_this_character(current_character->previous_character);
+        suppress_character(current_character->previous_character);
     } else {
         insert_style_before(ST_T_END, current_style->style, current_character);
     }
@@ -868,56 +841,6 @@ static __inline void begin_center(grestyle_style type,
 }
 
 /*
- * 
- * the macro called when we have ended the determination of the current
- * character. It makes current_character point to the last character, not to
- * null at the end of the determination.
- * 
- */
-
-#define end_c() if (_end_c(&current_character)) continue; else break;
-static __inline bool _end_c(gregorio_character **ptr_character)
-{
-    if ((*ptr_character)->next_character) {
-        *ptr_character = (*ptr_character)->next_character;
-        /* continue */
-        return true;
-    } else {
-        /* break */
-        return false;
-    }
-}
-
-/*
- * 
- * basically the same except that we suppress the current_character
- * 
- */
-
-#define suppress_char_and_end_c() if (_suppress_char_and_end_c(&current_character)) continue; else break;
-static __inline bool _suppress_char_and_end_c(
-        gregorio_character **ptr_character)
-{
-    if ((*ptr_character)->next_character) {
-        *ptr_character = (*ptr_character)->next_character;
-        suppress_this_character((*ptr_character)->previous_character);
-        /* continue */
-        return true;
-    } else {
-        if ((*ptr_character)->previous_character) {
-            gregorio_character *to_suppress = *ptr_character;
-            (*ptr_character) = (*ptr_character)->previous_character;
-            suppress_this_character(to_suppress);
-        } else {
-            suppress_this_character(*ptr_character);
-            *ptr_character = NULL;
-        }
-        /* break */
-        return false;
-    }
-}
-
-/*
  * THE big function. Very long, using a lot of long macros, etc. I hope you
  * really want to understand it, 'cause it won't be easy.
  * 
@@ -938,6 +861,7 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
 {
     /* the current_character */
     gregorio_character *current_character = *param_character;
+    gregorio_character *sentinel;
     /* a char that we will use in a very particular case */
     grestyle_style this_style;
     det_style *first_style = NULL;
@@ -945,6 +869,7 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
     grestyle_style center_type = ST_NO_STYLE;
     int start = -1, end = -1, index = -1; 
     bool in_elision = false;
+    det_style *current_style;
     /* so, here we start: we go to the first_character */
     if (go_to_end_initial(&current_character)) {
         if (!current_character->next_character) {
@@ -970,167 +895,200 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
     } else {
         center_type = ST_FORCED_CENTER;
     }
+    if (!current_character) {
+        return;
+    }
+    for (sentinel = current_character; sentinel->next_character;
+            sentinel = sentinel->next_character) {
+        /* just loop to get the last character */
+    }
+    /* put a sentinel at the end to aid in looping */
+    insert_style_after(ST_T_NOTHING, ST_SENTINEL, &sentinel);
     /* we loop until there isn't any character */
-    while (current_character) {
+    while (current_character != sentinel) {
+        /* IMPORTANT: A continue inside this loop MUST put current_character on
+         * the next character to process */
+
         /* the first part of the function deals with real characters (not
          * styles) */
         if (current_character->is_character) {
             if (!in_elision) {
                 ++index;
-                /* the firstcase is if the user hasn't determined the middle, and
-                 * we have only seen vowels so far (else center_is_determined
-                 * would be DETERMINING_MIDDLE). The current_character is the
-                 * first vowel, so we start the center here. */
                 if (!center_is_determined && index == start) {
+                    /* the firstcase is if the user hasn't determined the
+                     * middle, and we have only seen vowels so far (else
+                     * center_is_determined would be DETERMINING_MIDDLE). The
+                     * current_character is the first vowel, so we start the
+                     * center here. */
                     begin_center(center_type, current_character, &first_style);
                     center_is_determined = CENTER_DETERMINING_MIDDLE;
-                    end_c();
-                }
-                /* the case where the user has not determined the middle and we
-                 * are in the middle section of the syllable, but there we
-                 * encounter something that is not a vowel, so the center ends
-                 * there. */
-                if (center_is_determined == CENTER_DETERMINING_MIDDLE
+                } else if (center_is_determined == CENTER_DETERMINING_MIDDLE
                         && index == end) {
+                    /* the case where the user has not determined the middle
+                     * and we are in the middle section of the syllable, but
+                     * there we encounter something that is not a vowel, so the
+                     * center ends there. */
                     end_center(center_type, current_character, &first_style);
                     center_is_determined = CENTER_FULLY_DETERMINED;
-                }
-                /* in the case where it is just a normal character... we simply
-                 * pass. */
+                } /* else it is just a normal character... we simply pass. */
             }
-            end_c();
-        }
-        /* there starts the second part of the function that deals with the
-         * styles characters */
-        if (current_character->cos.s.type == ST_T_BEGIN
-                && current_character->cos.s.style != ST_CENTER
-                && current_character->cos.s.style != ST_FORCED_CENTER) {
-            det_style *current_style = NULL;
-            handle_elision(current_character, &in_elision);
-            /* first, if it it the beginning of a style, which is not center.
-             * We check if the style is not already in the stack. If it is the
-             * case, we suppress the character and pass (with the good macro) */
-            for (current_style = first_style; current_style
-                    && current_style->style != current_character->cos.s.style;
-                    current_style = current_style->next_style) {
-                /* just loop */
-            }
-            if (current_style) {
-                suppress_char_and_end_c();
-            }
-            /* if we are determining the end of the middle and we have a
-             * VERBATIM or SPECIAL_CHAR style, we end the center
-             * determination */
-            if ((current_character->cos.s.style == ST_VERBATIM
-                            || current_character->cos.s.style ==
-                            ST_SPECIAL_CHAR)
-                    && center_is_determined == CENTER_DETERMINING_MIDDLE) {
-                end_center(center_type, current_character, &first_style);
-                center_is_determined = CENTER_FULLY_DETERMINED;
-            }
-            /* if it is something to add then we just push the style in the
-             * stack and continue. */
-            style_push(&first_style, current_character->cos.s.style);
-            /* Here we pass all the characters after a verbatim (or special
-             * char) beginning, until we find a style (begin or end) */
-            if (current_character->cos.s.style == ST_VERBATIM
-                    || current_character->cos.s.style == ST_SPECIAL_CHAR) {
-                if (current_character->next_character) {
-                    current_character = current_character->next_character;
-                }
-                while (current_character->next_character
-                        && current_character->is_character) {
-                    current_character = current_character->next_character;
-                }
-            } else {
-                end_c();
-            }
-        }
-        /* if it is a beginning of a center, we call the good macro and end. */
-        if (current_character->cos.s.type == ST_T_BEGIN
-                && (current_character->cos.s.style == ST_CENTER
-                        || current_character->cos.s.style ==
-                        ST_FORCED_CENTER)) {
-            if (current_character->cos.s.style == ST_CENTER) {
-                center_type = ST_CENTER;
-            } else {
-                center_type = ST_FORCED_CENTER;
-            }
-            if (center_is_determined) {
-                end_c();
-            }
-            /* center_is_determined = DETERMINING_MIDDLE; */
-            /* TODO: not really sure, but shouldn't be there */
-            begin_center(center_type, current_character, &first_style);
-            end_c();
-        }
-        if (current_character->cos.s.type == ST_T_END
-                && current_character->cos.s.style != ST_CENTER
-                && current_character->cos.s.style != ST_FORCED_CENTER) {
-            handle_elision(current_character, &in_elision);
-            /* the case of the end of a style (the most complex). First, we
-             * have to see if the style is in the stack. If there is no stack,
-             * we just suppress and continue. */
-            if (!first_style) {
-                suppress_char_and_end_c();
-            }
-            /* so, we look if it is in the stack. If it is we put
-             * current_style to the style just before the style corresponding
-             * to the character that we are treating (still there ?) */
-            if (first_style->style != current_character->cos.s.style) {
-                det_style *current_style = NULL;
-                for (current_style = first_style; current_style->next_style
-                        && current_style->next_style->style !=
-                        current_character->cos.s.style;
-                        current_style = current_style->next_style) {
-                    /* just loop */
-                }
-                if (current_style->next_style) {
-                    for (current_style = first_style; current_style;
-                        current_style = current_style->previous_style) {
-                        /* if there are styles before in the stack, we close
-                         * them */
-                        insert_style_before(ST_T_END, current_style->style,
-                                current_character);
+        } else {
+            const grestyle_style style = current_character->cos.s.style;
+            /* there starts the second part of the function that deals with the
+             * styles characters */
+            switch (current_character->cos.s.type) {
+            case ST_T_BEGIN:
+                /* the beginning of a style */
+                switch (style) {
+                case ST_VERBATIM:
+                case ST_SPECIAL_CHAR:
+                    /* if we are determining the end of the middle and we have
+                     * a VERBATIM or SPECIAL_CHAR style, we end the center
+                     * determination */
+                    if (center_is_determined == CENTER_DETERMINING_MIDDLE) {
+                        end_center(center_type, current_character, &first_style);
+                        center_is_determined = CENTER_FULLY_DETERMINED;
                     }
-                    this_style = current_character->cos.s.style;
-                    /* and then we reopen them */
-                    for (current_style = first_style; current_style &&
-                            current_style->style != this_style;
+                    /* Here we pass all the characters after a verbatim (or
+                     * special char) beginning, until we find a style (begin or
+                     * end) */
+                    if (current_character->next_character) {
+                        current_character = current_character->next_character;
+                    }
+                    while (current_character && current_character->is_character) {
+                        current_character = current_character->next_character;
+                    }
+                    if (current_character) {
+                        gregorio_assert2(!current_character->is_character
+                                && current_character->cos.s.type == ST_T_END
+                                && current_character->cos.s.style == style,
+                                gregorio_rebuild_characters, "mismatched %s",
+                                grestyle_style_to_string(style), break);
+                    }
+                    break;
+
+                case ST_CENTER:
+                    /* not reachable unless there's a programming error */
+                    /* LCOV_EXCL_START */
+                    gregorio_fail(gregorio_rebuild_characters,
+                            "encountered unexpected begin ST_CENTER");
+                    break;
+                    /* LCOV_EXCL_STOP */
+
+                case ST_FORCED_CENTER:
+                    begin_center(center_type, current_character, &first_style);
+                    current_character = suppress_character(current_character);
+                    continue;
+
+                default:
+                    handle_elision(current_character, &in_elision);
+                    /* it the beginning of a style, which is not center.  We
+                     * check if the style is not already in the stack. If it is
+                     * the case, we suppress the character and pass */
+                    for (current_style = first_style; current_style
+                            && current_style->style != current_character->cos.s.style;
                             current_style = current_style->next_style) {
-                        insert_style_after(ST_T_BEGIN, current_style->style,
-                                &current_character);
+                        /* just loop */
                     }
-                    /* we delete the style in the stack */
-                    style_pop(&first_style, current_style);
-                } else {
-                    suppress_char_and_end_c();
+                    if (current_style) {
+                        current_character = suppress_character(current_character);
+                        continue;
+                    }
+                    /* if it is something to add then we just push the style in the
+                     * stack and continue. */
+                    style_push(&first_style, current_character->cos.s.style);
+                    break;
                 }
-            } else {
-                style_pop(&first_style, first_style);
-                end_c();
-            }
-        } else { /* ST_T_END && ST_CENTER */
-            /* a quite simple case, we just call the good macro. */
-            if (!center_is_determined) {
-                suppress_char_and_end_c();
+                break;
+
+            case ST_T_END:
+                /* the beginning of a style */
+                switch(current_character->cos.s.style) {
+                case ST_VERBATIM:
+                case ST_SPECIAL_CHAR:
+                case ST_CENTER:
+                    /* not reachable unless there's a programming error */
+                    /* LCOV_EXCL_START */
+                    gregorio_fail2(gregorio_rebuild_characters,
+                            "encountered unexpected end %s",
+                            grestyle_style_to_string(
+                                current_character->cos.s.style));
+                    break;
+                    /* LCOV_EXCL_STOP */
+
+                case ST_FORCED_CENTER:
+                    end_center(center_type, current_character, &first_style);
+                    current_character = suppress_character(current_character);
+                    continue;
+
+                default:
+                    handle_elision(current_character, &in_elision);
+                    /* the case of the end of a style (the most complex).
+                     * First, we have to see if the style is in the stack. If
+                     * there is no stack, we just suppress and continue. */
+                    if (!first_style) {
+                        current_character = suppress_character(current_character);
+                        continue;
+                    }
+                    /* so, we look if it is in the stack. If it is we put
+                     * current_style to the style just before the style
+                     * corresponding to the character that we are treating
+                     * (still there ?) */
+                    if (first_style->style != current_character->cos.s.style) {
+                        for (current_style = first_style; current_style->next_style
+                                && current_style->next_style->style !=
+                                current_character->cos.s.style;
+                                current_style = current_style->next_style) {
+                            /* just loop */
+                        }
+                        if (current_style->next_style) {
+                            for (current_style = first_style; current_style;
+                                current_style = current_style->previous_style) {
+                                /* if there are styles before in the stack, we close
+                                 * them */
+                                insert_style_before(ST_T_END,
+                                        current_style->style,
+                                        current_character);
+                            }
+                            this_style = current_character->cos.s.style;
+                            /* and then we reopen them */
+                            for (current_style = first_style; current_style &&
+                                    current_style->style != this_style;
+                                    current_style = current_style->next_style) {
+                                insert_style_after(ST_T_BEGIN,
+                                        current_style->style,
+                                        &current_character);
+                            }
+                            /* we delete the style in the stack */
+                            style_pop(&first_style, current_style);
+                        } else {
+                            current_character = suppress_character(current_character);
+                            continue;
+                        }
+                    } else {
+                        style_pop(&first_style, first_style);
+                    }
+                }
+                break;
+
+            default:
+                /* not reachable unless there's a programming error */
+                /* LCOV_EXCL_START */
+                gregorio_fail(gregorio_rebuild_characters,
+                        "unexpected style type");
+                /* LCOV_EXCL_STOP */
             }
         }
-        end_c();
+        current_character = current_character->next_character;
     }
-    if (!current_character) {
-        return;
-    }
+    /* destroy the sentinel */
+    current_character = sentinel->previous_character;
+    suppress_character(sentinel);
     /* we terminate all the styles that are still in the stack */
-    {
-        /* introduce a scope so current_style is local, since we can't
-         * initialize in the loop (as in C99) */
-        det_style *current_style = NULL;
-        for (current_style = first_style; current_style;
-                current_style = current_style->next_style) {
-            insert_style_after(ST_T_END, current_style->style,
-                    &current_character);
-        }
+    for (current_style = first_style; current_style;
+            current_style = current_style->next_style) {
+        insert_style_after(ST_T_END, current_style->style,
+                &current_character);
     }
     /* current_character is at the end of the list now, so if we havn't closed
      * the center, we do it at the end. */
@@ -1199,7 +1157,7 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
                         && current_character == *param_character) {
                     *param_character = (*param_character)->next_character;
                 }
-                suppress_current_character(&current_character);
+                current_character = suppress_character(current_character);
                 continue;
             }
         }

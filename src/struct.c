@@ -1107,7 +1107,10 @@ static void free_headers(gregorio_score *score) {
 void gregorio_free_score(gregorio_score *score)
 {
     gregorio_not_null(score, gregorio_free_score, return);
-    gregorio_free_syllables(&(score->first_syllable), score->number_of_voices);
+    if (score->first_syllable) {
+        gregorio_free_syllables(&(score->first_syllable),
+                score->number_of_voices);
+    }
     gregorio_free_score_infos(score);
     free_headers(score);
     free(score);
@@ -1311,7 +1314,7 @@ signed char gregorio_determine_next_pitch(gregorio_syllable *syllable,
  * it and we update the score->voice-info->initial_key. Works in
  * polyphony.
  *
- *********************************/
+ ******************************/
 
 void gregorio_fix_initial_keys(gregorio_score *score,
         gregorio_clef_info default_clef)
@@ -1321,14 +1324,17 @@ void gregorio_fix_initial_keys(gregorio_score *score,
     int i;
     char to_delete = 1;
 
-    gregorio_assert(score && score->first_syllable && score->first_voice_info,
-            gregorio-fix_initial_key, "score is not available", return);
+    gregorio_not_null(score, gregorio_fix_initial_keys, return);
+    gregorio_not_null(score->first_voice_info, gregorio_fix_initial_keys,
+            return);
+    if (!score->first_syllable) {
+        /* valid but almost nonsense: a score with no syllables */
+        return;
+    }
     voice_info = score->first_voice_info;
     for (i = 0; i < score->number_of_voices; i++) {
         element = score->first_syllable->elements[i];
-        gregorio_assert(element, gregorio_fix_initial_keys,
-                "encountered a syllable with no elements", continue);
-        if (element->type == GRE_CLEF) {
+        if (element && element->type == GRE_CLEF) {
             voice_info->initial_clef = element->u.misc.clef;
             gregorio_free_one_element(&(score->first_syllable->elements[i]));
             gregorio_messagef("gregorio_fix_initial_keys", VERBOSITY_INFO, 0,

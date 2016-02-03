@@ -317,7 +317,8 @@ ENUM(gregorio_glyph_type, GREGORIO_GLYPH_TYPE);
     E(ST_FIRST_WORD) \
     E(ST_FIRST_SYLLABLE) \
     E(ST_FIRST_SYLLABLE_INITIAL) \
-    L(ST_SYLLABLE_INITIAL)
+    E(ST_SYLLABLE_INITIAL) \
+    L(ST_SENTINEL) /* a temporary style to signify the end of a syllable */
 ENUM(grestyle_style, GRESTYLE_STYLE);
 
 /*
