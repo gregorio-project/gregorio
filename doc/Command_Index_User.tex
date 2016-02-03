@@ -927,6 +927,14 @@ Macro to change the behaviour for bars following a punctum mora. The argument ch
 
 When a punctum mora is ignored, the bar will also be shifted by \texttt{barmoraadjustment} (zero by default), see its description in the \textbf{Distances} section.
 
+\macroname{\textbackslash gresetbarspacing}{\{\#1\}}{gregoriotex-syllable.tex}
+Macro to activate the new bar spacing algorithm.  The new algorithm attempts to place the bar line exactly midway between its surrounding notes.  Any text associated with the bar is placed midway between its surrounding text.  Since this might result in the bar line and the text being widely separated, there is also a limit to the distance between their centers: \texttt{maxbaroffset}.
+
+\begin{argtable}
+  \#1 & \texttt{new} & Activates the new spacing algorithm\\
+  & \texttt{old} & Activates the old behavior (Default)\\
+\end{argtable}
+
 \subsubsection{Hyphenation}
 
 \macroname{\textbackslash gresethyphen}{\{\#1\}}{gregoriotex-main.tex}
@@ -1451,6 +1459,10 @@ Distance an over-the-notes slur will be raised above the baseline of a note at t
 
 \begin{gdimension}{underslurshift}
 Distance an under-the-notes slur will be raised above the baseline of a note at the same height.
+\end{gdimension}
+
+\begin{gdimension}{maxbaroffset}
+When the new bar spacing algorithm is active, this is the maximum distance by which a bar and its associated text can be separated.
 \end{gdimension}
 
 
