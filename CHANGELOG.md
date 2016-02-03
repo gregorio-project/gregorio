@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+### Added
+- A new algorithm for placing bar syllables has been added.  The goal of the new algorithm is to place the bar line exactly between the notes which surround it and do the same with the text associated with the bar line.  It also implements a limit, `maxbaroffset`, which prevents the bar line and its text from getting too far apart.  This algorithm can be activated with `\gresetbarspacing{new}`.  Testing is not yet complete and it may still contain bugs.  See [#767](https://github.com/gregorio-project/gregorio/issues/767).
 
 
 ## [4.1.0-beta1] - 2016-01-23

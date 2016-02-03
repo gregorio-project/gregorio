@@ -1520,6 +1520,9 @@ Count indicating when the presence of a punctum mora immediately before a bar li
 \macroname{\textbackslash ifgre@allowdeprecated}{}{gregoriotex.sty \textup{and} gregoriotex.tex}
 Boolean which controls whether deprecated functions raise a warning (true) or an error (false).
 
+\macroname{\textbackslash ifgre@newbarspacing}{}{gregoriotex-syllable.tex}
+Boolean which controls whether the new bar spacing algorithm is activated.
+
 
 \subsection{Boxes}
 
@@ -1677,23 +1680,23 @@ The distance from the baseline of the initial to the baseline of the annotation.
 \macroname{\textbackslash gre@dimen@commentarytrueraise}{}{gregoriotex-spaces.tex}
 The distance from the baseline of the initial to the baseline of the commentary.
 
-\macroname{\textbackslash gre@minTextDistance}{}{gregoriotex-spaces.tex}
-Minimum distance between text (meaningful alias for \verb=\gre@skip@temp@one= inside \verb=\gre@calculate@syllablefinalskip=).
+\macroname{\textbackslash gre@skip@minTextDistance}{}{gregoriotex-spaces.tex}
+Minimum distance between text.
 
-\macroname{\textbackslash gre@minNotesDistance}{}{gregoriotex-spaces.tex}
-Minimum distance between notes (meaningful alias for \verb=\gre@skip@temp@two= inside \verb=\gre@calculate@syllablefinalskip=).
+\macroname{\textbackslash gre@skip@minNotesDistance}{}{gregoriotex-spaces.tex}
+Minimum distance between notes.
 
-\macroname{\textbackslash gre@curTextDistance}{}{gregoriotex-spaces.tex}
-Current distance between text (meaningful alias for \verb=\gre@dimen@temp@three= inside \verb=\gre@calculate@syllablefinalskip=).
+\macroname{\textbackslash gre@dimen@curTextDistance}{}{gregoriotex-spaces.tex}
+Current distance between text.
 
-\macroname{\textbackslash gre@curNotesDistance}{}{gregoriotex-spaces.tex}
-Current distance between notes (meaningful alias for \verb=\gre@dimen@temp@four= inside \verb=\gre@calculate@syllablefinalskip=).
+\macroname{\textbackslash gre@dimen@curNotesDistance}{}{gregoriotex-spaces.tex}
+Current distance between notes.
 
-\macroname{\textbackslash gre@minShiftText}{}{gregoriotex-spaces.tex}
-Minimum shift required for the text (meaningful alias for \verb=\gre@skip@temp@three= inside \verb=\gre@calculate@syllablefinalskip=).
+\macroname{\textbackslash gre@skip@minShiftText}{}{gregoriotex-spaces.tex}
+Minimum shift required for the text.
 
-\macroname{\textbackslash gre@minShiftNotes}{}{gregoriotex-spaces.tex}
-Minimum shift required for the notes (meaningful alias for \verb=\gre@skip@temp@four= inside \verb=\gre@calculate@syllablefinalskip=).
+\macroname{\textbackslash gre@skip@minShiftNotes}{}{gregoriotex-spaces.tex}
+Minimum shift required for the notes.
 
 \macroname{\textbackslash gre@save@parfillskip}{}{gregoriotex-main.tex}
 Macro to store \verb=\parfillskip= value so that we can restore it at the end of the score (needed to force the last line of a score to be justified).
