@@ -881,8 +881,42 @@
     \gre@debugmsg{barspacing}{text space after accounting for text: \the\gre@skip@temp@one}%
     \gre@debugmsg{barspacing}{notes space after accounting for text: \the\gre@skip@temp@two}%
     % now we check the bar width
-    %conveniently the notes box already contains the spacing around the bar
-    \gre@skip@temp@three = \wd\gre@box@syllablenotes\relax%
+    %as with the text, we start by borrowing the minNotesDistance left over from the previous syllable
+    \gre@skip@temp@three = \glueexpr\wd\gre@box@syllablenotes + \gre@skip@minNotesDistance\relax%
+    %now, if there is a visible bar for this syllable, we calculate this syllable’s equivalent of minNotesDistance
+    % gre@count@temp@one holds 0 if next is not a bar, 1 if it is, 2 if it starts with an alteration
+    \gre@count@temp@one=0%
+    \ifnum#7>9\relax %
+      \ifnum#7<20\relax %
+        \gre@count@temp@one=1\relax %
+      \else %
+        \gre@count@temp@one=2\relax %
+      \fi %
+    \fi %
+    \ifdim\wd\gre@box@syllablenotes > 0pt\relax%
+      %as with the text, this calculation is similar to what \gre@calculate@syllablefinalskip does, but only for the notes, so we’ll use syllablefinalskip to store it
+      \ifcase\gre@count@temp@one\relax %
+        \ifnum#4=1\relax %
+          \ifgre@in@euouae %
+            \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacenotes@euouae\relax%
+          \else %
+            \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacenotes\relax%
+          \fi %
+        \else %
+          \gre@skip@syllablefinalskip=\gre@space@skip@intersyllablespacenotes\relax%
+        \fi %
+      \or %
+        \gre@skip@syllablefinalskip=\gre@space@skip@notebarspace\relax%
+      \or %
+        \ifnum#4=1\relax %
+          \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacenotes@alteration\relax %
+        \else %
+          \gre@skip@syllablefinalskip=\gre@space@skip@intersyllablespacenotes@alteration\relax%
+        \fi %
+      \fi %
+      \gre@debugmsg{syllablespacing}{ space after bar = \the\gre@skip@syllablefinalskip}%
+      \advance\gre@skip@temp@three by \gre@skip@syllablefinalskip%
+    \fi%
     \ifdim\gre@skip@temp@two < \gre@skip@temp@three\relax%
       \gre@skip@temp@one = \glueexpr\gre@skip@temp@one + (\gre@skip@temp@three - \gre@skip@temp@two)\relax%
       \gre@skip@temp@two = \gre@skip@temp@three\relax%
@@ -949,16 +983,8 @@
     \gre@debugmsg{barspacing}{Correcting enddifference}%
     \gre@dimen@enddifference = \dimexpr-\gre@dimen@begindifference + \wd\gre@box@syllablenotes - \wd\gre@box@syllabletext\relax%
     \gre@debugmsg{barspacing}{enddifference: \the\gre@dimen@enddifference}%
+    %we also need to correct syllablefinalskip to make sure it’s accurate because it depends on enddifference
     \gre@debugmsg{barspacing}{Correcting syllablefinalskip}%
-    % gre@count@temp@one holds 0 if next is a not bar, 1 if it is
-    \gre@count@temp@one=0%
-    \ifnum#7>9\relax %
-      \ifnum#7<20\relax %
-        \gre@count@temp@one=1\relax %
-      \else %
-        \gre@count@temp@one=2\relax %
-      \fi %
-    \fi %
     \gre@calculate@syllablefinalskip{#4}{\gre@count@temp@one}%
     \gre@debugmsg{barspacing}{syllablefinalskip: \the\gre@skip@syllablefinalskip}%
     %now we can place the text and bar
