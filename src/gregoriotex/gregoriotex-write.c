@@ -694,7 +694,8 @@ static __inline signed char second_pitch_of(const gregorio_glyph *const glyph) {
 static __inline const char *porrectus_shape(const gregorio_glyph *const glyph,
         const char *base_shape, const char *longqueue_shape) {
     const gregorio_note *const first_note = first_note_of(glyph);
-    if ((glyph->u.notes.liquescentia & L_DEMINUTUS)
+    if ((glyph->u.notes.glyph_type == G_PORRECTUS
+                && (glyph->u.notes.liquescentia & L_DEMINUTUS))
             || first_note->u.note.pitch - second_pitch_of(glyph) == 1) {
         switch (queuetype_of(first_note)) {
         case Q_ON_SPACE_BELOW_BOTTOM_LINE:
