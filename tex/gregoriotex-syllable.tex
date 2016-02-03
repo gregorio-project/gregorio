@@ -884,7 +884,7 @@
     %conveniently the notes box already contains the spacing around the bar
     \gre@skip@temp@three = \wd\gre@box@syllablenotes\relax%
     \ifdim\gre@skip@temp@two < \gre@skip@temp@three\relax%
-      \gre@skip@temp@one = \glueexpr\gre@skip@temp@one + (\gre@skip@temp@three - \gre@skip@temp@one)\relax%
+      \gre@skip@temp@one = \glueexpr\gre@skip@temp@one + (\gre@skip@temp@three - \gre@skip@temp@two)\relax%
       \gre@skip@temp@two = \gre@skip@temp@three\relax%
     \fi%
     \gre@debugmsg{barspacing}{required space for text: \the\gre@skip@temp@one}%
