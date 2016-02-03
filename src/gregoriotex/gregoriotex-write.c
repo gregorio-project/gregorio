@@ -3090,9 +3090,7 @@ static void gregoriotex_print_change_line_clef(FILE *f,
 
 static __inline bool is_manual_custos(const gregorio_element *element)
 {
-    return element->type == GRE_ELEMENT
-            && element->u.first_glyph
-            && element->u.first_glyph->type == GRE_MANUAL_CUSTOS;
+    return element->type == GRE_CUSTOS && element->u.misc.pitched.force_pitch;
 }
 
 static __inline bool next_is_bar(const gregorio_syllable *syllable,
@@ -3135,8 +3133,11 @@ static __inline bool next_is_bar(const gregorio_syllable *syllable,
         element = syllable->elements[0];
     }
 
-    assert(false); /* should never reach here; LCOV_EXCL_LINE */
-    return false; /* avoid gcc 5.1 warning */
+    /* not reachable unless there's a programming error */
+    /* LCOV_EXCL_START */
+    gregorio_fail(next_is_bar, "unexpected end of syllables/elements");
+    return false;
+    /* LCOV_EXCL_STOP */
 }
 
 static void finish_syllable(FILE *f, gregorio_syllable *syllable) {
@@ -3205,7 +3206,7 @@ static void write_first_syllable_text(FILE *f, const char *const syllable_type,
         const gregorio_character *const text, bool end_of_word)
 {
     if (syllable_type == NULL) {
-        fprintf(f, "}{\\GreSyllable{\\GreSetNoFirstSyllableText}");
+        fprintf(f, "}{\\GreSyllable}{\\GreSetNoFirstSyllableText}");
     } else if (text == NULL) {
         fprintf(f, "}{%s}{\\GreSetNoFirstSyllableText}", syllable_type);
     } else {
@@ -3848,6 +3849,9 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
         write_syllable(f, current_syllable, 0, &status, score,
                 write_first_syllable_text);
         current_syllable = current_syllable->next_syllable;
+    } else {
+        /* edge case: a score with no syllables */
+        fprintf(f, "}{}{\\GreSetNoFirstSyllableText}%%\n");
     }
     while (current_syllable) {
         write_syllable(f, current_syllable, 0, &status, score,

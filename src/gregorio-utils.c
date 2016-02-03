@@ -36,6 +36,7 @@
 #include <locale.h>
 #include <limits.h>
 #include <errno.h>
+#include <assert.h>
 #include "struct.h"
 #include "plugins.h"
 #include "messages.h"
@@ -251,8 +252,12 @@ static char *encode_point_and_click_filename(char *input_file_name)
 
     filename = gregorio_realpath(input_file_name, NULL);
     if (!filename) {
+        /* it's not reasonable to generate the system error that would cause
+         * this to fail */
+        /* LCOV_EXCL_START */
         fprintf(stderr, "error: unable to resolve %s\n", input_file_name);
         exit(1);
+        /* LCOV_EXCL_STOP */
     }
 
     /* 2 extra characters for a possible leading slash and final NUL */
@@ -312,7 +317,6 @@ int main(int argc, char **argv)
     gregorio_verbosity verb_mode = 0;
     bool point_and_click = false;
     char *point_and_click_filename = NULL;
-    int number_of_options = 0;
     int option_index = 0;
     static struct option long_options[] = {
         {"output-file", 1, 0, 'o'},
@@ -391,7 +395,7 @@ int main(int argc, char **argv)
                 break;
             } else {
                 fprintf(stderr, "error: unknown output format: %s\n", optarg);
-                exit(0);
+                exit(1);
             }
             break;
         case 'l':
@@ -415,16 +419,13 @@ int main(int argc, char **argv)
                 break;
             } else {
                 fprintf(stderr, "error: unknown input format: %s\n", optarg);
-                exit(0);
+                exit(1);
             }
             break;
         case 's':
-            if (input_file_name) {
-                fprintf(stderr,
-                        "warning: can't read from file and stdin, writing on %s\n",
-                        input_file_name);
-                break;
-            }
+            /* input_file_name will be null here because of the way
+             * we use getopt_long */
+            assert(!input_file_name);
             if (input_file) { /* means that stdin is defined */
                 fprintf(stderr, "warning: option used two times: %c\n", c);
                 break;
@@ -471,12 +472,13 @@ int main(int argc, char **argv)
         case '?':
             break;
         default:
-            fprintf(stderr, "unknown option: %c\n", c);
-            print_usage(argv[0]);
-            exit(0);
+            /* not reachable unless there's a programming error */
+            /* LCOV_EXCL_START */
+            gregorio_fail2(main, "unknown option: %c", c);
+            exit(1);
             break;
+            /* LCOV_EXCL_STOP */
         }
-        number_of_options++;
     } /* end of while */
     if (optind == argc) {
         if (!input_file) { /* input not undefined (could be stdin) */
@@ -485,7 +487,7 @@ int main(int argc, char **argv)
             exit(1);
         }
     } else {
-        input_file_name = argv[optind];
+        input_file_name = argv[optind++];
         output_basename = get_base_filename(input_file_name);
         if (input_file) {
             fprintf(stderr,
@@ -494,12 +496,12 @@ int main(int argc, char **argv)
             input_file = NULL;
         }
     }
-    optind++;
     if (optind < argc) {
-        printf("ignored arguments: ");
-        while (number_of_options < argc)
-            printf("%s ", argv[number_of_options++]);
-        printf("\n");
+        fprintf(stderr, "ignored arguments:");
+        for (; optind < argc; ++optind) {
+            fprintf(stderr, " %s", argv[optind]);
+        }
+        fprintf(stderr, "\n");
     }
 
     if (!input_format) {
@@ -524,24 +526,25 @@ int main(int argc, char **argv)
         if (!output_basename) {
             output_file = stdout;
         } else {
-            if (input_format != output_format) {
-                switch (output_format) {
-                case GABC:
-                    output_file_name =
-                        get_output_filename(output_basename, "gabc");
-                    break;
-                case GTEX:
-                    output_file_name =
-                        get_output_filename(output_basename, "gtex");
-                    break;
-                case DUMP:
-                    output_file_name =
-                        get_output_filename(output_basename, "dump");
-                    break;
-                default:
-                    fprintf(stderr, "error: unsupported format");
-                    exit(1);
-                }
+            switch (output_format) {
+            case GABC:
+                output_file_name =
+                    get_output_filename(output_basename, "gabc");
+                break;
+            case GTEX:
+                output_file_name =
+                    get_output_filename(output_basename, "gtex");
+                break;
+            case DUMP:
+                output_file_name =
+                    get_output_filename(output_basename, "dump");
+                break;
+            default:
+                /* not reachable unless there's a programming error */
+                /* LCOV_EXCL_START */
+                fprintf(stderr, "error: unsupported format");
+                exit(1);
+                /* LCOV_EXCL_STOP */
             }
         }
     }
@@ -562,8 +565,8 @@ int main(int argc, char **argv)
         #endif
         output_file = fopen(output_file_name, "wb");
         if (!output_file) {
-            fprintf(stderr, "error: can't write in file %s",
-                    output_file_name);
+            fprintf(stderr, "error: can't write in file %s", output_file_name);
+            exit(1);
         }
     }
 
@@ -580,7 +583,6 @@ int main(int argc, char **argv)
                     input_file_name);
             exit(1);
         }
-        gregorio_set_file_name(gregorio_basename(input_file_name));
         if (point_and_click) {
             point_and_click_filename = encode_point_and_click_filename(
                     input_file_name);
@@ -611,21 +613,25 @@ int main(int argc, char **argv)
         score = gabc_read_score(input_file);
         break;
     default:
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
         fprintf(stderr, "error : invalid input format\n");
         fclose(input_file);
         fclose(output_file);
         exit(1);
         break;
+        /* LCOV_EXCL_STOP */
     }
 
     fclose(input_file);
     if (score == NULL) {
+        /* score should never be NULL on return from gabc_read_score */
+        /* LCOV_EXCL_START */
         fclose(output_file);
         fprintf(stderr, "error in file parsing\n");
         exit(1);
+        /* LCOV_EXCL_STOP */
     }
-
-    gregorio_fix_initial_keys(score, gregorio_default_clef);
 
     switch (output_format) {
     case GABC:
@@ -638,11 +644,14 @@ int main(int argc, char **argv)
         dump_write_score(output_file, score);
         break;
     default:
+        /* not reachable unless there's a programming error */
+        /* LCOV_EXCL_START */
         fprintf(stderr, "error : invalid output format\n");
         gregorio_free_score(score);
         fclose(output_file);
         exit(1);
         break;
+        /* LCOV_EXCL_STOP */
     }
     fclose(output_file);
     if (point_and_click_filename) {
