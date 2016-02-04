@@ -434,8 +434,18 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
                 || current_pitch - last_pitch < -MAX_INTERVAL) {
             if (*end_of_glyph == DET_END_OF_CURRENT
                     || *end_of_glyph == DET_END_OF_BOTH) {
+                /* There is no current way for the code to end up here, but
+                 * we'll leave it in because it's a good safety precaution in
+                 * case something new is added in the future */
+                /* LCOV_EXCL_START */
+                gregorio_message(_("Encountered the need to switch "
+                            "DET_END_OF_CURRENT to DET_END_OF_BOTH because of "
+                            "overly large ambitus"),
+                            "gregorio_add_note_to_a_glyph", VERBOSITY_WARNING,
+                            __LINE__);
                 *end_of_glyph = DET_END_OF_BOTH;
             } else {
+                /* LCOV_EXCL_STOP */
                 *end_of_glyph = DET_END_OF_PREVIOUS;
             }
         }

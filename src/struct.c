@@ -802,7 +802,7 @@ void gregorio_free_one_glyph(gregorio_glyph **glyph)
 static void gregorio_free_glyphs(gregorio_glyph **glyph)
 {
     gregorio_glyph *next_glyph;
-    gregorio_not_null_ptr(glyph, gregorio_free_glyphs, return);
+    gregorio_not_null(glyph, gregorio_free_glyphs, return);
     while (*glyph) {
         next_glyph = (*glyph)->next;
         free_one_glyph(*glyph);
@@ -1014,7 +1014,6 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
     gregorio_assert(number_of_voices == 1, gregorio_add_syllable,
             "gregorio only supports one voice", return);
     next = gregorio_calloc(1, sizeof(gregorio_syllable));
-    next->type = GRE_SYLLABLE;
     next->position = position;
     next->no_linebreak_area = no_linebreak_area;
     next->euouae = euouae;
