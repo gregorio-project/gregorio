@@ -541,9 +541,13 @@ void gregorio_write_first_letter_alignment_text(
             switch (current_character->cos.s.style) {
             case ST_CENTER:
             case ST_FORCED_CENTER:
-            case ST_INITIAL:
             case ST_FIRST_SYLLABLE_INITIAL:
                 /* ignore */
+                break;
+            case ST_INITIAL:
+                /* in the case where the initial is closed before the first
+                 * letter */
+                close_first_letter = first_letter_open > 1;
                 break;
             case ST_VERBATIM:
             case ST_SPECIAL_CHAR:
@@ -862,8 +866,6 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
     /* the current_character */
     gregorio_character *current_character = *param_character;
     gregorio_character *sentinel;
-    /* a char that we will use in a very particular case */
-    grestyle_style this_style;
     det_style *first_style = NULL;
     /* determining the type of centering (forced or not) */
     grestyle_style center_type = ST_NO_STYLE;
@@ -1034,39 +1036,34 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
                      * current_style to the style just before the style
                      * corresponding to the character that we are treating
                      * (still there ?) */
-                    if (first_style->style != current_character->cos.s.style) {
-                        for (current_style = first_style; current_style->next_style
-                                && current_style->next_style->style !=
-                                current_character->cos.s.style;
-                                current_style = current_style->next_style) {
-                            /* just loop */
+                    for (current_style = first_style; current_style
+                            && current_style->style
+                            != current_character->cos.s.style;
+                            current_style = current_style->next_style) {
+                        /* just loop */
+                    }
+                    if (current_style) {
+                        det_style *this_style;
+                        /* if there are styles before in the stack, we close
+                         * them */
+                        for (this_style = first_style;
+                                this_style != current_style;
+                                this_style = this_style->next_style) {
+                            insert_style_before(ST_T_END, this_style->style,
+                                    current_character);
                         }
-                        if (current_style->next_style) {
-                            for (current_style = first_style; current_style;
-                                current_style = current_style->previous_style) {
-                                /* if there are styles before in the stack, we close
-                                 * them */
-                                insert_style_before(ST_T_END,
-                                        current_style->style,
-                                        current_character);
-                            }
-                            this_style = current_character->cos.s.style;
-                            /* and then we reopen them */
-                            for (current_style = first_style; current_style &&
-                                    current_style->style != this_style;
-                                    current_style = current_style->next_style) {
-                                insert_style_after(ST_T_BEGIN,
-                                        current_style->style,
-                                        &current_character);
-                            }
-                            /* we delete the style in the stack */
-                            style_pop(&first_style, current_style);
-                        } else {
-                            current_character = suppress_character(current_character);
-                            continue;
+                        /* and then we reopen them */
+                        for (this_style = this_style->previous_style;
+                                this_style;
+                                this_style = this_style->previous_style) {
+                            insert_style_after(ST_T_BEGIN, this_style->style,
+                                    &current_character);
                         }
+                        /* we delete the style in the stack */
+                        style_pop(&first_style, current_style);
                     } else {
-                        style_pop(&first_style, first_style);
+                        current_character = suppress_character(current_character);
+                        continue;
                     }
                 }
                 break;
@@ -1138,9 +1135,11 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
     gregorio_character *start_of_special;
     /* so, here we start: we go to the first_character */
     gregorio_go_to_first_character_c(&current_character);
-    /* first we look at the styles, to see if there is a FORCED_CENTER
-     * somewhere and we also remove the CENTER styles if the syllable starts at
-     * CENTER */
+    /* first we look at the styles to see if there is a FORCED_CENTER
+     * somewhere */
+    /* Note: we don't have to deal with ST_CENTER here because
+     * gregorio_rebuild_first_syllable is meant to be run **before**
+     * gregorio_rebuild_characters, which is what adds ST_CENTER */
     gregorio_assert(param_character, gregorio_rebuild_first_syllable,
             "param_character may not be NULL", return);
     while (current_character) {
@@ -1149,16 +1148,6 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
                 /* we can break here, as there won't be forced center plus
                  * center */
                 break;
-            }
-            if (current_character->cos.s.style == ST_CENTER) {
-                /* we have to do it in case param_character (the first
-                 * character) is a ST_CENTER beginning */
-                if (!current_character->previous_character
-                        && current_character == *param_character) {
-                    *param_character = (*param_character)->next_character;
-                }
-                current_character = suppress_character(current_character);
-                continue;
             }
         }
         current_character = current_character->next_character;
