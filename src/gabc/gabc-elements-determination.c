@@ -36,22 +36,32 @@
  * 
  */
 
-static __inline bool is_puncta_ascendens(char glyph)
+static __inline bool is_puncta_ascendens(gregorio_glyph_type glyph)
 {
-    return glyph == G_2_PUNCTA_INCLINATA_ASCENDENS
-        || glyph == G_3_PUNCTA_INCLINATA_ASCENDENS
-        || glyph == G_4_PUNCTA_INCLINATA_ASCENDENS
-        || glyph == G_5_PUNCTA_INCLINATA_ASCENDENS
-        || glyph == G_PUNCTUM_INCLINATUM;
+    switch (glyph) {
+    case G_2_PUNCTA_INCLINATA_ASCENDENS:
+    case G_3_PUNCTA_INCLINATA_ASCENDENS:
+    case G_4_PUNCTA_INCLINATA_ASCENDENS:
+    case G_5_PUNCTA_INCLINATA_ASCENDENS:
+    case G_PUNCTUM_INCLINATUM:
+        return true;
+    default:
+        return false;
+    }
 }
 
-static __inline bool is_puncta_descendens(char glyph)
+static __inline bool is_puncta_descendens(gregorio_glyph_type glyph)
 {
-    return glyph == G_2_PUNCTA_INCLINATA_DESCENDENS
-        || glyph == G_3_PUNCTA_INCLINATA_DESCENDENS
-        || glyph == G_4_PUNCTA_INCLINATA_DESCENDENS
-        || glyph == G_5_PUNCTA_INCLINATA_DESCENDENS
-        || glyph == G_PUNCTUM_INCLINATUM;
+    switch (glyph) {
+    case G_2_PUNCTA_INCLINATA_DESCENDENS:
+    case G_3_PUNCTA_INCLINATA_DESCENDENS:
+    case G_4_PUNCTA_INCLINATA_DESCENDENS:
+    case G_5_PUNCTA_INCLINATA_DESCENDENS:
+    case G_PUNCTUM_INCLINATUM:
+        return true;
+    default:
+        return false;
+    }
 }
 
 /*
@@ -70,15 +80,9 @@ static void close_element(gregorio_element **current_element,
 {
     gregorio_add_element(current_element, *first_glyph);
     if (*first_glyph && (*first_glyph)->previous) {
-        /* not reachable unless there's a programming error */
-        /* LCOV_EXCL_START */
-        gregorio_fail(close_element, "previous element was not closed");
         (*first_glyph)->previous->next = NULL;
         (*first_glyph)->previous = NULL;
     }
-    /* for some reason (optimization?), the previous line is not counted as
-     * covered even though the start of the condition IS covered */
-    /* LCOV_EXCL_STOP */
     *first_glyph = current_glyph->next;
 }
 
@@ -123,7 +127,7 @@ static gregorio_element *gabc_det_elements_from_glyphs(
     /* a char that is necessary to determine some cases */
     bool do_not_cut = false;
     /* a char that is necesarry to determine the type of the current_glyph */
-    char current_glyph_type;
+    gregorio_glyph_type current_glyph_type;
 
     gregorio_not_null(current_glyph, gabc_det_elements_from_glyphs, return NULL);
     /* first we go to the first glyph in the chained list of glyphs (maybe to
@@ -148,12 +152,13 @@ static gregorio_element *gabc_det_elements_from_glyphs(
                     break;
                 }
             }
-            /* we must not cut after a zero_width_space */
+            /* we must not cut after a texverb */
             if (current_glyph->type == GRE_TEXVERB_GLYPH) {
                 if (!current_glyph->next) {
                     close_element(&current_element, &first_glyph, current_glyph);
                 }
                 current_glyph = current_glyph->next;
+                do_not_cut = true;
                 continue;
             }
             /* clef change or space or end of line */
@@ -182,13 +187,17 @@ static gregorio_element *gabc_det_elements_from_glyphs(
             continue;
         }
 
-        if (is_puncta_ascendens(current_glyph->type)) {
+        if (is_fused(current_glyph->u.notes.liquescentia)) {
+            do_not_cut = true;
+        }
+
+        if (is_puncta_ascendens(current_glyph->u.notes.glyph_type)) {
             current_glyph_type = G_PUNCTA_ASCENDENS;
         } else {
-            if (is_puncta_descendens(current_glyph->type)) {
+            if (is_puncta_descendens(current_glyph->u.notes.glyph_type)) {
                 current_glyph_type = G_PUNCTA_DESCENDENS;
             } else {
-                current_glyph_type = current_glyph->type;
+                current_glyph_type = current_glyph->u.notes.glyph_type;
             }
         }
         switch (current_glyph_type) {

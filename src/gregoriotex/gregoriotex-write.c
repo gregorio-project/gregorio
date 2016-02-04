@@ -2384,8 +2384,7 @@ static int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
     gregorio_assert(syllable && syllable->elements,
             gregoriotex_syllable_first_type, "called with a NULL argument",
             return 0);
-    element = syllable->elements[0];
-    while (element) {
+    for (element = syllable->elements[0]; element; element = element->next) {
         if (element->type == GRE_BAR) {
             switch (element->u.misc.unpitched.info.bar) {
             case B_NO_BAR:
@@ -2473,10 +2472,8 @@ static int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
                     }
                     return type + alteration;
                 }
-                glyph = glyph->next;
             }
         }
-        element = element->next;
     }
     return 0;
 }
