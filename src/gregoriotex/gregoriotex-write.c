@@ -1360,97 +1360,104 @@ static unsigned char gregoriotex_internal_style_to_gregoriotex(
  * when this style is on all the parts, then we return this style.
  *
  */
-typedef enum {
-    FSS_NONE = 0, FSS_STYLE_FOUND, FSS_STYLE_FOUND_PART_CHANGED
-} fixed_style_state;
-static grestyle_style gregoriotex_fix_style(gregorio_character *first_character)
+static grestyle_style gregoriotex_fix_style(
+        const gregorio_character *current_char)
 {
     grestyle_style possible_fixed_style = ST_NO_STYLE;
-    fixed_style_state state = FSS_NONE;
-    /*
-     * states are:
-     * - FSS_NONE: we didn't meet any style yet, which means that if we encounter:
-     *     * a character -> we can return, nothing to do
-     *     * a style -> we go in state FSS_STYLE_FOUND
-     *     * center or initial: stay in state FSS_NONE
-     * - FSS_STYLE_FOUND: we encountered a style, if we encounter
-     *     * another style : we can return
-     *     * something that makes us change syllable part (like center or
-     *       initial) -> go in state FSS_STYLE_FOUND_PART_CHANGED
-     *     * a character : stay in state FSS_STYLE_FOUND
-     * - FSS_STYLE_FOUND_PART_CHANGED: if we encounter:
-     *     * another style, then return
-     *     * a character, then return
-     *     * the same style: go in state FSS_STYLE_FOUND
-     */
-    gregorio_character *current_char = first_character;
+    grestyle_style in_fixed_style = ST_NO_STYLE;
     while (current_char) {
-        switch (state) {
-        case FSS_NONE:
+        if (!in_fixed_style) {
+            /* before the first style */
             if (current_char->is_character) {
+                /* got some character, so no future style can apply to the
+                 * entire syllable */
                 return ST_NO_STYLE;
             }
-            if (current_char->cos.s.style != ST_CENTER
-                    && current_char->cos.s.style != ST_FORCED_CENTER
-                    && current_char->cos.s.style != ST_FIRST_WORD
-                    && current_char->cos.s.style != ST_FIRST_SYLLABLE
-                    && current_char->cos.s.style != ST_FIRST_SYLLABLE_INITIAL
-                    && current_char->cos.s.style != ST_SPECIAL_CHAR
-                    && current_char->cos.s.style != ST_VERBATIM
-                    && current_char->cos.s.style != ST_INITIAL) {
-                possible_fixed_style = current_char->cos.s.style;
-                state = FSS_STYLE_FOUND;
+            if (current_char->cos.s.type == ST_T_BEGIN) {
+                switch (current_char->cos.s.style) {
+                case ST_VERBATIM:
+                case ST_SPECIAL_CHAR:
+                    /* these are pseudo-characters, and if they appear
+                     * before the first style, then the style does not
+                     * apply to the entire syllable */
+                    return ST_NO_STYLE;
+
+                case ST_ITALIC:
+                case ST_BOLD:
+                case ST_TT:
+                case ST_SMALL_CAPS:
+                case ST_UNDERLINED:
+                case ST_COLORED:
+                    if (possible_fixed_style) {
+                        if (current_char->cos.s.style != possible_fixed_style) {
+                            /* found a differing style */
+                            return ST_NO_STYLE;
+                        } else {
+                            /* same style which may apply to the entire
+                             * syllable */
+                            in_fixed_style = possible_fixed_style;
+                        }
+                    } else {
+                        /* we found a candidate fixed style */
+                        in_fixed_style = possible_fixed_style =
+                                current_char->cos.s.style;
+                    }
+                    break;
+
+                default:
+                    /* anything else is "transparent" before the first real
+                     * or pseudo-character */
+                    break;
+                }
             }
-            break;
-        case FSS_STYLE_FOUND:
+            /* else it's an end of a style, which we treat as "transparent"
+             * noise */
+        } else {
+            /* we have a possible style */
             if (!current_char->is_character) {
-                if (!current_char->is_character
-                        && current_char->cos.s.style != ST_CENTER
-                        && current_char->cos.s.style != ST_FORCED_CENTER
-                        && current_char->cos.s.style != ST_FIRST_WORD
-                        && current_char->cos.s.style != ST_FIRST_SYLLABLE
-                        && current_char->cos.s.style != ST_FIRST_SYLLABLE_INITIAL
-                        && current_char->cos.s.style != ST_INITIAL) {
-                    state = FSS_STYLE_FOUND_PART_CHANGED;
-                } else if (current_char->cos.s.style != possible_fixed_style
-                        && current_char->cos.s.style != ST_SPECIAL_CHAR
-                        && current_char->cos.s.style != ST_VERBATIM) {
-                    return ST_NO_STYLE;
+                if (current_char->cos.s.type == ST_T_BEGIN) {
+                    switch (current_char->cos.s.style) {
+                    case ST_ITALIC:
+                    case ST_BOLD:
+                    case ST_TT:
+                    case ST_SMALL_CAPS:
+                    case ST_UNDERLINED:
+                    case ST_COLORED:
+                        if (current_char->cos.s.style != possible_fixed_style) {
+                            /* found a differing style */
+                            return ST_NO_STYLE;
+                        }
+                        /* else it's a (nested) open of the same style, which
+                         * doesn't change the style; however, nested styles
+                         * (should) have been eliminated by now */
+                        /* LCOV_EXCL_START */
+                        gregorio_fail(gregoriotex_fix_style, "encountered a "
+                                "nested style which should have been removed "
+                                "by now");
+                        break;
+                        /* LCOV_EXCL_STOP */
+
+                    default:
+                        /* anything else is a pseudo-character or a
+                         * "transparent" style, which don't affect the fixed
+                         * style */
+                        break;
+                    }
+                } else if (current_char->cos.s.type == ST_T_END) {
+                    if (current_char->cos.s.style == possible_fixed_style) {
+                        /* we closed the possible fixed style; we don't return
+                         * yet to give it the chance to re-open */
+                        in_fixed_style = ST_NO_STYLE;
+                    }
+                    /* else it's a close of something we don't care about or a
+                     * style that wasn't opened, so for the purposes of this
+                     * function, these are "transparent" and don't affect the
+                     * fixed style */
                 }
             }
-            break;
-        case FSS_STYLE_FOUND_PART_CHANGED:
-            if (current_char->is_character) {
-                return ST_NO_STYLE;
-            }
-            if (current_char->cos.s.style != ST_CENTER
-                    && current_char->cos.s.style != ST_FORCED_CENTER
-                    && current_char->cos.s.style != ST_FIRST_WORD
-                    && current_char->cos.s.style != ST_FIRST_SYLLABLE
-                    && current_char->cos.s.style != ST_FIRST_SYLLABLE_INITIAL
-                    && current_char->cos.s.style != ST_SPECIAL_CHAR
-                    && current_char->cos.s.style != ST_VERBATIM
-                    && current_char->cos.s.style != ST_INITIAL) {
-                if (current_char->cos.s.style != possible_fixed_style) {
-                    return ST_NO_STYLE;
-                } else {
-                    state = FSS_STYLE_FOUND;
-                }
-            }
-            break;
-        default:
-            /* not reachable unless there's a programming error */
-            /* LCOV_EXCL_START */
-            assert(false);
-            break;
-            /* LCOV_EXCL_STOP */
+            /* else it's a character, and that doesn't affect the fixed style */
         }
         current_char = current_char->next_character;
-    }
-    /* if we reached here, this means that we there is only one style applied
-     * to all the characters */
-    if (possible_fixed_style == ST_ELISION) {
-        return ST_NO_STYLE;
     }
     return possible_fixed_style;
 }
@@ -2123,10 +2130,11 @@ static void write_additional_line(FILE *f, int i, gtex_type type, bool bottom,
     switch (type) {
     case T_PORRECTUS:
     case T_PORRECTUS_FLEXUS:
-        if (i == 1) {
+        switch (i) {
+        case 1:
             i = HEPISEMA_FIRST_TWO;
-        }
-        if (i == 2) {
+            break;
+        case 2:
             if (current_note->previous->u.note.pitch > LOW_LEDGER_LINE_PITCH
                     && current_note->previous->u.note.pitch
                     < score->high_ledger_line_pitch) {
@@ -2136,21 +2144,23 @@ static void write_additional_line(FILE *f, int i, gtex_type type, bool bottom,
             } else {
                 return;
             }
-        }
-        if (i == 3) {
+            break;
+        case 3:
             if (bottom || current_note->previous->u.note.pitch
                     >= score->high_ledger_line_pitch) {
                 /* we don't need to add twice the same line */
                 return;
             }
+            break;
         }
         break;
     case T_TORCULUS_RESUPINUS:
     case T_TORCULUS_RESUPINUS_FLEXUS:
-        if (i == 2) {
+        switch (i) {
+        case 2:
             i = HEPISEMA_FIRST_TWO;
-        }
-        if (i == 3) {
+            break;
+        case 3:
             if (current_note->previous->u.note.pitch > LOW_LEDGER_LINE_PITCH
                     && current_note->previous->u.note.pitch
                     < score->high_ledger_line_pitch) {
@@ -2160,13 +2170,14 @@ static void write_additional_line(FILE *f, int i, gtex_type type, bool bottom,
             } else {
                 return;
             }
-        }
-        if (i == 4) {
+            break;
+        case 4:
             if (bottom || current_note->previous->u.note.pitch
                     >= score->high_ledger_line_pitch) {
                 /* we don't need to add twice the same line */
                 return;
             }
+            break;
         }
         break;
     default:
@@ -2176,15 +2187,11 @@ static void write_additional_line(FILE *f, int i, gtex_type type, bool bottom,
     if (i == HEPISEMA_FIRST_TWO) {
         /* here we must compare the first note of the big bar with the second
          * one, but it may be tricky sometimes, because of the previous patch */
-        if (current_note->previous &&
-                current_note->previous->u.note.pitch >
-                current_note->u.note.pitch) {
-            ambitus = current_note->previous->u.note.pitch -
-                    current_note->u.note.pitch;
-        } else {
-            ambitus = current_note->u.note.pitch -
-                    current_note->next->u.note.pitch;
-        }
+        gregorio_assert_only(!current_note->previous ||
+                current_note->u.note.pitch
+                > current_note->previous->u.note.pitch,
+                write_additional_line, "HEPISEMA_FIRST_TWO on the wrong note");
+        ambitus = current_note->u.note.pitch - current_note->next->u.note.pitch;
     }
     fprintf(f, "\\GreAdditionalLine{\\GreOCase%s}{%d}{%d}%%\n",
             current_note->gtex_offset_case, ambitus, bottom ? 3 : 2);
@@ -2616,8 +2623,6 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
     /* i is the number of the note for which we are typesetting the sign. */
     int i;
     gregorio_note *current_note;
-    /* a dumb char */
-    char block_hepisema = 0;
     signed char high_pitch = UNDETERMINED_HEIGHT;
     signed char low_pitch = UNDETERMINED_HEIGHT;
     bool found = false;
@@ -2681,15 +2686,6 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
         default:
             /* do nothing */
             break;
-        }
-        /* why is this if there?... */
-        if (!current_note->special_sign) {
-            if (block_hepisema == 2) {
-                block_hepisema = 0;
-            }
-            if (block_hepisema == 1) {
-                block_hepisema = 2;
-            }
         }
         if (type == T_ONE_NOTE) {
             break;
@@ -3124,14 +3120,7 @@ static __inline bool next_is_bar(const gregorio_syllable *syllable,
         if (!syllable) {
             return false;
         }
-        if (syllable->type == GRE_BAR) {
-            return true;
-        }
-        if (syllable->type != GRE_SYLLABLE) {
-            return false;
-        }
 
-        /* the next syllable is a GRE_SYLLABLE; so look at the element */
         element = syllable->elements[0];
     }
 
@@ -3352,14 +3341,11 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     gregorio_element *clef_change_element = NULL, *element;
     const char *syllable_type = NULL;
     bool event_anticipated = false;
-    bool end_of_word = syllable->position == WORD_END
+    bool end_of_word;
+    gregorio_not_null(syllable, write_syllable, return);
+    end_of_word = syllable->position == WORD_END
             || syllable->position == WORD_ONE_SYLLABLE || !syllable->text
-            || !syllable->next_syllable
-            || syllable->next_syllable->type == GRE_END_OF_LINE;
-    if (!syllable) {
-        write_this_syllable_text(f, NULL, NULL, end_of_word);
-        return;
-    }
+            || !syllable->next_syllable;
     /* Very first: before anything, if the syllable is the beginning of a
      * no-linebreak area: */
     if (syllable->no_linebreak_area == NLBA_BEGINNING) {
@@ -3827,9 +3813,12 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
         fprintf(f, "}%%\n");
     }
 
+    /* DEPRECATED by 4.1 */
+    /* LCOV_EXCL_START */
     if (score->initial_style != INITIAL_NOT_SPECIFIED) { /* DEPRECATED by 4.1 */
         fprintf(f, "\\GreSetInitialStyle{%d}%%\n", score->initial_style); /* DEPRECATED by 4.1 */
     }
+    /* LCOV_EXCL_STOP */
 
     fprintf(f, "\\GreScoreOpening{%%\n"); /* GreScoreOpening#1 */
     if (score->first_voice_info) {

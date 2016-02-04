@@ -652,24 +652,12 @@ unsigned char nabc_state = 0;
 size_t nabc_lines = 0;
 
 static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
-    gregorio_element *new_elements;
-    gregorio_element *last_element;
     if (nabc_state == 0) {
-        if (!elements[voice]) {
-            elements[voice] = gabc_det_elements_from_string(notes,
-                    &current_key, macros, &loc, score);
-            current_element = elements[voice];
-        } else {
-            new_elements = gabc_det_elements_from_string(notes,
-                    &current_key, macros, &loc, score);
-            last_element = elements[voice];
-            while(last_element->next) {
-                last_element = last_element->next;
-            }
-            last_element->next = new_elements;
-            new_elements->previous = last_element;
-            current_element = new_elements;
-        }
+        gregorio_assert(!elements[voice], gabc_y_add_notes,
+                "attempted to append notes", return);
+        elements[voice] = gabc_det_elements_from_string(notes, &current_key,
+                macros, &loc, score);
+        current_element = elements[voice];
     } else {
         if (!elements[voice]) {
             gregorio_add_element(&elements[voice], NULL);

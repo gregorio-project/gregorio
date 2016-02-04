@@ -69,7 +69,6 @@ typedef struct gregorio_scanner_location {
     E(GRE_GLYPH) \
     E(GRE_ELEMENT) \
     E(GRE_CLEF) \
-    E(GRE_SYLLABLE) \
     E(GRE_END_OF_LINE) \
     E(GRE_SPACE) \
     E(GRE_BAR) \
@@ -626,9 +625,6 @@ typedef struct gregorio_syllable {
     struct gregorio_element **elements;
     unsigned short euouae_id;
     unsigned short src_line, src_column, src_offset;
-    /* a syllable can be a GRE_SYLLABLE, a GRE_*_KEY_CHANGE or a
-     * GRE_BAR. It is useful when there is only that in a syllable. */
-    ENUM_BITFIELD(gregorio_type) type:8;
     /* type of translation (with center beginning or only center end) */
     ENUM_BITFIELD(gregorio_tr_centering) translation_type:2;
     /* beginning or end of area without linebreak? */

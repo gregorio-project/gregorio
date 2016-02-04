@@ -49,12 +49,22 @@ void dump_write_characters(FILE *const f,
             gregorio_print_unichar(f, current_character->cos.character);
             fprintf(f, "\n");
         } else {
-            if (current_character->cos.s.type == ST_T_BEGIN) {
+            switch (current_character->cos.s.type) {
+            case ST_T_BEGIN:
                 fprintf(f, "     beginning of style   %s\n",
                         dump_style_to_string(current_character->cos.s.style));
-            } else {
+                break;
+            case ST_T_END:
                 fprintf(f, "     end of style         %s\n",
                         dump_style_to_string(current_character->cos.s.style));
+                break;
+            default:
+                /* not reachable unless there's a programming error */
+                /* LCOV_EXCL_START */
+                fprintf(f, "     !! IMPROPER STYLE !! %s\n",
+                        dump_style_to_string(current_character->cos.s.style));
+                break;
+                /* LCOV_EXCL_STOP */
             }
         }
         current_character = current_character->next_character;
@@ -175,10 +185,7 @@ void dump_write_score(FILE *f, gregorio_score *score)
     for (syllable = score->first_syllable; syllable;
             syllable = syllable->next_syllable) {
         gregorio_element *element;
-        if (syllable->type) {
-            fprintf(f, "   type                      %d (%s)\n",
-                    syllable->type, gregorio_type_to_string(syllable->type));
-        }
+        fprintf(f, "   type                      0 (GRE_SYLLABLE)\n");
         if (syllable->position) {
             fprintf(f, "   position                  %d (%s)\n",
                     syllable->position,
