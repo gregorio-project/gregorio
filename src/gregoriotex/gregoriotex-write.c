@@ -691,6 +691,22 @@ static __inline signed char second_pitch_of(const gregorio_glyph *const glyph) {
     return second_note_of(glyph)->u.note.pitch;
 }
 
+static __inline gregorio_note *third_note_of(
+        const gregorio_glyph *const glyph) {
+    assert(glyph->type == GRE_GLYPH);
+    assert(glyph->u.notes.first_note);
+    assert(glyph->u.notes.first_note->type == GRE_NOTE);
+    assert(glyph->u.notes.first_note->next);
+    assert(glyph->u.notes.first_note->next->type == GRE_NOTE);
+    assert(glyph->u.notes.first_note->next->next);
+    assert(glyph->u.notes.first_note->next->next->type == GRE_NOTE);
+    return glyph->u.notes.first_note->next->next;
+}
+
+static __inline signed char third_pitch_of(const gregorio_glyph *const glyph) {
+    return third_note_of(glyph)->u.note.pitch;
+}
+
 static __inline const char *porrectus_shape(const gregorio_glyph *const glyph,
         const char *base_shape, const char *longqueue_shape) {
     const gregorio_note *const first_note = first_note_of(glyph);
@@ -967,16 +983,9 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
             *type = AT_FLEXUS;
         }
         *gtype = T_ANCUS;
-        switch (queuetype_of(second_note)) {
-        case Q_ON_SPACE_BELOW_BOTTOM_LINE:
-        case Q_ON_SPACE_ABOVE_BOTTOM_LINE:
-            shape = SHAPE_Ancus;
-            break;
-        case Q_ON_BOTTOM_LINE:
-        case Q_ON_LINE_ABOVE_BOTTOM_LINE:
-        shape = SHAPE_AncusLongqueue;
-            break;
-        }
+        ambitus = first_pitch_of(glyph) - second_pitch_of(glyph);
+        shape = flexus_shape(glyph, ambitus, SHAPE_Ancus,
+                    SHAPE_AncusLongqueue, SHAPE_Ancus);
         ltype = LG_ONLY_DEMINUTUS;
         break;
     case G_SCANDICUS:
@@ -988,16 +997,9 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
     case G_SALICUS:
         *type = AT_ONE_NOTE;
         *gtype = T_SALICUS;
-        switch (queuetype_of(second_note_of(glyph))) {
-        case Q_ON_SPACE_BELOW_BOTTOM_LINE:
-        case Q_ON_SPACE_ABOVE_BOTTOM_LINE:
-            shape = SHAPE_Salicus;
-            break;
-        case Q_ON_BOTTOM_LINE:
-        case Q_ON_LINE_ABOVE_BOTTOM_LINE:
-            shape = SHAPE_SalicusLongqueue;
-            break;
-        }
+        ambitus = third_pitch_of(glyph) - second_pitch_of(glyph);
+        shape = flexus_shape(glyph, ambitus, SHAPE_Salicus,
+                    SHAPE_SalicusLongqueue, SHAPE_Salicus);
         ltype = LG_NO_INITIO;
         break;
     case G_SALICUS_FLEXUS:
