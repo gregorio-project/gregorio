@@ -13,6 +13,24 @@ Fonts are installed with the usual process:
 
 The most important is that they must be found by [fontconfig](http://www.freedesktop.org/wiki/Software/fontconfig/).
 
+# Stem length
+
+Stem length are entirely configurable in gregorio, but are set during the time of font creation, so you cannot change it without modifying the font.
+
+You can change stem length schema in a font when building it, by passing the `-sc` option to `squarize.py`, followed by the stem length schema you want your font to get. Currently available schemas are
+
+- default, adapted from the 1934 Antiphonale Monasticum, see comments in [stemsschema.py](stemsschema.py) for more information
+- solesmes, a schema provided by the Abbey of Solesmes
+
+If you want a version of a font built with Solesmes' schema, or would like to see a new schema implemented, please contact the developers.
+
+As an example, here is how to use greciliae with solesmes schema:
+
+- cd in the `font/` directory (this one)
+- run `fontforge -script squarize.py greciliae-base.sfd -o greciliae-solesmes.ttf -c greciliae.json -n greciliae-solesmes -sc solesmes`
+- it will produce `gregorio-solesmes.ttf`, copy it in the same place as `greciliae.ttf`
+- use it in your TeX file: `\gresetgregoriofont{greciliae-solesmes}`
+
 # Ancient notation fonts
 
 The file [gregall.sfd](gregall.sfd) contains the images on which the author has drawn the fonts. The images come from:
@@ -24,6 +42,6 @@ and are published here with the consent of these two institutions, which we than
 
 # The case of Gregoria
 
-Support for Gregoria has be dropped.
+Support for Gregoria has been dropped.
 
 [Gregoria](http://www.anatoletype.net/projects/gregoria) cannot be used by Gregorio directly (although it was the primary goal of Gregorio when it was created). As the font is not free, it's not possible to use the same process as [caeciliae](http://marello.org/caeciliae/), because it would require to distribute a modified version.

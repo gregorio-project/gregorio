@@ -418,11 +418,8 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         }
         break;
     case T_PESQUADRATUM:
-    case T_PESQUADRATUM_LONGQUEUE:
     case T_PESQUASSUS:
-    case T_PESQUASSUS_LONGQUEUE:
     case T_PESQUILISMAQUADRATUM:
-    case T_PESQUILISMAQUADRATUM_LONGQUEUE:
         if (i == 1) {
             note->gtex_offset_case = first_note_case(note, glyph);
             h_episema = above_if_h_episema(note->next);
@@ -439,7 +436,6 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         }
         break;
     case T_FLEXUS:
-    case T_FLEXUS_LONGQUEUE:
     case T_FLEXUS_ORISCUS:
         if (i == 1) {
             high_low_set_upper(glyph, note);
@@ -811,7 +807,6 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         }
         /* else fallthrough to the next case! */
     case T_SALICUS:
-    case T_SALICUS_LONGQUEUE:
         v_episema = VPOS_BELOW;
         switch (i) {
         case 1:
@@ -861,7 +856,6 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         }
         /* else fallthrough to the next case! */
     case T_ANCUS:
-    case T_ANCUS_LONGQUEUE:
         switch (i) {
         case 1:
             note->gtex_offset_case = first_note_case(note, glyph);
@@ -1700,8 +1694,7 @@ void gregoriotex_compute_positioning(const gregorio_element *element,
                     glyph->u.notes.fuse_to_next_glyph = compute_fused_shift(
                             gregorio_next_non_texverb_glyph(glyph));
                     i = 0;
-                    gregoriotex_determine_glyph_name(glyph, element, &ignored,
-                            &type);
+                    gregoriotex_determine_glyph_name(glyph, &ignored, &type);
                     for (note = glyph->u.notes.first_note; note;
                             note = note->next) {
                         if (note->type == GRE_NOTE) {
