@@ -676,11 +676,21 @@ size_t nabc_lines = 0;
 
 static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
     if (nabc_state == 0) {
-        gregorio_assert(!elements[voice], gabc_y_add_notes,
-                "attempted to append notes", return);
-        elements[voice] = gabc_det_elements_from_string(notes, &current_key,
-                macros, &loc, score);
-        current_element = elements[voice];
+        if (!elements[voice]) {
+            elements[voice] = gabc_det_elements_from_string(notes,
+                    &current_key, macros, &loc, score);
+            current_element = elements[voice];
+        } else {
+            gregorio_element *new_elements = gabc_det_elements_from_string(
+                    notes, &current_key, macros, &loc, score);
+            gregorio_element *last_element = elements[voice];
+            while (last_element->next) {
+                last_element = last_element->next;
+            }
+            last_element->next = new_elements;
+            new_elements->previous = last_element;
+            current_element = new_elements;
+        }
     } else {
         if (!elements[voice]) {
             gregorio_add_element(&elements[voice], NULL);
