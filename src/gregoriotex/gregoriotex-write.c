@@ -1008,7 +1008,6 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
         shape = SHAPE_SalicusFlexus;
         ltype = LG_NO_INITIO;
         break;
-    case G_ONE_NOTE:
     case G_PUNCTUM_INCLINATUM:
     case G_PUNCTA_INCLINATA:
     case G_2_PUNCTA_INCLINATA_DESCENDENS:
