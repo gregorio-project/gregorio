@@ -853,6 +853,7 @@ gregorio_character *gregorio_clone_characters(const gregorio_character *source);
 signed char gregorio_determine_next_pitch(gregorio_syllable *syllable,
         gregorio_element *element, gregorio_glyph *glyph);
 const char *gregorio_unknown(int value);
+gregorio_element *gregorio_get_clef_change(gregorio_syllable *syllable);
 
 static __inline void gregorio_go_to_first_character_c(gregorio_character **character)
 {
