@@ -486,7 +486,7 @@ static const char *fusible_queued_shape(const gregorio_note *const note,
         const char *const base_shape, const char *const longqueue_shape,
         const char *const openqueue_shape)
 {
-    const char *name;
+    const char *name = "";
     if (glyph->u.notes.fuse_to_next_glyph < 0) {
         /* queue size depends on the following note if fused down */
         if (glyph->u.notes.fuse_to_next_glyph == -1) {
@@ -525,7 +525,7 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
         gregorio_glyph *glyph, gtex_alignment *type)
 {
     static char buf[128];
-    const char *name;
+    const char *name = "";
 
     gregorio_assert(note, gregoriotex_determine_note_glyph_name,
             "called with NULL pointer", return "");
