@@ -1516,27 +1516,30 @@
 % emits text if #1 is 0
 \def\gre@bar@text#1{\ifcase#1 \or text\fi}%
 
-\newcount\gre@count@barshiftaftermora
-\gre@count@barshiftaftermora=3
+\newcount\gre@count@shiftaftermora
+\gre@count@shiftaftermora=4
 
-\def\gresetbarshiftaftermora#1{%
+\def\gresetshiftaftermora#1{%
   \IfStrEq{#1}{always}%
-    {\gre@count@barshiftaftermora=3}%
-    {\IfStrEq{#1}{notextonly}%
-      {\gre@count@barshiftaftermora=2}%
-      {\IfStrEq{#1}{insideonly}%
-        {\gre@count@barshiftaftermora=1}%
-        {\IfStrEq{#1}{never}%
-          {\gre@count@barshiftaftermora=0}%
-          {\gre@error{Unrecognized option "#1" in gresetbarshiftaftermora , use 'always', 'notextonly', 'insideonly' or 'never'}}%
+    {\gre@count@shiftaftermora=4}%
+    {\IfStrEq{#1}{barsonly}%
+      {\gre@count@shiftaftermora=3}%
+      {\IfStrEq{#1}{barsnotextonly}%
+        {\gre@count@shiftaftermora=2}%
+        {\IfStrEq{#1}{barsinsideonly}%
+          {\gre@count@shiftaftermora=1}%
+          {\IfStrEq{#1}{never}%
+            {\gre@count@shiftaftermora=0}%
+            {\gre@error{Unrecognized option "#1" in gresetshiftaftermora , use 'always', 'barsonly', 'barsnotextonly', 'barsinsideonly' or 'never'}}%
+          }%
         }%
       }%
     }%
 }%
 
-\def\gre@kern@bar@aftermora{%
+\def\gre@unkern@aftermora{%
   \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@fontchar@punctummora}%
-  \kern\glueexpr -\wd\gre@box@temp@width - \gre@space@skip@spacebeforesigns + \gre@space@skip@barmoraadjustment\relax %
+  \kern\glueexpr -\wd\gre@box@temp@width - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustment\relax %
 }
 
 %a macro to write a bar
@@ -1549,16 +1552,16 @@
   % mora, we kern of the corresponding space. We do it only in the case
   % of a bar in the middle of other notes.
   \ifgre@lastispunctum%
-    \ifcase\gre@count@barshiftaftermora\or %
+    \ifcase\gre@count@shiftaftermora\or %
       \ifcase #2\or %
-        \gre@kern@bar@aftermora %
+        \gre@unkern@aftermora %
       \fi %
     \or %
       \ifcase #3\relax %
-        \gre@kern@bar@aftermora %
+        \gre@unkern@aftermora %
       \fi %
     \or %
-      \gre@kern@bar@aftermora %
+      \gre@unkern@aftermora %
     \fi %
   \fi %
   \gre@newglyphcommon %

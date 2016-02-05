@@ -750,6 +750,9 @@
 %%
 \def\gre@endofsyllable#1#2#3{%
   \gre@debugmsg{syllablespacing}{ endofsyllable with #2}%
+  \ifcase\gre@count@shiftaftermora\or\or\or\or %
+    \gre@unkern@aftermora %
+  \fi %
   \ifgre@eolshiftsenabled%
     %this shift will shorten the line somewhat to allow the lyrics to extend under the custos should TeX decide to insert a line break after the syllable being ended
     \GreNoBreak%
