@@ -2414,7 +2414,7 @@ def write_fusion_leading(i, first_glyph, glyph_type, lique, qtype = None, stemsh
         elif first_glyph == 'SalicusOriscus':
             first_glyph = 'OriscusLineBL'
         elif first_glyph == 'VirgaBaseLineBL':
-            first_glyph = 'virgabase'
+            first_glyph = 'rvirgabase'
     length = get_width(first_glyph) + length
     if qtype:
         write_left_queue(i, qtype, stemshape, lique)

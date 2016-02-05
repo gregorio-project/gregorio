@@ -611,9 +611,7 @@ static gregorio_note *close_fused_glyph(gregorio_glyph **last_glyph,
 static gregorio_note *next_non_texverb_note(gregorio_note *first_note,
         gregorio_note *last_note)
 {
-    if (first_note == NULL) {
-        return NULL;
-    }
+    gregorio_not_null(first_note, gregorio_note, return NULL);
 
     if (first_note == last_note) {
         /* not reachable unless there's a programming error */

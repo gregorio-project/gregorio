@@ -1399,6 +1399,48 @@ const char *gregorio_unknown(int value) {
     return buf;
 }
 
+/*
+ * A small helper for the following function
+ */
+
+static __inline bool is_clef(gregorio_type x)
+{
+    return x == GRE_CLEF;
+}
+
+/*
+ * This function is used in write_syllable, it detects if the syllable is like
+ * (c4), (::c4), (z0c4) or (z0::c4). It returns the gregorio_element of the
+ * clef change.
+ */
+gregorio_element *gregorio_get_clef_change(gregorio_syllable *syllable)
+{
+    gregorio_element *element;
+    gregorio_assert(syllable && syllable->elements && syllable->elements[0],
+            gregoriotex_syllable_is_clef_change, "invalid syllable",
+            return NULL);
+    element = syllable->elements[0];
+    /* we just detect the foud cases */
+    if (element->type == GRE_CUSTOS && element->next
+            && (is_clef(element->next->type)) && !element->next->next) {
+        return element->next;
+    }
+    if (element->type == GRE_BAR && element->next
+            && (is_clef(element->next->type)) && !element->next->next) {
+        return element->next;
+    }
+    if ((is_clef(element->type)) && !element->next) {
+        return element;
+    }
+    if (element->type == GRE_CUSTOS && element->next
+            && element->next->type == GRE_BAR && element->next->next
+            && (is_clef(element->next->next->type))
+            && !element->next->next->next) {
+        return element->next->next;
+    }
+    return NULL;
+}
+
 ENUM_TO_STRING(gregorio_type, GREGORIO_TYPE)
 ENUM_TO_STRING(gregorio_shape, GREGORIO_SHAPE)
 ENUM_TO_STRING(gregorio_bar, GREGORIO_BAR)
