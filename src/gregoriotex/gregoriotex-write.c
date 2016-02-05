@@ -2966,6 +2966,9 @@ static void write_element(FILE *f, gregorio_syllable *syllable,
                 case SP_HALF_SPACE:
                     fprintf(f, "\\GreEndOfGlyph{22}%%\n");
                     break;
+                case SP_INTERGLYPH_SPACE:
+                    fprintf(f, "\\GreEndOfGlyph{0}%%\n");
+                    break;
                 default:
                     /* not reachable unless there's a programming error */
                     /* LCOV_EXCL_START */

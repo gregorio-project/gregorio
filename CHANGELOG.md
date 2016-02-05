@@ -10,6 +10,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - A new algorithm for placing bar syllables has been added.  The goal of the new algorithm is to place the bar line exactly between the notes which surround it and do the same with the text associated with the bar line.  It also implements a limit, `maxbaroffset`, which prevents the bar line and its text from getting too far apart.  This algorithm can be activated with `\gresetbarspacing{new}`.  Testing is not yet complete and it may still contain bugs.  See [#767](https://github.com/gregorio-project/gregorio/issues/767).
 - It is now possible to generate a font with a different stem length schema (apart from the default one, Solesmes' is available), see [fonts/README.md](fonts/README.md) for details.
 - Some forms (`ed` for example) will have a different stem length if a ledger line is present. Heuristics to determine the presence of a ledger line or not are quite simple and may not always be correct. Gabc now allows you to force a note to act as if a ledger line was present with `[ll:1]`, or as if there was no ledger line, with `[ll:0]`. See Gabc section of GregorioRef for details.
+- The ability to typeset an inter-glyph space using `\!` in gabc (see [#868](https://github.com/gregorio-project/gregorio/issues/868))
 
 ## [4.1.0-beta1] - 2016-01-23
 ### Fixed
