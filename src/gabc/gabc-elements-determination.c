@@ -140,6 +140,7 @@ static gregorio_element *gabc_det_elements_from_glyphs(
                 switch (current_glyph->u.misc.unpitched.info.space) {
                 case SP_ZERO_WIDTH:
                 case SP_HALF_SPACE:
+                case SP_INTERGLYPH_SPACE:
                     if (!current_glyph->next) {
                         close_element(&current_element, &first_glyph, current_glyph);
                     }

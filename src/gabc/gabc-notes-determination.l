@@ -971,6 +971,10 @@ y   {
         gregorio_add_space_as_note(&current_note, SP_HALF_SPACE, NULL,
                 &notes_lloc);
     }
+!?\/! {
+        gregorio_add_space_as_note(&current_note, SP_INTERGLYPH_SPACE, NULL,
+                &notes_lloc);
+    }
 \/  {
         gregorio_add_space_as_note(&current_note, SP_NEUMATIC_CUT, NULL,
                 &notes_lloc);
