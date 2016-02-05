@@ -262,6 +262,14 @@
     \else %
       \gre@skip@minNotesDistance=\gre@space@skip@intersyllablespacenotes\relax%
     \fi %
+    \ifcase\gre@count@shiftaftermora\or\or\or\or %
+      \ifgre@thisendswithmora %
+        % last syllable ends by a punctum mora, we want to ignore it.
+        % this sets the distance to shift into \gre@skip@temp@four:
+        \gre@get@unkern@aftermora %
+        \advance\gre@skip@minNotesDistance by \gre@skip@temp@four %
+      \fi %
+    \fi %
   \or %
     \gre@skip@minNotesDistance=\gre@space@skip@notebarspace\relax%
   \or %

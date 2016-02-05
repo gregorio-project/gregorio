@@ -898,7 +898,7 @@
     \kern\gre@skip@temp@four %
   \fi %
   \ifnum#2=1\else %
-    \gre@lastispunctumtrue%
+    \global\gre@lastendswithmoratrue%
   \fi %
   \ifcase#3\relax % 0
     \gre@calculate@glyphraisevalue{#1}{4}%
@@ -1537,9 +1537,15 @@
     }%
 }%
 
-\def\gre@unkern@aftermora{%
+\def\gre@get@unkern@aftermora{%
   \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@fontchar@punctummora}%
-  \kern\glueexpr -\wd\gre@box@temp@width - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustment\relax %
+  \global\gre@skip@temp@four=\glueexpr -\wd\gre@box@temp@width - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustment\relax %
+}
+
+\def\gre@unkern@aftermora{%
+  \gre@get@unkern@aftermora %
+  \kern\gre@skip@temp@four %
+  \relax %
 }
 
 %a macro to write a bar
@@ -1551,7 +1557,7 @@
   % first, for the bar to be really centered, if the last glyph has a punctum
   % mora, we kern of the corresponding space. We do it only in the case
   % of a bar in the middle of other notes.
-  \ifgre@lastispunctum%
+  \ifgre@lastendswithmora %
     \ifcase\gre@count@shiftaftermora\or %
       \ifcase #2\or %
         \gre@unkern@aftermora %
@@ -1560,6 +1566,8 @@
       \ifcase #3\relax %
         \gre@unkern@aftermora %
       \fi %
+    \or %
+      \gre@unkern@aftermora %
     \or %
       \gre@unkern@aftermora %
     \fi %

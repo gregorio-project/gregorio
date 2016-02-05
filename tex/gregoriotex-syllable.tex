@@ -28,9 +28,13 @@
 % Flag to indicate if the note is on a line or not
 \newif\ifgre@isonaline%
 
-% Flag to tell if the last seen glyph has a punctum mora
-\newif\ifgre@lastispunctum%
-\gre@lastispunctumfalse%
+% if previous syllable ends with a punctum mora
+\newif\ifgre@lastendswithmora %
+\gre@lastendswithmorafalse %
+
+% if this syllable ends with a punctum mora
+\newif\ifgre@thisendswithmora %
+\gre@thisendswithmorafalse %
 
 % a macro called each time we start something looking like a glyph, but not mandatorily called through the \GreGlyph macro, for example bars, flats, etc.
 
@@ -88,9 +92,8 @@
     \global\gre@lastoflinecount=0\relax %
   \fi %
   \gre@currenttextabovelines %
-  \ifgre@lastispunctum %
-    \gre@lastispunctumfalse%
-  \fi %
+  \global\gre@lastendswithmorafalse %
+  \relax %
 }%
 
 % passes the glyph height limits:
@@ -306,15 +309,26 @@
 % the result is identical.
 \def\gre@syllablenotes#1{%
   \global\gre@firstglyphtrue%
-  \let\ifgre@lastispunctumsave\ifgre@lastispunctum%
   \global\gre@boxingtrue%
+  \let\ifgre@lastendswithmorasave\ifgre@lastendswithmora%
   \xdef\gre@savedlastoflinecount{\number\gre@lastoflinecount\relax }%
   \setbox\gre@box@syllablenotes=\hbox{#1}%
   \gre@debugmsg{spacing}{Width of notes: \the\wd\gre@box@syllablenotes}%
-  \let\ifgre@lastispunctum\ifgre@lastispunctumsave%
   \global\gre@boxingfalse%
   \global\gre@lastoflinecount=\gre@savedlastoflinecount\relax %
   \global\gre@firstglyphtrue%
+  % now gre@lastendswithmora is true if this syllable ends with a
+  % punctum mora, but we still want to keep gre@lastendswithmora if we
+  % are on a bar, so:
+  %   - we set gre@thisendswithmora to gre@lastendswithmora
+  %   - when syllables will be really typeset, they will set gre@lastendswithmora
+  %       again
+  \ifgre@lastendswithmora %
+    \gre@thisendswithmoratrue %
+  \else %
+    \gre@thisendswithmorafalse %
+  \fi %
+  \let\ifgre@lastendswithmora\ifgre@lastendswithmorasave %
   \relax %
 }%
 
@@ -750,9 +764,6 @@
 %%
 \def\gre@endofsyllable#1#2#3{%
   \gre@debugmsg{syllablespacing}{ endofsyllable with #2}%
-  \ifcase\gre@count@shiftaftermora\or\or\or\or %
-    \gre@unkern@aftermora %
-  \fi %
   \ifgre@eolshiftsenabled%
     %this shift will shorten the line somewhat to allow the lyrics to extend under the custos should TeX decide to insert a line break after the syllable being ended
     \GreNoBreak%
@@ -847,7 +858,7 @@
     \ifdim\gre@skip@nextbegindifference > 0pt\relax%
       % the text began after the notes in the next syllable
       \advance\gre@skip@temp@one by \gre@skip@nextbegindifference\relax%
-      \advance\gre@skip@temp@two by 0pt\relax% 
+      \advance\gre@skip@temp@two by 0pt\relax%
     \else%
       % the notes begin after the text in the next syllable
       \advance\gre@skip@temp@one by 0pt\relax%
