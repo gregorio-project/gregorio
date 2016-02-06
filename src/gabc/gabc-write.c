@@ -662,6 +662,9 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph)
             case SP_HALF_SPACE:
                 fprintf(f, "/0");
                 break;
+            case SP_INTERGLYPH_SPACE:
+                fprintf(f, "/!");
+                break;
             default:
                 /* not reachable unless there's a programming error */
                 /* LCOV_EXCL_START */
