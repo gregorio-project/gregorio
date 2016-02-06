@@ -1073,8 +1073,8 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
                 /* LCOV_EXCL_START */
                 gregorio_fail(gregorio_rebuild_characters,
                         "unexpected style type");
-                /* LCOV_EXCL_STOP */
             }
+            /* LCOV_EXCL_STOP */
         }
         current_character = current_character->next_character;
     }

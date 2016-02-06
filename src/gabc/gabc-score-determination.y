@@ -179,25 +179,46 @@ static void fix_custos(gregorio_score *score_to_check)
  * ridiculous... but it might be improved in the future. 
  */
 
-static int check_score_integrity(gregorio_score *score_to_check)
+static bool check_score_integrity(gregorio_score *score_to_check)
 {
+    bool good = true;
+
     gregorio_assert(score_to_check, check_score_integrity, "score is NULL",
-            return 0);
-    return 1;
+            return false);
+
+    if (score_to_check->first_syllable
+            && score_to_check->first_syllable->elements
+            && *(score_to_check->first_syllable->elements)) {
+        if ((score_to_check->first_syllable->elements)[0]->type
+                == GRE_END_OF_LINE) {
+            gregorio_message(
+                    "line break is not supported on the first syllable",
+                    "check_score_integrity", VERBOSITY_ERROR, 0);
+            good = false;
+        }
+        if (gregorio_get_clef_change(score_to_check->first_syllable)) {
+            gregorio_message(
+                    "clef change is not supported on the first syllable",
+                    "check_score_integrity", VERBOSITY_ERROR, 0);
+            good = false;
+        }
+    }
+
+    return good;
 }
 
 /*
  * Another function to be improved: this one checks the validity of the voice_infos.
  */
 
-static int check_infos_integrity(gregorio_score *score_to_check)
+static bool check_infos_integrity(gregorio_score *score_to_check)
 {
     if (!score_to_check->name) {
         gregorio_message(_("no name specified, put `name:...;' at the "
                 "beginning of the file, can be dangerous with some output "
                 "formats"), "det_score", VERBOSITY_WARNING, 0);
     }
-    return 1;
+    return true;
 }
 
 /*
@@ -642,8 +663,10 @@ gregorio_score *gabc_read_score(FILE *f_in)
     gabc_det_notes_finish();
     free_variables();
     /* then we check the validity and integrity of the score we have built. */
-    gregorio_assert_only(check_score_integrity(score), gabc_read_score,
-            "unable to determine a valid score from file");
+    if (!check_score_integrity(score)) {
+        gregorio_message(_("unable to determine a valid score from file"),
+                "gabc_read_score", VERBOSITY_ERROR, 0);
+    }
     sha1_finish_ctx(&digester, score->digest);
     return score;
 }
@@ -653,11 +676,21 @@ size_t nabc_lines = 0;
 
 static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
     if (nabc_state == 0) {
-        gregorio_assert(!elements[voice], gabc_y_add_notes,
-                "attempted to append notes", return);
-        elements[voice] = gabc_det_elements_from_string(notes, &current_key,
-                macros, &loc, score);
-        current_element = elements[voice];
+        if (!elements[voice]) {
+            elements[voice] = gabc_det_elements_from_string(notes,
+                    &current_key, macros, &loc, score);
+            current_element = elements[voice];
+        } else {
+            gregorio_element *new_elements = gabc_det_elements_from_string(
+                    notes, &current_key, macros, &loc, score);
+            gregorio_element *last_element = elements[voice];
+            while (last_element->next) {
+                last_element = last_element->next;
+            }
+            last_element->next = new_elements;
+            new_elements->previous = last_element;
+            current_element = new_elements;
+        }
     } else {
         if (!elements[voice]) {
             gregorio_add_element(&elements[voice], NULL);

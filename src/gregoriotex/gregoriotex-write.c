@@ -564,7 +564,7 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
             return SHAPE_VirgaOpenqueue;
         case Q_ON_LINE_ABOVE_BOTTOM_LINE:
             return SHAPE_VirgaLongqueue;
-        }
+        } /* all cases return, so this line is not hit; LCOV_EXCL_LINE */
     case S_VIRGA_REVERSA:
         switch (note->u.note.liquescentia) {
         case L_AUCTUS_ASCENDENS:
@@ -596,7 +596,7 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
                 return SHAPE_VirgaReversaOpenqueueDescendens;
             case Q_ON_LINE_ABOVE_BOTTOM_LINE:
                 return SHAPE_VirgaReversaLongqueueDescendens;
-            }
+            } /* all cases return, so this line is not hit; LCOV_EXCL_LINE */
         default:
             return fusible_queued_shape(note, glyph, SHAPE_VirgaReversa,
                     SHAPE_VirgaReversaLongqueue, SHAPE_VirgaReversaOpenqueue);
@@ -632,7 +632,7 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
         case Q_ON_BOTTOM_LINE:
         case Q_ON_LINE_ABOVE_BOTTOM_LINE:
             return SHAPE_StrophaAuctaLongtail;
-        }
+        } /* all cases return, so this line is not hit; LCOV_EXCL_LINE */
     case S_PUNCTUM_CAVUM_INCLINATUM:
         *type = AT_PUNCTUM_INCLINATUM;
         return SHAPE_PunctumCavumInclinatum;
@@ -721,7 +721,7 @@ static __inline const char *porrectus_shape(const gregorio_glyph *const glyph,
         case Q_ON_LINE_ABOVE_BOTTOM_LINE:
             return longqueue_shape;
         }
-    }
+    } /* must be optimized out; LCOV_EXCL_LINE */
     return base_shape;
 }
 
@@ -786,8 +786,8 @@ static __inline const char *quadratum_shape(const gregorio_glyph *const glyph,
         /* LCOV_EXCL_START */
         gregorio_fail(quadratum_shape, "unexpected queue length");
         /* fall out of the conditional */
-        /* LCOV_EXCL_STOP */
     }
+    /* LCOV_EXCL_STOP */
     return base_shape;
 }
 
@@ -1008,7 +1008,6 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
         shape = SHAPE_SalicusFlexus;
         ltype = LG_NO_INITIO;
         break;
-    case G_ONE_NOTE:
     case G_PUNCTUM_INCLINATUM:
     case G_PUNCTA_INCLINATA:
     case G_2_PUNCTA_INCLINATA_DESCENDENS:
@@ -1094,49 +1093,6 @@ static bool gregoriotex_is_last_of_line(gregorio_syllable *syllable)
         }
     }
     return false;
-}
-
-/*
- * A small helper for the following function
- */
-
-static __inline bool is_clef(gregorio_type x)
-{
-    return x == GRE_CLEF;
-}
-
-/*
- * This function is used in write_syllable, it detects if the syllable is like
- * (c4), (::c4), (z0c4) or (z0::c4). It returns the gregorio_element of the
- * clef change.
- */
-static gregorio_element *gregoriotex_syllable_is_clef_change(gregorio_syllable
-        *syllable)
-{
-    gregorio_element *element;
-    gregorio_assert(syllable && syllable->elements && syllable->elements[0],
-            gregoriotex_syllable_is_clef_change, "invalid syllable",
-            return NULL);
-    element = syllable->elements[0];
-    /* we just detect the foud cases */
-    if (element->type == GRE_CUSTOS && element->next
-            && (is_clef(element->next->type)) && !element->next->next) {
-        return element->next;
-    }
-    if (element->type == GRE_BAR && element->next
-            && (is_clef(element->next->type)) && !element->next->next) {
-        return element->next;
-    }
-    if ((is_clef(element->type)) && !element->next) {
-        return element;
-    }
-    if (element->type == GRE_CUSTOS && element->next
-            && element->next->type == GRE_BAR && element->next->next
-            && (is_clef(element->next->next->type))
-            && !element->next->next->next) {
-        return element->next->next;
-    }
-    return NULL;
 }
 
 /*
@@ -1300,8 +1256,12 @@ static void gtex_print_char(FILE *f, const grewchar to_print)
         fprintf(f, "\\GreStar{}");
         break;
     case L'%':
+        /* there's currently no way to get a % into gabc, so this wont be hit,
+         * but we leave it here for safety and possible future use */
+        /* LCOV_EXCL_START */
         fprintf(f, "\\%%{}");
         break;
+        /* LCOV_EXCL_STOP */
     case L'\\':
         fprintf(f, "\\textbackslash{}");
         break;
@@ -2384,8 +2344,7 @@ static int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
     gregorio_assert(syllable && syllable->elements,
             gregoriotex_syllable_first_type, "called with a NULL argument",
             return 0);
-    element = syllable->elements[0];
-    while (element) {
+    for (element = syllable->elements[0]; element; element = element->next) {
         if (element->type == GRE_BAR) {
             switch (element->u.misc.unpitched.info.bar) {
             case B_NO_BAR:
@@ -2473,10 +2432,8 @@ static int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
                     }
                     return type + alteration;
                 }
-                glyph = glyph->next;
             }
         }
-        element = element->next;
     }
     return 0;
 }
@@ -2970,6 +2927,9 @@ static void write_element(FILE *f, gregorio_syllable *syllable,
                 case SP_HALF_SPACE:
                     fprintf(f, "\\GreEndOfGlyph{22}%%\n");
                     break;
+                case SP_INTERGLYPH_SPACE:
+                    fprintf(f, "\\GreEndOfGlyph{0}%%\n");
+                    break;
                 default:
                     /* not reachable unless there's a programming error */
                     /* LCOV_EXCL_START */
@@ -3196,9 +3156,8 @@ static void write_syllable_text(FILE *f, const char *const syllable_type,
 static void write_first_syllable_text(FILE *f, const char *const syllable_type,
         const gregorio_character *const text, bool end_of_word)
 {
-    if (syllable_type == NULL) {
-        fprintf(f, "}{\\GreSyllable}{\\GreSetNoFirstSyllableText}");
-    } else if (text == NULL) {
+    gregorio_not_null(syllable_type, write_first_syllable_text, return);
+    if (text == NULL) {
         fprintf(f, "}{%s}{\\GreSetNoFirstSyllableText}", syllable_type);
     } else {
         gregorio_character *text_with_initial = gregorio_clone_characters(text),
@@ -3362,6 +3321,9 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
      */
     if (syllable->elements && *(syllable->elements)) {
         if ((syllable->elements)[0]->type == GRE_END_OF_LINE) {
+            gregorio_assert(syllable != score->first_syllable, write_syllable,
+                    "line break is not supported on the first syllable",
+                    return);
             if ((syllable->elements)[0]->u.misc.unpitched.info.eol_ragged) {
                 fprintf(f, "%%\n%%\n\\GreNewParLine %%\n%%\n%%\n");
             } else {
@@ -3377,8 +3339,12 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
          * effect. So first we detect it:
          */
         if (first_of_disc == 0) {   /* to avoid infinite loops */
-            clef_change_element = gregoriotex_syllable_is_clef_change(syllable);
+            clef_change_element = gregorio_get_clef_change(syllable);
             if (clef_change_element) {
+                gregorio_assert(syllable != score->first_syllable,
+                        write_syllable,
+                        "clef change is not supported on the first syllable",
+                        return);
                 /*
                  * In this case, the first thing to do is to change the line clef
                  */
@@ -3397,22 +3363,27 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
         write_fixed_text_styles(f, syllable->text,
                 syllable->next_syllable? syllable->next_syllable->text : NULL);
         if ((syllable->elements)[0]->type == GRE_BAR) {
-            if (!syllable->next_syllable && !syllable->text
-                    && (syllable->elements)[0]->u.misc.unpitched.info.bar ==
-                    B_DIVISIO_FINALIS) {
-                handle_final_bar(f, "DivisioFinalis", syllable);
-                write_this_syllable_text(f, NULL, syllable->text, end_of_word);
-                return;
+            if (syllable != score->first_syllable) {
+                if (!syllable->next_syllable && !syllable->text
+                        && (syllable->elements)[0]->u.misc.unpitched.info.bar
+                        == B_DIVISIO_FINALIS) {
+                    handle_final_bar(f, "DivisioFinalis", syllable);
+                    write_this_syllable_text(f, NULL, syllable->text,
+                            end_of_word);
+                    return;
+                }
+                if (!syllable->next_syllable && !syllable->text
+                        && (syllable->elements)[0]->u.misc.unpitched.info.bar
+                        == B_DIVISIO_MAIOR) {
+                    handle_final_bar(f, "DivisioMaior", syllable);
+                    write_this_syllable_text(f, NULL, syllable->text,
+                            end_of_word);
+                    return;
+                }
             }
-            if (!syllable->next_syllable && !syllable->text
-                    && (syllable->elements)[0]->u.misc.unpitched.info.bar ==
-                    B_DIVISIO_MAIOR) {
-                handle_final_bar(f, "DivisioMaior", syllable);
-                write_this_syllable_text(f, NULL, syllable->text, end_of_word);
-                return;
-            } else {
-                syllable_type = "\\GreBarSyllable";
-            }
+            /* the special case of first syllable will be treated as a normal
+             * bar syllable */
+            syllable_type = "\\GreBarSyllable";
         } else {
             syllable_type = "\\GreSyllable";
         }
@@ -3480,9 +3451,6 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             switch (element->type) {
             case GRE_SPACE:
                 switch (element->u.misc.unpitched.info.space) {
-                case SP_ZERO_WIDTH:
-                    fprintf(f, "\\GreEndOfElement{3}{1}%%\n");
-                    break;
                 case SP_LARGER_SPACE:
                     fprintf(f, "\\GreEndOfElement{1}{0}%%\n");
                     break;

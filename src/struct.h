@@ -191,6 +191,7 @@ ENUM(gregorio_sign, GREGORIO_SIGN);
     E(SP_NO_SPACE) \
     E(SP_ZERO_WIDTH) \
     E(SP_HALF_SPACE) \
+    E(SP_INTERGLYPH_SPACE) \
     E(SP_NEUMATIC_CUT) \
     E(SP_LARGER_SPACE) \
     E(SP_GLYPH_SPACE) \
@@ -275,7 +276,6 @@ ENUM(gregorio_vposition, GREGORIO_VPOSITION);
     E(G_SCANDICUS) \
     E(G_PES_QUILISMA_QUADRATUM_FIRST_PART) \
     E(G_ANCUS) \
-    E(G_ONE_NOTE) \
     E(G_PUNCTA_ASCENDENS) \
     E(G_PUNCTA_DESCENDENS) \
     E(G_VIRGA_REVERSA) \
@@ -853,6 +853,7 @@ gregorio_character *gregorio_clone_characters(const gregorio_character *source);
 signed char gregorio_determine_next_pitch(gregorio_syllable *syllable,
         gregorio_element *element, gregorio_glyph *glyph);
 const char *gregorio_unknown(int value);
+gregorio_element *gregorio_get_clef_change(gregorio_syllable *syllable);
 
 static __inline void gregorio_go_to_first_character_c(gregorio_character **character)
 {
