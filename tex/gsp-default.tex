@@ -111,10 +111,13 @@
 % space before end-of-line custos
 \grecreatedim{spacebeforeeolcustos}{0.1823 cm plus 0.31903 cm minus 0.0638 cm}{scalable}%
 % space before punctum mora and augmentum duplex
-\grecreatedim{spacebeforesigns}{0.05469 cm plus 0.00455 cm minus 0.00455 cm}{scalable}%
-% when a syllable (bar or not) is shifted left because of a preceding punctum mora, barmoraadjustment is
+\grecreatedim{spacebeforesigns}{0.050 cm plus 0.004 cm minus 0.004 cm}{scalable}%
+% when a syllable is shifted left because of a preceding punctum mora, barmoraadjustment is
 % also added. Use it to make the syllable a bit further from the punctum mora if you want.
-\grecreatedim{moraadjustment}{0 cm}{scalable}%
+% This version is the general case.
+\grecreatedim{moraadjustment}{0.050 cm}{scalable}%
+% This version is for when punctum mora is before a bar.
+\grecreatedim{moraadjustmentbar}{0 cm}{scalable}%
 % space after punctum mora and augmentum duplex
 \grecreatedim{spaceaftersigns}{0.08203 cm plus 0.0082 cm minus 0.0082 cm}{scalable}%
 % space after a clef at the beginning of a line

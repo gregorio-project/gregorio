@@ -1537,13 +1537,24 @@
     }%
 }%
 
-\def\gre@get@unkern@aftermora{%
+% sets gre@skip@temp@four to the (usually negative) shift to apply before
+% a syllable following a punctum mora, to cancel its taking into account into
+% horizontal placement.
+% First argument is:
+%   - 1 for the general case
+%   - 2 when the punctum mora is before a bar
+\def\gre@get@unkern@aftermora#1{%
   \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@fontchar@punctummora}%
-  \global\gre@skip@temp@four=\glueexpr -\wd\gre@box@temp@width - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustment\relax %
+  \ifnum #1=1%
+    \global\gre@skip@temp@four=\glueexpr -\wd\gre@box@temp@width - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustment\relax %
+  \else %
+    \global\gre@skip@temp@four=\glueexpr -\wd\gre@box@temp@width - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustmentbar\relax %
+  \fi %
+  \relax %
 }
 
-\def\gre@unkern@aftermora{%
-  \gre@get@unkern@aftermora %
+\def\gre@unkern@bar@aftermora{%
+  \gre@get@unkern@aftermora{2}%
   \kern\gre@skip@temp@four %
   \relax %
 }
@@ -1560,16 +1571,16 @@
   \ifgre@lastendswithmora %
     \ifcase\gre@count@shiftaftermora\or %
       \ifcase #2\or %
-        \gre@unkern@aftermora %
+        \gre@unkern@bar@aftermora %
       \fi %
     \or %
       \ifcase #3\relax %
-        \gre@unkern@aftermora %
+        \gre@unkern@bar@aftermora %
       \fi %
     \or %
-      \gre@unkern@aftermora %
+      \gre@unkern@bar@aftermora %
     \or %
-      \gre@unkern@aftermora %
+      \gre@unkern@bar@aftermora %
     \fi %
   \fi %
   \gre@newglyphcommon %
