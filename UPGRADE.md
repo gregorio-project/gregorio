@@ -20,6 +20,14 @@ Since the `biginitial` style will disappear with Gregorio 5.0, please consider d
 
 When the next syllable starts with an alteration, the minimal space between notes of the current syllable and notes of the current syllable is handled by the new spaces `intersyllablespacenotes@alteration` and `interwordspacenotes@alteration`. Set them in your custom spacings file if needed.
 
+When a syllable ends with a punctum mora, Gregorio 4.1 doesn't consider the punctum mora completely in horizontal spacing. This can result in next syllable being closer. To balance the output, `spacebeforesigns` has been made shorter. If you want to go back to the old behavior, use:
+
+- `\gresetshiftaftermora{never}` if you want to remove it completely
+- `\gresetshiftaftermora{barsonly}` if you want to remove it for non-bar syllables but keep it for bar syllables
+- `\grechangedim{spacebeforesigns}{0.05469 cm plus 0.00455 cm minus 0.00455 cm}{scalable}` to go back to the old spacing before punctum mora
+
+The `\gresetshiftaftermora` macro can take other arguments for controlling how this should work, see GregorioRef for details.
+
 ### Horizontal episemata on high and low notes
 
 Prior to version 4.1, Gregorio reserved space between notes at the `c` and `k` heights and their horizontal episemata for a "ledger line" that might appear between them.  However, if the ledger line did not appear, the episema would appear to be too far from the note.
