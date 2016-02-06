@@ -97,11 +97,13 @@ function copy_files()
   print("gregorio.exe...")
   copy_one_file("gregorio.exe", texmfbin_32)
   copy_one_file("gregorio.exe", texmfbin_64)
-  print("GregorioTeX files...")
-  os.spawn("xcopy texmf "..texmflocal.." /e /f /y")
 end
 
 function run_texcommands()
+  print("Registering Gregorio's texmf tree")
+  local appdir = lfs.currentdir()
+  local target = fixpath(appdir.."/texmf/")
+  os.spawn("initexmf --register-root=\""..target)
   print("Running initexmf...")
   os.spawn("initexmf -u")
 end
