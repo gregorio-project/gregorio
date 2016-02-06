@@ -100,7 +100,7 @@ function copy_files()
 end
 
 function run_texcommands()
-  print("Registering Gregorio's texmf tree")
+  print("Registering Gregorio's texmf tree with MiKTeX...")
   local appdir = lfs.currentdir()
   local target = fixpath(appdir.."/texmf/")
   os.spawn("initexmf --register-root=\""..target)
