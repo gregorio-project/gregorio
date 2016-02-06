@@ -85,7 +85,7 @@ function copy_files()
   if not lfs.isdir(texmflocal) then
     lfs.mkdir(texmflocal)
   end
-  print("Copying files...\n")
+  print("Copying files...")
   local texmfdist = kpse.expand_var("$TEXMFDIST")
   --[[ MiKTeX uses slightly different paths for the location of it's bin
   directory for 32 and 64 bit versions.  Since the copy command will fail
@@ -102,8 +102,8 @@ function copy_files()
 end
 
 function run_texcommands()
-  print("Running initexmf\n")
-  local p = os.spawn("initexmf -u --admin")
+  print("Running initexmf...")
+  os.spawn("initexmf -u")
 end
 
 function main_install()
