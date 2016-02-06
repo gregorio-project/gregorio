@@ -24,9 +24,9 @@ When a syllable ends with a punctum mora, Gregorio 4.1 doesn't consider the punc
 
 - `\gresetshiftaftermora{never}` if you want to remove it completely
 - `\gresetshiftaftermora{barsonly}` if you want to remove it for non-bar syllables but keep it for bar syllables
-- `\grecreatedim{spacebeforesigns}{0.05469 cm plus 0.00455 cm minus 0.00455 cm}{scalable}` to go back to the old spacing before punctum mora
+- `\grechangedim{spacebeforesigns}{0.05469 cm plus 0.00455 cm minus 0.00455 cm}{scalable}` to go back to the old spacing before punctum mora
 
-The `\gresetshiftaftermora` macro can take other arguments for precising the type of bars, see GregorioRef for details.
+The `\gresetshiftaftermora` macro can take other arguments for controlling how this should work, see GregorioRef for details.
 
 ### Horizontal episemata on high and low notes
 
