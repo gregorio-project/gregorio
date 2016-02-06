@@ -175,8 +175,7 @@ static void fix_custos(gregorio_score *score_to_check)
 }
 
 /*
- * A function that checks to score integrity. For now it is... quite
- * ridiculous... but it might be improved in the future. 
+ * A function that checks the score integrity.
  */
 
 static bool check_score_integrity(gregorio_score *score_to_check)
@@ -189,6 +188,7 @@ static bool check_score_integrity(gregorio_score *score_to_check)
     if (score_to_check->first_syllable
             && score_to_check->first_syllable->elements
             && *(score_to_check->first_syllable->elements)) {
+        gregorio_character *ch;
         if ((score_to_check->first_syllable->elements)[0]->type
                 == GRE_END_OF_LINE) {
             gregorio_message(
@@ -201,6 +201,21 @@ static bool check_score_integrity(gregorio_score *score_to_check)
                     "clef change is not supported on the first syllable",
                     "check_score_integrity", VERBOSITY_ERROR, 0);
             good = false;
+        }
+        /* check first syllable for elision at the beginning */
+        for (ch = score_to_check->first_syllable->text; ch;
+                ch = ch->next_character) {
+            if (ch->is_character) {
+                break;
+            } else if (ch->cos.s.style == ST_VERBATIM
+                    || ch->cos.s.style == ST_SPECIAL_CHAR) {
+                break;
+            } else if (ch->cos.s.style == ST_ELISION) {
+                gregorio_message(
+                        _("score initial may not be in an elision"),
+                        "rebuild_characters", VERBOSITY_ERROR, 0);
+                break;
+            }
         }
     }
 
@@ -342,40 +357,41 @@ static void gregorio_set_translation_center_beginning(
     current_syllable->translation_type = TR_NORMAL;
 }
 
-static void rebuild_characters(void)
+static void ready_characters(void)
 {
-    /* we rebuild the first syllable text if it is the first syllable, or if
-     * it is the second when the first has no text.
-     * it is a patch for cases like (c4) Al(ab)le(ab) */
-    if ((!score->first_syllable && current_character)
-            || (current_syllable && !current_syllable->previous_syllable
-            && !current_syllable->text && current_character)) {
-        gregorio_character *ch;
-
-        /* leave the first syllable text untouched at this time */
+    if (current_character) {
         gregorio_go_to_first_character_c(&current_character);
+        if (!score->first_syllable || (current_syllable
+                && !current_syllable->previous_syllable
+                && !current_syllable->text)) {
+            started_first_word = true;
+        }
+    }
+}
 
-        started_first_word = true;
+static void rebuild_score_characters(void)
+{
+    if (score->first_syllable) {
+        gregorio_syllable *syllable;
+        /* leave the first syllable text untouched at this time */
+        for (syllable = score->first_syllable->next_syllable; syllable;
+                syllable = syllable->next_syllable) {
+            const gregorio_character *t;
 
-        /* check first syllable for elision at the beginning */
-        for (ch = current_character; ch; ch = ch->next_character) {
-            if (ch->is_character) {
-                break;
-            } else {
-                if (ch->cos.s.style == ST_ELISION) {
-                    gregorio_message(
-                            _("score initial may not be in an elision"),
-                            "rebuild_characters", VERBOSITY_ERROR, 0);
+            /* find out if there is a forced center */
+            gregorio_center_determination center = CENTER_NOT_DETERMINED;
+            for (t = syllable->text; t; t = t->next_character) {
+                if (!t->is_character && t->cos.s.style == ST_FORCED_CENTER) {
+                    center = CENTER_FULLY_DETERMINED;
                     break;
                 }
             }
-        }
-    } else {
-        gregorio_rebuild_characters(&current_character, center_is_determined,
-                false);
 
-        if (started_first_word) {
-            gregorio_set_first_word(&current_character);
+            gregorio_rebuild_characters(&(syllable->text), center, false);
+
+            if (syllable->first_word) {
+                gregorio_set_first_word(&(syllable->text));
+            }
         }
     }
 }
@@ -476,7 +492,7 @@ static void close_syllable(YYLTYPE *loc)
  * the translation pointer instead of the text pointer */
 static void start_translation(unsigned char asked_translation_type)
 {
-    rebuild_characters();
+    ready_characters();
     first_text_character = current_character;
     /* the middle letters of the translation have no sense */
     center_is_determined = CENTER_FULLY_DETERMINED;
@@ -486,7 +502,7 @@ static void start_translation(unsigned char asked_translation_type)
 
 static void end_translation(void)
 {
-    rebuild_characters();
+    ready_characters();
     first_translation_character = current_character;
 }
 
@@ -659,6 +675,7 @@ gregorio_score *gabc_read_score(FILE *f_in)
         determine_oriscus_orientation(score);
     }
     gregorio_fix_initial_keys(score, gregorio_default_clef);
+    rebuild_score_characters();
     fix_custos(score);
     gabc_det_notes_finish();
     free_variables();
@@ -1045,7 +1062,7 @@ above_line_text:
 
 syllable_with_notes:
     text OPENING_BRACKET notes {
-        rebuild_characters();
+        ready_characters();
         first_text_character = current_character;
         close_syllable(&@1);
     }
@@ -1053,7 +1070,7 @@ syllable_with_notes:
         gregorio_gabc_add_style(ST_VERBATIM);
         gregorio_gabc_add_text(gregorio_strdup("\\GreForceHyphen"));
         gregorio_gabc_end_style(ST_VERBATIM);
-        rebuild_characters();
+        ready_characters();
         first_text_character = current_character;
         close_syllable(&@1);
     }
