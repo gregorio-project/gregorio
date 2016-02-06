@@ -867,10 +867,13 @@
 %% macros for the typesetting of punctum mora, auctum duplex and choral signs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% a function to typeset a punctum mora, the first argument is the letter of the height of the punctum mora
-% if the second argument is one, we the go back to the end of the punctum
-% if the second argument is two, it means that we must shift the width of one punctum to the left
-% if it is three, it means the same as when it is two, but with ambitus of one
+% a function to typeset a punctum mora,
+% #1 is the letter of the height of the punctum mora
+% #2 is
+%   - 0 in the general case
+%   - 1 if we make the punctum mora 0-width (e.g!hv)
+%   - 2 if we shift the width of one punctum to the left (g.e)
+%   - 3 same as 2 but with ambitus of one (g.f)
 % #3 is 1 in case of a punctommora in the note before the last note of a podatus, porrectus or torculus resupinus, 0 otherwise.
 % #4 is 1 if we are at a punctum inclinatum, 0 otherwise
 \def\GrePunctumMora#1#2#3#4{%
@@ -897,7 +900,7 @@
     \gre@skip@temp@four = \gre@space@skip@spacebeforesigns\relax%
     \kern\gre@skip@temp@four %
   \fi %
-  \ifnum#2=1\else %
+  \ifnum#2=0\relax %
     \global\gre@lastendswithmoratrue%
   \fi %
   \ifcase#3\relax % 0
