@@ -587,6 +587,7 @@ end
 local function direct_gabc(gabc, header)
   tmpname = os.tmpname()
   local f = io.open(tmpname, 'w')
+  -- trims spaces on both ends (trim6 from http://lua-users.org/wiki/StringTrim)
   gabc = gabc:match('^()%s*$') and '' or gabc:match('^%s*(.*%S)')
   f:write('name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par ', '\n'))
   f:close()
