@@ -157,8 +157,8 @@ static bool gregorio_readline(char **buf, size_t *bufsize, FILE *file)
             gregorio_message(_("invalid buffer size"), "gregorio_getline",
                     VERBOSITY_FATAL, 0);
             gregorio_exit(1);
+            /* LCOV_EXCL_STOP */
         }
-        /* LCOV_EXCL_STOP */
     }
     (*buf)[0] = '\0';
     oldsize = 1;
@@ -176,8 +176,8 @@ static bool gregorio_readline(char **buf, size_t *bufsize, FILE *file)
                 gregorio_message(_("Error reading from the file"),
                         "gregorio_getline", VERBOSITY_FATAL, 0);
                 gregorio_exit(1);
+                /* LCOV_EXCL_STOP */
             }
-            /* LCOV_EXCL_STOP */
             return (*buf)[0] != '\0';
         }
 
@@ -187,8 +187,8 @@ static bool gregorio_readline(char **buf, size_t *bufsize, FILE *file)
             gregorio_message(_("Line too long"), "gregorio_getline",
                     VERBOSITY_FATAL, 0);
             gregorio_exit(1);
+            /* LCOV_EXCL_STOP */
         }
-        /* LCOV_EXCL_STOP */
 
         oldsize = *bufsize;
         *bufsize <<= 1;

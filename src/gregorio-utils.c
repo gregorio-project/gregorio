@@ -112,8 +112,8 @@ static char *define_path(char *current_directory, char *string)
             fprintf(stderr, "the directory %s for %s does not exist\n",
                     temp_name, base_name);
             gregorio_exit(1);
+            /* LCOV_EXCL_STOP */
         }
-        /* LCOV_EXCL_STOP */
     } else {
         /* no path was supplied */
         base_name = string;
@@ -257,8 +257,8 @@ static char *encode_point_and_click_filename(char *input_file_name)
         /* LCOV_EXCL_START */
         fprintf(stderr, "error: unable to resolve %s\n", input_file_name);
         gregorio_exit(1);
+        /* LCOV_EXCL_STOP */
     }
-    /* LCOV_EXCL_STOP */
 
     /* 2 extra characters for a possible leading slash and final NUL */
     r = result = gregorio_malloc(strlen(filename) * 4 + 2);
@@ -396,7 +396,7 @@ int main(int argc, char **argv)
                 fprintf(stderr, "error: unknown output format: %s\n", optarg);
                 gregorio_exit(1);
             }
-            break; /* all cases either break or exit; LCOV_EXCL_LINE */
+            break;
         case 'l':
             if (error_file_name) {
                 fprintf(stderr,
@@ -420,7 +420,7 @@ int main(int argc, char **argv)
                 fprintf(stderr, "error: unknown input format: %s\n", optarg);
                 gregorio_exit(1);
             }
-            break; /* all cases either break or exit; LCOV_EXCL_LINE */
+            break;
         case 's':
             /* input_file_name will be null here because of the way
              * we use getopt_long */
@@ -546,7 +546,7 @@ int main(int argc, char **argv)
                 fprintf(stderr, "error: unsupported format");
                 gregorio_exit(1);
                 /* LCOV_EXCL_STOP */
-            } /* all cases either break or exit; LCOV_EXCL_LINE */
+            }
         }
     }
     if (output_basename) {
@@ -630,8 +630,8 @@ int main(int argc, char **argv)
         fclose(output_file);
         fprintf(stderr, "error in file parsing\n");
         gregorio_exit(1);
+        /* LCOV_EXCL_STOP */
     }
-    /* LCOV_EXCL_STOP */
 
     switch (output_format) {
     case GABC:

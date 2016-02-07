@@ -37,15 +37,15 @@
     ((size_t)((((INT_MAX < GREGORIO_SZ_MAX)? INT_MAX : GREGORIO_SZ_MAX) >> 1) + 1))
 
 void gregorio_snprintf(char *s, size_t size, const char *format, ...)
-        __attribute__ ((__format__ (__printf__, 3, 4)));
-void *gregorio_malloc(size_t size);
-void *gregorio_calloc(size_t nmemb, size_t size);
-void *gregorio_realloc(void *ptr, size_t size);
-char *gregorio_strdup(const char *s);
+        __attribute__((__format__ (__printf__, 3, 4)));
+void *gregorio_malloc(size_t size) __attribute__((malloc));
+void *gregorio_calloc(size_t nmemb, size_t size) __attribute__((malloc));
+void *gregorio_realloc(void *ptr, size_t size) __attribute__((warn_unused_result));
+char *gregorio_strdup(const char *s) __attribute__((malloc));
 void gregorio_support_init(const char *program, const char *argv0);
 void gregorio_print_version(const char *copyright);
 char **gregorio_kpse_find(const char *filename);
-void gregorio_exit(int status);
+void gregorio_exit(int status) __attribute__((noreturn));
 
 #ifdef USE_KPSE
 bool gregorio_read_ok(const char *filename, gregorio_verbosity verbosity);
