@@ -86,8 +86,8 @@ function copy_files()
     lfs.mkdir(texmflocal)
   end
   print("Copying files...\n")
-  local texmfbin = kpse.expand_var("$TEXMFDIST")
-  texmfbin = fixpath(texmfbin.."/../bin/win32/")
+  local texmfdist = kpse.expand_var("$TEXMFDIST")
+  texmfbin = fixpath(texmfdist.."/../bin/win32/")
   print("gregorio.exe...")
   copy_one_file("gregorio.exe", texmfbin)
   print("GregorioTeX files...")
@@ -106,7 +106,7 @@ local old_base_dirs = {
   fixpath(texmflocal.."fonts/tfm/gregoriotex"),
   fixpath(texmflocal.."fonts/type1/gregoriotex"),
   fixpath(texmflocal.."fonts/ovp/gregoriotex"),
-  fixpath(texmflocal.."fonts/ovf/gregoriotex"), 
+  fixpath(texmflocal.."fonts/ovf/gregoriotex"),
   fixpath(texmflocal.."fonts/map/gregoriotex"),
 }
 
