@@ -206,16 +206,6 @@ static __inline const char *fused_single_note_case(
     return unfused_case;
 }
 
-static __inline gregorio_vposition above_if_auctus(
-        const gregorio_glyph *const glyph)
-{
-    if (glyph->u.notes.liquescentia &
-            (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS)) {
-        return VPOS_ABOVE;
-    }
-    return VPOS_BELOW;
-}
-
 static __inline gregorio_vposition below_if_auctus(
         const gregorio_glyph *const glyph)
 {
@@ -239,11 +229,12 @@ static __inline gregorio_vposition above_if_fused_next_h_episema(
         const gregorio_glyph *glyph)
 {
     const gregorio_glyph *next = gregorio_next_non_texverb_glyph(glyph);
-    if (next && next->type == GRE_GLYPH
-            && is_fused(next->u.notes.liquescentia)) {
-        return above_if_h_episema(next->u.notes.first_note);
-    }
-    return VPOS_BELOW;
+    gregorio_assert(next && next->type == GRE_GLYPH
+            && is_fused(next->u.notes.liquescentia),
+            above_if_fused_next_h_episema,
+            "expected this glyph to be fused to the next one",
+            return VPOS_BELOW);
+    return above_if_h_episema(next->u.notes.first_note);
 }
 
 static __inline gregorio_vposition above_if_either_h_episema(
@@ -401,7 +392,7 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
                 } else {
                     note->gtex_offset_case = FinalPunctum;
                 }
-                h_episema = above_if_auctus(glyph);
+                h_episema = VPOS_BELOW;
             }
             v_episema = VPOS_BELOW;
         } else { /* i=2  */
@@ -1559,10 +1550,8 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
 
     prev_note = gregorio_glyph_last_note(previous);
 
-    if (prev_note->type != GRE_NOTE) {
-        /* previous note wasn't a note */
-        return 0;
-    }
+    gregorio_assert(prev_note->type == GRE_NOTE, compute_fused_shift,
+            "previous note wasn't a note", return 0);
 
     switch (prev_note->u.note.shape) {
     case S_PUNCTUM_CAVUM:
@@ -1581,10 +1570,8 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
     }
 
     shift = first_note->u.note.pitch - prev_note->u.note.pitch;
-    if (shift < -5 || shift > 5) {
-        /* ambitus too large to fuse */
-        return 0;
-    }
+    gregorio_assert(shift >= -MAX_AMBITUS && shift <= MAX_AMBITUS,
+            compute_fused_shift, "ambitus too large to fuse", return 0);
 
     if (shift > 0 && previous->u.notes.glyph_type == G_VIRGA_REVERSA) {
         /* virga reversa cannot fuse upwards */

@@ -98,8 +98,8 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
     /* here we separate notes that would be logically in the same glyph
      * but that are too far to be so */
     if (last_pitch) {
-        if (current_pitch - last_pitch > MAX_INTERVAL
-                || current_pitch - last_pitch < -MAX_INTERVAL) {
+        if (current_pitch - last_pitch > MAX_AMBITUS
+                || current_pitch - last_pitch < -MAX_AMBITUS) {
             current_glyph_type = G_UNDETERMINED;
         }
     }
@@ -430,8 +430,8 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
      * it was not the same glyph, there we must say that the previous
      * glyph has ended. */
     if (last_pitch) {
-        if (current_pitch - last_pitch > MAX_INTERVAL
-                || current_pitch - last_pitch < -MAX_INTERVAL) {
+        if (current_pitch - last_pitch > MAX_AMBITUS
+                || current_pitch - last_pitch < -MAX_AMBITUS) {
             if (*end_of_glyph == DET_END_OF_CURRENT
                     || *end_of_glyph == DET_END_OF_BOTH) {
                 /* There is no current way for the code to end up here, but
@@ -531,22 +531,6 @@ static gregorio_note *close_normal_glyph(gregorio_glyph **last_glyph,
                             copy_note_location(current_note, &loc));
                     gregorio_add_note(&added_notes, current_note->u.note.pitch,
                             S_STROPHA, current_note->signs,
-                            current_note->u.note.liquescentia, current_note,
-                            copy_note_location(current_note, &loc));
-                    break;
-                case S_TRISTROPHA_AUCTA:
-                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
-                            S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,
-                            current_note,
-                            copy_note_location(current_note, &loc));
-                    /* fall through */
-                case S_DISTROPHA_AUCTA:
-                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
-                            S_STROPHA, _NO_SIGN, L_NO_LIQUESCENTIA,
-                            current_note,
-                            copy_note_location(current_note, &loc));
-                    gregorio_add_note(&added_notes, current_note->u.note.pitch,
-                            S_STROPHA_AUCTA, current_note->signs,
                             current_note->u.note.liquescentia, current_note,
                             copy_note_location(current_note, &loc));
                     break;
@@ -1131,10 +1115,6 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                             current_note->u.note.shape =
                                     S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS;
                             break;
-
-                        default:
-                            /* do nothing */
-                            break;
                         }
 
                         if (current_note->next
@@ -1204,10 +1184,6 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                         case L_AUCTUS_ASCENDENS:
                             current_note->u.note.shape =
                                     S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS;
-                            break;
-
-                        default:
-                            /* do nothing */
                             break;
                         }
 

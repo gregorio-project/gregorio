@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include "bool.h"
+#include "config.h"
 
 #define GREGORIO_SZ_MAX (~((size_t)0))
 #define MAX_BUF_GROWTH \
@@ -37,6 +38,8 @@ void *gregorio_malloc(size_t size);
 void *gregorio_calloc(size_t nmemb, size_t size);
 void *gregorio_realloc(void *ptr, size_t size);
 char *gregorio_strdup(const char *s);
+#ifndef USE_KPSE
 bool gregorio_readline(char **bufptr, size_t *bufsize, FILE *file);
+#endif
 
 #endif

@@ -80,6 +80,7 @@ char *gregorio_strdup(const char *s)
     return (char *)assert_successful_allocation(strdup(s), "gregorio_strdup");
 }
 
+#ifndef USE_KPSE
 bool gregorio_readline(char **buf, size_t *bufsize, FILE *file)
 {
     size_t oldsize;
@@ -131,3 +132,4 @@ bool gregorio_readline(char **buf, size_t *bufsize, FILE *file)
         *buf = gregorio_realloc(*buf, *bufsize);
     }
 }
+#endif

@@ -71,11 +71,15 @@ static bool read_vowel_rules(char *const lang) {
 #ifdef USE_KPSE
     filenames = kpse_find_file_generic(VOWEL_FILE, kpse_tex_format, true, true);
     if (!filenames) {
+        /* It's not reasonable to break kpse in such a way that this would
+         * fail. */
+        /* LCOV_EXCL_START */
         if (strcmp(language, "Latin") != 0) {
             gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
                     _("kpse_find_file_generic cannot find %s"), VOWEL_FILE);
         }
         return false;
+        /* LCOV_EXCL_STOP */
     }
 #else
     FILE *file;
@@ -331,16 +335,13 @@ static void style_pop(det_style **first_style, det_style *element)
 }
 
 /*
- * free_styles just free the stack. You may notice that it will never be used
- * in a normal functionment. But we never know...
+ * free_styles just frees the stack.
  */
 
 static void free_styles(det_style **first_style)
 {
     det_style *current_style;
-    if (!first_style) {
-        return;
-    }
+    gregorio_not_null(first_style, free_styles, return);
     current_style = (*first_style);
     while (current_style) {
         current_style = current_style->next_style;
@@ -607,9 +608,12 @@ void gregorio_write_first_letter_alignment_text(
     }
 
     if (phase == WTP_FIRST_SYLLABLE) {
-        while ((--first_letter_open) >= 0) {
-            end(f, ST_SYLLABLE_INITIAL);
-        }
+        /* the only way this can happen is if the first syllable is empty,
+         * but if the first syllable is empty, this function will not be
+         * called */
+        gregorio_assert_only(!first_letter_open,
+                gregorio_write_first_letter_alignment_text,
+                "first_syllable was not closed properly");
     }
 
     free_styles(&first_style);
@@ -873,7 +877,7 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
     bool in_elision = false;
     det_style *current_style;
     /* so, here we start: we go to the first_character */
-    if (go_to_end_initial(&current_character)) {
+    if (skip_initial && go_to_end_initial(&current_character)) {
         if (!current_character->next_character) {
             /* nothing else to rebuild, but the initial needs to be ST_CENTER */
             insert_style_after(ST_T_END, ST_CENTER, &current_character);
@@ -883,10 +887,10 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
             (*param_character) = current_character;
             return;
         }
-        if (skip_initial) {
-            /* move to the character after the initial */
-            current_character = current_character->next_character;
-        } else {
+        /* move to the character after the initial */
+        current_character = current_character->next_character;
+    } else {
+        if (current_character) {
             gregorio_go_to_first_character_c(&current_character);
         }
     }
@@ -1194,10 +1198,6 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
                 start_of_special->previous_character = NULL;
                 current_character->next_character = first_character;
                 first_character->previous_character = current_character;
-
-                gregorio_message(_
-                        ("Any style applied to the initial will be ignored."),
-                        NULL, VERBOSITY_WARNING, 0);
             }
             break;
         }
@@ -1211,10 +1211,6 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
                 current_character->previous_character = NULL;
                 current_character->next_character = first_character;
                 first_character->previous_character = current_character;
-
-                gregorio_message(_
-                        ("Any style applied to the initial will be ignored."),
-                        NULL, VERBOSITY_WARNING, 0);
             }
             insert_style_before(ST_T_BEGIN, ST_INITIAL, current_character);
             insert_style_after(ST_T_END, ST_INITIAL, &current_character);

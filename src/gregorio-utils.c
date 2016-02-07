@@ -317,6 +317,7 @@ int main(int argc, char **argv)
     gregorio_verbosity verb_mode = 0;
     bool point_and_click = false;
     char *point_and_click_filename = NULL;
+    bool debug = false;
     int option_index = 0;
     static struct option long_options[] = {
         {"output-file", 1, 0, 'o'},
@@ -344,7 +345,7 @@ int main(int argc, char **argv)
     setlocale(LC_CTYPE, "C");
 
     while (1) {
-        c = getopt_long(argc, argv, "o:SF:l:f:shOLVvWp",
+        c = getopt_long(argc, argv, "o:SF:l:f:shOLVvWpd",
                         long_options, &option_index);
         if (c == -1)
             break;
@@ -437,7 +438,15 @@ int main(int argc, char **argv)
             exit(0);
             break;
         case 'V':
-            printf("Gregorio version %s.\n%s\n", GREGORIO_VERSION, copyright);
+            printf("Gregorio version %s"
+#ifdef USE_KPSE
+                    " (%s)"
+#endif
+                    ".\n%s\n", GREGORIO_VERSION,
+#ifdef USE_KPSE
+                        kpathsea_version_string,
+#endif
+                        copyright);
             exit(0);
             break;
         case 'v':
@@ -468,6 +477,14 @@ int main(int argc, char **argv)
                 break;
             }
             point_and_click = true;
+            break;
+        case 'd':
+            if (debug) {
+                fprintf(stderr,
+                        "warning: debug option passed two times\n");
+                break;
+            }
+            debug = true;
             break;
         case '?':
             break;
@@ -503,6 +520,8 @@ int main(int argc, char **argv)
         }
         fprintf(stderr, "\n");
     }
+
+    gregorio_set_debug_messages(debug);
 
     if (!input_format) {
         input_format = DEFAULT_INPUT_FORMAT;

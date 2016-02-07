@@ -48,12 +48,10 @@ void gregorio_set_verbosity_mode(const gregorio_verbosity verbosity)
     verbosity_mode = verbosity;
 }
 
-#if 0 /* unused */
-static void gregorio_set_debug_messages(bool debug)
+void gregorio_set_debug_messages(bool debug)
 {
     debug_messages = debug;
 }
-#endif
 
 static const char *verbosity_to_str(const gregorio_verbosity verbosity)
 {
@@ -114,12 +112,11 @@ void gregorio_messagef(const char *function_name,
     }
     verbosity_str = verbosity_to_str(verbosity);
     if (line_number) {
+        /* if line number is specified, function_name must be specified */
+        assert(function_name);
         if (function_name) {
             fprintf(error_out, "%d: in function `%s': %s", line_number,
                     function_name, verbosity_str);
-        } else {
-            /* no function_name specified */
-            fprintf(error_out, "%d: %s", line_number, verbosity_str);
         }
     } else {
         if (function_name) {
