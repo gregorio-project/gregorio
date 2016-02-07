@@ -37,9 +37,6 @@
 #include <limits.h>
 #include <sys/stat.h>
 #include <assert.h>
-#ifdef USE_KPSE
-    #include <kpathsea/kpathsea.h>
-#endif
 #include "bool.h"
 #include "struct.h"
 #include "unicode.h"
@@ -51,16 +48,6 @@
 
 #define VOWEL_FILE "gregorio-vowels.dat"
 
-#ifndef USE_KPSE
-static __inline void rtrim(char *buf)
-{
-    char *p;
-    for (p = buf + strlen(buf) - 1; p >= buf && isspace(*p); --p) {
-        *p = '\0';
-    }
-}
-#endif
-
 static bool read_vowel_rules(char *const lang) {
     char *language = lang;
     rulefile_parse_status status = RFPS_NOT_FOUND;
@@ -68,55 +55,7 @@ static bool read_vowel_rules(char *const lang) {
     const char *description;
     int tries;
 
-#ifdef USE_KPSE
-    filenames = kpse_find_file_generic(VOWEL_FILE, kpse_tex_format, true, true);
-    if (!filenames) {
-        /* It's not reasonable to break kpse in such a way that this would
-         * fail. */
-        /* LCOV_EXCL_START */
-        if (strcmp(language, "Latin") != 0) {
-            gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
-                    _("kpse_find_file_generic cannot find %s"), VOWEL_FILE);
-        }
-        return false;
-        /* LCOV_EXCL_STOP */
-    }
-#else
-    FILE *file;
-    size_t bufsize = 0;
-    char *buf = NULL;
-    size_t capacity = 16, size = 0;
-    
-    filenames = gregorio_malloc(capacity * sizeof(char *));
-
-    file = popen("kpsewhich -all " VOWEL_FILE, "r");
-    if (!file) {
-        /* it's not reasonable to cause popen to fail */
-        /* LCOV_EXCL_START */
-        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
-                _("unable to run kpsewhich %s: %s"), VOWEL_FILE,
-                strerror(errno));
-        return false;
-        /* LCOV_EXCL_STOP */
-    }
-    while (gregorio_readline(&buf, &bufsize, file)) {
-        rtrim(buf);
-        if (strlen(buf) > 0) {
-            filenames[size++] = gregorio_strdup(buf);
-            if (size >= capacity) {
-                capacity <<= 1;
-                filenames = gregorio_realloc(filenames,
-                                capacity * sizeof(char *));
-            }
-        } else {
-            gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
-                    _("kpsewhich returned bad value for %s"), VOWEL_FILE);
-        }
-    }
-    free(buf);
-    filenames[size] = NULL;
-    pclose(file);
-#endif
+    gregorio_kpse_find_or_else(filenames, VOWEL_FILE, return false);
 
     gregorio_vowel_tables_init();
     /* only need to try twice; if it's not resolved by then, there is an alias

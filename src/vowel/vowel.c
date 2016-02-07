@@ -26,9 +26,6 @@
 #include <string.h>
 #include <assert.h>
 #include <errno.h>
-#ifdef USE_KPSE
-    #include <kpathsea/kpathsea.h>
-#endif
 #include "bool.h"
 #include "vowel.h"
 #include "unicode.h"
@@ -240,13 +237,7 @@ void gregorio_vowel_tables_init(void)
 void gregorio_vowel_tables_load(const char *const filename,
         char **const language, rulefile_parse_status *status)
 {
-#ifdef USE_KPSE
-    if (!kpse_in_name_ok(filename)) {
-        gregorio_messagef("gregorio_vowel_tables_load", VERBOSITY_WARNING, 0,
-                _("kpse disallows read from %s"), filename);
-        return;
-    }
-#endif
+    gregorio_check_file_access(read, filename, WARNING, return);
     gregorio_vowel_rulefile_in = fopen(filename, "r");
     if (gregorio_vowel_rulefile_in) {
         gregorio_vowel_rulefile_parse(filename, language, status);

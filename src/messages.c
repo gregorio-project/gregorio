@@ -22,11 +22,10 @@
 
 #include "config.h"
 #include <stdio.h>
-#include <stdlib.h>             /* for exit() */
-#include <stdarg.h>             /* for exit() */
 #include <assert.h>
 #include "bool.h"
 #include "messages.h"
+#include "support.h"
 
 static FILE *error_out;
 static gregorio_verbosity verbosity_mode = 0;
@@ -139,7 +138,7 @@ void gregorio_messagef(const char *function_name,
     case VERBOSITY_FATAL:
         /* all fatal errors should not be reasonably testable */
         /* LCOV_EXCL_START */
-        exit(1);
+        gregorio_exit(1);
         break;
         /* LCOV_EXCL_STOP */
     default:
