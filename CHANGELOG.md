@@ -7,6 +7,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Stem length for virgas, flexus, pes quadratum, etc. are now tunable, and have been reviewed, see [#803](https://github.com/gregorio-project/gregorio/issues/803).
 - Height of the pes and porrectus have been altered (moved up in most cases) so that they are more coherent with the punctum height (see [#858](https://github.com/gregorio-project/gregorio/issues/858)).
 - Drawings of porrectus have been slightly altered to be more sharp at the end of the stroke.
+- When a syllable is preceeded by a punctum mora, gregorio now ignores the punctum mora in the spacing of the syllables by default, and also adds a custom space (defaulting to 0). You can change this behavior with `\gresetshiftaftermora{}`, see GregorioRef for its arguments. To balance the output, space before a punctum mora has been made slightly thinner, more in line with old Solesmes books. (For the change requests, see [#795](https://github.com/gregorio-project/gregorio/issues/795) and [#871](https://github.com/gregorio-project/gregorio/issues/871)).
 
 ### Added
 - A new algorithm for placing bar syllables has been added.  The goal of the new algorithm is to place the bar line exactly between the notes which surround it and do the same with the text associated with the bar line.  It also implements a limit, `maxbaroffset`, which prevents the bar line and its text from getting too far apart.  This algorithm can be activated with `\gresetbarspacing{new}`.  Testing is not yet complete and it may still contain bugs.  See [#767](https://github.com/gregorio-project/gregorio/issues/767).
@@ -36,7 +37,6 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Headers not recognized by gregorio, rather than inducing an error, are now simply accepted by gregorio.  Most of the old "standard" headers, like `book` and `manuscript-location`, are now handled in this way and thus are no longer limited to one instance.  See GregorioRef for details.
 - `mode` will now be converted to Roman numerals in lower case so that it shows up as small capitals using the default `modeline` style.  See [UPGRADE.md](UPGRADE.md) for details (for the change request, see [#756](https://github.com/gregorio-project/gregorio/issues/756)).
 - `\grecommentary` is now less restrictive about where it occurs and need not occur directly before the score anymore.
-- When a bar is preceeded by a punctum mora, gregorio now ignores the punctum mora in the bar horizontal placement by default, and also adds a custom space (defaulting to 0). You can change this behavior with `\gresetbarshiftaftermora{}`, see GregorioRef for its arguments (for the change request, see [#795](https://github.com/gregorio-project/gregorio/issues/795)).
 
 ### Added
 - Support for two-, three-, and five-line staves.  Set the `staff-lines` header to `2`, `3`, or `5`.  For all values of `staff-lines`, the note below the staff remains 'c'.  The two new notes above the staff (for a five-line staff) are `n` and `p`.  See [#429](https://github.com/gregorio-project/gregorio/issues/429).

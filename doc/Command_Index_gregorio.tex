@@ -722,9 +722,10 @@ Macro for typesetting punctum mora.
 
 \begin{argtable}
   \#1 & integer & Height number of punctum mora.\\
-  \#2 & \texttt{1} & Go back to end of punctum.\\
+  \#2 & \texttt{0} & General case.\\
+  & \texttt{1} & Make the punctum mora zero width.\\
   & \texttt{2} & Shift left width of 1 punctum.\\
-  & \texttt{3} & Shift left width of 1 punctum and ambitus of 1.\\
+  & \texttt{3} & Shift left width of 1 punctum if last ambitus is 1.\\
   \#3 & \texttt{0} & Punctum mora does not occur before last note of podatus, porrectus, or torculus resupinus.\\
   & \texttt{1} & Punctum mora occurs before last note of podatus, porrectus, or torculus resupinus.\\
   \#4 & \texttt{0} & No punctum inclinatum.\\
