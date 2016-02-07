@@ -811,61 +811,68 @@
 % #5 : y-distance
 % #6 : end height if #6 not given
 \def\GreSlur#1#2#3#4#5#6{%
-  \ifnum\number#2 > 0\relax %
-    \gre@calculate@glyphraisevalue{#1}{15}%
-  \else %
-    \gre@calculate@glyphraisevalue{#1}{16}%
-  \fi %
-  \hbox to 0pt{\raise\gre@dimen@glyphraisevalue\hbox{%
-    \ifcase#3 % 0
-    \or % 1
-      \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
-      \kern-\wd\gre@box@temp@sign %
-    \or % 2
-      \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
-      \kern-.5\wd\gre@box@temp@sign %
-    \fi %
-    \if\relax\detokenize{#5}\relax %
-      \gre@dimen@temp@five=\gre@dimen@glyphraisevalue\relax %
-      \ifnum\number#2 > 0\relax %
-        \gre@calculate@glyphraisevalue{#6}{15}%
-      \else %
-        \gre@calculate@glyphraisevalue{#6}{16}%
-      \fi %
-      \greslurheight = \dimexpr(\gre@dimen@glyphraisevalue - \gre@dimen@temp@five)\relax %
+  \ifgre@boxing\else %
+    \ifnum\number#2 > 0\relax %
+      \gre@calculate@glyphraisevalue{#1}{15}%
     \else %
-      \greslurheight = #5\relax %
+      \gre@calculate@glyphraisevalue{#1}{16}%
     \fi %
-    \gre@draw@slur{#4}{\the\greslurheight}{#2}%
-  }}%
+    \hbox to 0pt{\raise\gre@dimen@glyphraisevalue\hbox{%
+      \ifcase#3 % 0
+      \or % 1
+        \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
+        \kern-\wd\gre@box@temp@sign %
+      \or % 2
+        \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
+        \kern-.5\wd\gre@box@temp@sign %
+      \fi %
+      \if\relax\detokenize{#5}\relax %
+        \gre@dimen@temp@five=\gre@dimen@glyphraisevalue\relax %
+        \ifnum\number#2 > 0\relax %
+          \gre@calculate@glyphraisevalue{#6}{15}%
+        \else %
+          \gre@calculate@glyphraisevalue{#6}{16}%
+        \fi %
+        \greslurheight = \dimexpr(\gre@dimen@glyphraisevalue - \gre@dimen@temp@five)\relax %
+      \else %
+        \greslurheight = #5\relax %
+      \fi %
+      \gre@draw@slur{#4}{\the\greslurheight}{#2}%
+    }}%
+  \fi %
+  \relax %
 }%
 
 % #1: id of the variable length brace within the score
 \def\GreVarBraceLength#1{%
-  \directlua{gregoriotex.var_brace_len(#1)}%
+  \ifgre@boxing\else %
+    \directlua{gregoriotex.var_brace_len(#1)}%
+  \fi %
 }%
 
 % #1: id of the variable length brace within the score
 % #2: 0 = no left-shift, 1 = left-shift 1 punctum, 2 = left shift 1/2 punctum
 % #3: 1 if the start, 2 if the end
 \def\GreVarBraceSavePos#1#2#3{%
-  \ifcase#2 % 0
-    \gre@debugmsg{general}{save case 0}%
-    \pdfsavepos %
-  \or % 1
-    \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
-    \kern-\wd\gre@box@temp@sign %
-    \pdfsavepos %
-    \kern\wd\gre@box@temp@sign %
-  \or % 2
-    \gre@debugmsg{general}{save case 2}%
-    \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
-    \gre@dimen@temp@five=\wd\gre@box@temp@sign %
-    \kern-.5\wd\gre@box@temp@sign %
-    \pdfsavepos %
-    \kern.5\wd\gre@box@temp@sign %
+  \ifgre@boxing\else %
+    \ifcase#2 % 0
+      \gre@debugmsg{general}{save case 0}%
+      \pdfsavepos %
+    \or % 1
+      \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
+      \kern-\wd\gre@box@temp@sign %
+      \pdfsavepos %
+      \kern\wd\gre@box@temp@sign %
+    \or % 2
+      \gre@debugmsg{general}{save case 2}%
+      \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
+      \gre@dimen@temp@five=\wd\gre@box@temp@sign %
+      \kern-.5\wd\gre@box@temp@sign %
+      \pdfsavepos %
+      \kern.5\wd\gre@box@temp@sign %
+    \fi %
+    \directlua{gregoriotex.var_brace_note_pos(#1, #3)}%
   \fi %
-  \directlua{gregoriotex.var_brace_note_pos(#1, #3)}%
   \relax %
 }%
 
@@ -1561,6 +1568,9 @@
     }%
 }%
 
+% width of a punctum mora, reinitalized at each score
+\newdimen\gre@dimen@widthmora
+
 % sets gre@skip@temp@four to the (usually negative) shift to apply before
 % a syllable following a punctum mora, to cancel its taking into account into
 % horizontal placement.
@@ -1568,11 +1578,14 @@
 %   - 1 for the general case
 %   - 2 when the punctum mora is before a bar
 \def\gre@get@unkern@aftermora#1{%
-  \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@fontchar@punctummora}%
+  \ifdim\gre@dimen@widthmora=0pt\relax %
+    \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@fontchar@punctummora}%
+    \global\gre@dimen@widthmora=\wd\gre@box@temp@width %
+  \fi %
   \ifnum #1=1%
-    \global\gre@skip@temp@four=\glueexpr -\wd\gre@box@temp@width - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustment\relax %
+    \global\gre@skip@temp@four=\glueexpr - \gre@dimen@widthmora - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustment\relax %
   \else %
-    \global\gre@skip@temp@four=\glueexpr -\wd\gre@box@temp@width - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustmentbar\relax %
+    \global\gre@skip@temp@four=\glueexpr - \gre@dimen@widthmora - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustmentbar\relax %
   \fi %
   \relax %
 }
