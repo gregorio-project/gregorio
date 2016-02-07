@@ -555,12 +555,13 @@ static gregorio_note *close_normal_glyph(gregorio_glyph **last_glyph,
                 current_note->next->previous = added_notes;
                 added_notes->next = next_note;
             }
+            if (current_note == new_current_note) {
+                new_current_note = added_notes;
+            }
             gregorio_go_to_first_note(&added_notes);
             if (current_note->previous) {
                 current_note->previous->next = added_notes;
                 added_notes->previous = current_note->previous;
-            } else {
-                new_current_note = added_notes;
             }
             /* Detaching current_note is not strictly necessary here because we
              * are effectively plucking out added_notes into its own glyph;
