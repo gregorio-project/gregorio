@@ -1569,7 +1569,7 @@
 }%
 
 % width of a punctum mora, reinitalized at each score
-\newdimen\gre@dimen@widthmora
+\newdimen\gre@dimen@morawidth
 
 % sets gre@skip@temp@four to the (usually negative) shift to apply before
 % a syllable following a punctum mora, to cancel its taking into account into
@@ -1578,14 +1578,14 @@
 %   - 1 for the general case
 %   - 2 when the punctum mora is before a bar
 \def\gre@get@unkern@aftermora#1{%
-  \ifdim\gre@dimen@widthmora=0pt\relax %
+  \ifdim\gre@dimen@morawidth=0pt\relax %
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@fontchar@punctummora}%
-    \global\gre@dimen@widthmora=\wd\gre@box@temp@width %
+    \global\gre@dimen@morawidth=\wd\gre@box@temp@width %
   \fi %
   \ifnum #1=1%
-    \global\gre@skip@temp@four=\glueexpr - \gre@dimen@widthmora - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustment\relax %
+    \global\gre@skip@temp@four=\glueexpr - \gre@dimen@morawidth - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustment\relax %
   \else %
-    \global\gre@skip@temp@four=\glueexpr - \gre@dimen@widthmora - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustmentbar\relax %
+    \global\gre@skip@temp@four=\glueexpr - \gre@dimen@morawidth - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustmentbar\relax %
   \fi %
   \relax %
 }
