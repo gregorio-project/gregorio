@@ -20,7 +20,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1454669892
+ModificationTime: 1454842382
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -44,7 +44,7 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
-WinInfo: 19 19 8
+WinInfo: 0 19 8
 BeginPrivate: 0
 EndPrivate
 Grid
@@ -141,7 +141,7 @@ StartChar: Quilisma
 Encoding: 3 -1 3
 Width: 166
 VWidth: 2496
-Flags: W
+Flags: HW
 HStem: -45 227.7
 VStem: 0 59<-41.0625 -13.0609> 166 0<156.459 170.8>
 LayerCount: 2
@@ -153,17 +153,16 @@ SplineSet
  51.5996 87.0996 43.5 161 59.3994 162.1 c 0
  76.958 163.314 76.7324 109.2 95.7998 109.2 c 0
  110.532 109.2 101 181.5 116.6 182.7 c 0
- 134.45 184.073 134.985 127.5 143.3 127.5 c 1
- 156 127.126 164 156.459 166 170.8 c 1
+ 134.45 184.073 135.688 127.5 149.3 127.5 c 3
+ 161.688 127.5 164.333 190.333 166 208.8 c 5
  166 48.4004 l 2
- 166 22 154.985 -1.85191 146.399 -2.7998 c 0
- 131 -4.5 128.5 44 116.5 42.5 c 0
- 104.097 40.9492 115.007 -21.5 95.5 -21.5 c 0
+ 166 22 159.985 -2.85156 148.399 -2.7998 c 0
+ 132.906 -2.73047 130.5 44 118.5 42.5 c 0
+ 106.097 40.9492 115.007 -21.5 95.5 -21.5 c 0
  72.5 -21.5 71.5 22.5 59 20.5 c 0
  51.1006 19.2363 51.9479 -42.5551 33 -45 c 0
  17.5 -47 0 -16 0 0 c 2
 EndSplineSet
-Validated: 33
 EndChar
 
 StartChar: OriscusReversus
@@ -1772,7 +1771,7 @@ StartChar: PunctumSmall
 Encoding: 80 -1 71
 Width: 155
 VWidth: 2537
-Flags: HW
+Flags: HWO
 HStem: 5.7998 157.7<9.82522 126.738>
 VStem: 0 155<5.7998 151.15> 137 18<-48.8008 -18.2177>
 LayerCount: 2
@@ -1780,12 +1779,12 @@ Fore
 SplineSet
 154.996 -53 m 1
  137 -53 l 1
- 137 -40.8008 l 5xa0
- 137 -13 119.521 13.7998 78.3994 13.7998 c 4
- 48.0674 13.7998 19.9326 6.86719 0 -7 c 5
- 0 122.1 l 6
- 0 155.032 28.1328 171.5 78.3994 171.5 c 4
- 111.55 171.5 155.001 161.619 155 122.1 c 6xc0
+ 137 -45.8008 l 5xa0
+ 137 -18 119.521 8.7998 78.3994 8.7998 c 4
+ 48.0674 8.7998 19.9326 1.86719 0 -12 c 5
+ 0 117.1 l 6
+ 0 150.032 28.1328 166.5 78.3994 166.5 c 4
+ 111.55 166.5 155.001 156.619 155 117.1 c 6xc0
  154.996 -53 l 1
 EndSplineSet
 EndChar
@@ -2720,7 +2719,7 @@ StartChar: porrectusam11
 Encoding: 136 -1 110
 Width: 503
 VWidth: 2553
-Flags: HWO
+Flags: HW
 HStem: -394 15 -79 15 236 15 551 15
 LayerCount: 2
 Fore
