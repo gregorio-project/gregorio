@@ -1205,10 +1205,18 @@
     %case of hepisema at the bottom
     \raise \gre@dimen@glyphraisevalue \copy\gre@box@temp@sign %
   \or % case of a line at the top
-    \gre@drawadditionalline{0}{\gre@dimen@temp@two}{1}{}{1}{}%
+    \ifnum\gre@count@lastglyphiscavum=2\relax %
+      \gre@drawadditionalline{0}{\gre@dimen@temp@two}{0}{}{1}{}%
+    \else %
+      \gre@drawadditionalline{0}{\gre@dimen@temp@two}{1}{}{1}{}%
+    \fi %
     \gre@dimen@temp@two=0pt\relax %
   \or % case of a line at the bottom
-    \gre@drawadditionalline{1}{\gre@dimen@temp@two}{1}{}{1}{}%
+    \ifnum\gre@count@lastglyphiscavum=2\relax %
+      \gre@drawadditionalline{1}{\gre@dimen@temp@two}{0}{}{1}{}%
+    \else %
+      \gre@drawadditionalline{1}{\gre@dimen@temp@two}{1}{}{1}{}%
+    \fi %
     \gre@dimen@temp@two=0pt\relax %
   \or %
     %case of choral sign
@@ -1219,6 +1227,22 @@
   \advance\gre@dimen@temp@three by -\gre@dimen@temp@two %
   \kern\gre@dimen@temp@three %
   \relax%
+}%
+
+% another dumb top function
+\def\GreAdditionalLine#1#2#3{%
+  \ifgre@showlines %
+    \xdef\gre@dimen@savedglyphraise{\the\gre@dimen@glyphraisevalue}%
+    \gre@style@additionalstafflines %
+    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% OBSOLETE
+    \else % OBSOLETE
+      \gre@obsolete{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% OBSOLETE
+    \fi% OBSOLETE
+    \gre@hepisorline{\gre@pitch@dummy}{#1}{#2}{#3}{f}%
+    \endgre@style@additionalstafflines%
+    \gre@dimen@glyphraisevalue=\gre@dimen@savedglyphraise\relax%
+  \fi %
+  \relax %
 }%
 
 % #1 0 for over staff,
@@ -1391,23 +1415,6 @@
   \fi %
   \relax %
 }%
-
-% another dumb top function
-\def\GreAdditionalLine#1#2#3{%
-  \ifgre@showlines %
-    \xdef\gre@dimen@savedglyphraise{\the\gre@dimen@glyphraisevalue}%
-    \gre@style@additionalstafflines %
-    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% OBSOLETE
-    \else % OBSOLETE
-      \gre@obsolete{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% OBSOLETE
-    \fi% OBSOLETE
-    \gre@hepisorline{\gre@pitch@dummy}{#1}{#2}{#3}{f}%
-    \endgre@style@additionalstafflines%
-    \gre@dimen@glyphraisevalue=\gre@dimen@savedglyphraise\relax%
-  \fi %
-  \relax %
-}%
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of bars
@@ -1899,10 +1906,17 @@
   \gre@obsolete{\protect\GreDontHideAltLines}{\protect\gresetlinesbehindalteration{visible}}%
 }%
 
+% is last glyph a cavum?
+\newcount\gre@count@lastglyphiscavum
+% 0 if no
+% 1 if current glyph is a cavum (set once the cavum is filled)
+% 2 if previous glyph is a cavum (which is the most interesting information)
+\gre@count@lastglyphiscavum=0
 
 % the argument is the character with which we fill the hole, and we suppose that
 % isonaline and glyphraisevalue are correctly set.
 \def\gre@fillhole#1{%
+  \global\gre@count@lastglyphiscavum=1\relax %
   \setbox\gre@box@temp@sign=\hbox{#1}%
   \hbox to 0pt{%
     {%
