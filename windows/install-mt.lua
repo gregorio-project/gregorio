@@ -82,9 +82,6 @@ function copy_one_file(src, dest)
 end
 
 function copy_files()
-  if not lfs.isdir(texmflocal) then
-    lfs.mkdir(texmflocal)
-  end
   print("Copying files...")
   local texmfdist = kpse.expand_var("$TEXMFDIST")
   --[[ MiKTeX uses slightly different paths for the location of it's bin
@@ -105,7 +102,7 @@ function run_texcommands()
   local target = fixpath(appdir.."/texmf/")
   os.spawn("initexmf --register-root=\""..target)
   print("Running initexmf...")
-  os.spawn("initexmf -u")
+  os.spawn("initexmf -u=\""..target)
 end
 
 function main_install()
