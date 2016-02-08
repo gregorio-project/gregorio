@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+
+
+## [4.1.0-beta2] - 2016-02-08
 ### Fixed
 - When a flat on a ledger line (`bx` or `lx`) was preceding a note also on a ledger line, the ledger line was partially visible inside the flat, see [#882](https://github.com/gregorio-project/gregorio/issues/882).
 - Compilation of documents produced with Gregorio should be slightly faster.
