@@ -552,7 +552,9 @@
 % #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
 % #5: 1 if we put an accentus above or not
 \def\GreOverCurlyBrace#1#2#3#4#5{%
-  \gre@brace@common{#1}{#2}{#3}{#4}{#5}{\gre@pitch@overbraceglyph}{\gre@fontchar@curlybrace}%
+  \ifgre@boxing\else %
+    \gre@brace@common{#1}{#2}{#3}{#4}{#5}{\gre@pitch@overbraceglyph}{\gre@fontchar@curlybrace}%
+  \fi %
 }%
 
 % #1: the width
@@ -560,7 +562,9 @@
 % #3: a horizontal shift
 % #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
 \def\GreOverBrace#1#2#3#4{%
-  \gre@brace@common{#1}{#2}{#3}{#4}{0}{\gre@pitch@overbraceglyph}{\gre@fontchar@brace}%
+  \ifgre@boxing\else %
+    \gre@brace@common{#1}{#2}{#3}{#4}{0}{\gre@pitch@overbraceglyph}{\gre@fontchar@brace}%
+  \fi %
 }%
 
 % #1: the width
@@ -568,7 +572,9 @@
 % #3: a horizontal shift
 % #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
 \def\GreUnderBrace#1#2#3#4{%
-  \gre@brace@common{#1}{#2}{#3}{#4}{0}{\gre@pitch@underbrace}{\gre@fontchar@underbrace}%
+  \ifgre@boxing\else %
+    \gre@brace@common{#1}{#2}{#3}{#4}{0}{\gre@pitch@underbrace}{\gre@fontchar@underbrace}%
+  \fi %
 }%
 
 % #1: the width
@@ -805,61 +811,68 @@
 % #5 : y-distance
 % #6 : end height if #6 not given
 \def\GreSlur#1#2#3#4#5#6{%
-  \ifnum\number#2 > 0\relax %
-    \gre@calculate@glyphraisevalue{#1}{15}%
-  \else %
-    \gre@calculate@glyphraisevalue{#1}{16}%
-  \fi %
-  \hbox to 0pt{\raise\gre@dimen@glyphraisevalue\hbox{%
-    \ifcase#3 % 0
-    \or % 1
-      \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
-      \kern-\wd\gre@box@temp@sign %
-    \or % 2
-      \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
-      \kern-.5\wd\gre@box@temp@sign %
-    \fi %
-    \if\relax\detokenize{#5}\relax %
-      \gre@dimen@temp@five=\gre@dimen@glyphraisevalue\relax %
-      \ifnum\number#2 > 0\relax %
-        \gre@calculate@glyphraisevalue{#6}{15}%
-      \else %
-        \gre@calculate@glyphraisevalue{#6}{16}%
-      \fi %
-      \greslurheight = \dimexpr(\gre@dimen@glyphraisevalue - \gre@dimen@temp@five)\relax %
+  \ifgre@boxing\else %
+    \ifnum\number#2 > 0\relax %
+      \gre@calculate@glyphraisevalue{#1}{15}%
     \else %
-      \greslurheight = #5\relax %
+      \gre@calculate@glyphraisevalue{#1}{16}%
     \fi %
-    \gre@draw@slur{#4}{\the\greslurheight}{#2}%
-  }}%
+    \hbox to 0pt{\raise\gre@dimen@glyphraisevalue\hbox{%
+      \ifcase#3 % 0
+      \or % 1
+        \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
+        \kern-\wd\gre@box@temp@sign %
+      \or % 2
+        \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
+        \kern-.5\wd\gre@box@temp@sign %
+      \fi %
+      \if\relax\detokenize{#5}\relax %
+        \gre@dimen@temp@five=\gre@dimen@glyphraisevalue\relax %
+        \ifnum\number#2 > 0\relax %
+          \gre@calculate@glyphraisevalue{#6}{15}%
+        \else %
+          \gre@calculate@glyphraisevalue{#6}{16}%
+        \fi %
+        \greslurheight = \dimexpr(\gre@dimen@glyphraisevalue - \gre@dimen@temp@five)\relax %
+      \else %
+        \greslurheight = #5\relax %
+      \fi %
+      \gre@draw@slur{#4}{\the\greslurheight}{#2}%
+    }}%
+  \fi %
+  \relax %
 }%
 
 % #1: id of the variable length brace within the score
 \def\GreVarBraceLength#1{%
-  \directlua{gregoriotex.var_brace_len(#1)}%
+  \ifgre@boxing\else %
+    \directlua{gregoriotex.var_brace_len(#1)}%
+  \fi %
 }%
 
 % #1: id of the variable length brace within the score
 % #2: 0 = no left-shift, 1 = left-shift 1 punctum, 2 = left shift 1/2 punctum
 % #3: 1 if the start, 2 if the end
 \def\GreVarBraceSavePos#1#2#3{%
-  \ifcase#2 % 0
-    \gre@debugmsg{general}{save case 0}%
-    \pdfsavepos %
-  \or % 1
-    \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
-    \kern-\wd\gre@box@temp@sign %
-    \pdfsavepos %
-    \kern\wd\gre@box@temp@sign %
-  \or % 2
-    \gre@debugmsg{general}{save case 2}%
-    \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
-    \gre@dimen@temp@five=\wd\gre@box@temp@sign %
-    \kern-.5\wd\gre@box@temp@sign %
-    \pdfsavepos %
-    \kern.5\wd\gre@box@temp@sign %
+  \ifgre@boxing\else %
+    \ifcase#2 % 0
+      \gre@debugmsg{general}{save case 0}%
+      \pdfsavepos %
+    \or % 1
+      \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
+      \kern-\wd\gre@box@temp@sign %
+      \pdfsavepos %
+      \kern\wd\gre@box@temp@sign %
+    \or % 2
+      \gre@debugmsg{general}{save case 2}%
+      \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
+      \gre@dimen@temp@five=\wd\gre@box@temp@sign %
+      \kern-.5\wd\gre@box@temp@sign %
+      \pdfsavepos %
+      \kern.5\wd\gre@box@temp@sign %
+    \fi %
+    \directlua{gregoriotex.var_brace_note_pos(#1, #3)}%
   \fi %
-  \directlua{gregoriotex.var_brace_note_pos(#1, #3)}%
   \relax %
 }%
 
@@ -952,7 +965,9 @@
 
 % a function to typeset an augmentum duplex, easy enough to be understood...
 \def\GreAugmentumDuplex#1#2#3{%
-  \GrePunctumMora{#1}{1}{#3}{0}%
+  \ifgre@boxing\else %
+    \GrePunctumMora{#1}{1}{#3}{0}%
+  \fi %
   \GrePunctumMora{#2}{0}{0}{0}%
   \relax %
 }%
@@ -1081,25 +1096,27 @@
 % #4 is type (1: vertical episema, 2: rare sign, 3: choral sign, 4: brace above the bar)
 % #5 is the choral sign if relevant
 \def\gre@vepisemaorrare#1#2#3#4#5{%
-  \ifcase#4\or %
-    % if it is a vertical episema, we call the normal calculateglyphvalue
-    \gre@calculate@glyphraisevalue{#1}{3}%
-  \or %
-    % if it is not, we call it with 6 as second argument, it will give us the height of the rare signs (accentus, etc.) the first argument is m if the pitch is < k, otherwise it's n.
-    \ifnum#1<\gre@pitch@raresign\relax %
-      \gre@calculate@glyphraisevalue{\gre@pitch@raresign}{6}%
-    \else %
-      {%
-        \gre@count@temp@three=\numexpr(#1 + 1)\relax %
-        \gre@calculate@glyphraisevalue{\gre@count@temp@three}{6}%
-      }%
+  \ifgre@boxing\else %
+    \ifcase#4\or %
+      % if it is a vertical episema, we call the normal calculateglyphvalue
+      \gre@calculate@glyphraisevalue{#1}{3}%
+    \or %
+      % if it is not, we call it with 6 as second argument, it will give us the height of the rare signs (accentus, etc.) the first argument is m if the pitch is < k, otherwise it's n.
+      \ifnum#1<\gre@pitch@raresign\relax %
+        \gre@calculate@glyphraisevalue{\gre@pitch@raresign}{6}%
+      \else %
+        {%
+          \gre@count@temp@three=\numexpr(#1 + 1)\relax %
+          \gre@calculate@glyphraisevalue{\gre@count@temp@three}{6}%
+        }%
+      \fi %
+    \or % if it's a choral sign
+      \gre@calculate@glyphraisevalue{#1}{11}%
+    \or % if it's the brace above the bar
+      \gre@calculate@glyphraisevalue{#1}{13}%
     \fi %
-  \or % if it's a choral sign
-    \gre@calculate@glyphraisevalue{#1}{11}%
-  \or % if it's the brace above the bar
-    \gre@calculate@glyphraisevalue{#1}{13}%
+    \gre@v@case{#2}{#3}{#4}{#5}%
   \fi %
-  \gre@v@case{#2}{#3}{#4}{#5}%
   \relax%
 }%
 
@@ -1205,10 +1222,18 @@
     %case of hepisema at the bottom
     \raise \gre@dimen@glyphraisevalue \copy\gre@box@temp@sign %
   \or % case of a line at the top
-    \gre@drawadditionalline{0}{\gre@dimen@temp@two}{1}{}{1}{}%
+    \ifnum\gre@count@lastglyphiscavum=2\relax %
+      \gre@drawadditionalline{0}{\gre@dimen@temp@two}{0}{}{1}{}%
+    \else %
+      \gre@drawadditionalline{0}{\gre@dimen@temp@two}{1}{}{1}{}%
+    \fi %
     \gre@dimen@temp@two=0pt\relax %
   \or % case of a line at the bottom
-    \gre@drawadditionalline{1}{\gre@dimen@temp@two}{1}{}{1}{}%
+    \ifnum\gre@count@lastglyphiscavum=2\relax %
+      \gre@drawadditionalline{1}{\gre@dimen@temp@two}{0}{}{1}{}%
+    \else %
+      \gre@drawadditionalline{1}{\gre@dimen@temp@two}{1}{}{1}{}%
+    \fi %
     \gre@dimen@temp@two=0pt\relax %
   \or %
     %case of choral sign
@@ -1219,6 +1244,24 @@
   \advance\gre@dimen@temp@three by -\gre@dimen@temp@two %
   \kern\gre@dimen@temp@three %
   \relax%
+}%
+
+% another dumb top function
+\def\GreAdditionalLine#1#2#3{%
+  \ifgre@showlines %
+    \ifgre@boxing\else %
+      \xdef\gre@dimen@savedglyphraise{\the\gre@dimen@glyphraisevalue}%
+      \gre@style@additionalstafflines %
+      \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% OBSOLETE
+      \else % OBSOLETE
+        \gre@obsolete{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% OBSOLETE
+      \fi% OBSOLETE
+      \gre@hepisorline{\gre@pitch@dummy}{#1}{#2}{#3}{f}%
+      \endgre@style@additionalstafflines%
+      \gre@dimen@glyphraisevalue=\gre@dimen@savedglyphraise\relax%
+    \fi %
+  \fi %
+  \relax %
 }%
 
 % #1 0 for over staff,
@@ -1324,14 +1367,16 @@
 %    bridge, use #6, otherwise use #1
 % #7 is used for setting heuristics
 \def\GreHEpisema#1#2#3#4#5#6#7{%
-  \gre@prephepisemaledgerlineheuristics%
-  #7%
-  \ifgre@hepisemabridge%
-    \gre@hepisorline{#6}{#2}{#3}{#4}{#5}%
-  \else %
-    \gre@hepisorline{#1}{#2}{#3}{#4}{#5}%
+  \ifgre@boxing\else %
+    \gre@prephepisemaledgerlineheuristics%
+    #7%
+    \ifgre@hepisemabridge%
+      \gre@hepisorline{#6}{#2}{#3}{#4}{#5}%
+    \else %
+      \gre@hepisorline{#1}{#2}{#3}{#4}{#5}%
+    \fi %
+    \gre@resetledgerlineheuristics%
   \fi %
-  \gre@resetledgerlineheuristics%
   \relax %
 }%
 
@@ -1362,52 +1407,37 @@
 % #4 is for setting heuristics
 \def\GreHEpisemaBridge#1#2#3#4{%
   \ifgre@hepisemabridge%
-    \gre@prephepisemaledgerlineheuristics%
-    #4%
-    \ifcase#2 %
-      \gre@calculate@glyphraisevalue{#1}{9}%
-    \or %
-      \gre@calculate@glyphraisevalue{#1}{5}%
-    \fi %
-    \IfStrEq{-1}{#3}{%
-      \raise\gre@dimen@glyphraisevalue\hbox to 0pt{\gre@font@music\gre@char@he@punctum{f}\hss}%
-    }{%
-      % special handling for punctum inclinatum
-      \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPHEpisemaPunctumReduced}%
-      \gre@dimen@temp@four = \wd\gre@box@temp@width\relax %
-      \gre@get@spaceskip{#3}%
-      % convert rubber length to dimension... not perfect but works in the usual case
-      \gre@dimen@temp@three = 1\gre@skip@temp@four\relax %
-      \raise\gre@dimen@glyphraisevalue\hbox to 0pt{%
-        \loop\ifdim\gre@dimen@temp@three > 0pt\relax%
-          \advance\gre@dimen@temp@three by -\gre@dimen@temp@four\relax %
-          {\gre@font@music\GreCPHEpisemaPunctumReduced}%
-        \repeat %
-        \kern\gre@dimen@temp@three{\gre@font@music\GreCPHEpisemaPunctumReduced}%
-        \hss %
+    \ifgre@boxing\else %
+      \gre@prephepisemaledgerlineheuristics%
+      #4%
+      \ifcase#2 %
+        \gre@calculate@glyphraisevalue{#1}{9}%
+      \or %
+        \gre@calculate@glyphraisevalue{#1}{5}%
+      \fi %
+      \IfStrEq{-1}{#3}{%
+        \raise\gre@dimen@glyphraisevalue\hbox to 0pt{\gre@font@music\gre@char@he@punctum{f}\hss}%
+      }{%
+        % special handling for punctum inclinatum
+        \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPHEpisemaPunctumReduced}%
+        \gre@dimen@temp@four = \wd\gre@box@temp@width\relax %
+        \gre@get@spaceskip{#3}%
+        % convert rubber length to dimension... not perfect but works in the usual case
+        \gre@dimen@temp@three = 1\gre@skip@temp@four\relax %
+        \raise\gre@dimen@glyphraisevalue\hbox to 0pt{%
+          \loop\ifdim\gre@dimen@temp@three > 0pt\relax%
+            \advance\gre@dimen@temp@three by -\gre@dimen@temp@four\relax %
+            {\gre@font@music\GreCPHEpisemaPunctumReduced}%
+          \repeat %
+          \kern\gre@dimen@temp@three{\gre@font@music\GreCPHEpisemaPunctumReduced}%
+          \hss %
+        }%
       }%
-    }%
-    \gre@resetledgerlineheuristics%
+      \gre@resetledgerlineheuristics%
+    \fi %
   \fi %
   \relax %
 }%
-
-% another dumb top function
-\def\GreAdditionalLine#1#2#3{%
-  \ifgre@showlines %
-    \xdef\gre@dimen@savedglyphraise{\the\gre@dimen@glyphraisevalue}%
-    \gre@style@additionalstafflines %
-    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% OBSOLETE
-    \else % OBSOLETE
-      \gre@obsolete{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% OBSOLETE
-    \fi% OBSOLETE
-    \gre@hepisorline{\gre@pitch@dummy}{#1}{#2}{#3}{f}%
-    \endgre@style@additionalstafflines%
-    \gre@dimen@glyphraisevalue=\gre@dimen@savedglyphraise\relax%
-  \fi %
-  \relax %
-}%
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of bars
@@ -1540,6 +1570,9 @@
     }%
 }%
 
+% width of a punctum mora, reinitalized at each score
+\newdimen\gre@dimen@morawidth
+
 % sets gre@skip@temp@four to the (usually negative) shift to apply before
 % a syllable following a punctum mora, to cancel its taking into account into
 % horizontal placement.
@@ -1547,11 +1580,14 @@
 %   - 1 for the general case
 %   - 2 when the punctum mora is before a bar
 \def\gre@get@unkern@aftermora#1{%
-  \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@fontchar@punctummora}%
+  \ifdim\gre@dimen@morawidth=0pt\relax %
+    \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@fontchar@punctummora}%
+    \global\gre@dimen@morawidth=\wd\gre@box@temp@width %
+  \fi %
   \ifnum #1=1%
-    \global\gre@skip@temp@four=\glueexpr -\wd\gre@box@temp@width - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustment\relax %
+    \global\gre@skip@temp@four=\glueexpr - \gre@dimen@morawidth - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustment\relax %
   \else %
-    \global\gre@skip@temp@four=\glueexpr -\wd\gre@box@temp@width - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustmentbar\relax %
+    \global\gre@skip@temp@four=\glueexpr - \gre@dimen@morawidth - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustmentbar\relax %
   \fi %
   \relax %
 }
@@ -1899,22 +1935,31 @@
   \gre@obsolete{\protect\GreDontHideAltLines}{\protect\gresetlinesbehindalteration{visible}}%
 }%
 
+% is last glyph a cavum?
+\newcount\gre@count@lastglyphiscavum
+% 0 if no
+% 1 if current glyph is a cavum (set once the cavum is filled)
+% 2 if previous glyph is a cavum (which is the most interesting information)
+\gre@count@lastglyphiscavum=0
 
 % the argument is the character with which we fill the hole, and we suppose that
 % isonaline and glyphraisevalue are correctly set.
 \def\gre@fillhole#1{%
-  \setbox\gre@box@temp@sign=\hbox{#1}%
-  \hbox to 0pt{%
-    {%
-    \color{grebackgroundcolor}%
-    \raise \gre@dimen@glyphraisevalue\relax%
-    \copy\gre@box@temp@sign %
+  \ifgre@boxing\else %
+    \global\gre@count@lastglyphiscavum=1\relax %
+    \setbox\gre@box@temp@sign=\hbox{#1}%
+    \hbox to 0pt{%
+      {%
+      \color{grebackgroundcolor}%
+      \raise \gre@dimen@glyphraisevalue\relax%
+      \copy\gre@box@temp@sign %
+      }%
+      %\pdfliteral{}% this is a ugly hack for old versions of LuaTeX to work
+      \hss %
     }%
-    %\pdfliteral{}% this is a ugly hack for old versions of LuaTeX to work
-    \hss %
-  }%
-  \GreNoBreak %
-\relax %
+    \GreNoBreak %
+  \fi %
+  \relax %
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

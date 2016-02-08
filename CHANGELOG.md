@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+### Fixed
+- When a flat on a ledger line (`bx` or `lx`) was preceding a note also on a ledger line, the ledger line was partially visible inside the flat, see [#882](https://github.com/gregorio-project/gregorio/issues/882).
+- Compilation of documents produced with Gregorio should be slightly faster.
+
 ### Changed
 - Stem length for virgas, flexus, pes quadratum, etc. are now tunable, and have been reviewed, see [#803](https://github.com/gregorio-project/gregorio/issues/803).
 - Height of the porrectus have been altered (first note moved up, second also moved up when second ambitus is more than one) so that they are more coherent with the punctum height. The porrectus stroke drawings have also been slightly altered to be slightly thinner and sharper around the bottom note (see [#858](https://github.com/gregorio-project/gregorio/issues/858)).
