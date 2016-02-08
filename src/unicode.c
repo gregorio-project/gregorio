@@ -41,14 +41,17 @@
 
 /* an utf8 version of mbstowcs */
 
-static size_t gregorio_mbstowcs(grewchar *dest, const char *src, int n)
+/* expects a buffer of size n + 1 */
+static bool gregorio_mbstowcs(grewchar *dest, const char *src, size_t n)
 {
+    bool success = true;
     unsigned char bytes_to_come;
     grewchar result = 0;
     unsigned char c;
     size_t res = 0; /* number of bytes we've done so far */
-    gregorio_assert_only(src, gregorio_mbstowcs, "call with a NULL argument");
-    while (*src && ((int) res <= n || !dest)) {
+    gregorio_not_null(src, gregorio_mbstowcs, return false);
+    gregorio_not_null(dest, gregorio_mbstowcs, return false);
+    while (success && *src && res < n) {
         c = (unsigned char) (*src);
         if (c < 128) { /* 0100xxxx */
             /* one-byte symbol */
@@ -73,7 +76,8 @@ static size_t gregorio_mbstowcs(grewchar *dest, const char *src, int n)
             /* printf("%s %d %d\n", src, res, c); */
             gregorio_message(_("malformed UTF-8 sequence1"),
                     "gregorio_mbstowcs", VERBOSITY_ERROR, 0);
-            return -1;
+            success = false;
+            break;
         }
         while (bytes_to_come > 0) {
             bytes_to_come--;
@@ -85,20 +89,18 @@ static size_t gregorio_mbstowcs(grewchar *dest, const char *src, int n)
             } else {
                 gregorio_message(_("malformed UTF-8 sequence2"),
                         "gregorio_mbstowcs", VERBOSITY_ERROR, 0);
-                return -1;
+                success = false;
+                break;
             }
         }
-        if (dest) {
-            dest[res] = result;
-        }
+        dest[res] = result;
+
         res++;
         result = 0;
         src++;
     }
-    if (!(*src) && (int) res <= n && dest) {
-        dest[res] = 0;
-    }
-    return res;
+    dest[res] = 0;
+    return success;
 }
 
 /* the value returned by this function must be freed! */
@@ -112,7 +114,9 @@ grewchar *gregorio_build_grewchar_string_from_buf(const char *const buf)
     }
     len = strlen(buf); /* to get the length of the syllable in ASCII */
     gwstring = (grewchar *) gregorio_malloc((len + 1) * sizeof(grewchar));
-    gregorio_mbstowcs(gwstring, buf, len); /* converting into wchar_t */
+    gregorio_mbstowcs(gwstring, buf, len); /* converting into grewchar */
+    /* no need to check the return code; if it failed, the error state would
+     * already be in place */
     return gwstring;
 }
 

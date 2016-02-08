@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 This texlua script is called in Windows automatic installer (see gregorio.iss),
-it installs GregorioTeX under Windows.
+it uninstalls GregorioTeX under Windows.
 --]]
 
 require("lfs")
@@ -52,62 +52,56 @@ if os.type == "windows" or os.type == "msdos" then
 end
 
 local texmflocal = fixpath(kpse.expand_var("$TEXMFLOCAL"))..pathsep
-local suffix = "gregoriotex"..pathsep
+local texmfdist = fixpath(kpse.expand_var("$TEXMFDIST"))..pathsep
 
-function io.loaddata(filename,textmode)
-  local f = io.open(filename,(textmode and 'r') or 'rb')
-  if f then
-    local data = f:read('*all')
-    f:close()
-    return data
-  else
-    return nil
-  end
-end
-
-function io.savedata(filename,data,joiner)
-  local f = io.open(filename,"wb")
-  if f then
-    f:write(data or "")
-    f:close()
-    return true
-  else
+function remove_executable()
+  if not lfs.isdir(texmflocal) then
     return false
   end
-end
-
-function copy_one_file(src, dest)
-  local destfile = dest..basename(src)
-  io.savedata(destfile, io.loaddata(src))
-end
-
-function copy_files()
-  if not lfs.isdir(texmflocal) then
-    lfs.mkdir(texmflocal)
+  print("Removinging gregorio.exe...")
+  if string.find(string.lower(texmfdist), "texlive") then
+    texmfbin = fixpath(texmfdist.."/../bin/win32/")
+    rm_one(texmfbin..""  )
+  elseif string.find(string.lower(texmfdist), "miktex") then
+    --[[ MiKTeX uses slightly different paths for the location of it's bin
+    directory for 32 and 64 bit versions.  Our current install solution is to
+    copy the executable to both of these locations, so we have to delete from
+    both as well.
+    --]]
+    texmfbin_32 = fixpath(texmfdist.."/miktex/bin/")
+    texmfbin_64 = fixpath(texmfdist.."/miktex/bin/x64/")
+    rm_one(texmfbin_32.."gregorio.exe")
+    rm_one(texmfbin_64.."gregorio.exe")
+  else
+    print("I don't recognize your TeX distribution.")
+    print("You may need to remove gregorio.exe manually.")
   end
-  print("Copying files...\n")
-  local texmfdist = kpse.expand_var("$TEXMFDIST")
-  texmfbin = fixpath(texmfdist.."/../bin/win32/")
-  print("gregorio.exe...")
-  copy_one_file("gregorio.exe", texmfbin)
-  print("GregorioTeX files...")
-  os.spawn("xcopy texmf "..texmflocal.." /e /f /y")
 end
 
-function run_texcommands()
-  print("Running mktexlsr\n")
-  local p = os.spawn("mktexlsr "..texmflocal)
+function remove_tex_files()
+  if string.find(string.lower(texmfdist),"texlive") then
+    remove_texmf_install()
+    print("Running mktexlsr\n")
+    local p = os.spawn("mktexlsr "..texmflocal)
+  elseif string.find(string.lower(texmfdist), "miktex") then
+    print("Unregistering Gregorio's texmf tree with MiKTeX...")
+    local appdir = lfs.currentdir()
+    local target = fixpath(appdir.."/texmf/")
+    os.spawn("initexmf --unregister-root=\""..target)
+    print("Running initexmf...")
+    os.spawn("initexmf -u")
+    os.spawn("initexmf --mkmaps")
+  else
+    print("I don't recognize your TeX distribution.")
+    print("You may need to remove files from your texmf tree manually.")
+  end
 end
 
-local old_base_dirs = {
-  fixpath(texmflocal.."tex/generic/gregoriotex"),
-  fixpath(texmflocal.."tex/latex/gregoriotex"),
-  fixpath(texmflocal.."fonts/ofm/gregoriotex"),
-  fixpath(texmflocal.."fonts/tfm/gregoriotex"),
-  fixpath(texmflocal.."fonts/type1/gregoriotex"),
-  fixpath(texmflocal.."fonts/ovp/gregoriotex"),
-  fixpath(texmflocal.."fonts/ovf/gregoriotex"),
-  fixpath(texmflocal.."fonts/map/gregoriotex"),
+local texmf_install_dirs = {
+  fixpath(texmflocal.."tex/luatex/gregoriotex"),
+  fixpath(texmflocal.."fonts/truetype/public/gregoriotex"),
+  fixpath(texmflocal.."fonts/source/gregoriotex"),
+  fixpath(texmflocal.."doc/luatex/gregoriotex"),
 }
 
 -- should remove the Read-Only flag on files under Windows, but doesn't work, no idea why... even the attrib command in cmd.exe doesn't work...
@@ -119,7 +113,7 @@ function remove_read_only(filename)
 end
 
 -- a function removing one file
-local function rm_one(filename)
+function rm_one(filename)
   print("removing "..filename)
   remove_read_only(filename)
   local b, err = os.remove(filename)
@@ -144,46 +138,29 @@ local function rmdirrecursive(dir)
   rm_one(dir)
 end
 
--- gregorio used to be installed in other directories which have precedence
--- over the new ones
-function remove_possible_old_install()
-  print("Looking for old GregorioTeX files...\n")
-  local old_install_was_present = false
-  for _, d in pairs(old_base_dirs) do
+function remove_texmf_install()
+  print("Looking for GregorioTeX files...\n")
+  local install_was_present = false
+  for _, d in pairs(texmf_install_dirs) do
     print("Looking for "..d.."...")
     if lfs.isdir(d) then
-      old_install_was_present = true
+      install_was_present = true
       print("Found "..d..", removing...")
       rmdirrecursive(d)
     end
   end
-  if old_install_was_present then
+  if install_was_present then
     os.spawn("updmap")
   end
 end
 
 function main_install()
-  remove_possible_old_install()
-  copy_files()
-  run_texcommands()
-  print("Post-install script complete.")
+  remove_executable()
+  remove_tex_files()
+  print("Uninstall script complete.")
   print("Press return to continue...")
   answer=io.read()
 end
 
-function scribus_config()
-  local f = io.open('contrib'..pathsep..'900_gregorio.xml', 'r')
-  local data = ""
-  for l in f:lines() do
-    if l:match("executable command") then
-      data = data..string.format("	<executable command='texlua \"%s\" \"%%file\" \"%%dir\"'/>\n", lfs.currentdir()..pathsep.."contrib"..pathsep.."gregorio-scribus.lua")
-    else
-      data = data..l.."\n"
-    end
-  end
-  io.savedata('contrib'..pathsep..'900_gregorio.xml', data)
-end
-
 main_install()
-scribus_config()
 

@@ -547,9 +547,7 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         fprintf(f, "%cs", pitch_letter(note->u.note.pitch));
         break;
     default:
-        /* includes S_BIVIRGA, S_TRIVIRGA, S_DISTROPHA, S_TRISTROPHA,
-         * S_DISTROPHA_AUCTA, and S_TRISTROPHA_AUCTA -- which are patched out
-         * during parsing */
+        /* includes S_BIVIRGA, S_TRIVIRGA, S_DISTROPHA, and S_TRISTROPHA */
         /* not reachable unless there's a programming error */
         /* LCOV_EXCL_START */
         unsupported("gabc_write_gregorio_note", __LINE__, "shape",

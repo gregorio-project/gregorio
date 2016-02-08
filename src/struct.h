@@ -113,9 +113,7 @@ ENUM(gregorio_clef, GREGORIO_CLEF);
     E(S_STROPHA) \
     E(S_STROPHA_AUCTA) \
     E(S_DISTROPHA) \
-    E(S_DISTROPHA_AUCTA) \
     E(S_TRISTROPHA) \
-    E(S_TRISTROPHA_AUCTA) \
     E(S_PUNCTUM_CAVUM) \
     E(S_LINEA_PUNCTUM) \
     E(S_LINEA_PUNCTUM_CAVUM) \
@@ -756,6 +754,9 @@ static __inline bool is_fused(char liquescentia)
 #define LOWEST_PITCH 3
 #define DUMMY_PITCH (LOWEST_PITCH + 6)
 #define LOW_LEDGER_LINE_PITCH (LOWEST_PITCH + 1)
+
+/* defines the maximal interval between two notes of the same glyph */
+#define MAX_AMBITUS 5
 
 gregorio_score *gregorio_new_score(void);
 void gregorio_add_note(gregorio_note **current_note, signed char pitch,

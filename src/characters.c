@@ -37,9 +37,6 @@
 #include <limits.h>
 #include <sys/stat.h>
 #include <assert.h>
-#ifdef USE_KPSE
-    #include <kpathsea/kpathsea.h>
-#endif
 #include "bool.h"
 #include "struct.h"
 #include "unicode.h"
@@ -51,16 +48,6 @@
 
 #define VOWEL_FILE "gregorio-vowels.dat"
 
-#ifndef USE_KPSE
-static __inline void rtrim(char *buf)
-{
-    char *p;
-    for (p = buf + strlen(buf) - 1; p >= buf && isspace(*p); --p) {
-        *p = '\0';
-    }
-}
-#endif
-
 static bool read_vowel_rules(char *const lang) {
     char *language = lang;
     rulefile_parse_status status = RFPS_NOT_FOUND;
@@ -68,51 +55,7 @@ static bool read_vowel_rules(char *const lang) {
     const char *description;
     int tries;
 
-#ifdef USE_KPSE
-    filenames = kpse_find_file_generic(VOWEL_FILE, kpse_tex_format, true, true);
-    if (!filenames) {
-        if (strcmp(language, "Latin") != 0) {
-            gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
-                    _("kpse_find_file_generic cannot find %s"), VOWEL_FILE);
-        }
-        return false;
-    }
-#else
-    FILE *file;
-    size_t bufsize = 0;
-    char *buf = NULL;
-    size_t capacity = 16, size = 0;
-    
-    filenames = gregorio_malloc(capacity * sizeof(char *));
-
-    file = popen("kpsewhich -all " VOWEL_FILE, "r");
-    if (!file) {
-        /* it's not reasonable to cause popen to fail */
-        /* LCOV_EXCL_START */
-        gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
-                _("unable to run kpsewhich %s: %s"), VOWEL_FILE,
-                strerror(errno));
-        return false;
-        /* LCOV_EXCL_STOP */
-    }
-    while (gregorio_readline(&buf, &bufsize, file)) {
-        rtrim(buf);
-        if (strlen(buf) > 0) {
-            filenames[size++] = gregorio_strdup(buf);
-            if (size >= capacity) {
-                capacity <<= 1;
-                filenames = gregorio_realloc(filenames,
-                                capacity * sizeof(char *));
-            }
-        } else {
-            gregorio_messagef("read_patterns", VERBOSITY_WARNING, 0,
-                    _("kpsewhich returned bad value for %s"), VOWEL_FILE);
-        }
-    }
-    free(buf);
-    filenames[size] = NULL;
-    pclose(file);
-#endif
+    gregorio_kpse_find_or_else(filenames, VOWEL_FILE, return false);
 
     gregorio_vowel_tables_init();
     /* only need to try twice; if it's not resolved by then, there is an alias
@@ -331,16 +274,13 @@ static void style_pop(det_style **first_style, det_style *element)
 }
 
 /*
- * free_styles just free the stack. You may notice that it will never be used
- * in a normal functionment. But we never know...
+ * free_styles just frees the stack.
  */
 
 static void free_styles(det_style **first_style)
 {
     det_style *current_style;
-    if (!first_style) {
-        return;
-    }
+    gregorio_not_null(first_style, free_styles, return);
     current_style = (*first_style);
     while (current_style) {
         current_style = current_style->next_style;
@@ -607,9 +547,12 @@ void gregorio_write_first_letter_alignment_text(
     }
 
     if (phase == WTP_FIRST_SYLLABLE) {
-        while ((--first_letter_open) >= 0) {
-            end(f, ST_SYLLABLE_INITIAL);
-        }
+        /* the only way this can happen is if the first syllable is empty,
+         * but if the first syllable is empty, this function will not be
+         * called */
+        gregorio_assert_only(!first_letter_open,
+                gregorio_write_first_letter_alignment_text,
+                "first_syllable was not closed properly");
     }
 
     free_styles(&first_style);
@@ -732,7 +675,7 @@ static void insert_char_after(grewchar c,
  * 
  */
 
-static gregorio_character *suppress_character(
+static __inline gregorio_character *suppress_character(
         gregorio_character *current_character)
 {
     if (current_character) {
@@ -763,14 +706,23 @@ static gregorio_character *suppress_character(
 static __inline void close_style(gregorio_character *current_character,
         det_style *current_style)
 {
+    /* we suppose that there is a previous_character, because there is a
+     * current_style
+     */
+    gregorio_assert(current_character && current_character->previous_character,
+            close_syllable, "have a style but no previous character", return);
     if (!current_character->previous_character->is_character
             && current_character->previous_character->cos.s.style ==
             current_style->style) {
-        /*
-         * we suppose that there is a previous_character, because there is a
-         * current_style
-         */
-        suppress_character(current_character->previous_character);
+        /* we do it this way rather than calling suppress_character on the
+         * previous character because the intent is more obvious to both the
+         * human reading it and to the clang static analyzer */
+        gregorio_character *tofree = current_character->previous_character;
+        if (tofree->previous_character) {
+            tofree->previous_character->next_character = current_character;
+        }
+        current_character->previous_character = tofree->previous_character;
+        free(tofree);
     } else {
         insert_style_before(ST_T_END, current_style->style, current_character);
     }
@@ -873,7 +825,7 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
     bool in_elision = false;
     det_style *current_style;
     /* so, here we start: we go to the first_character */
-    if (go_to_end_initial(&current_character)) {
+    if (skip_initial && go_to_end_initial(&current_character)) {
         if (!current_character->next_character) {
             /* nothing else to rebuild, but the initial needs to be ST_CENTER */
             insert_style_after(ST_T_END, ST_CENTER, &current_character);
@@ -883,10 +835,10 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
             (*param_character) = current_character;
             return;
         }
-        if (skip_initial) {
-            /* move to the character after the initial */
-            current_character = current_character->next_character;
-        } else {
+        /* move to the character after the initial */
+        current_character = current_character->next_character;
+    } else {
+        if (current_character) {
             gregorio_go_to_first_character_c(&current_character);
         }
     }
@@ -907,7 +859,7 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
     /* put a sentinel at the end to aid in looping */
     insert_style_after(ST_T_NOTHING, ST_SENTINEL, &sentinel);
     /* we loop until there isn't any character */
-    while (current_character != sentinel) {
+    while (current_character && current_character != sentinel) {
         /* IMPORTANT: A continue inside this loop MUST put current_character on
          * the next character to process */
 
@@ -957,10 +909,12 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
                     if (current_character->next_character) {
                         current_character = current_character->next_character;
                     }
-                    while (current_character && current_character->is_character) {
+                    while (current_character && current_character != sentinel
+                            && current_character->is_character) {
                         current_character = current_character->next_character;
                     }
-                    if (current_character) {
+                    assert(current_character);
+                    if (current_character != sentinel) {
                         gregorio_assert2(!current_character->is_character
                                 && current_character->cos.s.type == ST_T_END
                                 && current_character->cos.s.style == style,
@@ -1080,7 +1034,8 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
     }
     /* destroy the sentinel */
     current_character = sentinel->previous_character;
-    suppress_character(sentinel);
+    current_character->next_character = NULL;
+    free(sentinel);
     /* we terminate all the styles that are still in the stack */
     for (current_style = first_style; current_style;
             current_style = current_style->next_style) {
@@ -1194,10 +1149,6 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
                 start_of_special->previous_character = NULL;
                 current_character->next_character = first_character;
                 first_character->previous_character = current_character;
-
-                gregorio_message(_
-                        ("Any style applied to the initial will be ignored."),
-                        NULL, VERBOSITY_WARNING, 0);
             }
             break;
         }
@@ -1211,10 +1162,6 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
                 current_character->previous_character = NULL;
                 current_character->next_character = first_character;
                 first_character->previous_character = current_character;
-
-                gregorio_message(_
-                        ("Any style applied to the initial will be ignored."),
-                        NULL, VERBOSITY_WARNING, 0);
             }
             insert_style_before(ST_T_BEGIN, ST_INITIAL, current_character);
             insert_style_after(ST_T_END, ST_INITIAL, &current_character);
