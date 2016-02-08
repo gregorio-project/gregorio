@@ -23,6 +23,7 @@
 #include "config.h"
 #include <stdio.h>
 #include <assert.h>
+#include <stdarg.h>
 #include "bool.h"
 #include "messages.h"
 #include "support.h"
