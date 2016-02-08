@@ -675,7 +675,7 @@ static void insert_char_after(grewchar c,
  * 
  */
 
-static gregorio_character *suppress_character(
+static __inline gregorio_character *suppress_character(
         gregorio_character *current_character)
 {
     if (current_character) {
@@ -706,14 +706,23 @@ static gregorio_character *suppress_character(
 static __inline void close_style(gregorio_character *current_character,
         det_style *current_style)
 {
+    /* we suppose that there is a previous_character, because there is a
+     * current_style
+     */
+    gregorio_assert(current_character && current_character->previous_character,
+            close_syllable, "have a style but no previous character", return);
     if (!current_character->previous_character->is_character
             && current_character->previous_character->cos.s.style ==
             current_style->style) {
-        /*
-         * we suppose that there is a previous_character, because there is a
-         * current_style
-         */
-        suppress_character(current_character->previous_character);
+        /* we do it this way rather than calling suppress_character on the
+         * previous character because the intent is more obvious to both the
+         * human reading it and to the clang static analyzer */
+        gregorio_character *tofree = current_character->previous_character;
+        if (tofree->previous_character) {
+            tofree->previous_character->next_character = current_character;
+        }
+        current_character->previous_character = tofree->previous_character;
+        free(tofree);
     } else {
         insert_style_before(ST_T_END, current_style->style, current_character);
     }
@@ -850,7 +859,7 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
     /* put a sentinel at the end to aid in looping */
     insert_style_after(ST_T_NOTHING, ST_SENTINEL, &sentinel);
     /* we loop until there isn't any character */
-    while (current_character != sentinel) {
+    while (current_character && current_character != sentinel) {
         /* IMPORTANT: A continue inside this loop MUST put current_character on
          * the next character to process */
 
@@ -900,10 +909,12 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
                     if (current_character->next_character) {
                         current_character = current_character->next_character;
                     }
-                    while (current_character && current_character->is_character) {
+                    while (current_character && current_character != sentinel
+                            && current_character->is_character) {
                         current_character = current_character->next_character;
                     }
-                    if (current_character) {
+                    assert(current_character);
+                    if (current_character != sentinel) {
                         gregorio_assert2(!current_character->is_character
                                 && current_character->cos.s.type == ST_T_END
                                 && current_character->cos.s.style == style,
@@ -1023,7 +1034,8 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
     }
     /* destroy the sentinel */
     current_character = sentinel->previous_character;
-    suppress_character(sentinel);
+    current_character->next_character = NULL;
+    free(sentinel);
     /* we terminate all the styles that are still in the stack */
     for (current_style = first_style; current_style;
             current_style = current_style->next_style) {
