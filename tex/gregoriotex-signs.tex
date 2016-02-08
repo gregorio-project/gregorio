@@ -965,7 +965,9 @@
 
 % a function to typeset an augmentum duplex, easy enough to be understood...
 \def\GreAugmentumDuplex#1#2#3{%
-  \GrePunctumMora{#1}{1}{#3}{0}%
+  \ifgre@boxing\else %
+    \GrePunctumMora{#1}{1}{#3}{0}%
+  \fi %
   \GrePunctumMora{#2}{0}{0}{0}%
   \relax %
 }%
