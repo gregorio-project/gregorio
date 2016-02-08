@@ -55,9 +55,6 @@ local texmflocal = fixpath(kpse.expand_var("$TEXMFLOCAL"))..pathsep
 local texmfdist = fixpath(kpse.expand_var("$TEXMFDIST"))..pathsep
 
 function remove_executable()
-  if not lfs.isdir(texmflocal) then
-    return false
-  end
   print("Removinging gregorio.exe...")
   if string.find(string.lower(texmfdist), "texlive") then
     texmfbin = fixpath(texmfdist.."/../bin/win32/")
