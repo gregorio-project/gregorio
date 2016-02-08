@@ -82,10 +82,7 @@ function copy_one_file(src, dest)
 end
 
 function copy_files()
-  if not lfs.isdir(texmflocal) then
-    lfs.mkdir(texmflocal)
-  end
-  print("Copying files...\n")
+  print("Copying files...")
   local texmfdist = kpse.expand_var("$TEXMFDIST")
   --[[ MiKTeX uses slightly different paths for the location of it's bin
   directory for 32 and 64 bit versions.  Since the copy command will fail
@@ -97,13 +94,15 @@ function copy_files()
   print("gregorio.exe...")
   copy_one_file("gregorio.exe", texmfbin_32)
   copy_one_file("gregorio.exe", texmfbin_64)
-  print("GregorioTeX files...")
-  os.spawn("xcopy texmf "..texmflocal.." /e /f /y")
 end
 
 function run_texcommands()
-  print("Running initexmf\n")
-  local p = os.spawn("initexmf -u --admin")
+  print("Registering Gregorio's texmf tree with MiKTeX...")
+  local appdir = lfs.currentdir()
+  local target = fixpath(appdir.."/texmf/")
+  os.spawn("initexmf --register-root=\""..target)
+  print("Running initexmf...")
+  os.spawn("initexmf -u=\""..target)
 end
 
 function main_install()

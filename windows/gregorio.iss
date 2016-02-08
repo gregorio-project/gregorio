@@ -47,6 +47,7 @@ Source: "../src/gregorio.exe"; DestDir: "{app}";
 Source: "gregorio.ico"; DestDir: "{app}";
 Source: "install-tl.lua"; DestDir: "{app}";
 Source: "install-mt.lua"; DestDir: "{app}";
+Source: "uninstall.lua"; DestDir: "{app}";
 Source: "README.txt"; DestDir: "{app}"; Flags: isreadme
 Source: "../CHANGELOG.md"; DestDir: "{app}";
 Source: "../README.md"; DestDir: "{app}";
@@ -102,6 +103,10 @@ Source: "../README.md"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
 Filename: "texlua.exe"; Parameters: """{app}\install-tl.lua"" > ""{app}\install-tl.log"""; StatusMsg: "Configuring TeXLive texmf..."; Description: "Add files to TeXLive texmf tree"; Flags: postinstall ; WorkingDir: "{app}";
 Filename: "texlua.exe"; Parameters: """{app}\install-mt.lua"" > ""{app}\install-mt.log"""; StatusMsg: "Configuring MiKTeX texmf..."; Description: "Add files to MiKTeK texmf tree"; Flags: postinstall ; WorkingDir: "{app}";
 
+[UninstallRun]
+Filename: "texlua.exe"; Parameters: """{app}\uninstall.lua"" > ""{app}\uninstall.log"""; WorkingDir: "{app}"; RunOnceId: "Remove_texmf"
+
+
 [Code]
 procedure URLLabelOnClickOne(Sender: TObject);
 var
@@ -129,13 +134,13 @@ begin
   StaticText.Height := ScaleY(15);
   StaticText.Caption := 'You are about to install the gregorio software, which is working with a';
   StaticText.Parent := Page.Surface;
-  
+
   StaticText := TNewStaticText.Create(Page);
   StaticText.Height := ScaleY(15);
   StaticText.Top := ScaleY(13);
   StaticText.Caption := 'typesetting software called LuaTeX.';
   StaticText.Parent := Page.Surface;
-  
+
   StaticText := TNewStaticText.Create(Page);
   StaticText.Top := ScaleY(35);;
   StaticText.Caption := 'The installation and use of gregorio needs LuaTeX in order to work.';
@@ -155,7 +160,7 @@ begin
   StaticText.Top := ScaleY(100);;
   StaticText.Caption := 'Note that you have to reboot your computer after having installed TeXLive';
   StaticText.Parent := Page.Surface;
-  
+
   StaticText := TNewStaticText.Create(Page);
   StaticText.Top := ScaleY(115);;
   StaticText.Caption := 'and before installing Gregorio.';
@@ -169,7 +174,7 @@ begin
   StaticText.Parent := Page.Surface;
   StaticText.Font.Style := StaticText.Font.Style + [fsUnderline];
   StaticText.Font.Color := clBlue;
-  
+
   StaticText := TNewStaticText.Create(Page);
   StaticText.Top := ScaleY(165);;
   StaticText.Caption := 'http://gregorio-project.github.io/installation-windows.html';
