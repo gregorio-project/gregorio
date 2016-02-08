@@ -20,17 +20,17 @@
  * along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+static const char *copyright =
+"Copyright (C) 2006-2016 Gregorio project authors (see CONTRIBUTORS.md)";
+
 #include "config.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #ifdef USE_KPSE
 #include <kpathsea/kpathsea.h>
-#define gregorio_basename xbasename
 #else
 #include <getopt.h>
-#include <libgen.h> /* for basename */
-#define gregorio_basename basename
 #endif
 #include <string.h> /* for strcmp */
 #include <locale.h>
@@ -111,7 +111,7 @@ static char *define_path(char *current_directory, char *string)
             /* LCOV_EXCL_START */
             fprintf(stderr, "the directory %s for %s does not exist\n",
                     temp_name, base_name);
-            exit(1);
+            gregorio_exit(1);
             /* LCOV_EXCL_STOP */
         }
     } else {
@@ -227,7 +227,7 @@ static void check_input_clobber(char *input_file_name, char *output_file_name)
         if (current_directory == NULL) {
             fprintf(stderr, _("can't determine current directory"));
             free(buf);
-            exit(1);
+            gregorio_exit(1);
         }
         absolute_input_file_name = define_path(current_directory, input_file_name);
         absolute_output_file_name = define_path(current_directory, output_file_name);
@@ -239,7 +239,7 @@ static void check_input_clobber(char *input_file_name, char *output_file_name)
         free(absolute_input_file_name);
         free(absolute_output_file_name);
         if (file_cmp == 0) {
-            exit(1);
+            gregorio_exit(1);
         }
     }
 }
@@ -256,7 +256,7 @@ static char *encode_point_and_click_filename(char *input_file_name)
          * this to fail */
         /* LCOV_EXCL_START */
         fprintf(stderr, "error: unable to resolve %s\n", input_file_name);
-        exit(1);
+        gregorio_exit(1);
         /* LCOV_EXCL_STOP */
     }
 
@@ -301,8 +301,6 @@ static char *encode_point_and_click_filename(char *input_file_name)
 
 int main(int argc, char **argv)
 {
-    const char *copyright =
-        "Copyright (C) 2006-2015 Gregorio project authors (see CONTRIBUTORS.md)";
     int c;
 
     char *input_file_name = NULL;
@@ -317,6 +315,7 @@ int main(int argc, char **argv)
     gregorio_verbosity verb_mode = 0;
     bool point_and_click = false;
     char *point_and_click_filename = NULL;
+    bool debug = false;
     int option_index = 0;
     static struct option long_options[] = {
         {"output-file", 1, 0, 'o'},
@@ -331,20 +330,20 @@ int main(int argc, char **argv)
         {"verbose", 0, 0, 'v'},
         {"all-warnings", 0, 0, 'W'},
         {"point-and-click", 0, 0, 'p'},
+        {"debug", 0, 0, 'd'},
     };
     gregorio_score *score = NULL;
 
-    #ifdef USE_KPSE
-        kpse_set_program_name(argv[0], "gregorio");
-    #endif
+    gregorio_support_init("gregorio", argv[0]);
+
     if (argc == 1) {
         print_usage(argv[0]);
-        exit(0);
+        gregorio_exit(0);
     }
     setlocale(LC_CTYPE, "C");
 
     while (1) {
-        c = getopt_long(argc, argv, "o:SF:l:f:shOLVvWp",
+        c = getopt_long(argc, argv, "o:SF:l:f:shOLVvWpd",
                         long_options, &option_index);
         if (c == -1)
             break;
@@ -395,7 +394,7 @@ int main(int argc, char **argv)
                 break;
             } else {
                 fprintf(stderr, "error: unknown output format: %s\n", optarg);
-                exit(1);
+                gregorio_exit(1);
             }
             break;
         case 'l':
@@ -419,7 +418,7 @@ int main(int argc, char **argv)
                 break;
             } else {
                 fprintf(stderr, "error: unknown input format: %s\n", optarg);
-                exit(1);
+                gregorio_exit(1);
             }
             break;
         case 's':
@@ -434,11 +433,11 @@ int main(int argc, char **argv)
             break;
         case 'h':
             print_usage(argv[0]);
-            exit(0);
+            gregorio_exit(0);
             break;
         case 'V':
-            printf("Gregorio version %s.\n%s\n", GREGORIO_VERSION, copyright);
-            exit(0);
+            gregorio_print_version(copyright);
+            gregorio_exit(0);
             break;
         case 'v':
             if (verb_mode && verb_mode != VERBOSITY_WARNING) {
@@ -459,7 +458,7 @@ int main(int argc, char **argv)
             break;
         case 'L':
             print_licence();
-            exit(0);
+            gregorio_exit(0);
             break;
         case 'p':
             if (point_and_click) {
@@ -469,13 +468,21 @@ int main(int argc, char **argv)
             }
             point_and_click = true;
             break;
+        case 'd':
+            if (debug) {
+                fprintf(stderr,
+                        "warning: debug option passed two times\n");
+                break;
+            }
+            debug = true;
+            break;
         case '?':
             break;
         default:
             /* not reachable unless there's a programming error */
             /* LCOV_EXCL_START */
             gregorio_fail2(main, "unknown option: %c", c);
-            exit(1);
+            gregorio_exit(1);
             break;
             /* LCOV_EXCL_STOP */
         }
@@ -484,7 +491,7 @@ int main(int argc, char **argv)
         if (!input_file) { /* input not undefined (could be stdin) */
             fprintf(stderr, "error: no input file specified\n");
             print_usage(argv[0]);
-            exit(1);
+            gregorio_exit(1);
         }
     } else {
         input_file_name = argv[optind++];
@@ -504,6 +511,8 @@ int main(int argc, char **argv)
         fprintf(stderr, "\n");
     }
 
+    gregorio_set_debug_messages(debug);
+
     if (!input_format) {
         input_format = DEFAULT_INPUT_FORMAT;
     }
@@ -511,14 +520,6 @@ int main(int argc, char **argv)
     if (!output_format) {
         output_format = DEFAULT_OUTPUT_FORMAT;
     }
-
-    #ifdef USE_KPSE
-        if (!kpse_in_name_ok(input_file_name)) {
-            fprintf(stderr, "Error: kpse doesn't allow to read from file  %s\n",
-                    input_file_name);
-            exit(1);
-        }
-    #endif
 
     /* then we act... */
 
@@ -543,7 +544,7 @@ int main(int argc, char **argv)
                 /* not reachable unless there's a programming error */
                 /* LCOV_EXCL_START */
                 fprintf(stderr, "error: unsupported format");
-                exit(1);
+                gregorio_exit(1);
                 /* LCOV_EXCL_STOP */
             }
         }
@@ -556,17 +557,12 @@ int main(int argc, char **argv)
         if (!input_file) {
             check_input_clobber(input_file_name, output_file_name);
         }
-        #ifdef USE_KPSE
-            if (!kpse_out_name_ok(output_file_name)) {
-                fprintf(stderr, "Error: kpse doesn't allow to write in file  %s\n",
-                        output_file_name);
-                exit(1);
-            }
-        #endif
+        gregorio_check_file_access(write, output_file_name, ERROR,
+                gregorio_exit(1));
         output_file = fopen(output_file_name, "wb");
         if (!output_file) {
             fprintf(stderr, "error: can't write in file %s", output_file_name);
-            exit(1);
+            gregorio_exit(1);
         }
     }
 
@@ -577,11 +573,13 @@ int main(int argc, char **argv)
                     "warning: disabling point-and-click since reading from stdin\n");
         }
     } else {
+        gregorio_check_file_access(read, input_file_name, ERROR,
+                gregorio_exit(1));
         input_file = fopen(input_file_name, "r");
         if (!input_file) {
             fprintf(stderr, "error: can't open file %s for reading\n",
                     input_file_name);
-            exit(1);
+            gregorio_exit(1);
         }
         if (point_and_click) {
             point_and_click_filename = encode_point_and_click_filename(
@@ -593,11 +591,13 @@ int main(int argc, char **argv)
         error_file = stderr;
         gregorio_set_error_out(error_file);
     } else {
+        gregorio_check_file_access(write, error_file_name, ERROR,
+                gregorio_exit(1));
         error_file = fopen(error_file_name, "wb");
         if (!error_file) {
             fprintf(stderr, "error: can't open file %s for writing\n",
                     error_file_name);
-            exit(1);
+            gregorio_exit(1);
         }
         gregorio_set_error_out(error_file);
     }
@@ -618,7 +618,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "error : invalid input format\n");
         fclose(input_file);
         fclose(output_file);
-        exit(1);
+        gregorio_exit(1);
         break;
         /* LCOV_EXCL_STOP */
     }
@@ -629,7 +629,7 @@ int main(int argc, char **argv)
         /* LCOV_EXCL_START */
         fclose(output_file);
         fprintf(stderr, "error in file parsing\n");
-        exit(1);
+        gregorio_exit(1);
         /* LCOV_EXCL_STOP */
     }
 
@@ -649,7 +649,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "error : invalid output format\n");
         gregorio_free_score(score);
         fclose(output_file);
-        exit(1);
+        gregorio_exit(1);
         break;
         /* LCOV_EXCL_STOP */
     }
@@ -666,5 +666,5 @@ int main(int argc, char **argv)
         fclose(error_file);
     }
 
-    exit(gregorio_get_return_value());
+    gregorio_exit(gregorio_get_return_value());
 } /* due to exit on prior line, this will never be reached; LCOV_EXCL_LINE */

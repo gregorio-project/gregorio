@@ -49,9 +49,6 @@ typedef enum gabc_determination {
     DET_END_OF_BOTH
 } gabc_determination;
 
-/* defines the maximal interval between two notes of the same glyph */
-#define MAX_INTERVAL 5
-
 static __inline void gabc_update_location(gregorio_scanner_location *const loc,
         const char *const bytes, const size_t length)
 {
