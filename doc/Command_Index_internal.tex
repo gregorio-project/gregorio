@@ -1520,6 +1520,14 @@ Boolean indicating whether the staff has a fifth line.
 \macroname{\textbackslash gre@count@barshiftaftermora}{}{gregoriotex-signs.tex}
 Count indicating when the presence of a punctum mora immediately before a bar line should affect the spacing.
 
+\macroname{\textbackslash gre@count@lastglyphiscavum}{}{gregoriotex-spaces.tex}
+Count indicating if the last glyph has a cavum (this includes flats, naturals, punctum cavum, etc.), when staff line shouldn't appear underneath this empty part. Can be:
+\begin{itemize}
+\item 0: previous and current glyph are not cavum
+\item 1: current glyph is (set when line is hidden, at the end of the glyph)
+\item 2: previous glyph is (set at beginning of glyph)
+\end{itemize}
+
 \macroname{\textbackslash ifgre@allowdeprecated}{}{gregoriotex.sty \textup{and} gregoriotex.tex}
 Boolean which controls whether deprecated functions raise a warning (true) or an error (false).
 
@@ -1584,8 +1592,11 @@ second is the name of the distance.
 
 These additional distances are calculated by Gregorio based on the values for the user customizable distances and what may be going on in the score at the time of their use.
 
+\macroname{\textbackslash gre@dimen@morawidth}{}{gregoriotex-spaces.tex}
+Width of a punctum mora (reinitialized at each score, lazily recomputed).
+
 \macroname{\textbackslash gre@dimen@clefwidth}{}{gregoriotex-spaces.tex}
-Width of the clef.
+Width of the current clef.
 
 \macroname{\textbackslash gre@dimen@constantglyphraise}{}{gregoriotex-spaces.tex}
 Dimension representing the space between the 0 of the gregorian fonts and the effective 0 of the TeX score.
