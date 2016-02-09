@@ -184,7 +184,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\
 static void print_usage(char *name)
 {
     printf(_("Usage: %s [OPTION]... [-s | INPUT_FILE]\n\
-\nEngrave Gregorian chant scores, convert a gabc file in GregorioTeX.\n\n\
+\nEngrave Gregorian chant scores, convert a gabc file to GregorioTeX.\n\n\
 Options:\n\
   -o, --output-file FILE    write output to FILE,\n\
                             default is basename(INPUT_FILE).FORMAT\n\
