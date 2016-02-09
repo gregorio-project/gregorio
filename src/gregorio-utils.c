@@ -216,7 +216,8 @@ GregorioRef-" FILENAME_VERSION ".pdf and GregorioNabcRef-" FILENAME_VERSION ".pd
 
 static void print_short_usage(char *name)
 {
-    printf("Try '%s --help' for more information.\n", name);
+    printf("Usage: %s [OPTION]... [-s | INPUT_FILE]\n\
+Try '%s --help' for more information.\n", name, name);
 }
 
 static void check_input_clobber(char *input_file_name, char *output_file_name)
