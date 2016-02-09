@@ -190,26 +190,28 @@ Options:\n\
                             default is basename(INPUT_FILE).FORMAT\n\
   -S, --stdout              write output to stdout\n\
   -s, --stdin               read input from stdin\n\
-  -l, --messages-file FILE     output messages to FILE (default: stderr)\n\
-  -F, --output-format FORMAT   specify output format (default: gtex)\n"), name);
-printf(_("  -f, --input-format FORMAT    specify input format (default: gabc)\n\
-  -p, --point-and-click        generate SyncTeX information\n\
-  -h, --help            print this help message\n\
-  -V, --version         print version and exit\n"));
+  -l, --messages-file FILE  output messages to FILE (default: stderr)\n\
+  -F, --output-format FORMAT\n\
+                            specify output format (default: gtex)\n"), name);
+printf(_("  -f, --input-format FORMAT\n\
+                            specify input format (default: gabc)\n\
+  -p, --point-and-click     generate Lilypond point and click information\n\
+  -h, --help                print this help message\n\
+  -V, --version             print version and exit\n"));
     printf(_("\
-  -L, --license         print licence\n\
-  -v, --verbose         verbose mode\n\
-  -W, --all-warnings    output warnings\n\
-  -d, --debug           output debug information\n\
+  -L, --license             print licence\n\
+  -v, --verbose             verbose mode\n\
+  -W, --all-warnings        output warnings\n\
+  -d, --debug               output debug information\n\
 \n\
 Formats:\n\
   gabc      gabc\n\
   gtex      GregorioTeX\n\
   dump      plain text dump (for debugging purpose)\n\
 \n\
-See <http://gregorio-project.github.io/> for general documentation,\n\
-GregorioRef-VERSION.pdf and GregorioNabcRef-VERSION.pdf for full documentation.\
-\n"));
+See <%s> for general documentation,\n\
+GregorioRef-%s.pdf and GregorioNabcRef-%s.pdf for full documentation.\
+\n"), PACKAGE_URL, VERSION, VERSION);
 }
 
 static void print_short_usage(char *name)
@@ -470,7 +472,7 @@ int main(int argc, char **argv)
         case 'W':
             if (verb_mode == VERBOSITY_WARNING) {
                 fprintf(stderr,
-                        "warning: all-warnings option passed twice\n");
+                        "warning: all-warnings option passed several times\n");
                 must_print_short_usage = true;
                 break;
             }
@@ -485,7 +487,7 @@ int main(int argc, char **argv)
         case 'p':
             if (point_and_click) {
                 fprintf(stderr,
-                        "warning: point-and-click option passed twice\n");
+                        "warning: point-and-click option passed several times\n");
                 must_print_short_usage = true;
                 break;
             }
@@ -494,7 +496,7 @@ int main(int argc, char **argv)
         case 'd':
             if (debug) {
                 fprintf(stderr,
-                        "warning: debug option passed twice\n");
+                        "warning: debug option passed several times\n");
                 must_print_short_usage = true;
                 break;
             }
