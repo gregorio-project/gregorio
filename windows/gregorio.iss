@@ -18,6 +18,7 @@ BackColor2=$FDF7EB
 WizardSmallImageFile=gregorio-32.bmp
 WizardImageFile=gregorio-image.bmp
 ChangesAssociations=yes
+ChangesEnvironment=true
 
 [Registry]
 Root: HKCR; Subkey: ".gabc"; ValueType: string; ValueName: ""; ValueData: "Gregorio"; Flags: uninsdeletevalue
@@ -26,6 +27,7 @@ Root: HKCR; Subkey: "Gregorio\DefaultIcon"; ValueType: string; ValueName: ""; Va
 Root: HKCR; Subkey: "Gregorio\shell\open\command"; ValueType: string; ValueName: ""; ValueData: "texworks.exe ""%1"""; Flags: uninsdeletekey
 
 [Dirs]
+Name: "{app}\bin"
 Name: "{app}\contrib"
 Name: "{app}\examples"
 Name: "{app}\texmf"
@@ -43,7 +45,7 @@ Name: "{app}\texmf\doc\luatex"
 Name: "{app}\texmf\doc\luatex\gregoriotex"
 
 [Files]
-Source: "../src/gregorio.exe"; DestDir: "{app}";
+Source: "../src/gregorio.exe"; DestDir: "{app}\bin";
 Source: "gregorio.ico"; DestDir: "{app}";
 Source: "install.lua"; DestDir: "{app}";
 Source: "uninstall.lua"; DestDir: "{app}";
@@ -98,12 +100,17 @@ Source: "../fonts/parmesan-base.sfd"; DestDir: "{app}\texmf\fonts\source\gregori
 Source: "../fonts/squarize.py"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../README.md"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
 
+[InstallDelete]
+Type: files; Name: "{app}\gregorio.exe"
+
 [Run]
 Filename: "texlua.exe"; Parameters: """{app}\install.lua"" > ""{app}\install.log"""; StatusMsg: "Adding files to texmf tree..."; Description: "Add files to texmf tree"; Flags: postinstall runascurrentuser ; WorkingDir: "{app}";
 
 [UninstallRun]
 Filename: "texlua.exe"; Parameters: """{app}\uninstall.lua"" > ""{app}\uninstall.log"""; WorkingDir: "{app}"; RunOnceId: "Remove_texmf" ; Flags: runascurrentuser
 
+[Tasks]
+Name: modifypath; Description: "Add gregorio to PATH"; GroupDescription "If you are not upgrading"; Flags: checkedonce
 
 [Code]
 procedure URLLabelOnClickOne(Sender: TObject);
@@ -188,3 +195,14 @@ procedure InitializeWizard();
 begin
   CreateTheWizardPages;
 end;
+
+const
+    ModPathName = 'modifypath';
+    ModPathType = 'system';
+
+function ModPathDir(): TArrayOfString;
+begin
+    setArrayLength(Result, 1)
+    Result[0] := ExpandConstant('{app}\bin');
+end;
+#include "modpath.iss"

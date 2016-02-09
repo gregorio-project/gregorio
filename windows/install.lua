@@ -89,23 +89,10 @@ function copy_files()
   print("Copying files into texmf tree...")
   if string.find(string.lower(texmfdist), "texlive") then
     print("Distribution is TeXLive")
-    local texmfbin = fixpath(texmfdist.."/../bin/win32/")
-    print("Executable into bin...")
-    copy_one_file("gregorio.exe", texmfbin)
     print("GregorioTeX files...")
     os.spawn("xcopy texmf "..texmflocal.." /e /f /y")
   elseif string.find(string.lower(texmfdist), "miktex") then
     print("Distribution is MiKTeX")
-    --[[ MiKTeX uses slightly different paths for the location of it's bin
-    directory for 32 and 64 bit versions.  Since the copy command will fail
-    silently if the destination directory doesn't exist, the simplest way to deal
-    with this is to simply try copying to both locations.
-    --]]
-    local texmfbin_32 = fixpath(texmfdist.."/miktex/bin/")
-    local texmfbin_64 = fixpath(texmfdist.."/miktex/bin/x64/")
-    print("Executable into bin...")
-    copy_one_file("gregorio.exe", texmfbin_32)
-    copy_one_file("gregorio.exe", texmfbin_64)
     print("Registering Gregorio's texmf tree with MiKTeX...")
     appdir = lfs.currentdir()
     target = fixpath(appdir.."/texmf/")
@@ -181,12 +168,15 @@ end
 -- gregorio used to be installed in other directories which have precedence
 -- over the new ones
 function remove_possible_old_install()
-  print("Looking for old GregorioTeX files...\n")
+  print("Looking for old GregorioTeX files...")
   local old_install_was_present = false
   for _, d in pairs(old_base_dirs) do
     print("Looking for "..d.."...")
     if lfs.isdir(d) then
-      old_install_was_present = true
+      if string.find(string.lower(d),"fonts") then
+        --We're removing fonts so we'll need to update the fonts maps later
+        old_install_was_present = true
+      end
       print("Found "..d..", removing...")
       rmdirrecursive(d)
     end
@@ -201,13 +191,37 @@ function remove_possible_old_install()
       print("You may need to rebuild your font maps manually.")
     end
   end
+  --[[ Because we used to copy the executable into the TeX path to make it
+  available, we need to remove it from said locations to make sure we don't
+  have any version conflicts.
+  ]]--
+  if string.find(string.lower(texmfdist), "texlive") then
+    local texmfbin = fixpath(texmfdist.."/../bin/win32/")
+    print("Removing old executable in bin...")
+    rm_one(texmfbin.."gregorio.exe")
+  elseif string.find(string.lower(texmfdist), "miktex") then
+    --[[ MiKTeX uses slightly different paths for the location of it's bin
+    directory for 32 and 64 bit versions.  Since we used to copy to both of
+    these locations, we now need to remove from both locations.
+    --]]
+    local texmfbin_32 = fixpath(texmfdist.."/miktex/bin/")
+    local texmfbin_64 = fixpath(texmfdist.."/miktex/bin/x64/")
+    print("Removing executable from bins...")
+    rm_one(texmfbin_32.."gregorio.exe")
+    rm_one(texmfbin_64.."gregorio.exe")
+  else
+    print("I don't recognize your TeX distribution.")
+    print("You may need to remove old executable files manually.")
+  end
 end
 
 function main_install()
   remove_possible_old_install()
+  print("\n")
   copy_files()
+  print("\n")
   run_texcommands()
-  print("Post-install script complete.")
+  print("\nPost-install script complete.")
   print("Press return to continue...")
   local answer=io.read()
 end
