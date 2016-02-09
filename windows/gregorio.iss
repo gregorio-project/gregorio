@@ -75,6 +75,7 @@ Source: "../tex/gregoriotex-signs.lua"; DestDir: "{app}\texmf\tex\luatex\gregori
 Source: "../tex/gregoriotex-spaces.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
 Source: "../tex/gregoriotex-syllable.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
 Source: "../tex/gregoriotex-symbols.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
+Source: "../tex/gregoriotex-symbols.lua"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
 Source: "../tex/gregoriotex-nabc.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
 Source: "../tex/gregoriotex-nabc.lua"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
 Source: "../tex/gsp-default.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
