@@ -105,7 +105,7 @@ end
 
 function run_texcommands()
   if string.find(string.lower(texmfdist),"texlive") then
-    print("Running mktexlsr\n")
+    print("Running mktexlsr...")
     os.spawn("mktexlsr "..texmflocal)
   elseif string.find(string.lower(texmfdist), "miktex") then
     print("Running initexmf...")
