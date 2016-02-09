@@ -216,7 +216,7 @@ GregorioRef-" FILENAME_VERSION ".pdf and GregorioNabcRef-" FILENAME_VERSION ".pd
 
 static void print_short_usage(char *name)
 {
-    printf("Usage: %s [OPTION]... [-s | INPUT_FILE]\n\
+    fprintf(stderr, "Usage: %s [OPTION]... [-s | INPUT_FILE]\n\
 Try '%s --help' for more information.\n", name, name);
 }
 
@@ -349,7 +349,7 @@ int main(int argc, char **argv)
     gregorio_support_init("gregorio", argv[0]);
 
     if (argc == 1) {
-        printf("%s: missing file operand.\n", argv[0]);
+        fprintf(stderr, "%s: missing file operand.\n", argv[0]);
         print_short_usage(argv[0]);
         gregorio_exit(0);
     }
@@ -518,7 +518,7 @@ int main(int argc, char **argv)
     } /* end of while */
     if (optind == argc) {
         if (!input_file) { /* input not undefined (could be stdin) */
-            printf("%s: missing file operand.\n", argv[0]);
+            fprintf(stderr, "%s: missing file operand.\n", argv[0]);
             print_short_usage(argv[0]);
             gregorio_exit(1);
         }
@@ -544,6 +544,7 @@ int main(int argc, char **argv)
 
     if (must_print_short_usage) {
         print_short_usage(argv[0]);
+        fprintf(stderr, "Proceeding anyway...\n");
     }
 
     gregorio_set_debug_messages(debug);
