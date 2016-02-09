@@ -209,9 +209,9 @@ Formats:\n\
   gtex      GregorioTeX\n\
   dump      plain text dump (for debugging purpose)\n\
 \n\
-See <%s> for general documentation,\n\
-GregorioRef-%s.pdf and GregorioNabcRef-%s.pdf for full documentation.\
-\n"), PACKAGE_URL, VERSION, VERSION);
+See <" PACKAGE_URL "> for general documentation,\n\
+GregorioRef-" VERSION ".pdf and GregorioNabcRef-" VERSION ".pdf for full documentation.\
+\n"));
 }
 
 static void print_short_usage(char *name)
