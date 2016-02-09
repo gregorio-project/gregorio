@@ -19,6 +19,7 @@ dnl along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 AC_INIT([gregorio],[4.1.0-beta2],[https://github.com/gregorio-project/gregorio/issues],[gregorio],[http://gregorio-project.github.io/])
 FILENAME_VERSION="4_1_0-beta2"
 AC_SUBST(FILENAME_VERSION)
+AC_DEFINE_UNQUOTED(FILENAME_VERSION, "$FILENAME_VERSION", [version suitable for file names])
 MK=""
 AC_SUBST(MK)
 AC_PREREQ(2.59)
