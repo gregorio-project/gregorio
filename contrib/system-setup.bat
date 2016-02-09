@@ -99,6 +99,7 @@ gregoriotex-ictus.tex ^
 gregoriotex-signs.tex ^
 gregoriotex-signs.lua ^
 gregoriotex-symbols.tex ^
+gregoriotex-symbols.lua ^
 gregoriotex-spaces.tex ^
 gregoriotex-syllable.tex ^
 gregoriotex-nabc.tex ^
