@@ -138,6 +138,10 @@ local old_base_dirs = {
   fixpath(texmflocal.."fonts/ovp/gregoriotex"),
   fixpath(texmflocal.."fonts/ovf/gregoriotex"),
   fixpath(texmflocal.."fonts/map/gregoriotex"),
+  fixpath(texmflocal.."tex/luatex/gregoriotex"),
+  fixpath(texmflocal.."fonts/truetype/public/gregoriotex"),
+  fixpath(texmflocal.."fonts/source/gregoriotex"),
+  fixpath(texmflocal.."doc/luatex/gregoriotex"),
 }
 
 -- should remove the Read-Only flag on files under Windows, but doesn't work, no idea why... even the attrib command in cmd.exe doesn't work...
