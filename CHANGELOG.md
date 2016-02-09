@@ -3,7 +3,8 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
-
+### Changed
+- Command line output (help message, version message, error handling) has been improved, see [#891](https://github.com/gregorio-project/gregorio/issues/891)
 
 ## [4.1.0-beta2] - 2016-02-08
 ### Fixed
