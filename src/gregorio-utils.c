@@ -161,7 +161,7 @@ static char *get_output_filename(char *fbasename, const char *extension)
     return output_filename;
 }
 
-static void print_licence(const char *copyright)
+static void print_licence(void)
 {
     printf("Gregorio: Gregorian chant score engraving.\n\
 %s\n\
@@ -183,11 +183,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\
 
 static void print_usage(char *name)
 {
-    printf(_("usage: %s [options] [-s | INPUT_FILE]\n\
+    printf(_("Usage: %s [OPTION]... [-s | INPUT_FILE]\n\
 \nEngrave Gregorian chant scores, convert a gabc file in GregorioTeX.\n\n\
-options:\n\
+Options:\n\
   -o, --output-file FILE    write output to FILE,\n\
-                            default is basename(INPUT_FILE)-VERSION.FORMAT\n\
+                            default is basename(INPUT_FILE).FORMAT\n\
   -S, --stdout              write output to stdout\n\
   -s, --stdin               read input from stdin\n\
   -l, --messages-file FILE     output messages to FILE (default: stderr)\n\
@@ -202,7 +202,7 @@ printf(_("  -f, --input-format FORMAT    specify input format (default: gabc)\n\
   -W, --all-warnings    output warnings\n\
   -d, --debug           output debug information\n\
 \n\
-FORMATs:\n\
+Formats:\n\
   gabc      gabc\n\
   gtex      GregorioTeX\n\
   dump      plain text dump (for debugging purpose)\n\
@@ -479,7 +479,7 @@ int main(int argc, char **argv)
             }
             break;
         case 'L':
-            print_licence(copyright);
+            print_licence();
             gregorio_exit(0);
             break;
         case 'p':
