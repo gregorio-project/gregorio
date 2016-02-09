@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 This texlua script is called in Windows automatic installer (see gregorio.iss),
-it installs GregorioTeX under Windows.
+it configures Gregorio under windows to work with TeXLive or MiKTeX.
 --]]
 
 require("lfs")
@@ -52,7 +52,7 @@ if os.type == "windows" or os.type == "msdos" then
 end
 
 local texmflocal = fixpath(kpse.expand_var("$TEXMFLOCAL"))..pathsep
-local suffix = "gregoriotex"..pathsep
+local texmfdist = kpse.expand_var("$TEXMFDIST")
 
 function io.loaddata(filename,textmode)
   local f = io.open(filename,(textmode and 'r') or 'rb')
@@ -78,6 +78,7 @@ end
 
 function copy_one_file(src, dest)
   local destfile = dest..basename(src)
+  print(src.." -> "..destfile)
   io.savedata(destfile, io.loaddata(src))
 end
 
@@ -85,18 +86,47 @@ function copy_files()
   if not lfs.isdir(texmflocal) then
     lfs.mkdir(texmflocal)
   end
-  print("Copying files...\n")
-  local texmfdist = kpse.expand_var("$TEXMFDIST")
-  texmfbin = fixpath(texmfdist.."/../bin/win32/")
-  print("gregorio.exe...")
-  copy_one_file("gregorio.exe", texmfbin)
-  print("GregorioTeX files...")
-  os.spawn("xcopy texmf "..texmflocal.." /e /f /y")
+  print("Copying files into texmf tree...")
+  if string.find(string.lower(texmfdist), "texlive") then
+    print("Distribution is TeXLive")
+    local texmfbin = fixpath(texmfdist.."/../bin/win32/")
+    print("Executable into bin...")
+    copy_one_file("gregorio.exe", texmfbin)
+    print("GregorioTeX files...")
+    os.spawn("xcopy texmf "..texmflocal.." /e /f /y")
+  elseif string.find(string.lower(texmfdist), "miktex") then
+    print("Distribution is MiKTeX")
+    --[[ MiKTeX uses slightly different paths for the location of it's bin
+    directory for 32 and 64 bit versions.  Since the copy command will fail
+    silently if the destination directory doesn't exist, the simplest way to deal
+    with this is to simply try copying to both locations.
+    --]]
+    local texmfbin_32 = fixpath(texmfdist.."/miktex/bin/")
+    local texmfbin_64 = fixpath(texmfdist.."/miktex/bin/x64/")
+    print("Executable into bin...")
+    copy_one_file("gregorio.exe", texmfbin_32)
+    copy_one_file("gregorio.exe", texmfbin_64)
+    print("Registering Gregorio's texmf tree with MiKTeX...")
+    appdir = lfs.currentdir()
+    target = fixpath(appdir.."/texmf/")
+    os.spawn("initexmf --register-root=\""..target)
+  else
+    print("I don't recognize your TeX distribution.")
+    print("You may need to add files to your texmf tree manually.")
+  end
 end
 
 function run_texcommands()
-  print("Running mktexlsr\n")
-  local p = os.spawn("mktexlsr "..texmflocal)
+  if string.find(string.lower(texmfdist),"texlive") then
+    print("Running mktexlsr\n")
+    os.spawn("mktexlsr "..texmflocal)
+  elseif string.find(string.lower(texmfdist), "miktex") then
+    print("Running initexmf...")
+    os.spawn("initexmf --update-fndb=\""..target)
+  else
+    print("I don't recognize your TeX distribution.")
+    print("You may need to rebuild your texmf indecies manually.")
+  end
 end
 
 local old_base_dirs = {
@@ -141,7 +171,7 @@ local function rmdirrecursive(dir)
       rm_one(dir..pathsep..filename)
     end
   end
-  rm_one(dir)
+  os.spawn("rmdir "..dir)
 end
 
 -- gregorio used to be installed in other directories which have precedence
@@ -158,7 +188,14 @@ function remove_possible_old_install()
     end
   end
   if old_install_was_present then
-    os.spawn("updmap")
+    if string.find(string.lower(texmfdist),"texlive") then
+      os.spawn("updmap-sys")
+    elseif string.find(string.lower(texmfdist), "miktex") then
+      os.spawn("initexmf --mkmaps")
+    else
+      print("I don't recognize your TeX distribution.")
+      print("You may need to rebuild your font maps manually.")
+    end
   end
 end
 
@@ -168,7 +205,7 @@ function main_install()
   run_texcommands()
   print("Post-install script complete.")
   print("Press return to continue...")
-  answer=io.read()
+  local answer=io.read()
 end
 
 function scribus_config()

@@ -45,8 +45,7 @@ Name: "{app}\texmf\doc\luatex\gregoriotex"
 [Files]
 Source: "../src/gregorio.exe"; DestDir: "{app}";
 Source: "gregorio.ico"; DestDir: "{app}";
-Source: "install-tl.lua"; DestDir: "{app}";
-Source: "install-mt.lua"; DestDir: "{app}";
+Source: "install.lua"; DestDir: "{app}";
 Source: "uninstall.lua"; DestDir: "{app}";
 Source: "README.txt"; DestDir: "{app}"; Flags: isreadme
 Source: "../CHANGELOG.md"; DestDir: "{app}";
@@ -100,11 +99,10 @@ Source: "../fonts/squarize.py"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../README.md"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
 
 [Run]
-Filename: "texlua.exe"; Parameters: """{app}\install-tl.lua"" > ""{app}\install-tl.log"""; StatusMsg: "Configuring TeXLive texmf..."; Description: "Add files to TeXLive texmf tree"; Flags: postinstall ; WorkingDir: "{app}";
-Filename: "texlua.exe"; Parameters: """{app}\install-mt.lua"" > ""{app}\install-mt.log"""; StatusMsg: "Configuring MiKTeX texmf..."; Description: "Add files to MiKTeK texmf tree"; Flags: postinstall ; WorkingDir: "{app}";
+Filename: "texlua.exe"; Parameters: """{app}\install.lua"" > ""{app}\install.log"""; StatusMsg: "Adding files to texmf tree..."; Description: "Add files to texmf tree"; Flags: postinstall runascurrentuser ; WorkingDir: "{app}";
 
 [UninstallRun]
-Filename: "texlua.exe"; Parameters: """{app}\uninstall.lua"" > ""{app}\uninstall.log"""; WorkingDir: "{app}"; RunOnceId: "Remove_texmf"
+Filename: "texlua.exe"; Parameters: """{app}\uninstall.lua"" > ""{app}\uninstall.log"""; WorkingDir: "{app}"; RunOnceId: "Remove_texmf" ; Flags: runascurrentuser
 
 
 [Code]
