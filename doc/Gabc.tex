@@ -286,19 +286,40 @@ under-the-staff slur.
 \subsection{Lyric Centering}
 
 Gregorio centers the text of each syllable around the first note of each
-syllable.  There are three basic modes: \verb:syllable:, \verb:vowel:, and \verb:firstletter:, which are selected with the command \verb=\gresetlyriccentering{<mode>}=. In \texttt{syllable} mode, the
-entire syllable is centered around the first note.  This is common in
-modern music.  In \texttt{vowel} mode, the vowel sound of the syllable is
-centered around the first note.  This is common in most Gregorian chant
-books with text in Latin.  In \texttt{firstletter} mode, the first letter of the syllable is centered around the first note.  While not a common choice, this was explicitly requested by a user and we try to be responsive to our user base.
+syllable.  There are three basic modes, selected with the command \verb=\gresetlyriccentering{<mode>}=:
+
+\begin{description}
+\item[syllable] the entire syllable is centered around the first note
+\item[firstletter] the first letter of the syllable is centered around the first note
+\item[vowel] the vowel sound of the syllable is centered around the first note
+\end{description}
+
+The default is \texttt{vowel}, being common in most Gregorian chant
+books with text in Latin.
+
+All modes allow you to force the centering with curly brackets,
+for example \verb=a{b}c= will center the notes around \texttt{b}.
+
+\subsubsection{Vowel detection}
 
 The default rules built into Gregorio for \texttt{vowel} mode are for
 Ecclesiatical Latin and work fairly well (though not perfectly) for
 other languages (especially Romance languages).  However, Gregorio
 provides a gabc \texttt{language} header which allows the language of
-the lyrics to be set.  Gregorio will look for a file named
+the lyrics to be set. The default is Latin.
+
+Special characters (input with \texttt{<sp>}) or verbatim text (\texttt{<v>})
+count as consonnants, so you have to force centering around them, for example
+\verb=gr{<sp>'ae</sp>}=. If an elision (input with \texttt{<e>}) is present in
+the syllable, Gregorio will consider it as consonnant too.
+
+If no vowel is found, the notes are centered around the whole syllable.
+
+\subsubsection{Vowel file}
+
+When run, Gregorio will look for a file named
 \texttt{gregorio-vowels.dat} in your working directory or amongst the
-GregorioTeX files.  If it finds the requested language (matched in a
+GregorioTeX files.  If it finds the language requested by the header (matched in a
 \emph{case-sensitive} fashion) in one of these files (henceforth called
 vowel files), Gregorio will use the rules contained within for vowel
 centering.  If it cannot find the requested language in any of the vowel
