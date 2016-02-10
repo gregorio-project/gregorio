@@ -3,8 +3,16 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+- More dimensions are tunable: `overhepisemalowshift`, `overhepisemahighshift`, `underhepisemalowshift`, `underhepisemahighshift`, `hepisemamiddleshift`, `vepisemalowshift`, `vepisemahighshift`, `linepunctummorashift`, `spacepunctummorashift`, `spaceamonepespunctummorashift`, `lineporrectuspunctummorashift`, `spaceporrectuspunctummorashift`, and `raresignshift`.  See GregorioRef for details (for the change request, see comments in [#872](https://github.com/gregorio-project/gregorio/issues/872)).
+
+### Added
+- Controls for tuning horizontal episema vertical position.  See GregorioRef for details (for the change request, see [#872](https://github.com/gregorio-project/gregorio/issues/872)).
+
+
+## [Unreleased][unreleased]
 ### Changed
 - Command line output (help message, version message, error handling) has been improved, see [#891](https://github.com/gregorio-project/gregorio/issues/891)
+
 
 ## [4.1.0-beta2] - 2016-02-08
 ### Fixed

@@ -283,6 +283,60 @@ the same meaning as before, but applies to both ends of the slur.
 Use \texttt{uslur} instead of \texttt{oslur} (with either form) to create an
 under-the-staff slur.
 
+\subsection{Horizontal Episema Tuning}
+
+The horizontal episema position within the space can be adjusted should the
+defaults not be satisfactory.
+
+There are five tunable dimensions:
+
+\begin{tabularx}{\textwidth}{l|X}
+  Dimension & Description \\
+  \hline
+  \texttt{overhepisemalowshift} & The shift for positioning a horizontal episema that is over a note in a low position in the space\\
+  \texttt{overhepisemahighhift} & The shift for positioning a horizontal episema that is over a note in a high position in the space\\
+  \texttt{underhepisemalowshift} & The shift for positioning a horizontal episema that is under a note in a low position in the space\\
+  \texttt{underhepisemahighhift} & The shift for positioning a horizontal episema that is under a note in a high position in the space\\
+  \texttt{hepisemamiddleshift} & The shift for centering the horizontal episema in the middle of a space\\
+\end{tabularx}
+
+In addition, gabc allows you to adjust the positioning of a given episema by
+appending \texttt{[oh:\textit{p}]} (for the episema over the note) or
+\texttt{[uh:\textit{p}]} (for the episema under the note).  Here,
+\texttt{\textit{p}} is an optional position specifier followed by an optional
+nudge.  However at least one or the other must be specified.
+
+The position specifier allows you to select which of the five tunable
+dimensions will be used for the base position:
+
+\begin{tabularx}{\textwidth}{l|X}
+  Specifier & Base shift \\
+  \hline
+  \textit{omitted} & Use the default shift based on the position of the episema relative to the note\\
+  \texttt{m} & Use \texttt{hepisemamiddleshift}.\\
+  \texttt{l} & Use \texttt{overhepisemalowshift} or \texttt{underhepisemalowshift} depending on whether the episema is over or under the note.\\
+  \texttt{h} & Use \texttt{overhepisemahighshift} or \texttt{underhepisemahighshift} depending on whether the episema is over or under the note.\\
+  \texttt{ol} & Use \texttt{overhepisemalowshift}.\\
+  \texttt{oh} & Use \texttt{overhepisemahighshift}.\\
+  \texttt{ul} & Use \texttt{underhepisemalowshift}.\\
+  \texttt{uh} & Use \texttt{underhepisemahighshift}.\\
+\end{tabularx}
+
+The nudge is a \TeX{} dimension specification (number and units) that starts
+with \texttt{+} for a nudge upwards or \texttt{-} for a nudge downwards from
+base position selected by the position speciifer.  If omitted, the episema will
+be drawn at the base position.
+
+In addition, gabc also allows you to specify that a block of notes---possibly
+separated with spaces and in different syllables--should be considered a single
+unit when it comes to positioning the horizontal episema.  To do this, put
+\texttt{[oh:\textit{p}\{]} (for the episema over the note) or
+\texttt{[uh:\textit{p}\{]} (for the episema under the note) before the first
+note of the block and the corresponding \texttt{[oh\}]} or \texttt{[uh\}]}
+after the last note of the block.  When using this syntax, \texttt{\textit{p}}
+is the position specifier as before, but is entirely optional, and when
+completely omitted, allows the \texttt{:} to also be omitted.
+
 \subsection{Lyric Centering}
 
 Gregorio centers the text of each syllable around the first note of each

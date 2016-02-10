@@ -465,7 +465,14 @@
 %% 14: punctum mora in a space with a note on the line below it
 %% 15: over slur
 %% 16: under slur
-\def\gre@calculate@glyphraisevalue#1#2{%
+% #3, for horizontal episemata, is the interline position:
+%% 0: auto
+%% 1: middle
+%% 2: low in space above note
+%% 3: high in space above note
+%% 4: low in space below note
+%% 5: high in space below note
+\def\gre@calculate@glyphraisevalue#1#2#3{%
   \global\gre@isonalinefalse%
   \ifcase#1%
   % the first two cases are special cases for episemae on the lowest note
@@ -565,33 +572,59 @@
   \ifcase#2 %
   \or\or\or%3: if it is a vertical episema on a line, we shift it a bit higher, so that it's more beautiful
     \ifgre@isonaline%
-      \global\advance\gre@dimen@glyphraisevalue by \dimexpr(7250 sp * \gre@factor)\relax %
+      \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@vepisemahighshift\relax %
     \else % if it is not on a line, we shift it a bit lower
-      \global\advance\gre@dimen@glyphraisevalue by \dimexpr(-1380 sp * \gre@factor)\relax %
+      \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@vepisemalowshift\relax %
     \fi %
   \or% 4: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
     \ifgre@isonaline%
-      \global\advance\gre@dimen@glyphraisevalue by \dimexpr(-6900 sp * \gre@factor)\relax %
+      \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@linepunctummorashift\relax %
     \else %
-      \global\advance\gre@dimen@glyphraisevalue by \dimexpr(-2200 sp * \gre@factor)\relax %
+      \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@spacepunctummorashift\relax %
     \fi%
   \or% 5: if it is a horizontal episema under a note which is on a line, we shift it lower
-    \ifgre@isonaline% if it is under a note between two lines, we shift it higher
-      \global\advance\gre@dimen@glyphraisevalue by \dimexpr(4000 sp * \gre@factor)\relax %
-    \else %
-      \global\advance\gre@dimen@glyphraisevalue by \dimexpr(-4980 sp * \gre@factor)\relax %
+    \ifcase#3\relax % 0 - auto
+      \ifgre@isonaline% if it is under a note between two lines, we shift it higher
+        \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@underhepisemahighshift\relax %
+      \else %
+        \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@underhepisemalowshift\relax %
+      \fi %
+    \or % 1 - middle
+        \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@hepisemamiddleshift\relax %
+    \or % 2 - over-low
+        \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@overhepisemalowshift\relax %
+    \or % 3 - over-high
+        \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@overhepisemahighshift\relax %
+    \or % 4 - under-low
+        \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@underhepisemalowshift\relax %
+    \or % 5 - under-high
+        \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@underhepisemahighshift\relax %
     \fi %
   \or% 6: if it is a sign, we put it at an arbitrary height
-    \global\advance\gre@dimen@glyphraisevalue by \dimexpr(20000 sp * \gre@factor)\relax %
+    \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@raresignshift\relax %
   \or\or% 8: if it is a punctum mora on a line, we shift it a bit lower, for the same reason
     \ifgre@isonaline%
-      \global\advance\gre@dimen@glyphraisevalue by \dimexpr(5000 sp * \gre@factor)\relax %
+      \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@lineporrectuspunctummorashift\relax %
+    \else %
+      \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@spaceporrectuspunctummorashift\relax %
     \fi %
   \or% 9: if it is an horizontal episema not on a line, we put it a bit lower
-    \ifgre@isonaline%
-      \global\advance\gre@dimen@glyphraisevalue by \dimexpr(-5500 sp * \gre@factor)\relax %
-    \else %
-      \global\advance\gre@dimen@glyphraisevalue by \dimexpr(3000 sp * \gre@factor)\relax %
+    \ifcase#3\relax % 0 - auto
+      \ifgre@isonaline%
+        \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@overhepisemalowshift\relax %
+      \else %
+        \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@overhepisemahighshift\relax %
+      \fi %
+    \or % 1 - middle
+        \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@hepisemamiddleshift\relax %
+    \or % 2 - over-low
+        \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@overhepisemalowshift\relax %
+    \or % 3 - over-high
+        \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@overhepisemahighshift\relax %
+    \or % 4 - under-low
+        \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@underhepisemalowshift\relax %
+    \or % 5 - under-high
+        \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@underhepisemahighshift\relax %
     \fi %
   \or% 10: low choral sign that is not lower than the note
     \global\advance\gre@dimen@glyphraisevalue by -\gre@space@dimen@choralsigndownshift\relax%
@@ -608,9 +641,9 @@
       \global\advance\gre@dimen@glyphraisevalue by -\gre@space@dimen@choralsigndownshift\relax%
     \fi %
   \or% 13: if it is the brace above the bars, we shift it to a user-defined value
-      \global\advance\gre@dimen@glyphraisevalue by -\gre@space@dimen@braceshift\relax%
+    \global\advance\gre@dimen@glyphraisevalue by -\gre@space@dimen@braceshift\relax%
   \or% 14: raise the punctum mora in a space a bit higher than case 4
-    \global\advance\gre@dimen@glyphraisevalue by \dimexpr(200 sp * \gre@factor)\relax%
+    \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@spaceamonepespunctummorashift\relax%
   \or% 15: over slur
     \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@overslurshift\relax%
   \or% 16: under slur
@@ -964,37 +997,51 @@
 % This function checks to see if the length is one of the ones which cannot be a rubber length.  The assumption is that any length not listed here is allowed to be rubber.
 \newif\ifgre@rubber%
 \def\gre@rubberpermit#1{%
-  \gre@rubbertrue%
   % is length one that cannot be rubber?
-  \IfStrEq{#1}{additionallineswidth}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{additionalcustoslineswidth}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{zerowidthspace}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{maximumspacewithoutdash}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{afterinitialshift}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{beforeinitialshift}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{minimalspaceatlinebeginning}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{manualinitialwidth}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{annotationseparation}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{annotationraise}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{commentaryseparation}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{commentaryraise}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{noclefspace}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{clivisalignmentmin}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{choralsigndownshift}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{choralsignupshift}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{translationheight}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{spacelinestext}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{spacebeneathtext}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{abovelinestextraise}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{abovelinestextheight}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{braceshift}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{curlybraceaccentusshift}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{initialraise}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{beforealterationspace}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{alterationspace}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{overslurshift}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{underslurshift}{\gre@rubberfalse}{\relax}%
-  \IfStrEq{#1}{maxbaroffset}{\gre@rubberfalse}{\relax}%
+  \IfStrEqCase{#1}{%
+    {additionallineswidth}{\gre@rubberfalse}%
+    {additionalcustoslineswidth}{\gre@rubberfalse}%
+    {zerowidthspace}{\gre@rubberfalse}%
+    {maximumspacewithoutdash}{\gre@rubberfalse}%
+    {afterinitialshift}{\gre@rubberfalse}%
+    {beforeinitialshift}{\gre@rubberfalse}%
+    {minimalspaceatlinebeginning}{\gre@rubberfalse}%
+    {manualinitialwidth}{\gre@rubberfalse}%
+    {annotationseparation}{\gre@rubberfalse}%
+    {annotationraise}{\gre@rubberfalse}%
+    {commentaryseparation}{\gre@rubberfalse}%
+    {commentaryraise}{\gre@rubberfalse}%
+    {noclefspace}{\gre@rubberfalse}%
+    {clivisalignmentmin}{\gre@rubberfalse}%
+    {choralsigndownshift}{\gre@rubberfalse}%
+    {choralsignupshift}{\gre@rubberfalse}%
+    {translationheight}{\gre@rubberfalse}%
+    {spacelinestext}{\gre@rubberfalse}%
+    {spacebeneathtext}{\gre@rubberfalse}%
+    {abovelinestextraise}{\gre@rubberfalse}%
+    {abovelinestextheight}{\gre@rubberfalse}%
+    {braceshift}{\gre@rubberfalse}%
+    {curlybraceaccentusshift}{\gre@rubberfalse}%
+    {initialraise}{\gre@rubberfalse}%
+    {beforealterationspace}{\gre@rubberfalse}%
+    {alterationspace}{\gre@rubberfalse}%
+    {overslurshift}{\gre@rubberfalse}%
+    {underslurshift}{\gre@rubberfalse}%
+    {maxbaroffset}{\gre@rubberfalse}%
+    {overhepisemalowshift}{\gre@rubberfalse}%
+    {overhepisemahighshift}{\gre@rubberfalse}%
+    {underhepisemalowshift}{\gre@rubberfalse}%
+    {underhepisemahighshift}{\gre@rubberfalse}%
+    {hepisemamiddleshift}{\gre@rubberfalse}%
+    {vepisemalowshift}{\gre@rubberfalse}%
+    {vepisemahighshift}{\gre@rubberfalse}%
+    {linepunctummorashift}{\gre@rubberfalse}%
+    {spacepunctummorashift}{\gre@rubberfalse}%
+    {spaceamonepespunctummorashift}{\gre@rubberfalse}%
+    {lineporrectuspunctummorashift}{\gre@rubberfalse}%
+    {spaceporrectuspunctummorashift}{\gre@rubberfalse}%
+    {raresignshift}{\gre@rubberfalse}%
+  }[\gre@rubbertrue]%
 }%
 
 %% an aux function adapting the value #1 from the factor #2 to the factor #3
