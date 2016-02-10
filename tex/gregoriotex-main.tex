@@ -19,8 +19,6 @@
 
 % this file contains definitions for lines, initial, fonts, etc.
 
-\gre@debugmsg{general}{Loading gregoriotex-main.tex}%
-
 \ifluatex%
   \ifnum\luatexversion<76%
     \gre@error{Error: this document must be compiled with LuaTeX (lualatex) 0.76 or later}%
@@ -49,6 +47,8 @@
       }%
     }%
 }%
+
+\gre@debugmsg{general}{Loading gregoriotex-main.tex}%
 
 % Macro to handle deprecated macros.
 % #1 - the deprecated macro
