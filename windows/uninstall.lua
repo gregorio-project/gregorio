@@ -55,7 +55,7 @@ local texmflocal = fixpath(kpse.expand_var("$TEXMFLOCAL"))..pathsep
 local texmfdist = fixpath(kpse.expand_var("$TEXMFDIST"))..pathsep
 
 function remove_executable()
-  print("Removinging gregorio.exe...")
+  print("Removing gregorio.exe...")
   if string.find(string.lower(texmfdist), "texlive") then
     texmfbin = fixpath(texmfdist.."../bin/win32/")
     rm_one(texmfbin.."gregorio.exe")
@@ -151,7 +151,7 @@ function remove_texmf_install()
     Since this function is only used when extracting files from a TeXLive
     texmf tree, we don't need to go through the distribution check.
     ]]--
-    os.spawn("updmap-sys")
+    os.spawn("luaotfload-tool")
   end
 end
 

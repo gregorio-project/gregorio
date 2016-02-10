@@ -68,10 +68,8 @@ Source: "../tex/*.sty"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
 Source: "../tex/*.lua"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
 Source: "../tex/gregorio-vowels.dat"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
 Source: "../fonts/*.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
-Source: "../fonts/convertsfdtottf.py"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/*.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
-Source: "../fonts/Makefile"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
-Source: "../fonts/squarize.py"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
+Source: "../fonts/*.py"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../README.md"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
 
 [InstallDelete]
