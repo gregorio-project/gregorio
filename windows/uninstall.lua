@@ -151,7 +151,7 @@ function remove_texmf_install()
     Since this function is only used when extracting files from a TeXLive
     texmf tree, we don't need to go through the distribution check.
     ]]--
-    os.spawn("luaotfload-tool")
+    os.spawn("luaotfload-tool -u")
   end
 end
 
