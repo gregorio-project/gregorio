@@ -84,23 +84,23 @@ echo "" >> $OUTPUT
 echo "####	GregorioTeX Locations" >> $OUTPUT
 echo "" >> $OUTPUT
 
-files="gregoriotex.sty
+files="gregorio-vowels.dat
 gregoriosyms.sty
-gregoriotex.tex
-gregoriotex-main.tex
 gregoriotex-chars.tex
+gregoriotex-main.tex
 gregoriotex-ictus.tex
-gregoriotex-signs.tex
+gregoriotex-nabc.lua
+gregoriotex-nabc.tex
 gregoriotex-signs.lua
-gregoriotex-symbols.tex
-gregoriotex-symbols.lua
+gregoriotex-signs.tex
 gregoriotex-spaces.tex
 gregoriotex-syllable.tex
-gregoriotex-nabc.tex
-gregoriotex-nabc.lua
+gregoriotex-symbols.lua
+gregoriotex-symbols.tex
 gregoriotex.lua
+gregoriotex.sty
+gregoriotex.tex
 gsp-default.tex
-gregorio-vowels.dat
 greciliae.ttf
 greciliae-op.ttf
 greextra.ttf
