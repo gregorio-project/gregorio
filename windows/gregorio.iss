@@ -111,7 +111,7 @@ Filename: "texlua.exe"; Parameters: """{app}\install.lua"" > ""{app}\install.log
 Filename: "texlua.exe"; Parameters: """{app}\uninstall.lua"" > ""{app}\uninstall.log"""; WorkingDir: "{app}"; RunOnceId: "Remove_texmf" ; Flags: runascurrentuser
 
 [Tasks]
-Name: modifypath; Description: "Add gregorio to PATH"; GroupDescription "If you are not upgrading"; Flags: checkedonce
+Name: modifypath; Description: "Add gregorio to PATH"; GroupDescription: "If you are not upgrading"; Flags: checkedonce
 
 [Code]
 procedure URLLabelOnClickOne(Sender: TObject);
