@@ -60,7 +60,7 @@ Source: "../doc/GregorioRef-4_1_0-beta2.pdf"; DestDir: "{app}";
 Source: "../doc/GregorioNabcRef-4_1_0-beta2.pdf"; DestDir: "{app}";
 Source: "../COPYING.md"; DestDir: "{app}";
 Source: "../contrib/system-setup.bat"; DestDir: "{app}";
-Source: "../contrib/*"; DestDir: "{app}\contrib";
+Source: "../contrib/*"; DestDir: "{app}\contrib"; Excludes: "Makefile*,TeXShop\*,*.command";
 Source: "../examples/*.gabc"; DestDir: "{app}\examples";
 Source: "../examples/*.tex"; DestDir: "{app}\examples";
 Source: "../tex/*.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
