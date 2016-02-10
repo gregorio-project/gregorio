@@ -1,6 +1,40 @@
 #!/usr/bin/env bash
 
-HERE=`pwd`
+# This script generates a log detailing information about your computer.
+# You can run it by double clicking on it on a Mac.
+# On Linux this behavior is controlled by a preference.  See http://askubuntu.com/questions/286621/how-do-i-run-executable-scripts-in-nautilus for details.
+# If prompted, you need to select "Run in Terminal" to see the output.
+
+#This trap combination allows the window to linger long enough for the user to
+#inspect the output, but still get closed when all is said and done.
+function quit {
+    read -n1 -r -p "Press any key to close window." key
+    if $mac; then
+        osascript -e 'tell application "Terminal" to close front window' > /dev/null 2>&1 &
+    else
+        exit
+    fi
+}
+
+trap quit EXIT
+
+case "$(uname -s)" in
+    Darwin)
+        echo 'Mac OS X detected'
+        mac=true
+        ;;
+    Linux)
+        echo 'Linux detected'
+        mac=false
+        ;;
+    *)
+        echo 'Unsupported OS detected'
+        exit 1
+        ;;
+esac
+
+
+HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 OUTPUT=$HERE/system-setup.log
 
 echo "Gregorio Unix Setup Diagnostic Tool"
@@ -139,4 +173,6 @@ echo ""
 echo "You can also create an issue at "
 echo "http://github.org/gregorio-project/gregorio/issues"
 echo "and copy-paste the content of this file into the description."
-echo "" 
+echo ""
+exit 0
+
