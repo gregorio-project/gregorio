@@ -782,7 +782,7 @@ static __inline void close_hepisema_adjustment(FILE *const f,
 static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph,
         glyph_context *context)
 {
-    unsigned short next_adjustment_index[2];
+    unsigned short next_adjustment_index[2] = { 0, 0 };
     gregorio_note *current_note;
 
     gregorio_assert(glyph, gabc_write_gregorio_glyph, "call with NULL argument",
@@ -992,9 +992,9 @@ static void gabc_write_gregorio_elements(FILE *f, gregorio_element *element,
  * 
  */
 
-static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable)
+static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
+        glyph_context *context)
 {
-    glyph_context context;
     gregorio_assert(syllable, gabc_write_gregorio_syllable,
             "call with NULL argument", return);
     if (syllable->no_linebreak_area == NLBA_BEGINNING) {
@@ -1027,8 +1027,7 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable)
     }
     fprintf(f, "(");
     /* we write all the elements of the syllable. */
-    context.syllable = syllable;
-    gabc_write_gregorio_elements(f, syllable->elements[0], &context);
+    gabc_write_gregorio_elements(f, syllable->elements[0], context);
     if (syllable->position == WORD_END
         || syllable->position == WORD_ONE_SYLLABLE
         || gregorio_is_only_special(syllable->elements[0]))
@@ -1048,10 +1047,14 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable)
 
 void gabc_write_score(FILE *f, gregorio_score *score)
 {
+    glyph_context context;
     gregorio_syllable *syllable;
     gregorio_header *header;
 
     gregorio_assert(f, gabc_write_score, "call with NULL file", return);
+
+    context.he_adjustment_index[0] = 0;
+    context.he_adjustment_index[1] = 0;
 
     for (header = score->headers; header; header = header->next) {
         gabc_write_str_attribute(f, header->name, header->value);
@@ -1070,7 +1073,8 @@ void gabc_write_score(FILE *f, gregorio_score *score)
     syllable = score->first_syllable;
     /* the we write every syllable */
     while (syllable) {
-        gabc_write_gregorio_syllable(f, syllable);
+        context.syllable = syllable;
+        gabc_write_gregorio_syllable(f, syllable, &context);
         syllable = syllable->next_syllable;
     }
     fprintf(f, "\n");
