@@ -284,12 +284,13 @@ under-the-staff slur.
 
 \subsection{Horizontal episema placement for very high and low notes}
 
-Gregorio places horizontal episemus under c and above k closer to the notes when no ledger line is present.
+Gregorio places horizontal episema under c and above k (or the not above upper line when
+staff does not have exactly 4 lines) closer to the notes when no ledger line is present.
 The heuristics used by Gregorio are not perfect so it may be necessary to make
-the presence or absence of ledger line explicit for horizontal episemus placement.
+the presence or absence of ledger line explicit for horizontal episema placement.
 This is done in the exact same way as for stem length: place \texttt{[ll:0]} or
-\texttt{[ll:1]} on the note carrying the episemus, to force gregorio to consider the
-absence or presence of a ledger line in episemus placement.
+\texttt{[ll:1]} on the note carrying the episema, to force gregorio to consider the
+absence or presence of a ledger line in episema placement.
 
 \subsection{Horizontal Episema Tuning}
 
