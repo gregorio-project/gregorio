@@ -1672,6 +1672,70 @@ static __inline void adjust_hepisema(const height_computation *const h,
     }
 }
 
+static __inline void guess_ledger_lines(const gregorio_element *element,
+        const gregorio_score *const score)
+{
+    bool high_ledger_line = false;
+    bool low_ledger_line = false;
+    gregorio_note *prev = NULL;
+
+    for (; element; element = element->next) {
+        if (element->type == GRE_ELEMENT) {
+            gregorio_glyph *glyph;
+            for (glyph = element->u.first_glyph; glyph;
+                    glyph = glyph->next) {
+                if (glyph->type == GRE_GLYPH) {
+                    gregorio_note *note;
+                    for (note = glyph->u.notes.first_note; note;
+                            note = note->next) {
+                        if (note->type == GRE_NOTE) {
+                            if (high_ledger_line
+                                    && !note->explicit_high_ledger_line
+                                    && !note->supposed_high_ledger_line) {
+                                note->supposed_high_ledger_line = true;
+                            }
+                            if (low_ledger_line
+                                    && !note->explicit_low_ledger_line
+                                    && !note->supposed_low_ledger_line) {
+                                note->supposed_low_ledger_line = true;
+                            }
+                            high_ledger_line = has_high_ledger_line(
+                                    note->u.note.pitch, false, score);
+                            low_ledger_line = has_low_ledger_line(
+                                    note->u.note.pitch, false);
+                            if (high_ledger_line) {
+                                if (!note->explicit_high_ledger_line
+                                        && !note->supposed_high_ledger_line) {
+                                    note->supposed_high_ledger_line = true;
+                                }
+                                if (prev && !prev->explicit_high_ledger_line
+                                        && !prev->supposed_high_ledger_line) {
+                                    prev->supposed_high_ledger_line = true;
+                                }
+                            }
+                            if (low_ledger_line) {
+                                if (!note->explicit_low_ledger_line
+                                        && !note->supposed_low_ledger_line) {
+                                    note->supposed_low_ledger_line = true;
+                                }
+                                if (prev && !prev->explicit_low_ledger_line
+                                        && !prev->supposed_low_ledger_line) {
+                                    prev->supposed_low_ledger_line = true;
+                                }
+                            }
+                            prev = note;
+                        }
+                    }
+                }
+            }
+            /* this heuristic ends eith the element */
+            high_ledger_line = false;
+            low_ledger_line = false;
+            prev = NULL;
+        }
+    }
+}
+
 void gregoriotex_compute_positioning(
         const gregorio_element *const param_element,
         const gregorio_score *const score)
@@ -1724,6 +1788,8 @@ void gregoriotex_compute_positioning(
     gtex_alignment ignored;
     gtex_type type;
     const gregorio_element *element;
+
+    guess_ledger_lines(param_element, score);
 
     for (element = param_element; element; element = element->next) {
         if (element->type == GRE_ELEMENT) {
