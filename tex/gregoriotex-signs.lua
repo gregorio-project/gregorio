@@ -87,7 +87,7 @@ local offset_cases = {
     v = [[\gre@vepisemaorrareaux{0}{\GreCPPunctumDeminutus}{0}{0}{#2}{#3}{#4}]],
     -- we assume that the initio-debilis has the same width as a punctum
     -- deminutus
-    h = [[\gre@hepisorlineaux{0}{\gre@char@he@flexus{#4}}{0}{#3}]],
+    h = [[\gre@hepisorlineaux{0}{\gre@char@he@initio{#4}}{0}{#3}]],
   },
   -- first note of a non-auctus porrectus with a second ambitus of at least two
   {

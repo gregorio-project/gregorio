@@ -69,9 +69,12 @@ static __inline gregorio_sign_orientation letter_to_sign_orientation(
     case 'o': /* "o"ver */
         return SO_OVER;
     }
+    /* not reachable unless there's a programming error */
+    /* LCOV_EXCL_START */
     gregorio_fail2(letter_to_sign_orientation,
             "invalid sign orientation letter: %c", letter);
     return SO_OVER;
+    /* LCOV_EXCL_STOP */
 }
 
 static __inline int letter_to_pitch_adjustment(const char letter) {
@@ -81,9 +84,12 @@ static __inline int letter_to_pitch_adjustment(const char letter) {
     case SO_UNDER:
         return -1;
     }
+    /* not reachable unless there's a programming error */
+    /* LCOV_EXCL_START */
     gregorio_fail2(letter_to_pitch_adjustment,
             "invalid sign orientation letter: %c", letter);
     return 0;
+    /* LCOV_EXCL_STOP */
 }
 
 static __inline char pitch_letter_to_height(const char pitch) {

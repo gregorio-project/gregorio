@@ -191,7 +191,7 @@ typedef enum queuetype {
 } queuetype;
 
 static queuetype adjusted_queuetype_of(const gregorio_note *const note,
-        const signed char adjustment)
+        const gregorio_note *const queue_note, const signed char adjustment)
 {
     switch (note->u.note.pitch + adjustment - LOWEST_PITCH) {
     case 0:
@@ -199,11 +199,11 @@ static queuetype adjusted_queuetype_of(const gregorio_note *const note,
     case 1:
         return Q_ON_BOTTOM_LINE;
     case 2:
-        return note->supposed_low_ledger_line? Q_ON_SPACE_ABOVE_BOTTOM_LINE
-                : Q_ON_SPACE_BELOW_BOTTOM_LINE;
+        return queue_note->supposed_low_ledger_line?
+                Q_ON_SPACE_ABOVE_BOTTOM_LINE : Q_ON_SPACE_BELOW_BOTTOM_LINE;
     case 3:
-        return note->supposed_low_ledger_line? Q_ON_LINE_ABOVE_BOTTOM_LINE
-                : Q_ON_BOTTOM_LINE;
+        return queue_note->supposed_low_ledger_line?
+                Q_ON_LINE_ABOVE_BOTTOM_LINE : Q_ON_BOTTOM_LINE;
     case 5:
     case 7:
     case 9:
@@ -216,7 +216,7 @@ static queuetype adjusted_queuetype_of(const gregorio_note *const note,
 }
 
 static queuetype queuetype_of(const gregorio_note *const note) {
-    return adjusted_queuetype_of(note, 0);
+    return adjusted_queuetype_of(note, note, 0);
 }
 
 static grestyle_style gregoriotex_ignore_style = ST_NO_STYLE;
@@ -490,7 +490,7 @@ static const char *fusible_queued_shape(const gregorio_note *const note,
     if (glyph->u.notes.fuse_to_next_glyph < 0) {
         /* queue size depends on the following note if fused down */
         if (glyph->u.notes.fuse_to_next_glyph == -1) {
-            switch (adjusted_queuetype_of(note,
+            switch (adjusted_queuetype_of(note, note,
                         glyph->u.notes.fuse_to_next_glyph)) {
             case Q_ON_SPACE_BELOW_BOTTOM_LINE:
             case Q_ON_BOTTOM_LINE:
@@ -729,7 +729,8 @@ static __inline const char *flexus_shape(const gregorio_glyph *const glyph,
         const signed char ambitus, const char *base_shape,
         const char *longqueue_shape, const char *openqueue_shape) {
     const bool ambitus_one = (ambitus == 1);
-    switch (queuetype_of(second_note_of(glyph))) {
+    switch (adjusted_queuetype_of(second_note_of(glyph), first_note_of(glyph),
+                0)) {
     case Q_ON_SPACE_BELOW_BOTTOM_LINE:
         if (ambitus_one) {
             return openqueue_shape;
@@ -762,7 +763,8 @@ static __inline const char *quadratum_shape(const gregorio_glyph *const glyph,
     const bool ambitus_one =
             (second_pitch_of(glyph) - first_pitch_of(glyph) == 1);
     if (!is_tail_liquescentia(glyph->u.notes.liquescentia)) {
-        switch (queuetype_of(first_note_of(glyph))) {
+        switch (adjusted_queuetype_of(first_note_of(glyph),
+                    second_note_of(glyph), 0)) {
         case Q_ON_SPACE_BELOW_BOTTOM_LINE:
             if (ambitus_one) {
                 return openqueue_shape;
@@ -2249,8 +2251,11 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
             }
             /* else fall through to next case */
         case L_DEMINUTUS:
+            /* this is a currenly unused, but we keep it as a fallback case */
+            /* LCOV_EXCL_START */
             note->u.note.shape = S_PUNCTUM_DEMINUTUS;
             break;
+            /* LCOV_EXCL_STOP */
         default:
             break;
         }
@@ -3625,6 +3630,18 @@ static void initialize_score(gregoriotex_status *const status,
     status->top_height = status->bottom_height = UNDETERMINED_HEIGHT;
     status->abovelinestext = status->translation = false;
 
+    /* first pass to compute positioning */
+    for (syllable = score->first_syllable; syllable;
+            syllable = syllable->next_syllable) {
+        int voice;
+
+        for (voice = 0; voice < score->number_of_voices; ++voice) {
+            gregoriotex_compute_positioning(syllable->elements[voice], score);
+        }
+    }
+
+    gregoriotex_compute_cross_syllable_positioning(score);
+
     for (syllable = score->first_syllable; syllable;
             syllable = syllable->next_syllable) {
         int voice;
@@ -3640,7 +3657,6 @@ static void initialize_score(gregoriotex_status *const status,
         for (voice = 0; voice < score->number_of_voices; ++voice) {
             gregorio_element *element;
 
-            gregoriotex_compute_positioning(syllable->elements[voice], score);
             for (element = syllable->elements[voice]; element;
                     element = element->next) {
                 gregorio_glyph *glyph;
