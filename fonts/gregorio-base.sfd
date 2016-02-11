@@ -4,23 +4,22 @@ FullName: gregorio
 FamilyName: gregorio
 Weight: Medium
 Copyright: Font named "gregorio"\nCopyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)\nThis file is part of Gregorio.\n\n<<GPLV3>>
-UComments: "2007-4-12: Created."
+UComments: "2007-4-12: Created." 
 Version: 1.2
 ItalicAngle: 0
 UnderlinePosition: -204
 UnderlineWidth: 102
 Ascent: 800
 Descent: 200
-InvalidEm: 0
 LayerCount: 2
-Layer: 0 0 "Back" 1
-Layer: 1 0 "Fore" 0
+Layer: 0 0 "Back"  1
+Layer: 1 0 "Fore"  0
 XUID: [1021 341 828717519 16122349]
 OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1453929798
+ModificationTime: 1455123251
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -49,13 +48,13 @@ BeginPrivate: 0
 EndPrivate
 Grid
 -1000 -77.1348 m 0
- 2000 -77.1348 l 1024
+ 2000 -77.1348 l 0
 -1000 -151.335 m 0
- 2000 -151.335 l 1024
+ 2000 -151.335 l 0
 142 1300 m 0
- 142 -700 l 1024
+ 142 -700 l 0
 22 1300 m 0
- 22 -700 l 1024
+ 22 -700 l 0
 EndSplineSet
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
 BeginChars: 375 152
@@ -245,7 +244,7 @@ SplineSet
  0 4 l 25
  22 4 l 25
  22 -6.5 l 17
- 17.5927734375 -12.2783203125 8.1572265625 -12.708984375 0 -14.5 c 13
+ 17.5928 -12.2783 8.15723 -12.709 0 -14.5 c 13
 EndSplineSet
 EndChar
 
@@ -1352,19 +1351,18 @@ EndChar
 StartChar: hepisema_base
 Encoding: 66 -1 58
 Width: 1
-VWidth: 2048
+VWidth: 1968
 Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
+HStem: -489 15 -174 15 141 15 456 15
 LayerCount: 2
 Fore
 SplineSet
-0 64 m 29
- 0 96 l 25
- 1 96 l 25
- 1 64 l 25
- 0 64 l 29
+0 -16 m 29
+ 0 16 l 25
+ 1 16 l 25
+ 1 -16 l 29
+ 0 -16 l 29
 EndSplineSet
-Validated: 1
 EndChar
 
 StartChar: PesOneNothing
@@ -1754,19 +1752,18 @@ EndChar
 StartChar: hepisemaright
 Encoding: 83 -1 74
 Width: 2
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
+VWidth: 1968
+Flags: HWO
+HStem: -489 15 -174 15 141 15 456 15
 LayerCount: 2
 Fore
 SplineSet
-0 64 m 25
- -1 64 l 25
- -1 96 l 25
- 2 96 l 25
- 0 64 l 25
+0 -16 m 29
+ -1 -16 l 29
+ -1 16 l 25
+ 2 16 l 25
+ 0 -16 l 29
 EndSplineSet
-Validated: 1
 EndChar
 
 StartChar: mpdeminutus
@@ -2473,19 +2470,18 @@ EndChar
 StartChar: hepisemaleft
 Encoding: 82 -1 104
 Width: 1
-VWidth: 2048
+VWidth: 1968
 Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
+HStem: -489 15 -174 15 141 15 456 15
 LayerCount: 2
 Fore
 SplineSet
--2 64 m 25
- 0 96 l 25
- 1 96 l 25
- 1 64 l 25
- -2 64 l 25
+-2 -16 m 29
+ 0 16 l 25
+ 1 16 l 25
+ 1 -16 l 29
+ -2 -16 l 29
 EndSplineSet
-Validated: 1
 EndChar
 
 StartChar: RoundBraceDown
@@ -3361,7 +3357,7 @@ LayerCount: 2
 Fore
 SplineSet
 22 -14.5 m 21
- 13.8427734375 -12.708984375 4.4072265625 -12.2783203125 0 -6.5 c 9
+ 13.8428 -12.709 4.40723 -12.2783 0 -6.5 c 9
  0 4 l 25
  22 4 l 25
  22 -14.5 l 21
@@ -3399,7 +3395,7 @@ SplineSet
  0 4 l 25
  22 4 l 25
  22 -6.5 l 17
- 17.5927734375 -12.2783203125 8.1572265625 -12.708984375 0 -14.5 c 13
+ 17.5928 -12.2783 8.15723 -12.709 0 -14.5 c 13
 EndSplineSet
 EndChar
 
@@ -3456,17 +3452,17 @@ HStem: -409 15 -94 15 221 15 536 15
 LayerCount: 2
 Fore
 SplineSet
-22.00390625 -41 m 5
+22.0039 -41 m 5
  0 -41 l 1
  0 150 l 1
- 20 158 49.4169921875 166 82 166 c 24
- 114.583007812 166 144 161 164 150 c 1
+ 20 158 49.417 166 82 166 c 24
+ 114.583 166 144 161 164 150 c 1
  164 -20 l 1
  153.375 -19.875 164 -20 142 -20 c 1
- 140.625 -12.125 132.583007812 -1.728515625 127 0 c 1
- 114 8 103.5625 9.4970703125 81.9990234375 9.3330078125 c 0
- 51.3330078125 8.6669921875 22 -4 22.00390625 -26.66796875 c 2
- 22.00390625 -41 l 5
+ 140.625 -12.125 132.583 -1.72852 127 0 c 1
+ 114 8 103.562 9.49707 81.999 9.33301 c 0
+ 51.333 8.66699 22 -4 22.0039 -26.668 c 2
+ 22.0039 -41 l 5
 EndSplineSet
 EndChar
 
@@ -3479,15 +3475,15 @@ HStem: -409 15 -94 15 221 15 536 15
 LayerCount: 2
 Fore
 SplineSet
-22.00390625 -46 m 5
+22.0039 -46 m 5
  0 -46 l 1
  0 150 l 1
- 20 158 49.4169921875 166 82 166 c 24
- 114.583007812 166 144 161 164 150 c 1
+ 20 158 49.417 166 82 166 c 24
+ 114.583 166 144 161 164 150 c 1
  164 -10 l 1
- 149 0.65625 116.999023438 9.3330078125 81.9990234375 9.3330078125 c 0
- 51.3330078125 8.6669921875 22 -4 22.00390625 -26.66796875 c 2
- 22.00390625 -46 l 5
+ 149 0.65625 116.999 9.33301 81.999 9.33301 c 0
+ 51.333 8.66699 22 -4 22.0039 -26.668 c 2
+ 22.0039 -46 l 5
 EndSplineSet
 EndChar
 
@@ -3512,7 +3508,7 @@ SplineSet
  152.665 7.08008 134.579 21.5244 111.665 23.3301 c 0
  79.2109 21.2725 74.165 -3.66992 45.915 -9.16992 c 0
  43.6121 -9.56246 41.2501 -9.74922 38.8707 -9.74922 c 0
- 33.1558532641 -9.74922 27.3402631908 -8.67193118708 22 -6.78100080576 c 1
+ 33.1559 -9.74922 27.3403 -8.67193 22 -6.781 c 1
  22 -38.5 l 1
  0 -38.5 l 5
 EndSplineSet
@@ -3540,7 +3536,7 @@ SplineSet
  122.667 -6.90644 120.304 -6.71969 118.001 -6.32715 c 1
  89.751 -0.827148 84.7041 24.1152 52.251 26.1729 c 1
  40.6015 25.2549 22 17.4121 22 7.5 c 2
- 22.0004142639 -27 l 1
+ 22.0004 -27 l 1
  0 -27 l 5
 EndSplineSet
 EndChar

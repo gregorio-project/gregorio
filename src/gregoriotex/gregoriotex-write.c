@@ -1971,16 +1971,19 @@ static __inline int get_punctum_inclinatum_to_nobar_space_case(
 }
 
 static __inline void write_single_hepisema(FILE *const f, int hepisema_case,
-        const gregorio_note *const note, bool connect, char height,
-        const grehepisema_size size, const int i,
+        const gregorio_note *const note, gregorio_sign_orientation orientation,
+        bool connect, char height, const grehepisema_size size, const int i,
         const gregorio_glyph *const glyph,
         const int porrectus_long_episema_index,
         bool (*const is_episema_shown)(const gregorio_note *))
 {
-    char ambitus = 0;
-    char size_arg;
-
     if (height) {
+        const gregorio_hepisema_adjustment *adj =
+                gregorio_get_hepisema_adjustment(
+                        note->he_adjustment_index[orientation]);
+        char ambitus = 0;
+        char size_arg;
+
         switch (size) {
         case H_SMALL_LEFT:
             size_arg = 'l';
@@ -2014,11 +2017,13 @@ static __inline void write_single_hepisema(FILE *const f, int hepisema_case,
                             != SP_ZERO_WIDTH)) {
                     /* not followed by a zero-width space */
                     /* try to fuse from punctum inclinatum to nobar glyph */
-                    fprintf(f, "\\GreHEpisemaBridge{%d}{%d}{%d}{%s%s}%%\n",
+                    fprintf(f,
+                            "\\GreHEpisemaBridge{%d}{%d}{%d}{%s%s}{%s}{%d}%%\n",
                             pitch_value(height), hepisema_case,
                             get_punctum_inclinatum_to_nobar_space_case(glyph),
                             suppose_high_ledger_line(note),
-                            suppose_low_ledger_line(note));
+                            suppose_low_ledger_line(note),
+                            adj->nudge? adj->nudge : "", adj->vbasepos);
                 } else if (note->next
                         && (note->next->u.note.shape == S_PUNCTUM_INCLINATUM
                             || note->next->u.note.shape
@@ -2026,18 +2031,20 @@ static __inline void write_single_hepisema(FILE *const f, int hepisema_case,
                             || note->next->u.note.shape
                             == S_PUNCTUM_INCLINATUM_AUCTUS)) {
                     /* is a punctum inclinatum of some sort */
-                    fprintf(f, "\\GreHEpisemaBridge{%d}{%d}{%d}{%s%s}%%\n",
+                    fprintf(f, "\\GreHEpisemaBridge{%d}{%d}{%d}{%s%s}{%s}{%d}%%\n",
                             pitch_value(height), hepisema_case,
                             get_punctum_inclinatum_space_case(note->next),
                             suppose_high_ledger_line(note),
-                            suppose_low_ledger_line(note));
+                            suppose_low_ledger_line(note),
+                            adj->nudge? adj->nudge : "", adj->vbasepos);
                 }
             }
             fprintf(f, "\\GreHEpisema{%d}{\\GreOCase%s}{%d}{%d}{%c}{%d}"
-                    "{%s%s}%%\n", pitch_value(height), note->gtex_offset_case,
-                    ambitus, hepisema_case, size_arg, pitch_value(height),
-                    suppose_high_ledger_line(note),
-                    suppose_low_ledger_line(note));
+                    "{%s%s}{%s}{%d}%%\n", pitch_value(height),
+                    note->gtex_offset_case, ambitus, hepisema_case, size_arg,
+                    pitch_value(height), suppose_high_ledger_line(note),
+                    suppose_low_ledger_line(note), adj->nudge? adj->nudge : "",
+                    adj->vbasepos);
         }
     }
 }
@@ -2069,10 +2076,10 @@ static void gregoriotex_write_hepisema(FILE *const f,
         break;
     }
 
-    write_single_hepisema(f, 1, note, note->h_episema_below_connect,
+    write_single_hepisema(f, 1, note, SO_UNDER, note->h_episema_below_connect,
             note->h_episema_below, note->h_episema_below_size, i, glyph,
             porrectus_long_episema_index, &gtex_is_h_episema_below_shown);
-    write_single_hepisema(f, 0, note, note->h_episema_above_connect,
+    write_single_hepisema(f, 0, note, SO_OVER, note->h_episema_above_connect,
             note->h_episema_above, note->h_episema_above_size, i, glyph,
             porrectus_long_episema_index, &gtex_is_h_episema_above_shown);
 }
@@ -2231,37 +2238,19 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
     if (note->u.note.shape == S_PUNCTUM) {
         switch (note->u.note.liquescentia) {
         case L_AUCTUS_ASCENDENS:
-            /* not reachable unless there's a programming error */
-            /* LCOV_EXCL_START */
-            gregorio_fail(gregoriotex_write_note,
-                    "encounted S_PUNCTUM with L_AUCTUS_ASCENDENS");
-            /* should have been changed by this point */
             note->u.note.shape = S_PUNCTUM_AUCTUS_ASCENDENS;
             break;
-            /* LCOV_EXCL_STOP */
         case L_AUCTUS_DESCENDENS:
-            /* not reachable unless there's a programming error */
-            /* LCOV_EXCL_START */
-            gregorio_fail(gregoriotex_write_note,
-                    "encounted S_PUNCTUM with L_AUCTUS_DESCENDENS");
-            /* should have been changed by this point */
             note->u.note.shape = S_PUNCTUM_AUCTUS_DESCENDENS;
             break;
-            /* LCOV_EXCL_STOP */
         case L_INITIO_DEBILIS:
             if (glyph->u.notes.fuse_to_next_glyph > 0) {
                 break;
             }
             /* else fall through to next case */
         case L_DEMINUTUS:
-            /* not reachable unless there's a programming error */
-            /* LCOV_EXCL_START */
-            gregorio_fail(gregoriotex_write_note,
-                    "encounted S_PUNCTUM with L_DEMINUTUS");
-            /* should have been changed by this point */
             note->u.note.shape = S_PUNCTUM_DEMINUTUS;
             break;
-            /* LCOV_EXCL_STOP */
         default:
             break;
         }
@@ -2762,16 +2751,30 @@ static void write_glyph(FILE *f, gregorio_syllable *syllable,
         /* TODO: handle fusion to next note */
         break;
     case G_SCANDICUS:
-        gregorio_assert((glyph->u.notes.liquescentia & L_DEMINUTUS)
+        if ((glyph->u.notes.liquescentia & L_DEMINUTUS)
                 || glyph->u.notes.liquescentia == L_NO_LIQUESCENTIA
-                || glyph->u.notes.liquescentia == L_FUSED, write_glyph,
-                "encountered an invalid scandicus", break);
-        shape = gregoriotex_determine_glyph_name(glyph, &type, &gtype);
-        fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%d}{%d}", shape,
-                pitch_value(glyph->u.notes.first_note->u.note.pitch),
-                pitch_value(next_note_pitch), type);
-        gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note,
-                fuse_to_next_note, status, score);
+                || glyph->u.notes.liquescentia == L_FUSED) {
+            shape = gregoriotex_determine_glyph_name(glyph, &type, &gtype);
+            fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%d}{%d}", shape,
+                    pitch_value(glyph->u.notes.first_note->u.note.pitch),
+                    pitch_value(next_note_pitch), type);
+            gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note,
+                    fuse_to_next_note, status, score);
+        } else {
+            while (current_note) {
+                if (current_note->next) {
+                    gregoriotex_write_note(f, current_note, glyph,
+                            current_note->next->u.note.pitch);
+                } else {
+                    gregoriotex_write_note(f, current_note, glyph,
+                            next_note_pitch);
+                }
+                gregoriotex_write_signs(f, T_ONE_NOTE, glyph, current_note,
+                        current_note->next ? 0 : fuse_to_next_note, status,
+                        score);
+                current_note = current_note->next;
+            }
+        }
         break;
     case G_ANCUS:
         gregorio_assert(glyph->u.notes.liquescentia & L_DEMINUTUS,

@@ -44,6 +44,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 #include <assert.h>
 #include "struct.h"
 #include "unicode.h"
@@ -60,6 +61,32 @@ gregorio_clef_info gregorio_default_clef = {
     /*.secondary_clef =*/ CLEF_C, /* not used since secondary_line is 0 */
     /*.secondary_flatted =*/ false,
 };
+
+static size_t hepisema_adjustments_capacity;
+static unsigned short hepisema_adjustments_last;
+static gregorio_hepisema_adjustment *hepisema_adjustments;
+
+void gregorio_struct_init(void)
+{
+    hepisema_adjustments_capacity = 8;
+    hepisema_adjustments = gregorio_grow_buffer(NULL,
+            &hepisema_adjustments_capacity, gregorio_hepisema_adjustment);
+    hepisema_adjustments[0].vbasepos = HVB_AUTO;
+    hepisema_adjustments[0].nudge = NULL;
+}
+
+void gregorio_struct_destroy(void)
+{
+    size_t i;
+    gregorio_hepisema_adjustment *adj;
+    for (i = 0, adj = hepisema_adjustments; i <= hepisema_adjustments_last;
+            ++i, ++adj) {
+        if (adj->nudge) {
+            free(adj->nudge);
+        }
+    }
+    free(hepisema_adjustments);
+}
 
 static gregorio_note *create_and_link_note(gregorio_note **current_note,
         const gregorio_scanner_location *const loc)
@@ -127,6 +154,10 @@ void gregorio_add_note(gregorio_note **current_note, signed char pitch,
         set_h_episema_below(element, prototype->h_episema_below,
                 prototype->h_episema_below_size,
                 prototype->h_episema_below_connect);
+        element->he_adjustment_index[SO_OVER] =
+                prototype->he_adjustment_index[SO_OVER];
+        element->he_adjustment_index[SO_UNDER] =
+                prototype->he_adjustment_index[SO_UNDER];
     }
     element->texverb = NULL;
     element->choral_sign = NULL;
@@ -1441,6 +1472,34 @@ gregorio_element *gregorio_get_clef_change(gregorio_syllable *syllable)
     return NULL;
 }
 
+unsigned short gregorio_add_hepisema_adjustment(
+        const gregorio_hepisema_vbasepos vbasepos, char *const nudge)
+{
+    if (hepisema_adjustments_last == USHRT_MAX) {
+        gregorio_message(_("too many horizontal episema adjustments"),
+                "gregorio_add_hepisema_adjustment", VERBOSITY_ERROR, 0);
+        return 0;
+    }
+    ++hepisema_adjustments_last;
+    if (hepisema_adjustments_last >= hepisema_adjustments_capacity) {
+        hepisema_adjustments = gregorio_grow_buffer(hepisema_adjustments,
+                &hepisema_adjustments_capacity, gregorio_hepisema_adjustment);
+    }
+    hepisema_adjustments[hepisema_adjustments_last].vbasepos = vbasepos;
+    hepisema_adjustments[hepisema_adjustments_last].nudge = nudge;
+    hepisema_adjustments[hepisema_adjustments_last].pitch_extremum = NO_PITCH;
+    return hepisema_adjustments_last;
+}
+
+gregorio_hepisema_adjustment *gregorio_get_hepisema_adjustment(
+        const unsigned short index)
+{
+    gregorio_assert(index <= hepisema_adjustments_last,
+            gregorio_get_hepisema_adjustment, "array index out of bounds",
+            return &hepisema_adjustments[0]);
+    return &hepisema_adjustments[index];
+}
+
 ENUM_TO_STRING(gregorio_type, GREGORIO_TYPE)
 ENUM_TO_STRING(gregorio_shape, GREGORIO_SHAPE)
 ENUM_TO_STRING(gregorio_bar, GREGORIO_BAR)
@@ -1451,8 +1510,8 @@ ENUM_TO_STRING(grehepisema_size, GREHEPISEMA_SIZE)
 ENUM_TO_STRING(gregorio_vposition, GREGORIO_VPOSITION)
 ENUM_TO_STRING(gregorio_glyph_type, GREGORIO_GLYPH_TYPE)
 ENUM_TO_STRING(grestyle_style, GRESTYLE_STYLE)
-/* ENUM_TO_STRING(grestyle_type, GRESTYLE_TYPE) */
 ENUM_TO_STRING(gregorio_tr_centering, GREGORIO_TR_CENTERING)
 ENUM_TO_STRING(gregorio_nlba, GREGORIO_NLBA)
 ENUM_TO_STRING(gregorio_euouae, GREGORIO_EUOUAE)
 ENUM_TO_STRING(gregorio_word_position, GREGORIO_WORD_POSITION)
+ENUM_TO_STRING(gregorio_hepisema_vbasepos, GREGORIO_HEPISEMA_VBASEPOS)
