@@ -969,9 +969,10 @@ static void gabc_write_gregorio_element(FILE *f, gregorio_element *element,
  * 
  */
 
-static void gabc_write_gregorio_elements(FILE *f, gregorio_element *element,
+static bool gabc_write_gregorio_elements(FILE *f, gregorio_element *element,
         glyph_context *context)
 {
+    bool linebreak_or_bar_in_element = false;
     while (element) {
         context->element = element;
         gabc_write_gregorio_element(f, element, context);
@@ -982,8 +983,13 @@ static void gabc_write_gregorio_elements(FILE *f, gregorio_element *element,
             && element->next && element->next->type == GRE_ELEMENT) {
             fprintf(f, "/");
         }
+        if (element->type == GRE_END_OF_LINE || element->type == GRE_BAR)
+        {
+            linebreak_or_bar_in_element = true;
+        }
         element = element->next;
     }
+    return linebreak_or_bar_in_element;
 }
 
 /*
@@ -995,6 +1001,7 @@ static void gabc_write_gregorio_elements(FILE *f, gregorio_element *element,
 static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
         glyph_context *context)
 {
+    bool linebreak_or_bar_in_element;
     gregorio_assert(syllable, gabc_write_gregorio_syllable,
             "call with NULL argument", return);
     if (syllable->no_linebreak_area == NLBA_BEGINNING) {
@@ -1027,14 +1034,19 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
     }
     fprintf(f, "(");
     /* we write all the elements of the syllable. */
-    gabc_write_gregorio_elements(f, syllable->elements[0], context);
-    if (syllable->position == WORD_END
-        || syllable->position == WORD_ONE_SYLLABLE
-        || gregorio_is_only_special(syllable->elements[0]))
+    linebreak_or_bar_in_element = gabc_write_gregorio_elements(f, syllable->elements[0], context);
+    if (linebreak_or_bar_in_element)
     {
-        fprintf(f, ") ");
+        fprintf(f, ")\n");
     } else {
-        fprintf(f, ")");
+        if (syllable->position == WORD_END
+            || syllable->position == WORD_ONE_SYLLABLE
+            || gregorio_is_only_special(syllable->elements[0]))
+        {
+            fprintf(f, ") ");
+        } else {
+            fprintf(f, ")");
+        }
     }
 }
 
