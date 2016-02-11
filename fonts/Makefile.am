@@ -24,7 +24,7 @@ TTFFILES = gregorio.ttf greciliae.ttf parmesan.ttf \
 SOURCEFILES = gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd \
 			  greextra.sfd gregall.sfd gresgmodern.sfd
 
-EXTRA_DIST = $(TTFFILES) $(SOURCEFILES) squarize.py convertsfdtottf.py README.md
+EXTRA_DIST = $(TTFFILES) $(SOURCEFILES) squarize.py stemsschemas.py convertsfdtottf.py README.md
 
 FONTFORGE = fontforge
 RM = rm

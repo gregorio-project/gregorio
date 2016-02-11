@@ -22,7 +22,8 @@
 
 \def\grebarbracewidth{.58879}%
 
-\gre@declarefileversion{gregoriotex-signs.tex}{4.1.0-beta2}% GREGORIO_VERSION
+\gre@debugmsg{general}{Loading gregoriotex-signs.tex}%
+\gre@declarefileversion{gregoriotex-signs.tex}{4.1.0-beta3}% GREGORIO_VERSION
 
 \def\gre@usestylecommon{%
   \ifgre@usestylefont\else %
@@ -194,27 +195,27 @@
 \def\gre@typesingleclef#1#2#3#4{%
   \ifcase#2 %
   \or%
-    \gre@calculate@glyphraisevalue{\gre@pitch@c}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@c}{0}{}%
   \or%
-    \gre@calculate@glyphraisevalue{\gre@pitch@e}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@e}{0}{}%
   \or%
-    \gre@calculate@glyphraisevalue{\gre@pitch@g}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@g}{0}{}%
   \or%
-    \gre@calculate@glyphraisevalue{\gre@pitch@i}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@i}{0}{}%
   \or%
-    \gre@calculate@glyphraisevalue{\gre@pitch@k}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@k}{0}{}%
   \fi%
   \ifx c#1% we check if it is a c key
     \ifcase#3%
-      \raise\gre@dimen@glyphraisevalue\hbox{\gre@fontchar@cclef}%
+      \raise\gre@dimen@glyphraisevalue\hbox{\gre@fontchar@cclef}{}{}%
     \or%
-      \raise\gre@dimen@glyphraisevalue\hbox{\gre@fontchar@incclef}%
+      \raise\gre@dimen@glyphraisevalue\hbox{\gre@fontchar@incclef}{}{}%
     \fi%
   \else % we consider that it is a f key
     \ifcase#3%
-      \raise\gre@dimen@glyphraisevalue\hbox{\gre@fontchar@fclef}%
+      \raise\gre@dimen@glyphraisevalue\hbox{\gre@fontchar@fclef}{}{}%
     \or%
-      \raise\gre@dimen@glyphraisevalue\hbox{\gre@fontchar@infclef}%
+      \raise\gre@dimen@glyphraisevalue\hbox{\gre@fontchar@infclef}{}{}%
     \fi%
   \fi%
   \ifnum#4=3%
@@ -276,7 +277,7 @@
 \def\GreCustos#1{%
   \gre@skip@temp@four = \gre@space@skip@spacebeforeinlinecustos\relax%
   \kern\gre@skip@temp@four%
-  \gre@calculate@glyphraisevalue{#1}{0}%
+  \gre@calculate@glyphraisevalue{#1}{0}{}%
   %here we need some tricks to draw the line before the custos (for the color)
   \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{#1}}%
   \gre@dimen@temp@three=\wd\gre@box@temp@width %
@@ -314,7 +315,7 @@
   \ifnum\gre@insidediscretionary=0\relax %
     \edef\gre@nextcustos{#1}%
     \ifgre@blockeolcustos\else%
-      \gre@calculate@glyphraisevalue{#1}{0}%
+      \gre@calculate@glyphraisevalue{#1}{0}{}%
       %here we need some tricks to draw the line before the custos (for the color)
       \setbox\gre@box@temp@width=\hbox{%
       % we type a hskip and the we type the custos
@@ -590,7 +591,7 @@
     \gre@dimen@temp@five=\wd\gre@box@temp@sign %
     \kern-\gre@dimen@temp@five %
   \fi %
-  \gre@calculate@glyphraisevalue{#6}{13}%
+  \gre@calculate@glyphraisevalue{#6}{13}{}%
   \advance\gre@dimen@glyphraisevalue by #2\relax %
   \hbox to 0pt{%
     \gre@skip@temp@four = #3\relax %
@@ -622,7 +623,7 @@
     }%
     \hss %
     \ifnum#5=1\relax %
-      \gre@calculate@glyphraisevalue{\gre@pitch@overbrace}{13}%
+      \gre@calculate@glyphraisevalue{\gre@pitch@overbrace}{13}{}%
       \advance\gre@dimen@glyphraisevalue by \gre@space@dimen@curlybraceaccentusshift\relax%
       \raise\gre@dimen@glyphraisevalue\hbox{%
         \gre@font@music\GreCPAccentus\relax %
@@ -813,9 +814,9 @@
 \def\GreSlur#1#2#3#4#5#6{%
   \ifgre@boxing\else %
     \ifnum\number#2 > 0\relax %
-      \gre@calculate@glyphraisevalue{#1}{15}%
+      \gre@calculate@glyphraisevalue{#1}{15}{}%
     \else %
-      \gre@calculate@glyphraisevalue{#1}{16}%
+      \gre@calculate@glyphraisevalue{#1}{16}{}%
     \fi %
     \hbox to 0pt{\raise\gre@dimen@glyphraisevalue\hbox{%
       \ifcase#3 % 0
@@ -829,9 +830,9 @@
       \if\relax\detokenize{#5}\relax %
         \gre@dimen@temp@five=\gre@dimen@glyphraisevalue\relax %
         \ifnum\number#2 > 0\relax %
-          \gre@calculate@glyphraisevalue{#6}{15}%
+          \gre@calculate@glyphraisevalue{#6}{15}{}%
         \else %
-          \gre@calculate@glyphraisevalue{#6}{16}%
+          \gre@calculate@glyphraisevalue{#6}{16}{}%
         \fi %
         \greslurheight = \dimexpr(\gre@dimen@glyphraisevalue - \gre@dimen@temp@five)\relax %
       \else %
@@ -917,11 +918,11 @@
     \global\gre@lastendswithmoratrue%
   \fi %
   \ifcase#3\relax % 0
-    \gre@calculate@glyphraisevalue{#1}{4}%
+    \gre@calculate@glyphraisevalue{#1}{4}{}%
   \or% 1
-    \gre@calculate@glyphraisevalue{#1}{8}%
+    \gre@calculate@glyphraisevalue{#1}{8}{}%
   \or% 2
-    \gre@calculate@glyphraisevalue{#1}{14}%
+    \gre@calculate@glyphraisevalue{#1}{14}{}%
   \fi %
   % here we shift a bit left in the case where we have a punctum inclinatum on a line
   \ifnum#4=1\relax %
@@ -985,9 +986,9 @@
   \hskip\gre@skip@temp@four %
   \GreNoBreak %
   \ifnum#3=1\relax %
-    \gre@calculate@glyphraisevalue{#1}{12}%
+    \gre@calculate@glyphraisevalue{#1}{12}{}%
   \else %
-    \gre@calculate@glyphraisevalue{#1}{10}%
+    \gre@calculate@glyphraisevalue{#1}{10}{}%
   \fi %
   \raise\gre@dimen@glyphraisevalue\hbox{\gre@style@lowchoralsign#2\endgre@style@lowchoralsign}%
   \ifx\gre@empty@lowchoralsignstyle\grelowchoralsignstyle% OBSOLETE
@@ -1004,7 +1005,6 @@
   \else%  OBSOLETE
     \gre@obsolete{\protect\grehighchoralsignstyle}{\protect\grechangestyle{highchoralsign}}%  OBSOLETE
   \fi% OBSOLETE
-  %\gre@hepisorline{#1}{#3}{0}{4}{\gre@style@highchoralsign#2\endgre@style@highchoralsign}
   \relax %
 }%
 
@@ -1099,21 +1099,21 @@
   \ifgre@boxing\else %
     \ifcase#4\or %
       % if it is a vertical episema, we call the normal calculateglyphvalue
-      \gre@calculate@glyphraisevalue{#1}{3}%
+      \gre@calculate@glyphraisevalue{#1}{3}{}%
     \or %
       % if it is not, we call it with 6 as second argument, it will give us the height of the rare signs (accentus, etc.) the first argument is m if the pitch is < k, otherwise it's n.
       \ifnum#1<\gre@pitch@raresign\relax %
-        \gre@calculate@glyphraisevalue{\gre@pitch@raresign}{6}%
+        \gre@calculate@glyphraisevalue{\gre@pitch@raresign}{6}{}%
       \else %
         {%
           \gre@count@temp@three=\numexpr(#1 + 1)\relax %
-          \gre@calculate@glyphraisevalue{\gre@count@temp@three}{6}%
+          \gre@calculate@glyphraisevalue{\gre@count@temp@three}{6}{}%
         }%
       \fi %
     \or % if it's a choral sign
-      \gre@calculate@glyphraisevalue{#1}{11}%
+      \gre@calculate@glyphraisevalue{#1}{11}{}%
     \or % if it's the brace above the bar
-      \gre@calculate@glyphraisevalue{#1}{13}%
+      \gre@calculate@glyphraisevalue{#1}{13}{}%
     \fi %
     \gre@v@case{#2}{#3}{#4}{#5}%
   \fi %
@@ -1256,7 +1256,7 @@
       \else % OBSOLETE
         \gre@obsolete{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% OBSOLETE
       \fi% OBSOLETE
-      \gre@hepisorline{\gre@pitch@dummy}{#1}{#2}{#3}{f}%
+      \gre@hepisorline{\gre@pitch@dummy}{#1}{#2}{#3}{f}{}{}%
       \endgre@style@additionalstafflines%
       \gre@dimen@glyphraisevalue=\gre@dimen@savedglyphraise\relax%
     \fi %
@@ -1345,19 +1345,26 @@
 % #5 is f for a normal episema, l for a small episema aligned left,
 %    c for a small episema aligned center, or r for a small episema
 %    aligned right
-\def\gre@hepisorline#1#2#3#4#5{{%
-  \ifcase#4 %
-    \gre@calculate@glyphraisevalue{#1}{9}%
-  \or %
-    \gre@calculate@glyphraisevalue{#1}{5}%
-  \or %
+% #6 is the vertical nudge
+% #7 is horizontal episema interline position case
+%%   0 : auto
+%%   1 : middle
+%%   2 : low in space above note
+%%   3 : high in space above note
+%%   4 : low in space below note
+%%   5 : high in space below note
+\def\gre@hepisorline#1#2#3#4#5#6#7{{%
+  \ifcase#4 % 0
+    \gre@calculate@glyphraisevalue{#1}{9}{#7}%
+  \or % 1
+    \gre@calculate@glyphraisevalue{#1}{5}{#7}%
+  \or % 2
     % the glyphraisevalue is ignored anyway... but it's just in case...
-    \gre@calculate@glyphraisevalue{\gre@pitch@ledger@above}{0}%
-  \or %
-    \gre@calculate@glyphraisevalue{\gre@pitch@ledger@below}{0}%
-  \or %
-    \gre@calculate@glyphraisevalue{#1}{11}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@ledger@above}{0}{}%
+  \or % 3
+    \gre@calculate@glyphraisevalue{\gre@pitch@ledger@below}{0}{}%
   \fi %
+  \global\gre@dimen@glyphraisevalue=\dimexpr\gre@dimen@glyphraisevalue#6\relax %
   \gre@h@case{#2}{#3}{#4}{#5}%
   \relax%
 }}%
@@ -1366,14 +1373,22 @@
 % #6 is a trick for bridges: if we must use a different height because of a
 %    bridge, use #6, otherwise use #1
 % #7 is used for setting heuristics
-\def\GreHEpisema#1#2#3#4#5#6#7{%
+% #8 is the vertical nudge
+% #9 is horizontal episema interline position case
+%%   0 : auto
+%%   1 : middle
+%%   2 : low in space above note
+%%   3 : high in space above note
+%%   4 : low in space below note
+%%   5 : high in space below note
+\def\GreHEpisema#1#2#3#4#5#6#7#8#9{%
   \ifgre@boxing\else %
     \gre@prephepisemaledgerlineheuristics%
     #7%
     \ifgre@hepisemabridge%
-      \gre@hepisorline{#6}{#2}{#3}{#4}{#5}%
+      \gre@hepisorline{#6}{#2}{#3}{#4}{#5}{#8}{#9}%
     \else %
-      \gre@hepisorline{#1}{#2}{#3}{#4}{#5}%
+      \gre@hepisorline{#1}{#2}{#3}{#4}{#5}{#8}{#9}%
     \fi %
     \gre@resetledgerlineheuristics%
   \fi %
@@ -1405,16 +1420,25 @@
 % #2 is 0 for episema above, 1 for episema below
 % #3 is the "space case" for the following note, if a punctum inclinatum
 % #4 is for setting heuristics
-\def\GreHEpisemaBridge#1#2#3#4{%
+% #5 is the vertical nudge
+% #6 is horizontal episema interline position case
+%%   0 : auto
+%%   1 : middle
+%%   2 : low in space above note
+%%   3 : high in space above note
+%%   4 : low in space below note
+%%   5 : high in space below note
+\def\GreHEpisemaBridge#1#2#3#4#5#6{%
   \ifgre@hepisemabridge%
     \ifgre@boxing\else %
       \gre@prephepisemaledgerlineheuristics%
       #4%
       \ifcase#2 %
-        \gre@calculate@glyphraisevalue{#1}{9}%
+        \gre@calculate@glyphraisevalue{#1}{9}{#6}%
       \or %
-        \gre@calculate@glyphraisevalue{#1}{5}%
+        \gre@calculate@glyphraisevalue{#1}{5}{#6}%
       \fi %
+      \global\gre@dimen@glyphraisevalue=\dimexpr\gre@dimen@glyphraisevalue#5\relax %
       \IfStrEq{-1}{#3}{%
         \raise\gre@dimen@glyphraisevalue\hbox to 0pt{\gre@font@music\gre@char@he@punctum{f}\hss}%
       }{%
@@ -1623,7 +1647,7 @@
     \fi %
   \fi %
   \gre@newglyphcommon %
-  \gre@calculate@glyphraisevalue{\gre@pitch@bar}{0}% bar glyphs are made to be at this height
+  \gre@calculate@glyphraisevalue{\gre@pitch@bar}{0}{}% bar glyphs are made to be at this height
   \GreNoBreak %
   \ifcase#1 % 0 : virgula
     \ifnum#2=1\relax %
@@ -1704,7 +1728,7 @@
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 6 : dominican bar 1
-    \gre@calculate@glyphraisevalue{\gre@pitch@e}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@e}{0}{}%
     % we need to adjust the height of the bar a little so that it is perfectly aligned with the bottom (or the top for some bars) of the staff line, which is not the case by default if \gre@stafflinefactor is not 10.
     \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff\relax%
     \ifnum#2=1\relax %
@@ -1720,7 +1744,7 @@
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 7 : dominican bar 2
-    \gre@calculate@glyphraisevalue{\gre@pitch@e}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@e}{0}{}%
     \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff\relax%
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
@@ -1763,7 +1787,7 @@
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 10 : dominican bar 5
-    \gre@calculate@glyphraisevalue{\gre@pitch@i}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@i}{0}{}%
     \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff\relax%
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
@@ -1778,7 +1802,7 @@
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 11 : dominican bar 6
-    \gre@calculate@glyphraisevalue{\gre@pitch@i}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@i}{0}{}%
     \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff\relax%
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
@@ -1793,7 +1817,7 @@
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 12 : dominican bar 7
-    \gre@calculate@glyphraisevalue{\gre@pitch@k}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@k}{0}{}%
     \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff\relax%
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
@@ -1808,7 +1832,7 @@
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 13 : dominican bar 8
-    \gre@calculate@glyphraisevalue{\gre@pitch@k}{0}%
+    \gre@calculate@glyphraisevalue{\gre@pitch@k}{0}{}%
     \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff\relax%
     \ifnum#2=1\relax %
       \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
@@ -1831,7 +1855,7 @@
 
 \def\gre@fontchar@divisiomaior{%
   \ifnum\gre@stafflinefactor=17\relax %
-    %\gre@calculate@glyphraisevalue{\gre@pitch@bar}{0}% bar glyphs are made to be at this height
+    %\gre@calculate@glyphraisevalue{\gre@pitch@bar}{0}{}% bar glyphs are made to be at this height
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioMaior}%
   \else %
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioMaior}%
@@ -1847,7 +1871,7 @@
 }%
 
 \def\gre@fontchar@divisiofinalis{%
-  \gre@calculate@glyphraisevalue{\gre@pitch@bar}{0}% bar glyphs are made to be at this height
+  \gre@calculate@glyphraisevalue{\gre@pitch@bar}{0}{}% bar glyphs are made to be at this height
   \gre@fontchar@divisiomaior %
   \kern\dimexpr(12000 sp * \gre@factor)%
   \GreNoBreak %
@@ -1985,7 +2009,7 @@
   \kern\gre@skip@temp@one %
   #5\relax %
   \kern-\gre@skip@temp@one %
-  \gre@calculate@glyphraisevalue{#1}{0}%
+  \gre@calculate@glyphraisevalue{#1}{0}{}%
   \ifgre@hidealtlines %
     \gre@fillhole{#3}%
   \fi %
@@ -2078,7 +2102,7 @@
   \kern\gre@skip@temp@four %
   #4\relax %
   \kern-\gre@skip@temp@four %
-  \gre@calculate@glyphraisevalue{#1}{0}%
+  \gre@calculate@glyphraisevalue{#1}{0}{}%
   \ifgre@hidepclines%
     \gre@fillhole{#8}%
   \fi %

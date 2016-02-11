@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 This texlua script is called in Windows automatic installer (see gregorio.iss),
-it installs GregorioTeX under Windows.
+it configures Gregorio under windows to work with TeXLive or MiKTeX.
 --]]
 
 require("lfs")
@@ -52,7 +52,7 @@ if os.type == "windows" or os.type == "msdos" then
 end
 
 local texmflocal = fixpath(kpse.expand_var("$TEXMFLOCAL"))..pathsep
-local suffix = "gregoriotex"..pathsep
+local texmfdist = kpse.expand_var("$TEXMFDIST")
 
 function io.loaddata(filename,textmode)
   local f = io.open(filename,(textmode and 'r') or 'rb')
@@ -78,6 +78,7 @@ end
 
 function copy_one_file(src, dest)
   local destfile = dest..basename(src)
+  print(src.." -> "..destfile)
   io.savedata(destfile, io.loaddata(src))
 end
 
@@ -85,18 +86,34 @@ function copy_files()
   if not lfs.isdir(texmflocal) then
     lfs.mkdir(texmflocal)
   end
-  print("Copying files...\n")
-  local texmfdist = kpse.expand_var("$TEXMFDIST")
-  texmfbin = fixpath(texmfdist.."/../bin/win32/")
-  print("gregorio.exe...")
-  copy_one_file("gregorio.exe", texmfbin)
-  print("GregorioTeX files...")
-  os.spawn("xcopy texmf "..texmflocal.." /e /f /y")
+  print("Copying files into texmf tree...")
+  if string.find(string.lower(texmfdist), "texlive") then
+    print("Distribution is TeXLive")
+    print("GregorioTeX files...")
+    os.spawn("xcopy texmf "..texmflocal.." /e /f /y")
+  elseif string.find(string.lower(texmfdist), "miktex") then
+    print("Distribution is MiKTeX")
+    print("Registering Gregorio's texmf tree with MiKTeX...")
+    appdir = lfs.currentdir()
+    target = fixpath(appdir.."/texmf/")
+    os.spawn("initexmf --register-root=\""..target)
+  else
+    print("I don't recognize your TeX distribution.")
+    print("You may need to add files to your texmf tree manually.")
+  end
 end
 
 function run_texcommands()
-  print("Running mktexlsr\n")
-  local p = os.spawn("mktexlsr "..texmflocal)
+  if string.find(string.lower(texmfdist),"texlive") then
+    print("Running mktexlsr...")
+    os.spawn("mktexlsr "..texmflocal)
+  elseif string.find(string.lower(texmfdist), "miktex") then
+    print("Running initexmf...")
+    os.spawn("initexmf --update-fndb=\""..target)
+  else
+    print("I don't recognize your TeX distribution.")
+    print("You may need to rebuild your texmf indecies manually.")
+  end
 end
 
 local old_base_dirs = {
@@ -108,6 +125,10 @@ local old_base_dirs = {
   fixpath(texmflocal.."fonts/ovp/gregoriotex"),
   fixpath(texmflocal.."fonts/ovf/gregoriotex"),
   fixpath(texmflocal.."fonts/map/gregoriotex"),
+  fixpath(texmflocal.."tex/luatex/gregoriotex"),
+  fixpath(texmflocal.."fonts/truetype/public/gregoriotex"),
+  fixpath(texmflocal.."fonts/source/gregoriotex"),
+  fixpath(texmflocal.."doc/luatex/gregoriotex"),
 }
 
 -- should remove the Read-Only flag on files under Windows, but doesn't work, no idea why... even the attrib command in cmd.exe doesn't work...
@@ -141,34 +162,68 @@ local function rmdirrecursive(dir)
       rm_one(dir..pathsep..filename)
     end
   end
-  rm_one(dir)
+  os.spawn("rmdir "..dir)
 end
 
 -- gregorio used to be installed in other directories which have precedence
 -- over the new ones
 function remove_possible_old_install()
-  print("Looking for old GregorioTeX files...\n")
+  print("Looking for old GregorioTeX files...")
   local old_install_was_present = false
   for _, d in pairs(old_base_dirs) do
     print("Looking for "..d.."...")
     if lfs.isdir(d) then
-      old_install_was_present = true
+      if string.find(string.lower(d),"fonts") then
+        --We're removing fonts so we'll need to update the fonts maps later
+        old_install_was_present = true
+      end
       print("Found "..d..", removing...")
       rmdirrecursive(d)
     end
   end
   if old_install_was_present then
-    os.spawn("updmap")
+    if string.find(string.lower(texmfdist),"texlive") then
+      os.spawn("updmap-sys")
+    elseif string.find(string.lower(texmfdist), "miktex") then
+      os.spawn("initexmf --mkmaps")
+    else
+      print("I don't recognize your TeX distribution.")
+      print("You may need to rebuild your font maps manually.")
+    end
+  end
+  --[[ Because we used to copy the executable into the TeX path to make it
+  available, we need to remove it from said locations to make sure we don't
+  have any version conflicts.
+  ]]--
+  if string.find(string.lower(texmfdist), "texlive") then
+    local texmfbin = fixpath(texmfdist.."/../bin/win32/")
+    print("Removing old executable in bin...")
+    rm_one(texmfbin.."gregorio.exe")
+  elseif string.find(string.lower(texmfdist), "miktex") then
+    --[[ MiKTeX uses slightly different paths for the location of it's bin
+    directory for 32 and 64 bit versions.  Since we used to copy to both of
+    these locations, we now need to remove from both locations.
+    --]]
+    local texmfbin_32 = fixpath(texmfdist.."/miktex/bin/")
+    local texmfbin_64 = fixpath(texmfdist.."/miktex/bin/x64/")
+    print("Removing executable from bins...")
+    rm_one(texmfbin_32.."gregorio.exe")
+    rm_one(texmfbin_64.."gregorio.exe")
+  else
+    print("I don't recognize your TeX distribution.")
+    print("You may need to remove old executable files manually.")
   end
 end
 
 function main_install()
   remove_possible_old_install()
+  print("\n")
   copy_files()
+  print("\n")
   run_texcommands()
-  print("Post-install script complete.")
+  print("\nPost-install script complete.")
   print("Press return to continue...")
-  answer=io.read()
+  local answer=io.read()
 end
 
 function scribus_config()

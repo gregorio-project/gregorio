@@ -564,7 +564,7 @@
 				<key>OVERWRITE_PERMISSIONS</key>
 				<false/>
 				<key>VERSION</key>
-				<string>4.1.0-beta2</string><!--GREGORIO_VERSION-->
+				<string>4.1.0-beta3</string><!--GREGORIO_VERSION-->
 			</dict>
 			<key>UUID</key>
 			<string>74692645-8112-42EB-8FFC-2CBE2CEDE9FB</string>

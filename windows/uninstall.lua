@@ -55,13 +55,10 @@ local texmflocal = fixpath(kpse.expand_var("$TEXMFLOCAL"))..pathsep
 local texmfdist = fixpath(kpse.expand_var("$TEXMFDIST"))..pathsep
 
 function remove_executable()
-  if not lfs.isdir(texmflocal) then
-    return false
-  end
-  print("Removinging gregorio.exe...")
+  print("Removing gregorio.exe...")
   if string.find(string.lower(texmfdist), "texlive") then
-    texmfbin = fixpath(texmfdist.."/../bin/win32/")
-    rm_one(texmfbin..""  )
+    texmfbin = fixpath(texmfdist.."../bin/win32/")
+    rm_one(texmfbin.."gregorio.exe")
   elseif string.find(string.lower(texmfdist), "miktex") then
     --[[ MiKTeX uses slightly different paths for the location of it's bin
     directory for 32 and 64 bit versions.  Our current install solution is to
@@ -135,11 +132,11 @@ local function rmdirrecursive(dir)
       rm_one(dir..pathsep..filename)
     end
   end
-  rm_one(dir)
+  os.spawn("rmdir"..dir)
 end
 
 function remove_texmf_install()
-  print("Looking for GregorioTeX files...\n")
+  print("Looking for GregorioTeX files...")
   local install_was_present = false
   for _, d in pairs(texmf_install_dirs) do
     print("Looking for "..d.."...")
@@ -150,7 +147,11 @@ function remove_texmf_install()
     end
   end
   if install_was_present then
-    os.spawn("updmap")
+    --[[Since we removed some fonts, we need to rebuild the font databases.
+    Since this function is only used when extracting files from a TeXLive
+    texmf tree, we don't need to go through the distribution check.
+    ]]--
+    os.spawn("luaotfload-tool -u")
   end
 end
 

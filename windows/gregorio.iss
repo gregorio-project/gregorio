@@ -1,6 +1,6 @@
 [Setup]
 AppName=gregorio
-AppVersion=4.1.0-beta2
+AppVersion=4.1.0-beta3
 DefaultDirName={pf}\gregorio
 DefaultGroupName=gregorio
 SetupIconFile=gregorio.ico
@@ -18,6 +18,7 @@ BackColor2=$FDF7EB
 WizardSmallImageFile=gregorio-32.bmp
 WizardImageFile=gregorio-image.bmp
 ChangesAssociations=yes
+ChangesEnvironment=true
 
 [Registry]
 Root: HKCR; Subkey: ".gabc"; ValueType: string; ValueName: ""; ValueData: "Gregorio"; Flags: uninsdeletevalue
@@ -26,6 +27,7 @@ Root: HKCR; Subkey: "Gregorio\DefaultIcon"; ValueType: string; ValueName: ""; Va
 Root: HKCR; Subkey: "Gregorio\shell\open\command"; ValueType: string; ValueName: ""; ValueData: "texworks.exe ""%1"""; Flags: uninsdeletekey
 
 [Dirs]
+Name: "{app}\bin"
 Name: "{app}\contrib"
 Name: "{app}\examples"
 Name: "{app}\texmf"
@@ -43,10 +45,9 @@ Name: "{app}\texmf\doc\luatex"
 Name: "{app}\texmf\doc\luatex\gregoriotex"
 
 [Files]
-Source: "../src/gregorio.exe"; DestDir: "{app}";
+Source: "../src/gregorio.exe"; DestDir: "{app}\bin";
 Source: "gregorio.ico"; DestDir: "{app}";
-Source: "install-tl.lua"; DestDir: "{app}";
-Source: "install-mt.lua"; DestDir: "{app}";
+Source: "install.lua"; DestDir: "{app}";
 Source: "uninstall.lua"; DestDir: "{app}";
 Source: "README.txt"; DestDir: "{app}"; Flags: isreadme
 Source: "../CHANGELOG.md"; DestDir: "{app}";
@@ -54,59 +55,34 @@ Source: "../README.md"; DestDir: "{app}";
 Source: "../CONTRIBUTORS.md"; DestDir: "{app}";
 Source: "../UPGRADE.md"; DestDir: "{app}";
 ; PARSE_VERSION_FILE_NEXTLINE
-Source: "../doc/GregorioRef-4_1_0-beta2.pdf"; DestDir: "{app}";
+Source: "../doc/GregorioRef-4_1_0-beta3.pdf"; DestDir: "{app}";
 ; PARSE_VERSION_FILE_NEXTLINE
-Source: "../doc/GregorioNabcRef-4_1_0-beta2.pdf"; DestDir: "{app}";
+Source: "../doc/GregorioNabcRef-4_1_0-beta3.pdf"; DestDir: "{app}";
 Source: "../COPYING.md"; DestDir: "{app}";
-Source: "../contrib/900_gregorio.xml"; DestDir: "{app}\contrib";
 Source: "../contrib/system-setup.bat"; DestDir: "{app}";
-Source: "../contrib/gregorio-scribus.lua"; DestDir: "{app}\contrib";
-Source: "../contrib/*"; DestDir: "{app}\contrib";
+Source: "../contrib/*"; DestDir: "{app}\contrib"; Excludes: "Makefile*,TeXShop\*,*.command";
 Source: "../examples/*.gabc"; DestDir: "{app}\examples";
-Source: "../examples/main-lualatex.tex"; DestDir: "{app}\examples";
-Source: "../tex/gregoriotex.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
-Source: "../tex/gregoriotex.sty"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
-Source: "../tex/gregoriotex.lua"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
-Source: "../tex/gregoriotex-main.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
-Source: "../tex/gregoriotex-chars.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
-Source: "../tex/gregoriotex-signs.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
-Source: "../tex/gregoriotex-signs.lua"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
-Source: "../tex/gregoriotex-spaces.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
-Source: "../tex/gregoriotex-syllable.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
-Source: "../tex/gregoriotex-symbols.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
-Source: "../tex/gregoriotex-symbols.lua"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
-Source: "../tex/gregoriotex-nabc.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
-Source: "../tex/gregoriotex-nabc.lua"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
-Source: "../tex/gsp-default.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
+Source: "../examples/*.tex"; DestDir: "{app}\examples";
+Source: "../tex/*.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
+Source: "../tex/*.sty"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
+Source: "../tex/*.lua"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
 Source: "../tex/gregorio-vowels.dat"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
-Source: "../tex/gregoriosyms.sty"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
-Source: "../fonts/greciliae.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
-Source: "../fonts/greciliae-op.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
-Source: "../fonts/gregorio.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
-Source: "../fonts/gregorio-op.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
-Source: "../fonts/greextra.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
-Source: "../fonts/parmesan.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
-Source: "../fonts/parmesan-op.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
-Source: "../fonts/gregall.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
-Source: "../fonts/gresgmodern.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
-Source: "../fonts/convertsfdtottf.py"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
-Source: "../fonts/greciliae-base.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
-Source: "../fonts/greextra.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
-Source: "../fonts/gregall.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
-Source: "../fonts/gresgmodern.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
-Source: "../fonts/gregorio-base.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
-Source: "../fonts/Makefile"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
-Source: "../fonts/parmesan-base.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
-Source: "../fonts/squarize.py"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
+Source: "../fonts/*.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
+Source: "../fonts/*.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
+Source: "../fonts/*.py"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../README.md"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
 
+[InstallDelete]
+Type: files; Name: "{app}\gregorio.exe"
+
 [Run]
-Filename: "texlua.exe"; Parameters: """{app}\install-tl.lua"" > ""{app}\install-tl.log"""; StatusMsg: "Configuring TeXLive texmf..."; Description: "Add files to TeXLive texmf tree"; Flags: postinstall ; WorkingDir: "{app}";
-Filename: "texlua.exe"; Parameters: """{app}\install-mt.lua"" > ""{app}\install-mt.log"""; StatusMsg: "Configuring MiKTeX texmf..."; Description: "Add files to MiKTeK texmf tree"; Flags: postinstall ; WorkingDir: "{app}";
+Filename: "texlua.exe"; Parameters: """{app}\install.lua"" > ""{app}\install.log"""; StatusMsg: "Adding files to texmf tree..."; Description: "Add files to texmf tree"; Flags: postinstall runascurrentuser ; WorkingDir: "{app}";
 
 [UninstallRun]
-Filename: "texlua.exe"; Parameters: """{app}\uninstall.lua"" > ""{app}\uninstall.log"""; WorkingDir: "{app}"; RunOnceId: "Remove_texmf"
+Filename: "texlua.exe"; Parameters: """{app}\uninstall.lua"" > ""{app}\uninstall.log"""; WorkingDir: "{app}"; RunOnceId: "Remove_texmf" ; Flags: runascurrentuser
 
+[Tasks]
+Name: modifypath; Description: "Add gregorio to PATH"; GroupDescription: "New Installs and Upgrades from 4.0 and earlier"; Flags: checkedonce
 
 [Code]
 procedure URLLabelOnClickOne(Sender: TObject);
@@ -191,3 +167,14 @@ procedure InitializeWizard();
 begin
   CreateTheWizardPages;
 end;
+
+const
+    ModPathName = 'modifypath';
+    ModPathType = 'system';
+
+function ModPathDir(): TArrayOfString;
+begin
+    setArrayLength(Result, 1)
+    Result[0] := ExpandConstant('{app}\bin');
+end;
+#include "modpath.iss"
