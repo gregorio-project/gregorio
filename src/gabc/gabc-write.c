@@ -835,10 +835,10 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph,
 
             open_hepisema_adjustment(f, current_note,
                     context->he_adjustment_index, next_adjustment_index,
-                    SO_OVER, 'h');
+                    SO_OVER, 'o');
             open_hepisema_adjustment(f, current_note,
                     context->he_adjustment_index, next_adjustment_index,
-                    SO_UNDER, 'l');
+                    SO_UNDER, 'u');
 
             /* third argument necessary for the special shape pes quadratum */
             gabc_write_gregorio_note(f, current_note,
@@ -847,10 +847,10 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph,
 
             close_hepisema_adjustment(f, current_note,
                     context->he_adjustment_index, next_adjustment_index,
-                    SO_OVER, 'h');
+                    SO_OVER, 'o');
             close_hepisema_adjustment(f, current_note,
                     context->he_adjustment_index, next_adjustment_index,
-                    SO_UNDER, 'l');
+                    SO_UNDER, 'u');
 
             context->he_adjustment_index[SO_OVER] =
                     current_note->he_adjustment_index[SO_OVER];
