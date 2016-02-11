@@ -1031,8 +1031,17 @@
     %move to the beginning of the text
     \kern\gre@dimen@begindifference%
     \GreNoBreak% probably redundant, but better safe than sorry
-    %print the text
-    \copy\gre@box@syllabletext%
+    % all that extra stuff (translations and the like)
+    #8%
+    \GreNoBreak% probably redundant, but better safe than sorry
+    %print the text, the raise is in case of a translation
+    \raise\gre@dimen@textlower \copy\gre@box@syllabletext%
+    %and the code which handles translation centering
+    \ifgre@mustdotranslationcenterend%
+      % case of end of translation centering, we do it after the typesetting of the text
+      \gre@dotranslationcenterend %
+      \gre@mustdotranslationcenterendfalse%
+    \fi %
     %move back to the end of the notes%
     \kern\gre@dimen@enddifference%
     %move to the nominal end of the notes%
