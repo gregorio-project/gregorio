@@ -1038,7 +1038,6 @@ typedef struct height_computation {
     grehepisema_size (*const get_size)(const gregorio_note *);
     bool (*const is_better_height)(signed char, signed char);
     void (*const position)(gregorio_note *, signed char, bool);
-    void (*const adjust_if_better)(gregorio_note *, signed char);
 
     bool active;
     char height;
@@ -1658,20 +1657,6 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
     return shift;
 }
 
-static __inline void adjust_hepisema(const height_computation *const h,
-        gregorio_note *const note)
-{
-    const unsigned short adjustment_index =
-            note->he_adjustment_index[h->orientation];
-
-    if (adjustment_index && h->is_shown(note)) {
-        gregorio_hepisema_adjustment *adj = gregorio_get_hepisema_adjustment(
-                adjustment_index);
-
-        h->adjust_if_better(note, adj->pitch_extremum);
-    }
-}
-
 static __inline void guess_ledger_lines(const gregorio_element *element,
         const gregorio_score *const score)
 {
@@ -1749,7 +1734,6 @@ void gregoriotex_compute_positioning(
         /*.get_size =*/ &get_h_episema_above_size,
         /*.is_better_height =*/ &is_h_episema_above_better_height,
         /*.position =*/ &gregorio_position_h_episema_above,
-        /*.adjust_if_better =*/ &adjust_h_episema_above_if_better,
 
         /*.active =*/ false,
         /*.height =*/ 0,
@@ -1771,7 +1755,6 @@ void gregoriotex_compute_positioning(
         /*.get_size =*/ &get_h_episema_below_size,
         /*.is_better_height =*/ &is_h_episema_below_better_height,
         /*.position =*/ &gregorio_position_h_episema_below,
-        /*.adjust_if_better =*/ &adjust_h_episema_below_if_better,
 
         /*.active =*/ false,
         /*.height =*/ 0,
@@ -1818,20 +1801,52 @@ void gregoriotex_compute_positioning(
     }
     end_h_episema(&above, NULL, score);
     end_h_episema(&below, NULL, score);
+}
 
-    /* second pass to patch in the horizontal episema adjustments */
-    for (element = param_element; element; element = element->next) {
-        if (element->type == GRE_ELEMENT) {
-            gregorio_glyph *glyph;
-            for (glyph = element->u.first_glyph; glyph;
-                    glyph = glyph->next) {
-                if (glyph->type == GRE_GLYPH) {
-                    gregorio_note *note;
-                    for (note = glyph->u.notes.first_note; note;
-                            note = note->next) {
-                        if (note->type == GRE_NOTE) {
-                            adjust_hepisema(&above, note);
-                            adjust_hepisema(&below, note);
+static __inline void adjust_hepisema(gregorio_note *const note,
+        const gregorio_sign_orientation orientation,
+        bool (*const is_shown)(const gregorio_note *),
+        void (*const adjust_if_better)(gregorio_note *, signed char))
+{
+    const unsigned short adjustment_index =
+            note->he_adjustment_index[orientation];
+
+    if (adjustment_index && is_shown(note)) {
+        gregorio_hepisema_adjustment *adj = gregorio_get_hepisema_adjustment(
+                adjustment_index);
+
+        adjust_if_better(note, adj->pitch_extremum);
+    }
+}
+
+void gregoriotex_compute_cross_syllable_positioning(
+        const gregorio_score *const score)
+{
+    gregorio_syllable *syllable;
+    for (syllable = score->first_syllable; syllable;
+            syllable = syllable->next_syllable) {
+        int voice;
+        for (voice = 0; voice < score->number_of_voices; ++voice) {
+            gregorio_element *element;
+            for (element = syllable->elements[voice]; element;
+                    element = element->next) {
+                if (element->type == GRE_ELEMENT) {
+                    gregorio_glyph *glyph;
+                    for (glyph = element->u.first_glyph; glyph;
+                            glyph = glyph->next) {
+                        if (glyph->type == GRE_GLYPH) {
+                            gregorio_note *note;
+                            for (note = glyph->u.notes.first_note; note;
+                                    note = note->next) {
+                                if (note->type == GRE_NOTE) {
+                                    adjust_hepisema(note, SO_OVER,
+                                            gtex_is_h_episema_above_shown,
+                                            adjust_h_episema_above_if_better);
+                                    adjust_hepisema(note, SO_UNDER,
+                                            gtex_is_h_episema_below_shown,
+                                            adjust_h_episema_below_if_better);
+                                }
+                            }
                         }
                     }
                 }
@@ -1839,4 +1854,3 @@ void gregoriotex_compute_positioning(
         }
     }
 }
-

@@ -1476,9 +1476,12 @@ unsigned short gregorio_add_hepisema_adjustment(
         const gregorio_hepisema_vbasepos vbasepos, char *const nudge)
 {
     if (hepisema_adjustments_last == USHRT_MAX) {
+        /* It's not reasonable to trigger this condition while testing */
+        /* LCOV_EXCL_START */
         gregorio_message(_("too many horizontal episema adjustments"),
                 "gregorio_add_hepisema_adjustment", VERBOSITY_ERROR, 0);
         return 0;
+        /* LCOV_EXCL_STOP */
     }
     ++hepisema_adjustments_last;
     if (hepisema_adjustments_last >= hepisema_adjustments_capacity) {

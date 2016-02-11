@@ -2251,8 +2251,11 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
             }
             /* else fall through to next case */
         case L_DEMINUTUS:
+            /* this is a currenly unused, but we keep it as a fallback case */
+            /* LCOV_EXCL_START */
             note->u.note.shape = S_PUNCTUM_DEMINUTUS;
             break;
+            /* LCOV_EXCL_STOP */
         default:
             break;
         }
@@ -3627,6 +3630,18 @@ static void initialize_score(gregoriotex_status *const status,
     status->top_height = status->bottom_height = UNDETERMINED_HEIGHT;
     status->abovelinestext = status->translation = false;
 
+    /* first pass to compute positioning */
+    for (syllable = score->first_syllable; syllable;
+            syllable = syllable->next_syllable) {
+        int voice;
+
+        for (voice = 0; voice < score->number_of_voices; ++voice) {
+            gregoriotex_compute_positioning(syllable->elements[voice], score);
+        }
+    }
+
+    gregoriotex_compute_cross_syllable_positioning(score);
+
     for (syllable = score->first_syllable; syllable;
             syllable = syllable->next_syllable) {
         int voice;
@@ -3642,7 +3657,6 @@ static void initialize_score(gregoriotex_status *const status,
         for (voice = 0; voice < score->number_of_voices; ++voice) {
             gregorio_element *element;
 
-            gregoriotex_compute_positioning(syllable->elements[voice], score);
             for (element = syllable->elements[voice]; element;
                     element = element->next) {
                 gregorio_glyph *glyph;
