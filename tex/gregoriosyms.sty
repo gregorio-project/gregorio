@@ -58,6 +58,27 @@
 
 \ProcessKeyvalOptions*
 
+\def\gre@debugmsg#1#2{%
+  \IfStrEq{\gre@debug}{}{}%
+    %false
+    {\IfStrEq{#1}{all}%
+      %true
+      {\gre@error{Debug error: ‘all’ is not a permitted keyword}}%
+      %false
+      {\IfStrEq{\gre@debug}{all}%
+        %true
+        {\gre@typeout{GregorioTeX debug: (#1) #2}}%
+        %false
+        {\IfSubStr{\gre@debug}{#1}%
+          %true
+          {\gre@typeout{GregorioTeX debug: (#1) #2}}%
+          %false
+          {\relax}%
+        }%
+      }%
+    }%
+}%
+
 % Macro to handle deprecated macros.
 % #1 - the deprecated macro
 % #2 - the correct macro to use
