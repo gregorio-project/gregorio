@@ -66,7 +66,7 @@ def main():
     fontfile = args[0]
     font = fontforge.open(fontfile)
     font.selection.all()
-    font.simplify()
+    font.simplify(0.1, ('mergelines','ignoreslopes','setstarttoextremum'))
     font.generate(fontfile)
     font.close()
 
