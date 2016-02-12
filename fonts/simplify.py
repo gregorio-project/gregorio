@@ -4,10 +4,11 @@
 
 
 """
-    Python fontforge script to convert from fontforge's native sfd
-    to a TrueType font (ttf).
+    Python fontforge script to simplify a font. This only exists
+    because simplification doesn't work in squarize.py due to bugs
+    in fontforge.
 
-    Copyright (C) 2015 The Gregorio Project (see CONTRIBUTORS.md)
+    Copyright (C) 2016 The Gregorio Project (see CONTRIBUTORS.md)
 
     This file is part of Gregorio.
 
@@ -24,10 +25,10 @@
     You should have received a copy of the GNU General Public License
     along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
-    This script takes a .sfd file and converts it to a .ttf file.
+    This script takes a font file, simplifies it and overwrites it.
 
     Basic use :
-        fontforge -script convertsfdtottf.py fontfile
+         fontforge -script simplify.py fontfile
 """
 
 
@@ -40,11 +41,10 @@ import fontforge
 def usage():
     "Prints help message."
     print("""
-Python script to convert a fontforge native file (.sfd) to a TrueType font
-(.ttf).
+Python fontforge script to simplify a font.
 
 Usage:
-    fontforge -script convertsfdtottf.py fontfile
+    fontforge -script simplify.py fontfile
 """)
 
 def main():
@@ -63,14 +63,11 @@ def main():
     if len(args) == 0:
         usage()
         sys.exit(2)
-    if args[0][-3:] == "sfd":
-        outputfile = "%s.ttf" % args[0][:-4]
-        inputfile = args[0]
-    else:
-        usage()
-        sys.exit(2)
-    font = fontforge.open(inputfile)
-    font.generate(outputfile)
+    fontfile = args[0]
+    font = fontforge.open(fontfile)
+    font.selection.all()
+    font.simplify(0.1, ('mergelines','ignoreslopes','setstarttoextremum'))
+    font.generate(fontfile)
     font.close()
 
 if __name__ == "__main__":
