@@ -31,9 +31,11 @@ RM = rm
 
 %.ttf: %-base.sfd squarize.py stemsschemas.py %.json
 	$(FONTFORGE) -script squarize.py $< -o $@ -c $*.json
+	$(FONTFORGE) -script simplify.py $@
 
 %-op.ttf: %-base.sfd squarize.py stemsschemas.py %.json
 	$(FONTFORGE) -script squarize.py $< -o $@ -s op -c $*.json
+	$(FONTFORGE) -script simplify.py $@
 
 %.ttf: convertsfdtottf.py %.sfd
 	$(FONTFORGE) -script $< $*.sfd
