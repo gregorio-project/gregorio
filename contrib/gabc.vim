@@ -1,6 +1,5 @@
 " Vim syntax file
 " Language:	Gabc gregorian chant notation
-" Maintainer:	Elie Roux <elie.roux@telecom-bretagne.eu>
 " Last Change:	2016 Feb 11
 
 " Quit when a (custom) syntax file was already loaded
