@@ -11,6 +11,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Changed
 - Adjustments to the heuristic for ledger lines to include adjacent notes (see [#862](https://github.com/gregorio-project/gregorio/issues/862)).
 - The stem length determination will use the ledger line below the note with the stem (see [#863](https://github.com/gregorio-project/gregorio/issues/863)).
+- Add new lines as needed to the gabc output. (see [#905](https://github.com/gregorio-project/gregorio/issues/905)).
 
 ### Added
 - Controls for tuning horizontal episema vertical position.  See GregorioRef for details (for the change request, see [#872](https://github.com/gregorio-project/gregorio/issues/872)).
