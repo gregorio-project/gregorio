@@ -7,6 +7,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - New bar spacing algorithm now accounts for translations (and other below lyrics stuff).
 - Horizontal episema on initio debilis is now sized correctly (see [#880](https://github.com/gregorio-project/gregorio/issues/880)).
 - Elisions immediately after the vowel are now properly left out of the center (see [#907](https://github.com/gregorio-project/gregorio/issues/907))
+- Syllable with no notes are now treated as bar syllables rather than note syllables.  This increase their spacing under the old algorithm and, more importantly, allows them to use the new spacing algorithm.
 
 ### Changed
 - Adjustments to the heuristic for ledger lines to include adjacent notes (see [#862](https://github.com/gregorio-project/gregorio/issues/862)).
