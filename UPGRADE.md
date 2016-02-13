@@ -56,7 +56,7 @@ By default, these are sized one half millimeter larger than their "non-text" cou
 
 ### Oriscus orientation
 
-The oriscus orientation (whether it points up or down) is now dependent on the note the follows, even if the note is not directly connected to the oriscus (as it would be in a salicus or a pressus).  Appending a `<` to an unconnected oriscus in gabc will force the oriscus to point upwards and `>` will force the oriscus to point downwards.
+The oriscus orientation (whether it points up or down) is now dependent on the note the follows, even if the note is not directly connected to the oriscus (as it would be in a salicus or a pressus).  Appending a `1` to an unconnected oriscus in gabc will force the oriscus to point upwards and `0` will force the oriscus to point downwards.
 
 Prior to version 4.1, Gregorio automatically oriented the oriscus when it was within a neume, but left the orientation up the user otherwise.  If you prefer this behavior, set the `oriscus-orientation` header in gabc to `legacy`.  In legacy mode, the orientation of an unconnected oriscus will (by default) point downwards and may be reversed by appending `<` or `>` to the oriscus.
 

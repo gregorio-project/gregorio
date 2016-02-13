@@ -357,20 +357,32 @@ static void fix_oriscus_liquescentia(gregorio_note *const note,
             break;
         }
     } else {
+        note->u.note.liquescentia &= ((~TAIL_LIQUESCENTIA_MASK) | L_DEMINUTUS);
+        if (note->u.note.liquescentia & L_DEMINUTUS) {
+            note->u.note.shape = S_ORISCUS_DEMINUTUS;
+        }
+    }
+}
+
+static void fix_oriscus_scapus_liquescentia(gregorio_note *const note,
+        const bool legacy_oriscus_orientation)
+{
+    if (legacy_oriscus_orientation) {
         switch (note->u.note.liquescentia) {
         case L_AUCTUS_ASCENDENS:
-            note->u.note.shape = S_ORISCUS_ASCENDENS;
-            break;
+            note->u.note.liquescentia =
+                    (note->u.note.liquescentia & ~TAIL_LIQUESCENTIA_MASK)
+                    | L_AUCTUS_DESCENDENS;
+            /* fall through */
         case L_AUCTUS_DESCENDENS:
-            note->u.note.shape = S_ORISCUS_DESCENDENS;
-            break;
-        case L_DEMINUTUS:
-            note->u.note.shape = S_ORISCUS_DEMINUTUS;
+            note->u.note.shape = S_ORISCUS_SCAPUS_DESCENDENS;
             break;
         default:
-            note->u.note.shape = S_ORISCUS_UNDETERMINED;
+            note->u.note.shape = S_ORISCUS_SCAPUS_ASCENDENS;
             break;
         }
+    } else {
+        note->u.note.liquescentia &= ~TAIL_LIQUESCENTIA_MASK;
     }
 }
 
@@ -395,19 +407,9 @@ static void fix_oriscus_cavum_liquescentia(gregorio_note *const note,
             break;
         }
     } else {
-        switch (note->u.note.liquescentia) {
-        case L_AUCTUS_ASCENDENS:
-            note->u.note.shape = S_ORISCUS_CAVUM_ASCENDENS;
-            break;
-        case L_AUCTUS_DESCENDENS:
-            note->u.note.shape = S_ORISCUS_CAVUM_DESCENDENS;
-            break;
-        case L_DEMINUTUS:
+        note->u.note.liquescentia &= ((~TAIL_LIQUESCENTIA_MASK) | L_DEMINUTUS);
+        if (note->u.note.liquescentia & L_DEMINUTUS) {
             note->u.note.shape = S_ORISCUS_CAVUM_DEMINUTUS;
-            break;
-        default:
-            note->u.note.shape = S_ORISCUS_CAVUM_UNDETERMINED;
-            break;
         }
     }
 }
@@ -434,10 +436,21 @@ void gregorio_change_shape(gregorio_note *const note,
             break;
 
         case S_ORISCUS_UNDETERMINED:
-        case S_ORISCUS_ASCENDENS:
-        case S_ORISCUS_DESCENDENS:
         case S_ORISCUS_DEMINUTUS:
+        case S_ORISCUS_SCAPUS_UNDETERMINED:
             note->u.note.shape = S_ORISCUS_CAVUM_UNDETERMINED;
+            fix_oriscus_cavum_liquescentia(note, legacy_oriscus_orientation);
+            break;
+
+        case S_ORISCUS_ASCENDENS:
+        case S_ORISCUS_SCAPUS_ASCENDENS:
+            note->u.note.shape = S_ORISCUS_CAVUM_ASCENDENS;
+            fix_oriscus_cavum_liquescentia(note, legacy_oriscus_orientation);
+            break;
+
+        case S_ORISCUS_DESCENDENS:
+        case S_ORISCUS_SCAPUS_DESCENDENS:
+            note->u.note.shape = S_ORISCUS_CAVUM_DESCENDENS;
             fix_oriscus_cavum_liquescentia(note, legacy_oriscus_orientation);
             break;
 
@@ -456,11 +469,15 @@ void gregorio_change_shape(gregorio_note *const note,
         switch (old_shape) {
         case S_PUNCTUM_CAVUM:
         case S_PUNCTUM_CAVUM_INCLINATUM:
+            note->u.note.shape = S_ORISCUS_CAVUM_UNDETERMINED;
+            fix_oriscus_cavum_liquescentia(note, legacy_oriscus_orientation);
+            break;
+
         case S_ORISCUS_CAVUM_UNDETERMINED:
         case S_ORISCUS_CAVUM_ASCENDENS:
         case S_ORISCUS_CAVUM_DESCENDENS:
         case S_ORISCUS_CAVUM_DEMINUTUS:
-            note->u.note.shape = S_ORISCUS_CAVUM_UNDETERMINED;
+            note->u.note.shape = old_shape;
             fix_oriscus_cavum_liquescentia(note, legacy_oriscus_orientation);
             break;
 
@@ -468,6 +485,48 @@ void gregorio_change_shape(gregorio_note *const note,
             fix_oriscus_liquescentia(note, legacy_oriscus_orientation);
             break;
         }
+        break;
+
+    case S_ORISCUS_ASCENDENS:
+        switch (old_shape) {
+        case S_PUNCTUM_CAVUM:
+        case S_PUNCTUM_CAVUM_INCLINATUM:
+        case S_ORISCUS_CAVUM_UNDETERMINED:
+        case S_ORISCUS_CAVUM_ASCENDENS:
+        case S_ORISCUS_CAVUM_DESCENDENS:
+        case S_ORISCUS_CAVUM_DEMINUTUS:
+            note->u.note.shape = S_ORISCUS_CAVUM_ASCENDENS;
+            fix_oriscus_cavum_liquescentia(note, legacy_oriscus_orientation);
+            break;
+
+        default:
+            fix_oriscus_liquescentia(note, legacy_oriscus_orientation);
+            break;
+        }
+        break;
+
+    case S_ORISCUS_DESCENDENS:
+        switch (old_shape) {
+        case S_PUNCTUM_CAVUM:
+        case S_PUNCTUM_CAVUM_INCLINATUM:
+        case S_ORISCUS_CAVUM_UNDETERMINED:
+        case S_ORISCUS_CAVUM_ASCENDENS:
+        case S_ORISCUS_CAVUM_DESCENDENS:
+        case S_ORISCUS_CAVUM_DEMINUTUS:
+            note->u.note.shape = S_ORISCUS_CAVUM_DESCENDENS;
+            fix_oriscus_cavum_liquescentia(note, legacy_oriscus_orientation);
+            break;
+
+        default:
+            fix_oriscus_liquescentia(note, legacy_oriscus_orientation);
+            break;
+        }
+        break;
+
+    case S_ORISCUS_SCAPUS_UNDETERMINED:
+    case S_ORISCUS_SCAPUS_ASCENDENS:
+    case S_ORISCUS_SCAPUS_DESCENDENS:
+        fix_oriscus_scapus_liquescentia(note, legacy_oriscus_orientation);
         break;
 
     default:
@@ -489,6 +548,10 @@ void gregorio_add_tail_liquescentia(gregorio_note *note,
         | (liq & TAIL_LIQUESCENTIA_MASK);
 
     switch (note->u.note.shape) {
+    case S_PUNCTUM_CAVUM_INCLINATUM:
+        fix_punctum_cavum_inclinatum_liquescentia(note);
+        break;
+
     case S_STROPHA:
     case S_DISTROPHA:
     case S_TRISTROPHA:
@@ -506,8 +569,10 @@ void gregorio_add_tail_liquescentia(gregorio_note *note,
         fix_oriscus_liquescentia(note, legacy_oriscus_orientation);
         break;
 
-    case S_PUNCTUM_CAVUM_INCLINATUM:
-        fix_punctum_cavum_inclinatum_liquescentia(note);
+    case S_ORISCUS_SCAPUS_UNDETERMINED:
+    case S_ORISCUS_SCAPUS_ASCENDENS:
+    case S_ORISCUS_SCAPUS_DESCENDENS:
+        fix_oriscus_scapus_liquescentia(note, legacy_oriscus_orientation);
         break;
 
     case S_ORISCUS_CAVUM_UNDETERMINED:

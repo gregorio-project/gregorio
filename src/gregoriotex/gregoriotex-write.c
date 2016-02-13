@@ -96,6 +96,9 @@ SHAPE(OriscusReversusLineTL);
 SHAPE(OriscusScapus);
 SHAPE(OriscusScapusLongqueue);
 SHAPE(OriscusScapusOpenqueue);
+SHAPE(OriscusScapusReversus);
+SHAPE(OriscusScapusReversusLongqueue);
+SHAPE(OriscusScapusReversusOpenqueue);
 SHAPE(Pes);
 SHAPE(PesQuadratum);
 SHAPE(PesQuadratumLongqueue);
@@ -108,10 +111,10 @@ SHAPE(PesQuilismaQuadratum);
 SHAPE(PesQuilismaQuadratumLongqueue);
 SHAPE(PesQuilismaQuadratumOpenqueue);
 SHAPE(Porrectus);
-SHAPE(PorrectusLongqueue);
 SHAPE(PorrectusFlexus);
 SHAPE(PorrectusFlexusLongqueue);
 SHAPE(PorrectusFlexusNobar);
+SHAPE(PorrectusLongqueue);
 SHAPE(PorrectusNobar);
 SHAPE(Punctum);
 SHAPE(PunctumAscendens);
@@ -345,7 +348,8 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
             switch (previous_note->u.note.shape) {
             case S_ORISCUS_ASCENDENS:
             case S_ORISCUS_DESCENDENS:
-            case S_ORISCUS_SCAPUS:
+            case S_ORISCUS_SCAPUS_ASCENDENS:
+            case S_ORISCUS_SCAPUS_DESCENDENS:
                 fuse_head = FUSE_Lower;
                 break;
             default:
@@ -395,6 +399,24 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
                     || shape == SHAPE_OriscusScapusOpenqueue)
                 && is_fused(glyph->u.notes.liquescentia))) {
         shape = SHAPE_Oriscus;
+    }
+
+    if (*fuse_tail) {
+        if (is_fused(glyph->u.notes.liquescentia)) {
+            if (shape == SHAPE_OriscusScapusReversus
+                    || shape == SHAPE_OriscusScapusReversusLongqueue
+                    || shape == SHAPE_OriscusScapusReversusOpenqueue) {
+                shape = SHAPE_Oriscus;
+            }
+        } else {
+            if (shape == SHAPE_OriscusScapusReversus) {
+                shape = SHAPE_OriscusScapus;
+            } else if (shape == SHAPE_OriscusScapusReversusLongqueue) {
+                shape = SHAPE_OriscusScapusLongqueue;
+            } else if (shape == SHAPE_OriscusScapusReversusOpenqueue) {
+                shape = SHAPE_OriscusScapusOpenqueue;
+            }
+        }
     }
 
     current_note = glyph->u.notes.first_note;
@@ -486,25 +508,34 @@ static const char *fusible_queued_shape(const gregorio_note *const note,
         const char *const base_shape, const char *const longqueue_shape,
         const char *const openqueue_shape)
 {
-    const char *name = "";
+    const char *name = NULL;
     if (glyph->u.notes.fuse_to_next_glyph < 0) {
         /* queue size depends on the following note if fused down */
-        if (glyph->u.notes.fuse_to_next_glyph == -1) {
-            switch (adjusted_queuetype_of(note, note,
-                        glyph->u.notes.fuse_to_next_glyph)) {
-            case Q_ON_SPACE_BELOW_BOTTOM_LINE:
-            case Q_ON_BOTTOM_LINE:
+        bool ambitus_one = (glyph->u.notes.fuse_to_next_glyph == -1);
+        switch (adjusted_queuetype_of(note, note,
+                    glyph->u.notes.fuse_to_next_glyph)) {
+        case Q_ON_SPACE_BELOW_BOTTOM_LINE:
+            if (ambitus_one) {
                 name = openqueue_shape;
                 break;
-            case Q_ON_SPACE_ABOVE_BOTTOM_LINE:
-                name = base_shape;
-                break;
-            case Q_ON_LINE_ABOVE_BOTTOM_LINE:
-                name = longqueue_shape;
+            }
+            /* else fall through */
+        case Q_ON_SPACE_ABOVE_BOTTOM_LINE:
+            /* at ambitus one, long and short are swapped becuase the queue where
+             * the second note is on a space is longer than on a line */
+            name = ambitus_one? longqueue_shape : base_shape;
+            break;
+        case Q_ON_BOTTOM_LINE:
+            if (ambitus_one) {
+                name = openqueue_shape;
                 break;
             }
-        } else {
-            name = base_shape;
+            /* else fall through */
+        case Q_ON_LINE_ABOVE_BOTTOM_LINE:
+            /* at ambitus one, long and short are swapped becuase the queue where
+             * the second note is on a line is shorter than on a space */
+            name = ambitus_one? base_shape : longqueue_shape;
+            break;
         }
     } else {
         switch (queuetype_of(note)) {
@@ -518,6 +549,7 @@ static const char *fusible_queued_shape(const gregorio_note *const note,
             break;
         }
     }
+    gregorio_not_null(name, fusible_queued_shape, return base_shape);
     return compute_glyph_name(glyph, name, LG_NONE, true);
 }
 
@@ -613,9 +645,13 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
     case S_QUILISMA:
         *type = AT_QUILISMA;
         return compute_glyph_name(glyph, SHAPE_Quilisma, LG_NONE, true);
-    case S_ORISCUS_SCAPUS:
+    case S_ORISCUS_SCAPUS_ASCENDENS:
         return fusible_queued_shape(note, glyph, SHAPE_OriscusScapus,
                 SHAPE_OriscusScapusLongqueue, SHAPE_OriscusScapusOpenqueue);
+    case S_ORISCUS_SCAPUS_DESCENDENS:
+        return fusible_queued_shape(note, glyph, SHAPE_OriscusScapusReversus,
+                SHAPE_OriscusScapusReversusLongqueue,
+                SHAPE_OriscusScapusReversusOpenqueue);
     case S_STROPHA:
         *type = AT_STROPHA;
         if (!(note->u.note.liquescentia &
@@ -828,7 +864,8 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
             break;
         case S_ORISCUS_ASCENDENS:
         case S_ORISCUS_DESCENDENS:
-        case S_ORISCUS_SCAPUS:
+        case S_ORISCUS_SCAPUS_ASCENDENS:
+        case S_ORISCUS_SCAPUS_DESCENDENS:
             *type = AT_ORISCUS;
             *gtype = T_PESQUASSUS;
             shape = quadratum_shape(glyph, SHAPE_PesQuassus,
@@ -893,7 +930,8 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
             ltype = LG_NO_INITIO;
             break;
 
-        case S_ORISCUS_SCAPUS:
+        case S_ORISCUS_SCAPUS_ASCENDENS:
+        case S_ORISCUS_SCAPUS_DESCENDENS:
             *gtype = T_FLEXUS_ORISCUS_SCAPUS;
             shape = flexus_shape(glyph, ambitus, SHAPE_FlexusOriscusScapus,
                     SHAPE_FlexusOriscusScapusLongqueue,
@@ -2849,7 +2887,8 @@ static void write_glyph(FILE *f, gregorio_syllable *syllable,
         case S_ORISCUS_CAVUM_ASCENDENS:
         case S_ORISCUS_CAVUM_DESCENDENS:
         case S_ORISCUS_CAVUM_DEMINUTUS:
-        case S_ORISCUS_SCAPUS:
+        case S_ORISCUS_SCAPUS_ASCENDENS:
+        case S_ORISCUS_SCAPUS_DESCENDENS:
             /* don't change the oriscus */
             break;
 

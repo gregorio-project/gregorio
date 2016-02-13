@@ -1613,7 +1613,8 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
      * fusible from above */
     if (shift < 0 && ((next_is_fused && glyph->u.notes.glyph_type == G_FLEXA)
                 || glyph->u.notes.glyph_type == G_PORRECTUS
-                || glyph->u.notes.glyph_type == G_PODATUS
+                || (glyph->u.notes.glyph_type == G_PODATUS
+                    && !(glyph->u.notes.liquescentia & L_DEMINUTUS))
                 || (previous->u.notes.glyph_type == G_PUNCTUM
                     && is_initio_debilis(previous->u.notes.liquescentia)))) {
         /* may not be fused from above */
@@ -1626,7 +1627,8 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
         const gregorio_glyph *next_glyph;
     case S_ORISCUS_ASCENDENS:
     case S_ORISCUS_DESCENDENS:
-    case S_ORISCUS_SCAPUS:
+    case S_ORISCUS_SCAPUS_ASCENDENS:
+    case S_ORISCUS_SCAPUS_DESCENDENS:
         next_note = first_note->next;
         if (!next_note && (next_glyph = gregorio_next_non_texverb_glyph(glyph))
                 && next_glyph->type == GRE_GLYPH

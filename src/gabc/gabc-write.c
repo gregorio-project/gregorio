@@ -515,16 +515,24 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         fprintf(f, "%cV", pitch_letter(note->u.note.pitch));
         break;
     case S_ORISCUS_ASCENDENS:
+        fprintf(f, "%co1", pitch_letter(note->u.note.pitch));
+        break;
     case S_ORISCUS_DESCENDENS:
+        fprintf(f, "%co0", pitch_letter(note->u.note.pitch));
+        break;
     case S_ORISCUS_DEMINUTUS:
         fprintf(f, "%co", pitch_letter(note->u.note.pitch));
-        /* Note: the ASCENDENS, DESCENDENS, or DEMINUTUS is also in the liquescentia */
+        /* Note: the DEMINUTUS is also in the liquescentia */
         break;
     case S_ORISCUS_CAVUM_ASCENDENS:
+        fprintf(f, "%co1r", pitch_letter(note->u.note.pitch));
+        break;
     case S_ORISCUS_CAVUM_DESCENDENS:
+        fprintf(f, "%co0r", pitch_letter(note->u.note.pitch));
+        break;
     case S_ORISCUS_CAVUM_DEMINUTUS:
         fprintf(f, "%cor", pitch_letter(note->u.note.pitch));
-        /* Note: the ASCENDENS, DESCENDENS, or DEMINUTUS is also in the liquescentia */
+        /* Note: the DEMINUTUS is also in the liquescentia */
         break;
     case S_QUILISMA:
         if (is_quadratum) {
@@ -545,8 +553,11 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     case S_LINEA_PUNCTUM_CAVUM:
         fprintf(f, "%cr0", pitch_letter(note->u.note.pitch));
         break;
-    case S_ORISCUS_SCAPUS:
-        fprintf(f, "%cO", pitch_letter(note->u.note.pitch));
+    case S_ORISCUS_SCAPUS_ASCENDENS:
+        fprintf(f, "%cO1", pitch_letter(note->u.note.pitch));
+        break;
+    case S_ORISCUS_SCAPUS_DESCENDENS:
+        fprintf(f, "%cO0", pitch_letter(note->u.note.pitch));
         break;
     case S_STROPHA:
     case S_STROPHA_AUCTA:
