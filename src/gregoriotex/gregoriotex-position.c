@@ -1626,7 +1626,8 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
         const gregorio_glyph *next_glyph;
     case S_ORISCUS_ASCENDENS:
     case S_ORISCUS_DESCENDENS:
-    case S_ORISCUS_SCAPUS:
+    case S_ORISCUS_SCAPUS_ASCENDENS:
+    case S_ORISCUS_SCAPUS_DESCENDENS:
         next_note = first_note->next;
         if (!next_note && (next_glyph = gregorio_next_non_texverb_glyph(glyph))
                 && next_glyph->type == GRE_GLYPH

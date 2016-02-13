@@ -108,7 +108,8 @@ ENUM(gregorio_clef, GREGORIO_CLEF);
     E(S_ORISCUS_ASCENDENS) \
     E(S_ORISCUS_DESCENDENS) \
     E(S_ORISCUS_DEMINUTUS) \
-    E(S_ORISCUS_SCAPUS) \
+    E(S_ORISCUS_SCAPUS_ASCENDENS) \
+    E(S_ORISCUS_SCAPUS_DESCENDENS) \
     E(S_QUILISMA) \
     E(S_STROPHA) \
     E(S_STROPHA_AUCTA) \
@@ -130,6 +131,7 @@ ENUM(gregorio_clef, GREGORIO_CLEF);
      * and quilisma quadratum is the shape of the first note of a pes
      * quislisma quadratum */ \
     E(S_ORISCUS_UNDETERMINED) \
+    E(S_ORISCUS_SCAPUS_UNDETERMINED) \
     E(S_ORISCUS_CAVUM_UNDETERMINED) \
     E(S_QUADRATUM) \
     /* those shapes are for now used only in gregoriotex */ \

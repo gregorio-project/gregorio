@@ -1248,8 +1248,24 @@ o   {
         gregorio_change_shape(current_note, S_ORISCUS_UNDETERMINED,
                 legacy_oriscus_orientation);
     }
+o0  {
+        gregorio_change_shape(current_note, S_ORISCUS_DESCENDENS,
+                legacy_oriscus_orientation);
+    }
+o1  {
+        gregorio_change_shape(current_note, S_ORISCUS_ASCENDENS,
+                legacy_oriscus_orientation);
+    }
 O   {
-        gregorio_change_shape(current_note, S_ORISCUS_SCAPUS,
+        gregorio_change_shape(current_note, S_ORISCUS_SCAPUS_UNDETERMINED,
+                legacy_oriscus_orientation);
+    }
+O0  {
+        gregorio_change_shape(current_note, S_ORISCUS_SCAPUS_ASCENDENS,
+                legacy_oriscus_orientation);
+    }
+O1  {
+        gregorio_change_shape(current_note, S_ORISCUS_SCAPUS_DESCENDENS,
                 legacy_oriscus_orientation);
     }
 w   {
