@@ -508,25 +508,34 @@ static const char *fusible_queued_shape(const gregorio_note *const note,
         const char *const base_shape, const char *const longqueue_shape,
         const char *const openqueue_shape)
 {
-    const char *name = "";
+    const char *name = NULL;
     if (glyph->u.notes.fuse_to_next_glyph < 0) {
         /* queue size depends on the following note if fused down */
-        if (glyph->u.notes.fuse_to_next_glyph == -1) {
-            switch (adjusted_queuetype_of(note, note,
-                        glyph->u.notes.fuse_to_next_glyph)) {
-            case Q_ON_SPACE_BELOW_BOTTOM_LINE:
-            case Q_ON_BOTTOM_LINE:
+        bool ambitus_one = (glyph->u.notes.fuse_to_next_glyph == -1);
+        switch (adjusted_queuetype_of(note, note,
+                    glyph->u.notes.fuse_to_next_glyph)) {
+        case Q_ON_SPACE_BELOW_BOTTOM_LINE:
+            if (ambitus_one) {
                 name = openqueue_shape;
                 break;
-            case Q_ON_SPACE_ABOVE_BOTTOM_LINE:
-                name = base_shape;
-                break;
-            case Q_ON_LINE_ABOVE_BOTTOM_LINE:
-                name = longqueue_shape;
+            }
+            /* else fall through */
+        case Q_ON_SPACE_ABOVE_BOTTOM_LINE:
+            /* at ambitus one, long and short are swapped becuase the queue where
+             * the second note is on a space is longer than on a line */
+            name = ambitus_one? longqueue_shape : base_shape;
+            break;
+        case Q_ON_BOTTOM_LINE:
+            if (ambitus_one) {
+                name = openqueue_shape;
                 break;
             }
-        } else {
-            name = base_shape;
+            /* else fall through */
+        case Q_ON_LINE_ABOVE_BOTTOM_LINE:
+            /* at ambitus one, long and short are swapped becuase the queue where
+             * the second note is on a line is shorter than on a space */
+            name = ambitus_one? base_shape : longqueue_shape;
+            break;
         }
     } else {
         switch (queuetype_of(note)) {
@@ -540,6 +549,7 @@ static const char *fusible_queued_shape(const gregorio_note *const note,
             break;
         }
     }
+    gregorio_not_null(name, fusible_queued_shape, return base_shape);
     return compute_glyph_name(glyph, name, LG_NONE, true);
 }
 
