@@ -11,9 +11,9 @@ syn match gabcAttributeName /^[^:]*:/
 syn match gabcAttributeEnd ";"
 syn match gabcNoteError "." contained
 syn match gabcBasicNote "[a-npA-NP]" contained
-syn match gabcAlteration "[\<\>~xy#vVoOwWqQR\-Ss\.+]" contained
+syn match gabcAlteration "[\<\>~xy#vVwWqQR\-Ss\.+]" contained
 syn match gabcAlteration "_[0-5]*" contained
-syn match gabcAlteration "['\.][01]\?" contained
+syn match gabcAlteration "[oO'\.][01]\?" contained
 syn match gabcAlteration "r[0-5]\?" contained
 syn match gabcClef "[cf]b\?[1-5]" contained
 syn match gabcTextMarkup "</\?e>" contained
