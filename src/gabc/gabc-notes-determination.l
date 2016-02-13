@@ -1261,11 +1261,11 @@ O   {
                 legacy_oriscus_orientation);
     }
 O0  {
-        gregorio_change_shape(current_note, S_ORISCUS_SCAPUS_ASCENDENS,
+        gregorio_change_shape(current_note, S_ORISCUS_SCAPUS_DESCENDENS,
                 legacy_oriscus_orientation);
     }
 O1  {
-        gregorio_change_shape(current_note, S_ORISCUS_SCAPUS_DESCENDENS,
+        gregorio_change_shape(current_note, S_ORISCUS_SCAPUS_ASCENDENS,
                 legacy_oriscus_orientation);
     }
 w   {
