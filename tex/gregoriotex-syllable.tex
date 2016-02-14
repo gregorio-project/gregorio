@@ -1044,7 +1044,7 @@
     %currently begindifference holds the kern from the nominal middle of the notes to the nominal middle of the text
     %we thus need to increase it by the half the width of the bar line, decrease it by half the width of the text, decrease it by the kern from the nominal to the true center of the bar line, and increase it by the kern from the nominal to the true center of the text
     \gre@debugmsg{barspacing}{Correcting begindifference}%
-    \gre@dimen@begindifference = \dimexpr\gre@dimen@begindifference + (\wd\gre@box@syllablenotes/2) - (\wd\gre@box@syllabletext/2) - \gre@dimen@temp@two + \gre@dimen@temp@two\relax%
+    \gre@dimen@begindifference = \dimexpr\gre@dimen@begindifference + (\wd\gre@box@syllablenotes/2) - (\wd\gre@box@syllabletext/2) - \gre@dimen@temp@one + \gre@dimen@temp@two\relax%
     \gre@debugmsg{barspacing}{begindifference: \the\gre@dimen@begindifference}%
     %the end difference can be calculated from begindifference by decreasing begindifference by the width of the notes, increasing it by the width of the text, and then reversing the sign on the whole thing
     \gre@debugmsg{barspacing}{Correcting enddifference}%
