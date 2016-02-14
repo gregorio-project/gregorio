@@ -1002,34 +1002,35 @@
     % this value is positive if the middle of the bar is before the middle of the text
     \gre@dimen@begindifference=\dimexpr(-\gre@dimen@temp@three - \gre@skip@temp@two + \gre@skip@temp@one)\relax%
     \gre@debugmsg{barspacing}{new begindifference approximation: \the\gre@dimen@begindifference}%
-      \gre@debugmsg{barspacing}{offset limit: \gre@space@dimen@maxbaroffset}%
-    \ifdim\gre@dimen@begindifference > \gre@space@dimen@maxbaroffset\relax%
+    \gre@debugmsg{barspacing}{left offset limit: \gre@space@dimen@maxbaroffsettextleft}%
+    \gre@debugmsg{barspacing}{right offset limit: \gre@space@dimen@maxbaroffsettextright}%
+    \ifdim\gre@dimen@begindifference > \gre@space@dimen@maxbaroffsettextright\relax%
       %the two elements are too far apart and the bar is before the text
       %we want to create an offset for the one with the larger available space
       \gre@debugmsg{barspacing}{non-zero offsets}%
       \ifdim\gre@skip@temp@one > \gre@skip@temp@two\relax%
         \gre@debugmsg{barspacing}{offset the text to the left}%
-        \gre@dimen@temp@one = \dimexpr(\gre@dimen@begindifference - \gre@space@dimen@maxbaroffset)\relax%
+        \gre@dimen@temp@one = \dimexpr(\gre@dimen@begindifference - \gre@space@dimen@maxbaroffsettextright)\relax%
         \gre@debugmsg{barspacing}{check in}%
         \gre@dimen@temp@two = 0pt\relax%
         \gre@debugmsg{barspacing}{check in 2}%
       \else%
         \gre@debugmsg{barspacing}{offset the bar to the right}%
         \gre@dimen@temp@one = 0pt\relax%
-        \gre@dimen@temp@two = \dimexpr-\gre@dimen@begindifference + \gre@space@dimen@maxbaroffset\relax%
+        \gre@dimen@temp@two = \dimexpr-\gre@dimen@begindifference + \gre@space@dimen@maxbaroffsettextright\relax%
       \fi%
-    \else\ifdim\gre@dimen@begindifference < -\gre@space@dimen@maxbaroffset\relax%
+    \else\ifdim\gre@dimen@begindifference < -\gre@space@dimen@maxbaroffsettextleft\relax%
       %the two elements are too far apart and the text is before the bar
       %we want to create an offset for the one with the larger available space
       \gre@debugmsg{barspacing}{non-zero offsets}%
       \ifdim\gre@skip@temp@one > \gre@skip@temp@two\relax%
         \gre@debugmsg{barspacing}{offset the text to the right}%
-        \gre@dimen@temp@one = \dimexpr\gre@dimen@begindifference + \gre@space@dimen@maxbaroffset\relax%
+        \gre@dimen@temp@one = \dimexpr\gre@dimen@begindifference + \gre@space@dimen@maxbaroffsettextleft\relax%
         \gre@dimen@temp@two = 0pt\relax%
       \else%
         \gre@debugmsg{barspacing}{offset the bar to the left}%
         \gre@dimen@temp@one = 0pt\relax%
-        \gre@dimen@temp@two = \dimexpr-\gre@dimen@begindifference - \gre@space@dimen@maxbaroffset\relax%
+        \gre@dimen@temp@two = \dimexpr-\gre@dimen@begindifference - \gre@space@dimen@maxbaroffsettextleft\relax%
       \fi%
     \else%
       %the two elements are sufficiently close together

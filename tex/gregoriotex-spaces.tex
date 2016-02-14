@@ -1036,7 +1036,8 @@
     {alterationspace}{\gre@rubberfalse}%
     {overslurshift}{\gre@rubberfalse}%
     {underslurshift}{\gre@rubberfalse}%
-    {maxbaroffset}{\gre@rubberfalse}%
+    {maxbaroffsettextleft}{\gre@rubberfalse}%
+    {maxbaroffsettextright}{\gre@rubberfalse}%
     {overhepisemalowshift}{\gre@rubberfalse}%
     {overhepisemahighshift}{\gre@rubberfalse}%
     {underhepisemalowshift}{\gre@rubberfalse}%
@@ -1351,8 +1352,11 @@
   \ifgre@scale@curlybraceaccentusshift%
     \gre@changeonedimenfactor{curlybraceaccentusshift}{#1}{#2}%
   \fi%
-  \ifgre@scale@maxbaroffset%
-    \gre@changeonedimenfactor{maxbaroffset}{#1}{#2}%
+  \ifgre@scale@maxbaroffsettextright%
+    \gre@changeonedimenfactor{maxbaroffsettextright}{#1}{#2}%
+  \fi%
+  \ifgre@scale@maxbaroffsettextleft%
+    \gre@changeonedimenfactor{maxbaroffsettextleft}{#1}{#2}%
   \fi%
   \ifgre@scale@stafflinefactor%
     \gre@count@temp@two = \numexpr((\gre@stafflinefactor * #2) / #1)\relax%
