@@ -42,7 +42,17 @@ If you prefer the old behavior, you may switch this off by issuing `\gresetledge
 
 In the past, Gregorio handled the notes of an `<eu>` block like any other, which meant that a custos would appear before the `<eu>` block if it happened to start on a new line.  However, the '<eu>' block is not a continuation of the melody, but rather a reminder of the ending to use for the paired psalm tone.  As a result, a custos immediately before an EUOUAE block is now suppressed by default.  If you desire the old behaviour, use `\greseteolcustosbeforeeuouae{auto}` in your TeX document.  To once again suppress the custos, use `\greseteolcustosbeforeeuouae{suppressed}`.
 
-### Spacing around bars (divisio) with text underneath
+### Spacing around bars
+
+#### New algorithm
+
+A new algorithm has been implemented and is tuned on by default. We hope this is a significant improvement over previous one, but in case you prefer the old version, you can turn it on with
+
+```
+\gresetbarspacing{old}
+```
+
+#### Spaces difference according to presence of text
 
 The following spaces have been added:
 
