@@ -46,10 +46,10 @@ In the past, Gregorio handled the notes of an `<eu>` block like any other, which
 
 #### New algorithm
 
-A new algorithm has been implemented and is tuned on by default. We hope this is a significant improvement over previous one, but in case you prefer the old version, you can turn it on with
+A new algorithm has been implemented but is turned off by default. We hope this is a significant improvement over previous one, but it still has a few bugs. You can turn it on with
 
 ```
-\gresetbarspacing{old}
+\gresetbarspacing{new}
 ```
 
 #### Spaces difference according to presence of text
