@@ -1010,14 +1010,12 @@
       \gre@debugmsg{barspacing}{non-zero offsets}%
       \ifdim\gre@skip@temp@one > \gre@skip@temp@two\relax%
         \gre@debugmsg{barspacing}{offset the text to the left}%
-        \gre@dimen@temp@one = \dimexpr(\gre@dimen@begindifference - \gre@space@dimen@maxbaroffsettextright)\relax%
-        \gre@debugmsg{barspacing}{check in}%
+        \gre@dimen@temp@one = \dimexpr(-\gre@dimen@begindifference + \gre@space@dimen@maxbaroffsettextright)\relax%
         \gre@dimen@temp@two = 0pt\relax%
-        \gre@debugmsg{barspacing}{check in 2}%
       \else%
         \gre@debugmsg{barspacing}{offset the bar to the right}%
         \gre@dimen@temp@one = 0pt\relax%
-        \gre@dimen@temp@two = \dimexpr-\gre@dimen@begindifference + \gre@space@dimen@maxbaroffsettextright\relax%
+        \gre@dimen@temp@two = \dimexpr\gre@dimen@begindifference - \gre@space@dimen@maxbaroffsettextright\relax%
       \fi%
     \else\ifdim\gre@dimen@begindifference < -\gre@space@dimen@maxbaroffsettextleft\relax%
       %the two elements are too far apart and the text is before the bar
@@ -1025,12 +1023,12 @@
       \gre@debugmsg{barspacing}{non-zero offsets}%
       \ifdim\gre@skip@temp@one > \gre@skip@temp@two\relax%
         \gre@debugmsg{barspacing}{offset the text to the right}%
-        \gre@dimen@temp@one = \dimexpr\gre@dimen@begindifference + \gre@space@dimen@maxbaroffsettextleft\relax%
+        \gre@dimen@temp@one = \dimexpr-\gre@dimen@begindifference - \gre@space@dimen@maxbaroffsettextleft\relax%
         \gre@dimen@temp@two = 0pt\relax%
       \else%
         \gre@debugmsg{barspacing}{offset the bar to the left}%
         \gre@dimen@temp@one = 0pt\relax%
-        \gre@dimen@temp@two = \dimexpr-\gre@dimen@begindifference - \gre@space@dimen@maxbaroffsettextleft\relax%
+        \gre@dimen@temp@two = \dimexpr\gre@dimen@begindifference + \gre@space@dimen@maxbaroffsettextleft\relax%
       \fi%
     \else%
       %the two elements are sufficiently close together
@@ -1045,7 +1043,7 @@
     %currently begindifference holds the kern from the nominal middle of the notes to the nominal middle of the text
     %we thus need to increase it by the half the width of the bar line, decrease it by half the width of the text, decrease it by the kern from the nominal to the true center of the bar line, and increase it by the kern from the nominal to the true center of the text
     \gre@debugmsg{barspacing}{Correcting begindifference}%
-    \gre@dimen@begindifference = \dimexpr\gre@dimen@begindifference + (\wd\gre@box@syllablenotes/2) - (\wd\gre@box@syllabletext/2) - \gre@dimen@temp@one + \gre@dimen@temp@two\relax%
+    \gre@dimen@begindifference = \dimexpr\gre@dimen@begindifference + (\wd\gre@box@syllablenotes/2) - (\wd\gre@box@syllabletext/2) + \gre@dimen@temp@one - \gre@dimen@temp@two\relax%
     \gre@debugmsg{barspacing}{begindifference: \the\gre@dimen@begindifference}%
     %the end difference can be calculated from begindifference by decreasing begindifference by the width of the notes, increasing it by the width of the text, and then reversing the sign on the whole thing
     \gre@debugmsg{barspacing}{Correcting enddifference}%
