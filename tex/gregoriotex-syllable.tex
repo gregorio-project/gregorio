@@ -169,8 +169,9 @@
 %% 8 : flexus with an ambitus of one
 %% 9 : flexus deminutus
 %% 10 : virgula
-%% 11 : divisio minima, minor and maior
+%% 11 : divisio minima, minor, maior or dominican bar
 %% 12 : divisio finalis
+%% 13 : no note
 % there is a tricky here : if notesaligncenter is not 0, it means that there is a flat before, so we simply add notes aligncenter
 % #2 is 0 if we are in the context of current syllable, 1 if we are in the context of next syllable
 \def\gre@calculate@simplenotesaligncenter#1#2{%
@@ -213,6 +214,9 @@
   \or %
     % case of divisiofinalis
     \global\setbox\gre@box@temp@width=\hbox{\gre@fontchar@divisiofinalis}%
+  \or %
+    % case of no note
+    \global\setbox\gre@box@temp@width=\hbox{}%
   \fi%
   \relax%
 }%

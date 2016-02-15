@@ -2473,7 +2473,7 @@ static int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
     }
     /* the only thing that should reach this point is an empty next syllable
      * we treat that kind of syllable as a bar */
-    return 11;
+    return 13;
 }
 
 static __inline void write_low_choral_sign(FILE *const f,
