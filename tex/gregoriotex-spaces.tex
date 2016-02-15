@@ -1002,7 +1002,7 @@
 \newif\ifgre@rubber%
 \def\gre@rubberpermit#1{%
   % is length one that cannot be rubber?
-  \IfStrEqCase{#1}{%
+  \IfStrEqCase*{#1}{%
     {additionallineswidth}{\gre@rubberfalse}%
     {additionalcustoslineswidth}{\gre@rubberfalse}%
     {zerowidthspace}{\gre@rubberfalse}%

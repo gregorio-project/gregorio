@@ -124,7 +124,8 @@
 \makeatletter%
 \NewDocumentEnvironment{gdimension}{m}{\macroname{#1}{}{gsp-default.tex}}{%
 
-  \makeatletter\gre@rubberpermit{#1}%
+  \makeatletter%
+  \gre@rubberpermit{#1}%
   \ifgre@rubber%
     Default: \directlua{GregorioRef.emit_dimension("\luaescapestring{\csname gre@space@skip@#1\endcsname}")}
   \else%
