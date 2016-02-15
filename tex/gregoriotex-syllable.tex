@@ -928,7 +928,7 @@
             \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacenotes\relax%
           \fi %
         \else %
-          \gre@skip@syllablefinalskip=\gre@space@skip@intersyllablespacenotes\relax%
+          \gre@skip@syllablefinalskip=\gre@space@dimen@intersyllablespacenotes\relax%
         \fi %
       \or %
         \gre@skip@syllablefinalskip=\gre@space@skip@notebarspace\relax%
@@ -936,7 +936,7 @@
         \ifnum#4=1\relax %
           \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacenotes@alteration\relax %
         \else %
-          \gre@skip@syllablefinalskip=\gre@space@skip@intersyllablespacenotes@alteration\relax%
+          \gre@skip@syllablefinalskip=\gre@space@dimen@intersyllablespacenotes@alteration\relax%
         \fi %
       \fi %
       \gre@debugmsg{syllablespacing}{ space after bar = \the\gre@skip@syllablefinalskip}%
