@@ -113,7 +113,7 @@
 \grecreatedim{spacebeforeeolcustos}{0.1823 cm plus 0.31903 cm minus 0.0638 cm}{scalable}%
 % space before punctum mora and augmentum duplex
 \grecreatedim{spacebeforesigns}{0.050 cm plus 0.004 cm minus 0.004 cm}{scalable}%
-% when a syllable is shifted left because of a preceding punctum mora, moraadjustmentbar is
+% when a syllable is shifted left because of a preceding punctum mora, barmoraadjustment is
 % also added. Use it to make the syllable a bit further from the punctum mora if you want.
 % This version is the general case.
 \grecreatedim{moraadjustment}{0.050 cm}{scalable}%
@@ -131,6 +131,11 @@
 % minimal space between letters of different words. Makes sense to have
 % the same plus and minus as interwordspacenotes.
 \grecreatedim{interwordspacetext}{0.38 cm plus 0.15 cm minus 0.05 cm}{scalable}%
+% minimal space between letters of different syllable texts for text around bars
+\grecreatedim{interwordspacetext@bars}{0.15 cm plus 0.2 cm minus 0.02 cm}{scalable}%
+% minimal space between letters of different syllable texts for text around bars,
+% euouae context
+\grecreatedim{interwordspacetext@bars@euouae}{0.15 cm plus 0.2 cm minus 0.02 cm}{scalable}%
 % Versions of interword spaces for euouae blocks
 \grecreatedim{interwordspacenotes@euouae}{0.19 cm plus 0.1 cm minus 0.05 cm}{scalable}%
 \grecreatedim{interwordspacetext@euouae}{0.27 cm plus 0.1 cm minus 0.05 cm}{scalable}%
@@ -175,29 +180,29 @@
 % space between a punctum inclinatum and a no-bar glyph three or four pitches above
 \grecreatedim{ascendinginclinatumtonobarmaxshift}{0.12927 cm plus 0.00363 cm minus 0.00363 cm}{scalable}%
 % space for the bars (inside syllables)
-% virgula and divisio minima
+%first for virgula and divisio minima
 \grecreatedim{spacearoundsmallbar}{0.1823 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
-%  divisio minor
+%then divisio minor
 \grecreatedim{spacearoundminor}{0.1823 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
-% divisio major
+%divisio major
 \grecreatedim{spacearoundmaior}{0.1823 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
-% divisio finalis
+%divisio finalis
 \grecreatedim{spacearoundfinalis}{0.1823 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
-% divisio finalis when it's the last glyph
+%a special space for finalis, for when it is the last glyph
 \grecreatedim{spacebeforefinalfinalis}{0.29169 cm plus 0.07292 cm minus 0.27345 cm}{scalable}%
-% for virgula and divisio minima with text underneath
+%for virgula and divisio minima with text underneath
 \grecreatedim{spacearoundsmallbartext}{0.2323 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
-% for the divisio minor with text underneath
+%for the divisio minor with text underneath
 \grecreatedim{spacearoundminortext}{0.2323 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
-% for divisio major with text underneath
+%for divisio major with text underneath
 \grecreatedim{spacearoundmaiortext}{0.2323 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
-% for divisio finalis with text underneath
+%for divisio finalis with text underneath
 \grecreatedim{spacearoundfinalistext}{0.2323 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
-% for finalis, for when it is the last glyph, with text underneath
+%for finalis, for when it is the last glyph, with text underneath
 \grecreatedim{spacebeforefinalfinalistext}{0.34169 cm plus 0.07292 cm minus 0.27345 cm}{scalable}%
 % additional space that will appear around bars that are preceded by a custos and followed by a key.
 \grecreatedim{spacearoundclefbars}{0.03645 cm plus 0.00455 cm minus 0.0009 cm}{scalable}%
-% space between the text of previous syllable and text associated with a bar (old bar spacing algorithm only)
+% space between the text and the text of the bar
 \grecreatedim{textbartextspace}{0.24611 cm plus 0.13672 cm minus 0.04921 cm}{scalable}%
 % minimal space between a note and a bar
 \grecreatedim{notebarspace}{0.31903 cm plus 0.27345 cm minus 0.02824 cm}{scalable}%
@@ -227,12 +232,10 @@
 \grecreatedim{noclefspace}{0.1 cm}{scalable}%
 % space around a clef change
 \grecreatedim{clefchangespace}{0.01768 cm plus 0.00175 cm minus 0.01768 cm}{scalable}%
-% When \gre@clivisalignment is 2, this distance is the maximum length of the consonants after vowels for which the clivis will be aligned on its center.
+%When \gre@clivisalignment is 2, this distance is the maximum length of the consonants after vowels for which the clivis will be aligned on its center.
 \grecreatedim{clivisalignmentmin}{0.3 cm}{scalable}%
-% Maximum offset between a bar and its associated text when the text goes left ofthe note (new bar spacing algorithm only)
-\grecreatedim{maxbaroffsettextleft}{0.6 cm}{scalable}%
-% Same as maxbaroffsettextleft when text goes right of the notes
-\grecreatedim{maxbaroffsettextright}{0 cm}{scalable}%
+%maximum offset between a bar and its associated text when the new bar spacing algorithm is active
+\grecreatedim{maxbaroffset}{1cm}{scalable}%
 
 
 %%%%%%%%%%%%%%%%%%

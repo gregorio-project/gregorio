@@ -1197,11 +1197,17 @@
   \ifgre@scale@interwordspacetext%
     \gre@changeonedimenfactor{interwordspacetext}{#1}{#2}%
   \fi%
+  \ifgre@scale@interwordspacetext@bars%
+    \gre@changeonedimenfactor{interwordspacetext@bars}{#1}{#2}%
+  \fi%
   \ifgre@scale@interwordspacenotes@euouae%
     \gre@changeonedimenfactor{interwordspacenotes@euouae}{#1}{#2}%
   \fi%
   \ifgre@scale@interwordspacetext@euouae%
     \gre@changeonedimenfactor{interwordspacetext@euouae}{#1}{#2}%
+  \fi%
+  \ifgre@scale@interwordspacetext@euouae@bars%
+    \gre@changeonedimenfactor{interwordspacetext@euouae@bars}{#1}{#2}%
   \fi%
   \ifgre@scale@bitrivirspace%
     \gre@changeonedimenfactor{bitrivirspace}{#1}{#2}%
