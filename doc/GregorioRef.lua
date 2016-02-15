@@ -389,7 +389,6 @@ function GregorioRef.emit_extra_glyphs(csname)
 end
 
 function GregorioRef.emit_dimension(value)
-  texio.write_nl(value)
   value = string.gsub(value, '(-?%d+%.%d+)%s*(%a+)', [[\unit[%1]{%2}]])
   value = string.gsub(value, '(-?%d+%.)%s*(%a+)', [[\unit[%1]{%2}]])
   value = string.gsub(value, '(-?%.?%d+)%s*(%a+)', [[\unit[%1]{%2}]])
