@@ -100,8 +100,8 @@ static __inline void cut_before(gregorio_glyph *current_glyph,
         close_element(current_element, first_glyph, current_glyph);
         /* yes, this is changing value close_element sets for first_glyph */
         *first_glyph = current_glyph;
-        *previous_glyph = current_glyph;
     }
+    *previous_glyph = current_glyph;
 }
 
 /*
