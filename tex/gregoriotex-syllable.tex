@@ -860,14 +860,52 @@
     %In the new algorithm the bar and the text are set independently of each other based purely on the positions of the corresponding element in the previous and next syllable
     % we start by finding the distance between the text and notes of the previous and the next syllable (as if this syllable didn't exist, for the moment)
     \gre@debugmsg{barspacing}{calculate available space}%
-    \ifdim\gre@dimen@previousenddifference > 0pt\relax%
+    % first, recomputing \gre@dimen@previousenddifference into \gre@dimen@temp@three
+    % taking into account the punctum mora shift
+    \gre@dimen@temp@three=\gre@dimen@previousenddifference %
+    % gre@skip@temp@four is 0 or the punctum mora shift
+    \gre@skip@temp@four=0pt\relax %
+    \ifgre@lastendswithmora %
+      \ifcase\gre@count@shiftaftermora\or\or %
+        \ifdim\wd\gre@box@syllabletext=0pt\relax %
+          % punctum mora adjustment should occur only for bars with no text
+          \gre@get@unkern@aftermora{2}%
+          \advance\gre@dimen@temp@three by \gre@skip@temp@four %
+        \fi %
+      \or %
+        % punctum mora adjustment only before bars
+        \gre@get@unkern@aftermora{2}%
+        \advance\gre@dimen@temp@three by \gre@skip@temp@four %
+      \or %
+        % punctum mora adjustment always occurs
+        \gre@get@unkern@aftermora{2}%
+        \advance\gre@dimen@temp@three by \gre@skip@temp@four %
+      \fi %
+    \fi %
+    % now something a bit tricky: as we changed previousenddifference,
+    % we must kern of the difference we created, but no more than
+    % the end of the text:
+    \ifdim\gre@skip@temp@four=0pt\else %
+      \gre@debugmsg{barspacing}{adjustment for punctum mora: \the\gre@skip@temp@four}%
+      \gre@debugmsg{barspacing}{adjustend previous enddifference (for punctum mora): \the\gre@dimen@temp@three}%
+      \ifdim -\gre@skip@temp@four < \gre@dimen@previousenddifference %
+        \gre@debugmsg{barspacing}{kern \the\gre@skip@temp@four for punctum mora adjustment}%
+        \kern\gre@skip@temp@four %
+      \else %
+        \ifdim\gre@dimen@previousenddifference > 0pt\relax %
+          \gre@debugmsg{barspacing}{kern \the\gre@dimen@previousenddifference for punctum mora adjustment}%
+          \kern-\gre@dimen@previousenddifference %
+        \fi %
+      \fi %
+    \fi %
+    \ifdim\gre@dimen@temp@three > 0pt\relax%
       % the notes ended after the text in the previous syllable
-      \gre@skip@temp@one = \gre@dimen@previousenddifference\relax%
+      \gre@skip@temp@one = \gre@dimen@temp@three\relax%
       \gre@skip@temp@two = 0pt\relax%
     \else%
       % the text ended after the notes in the previous syllable
       \gre@skip@temp@one = 0pt\relax%
-      \gre@skip@temp@two = -\gre@dimen@previousenddifference\relax%
+      \gre@skip@temp@two = -\gre@dimen@temp@three\relax%
     \fi%
     \ifdim\gre@skip@nextbegindifference > 0pt\relax%
       % the text began after the notes in the next syllable
@@ -962,7 +1000,7 @@
     \gre@debugmsg{barspacing}{limit by offset}%
     % this isn't really the begindifference (it doesn't account for the width of the text and the bar), but it's close enough that we'll use that register for this calculation
     % this value is positive if the middle of the bar is before the middle of the text
-    \gre@dimen@begindifference=\dimexpr(-\gre@dimen@previousenddifference - \gre@skip@temp@two + \gre@skip@temp@one)\relax%
+    \gre@dimen@begindifference=\dimexpr(-\gre@dimen@temp@three - \gre@skip@temp@two + \gre@skip@temp@one)\relax%
     \gre@debugmsg{barspacing}{new begindifference approximation: \the\gre@dimen@begindifference}%
     \gre@debugmsg{barspacing}{left offset limit: \gre@space@dimen@maxbaroffsettextleft}%
     \gre@debugmsg{barspacing}{right offset limit: \gre@space@dimen@maxbaroffsettextright}%
@@ -1017,9 +1055,9 @@
     \gre@debugmsg{barspacing}{syllablefinalskip: \the\gre@skip@syllablefinalskip}%
     %now we can place the text and bar
     %we're going to start with the bar line, place the text relative to that, and then use the position of the bar line to reposition the cursor for the next syllable
-    \ifdim\gre@dimen@previousenddifference < 0pt\relax%
+    \ifdim\gre@dimen@temp@three < 0pt\relax%
       %we need to move back to where the previous notes ended
-      \kern\gre@dimen@previousenddifference\relax%
+      \kern\gre@dimen@temp@three\relax%
     \fi%
     %now we move to the nominal start of the bar line
     \kern\gre@skip@temp@two%
