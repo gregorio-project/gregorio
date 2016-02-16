@@ -9,6 +9,8 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Elisions immediately after the vowel are now properly left out of the center (see [#907](https://github.com/gregorio-project/gregorio/issues/907))
 - Space between the text of two syllables of the same word when no hyphen is necessary is now strictly 0 (see [#922](https://github.com/gregorio-project/gregorio/issues/922))
 - A horizontal episema on the first note of a torculus deminutus is now placed correctly.  See [#926](https://github.com/gregorio-project/gregorio/issues/926).
+- Corrected determination of repercussive figures and other edge cases (introduced in 4.1.0-beta2).  See [#928](https://github.com/gregorio-project/gregorio/issues/928) and [#929](https://github.com/gregorio-project/gregorio/issues/929).
+
 
 ### Changed
 - Adjustments to the heuristic for ledger lines to include adjacent notes (see [#862](https://github.com/gregorio-project/gregorio/issues/862)).
