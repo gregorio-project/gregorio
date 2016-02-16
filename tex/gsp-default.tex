@@ -126,8 +126,10 @@
 % minimal space between notes of different words
 \grecreatedim{interwordspacenotes}{0.27 cm plus 0.15 cm minus 0.05 cm}{scalable}%
 % minimal space between notes of the same syllable.
-% Warning: always keep minus to 0; also keep plus very low, or some words won't be hyphenated
-\grecreatedim{intersyllablespacenotes}{0.24 cm plus 0.04cm minus 0cm}{scalable}%
+\grecreatedim{intersyllablespacenotes}{0.24 cm}{scalable}%
+% stretching added in the case where the text of two syllables of the same word are
+% separated with an automatic hyphen
+\grecreatedim{intersyllablespacestretchhyphen}{0cm plus 0.05cm}{scalable}%
 % minimal space between letters of different words. Makes sense to have
 % the same plus and minus as interwordspacenotes.
 \grecreatedim{interwordspacetext}{0.38 cm plus 0.15 cm minus 0.05 cm}{scalable}%
@@ -137,7 +139,7 @@
 % versions of note spaces when the first note of the second syllable is an alteration
 % those are used in euouae blocks
 \grecreatedim{interwordspacenotes@alteration}{0.1 cm plus 0.07 cm minus 0.01 cm}{scalable}%
-\grecreatedim{intersyllablespacenotes@alteration}{0.1 cm plus 0.04 cm minus 0 cm}{scalable}%
+\grecreatedim{intersyllablespacenotes@alteration}{0.1 cm}{scalable}%
 % space between notes of a bivirga or trivirga
 \grecreatedim{bitrivirspace}{0.06927 cm plus 0.00182 cm minus 0.00546 cm}{scalable}%
 % space between notes of a bistropha or tristrophae
@@ -202,7 +204,7 @@
 % minimal space between a note and a bar
 \grecreatedim{notebarspace}{0.31903 cm plus 0.27345 cm minus 0.02824 cm}{scalable}%
 % maximal space between two syllables for which we consider a dash is not needed
-\grecreatedim{maximumspacewithoutdash}{0.02 cm}{scalable}%
+\grecreatedim{maximumspacewithoutdash}{0 cm}{scalable}%
 % an extensible space for the beginning of lines
 \grecreatedim{afterclefnospace}{0 cm plus 0.27345 cm minus 0 cm}{scalable}%
 % space between the initial and the beginning of the score
