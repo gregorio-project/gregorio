@@ -1021,11 +1021,11 @@ a different value be desired.
 \subsubsection{Headers}
 
 \macroname{\textbackslash gresetheadercapture}{\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-main.tex}
-Macro to tell Gregorio\TeX{} to capture a given header by calling a specified
-macro.  Passing an empty \#2 will cancel capture of the given header.
+Macro to tell Gregorio\TeX{} to capture a given header of the gabc file, passing it to a
+specified \TeX{} macro.  Passing an empty \#2 will cancel capture of the given header.
 
 \begin{argtable}
-  \#1 & string & The name of the header\\
+  \#1 & string & The name of the gabc header\\
   \#2 & string & The name of the macro to use (without the leading backslash)
                  or empty to stop capturing the given header\\
   \#3 & string & a comma-separated list of options\\
@@ -1038,15 +1038,15 @@ The options are:
   \texttt{string} & The header value should be passed to the macro as a string\\
 \end{tabular}
 
-If the \texttt{name} option is not supplied, the macro supplied must take one
+If the \texttt{name} option is not supplied, the macro is called with one
 argument: the value of the header.
 
-If the \texttt{name} option is supplied, the macro supplied must take two
+If the \texttt{name} option is supplied, the macro is called with two
 arguments: the name and the value of the header (in that order).
 
-If the \texttt{string} option is supplied, the value will be passed with all
-non-space characters as \TeX{} catcode 12 (and all spaces as catcode 10).
-If not, the value will be evaluated as \TeX{}.
+If the \texttt{string} option is supplied, the value will be passed with
+catcode 12 associated with all non-space characters (and catcode 10 for all spaces).
+If not, the value will be evaluated as regular \TeX{} input.
 
 Other than the headers that define macros, which are not passed to \TeX{},
 the headers will be processed in the order they were presented in the gabc
@@ -1055,12 +1055,16 @@ file.  Headers will be processed in the \TeX{} state at the point of the
 capturing macro produce something, it will be typeset within the same
 paragraph as the \verb=\gregorioscore= call.
 
-Gregorio will call whatever is passed to \verb=\grebeforeheaders= before
-processing a given set of headers and to \verb=\greafterheaders= after
-processing them.
+As an example, you can use
+
+\verb=\gresetheadercapture{commentary}{grecommentary}{string}=
+
+\noindent to capture the
+\texttt{commentary} header of gabc files and feed it to \verb=\grecommentary=,
+thus automatically printing the content of the header above the score.
 
 \macroname{\textbackslash grebeforeheaders}{\{\#1\}}{gregoriotex-main.tex}
-Specifies something to be done before a set of headers is processed.
+Specifies \TeX{} code processed before the processing of the headers of a score.
 Defaults to nothing.  If this is called multiple times, the most recent call
 will define the behavior at the next set of headers.
 
@@ -1069,7 +1073,7 @@ will define the behavior at the next set of headers.
 \end{argtable}
 
 \macroname{\textbackslash greafterheaders}{\{\#1\}}{gregoriotex-main.tex}
-Specifies something to be done after a set of headers is processed.
+Specifies \TeX{} code processed after the processing of the headers of a score.
 Defaults to nothing.  If this is called multiple times, the most recent call
 will define the behavior at the next set of headers.
 
@@ -1079,7 +1083,7 @@ will define the behavior at the next set of headers.
 
 
 \subsubsection{Ancient Notation}
-For a full description of how to make use of the ancient notation capabilities of gregorio and Gregorio\TeX, look at the GregorioNabcRef documentation.  The commands listed here allow the manipulation of settings related to that notation.
+For a full description of how to make use of the ancient notation capabilities of Gregorio and Gregorio\TeX, look at the GregorioNabcRef documentation.  The commands listed here allow the manipulation of settings related to that notation.
 
 \macroname{\textbackslash gresetnabcfont}{\{\#1\}\{\#2\}}{gregoriotex-nabc.tex}
 Macro to set the font to be used for the ancient notation.
@@ -1174,6 +1178,11 @@ Space after a clef at the beginning of a line.
 
 \begin{gdimension}{intersyllablespacenotes}
 Minimum space between notes of different syllables.
+\end{gdimension}
+
+\begin{gdimension}{intersyllablespacestretchhyphen}
+Stretching added in the case where the text of two syllables of the same word are
+separated with an automatic hyphen.
 \end{gdimension}
 
 \begin{gdimension}{interwordspacenotes}

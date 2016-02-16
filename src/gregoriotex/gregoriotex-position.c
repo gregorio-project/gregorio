@@ -1382,6 +1382,7 @@ static __inline void end_h_episema(height_computation *const h,
             }
         }
         if (end && end->type == GRE_NOTE && is_connected_left(h->get_size(end))
+                && !(end->u.note.liquescentia & L_DEMINUTUS)
                 && h->last_connected_note
                 && is_connected_right(h->get_size(h->last_connected_note))) {
             if (h->last_connected_note->next) {
