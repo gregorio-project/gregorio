@@ -1097,8 +1097,12 @@
     \kern\gre@skip@temp@two%
     %move to the actual start of the bar line
     \kern\gre@dimen@temp@two%
-    %print the bar line
+    %print the bar line, saving the penalty for later
+    \global\let\gre@savedpenaltytype\gre@penalty %
+    \global\let\gre@penalty\gre@falsepenalty %
+    \xdef\gre@savedpenalty{0}%
     #9%
+    \global\let\gre@penalty\gre@savedpenaltytype %
     \GreNoBreak%
     %move back to the beginning of the bar line
     \kern-\wd\gre@box@syllablenotes%
@@ -1128,8 +1132,13 @@
       \kern\gre@skip@nextbegindifference\relax%
     \fi%
     %finally we end by adding the penalty
-    \gre@debugmsg{barspacing}{after bar penalty}%
-    \gre@penalty{\greendafterbarpenalty }\relax %
+    \ifx0\gre@savedpenalty %
+      \gre@debugmsg{barspacing}{after bar penalty: \greendafterbarpenalty}%
+      \gre@penalty{\greendafterbarpenalty}%
+    \else %
+      \gre@debugmsg{barspacing}{saved bar penalty: \gre@savedpenalty}%
+      \gre@penalty{\gre@savedpenalty}%
+    \fi %
   \else%
     %This is the old algorithm.  I've kept it in case people still want to use it.
     % then we check if there is something to write
