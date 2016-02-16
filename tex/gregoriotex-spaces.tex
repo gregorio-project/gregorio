@@ -261,7 +261,7 @@
         \gre@skip@minNotesDistance=\gre@space@skip@interwordspacenotes\relax%
       \fi %
     \else %
-      \gre@skip@minNotesDistance=\gre@space@skip@intersyllablespacenotes\relax%
+      \gre@skip@minNotesDistance=\gre@space@dimen@intersyllablespacenotes\relax%
     \fi %
     \ifcase\gre@count@shiftaftermora\or\or\or\or %
       \ifgre@thisendswithmora %
@@ -277,7 +277,7 @@
     \ifnum#1=1\relax %
       \gre@skip@minNotesDistance=\gre@space@skip@interwordspacenotes@alteration\relax %
     \else %
-      \gre@skip@minNotesDistance=\gre@space@skip@intersyllablespacenotes@alteration\relax%
+      \gre@skip@minNotesDistance=\gre@space@dimen@intersyllablespacenotes@alteration\relax%
     \fi %
   \fi %
   \gre@debugmsg{syllablespacing}{ minNotesDistance = \the\gre@skip@minNotesDistance}%
@@ -317,11 +317,14 @@
   \gre@debugmsg{syllablespacing}{ minShiftText = \the\gre@skip@minShiftText}%
   \ifdim\gre@skip@minShiftNotes < \gre@skip@minShiftText %
     \global\gre@skip@syllablefinalskip = \gre@skip@minShiftText %
-    \gre@debugmsg{syllablespacing}{ syllablefinalskip = \the\gre@skip@minShiftText}%
   \else %
     \global\gre@skip@syllablefinalskip = \gre@skip@minShiftNotes %
-    \gre@debugmsg{syllablespacing}{ syllablefinalskip = \the\gre@skip@minShiftNotes}%
   \fi %
+  \ifgre@showhyphenafterthissyllable %
+    \gre@debugmsg{syllablespacing}{ add intersyllablespacestretchhyphen (\gre@space@skip@intersyllablespacestretchhyphen)}%
+    \advance\gre@skip@syllablefinalskip by \gre@space@skip@intersyllablespacestretchhyphen\relax%
+  \fi %
+  \gre@debugmsg{syllablespacing}{ syllablefinalskip = \the\gre@skip@syllablefinalskip}%
   \relax %
 }
 
@@ -999,7 +1002,7 @@
 \newif\ifgre@rubber%
 \def\gre@rubberpermit#1{%
   % is length one that cannot be rubber?
-  \IfStrEqCase{#1}{%
+  \IfStrEqCase*{#1}{%
     {additionallineswidth}{\gre@rubberfalse}%
     {additionalcustoslineswidth}{\gre@rubberfalse}%
     {zerowidthspace}{\gre@rubberfalse}%
@@ -1009,6 +1012,8 @@
     {minimalspaceatlinebeginning}{\gre@rubberfalse}%
     {manualinitialwidth}{\gre@rubberfalse}%
     {annotationseparation}{\gre@rubberfalse}%
+    {intersyllablespacenotes}{\gre@rubberfalse}%
+    {intersyllablespacenotes@alteration}{\gre@rubberfalse}%
     {annotationraise}{\gre@rubberfalse}%
     {commentaryseparation}{\gre@rubberfalse}%
     {commentaryraise}{\gre@rubberfalse}%
@@ -1192,6 +1197,15 @@
   \fi%
   \ifgre@scale@intersyllablespacenotes%
     \gre@changeonedimenfactor{intersyllablespacenotes}{#1}{#2}%
+  \fi%
+  \ifgre@scale@interwordspacenotes@alteration%
+    \gre@changeonedimenfactor{interwordspacenotes@alteration}{#1}{#2}%
+  \fi%
+  \ifgre@scale@intersyllablespacenotes@alteration%
+    \gre@changeonedimenfactor{intersyllablespacenotes@alteration}{#1}{#2}%
+  \fi%
+  \ifgre@scale@intersyllablespacestretchhyphen%
+    \gre@changeonedimenfactor{intersyllablespacestretchhyphen}{#1}{#2}%
   \fi%
   \ifgre@scale@interwordspacetext%
     \gre@changeonedimenfactor{interwordspacetext}{#1}{#2}%

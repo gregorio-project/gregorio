@@ -7,6 +7,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - New bar spacing algorithm now accounts for translations (and other below lyrics stuff).
 - Horizontal episema on initio debilis is now sized correctly (see [#880](https://github.com/gregorio-project/gregorio/issues/880)).
 - Elisions immediately after the vowel are now properly left out of the center (see [#907](https://github.com/gregorio-project/gregorio/issues/907))
+- Space between the text of two syllables of the same word when no hyphen is necessary is now strictly 0 (see [#922](https://github.com/gregorio-project/gregorio/issues/922))
 - A horizontal episema on the first note of a torculus deminutus is now placed correctly.  See [#926](https://github.com/gregorio-project/gregorio/issues/926).
 - Corrected determination of repercussive figures and other edge cases (introduced in 4.1.0-beta2).  See [#928](https://github.com/gregorio-project/gregorio/issues/928) and [#929](https://github.com/gregorio-project/gregorio/issues/929).
 
@@ -20,6 +21,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Added
 - Controls for tuning horizontal episema vertical position.  See GregorioRef for details (for the change request, see [#872](https://github.com/gregorio-project/gregorio/issues/872)).
 - More dimensions are tunable: `overhepisemalowshift`, `overhepisemahighshift`, `underhepisemalowshift`, `underhepisemahighshift`, `hepisemamiddleshift`, `vepisemalowshift`, `vepisemahighshift`, `linepunctummorashift`, `spacepunctummorashift`, `spaceamonepespunctummorashift`, `lineporrectuspunctummorashift`, `spaceporrectuspunctummorashift`, and `raresignshift`.  See GregorioRef for details (for the change request, see comments in [#872](https://github.com/gregorio-project/gregorio/issues/872)).
+- A new dimension, `intersyllablespacestretchhyphen` is now available to add stretching in the case of syllables separated by an hyphen (see comments in [#922](https://github.com/gregorio-project/gregorio/issues/922))
 
 
 ## [4.1.0-beta3] - 2016-02-09
