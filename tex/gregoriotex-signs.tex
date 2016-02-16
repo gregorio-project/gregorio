@@ -1617,8 +1617,17 @@
 }
 
 \def\gre@unkern@bar@aftermora{%
-  \gre@get@unkern@aftermora{2}%
-  \kern\gre@skip@temp@four %
+  % don't apply a negative kern on the first glyph
+  % while boxing, otherwise the box width will be wrong
+  \ifgre@firstglyph %
+    \ifgre@boxing\else %
+      \gre@get@unkern@aftermora{2}%
+      \kern\gre@skip@temp@four %
+    \fi %
+  \else %
+    \gre@get@unkern@aftermora{2}%
+    \kern\gre@skip@temp@four %
+  \fi %
   \relax %
 }
 
