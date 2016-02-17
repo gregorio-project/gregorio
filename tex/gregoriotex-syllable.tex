@@ -833,6 +833,12 @@
     }%
 }%
 
+% macro to 
+\xdef\gre@newlinearg{-1}
+\gdef\gre@newlinecommondelayed#1{%
+  \xdef\gre@newlinearg{#1}%
+}
+
 %a macro to typeset a syllable with only a bar inside
 \def\GreBarSyllable#1#2#3#4#5#6#7#8#9{%
   \gre@debugmsg{general}{New bar syllable}%
@@ -1067,11 +1073,11 @@
     %move to the actual start of the bar line
     \kern\gre@dimen@temp@two%
     %print the bar line, saving the penalty for later
-    \global\let\gre@savedpenaltytype\gre@penalty %
-    \global\let\gre@penalty\gre@falsepenalty %
-    \xdef\gre@savedpenalty{0}%
+    \global\let\gre@newlinecommonsaved\gre@newlinecommon %
+    \global\let\gre@newlinecommon\gre@newlinecommondelayed %
+    \xdef\gre@newlinearg{-1}%
     #9%
-    \global\let\gre@penalty\gre@savedpenaltytype %
+    \global\let\gre@newlinecommon\gre@newlinecommonsaved %
     \GreNoBreak%
     %move back to the beginning of the bar line
     \kern-\wd\gre@box@syllablenotes%
@@ -1092,21 +1098,22 @@
     \fi %
     %move back to the end of the notes%
     \kern\gre@dimen@enddifference%
-    %move to the nominal end of the notes%
-    \kern-\gre@dimen@temp@two%
-    %move to the beginning of the notes of the next syllable
-    \kern\gre@skip@temp@two%
-    \ifdim\gre@skip@nextbegindifference < 0pt\relax%
-      %we need to move back to where the text for the next syllable should start
-      \kern\gre@skip@nextbegindifference\relax%
-    \fi%
-    %finally we end by adding the penalty
-    \ifx0\gre@savedpenalty %
+    % if no end of line:
+    \ifx-1\gre@newlinearg %
+      %move to the nominal end of the notes%
+      \kern-\gre@dimen@temp@two%
+      %move to the beginning of the notes of the next syllable
+      \kern\gre@skip@temp@two%
+      \ifdim\gre@skip@nextbegindifference < 0pt\relax%
+        %we need to move back to where the text for the next syllable should start
+        \kern\gre@skip@nextbegindifference\relax%
+      \fi%
+      %finally we end by adding the penalty
       \gre@debugmsg{barspacing}{after bar penalty: \greendafterbarpenalty}%
       \gre@penalty{\greendafterbarpenalty}%
     \else %
-      \gre@debugmsg{barspacing}{saved bar penalty: \gre@savedpenalty}%
-      \gre@penalty{\gre@savedpenalty}%
+      \gre@debugmsg{barspacing}{calling new line with argument: \gre@newlinearg}%
+      \gre@newlinecommon{\gre@newlinearg}%
     \fi %
   \else%
     %
