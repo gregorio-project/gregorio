@@ -953,7 +953,7 @@
       \gre@debugmsg{barspacing}{this syllable skip after text = \the\gre@skip@syllablefinalskip}%
       \advance\gre@skip@temp@three by \gre@skip@syllablefinalskip\relax%
     \fi%
-    \ifdim\gre@skip@temp@one < 	\gre@skip@temp@three\relax%
+    \ifdim\gre@skip@temp@one < \gre@skip@temp@three\relax%
       \advance\gre@skip@temp@two by \glueexpr(\gre@skip@temp@three - \gre@skip@temp@one)\relax%
       \gre@skip@temp@one = \gre@skip@temp@three\relax%
     \fi%
@@ -1054,16 +1054,20 @@
       \gre@debugmsg{barspacing}{no notes, shifts set to 0}%
       \gre@dimen@temp@one = 0pt\relax%
       \gre@dimen@temp@two = 0pt\relax%
-    \fi%			
+    \fi%
     \ifdim\wd\gre@box@syllabletext = 0pt\relax%
       \gre@debugmsg{barspacing}{no text, shifts set to 0}%
       \gre@dimen@temp@one = 0pt\relax%
       \gre@dimen@temp@two = 0pt\relax%
-    \fi%			
+    \fi%
+    \gre@dimen@temp@five = 0pt\relax %
     % now, if the shifts are too big, the will cause the bar element they apply to to overlap with the corresponding element in an adjacent syllable
     % we consider the offset limits set by the user to be ruling, so to account for this we allocate more space to the bar syllable to prevent these collisions
     \ifdim\gre@dimen@temp@one > \glueexpr(\gre@skip@temp@one-\gre@skip@temp@three/2)\relax\relax%
       \gre@debugmsg{barspacing}{text collision on right}%
+      \ifdim\glueexpr(\gre@dimen@temp@one + \gre@skip@temp@three/2 - \gre@skip@temp@one) > \gre@space@dimen@baroffsetadditionalspacearoundbars\relax %
+        \gre@dimen@temp@five = -\dimexpr(\gre@dimen@temp@one + \gre@skip@temp@three/2 - \gre@skip@temp@one)\relax %
+      \fi %
       \advance\gre@skip@temp@two by \glueexpr(\gre@dimen@temp@one + \gre@skip@temp@three/2 - \gre@skip@temp@one)\relax%
       \gre@skip@temp@one = \glueexpr\gre@dimen@temp@one + \gre@skip@temp@three/2\relax%
     \fi%
@@ -1106,9 +1110,10 @@
       \kern\gre@dimen@temp@three\relax%
     \fi%
     %now we move to the nominal start of the bar line
-    \kern\gre@skip@temp@two%
+    \gre@hskip\gre@skip@temp@two%
     %move to the actual start of the bar line
     \kern\gre@dimen@temp@two%
+    \kern\gre@dimen@temp@five%
     %print the bar line, saving the penalty for later
     \global\let\gre@newlinecommonsaved\gre@newlinecommon %
     \global\let\gre@newlinecommon\gre@newlinecommondelayed %
@@ -1136,11 +1141,11 @@
     %move back to the end of the notes%
     \kern\gre@dimen@enddifference%
     % if no end of line:
-    \ifx-1\gre@newlinearg %
+    \ifnum-1=\gre@newlinearg %
       %move to the nominal end of the notes%
       \kern-\gre@dimen@temp@two%
       %move to the beginning of the notes of the next syllable
-      \kern\gre@skip@temp@two%
+      \gre@hskip\gre@skip@temp@two%
       \ifdim\gre@skip@nextbegindifference < 0pt\relax%
         %we need to move back to where the text for the next syllable should start
         \kern\gre@skip@nextbegindifference\relax%

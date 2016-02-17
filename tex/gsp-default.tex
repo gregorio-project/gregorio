@@ -240,6 +240,10 @@
 \grecreatedim{maxbaroffsettextleft}{0.6 cm}{scalable}%
 % Same as maxbaroffsettextleft when text goes right of the notes
 \grecreatedim{maxbaroffsettextright}{0 cm}{scalable}%
+% A bit complex: when realigning text and bar in case the offset is superior to
+% maxbaroffsettextleft or maxbaroffsettextright, we add space around bar to
+% keep it centered, but no more than baroffsetadditionalspacearoundbars
+\grecreatedim{baroffsetadditionalspacearoundbars}{0.1 cm}{scalable}%
 
 
 %%%%%%%%%%%%%%%%%%

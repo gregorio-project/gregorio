@@ -1043,6 +1043,7 @@
     {underslurshift}{\gre@rubberfalse}%
     {maxbaroffsettextleft}{\gre@rubberfalse}%
     {maxbaroffsettextright}{\gre@rubberfalse}%
+    {baroffsetadditionalspacearoundbars}{\gre@rubberfalse}%
     {overhepisemalowshift}{\gre@rubberfalse}%
     {overhepisemahighshift}{\gre@rubberfalse}%
     {underhepisemalowshift}{\gre@rubberfalse}%
@@ -1374,6 +1375,9 @@
   \fi%
   \ifgre@scale@maxbaroffsettextleft%
     \gre@changeonedimenfactor{maxbaroffsettextleft}{#1}{#2}%
+  \fi%
+  \ifgre@scale@baroffsetadditionalspacearoundbars%
+    \gre@changeonedimenfactor{baroffsetadditionalspacearoundbars}{#1}{#2}%
   \fi%
   \ifgre@scale@stafflinefactor%
     \gre@count@temp@two = \numexpr((\gre@stafflinefactor * #2) / #1)\relax%
