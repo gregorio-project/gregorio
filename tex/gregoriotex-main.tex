@@ -215,15 +215,19 @@
 
 % macro called to go to the next line
 \def\GreNewLine{%
-  \gre@debugmsg{lineheight}{GreNewLine}%
-  \gre@newlinecommon{0}%
+  \ifgre@boxing\else %
+    \gre@debugmsg{lineheight}{GreNewLine}%
+    \gre@newlinecommon{0}%
+  \fi %
   \relax%
 }%
 
 % basically same as above, but this one does a \hfill, so the lines are not justified
 \def\GreNewParLine{%
-  \gre@debugmsg{lineheight}{GreNewParLine}%
-  \gre@newlinecommon{1}%
+  \ifgre@boxing\else %
+    \gre@debugmsg{lineheight}{GreNewParLine}%
+    \gre@newlinecommon{1}%
+  \fi %
   \relax%
 }%
 
