@@ -1108,11 +1108,14 @@
     \ifdim\gre@dimen@temp@three < 0pt\relax%
       %we need to move back to where the previous notes ended
       \kern\gre@dimen@temp@three\relax%
+      \GreNoBreak %
     \fi%
     %now we move to the nominal start of the bar line
     \gre@hskip\gre@skip@temp@two%
+    \GreNoBreak %
     %move to the actual start of the bar line
     \kern\gre@dimen@temp@two%
+    \GreNoBreak %
     \kern\gre@dimen@temp@five%
     %print the bar line, saving the penalty for later
     \global\let\gre@newlinecommonsaved\gre@newlinecommon %
@@ -1120,16 +1123,16 @@
     \xdef\gre@newlinearg{-1}%
     #9%
     \global\let\gre@newlinecommon\gre@newlinecommonsaved %
-    \GreNoBreak%
+    \GreNoBreak %
     %move back to the beginning of the bar line
     \kern-\wd\gre@box@syllablenotes%
-    \GreNoBreak% probably redundant, but better safe than sorry
+    \GreNoBreak % probably redundant, but better safe than sorry
     %move to the beginning of the text
     \kern\gre@dimen@begindifference%
-    \GreNoBreak% probably redundant, but better safe than sorry
+    \GreNoBreak %
     % all that extra stuff (translations and the like)
     #8%
-    \GreNoBreak% probably redundant, but better safe than sorry
+    \GreNoBreak % probably redundant, but better safe than sorry
     %print the text, the raise is in case of a translation
     \raise\gre@dimen@textlower \copy\gre@box@syllabletext%
     %and the code which handles translation centering
@@ -1139,15 +1142,19 @@
       \gre@mustdotranslationcenterendfalse%
     \fi %
     %move back to the end of the notes%
-    \kern\gre@dimen@enddifference%
+    \GreNoBreak % probably redundant, but better safe than sorry
+    \kern\gre@dimen@enddifference %
+    \GreNoBreak %
     % if no end of line:
     \ifnum-1=\gre@newlinearg %
       %move to the nominal end of the notes%
       \kern-\gre@dimen@temp@two%
+      \GreNoBreak %
       %move to the beginning of the notes of the next syllable
       \gre@hskip\gre@skip@temp@two%
       \ifdim\gre@skip@nextbegindifference < 0pt\relax%
         %we need to move back to where the text for the next syllable should start
+        \GreNoBreak %
         \kern\gre@skip@nextbegindifference\relax%
       \fi%
       %finally we end by adding the penalty
