@@ -1060,6 +1060,28 @@
       \gre@dimen@temp@one = 0pt\relax%
       \gre@dimen@temp@two = 0pt\relax%
     \fi%			
+    % now, if the shifts are too big, the will cause the bar element they apply to to overlap with the corresponding element in an adjacent syllable
+    % we consider the offset limits set by the user to be ruling, so to account for this we allocate more space to the bar syllable to prevent these collisions
+    \ifdim\gre@dimen@temp@one > \glueexpr(\gre@skip@temp@one-\gre@skip@temp@three/2)\relax\relax%
+      \gre@debugmsg{barspacing}{text collision on right}%
+      \advance\gre@skip@temp@two by \glueexpr(\gre@dimen@temp@one + \gre@skip@temp@three/2 - \gre@skip@temp@one)\relax%
+      \gre@skip@temp@one = \glueexpr\gre@dimen@temp@one + \gre@skip@temp@three/2\relax%
+    \fi%
+    \ifdim-\gre@dimen@temp@one > \glueexpr(\gre@skip@temp@one-\gre@skip@temp@three/2)\relax\relax%
+      \gre@debugmsg{barspacing}{text collision on left}%
+      \advance\gre@skip@temp@two by \glueexpr(-\gre@dimen@temp@one + \gre@skip@temp@three/2 - \gre@skip@temp@one)\relax%
+      \gre@skip@temp@one = \glueexpr-\gre@dimen@temp@one + \gre@skip@temp@three/2\relax%
+    \fi%
+    \ifdim\gre@dimen@temp@two > \glueexpr(\gre@skip@temp@two-\gre@skip@temp@four/2)\relax\relax%
+      \gre@debugmsg{barspacing}{bar collision on right}%
+      \advance\gre@skip@temp@one by \glueexpr(\gre@dimen@temp@two + \gre@skip@temp@four/2 - \gre@skip@temp@two)\relax%
+      \gre@skip@temp@two = \glueexpr\gre@dimen@temp@two + \gre@skip@temp@four/2\relax%
+    \fi%
+    \ifdim-\gre@dimen@temp@two > \glueexpr(\gre@skip@temp@two-\gre@skip@temp@four/2)\relax\relax%
+      \gre@debugmsg{barspacing}{bar collision on left}%
+      \advance\gre@skip@temp@one by \glueexpr(-\gre@dimen@temp@two + \gre@skip@temp@four/2 - \gre@skip@temp@two)\relax%
+      \gre@skip@temp@two = \glueexpr-\gre@dimen@temp@two + \gre@skip@temp@four/2\relax%
+    \fi%
     %at this point we're going to correct the values of enddifference and begindifference so that they are right for calculations which reference them in the next syllable
     \gre@debugmsg{barspacing}{bar width: \the\wd\gre@box@syllablenotes}%
     \gre@debugmsg{barspacing}{text width: \the\wd\gre@box@syllabletext}%
