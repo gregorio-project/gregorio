@@ -857,6 +857,9 @@
   \gre@debugmsg{barspacing}{enddifference: \the\gre@dimen@enddifference}%
   \gre@debugmsg{barspacing}{nextbegindifference: \the\gre@skip@nextbegindifference}%
   \ifgre@newbarspacing%
+    %
+    % New bar spacing algorithm
+    %
     %In the new algorithm the bar and the text are set independently of each other based purely on the positions of the corresponding element in the previous and next syllable
     % we start by finding the distance between the text and notes of the previous and the next syllable (as if this syllable didn't exist, for the moment)
     \gre@debugmsg{barspacing}{calculate available space}%
@@ -1140,6 +1143,9 @@
       \gre@penalty{\gre@savedpenalty}%
     \fi %
   \else%
+    %
+    % Old spacing algorithm
+    %
     %This is the old algorithm.  I've kept it in case people still want to use it.
     % then we check if there is something to write
     \gre@debugmsg{ifdim}{ wd(gre@box@syllabletext) = 0pt}%
