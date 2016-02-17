@@ -833,7 +833,10 @@
     }%
 }%
 
-% macro to 
+% in the new bar algorithm, we have to cheat a little bit in the case of (:z),
+% we don't want to create a new line just after the bar, instead we delay
+% it to the end of the algorithm. To do so, we override gre@newlinecommon using
+% these:
 \xdef\gre@newlinearg{-1}
 \gdef\gre@newlinecommondelayed#1{%
   \xdef\gre@newlinearg{#1}%
