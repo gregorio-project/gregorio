@@ -874,22 +874,13 @@
     %move to the actual start of the bar line
     \kern\gre@dimen@bar@shift%
     \GreNoBreak %
-    %print the bar line, saving the penalty for later
-    \global\let\gre@savedpenaltytype\gre@penalty %
-    \global\let\gre@penalty\gre@falsepenalty %
-    \xdef\gre@savedpenalty{0}%
-    #9%
-    \global\let\gre@penalty\gre@savedpenaltytype %
-    \GreNoBreak%
-    %move back to the beginning of the bar line
-    \kern-\wd\gre@box@syllablenotes%
-    \GreNoBreak % probably redundant, but better safe than sorry
+    \kern-0.5\wd\gre@box@syllablenotes
     %move to the beginning of the text
     \kern\gre@dimen@begindifference%
     \GreNoBreak %
     % all that extra stuff (translations and the like)
     #8%
-    \GreNoBreak % probably redundant, but better safe than sorry
+    \GreNoBreak % 
     %print the text, the raise is in case of a translation
     \raise\gre@dimen@textlower \copy\gre@box@syllabletext%
     %and the code which handles translation centering
@@ -900,10 +891,21 @@
     \fi %
     %move back to the end of the notes%
     \kern\gre@dimen@enddifference%
+    \GreNoBreak%
+    %move back to the beginning of the bar line
+    \kern-\wd\gre@box@syllablenotes%
+    \GreNoBreak %
+    %print the bar line, saving the penalty for later
+    \global\let\gre@savedpenaltytype\gre@penalty %
+    \global\let\gre@penalty\gre@falsepenalty %
+    \xdef\gre@savedpenalty{0}%
+    #9%
+    \global\let\gre@penalty\gre@savedpenaltytype %
+    \GreNoBreak%
     %move to the nominal end of the notes%
     \kern-\gre@dimen@bar@shift%
     %move to the beginning of the notes of the next syllable
-    \kern\gre@skip@bar@allocation%
+    \gre@hskip\gre@skip@bar@allocation%
     \ifdim\gre@skip@nextbegindifference < 0pt\relax%
       %we need to move back to where the text for the next syllable should start
       \kern\gre@skip@nextbegindifference\relax%
