@@ -1048,6 +1048,17 @@
       \gre@dimen@temp@one = 0pt\relax%
       \gre@dimen@temp@two = 0pt\relax%
     \fi\fi%
+    % All this worry about shifts is superfluous if either the bar line or text isn’t present, so now we check for that and reset them to 0 if one is missing
+    \ifdim\wd\gre@box@syllablenotes = 0pt\relax%
+      \gre@debugmsg{barspacing}{no notes, shifts set to 0}%
+      \gre@dimen@temp@one = 0pt\relax%
+      \gre@dimen@temp@two = 0pt\relax%
+    \fi%			
+    \ifdim\wd\gre@box@syllabletext = 0pt\relax%
+      \gre@debugmsg{barspacing}{no text, shifts set to 0}%
+      \gre@dimen@temp@one = 0pt\relax%
+      \gre@dimen@temp@two = 0pt\relax%
+    \fi%			
     %at this point we're going to correct the values of enddifference and begindifference so that they are right for calculations which reference them in the next syllable
     \gre@debugmsg{barspacing}{bar width: \the\wd\gre@box@syllablenotes}%
     \gre@debugmsg{barspacing}{text width: \the\wd\gre@box@syllabletext}%
