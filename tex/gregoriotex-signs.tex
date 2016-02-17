@@ -1601,7 +1601,7 @@
 % width of a punctum mora, reinitalized at each score
 \newdimen\gre@dimen@morawidth
 
-% sets gre@skip@temp@four to the (usually negative) shift to apply before
+% sets gre@skip@punctummorashift to the (usually negative) shift to apply before
 % a syllable following a punctum mora, to cancel its taking into account into
 % horizontal placement.
 % First argument is:
@@ -1613,9 +1613,9 @@
     \global\gre@dimen@morawidth=\wd\gre@box@temp@width %
   \fi %
   \ifnum #1=1%
-    \global\gre@skip@temp@four=\glueexpr - \gre@dimen@morawidth - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustment\relax %
+    \global\gre@skip@punctummorashift=\glueexpr - \gre@dimen@morawidth - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustment\relax %
   \else %
-    \global\gre@skip@temp@four=\glueexpr - \gre@dimen@morawidth - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustmentbar\relax %
+    \global\gre@skip@punctummorashift=\glueexpr - \gre@dimen@morawidth - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustmentbar\relax %
   \fi %
   \relax %
 }
@@ -1626,11 +1626,11 @@
   \ifgre@firstglyph %
     \ifgre@boxing\else %
       \gre@get@unkern@aftermora{2}%
-      \kern\gre@skip@temp@four %
+      \kern\gre@skip@punctummorashift %
     \fi %
   \else %
     \gre@get@unkern@aftermora{2}%
-    \kern\gre@skip@temp@four %
+    \kern\gre@skip@punctummorashift %
   \fi %
   \relax %
 }
