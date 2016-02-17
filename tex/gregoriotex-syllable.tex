@@ -169,8 +169,9 @@
 %% 8 : flexus with an ambitus of one
 %% 9 : flexus deminutus
 %% 10 : virgula
-%% 11 : divisio minima, minor and maior
+%% 11 : divisio minima, minor, maior or dominican bar
 %% 12 : divisio finalis
+%% 13 : no note
 % there is a tricky here : if notesaligncenter is not 0, it means that there is a flat before, so we simply add notes aligncenter
 % #2 is 0 if we are in the context of current syllable, 1 if we are in the context of next syllable
 \def\gre@calculate@simplenotesaligncenter#1#2{%
@@ -213,6 +214,9 @@
   \or %
     % case of divisiofinalis
     \global\setbox\gre@box@temp@width=\hbox{\gre@fontchar@divisiofinalis}%
+  \or %
+    % case of no note
+    \global\setbox\gre@box@temp@width=\hbox{}%
   \fi%
   \relax%
 }%
@@ -829,6 +833,15 @@
     }%
 }%
 
+% in the new bar algorithm, we have to cheat a little bit in the case of (:z),
+% we don't want to create a new line just after the bar, instead we delay
+% it to the end of the algorithm. To do so, we override gre@newlinecommon using
+% these:
+\xdef\gre@newlinearg{-1}
+\gdef\gre@newlinecommondelayed#1{%
+  \xdef\gre@newlinearg{#1}%
+}
+
 %a macro to typeset a syllable with only a bar inside
 \def\GreBarSyllable#1#2#3#4#5#6#7#8#9{%
   \gre@debugmsg{general}{New bar syllable}%
@@ -853,17 +866,58 @@
   \gre@debugmsg{barspacing}{enddifference: \the\gre@dimen@enddifference}%
   \gre@debugmsg{barspacing}{nextbegindifference: \the\gre@skip@nextbegindifference}%
   \ifgre@newbarspacing%
+    %
+    % New bar spacing algorithm
+    %
     %In the new algorithm the bar and the text are set independently of each other based purely on the positions of the corresponding element in the previous and next syllable
     % we start by finding the distance between the text and notes of the previous and the next syllable (as if this syllable didn't exist, for the moment)
     \gre@debugmsg{barspacing}{calculate available space}%
-    \ifdim\gre@dimen@previousenddifference > 0pt\relax%
+    % first, recomputing \gre@dimen@previousenddifference into \gre@dimen@temp@three
+    % taking into account the punctum mora shift
+    \gre@dimen@temp@three=\gre@dimen@previousenddifference %
+    % gre@skip@temp@four is 0 or the punctum mora shift
+    \gre@skip@temp@four=0pt\relax %
+    \ifgre@lastendswithmora %
+      \ifcase\gre@count@shiftaftermora\or\or %
+        \ifdim\wd\gre@box@syllabletext=0pt\relax %
+          % punctum mora adjustment should occur only for bars with no text
+          \gre@get@unkern@aftermora{2}%
+          \advance\gre@dimen@temp@three by \gre@skip@temp@four %
+        \fi %
+      \or %
+        % punctum mora adjustment only before bars
+        \gre@get@unkern@aftermora{2}%
+        \advance\gre@dimen@temp@three by \gre@skip@temp@four %
+      \or %
+        % punctum mora adjustment always occurs
+        \gre@get@unkern@aftermora{2}%
+        \advance\gre@dimen@temp@three by \gre@skip@temp@four %
+      \fi %
+    \fi %
+    % now something a bit tricky: as we changed previousenddifference,
+    % we must kern of the difference we created, but no more than
+    % the end of the text:
+    \ifdim\gre@skip@temp@four=0pt\else %
+      \gre@debugmsg{barspacing}{adjustment for punctum mora: \the\gre@skip@temp@four}%
+      \gre@debugmsg{barspacing}{adjustend previous enddifference (for punctum mora): \the\gre@dimen@temp@three}%
+      \ifdim -\gre@skip@temp@four < \gre@dimen@previousenddifference %
+        \gre@debugmsg{barspacing}{kern \the\gre@skip@temp@four for punctum mora adjustment}%
+        \kern\gre@skip@temp@four %
+      \else %
+        \ifdim\gre@dimen@previousenddifference > 0pt\relax %
+          \gre@debugmsg{barspacing}{kern \the\gre@dimen@previousenddifference for punctum mora adjustment}%
+          \kern-\gre@dimen@previousenddifference %
+        \fi %
+      \fi %
+    \fi %
+    \ifdim\gre@dimen@temp@three > 0pt\relax%
       % the notes ended after the text in the previous syllable
-      \gre@skip@temp@one = \gre@dimen@previousenddifference\relax%
+      \gre@skip@temp@one = \gre@dimen@temp@three\relax%
       \gre@skip@temp@two = 0pt\relax%
     \else%
       % the text ended after the notes in the previous syllable
       \gre@skip@temp@one = 0pt\relax%
-      \gre@skip@temp@two = -\gre@dimen@previousenddifference\relax%
+      \gre@skip@temp@two = -\gre@dimen@temp@three\relax%
     \fi%
     \ifdim\gre@skip@nextbegindifference > 0pt\relax%
       % the text began after the notes in the next syllable
@@ -889,9 +943,9 @@
       %this calculation is similar to what is done in \gre@calculate@syllablefinalskip, but is only for the text, so we'll use \gre@skip@syllablefinalskip to hold this value for now
       \ifnum#4=1\relax %
         \ifgre@in@euouae %
-          \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacetext@euouae\relax%
+          \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacetext@bars@euouae\relax%
         \else %
-          \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacetext\relax%
+          \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacetext@bars\relax%
         \fi %
       \else %
         \gre@skip@syllablefinalskip=0pt\relax%
@@ -899,15 +953,16 @@
       \gre@debugmsg{barspacing}{this syllable skip after text = \the\gre@skip@syllablefinalskip}%
       \advance\gre@skip@temp@three by \gre@skip@syllablefinalskip\relax%
     \fi%
-    \ifdim\gre@skip@temp@one < 	\gre@skip@temp@three\relax%
+    \ifdim\gre@skip@temp@one < \gre@skip@temp@three\relax%
       \advance\gre@skip@temp@two by \glueexpr(\gre@skip@temp@three - \gre@skip@temp@one)\relax%
       \gre@skip@temp@one = \gre@skip@temp@three\relax%
     \fi%
-    \gre@debugmsg{barspacing}{text space after accounting for text: \the\gre@skip@temp@one}%
-    \gre@debugmsg{barspacing}{notes space after accounting for text: \the\gre@skip@temp@two}%
+    \gre@debugmsg{barspacing}{space required by text: \the\gre@skip@temp@three}%
+    \gre@debugmsg{barspacing}{allocated text space: \the\gre@skip@temp@one}%
+    \gre@debugmsg{barspacing}{allocated notes space: \the\gre@skip@temp@two}%
     % now we check the bar width
     %as with the text, we start by borrowing the minNotesDistance left over from the previous syllable
-    \gre@skip@temp@three = \glueexpr\wd\gre@box@syllablenotes + \gre@skip@minNotesDistance\relax%
+    \gre@skip@temp@four = \glueexpr\wd\gre@box@syllablenotes + \gre@skip@minNotesDistance\relax%
     %now, if there is a visible bar for this syllable, we calculate this syllable’s equivalent of minNotesDistance
     % gre@count@temp@one holds 0 if next is not a bar, 1 if it is, 2 if it starts with an alteration
     \gre@count@temp@one=0%
@@ -940,14 +995,15 @@
         \fi %
       \fi %
       \gre@debugmsg{syllablespacing}{ space after bar = \the\gre@skip@syllablefinalskip}%
-      \advance\gre@skip@temp@three by \gre@skip@syllablefinalskip%
+      \advance\gre@skip@temp@four by \gre@skip@syllablefinalskip%
     \fi%
-    \ifdim\gre@skip@temp@two < \gre@skip@temp@three\relax%
-      \gre@skip@temp@one = \glueexpr\gre@skip@temp@one + (\gre@skip@temp@three - \gre@skip@temp@two)\relax%
-      \gre@skip@temp@two = \gre@skip@temp@three\relax%
+    \ifdim\gre@skip@temp@two < \gre@skip@temp@four\relax%
+      \gre@skip@temp@one = \glueexpr\gre@skip@temp@one + (\gre@skip@temp@four - \gre@skip@temp@two)\relax%
+      \gre@skip@temp@two = \gre@skip@temp@four\relax%
     \fi%
-    \gre@debugmsg{barspacing}{required space for text: \the\gre@skip@temp@one}%
-    \gre@debugmsg{barspacing}{required space for notes: \the\gre@skip@temp@two}%
+    \gre@debugmsg{barspacing}{required space for notes: \the\gre@skip@temp@four}%
+    \gre@debugmsg{barspacing}{allocated text space: \the\gre@skip@temp@one}%
+    \gre@debugmsg{barspacing}{allocated notes space: \the\gre@skip@temp@two}%
     % now we divide the two distances in half to represent the position of the middle of each element
     \gre@debugmsg{barspacing}{calculate position of middles}%
     \divide\gre@skip@temp@one by 2\relax%
@@ -955,46 +1011,81 @@
     \gre@debugmsg{barspacing}{distance from previous text to middle of this text: \the\gre@skip@temp@one}%
     \gre@debugmsg{barspacing}{distance from previous notes to middle of this notes: \the\gre@skip@temp@two}%
     % our final position calculation is to make sure that the centers of the text and the bar are not too far from each other
-    \gre@debugmsg{barspacing}{limit by offset}%
     % this isn't really the begindifference (it doesn't account for the width of the text and the bar), but it's close enough that we'll use that register for this calculation
     % this value is positive if the middle of the bar is before the middle of the text
-    \gre@dimen@begindifference=\dimexpr(-\gre@dimen@previousenddifference - \gre@skip@temp@two + \gre@skip@temp@one)\relax%
+    \gre@dimen@begindifference=\dimexpr(-\gre@dimen@temp@three - \gre@skip@temp@two + \gre@skip@temp@one)\relax%
     \gre@debugmsg{barspacing}{new begindifference approximation: \the\gre@dimen@begindifference}%
-      \gre@debugmsg{barspacing}{offset limit: \gre@space@dimen@maxbaroffset}%
-    \ifdim\gre@dimen@begindifference > \gre@space@dimen@maxbaroffset\relax%
+    \gre@debugmsg{barspacing}{left offset limit: \gre@space@dimen@maxbaroffsettextleft}%
+    \gre@debugmsg{barspacing}{right offset limit: \gre@space@dimen@maxbaroffsettextright}%
+    \ifdim\gre@dimen@begindifference > \gre@space@dimen@maxbaroffsettextright\relax%
       %the two elements are too far apart and the bar is before the text
-      %we want to create an offset for the one with the larger available space
-      \gre@debugmsg{barspacing}{non-zero offsets}%
+      %we want to create a shift for the one with the larger available space
+      \gre@debugmsg{barspacing}{non-zero shifts}%
       \ifdim\gre@skip@temp@one > \gre@skip@temp@two\relax%
-        \gre@debugmsg{barspacing}{offset the text to the left}%
-        \gre@dimen@temp@one = \dimexpr(\gre@dimen@begindifference - \gre@space@dimen@maxbaroffset)\relax%
-        \gre@debugmsg{barspacing}{check in}%
+        \gre@debugmsg{barspacing}{shift the text to the left}%
+        \gre@dimen@temp@one = \dimexpr(-\gre@dimen@begindifference + \gre@space@dimen@maxbaroffsettextright)\relax%
         \gre@dimen@temp@two = 0pt\relax%
-        \gre@debugmsg{barspacing}{check in 2}%
       \else%
-        \gre@debugmsg{barspacing}{offset the bar to the right}%
+        \gre@debugmsg{barspacing}{shift the bar to the right}%
         \gre@dimen@temp@one = 0pt\relax%
-        \gre@dimen@temp@two = \dimexpr-\gre@dimen@begindifference + \gre@space@dimen@maxbaroffset\relax%
+        \gre@dimen@temp@two = \dimexpr\gre@dimen@begindifference - \gre@space@dimen@maxbaroffsettextright\relax%
       \fi%
-    \else\ifdim\gre@dimen@begindifference < -\gre@space@dimen@maxbaroffset\relax%
+    \else\ifdim\gre@dimen@begindifference < -\gre@space@dimen@maxbaroffsettextleft\relax%
       %the two elements are too far apart and the text is before the bar
-      %we want to create an offset for the one with the larger available space
-      \gre@debugmsg{barspacing}{non-zero offsets}%
+      %we want to create a shift for the one with the larger available space
+      \gre@debugmsg{barspacing}{non-zero shifts}%
       \ifdim\gre@skip@temp@one > \gre@skip@temp@two\relax%
-        \gre@debugmsg{barspacing}{offset the text to the right}%
-        \gre@dimen@temp@one = \dimexpr\gre@dimen@begindifference + \gre@space@dimen@maxbaroffset\relax%
+        \gre@debugmsg{barspacing}{shift the text to the right}%
+        \gre@dimen@temp@one = \dimexpr-\gre@dimen@begindifference - \gre@space@dimen@maxbaroffsettextleft\relax%
         \gre@dimen@temp@two = 0pt\relax%
       \else%
-        \gre@debugmsg{barspacing}{offset the bar to the left}%
+        \gre@debugmsg{barspacing}{shift the bar to the left}%
         \gre@dimen@temp@one = 0pt\relax%
-        \gre@dimen@temp@two = \dimexpr-\gre@dimen@begindifference - \gre@space@dimen@maxbaroffset\relax%
+        \gre@dimen@temp@two = \dimexpr\gre@dimen@begindifference + \gre@space@dimen@maxbaroffsettextleft\relax%
       \fi%
     \else%
       %the two elements are sufficiently close together
-      \gre@debugmsg{barspacing}{zero offsets}%
+      \gre@debugmsg{barspacing}{zero shifts}%
       \gre@dimen@temp@one = 0pt\relax%
       \gre@dimen@temp@two = 0pt\relax%
     \fi\fi%
+    % All this worry about shifts is superfluous if either the bar line or text isn’t present, so now we check for that and reset them to 0 if one is missing
+    \ifdim\wd\gre@box@syllablenotes = 0pt\relax%
+      \gre@debugmsg{barspacing}{no notes, shifts set to 0}%
+      \gre@dimen@temp@one = 0pt\relax%
+      \gre@dimen@temp@two = 0pt\relax%
+    \fi%
+    \ifdim\wd\gre@box@syllabletext = 0pt\relax%
+      \gre@debugmsg{barspacing}{no text, shifts set to 0}%
+      \gre@dimen@temp@one = 0pt\relax%
+      \gre@dimen@temp@two = 0pt\relax%
+    \fi%
+    \gre@dimen@temp@five = 0pt\relax %
+    % now, if the shifts are too big, the will cause the bar element they apply to to overlap with the corresponding element in an adjacent syllable
+    % we consider the offset limits set by the user to be ruling, so to account for this we allocate more space to the bar syllable to prevent these collisions
+    \ifdim\gre@dimen@temp@one > \glueexpr(\gre@skip@temp@one-\gre@skip@temp@three/2)\relax\relax%
+      \gre@debugmsg{barspacing}{text collision on right}%
+      \ifdim\glueexpr(\gre@dimen@temp@one + \gre@skip@temp@three/2 - \gre@skip@temp@one) > \gre@space@dimen@baroffsetadditionalspacearoundbars\relax %
+        \gre@dimen@temp@five = -\dimexpr(\gre@dimen@temp@one + \gre@skip@temp@three/2 - \gre@skip@temp@one)\relax %
+      \fi %
+      \advance\gre@skip@temp@two by \glueexpr(\gre@dimen@temp@one + \gre@skip@temp@three/2 - \gre@skip@temp@one)\relax%
+      \gre@skip@temp@one = \glueexpr\gre@dimen@temp@one + \gre@skip@temp@three/2\relax%
+    \fi%
+    \ifdim-\gre@dimen@temp@one > \glueexpr(\gre@skip@temp@one-\gre@skip@temp@three/2)\relax\relax%
+      \gre@debugmsg{barspacing}{text collision on left}%
+      \advance\gre@skip@temp@two by \glueexpr(-\gre@dimen@temp@one + \gre@skip@temp@three/2 - \gre@skip@temp@one)\relax%
+      \gre@skip@temp@one = \glueexpr-\gre@dimen@temp@one + \gre@skip@temp@three/2\relax%
+    \fi%
+    \ifdim\gre@dimen@temp@two > \glueexpr(\gre@skip@temp@two-\gre@skip@temp@four/2)\relax\relax%
+      \gre@debugmsg{barspacing}{bar collision on right}%
+      \advance\gre@skip@temp@one by \glueexpr(\gre@dimen@temp@two + \gre@skip@temp@four/2 - \gre@skip@temp@two)\relax%
+      \gre@skip@temp@two = \glueexpr\gre@dimen@temp@two + \gre@skip@temp@four/2\relax%
+    \fi%
+    \ifdim-\gre@dimen@temp@two > \glueexpr(\gre@skip@temp@two-\gre@skip@temp@four/2)\relax\relax%
+      \gre@debugmsg{barspacing}{bar collision on left}%
+      \advance\gre@skip@temp@one by \glueexpr(-\gre@dimen@temp@two + \gre@skip@temp@four/2 - \gre@skip@temp@two)\relax%
+      \gre@skip@temp@two = \glueexpr-\gre@dimen@temp@two + \gre@skip@temp@four/2\relax%
+    \fi%
     %at this point we're going to correct the values of enddifference and begindifference so that they are right for calculations which reference them in the next syllable
     \gre@debugmsg{barspacing}{bar width: \the\wd\gre@box@syllablenotes}%
     \gre@debugmsg{barspacing}{text width: \the\wd\gre@box@syllabletext}%
@@ -1002,7 +1093,7 @@
     %currently begindifference holds the kern from the nominal middle of the notes to the nominal middle of the text
     %we thus need to increase it by the half the width of the bar line, decrease it by half the width of the text, decrease it by the kern from the nominal to the true center of the bar line, and increase it by the kern from the nominal to the true center of the text
     \gre@debugmsg{barspacing}{Correcting begindifference}%
-    \gre@dimen@begindifference = \dimexpr\gre@dimen@begindifference + (\wd\gre@box@syllablenotes/2) - (\wd\gre@box@syllabletext/2) - \gre@dimen@temp@two + \gre@dimen@temp@two\relax%
+    \gre@dimen@begindifference = \dimexpr\gre@dimen@begindifference + (\wd\gre@box@syllablenotes/2) - (\wd\gre@box@syllabletext/2) + \gre@dimen@temp@one - \gre@dimen@temp@two\relax%
     \gre@debugmsg{barspacing}{begindifference: \the\gre@dimen@begindifference}%
     %the end difference can be calculated from begindifference by decreasing begindifference by the width of the notes, increasing it by the width of the text, and then reversing the sign on the whole thing
     \gre@debugmsg{barspacing}{Correcting enddifference}%
@@ -1014,26 +1105,34 @@
     \gre@debugmsg{barspacing}{syllablefinalskip: \the\gre@skip@syllablefinalskip}%
     %now we can place the text and bar
     %we're going to start with the bar line, place the text relative to that, and then use the position of the bar line to reposition the cursor for the next syllable
-    \ifdim\gre@dimen@previousenddifference < 0pt\relax%
+    \ifdim\gre@dimen@temp@three < 0pt\relax%
       %we need to move back to where the previous notes ended
-      \kern\gre@dimen@previousenddifference\relax%
+      \kern\gre@dimen@temp@three\relax%
+      \GreNoBreak %
     \fi%
     %now we move to the nominal start of the bar line
-    \kern\gre@skip@temp@two%
+    \gre@hskip\gre@skip@temp@two%
+    \GreNoBreak %
     %move to the actual start of the bar line
     \kern\gre@dimen@temp@two%
-    %print the bar line
+    \GreNoBreak %
+    \kern\gre@dimen@temp@five%
+    %print the bar line, saving the penalty for later
+    \global\let\gre@newlinecommonsaved\gre@newlinecommon %
+    \global\let\gre@newlinecommon\gre@newlinecommondelayed %
+    \xdef\gre@newlinearg{-1}%
     #9%
-    \GreNoBreak%
+    \global\let\gre@newlinecommon\gre@newlinecommonsaved %
+    \GreNoBreak %
     %move back to the beginning of the bar line
     \kern-\wd\gre@box@syllablenotes%
-    \GreNoBreak% probably redundant, but better safe than sorry
+    \GreNoBreak % probably redundant, but better safe than sorry
     %move to the beginning of the text
     \kern\gre@dimen@begindifference%
-    \GreNoBreak% probably redundant, but better safe than sorry
+    \GreNoBreak %
     % all that extra stuff (translations and the like)
     #8%
-    \GreNoBreak% probably redundant, but better safe than sorry
+    \GreNoBreak % probably redundant, but better safe than sorry
     %print the text, the raise is in case of a translation
     \raise\gre@dimen@textlower \copy\gre@box@syllabletext%
     %and the code which handles translation centering
@@ -1043,19 +1142,32 @@
       \gre@mustdotranslationcenterendfalse%
     \fi %
     %move back to the end of the notes%
-    \kern\gre@dimen@enddifference%
-    %move to the nominal end of the notes%
-    \kern-\gre@dimen@temp@two%
-    %move to the beginning of the notes of the next syllable
-    \kern\gre@skip@temp@two%
-    \ifdim\gre@skip@nextbegindifference < 0pt\relax%
-      %we need to move back to where the text for the next syllable should start
-      \kern\gre@skip@nextbegindifference\relax%
-    \fi%
-    %finally we end by adding the penalty
-    \gre@debugmsg{barspacing}{after bar penalty}%
-    \gre@penalty{\greendafterbarpenalty }\relax %
+    \GreNoBreak % probably redundant, but better safe than sorry
+    \kern\gre@dimen@enddifference %
+    \GreNoBreak %
+    % if no end of line:
+    \ifnum-1=\gre@newlinearg %
+      %move to the nominal end of the notes%
+      \kern-\gre@dimen@temp@two%
+      \GreNoBreak %
+      %move to the beginning of the notes of the next syllable
+      \gre@hskip\gre@skip@temp@two%
+      \ifdim\gre@skip@nextbegindifference < 0pt\relax%
+        %we need to move back to where the text for the next syllable should start
+        \GreNoBreak %
+        \kern\gre@skip@nextbegindifference\relax%
+      \fi%
+      %finally we end by adding the penalty
+      \gre@debugmsg{barspacing}{after bar penalty: \greendafterbarpenalty}%
+      \gre@penalty{\greendafterbarpenalty}%
+    \else %
+      \gre@debugmsg{barspacing}{calling new line with argument: \gre@newlinearg}%
+      \gre@newlinecommon{\gre@newlinearg}%
+    \fi %
   \else%
+    %
+    % Old spacing algorithm
+    %
     %This is the old algorithm.  I've kept it in case people still want to use it.
     % then we check if there is something to write
     \gre@debugmsg{ifdim}{ wd(gre@box@syllabletext) = 0pt}%
