@@ -1008,53 +1008,37 @@
     %the two elements are too far apart and the text is before the bar
     %we want to create a shift for the one with the larger available space
     \gre@debugmsg{barspacing}{non-zero shifts}%
-    \ifdim\gre@skip@text@allocation > \gre@skip@bar@allocation\relax%
-      \gre@debugmsg{barspacing}{shift the text to the right}%
-      \gre@dimen@text@shift = \dimexpr-\gre@dimen@begindifference - \gre@space@dimen@maxbaroffsettextleft\relax%
-      \gre@dimen@bar@shift = 0pt\relax%
-    \else%
-      \gre@debugmsg{barspacing}{shift the bar to the left}%
-      \gre@dimen@text@shift = 0pt\relax%
-      \gre@dimen@bar@shift = \dimexpr\gre@dimen@begindifference + \gre@space@dimen@maxbaroffsettextleft\relax%
-    \fi%
+    % first we try to shift text on the right, but no more than text@allocation/2:
+    \gre@dimen@bar@shift = 0pt\relax %
+    \gre@dimen@text@shift = \dimexpr(-\gre@dimen@begindifference + \gre@space@dimen@maxbaroffsettextleft)\relax %
+    % the total shift we have to make is superior to the room of the text, so we
+    % just make it as big as we can, shifting notes on the left of the difference
+    % dimen@temp@one is the excess of text@shift
+    \ifdim\gre@dimen@text@shift > \dimexpr(\gre@skip@text@allocation-\gre@skip@text@requirement/2)\relax %
+      \gre@dimen@bar@shift = \dimexpr(-\gre@dimen@text@shift+\gre@skip@text@allocation-\gre@skip@text@requirement/2)\relax %
+      \gre@dimen@text@shift = \dimexpr(\gre@skip@text@allocation-\gre@skip@text@requirement/2)\relax %
+      % now if the shift of the bar is too large, we make all spaces larger by
+      % the difference:
+      % gre@dimen@temp@one is the excess of bar@shift:
+      \gre@dimen@temp@one=\dimexpr(-\gre@skip@bar@allocation+\gre@skip@bar@requirement/2-\gre@dimen@bar@shift)\relax %
+      \ifdim\gre@dimen@temp@one>0pt\relax %
+        \advance\gre@dimen@bar@shift by 0.5\gre@dimen@temp@one\relax %
+        \advance\gre@dimen@text@shift by 0.5\gre@dimen@temp@one\relax %
+        \advance\gre@skip@bar@allocation by 0.5\gre@dimen@temp@one\relax %
+      \fi %
+    \fi %
   \else%
     %the two elements are sufficiently close together
     \gre@debugmsg{barspacing}{zero shifts}%
     \gre@dimen@text@shift = 0pt\relax%
     \gre@dimen@bar@shift = 0pt\relax%
   \fi\fi%
-  % All this worry about shifts is superfluous if either the bar line or text isn’t present, so now we check for that and reset them to 0 if one is missing
-  \ifdim\wd\gre@box@syllablenotes = 0pt\relax%
-    \gre@debugmsg{barspacing}{no notes, shifts set to 0}%
-    \gre@dimen@text@shift = 0pt\relax%
-    \gre@dimen@bar@shift = 0pt\relax%
-  \fi%
+  % All this worry about shifts is superfluous if either the text isn’t present,
+  % so now we check for that and reset them to 0 if one is missing
   \ifdim\wd\gre@box@syllabletext = 0pt\relax%
     \gre@debugmsg{barspacing}{no text, shifts set to 0}%
     \gre@dimen@text@shift = 0pt\relax%
     \gre@dimen@bar@shift = 0pt\relax%
-  \fi%
-  % now, if the shifts are too big, the will cause the bar element they apply to to overlap with the corresponding element in an adjacent syllable
-  % we consider the offset limits set by the user to be ruling, so to account for this we allocate more space to the bar syllable to prevent these collisions
-  \ifdim\gre@dimen@text@shift > \glueexpr(\gre@skip@text@allocation-\gre@skip@text@requirement/2)\relax\relax%
-    \gre@debugmsg{barspacing}{text collision on right}%
-    \advance\gre@skip@bar@allocation by \glueexpr(\gre@dimen@text@shift + \gre@skip@text@requirement/2 - \gre@skip@text@allocation)\relax%
-    \gre@skip@text@allocation = \glueexpr\gre@dimen@text@shift + \gre@skip@text@requirement/2\relax%
-  \fi%
-  \ifdim-\gre@dimen@text@shift > \glueexpr(\gre@skip@text@allocation-\gre@skip@text@requirement/2)\relax\relax%
-    \gre@debugmsg{barspacing}{text collision on left}%
-    \advance\gre@skip@bar@allocation by \glueexpr(-\gre@dimen@text@shift + \gre@skip@text@requirement/2 - \gre@skip@text@allocation)\relax%
-    \gre@skip@text@allocation = \glueexpr-\gre@dimen@text@shift + \gre@skip@text@requirement/2\relax%
-  \fi%
-  \ifdim\gre@dimen@bar@shift > \glueexpr(\gre@skip@bar@allocation-\gre@skip@bar@requirement/2)\relax\relax%
-    \gre@debugmsg{barspacing}{bar collision on right}%
-    \advance\gre@skip@text@allocation by \glueexpr(\gre@dimen@bar@shift + \gre@skip@bar@requirement/2 - \gre@skip@bar@allocation)\relax%
-    \gre@skip@bar@allocation = \glueexpr\gre@dimen@bar@shift + \gre@skip@bar@requirement/2\relax%
-  \fi%
-  \ifdim-\gre@dimen@bar@shift > \glueexpr(\gre@skip@bar@allocation-\gre@skip@bar@requirement/2)\relax\relax%
-    \gre@debugmsg{barspacing}{bar collision on left}%
-    \advance\gre@skip@text@allocation by \glueexpr(-\gre@dimen@bar@shift + \gre@skip@bar@requirement/2 - \gre@skip@bar@allocation)\relax%
-    \gre@skip@bar@allocation = \glueexpr-\gre@dimen@bar@shift + \gre@skip@bar@requirement/2\relax%
   \fi%
   %at this point we're going to correct the values of enddifference and begindifference so that they are right for calculations which reference them in the next syllable
   \gre@debugmsg{barspacing}{bar width: \the\wd\gre@box@syllablenotes}%
