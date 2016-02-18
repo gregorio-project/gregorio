@@ -1016,7 +1016,6 @@
     \gre@dimen@text@shift = \dimexpr(-\gre@dimen@begindifference + \gre@space@dimen@maxbaroffsettextleft)\relax %
     % the total shift we have to make is superior to the room of the text, so we
     % just make it as big as we can, shifting notes on the left of the difference
-    % dimen@temp@one is the excess of text@shift
     \ifdim\gre@dimen@text@shift > \dimexpr(\gre@skip@text@allocation-\gre@skip@text@requirement/2)\relax %
       \gre@dimen@bar@shift = \dimexpr(-\gre@dimen@text@shift+\gre@skip@text@allocation-\gre@skip@text@requirement/2)\relax %
       \gre@dimen@text@shift = \dimexpr(\gre@skip@text@allocation-\gre@skip@text@requirement/2)\relax %
