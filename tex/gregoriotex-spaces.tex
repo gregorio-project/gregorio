@@ -828,14 +828,14 @@
 }%
 
 % spaces for new bar positioning algorithm
-\newskip\gre@skip@bar@requirement%
-\newskip\gre@skip@bar@allocation%
-\newdimen\gre@dimen@bar@shift%
-\newskip\gre@skip@text@requirement%
-\newskip\gre@skip@text@allocation%
-\newdimen\gre@dimen@text@shift%
-\newdimen\gre@dimen@adjustedpreviousenddifference%
-\newskip\gre@skip@punctummorashift%
+\newskip\gre@skip@bar@requirement% amount of space required by bar (including skips before and after)
+\newskip\gre@skip@bar@allocation% amount of space allocated to the bar
+\newdimen\gre@dimen@bar@shift% displacement from center of the bar’s position
+\newskip\gre@skip@text@requirement% amount of space required by the text (including skips before and after)
+\newskip\gre@skip@text@allocation% amount of space allocated to the text
+\newdimen\gre@dimen@text@shift% displacement from center of the text’s position
+\newdimen\gre@dimen@adjustedpreviousenddifference% previousenddifference adjusted to account for the presence of a punctum mora at the end of the pervious syllable
+\newskip\gre@skip@punctummorashift% displacement of whole syllable to account for the presence of a punctum mora at the end of the previous syllable
 
 %
 % New bar spacing algorithm
@@ -873,7 +873,7 @@
   % the end of the text:
   \ifdim\gre@skip@punctummorashift=0pt\else %
     \gre@debugmsg{barspacing}{adjustment for punctum mora: \the\gre@skip@punctummorashift}%
-    \gre@debugmsg{barspacing}{adjustend previous enddifference (for punctum mora): \the\gre@dimen@adjustedpreviousenddifference}%
+    \gre@debugmsg{barspacing}{adjusted previous enddifference (for punctum mora): \the\gre@dimen@adjustedpreviousenddifference}%
     \ifdim -\gre@skip@punctummorashift < \gre@dimen@previousenddifference %
       \gre@debugmsg{barspacing}{kern \the\gre@skip@punctummorashift for punctum mora adjustment}%
       \kern\gre@skip@punctummorashift %
