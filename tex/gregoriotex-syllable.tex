@@ -868,15 +868,8 @@
       \kern\gre@dimen@adjustedpreviousenddifference\relax%
       \GreNoBreak %
     \fi%
-    %now we move to the nominal start of the bar line
-    \gre@hskip\gre@skip@bar@allocation%
-    \GreNoBreak %
-    %move to the actual start of the bar line
-    \kern\gre@dimen@bar@shift%
-    \GreNoBreak %
-    \kern-0.5\wd\gre@box@syllablenotes
     %move to the beginning of the text
-    \kern\gre@dimen@begindifference%
+    \gre@hskip\glueexpr(\gre@skip@bar@allocation+\gre@dimen@bar@shift+\wd\gre@box@syllablenotes/2+\gre@dimen@begindifference)\relax %
     \GreNoBreak %
     % all that extra stuff (translations and the like)
     #8%
@@ -889,35 +882,21 @@
       \gre@dotranslationcenterend %
       \gre@mustdotranslationcenterendfalse%
     \fi %
-    %move back to the end of the notes%
-    \kern\gre@dimen@enddifference%
-    \GreNoBreak%
     %move back to the beginning of the bar line
-    \kern-\wd\gre@box@syllablenotes%
-    \GreNoBreak %
-    %print the bar line, saving the penalty for later
-    \global\let\gre@savedpenaltytype\gre@penalty %
-    \global\let\gre@penalty\gre@falsepenalty %
-    \xdef\gre@savedpenalty{0}%
-    #9%
-    \global\let\gre@penalty\gre@savedpenaltytype %
+    \kern\dimexpr(\gre@dimen@enddifference-\wd\gre@box@syllablenotes)\relax %
     \GreNoBreak%
-    %move to the nominal end of the notes%
-    \kern-\gre@dimen@bar@shift%
+    #9%
+    \GreNoBreak%
     %move to the beginning of the notes of the next syllable
-    \gre@hskip\gre@skip@bar@allocation%
+    \gre@hskip\glueexpr(\gre@skip@bar@allocation-\gre@dimen@bar@shift)\relax %
     \ifdim\gre@skip@nextbegindifference < 0pt\relax%
       %we need to move back to where the text for the next syllable should start
+      \GreNoBreak %
       \kern\gre@skip@nextbegindifference\relax%
     \fi%
     %finally we end by adding the penalty
-    \ifx0\gre@savedpenalty %
-      \gre@debugmsg{barspacing}{after bar penalty: \greendafterbarpenalty}%
-      \gre@penalty{\greendafterbarpenalty}%
-    \else %
-      \gre@debugmsg{barspacing}{saved bar penalty: \gre@savedpenalty}%
-      \gre@penalty{\gre@savedpenalty}%
-    \fi %
+    \gre@debugmsg{barspacing}{after bar penalty: \greendafterbarpenalty}%
+    \gre@penalty{\greendafterbarpenalty}%
   \else%
     %
     % Old spacing algorithm
