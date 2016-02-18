@@ -7,20 +7,22 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - New bar spacing algorithm now accounts for translations (and other below lyrics stuff).
 - Horizontal episema on initio debilis is now sized correctly (see [#880](https://github.com/gregorio-project/gregorio/issues/880)).
 - Elisions immediately after the vowel are now properly left out of the center (see [#907](https://github.com/gregorio-project/gregorio/issues/907))
+- New bar spacing algorithm now respects the setting of `\gresetshiftaftermora`.  See [#919](https://github.com/gregorio-project/gregorio/issues/919)
 - Space between the text of two syllables of the same word when no hyphen is necessary is now strictly 0 (see [#922](https://github.com/gregorio-project/gregorio/issues/922))
 - A horizontal episema on the first note of a torculus deminutus is now placed correctly.  See [#926](https://github.com/gregorio-project/gregorio/issues/926).
 - Corrected determination of repercussive figures and other edge cases (introduced in 4.1.0-beta2).  See [#928](https://github.com/gregorio-project/gregorio/issues/928) and [#929](https://github.com/gregorio-project/gregorio/issues/929).
-
 
 ### Changed
 - Adjustments to the heuristic for ledger lines to include adjacent notes (see [#862](https://github.com/gregorio-project/gregorio/issues/862)).
 - The stem length determination will use the ledger line below the note with the stem (see [#863](https://github.com/gregorio-project/gregorio/issues/863)).
 - Made the oriscus orientation dependent on the note that follows.  Using `1` will force the ascending oriscus and `0` will force the descending oriscus.  The old behavior may be restored by setting the `oriscus-orientation` gabc header to `legacy`.  See UPGRADE.md for details (for the change request, see [#774](https://github.com/gregorio-project/gregorio/issues/774) and [#898](https://github.com/gregorio-project/gregorio/issues/898)).
 - Add new lines as needed to the gabc output. (see [#905](https://github.com/gregorio-project/gregorio/issues/905)).
+- Syllable with no notes are now treated as bar syllables rather than note syllables.  This increase their spacing under the old algorithm and, more importantly, allows them to use the new spacing algorithm.
+- `maxbaroffset` has been split into `maxbaroffsettextleft` and `maxbaroffsettextright`
 
 ### Added
 - Controls for tuning horizontal episema vertical position.  See GregorioRef for details (for the change request, see [#872](https://github.com/gregorio-project/gregorio/issues/872)).
-- More dimensions are tunable: `overhepisemalowshift`, `overhepisemahighshift`, `underhepisemalowshift`, `underhepisemahighshift`, `hepisemamiddleshift`, `vepisemalowshift`, `vepisemahighshift`, `linepunctummorashift`, `spacepunctummorashift`, `spaceamonepespunctummorashift`, `lineporrectuspunctummorashift`, `spaceporrectuspunctummorashift`, and `raresignshift`.  See GregorioRef for details (for the change request, see comments in [#872](https://github.com/gregorio-project/gregorio/issues/872)).
+- More dimensions are tunable: `overhepisemalowshift`, `overhepisemahighshift`, `underhepisemalowshift`, `underhepisemahighshift`, `hepisemamiddleshift`, `vepisemalowshift`, `vepisemahighshift`, `linepunctummorashift`, `spacepunctummorashift`, `spaceamonepespunctummorashift`, `lineporrectuspunctummorashift`, `spaceporrectuspunctummorashift`, `raresignshift`, `interwordspacetext@bars`, `interwordspacetext@bars@euouae`.  See GregorioRef for details (for the change request for most of these, see comments in [#872](https://github.com/gregorio-project/gregorio/issues/872)).
 - A new dimension, `intersyllablespacestretchhyphen` is now available to add stretching in the case of syllables separated by an hyphen (see comments in [#922](https://github.com/gregorio-project/gregorio/issues/922))
 
 

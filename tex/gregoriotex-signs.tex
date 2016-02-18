@@ -1597,7 +1597,7 @@
 % width of a punctum mora, reinitalized at each score
 \newdimen\gre@dimen@morawidth
 
-% sets gre@skip@temp@four to the (usually negative) shift to apply before
+% sets gre@skip@punctummorashift to the (usually negative) shift to apply before
 % a syllable following a punctum mora, to cancel its taking into account into
 % horizontal placement.
 % First argument is:
@@ -1609,16 +1609,25 @@
     \global\gre@dimen@morawidth=\wd\gre@box@temp@width %
   \fi %
   \ifnum #1=1%
-    \global\gre@skip@temp@four=\glueexpr - \gre@dimen@morawidth - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustment\relax %
+    \global\gre@skip@punctummorashift=\glueexpr - \gre@dimen@morawidth - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustment\relax %
   \else %
-    \global\gre@skip@temp@four=\glueexpr - \gre@dimen@morawidth - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustmentbar\relax %
+    \global\gre@skip@punctummorashift=\glueexpr - \gre@dimen@morawidth - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustmentbar\relax %
   \fi %
   \relax %
 }
 
 \def\gre@unkern@bar@aftermora{%
-  \gre@get@unkern@aftermora{2}%
-  \kern\gre@skip@temp@four %
+  % don't apply a negative kern on the first glyph
+  % while boxing, otherwise the box width will be wrong
+  \ifgre@firstglyph %
+    \ifgre@boxing\else %
+      \gre@get@unkern@aftermora{2}%
+      \kern\gre@skip@punctummorashift %
+    \fi %
+  \else %
+    \gre@get@unkern@aftermora{2}%
+    \kern\gre@skip@punctummorashift %
+  \fi %
   \relax %
 }
 
@@ -1632,18 +1641,28 @@
   % mora, we kern of the corresponding space. We do it only in the case
   % of a bar in the middle of other notes.
   \ifgre@lastendswithmora %
-    \ifcase\gre@count@shiftaftermora\or %
-      \ifcase #2\or %
+    \ifgre@newbarspacing %
+      \ifnum\gre@count@shiftaftermora=0\else %
+        % new bar spacing takes care of punctum mora on its own, but only when
+        % bar has its own syllable
+        \ifcase #2\or %
+          \gre@unkern@bar@aftermora %
+        \fi %
+      \fi %
+    \else %
+      \ifcase\gre@count@shiftaftermora\or %
+        \ifcase #2\or %
+          \gre@unkern@bar@aftermora %
+        \fi %
+      \or %
+        \ifcase #3\relax %
+          \gre@unkern@bar@aftermora %
+        \fi %
+      \or %
+        \gre@unkern@bar@aftermora %
+      \or %
         \gre@unkern@bar@aftermora %
       \fi %
-    \or %
-      \ifcase #3\relax %
-        \gre@unkern@bar@aftermora %
-      \fi %
-    \or %
-      \gre@unkern@bar@aftermora %
-    \or %
-      \gre@unkern@bar@aftermora %
     \fi %
   \fi %
   \gre@newglyphcommon %

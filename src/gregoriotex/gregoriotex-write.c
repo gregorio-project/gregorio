@@ -2467,7 +2467,13 @@ static int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
             }
         }
     }
-    return 0;
+    if (syllable->elements[0]) {
+        /* if there is anything else in the next syllable */
+        return 0;
+    }
+    /* the only thing that should reach this point is an empty next syllable
+     * we treat that kind of syllable as a bar */
+    return 13;
 }
 
 static __inline void write_low_choral_sign(FILE *const f,
@@ -3437,7 +3443,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     } else {
         write_fixed_text_styles(f, syllable->text,
                 syllable->next_syllable? syllable->next_syllable->text : NULL);
-        syllable_type = "\\GreSyllable";
+        syllable_type = "\\GreBarSyllable";
     }
     write_this_syllable_text(f, syllable_type, syllable->text, end_of_word);
     fprintf(f, "{}{\\Gre%s}", syllable->first_word ? "FirstWord" : "Unstyled");
