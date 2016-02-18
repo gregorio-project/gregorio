@@ -48,11 +48,7 @@
 % To remedy that, we define \gre@hskip to be \hskip outside a discretionary, and
 % \kern inside a discretionary. This is what these macros do:
 
-% save asked penalty in the case where we don't really use it (discretionary, etc.)
-\xdef\gre@savedpenalty{0}
-
-% gre@falsepenalty just saves the last seen penalty
-\def\gre@falsepenalty#1{\xdef\gre@savedpenalty{#1}}%
+\def\gre@falsepenalty#1{}%
 \def\gre@truepenalty#1{\penalty#1}%
 
 \let\gre@hskip\hskip%
