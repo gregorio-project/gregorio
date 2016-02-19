@@ -3443,7 +3443,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     } else {
         write_fixed_text_styles(f, syllable->text,
                 syllable->next_syllable? syllable->next_syllable->text : NULL);
-        syllable_type = "\\GreBarSyllable";
+        syllable_type = "\\GreNoNoteSyllable";
     }
     write_this_syllable_text(f, syllable_type, syllable->text, end_of_word);
     fprintf(f, "{}{\\Gre%s}", syllable->first_word ? "FirstWord" : "Unstyled");
