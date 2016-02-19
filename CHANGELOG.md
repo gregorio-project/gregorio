@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+### Changed
+- The treatment of syllables with no notes has been reverted when the old spacing algorithm is used.  Such syllables are now treated as notes syllables under the old algorithm (as was the case in 4.1.0-beta3 and earlier) and as bar syllables under the new algorithm.
 
 
 ## [4.1.0-rc1] - 2016-02-18
