@@ -244,17 +244,25 @@
 %%  min_text_dist = prev_cur_word ? 0 : space_inter_words
   \ifnum#1=1\relax %
     \ifgre@in@euouae %
-      \ifnum#2=1\relax %
-        \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext@bars@euouae\relax%
-      \else %
+      \ifgre@newbarspacing%
+        \ifnum#2=1\relax %
+          \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext@bars@euouae\relax%
+        \else %
+          \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext@euouae\relax%
+        \fi %
+      \else%
         \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext@euouae\relax%
-      \fi %
+      \fi%
     \else %
-      \ifnum#2=1\relax %
-        \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext@bars\relax%
-      \else %
+      \ifgre@newbarspacing%
+        \ifnum#2=1\relax %
+          \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext@bars\relax%
+        \else %
+          \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext\relax%
+        \fi %
+      \else%
         \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext\relax%
-      \fi %
+      \fi%
     \fi %
   \else %
     \gre@skip@minTextDistance=0pt\relax%
