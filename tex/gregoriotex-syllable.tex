@@ -869,7 +869,7 @@
       \GreNoBreak %
     \fi%
     %move to the beginning of the text
-    \gre@hskip\glueexpr(\gre@skip@bar@allocation+\gre@dimen@bar@shift+\wd\gre@box@syllablenotes/2+\gre@dimen@begindifference)\relax %
+    \gre@hskip\glueexpr(\gre@skip@bar@allocation+\gre@dimen@bar@shift-\wd\gre@box@syllablenotes/2-\gre@dimen@begindifference)\relax %
     \GreNoBreak %
     % all that extra stuff (translations and the like)
     #8%
@@ -883,12 +883,12 @@
       \gre@mustdotranslationcenterendfalse%
     \fi %
     %move back to the beginning of the bar line
-    \kern\dimexpr(\gre@dimen@enddifference-\wd\gre@box@syllablenotes)\relax %
+    \kern\dimexpr(-\gre@dimen@enddifference-\wd\gre@box@syllablenotes)\relax %
     \GreNoBreak%
     #9%
     \GreNoBreak%
     %move to the beginning of the notes of the next syllable
-    \gre@hskip\glueexpr(\gre@skip@bar@allocation-\gre@dimen@bar@shift)\relax %
+    \gre@hskip\glueexpr(-\wd\gre@box@syllablenotes/2-\gre@dimen@bar@shift+\gre@skip@bar@allocation)\relax %
     \ifdim\gre@skip@nextbegindifference < 0pt\relax%
       %we need to move back to where the text for the next syllable should start
       \GreNoBreak %
