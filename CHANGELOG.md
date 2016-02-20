@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+### Fixed
+- Offset limit calculations now function better in both directions for new bar spacing algorithm.
+
 ### Added
 - Added `maxbaroffsettextright@nobar` and `maxbaroffsettextleft@nobar` which function identically to the normal version except that they are used then the "bar" is empty (i.e. something like `*()` in gabc).
 

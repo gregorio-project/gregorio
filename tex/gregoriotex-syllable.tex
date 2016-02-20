@@ -862,14 +862,17 @@
     %
     \gre@calculate@barposition{#4}{#7}%
     %now we can place the text and bar
-    %we're going to start with the bar line, place the text relative to that, and then use the position of the bar line to reposition the cursor for the next syllable
+    %we're going to use the bar line to control positioning, so we need to start by getting to the end of the notes of the previous syllable
     \ifdim\gre@dimen@adjustedpreviousenddifference < 0pt\relax%
       %we need to move back to where the previous notes ended
       \kern\gre@dimen@adjustedpreviousenddifference\relax%
       \GreNoBreak %
     \fi%
     %move to the beginning of the text
-    \gre@hskip\glueexpr(\gre@skip@bar@allocation+\gre@dimen@bar@shift+\wd\gre@box@syllablenotes/2+\gre@dimen@begindifference)\relax %
+    \gre@hskip\glueexpr(\gre@skip@bar@allocation/2% right from end of previous notes to nominal middle of bar line
+      +\gre@dimen@bar@shift% from nominal middle of bar line to actual middle
+      -\wd\gre@box@syllablenotes/2% back up to beginning of bar line
+      +\gre@dimen@begindifference)\relax % from beginning of bar line to beginning of text
     \GreNoBreak %
     % all that extra stuff (translations and the like)
     #8%
@@ -883,12 +886,15 @@
       \gre@mustdotranslationcenterendfalse%
     \fi %
     %move back to the beginning of the bar line
-    \kern\dimexpr(\gre@dimen@enddifference-\wd\gre@box@syllablenotes)\relax %
+    \kern\dimexpr(\gre@dimen@enddifference% move from end of text to end of bar line
+      -\wd\gre@box@syllablenotes)\relax % back up from end of bar line to beginning
     \GreNoBreak%
     #9%
     \GreNoBreak%
     %move to the beginning of the notes of the next syllable
-    \gre@hskip\glueexpr(\gre@skip@bar@allocation-\gre@dimen@bar@shift)\relax %
+    \gre@hskip\glueexpr(-\wd\gre@box@syllablenotes/2% back up to middle of notes
+      -\gre@dimen@bar@shift% go back from actual middle to nominal middle of bar line
+      +\gre@skip@bar@allocation/2)\relax % go from nominal middle to the start of the next notes
     \ifdim\gre@skip@nextbegindifference < 0pt\relax%
       %we need to move back to where the text for the next syllable should start
       \GreNoBreak %
