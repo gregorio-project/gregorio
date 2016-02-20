@@ -3,7 +3,8 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
-
+### Added
+- It is now possible to turn off rythmic signs (separately or all together) with `\greprintsigns`, see GregorioRef for details (and [#936](https://github.com/gregorio-project/gregorio/issues/936) for request).
 
 ## [4.1.0-rc1] - 2016-02-18
 ### Fixed
