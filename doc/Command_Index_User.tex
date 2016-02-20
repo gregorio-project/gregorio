@@ -936,6 +936,22 @@ Macro to activate the new bar spacing algorithm.  The new algorithm attempts to 
   & \texttt{old} & Activates the old behavior (Default)\\
 \end{argtable}
 
+\subsubsection{Sign printing}
+
+\macroname{\textbackslash greprintsigns}{\{\#1\}\{\#2\}}{gregoriotex-signs.tex}
+Macro to prevent rythmic signs from printing:
+
+\begin{argtable}
+  \#1 & \texttt{vepisemus} & sets the printing of vertical episema\\
+  & \texttt{hepisemus} & sets the printing of horizontal episema\\
+  & \texttt{mora} & sets the printing of punctum mora and auctum duplex\\
+  & \texttt{all} & set the printing of all of these\\
+  \#2 & \texttt{enable} & enable the printing\\
+  & \texttt{disable} & disable the priting\\
+\end{argtable}
+
+Note that punctum mora and auctum duplex have an influence on spacings, so removing them will have an impact on that matter.
+
 \subsubsection{Hyphenation}
 
 \macroname{\textbackslash gresethyphen}{\{\#1\}}{gregoriotex-main.tex}
