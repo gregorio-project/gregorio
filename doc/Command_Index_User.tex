@@ -936,6 +936,22 @@ Macro to activate the new bar spacing algorithm.  The new algorithm attempts to 
   & \texttt{old} & Activates the old behavior (Default)\\
 \end{argtable}
 
+\subsubsection{Sign printing}
+
+\macroname{\textbackslash greprintsigns}{\{\#1\}\{\#2\}}{gregoriotex-signs.tex}
+Macro to prevent rythmic signs from printing (all signs are printed by default):
+
+\begin{argtable}
+  \#1 & \texttt{vepisema} & sets the printing of vertical episema\\
+  & \texttt{hepisema} & sets the printing of horizontal episema\\
+  & \texttt{mora} & sets the printing of punctum mora and auctum duplex\\
+  & \texttt{all} & set the printing of all of these\\
+  \#2 & \texttt{enable} & enable the printing\\
+  & \texttt{disable} & disable the priting\\
+\end{argtable}
+
+Note that punctum mora and auctum duplex have an influence on spacings, so removing them will have an impact on that matter.
+
 \subsubsection{Hyphenation}
 
 \macroname{\textbackslash gresethyphen}{\{\#1\}}{gregoriotex-main.tex}
@@ -1490,6 +1506,14 @@ Maximum distance by which the center of a bar and the center of its associated t
 
 \begin{gdimension}{maxbaroffsettextright}
 Same as \texttt{maxbaroffsettextleft} but when the center of the text goes right of the center of the bar.
+\end{gdimension}
+
+\begin{gdimension}{maxbaroffsettextleft@nobar}
+Maximum distance by which the center of a “no-bar” (\ie something like \texttt{*()} in gabc) and the center of its associated text can be separated, when the center of the text goes left of the center of the no-bar (new bar spacing algorithm only).
+\end{gdimension}
+
+\begin{gdimension}{maxbaroffsettextright@nobar}
+Same as \texttt{maxbaroffsettextleft@nobar} but when the center of the text goes right of the center of the no-bar.
 \end{gdimension}
 
 \begin{gdimension}{overhepisemalowshift}
