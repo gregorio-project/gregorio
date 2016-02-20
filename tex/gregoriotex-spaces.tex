@@ -1000,12 +1000,12 @@
   \else%
     \gre@debugmsg{barspacing}{left offset limit: \gre@space@dimen@maxbaroffsettextleft}%
     \gre@debugmsg{barspacing}{right offset limit: \gre@space@dimen@maxbaroffsettextright}%
-    \ifdim\gre@dimen@begindifference > \gre@space@dimen@maxbaroffsettextleft\relax%
+    \ifdim\gre@dimen@begindifference > \gre@space@dimen@maxbaroffsettextright\relax%
       %the two elements are too far apart and the text is to the left of the bar
-      \gre@debugmsg{barspacing}{shifts for text left of bar}%
+      \gre@debugmsg{barspacing}{shifts for text right of bar}%
       % first we shift text to the left so that it has the correct offset
       \gre@dimen@bar@shift = 0pt\relax%
-      \gre@dimen@text@shift = \dimexpr(-\gre@dimen@begindifference + \gre@space@dimen@maxbaroffsettextleft)\relax%
+      \gre@dimen@text@shift = \dimexpr(-\gre@dimen@begindifference + \gre@space@dimen@maxbaroffsettextright)\relax%
       % is the text too far to the left?
       \ifdim-\gre@dimen@text@shift > \dimexpr(\gre@skip@text@allocation/2-\gre@skip@text@requirement/2)\relax%
         % it is, so push both bar and text right to prevent a collision
@@ -1024,12 +1024,12 @@
           \advance\gre@dimen@text@shift by -0.5\gre@dimen@temp@one\relax%
         \fi %
       \fi%
-    \else\ifdim\gre@dimen@begindifference < -\gre@space@dimen@maxbaroffsettextright\relax%
+    \else\ifdim\gre@dimen@begindifference < -\gre@space@dimen@maxbaroffsettextleft\relax%
       %the two elements are too far apart and the text is to the right of the bar
       \gre@debugmsg{barspacing}{shifts for text to right of bar}%
       % first we shift text to the right so that it has the correct offset
       \gre@dimen@bar@shift = 0pt\relax %
-      \gre@dimen@text@shift = \dimexpr(-\gre@dimen@begindifference - \gre@space@dimen@maxbaroffsettextright)\relax %
+      \gre@dimen@text@shift = \dimexpr(-\gre@dimen@begindifference - \gre@space@dimen@maxbaroffsettextleft)\relax %
       % is the text too far to the right?
       \ifdim\gre@dimen@text@shift > \dimexpr(\gre@skip@text@allocation/2-\gre@skip@text@requirement/2)\relax %
         \gre@debugmsg{barspacing}{text collision detected}%
