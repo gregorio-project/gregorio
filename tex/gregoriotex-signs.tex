@@ -36,20 +36,20 @@
 \gresetglyphstyle{default}%
 
 % Possibility to disable some signs:
-\newif\ifgre@disablevepisemus
-\gre@disablevepisemusfalse
-\newif\ifgre@disablehepisemus
-\gre@disablehepisemusfalse
+\newif\ifgre@disablevepisema
+\gre@disablevepisemafalse
+\newif\ifgre@disablehepisema
+\gre@disablehepisemafalse
 \newif\ifgre@disablemora
 \gre@disablemorafalse
 
 \def\greprintsigns#1#2{%
   \IfStrEq{#2}{enable}%
     {%
-      \IfStrEq{#1}{vepisemus}{\global\gre@disablevepisemusfalse}{%
-        \IfStrEq{#1}{hepisemus}{\global\gre@disablehepisemusfalse}{%
+      \IfStrEq{#1}{vepisema}{\global\gre@disablevepisemafalse}{%
+        \IfStrEq{#1}{hepisema}{\global\gre@disablehepisemafalse}{%
           \IfStrEq{#1}{mora}{\global\gre@disablemorafalse}{%
-            \IfStrEq{#1}{all}{\global\gre@disablemorafalse\global\gre@disablevepisemusfalse\global\gre@disablehepisemusfalse}{%
+            \IfStrEq{#1}{all}{\global\gre@disablemorafalse\global\gre@disablevepisemafalse\global\gre@disablehepisemafalse}{%
               {\gre@error{Unrecognized first argument for \protect\greprintsigns}}%
             }%
           }%
@@ -58,10 +58,10 @@
     }%
     {\IfStrEq{#2}{disable}%
       {%
-        \IfStrEq{#1}{vepisemus}{\global\gre@disablevepisemustrue}{%
-          \IfStrEq{#1}{hepisemus}{\global\gre@disablehepisemustrue}{%
+        \IfStrEq{#1}{vepisema}{\global\gre@disablevepisematrue}{%
+          \IfStrEq{#1}{hepisema}{\global\gre@disablehepisematrue}{%
             \IfStrEq{#1}{mora}{\global\gre@disablemoratrue}{%
-              \IfStrEq{#1}{all}{\global\gre@disablemoratrue\global\gre@disablevepisemustrue\global\gre@disablehepisemustrue}{%
+              \IfStrEq{#1}{all}{\global\gre@disablemoratrue\global\gre@disablevepisematrue\global\gre@disablehepisematrue}{%
                 {\gre@error{Unrecognized first argument for \protect\greprintsigns}}%
               }%
             }%
@@ -1165,7 +1165,7 @@
 }%
 
 \def\GreVEpisema#1#2{%
-  \ifgre@disablevepisemus\else %
+  \ifgre@disablevepisema\else %
     \gre@vepisemaorrare{#1}{#2}{\GreCPVEpisema}{1}{}%
   \fi %
   \relax %
@@ -1428,7 +1428,7 @@
 %%   4 : low in space below note
 %%   5 : high in space below note
 \def\GreHEpisema#1#2#3#4#5#6#7#8#9{%
-  \ifgre@boxing\else\ifgre@disablehepisemus\else %
+  \ifgre@boxing\else\ifgre@disablehepisema\else %
     \gre@prephepisemaledgerlineheuristics%
     #7%
     \ifgre@hepisemabridge%
