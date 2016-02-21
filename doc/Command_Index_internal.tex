@@ -170,6 +170,8 @@ Calculates the difference between the end of the notes and the end of the syllab
   & \texttt{1} & save the value for the previous syllable before calculating the new value
 \end{argtable}
 
+The formula used is \verb=#1 - #2 + #3 - #4= or (more sensibly) \verb=(#1 - #4) - (#2 - #3)=.  This is also equivalent to \verb=-#4 - \gre@dimen@begindifference + #3=, a fact we take advantage of when calculating the end difference for a bar syllable under the new bar spacing algorithm.
+
 \macroname{\textbackslash gre@changeonedimenfactor}{\#1\#2\#3}{gregoriotex-spaces.tex}
 Change the scale of a single distance from one factor to another.
 
@@ -1675,7 +1677,9 @@ The space between the lines.
 The value that a particular glyph must be raised to be set in the correct position.
 
 \macroname{\textbackslash gre@dimen@enddifference}{}{gregoriotex-spaces.tex}
-Distance from the end of the notes to the end of the text for the previous syllable.  Positive values when notes go further than text, negative in the other case.
+Distance from the end of the notes to the end of the text for the previous syllable.  Positive values when notes go further than text, negative in the other case.  This means that \verb=\kern\gre@dimen@enddifference= will take you from the end of the text to the end of the notes.
+
+For regular syllables and bar syllables using the old bar spacing algorithm this is calculated using \verb=\gre@calculate@enddifference=.  For bar syllables using the new bar spacing algorithm the calculation is \verb=-\wd\gre@box@syllabletext - \gre@dimen@begindifference + \wd\gre@box@syllablenotes=
 
 \macroname{\textbackslash gre@dimen@previousenddifference}{}{gregoriotex-spaces.tex}
 Stored value of enddifference prior to the current one.
@@ -1684,7 +1688,9 @@ Stored value of enddifference prior to the current one.
 The difference between the start of the notes and the start of the text for the next syllable.  Positive when when text begins first, negative in other case.
 
 \macroname{\textbackslash gre@dimen@begindifference}{}{gregoriotex-spaces.tex}
-The difference between the start of the notes and the start of the text for the current syllable.  Positive when when text begins first, negative in other case.
+The difference between the start of the notes and the start of the text for the current syllable.  Positive when when text begins first, negative in other case.  This means that \verb=\kern\gre@dimen@begindifference= will take you from the start of the notes to the start of the text.
+
+For regular syllables and bar syllables using the old bar spacing algorithm this is calculated as \verb=\gre@dimen@notesaligncenter - \gre@dimen@textaligncenter=.  For bar syllables using the new bar spacing algorithm the calculation is \verb= -\wd\gre@box@syllablenotes/2 - \gre@dimen@bar@shift - \gre@skip@bar@allocation - \gre@dimen@adjustedpreviousenddifference + \gre@skip@text@allocation + \gre@dimen@text@shift -\wd\gre@box@syllabletext/2=.
 
 \macroname{\textbackslash gre@dimen@lastglyphwidth}{}{gregoriotex-spaces.tex}
 The width of the last glyph.

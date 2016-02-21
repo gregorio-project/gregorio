@@ -35,6 +35,43 @@
 
 \gresetglyphstyle{default}%
 
+% Possibility to disable some signs:
+\newif\ifgre@disablevepisema
+\gre@disablevepisemafalse
+\newif\ifgre@disablehepisema
+\gre@disablehepisemafalse
+\newif\ifgre@disablemora
+\gre@disablemorafalse
+
+\def\greprintsigns#1#2{%
+  \IfStrEq{#2}{enable}%
+    {%
+      \IfStrEq{#1}{vepisema}{\global\gre@disablevepisemafalse}{%
+        \IfStrEq{#1}{hepisema}{\global\gre@disablehepisemafalse}{%
+          \IfStrEq{#1}{mora}{\global\gre@disablemorafalse}{%
+            \IfStrEq{#1}{all}{\global\gre@disablemorafalse\global\gre@disablevepisemafalse\global\gre@disablehepisemafalse}{%
+              {\gre@error{Unrecognized first argument for \protect\greprintsigns}}%
+            }%
+          }%
+        }%
+      }%
+    }%
+    {\IfStrEq{#2}{disable}%
+      {%
+        \IfStrEq{#1}{vepisema}{\global\gre@disablevepisematrue}{%
+          \IfStrEq{#1}{hepisema}{\global\gre@disablehepisematrue}{%
+            \IfStrEq{#1}{mora}{\global\gre@disablemoratrue}{%
+              \IfStrEq{#1}{all}{\global\gre@disablemoratrue\global\gre@disablevepisematrue\global\gre@disablehepisematrue}{%
+                {\gre@error{Unrecognized first argument for \protect\greprintsigns}}%
+              }%
+            }%
+          }%
+        }%
+      }%
+      {\gre@error{Unrecognized second argument for \protect\greprintsigns}}%
+    }%
+}%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for discretionaries
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -890,7 +927,7 @@
 %   - 3 same as 2 but with ambitus of one (g.f)
 % #3 is 1 in case of a punctommora in the note before the last note of a podatus, porrectus or torculus resupinus, 0 otherwise.
 % #4 is 1 if we are at a punctum inclinatum, 0 otherwise
-\def\GrePunctumMora#1#2#3#4{%
+\def\gre@punctum@mora#1#2#3#4{%
   \GreNoBreak %
   \ifcase#2\relax %
     \gre@skip@temp@four = \gre@space@skip@spacebeforesigns\relax%
@@ -963,6 +1000,13 @@
   \GreNoBreak %
   \relax%
 }%
+
+\def\GrePunctumMora#1#2#3#4{%
+  \ifgre@disablemora\else %
+    \gre@punctum@mora{#1}{#2}{#3}{#4}%
+  \fi %
+  \relax %
+}
 
 % a function to typeset an augmentum duplex, easy enough to be understood...
 \def\GreAugmentumDuplex#1#2#3{%
@@ -1121,7 +1165,9 @@
 }%
 
 \def\GreVEpisema#1#2{%
-  \gre@vepisemaorrare{#1}{#2}{\GreCPVEpisema}{1}{}%
+  \ifgre@disablevepisema\else %
+    \gre@vepisemaorrare{#1}{#2}{\GreCPVEpisema}{1}{}%
+  \fi %
   \relax %
 }%
 
@@ -1382,7 +1428,7 @@
 %%   4 : low in space below note
 %%   5 : high in space below note
 \def\GreHEpisema#1#2#3#4#5#6#7#8#9{%
-  \ifgre@boxing\else %
+  \ifgre@boxing\else\ifgre@disablehepisema\else %
     \gre@prephepisemaledgerlineheuristics%
     #7%
     \ifgre@hepisemabridge%
@@ -1391,7 +1437,7 @@
       \gre@hepisorline{#1}{#2}{#3}{#4}{#5}{#8}{#9}%
     \fi %
     \gre@resetledgerlineheuristics%
-  \fi %
+  \fi\fi %
   \relax %
 }%
 
