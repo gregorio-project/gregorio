@@ -384,6 +384,13 @@
 
 % dimen keeping the shift computed with next function
 \newdimen\gre@dimen@eolshift
+\newcount\gre@count@protrusion@hyphen@eol %
+\gre@count@protrusion@hyphen@eol = 50
+%
+\def\gresethyphenprotrusion#1{%
+  \gre@count@protrusion@hyphen@eol = #1\relax %
+  \relax %
+}
 
 %% @desc Macro used in \GreSyllable. Sets \gre@dimen@eolshift to the right kern
 %%       that should appear before an end of line.  When active this prevents
@@ -401,6 +408,16 @@
     \else%
       % The basic value for the eol shift is -enddifference
       \global\gre@skip@temp@two=-#1\relax%
+      % if there is a possible hyphen (added afterwards in lua), we keep some room for it
+      \ifgre@possibleluahyphenafterthissyllable %
+        \setbox\gre@box@temp@width=\hbox{\GreHyph}%
+        \global\advance\gre@skip@temp@two by -\dimexpr(\wd\gre@box@temp@width * ((100 - \gre@count@protrusion@hyphen@eol) / 100))\relax%
+      \fi %
+      % if there is an automatic hyphen, we apply the protrusion factor
+      \ifgre@showhyphenafterthissyllable %
+        \setbox\gre@box@temp@width=\hbox{\GreHyph}%
+        \global\advance\gre@skip@temp@two by \dimexpr(\wd\gre@box@temp@width * (\gre@count@protrusion@hyphen@eol / 100))\relax%
+      \fi %
       % The maximum value is wd(custos) + spacebeforeeolcustos
       % Were the eolshift larger than this the lyrics would stick out
       % into the margin

@@ -3,7 +3,8 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
-
+### Fixed
+- hyphens now cannot go right of the staff lines. A protrusion factor can now be applied for hyphens at end of lines (50% by default), it can be changed through `\gresethyphenprotrusion` (see GregorioRef and [#845](https://github.com/gregorio-project/gregorio/issues/845)).
 
 ## [4.1.0-rc1] - 2016-02-18
 ### Fixed

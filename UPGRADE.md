@@ -66,6 +66,15 @@ The following spaces have been added:
 
 By default, these are sized one half millimeter larger than their "non-text" counterparts.  This may cause minor spacing changes in your existing scores.  Adjust them as necessary to get the look you want.
 
+### Protrusion of hyphens at end of line
+
+The default protrusion factor for hyphens at end of lines is 50, meaning that 50% of the hyphen is ignored by horizontal spacing algorithm at end of line. This should:
+
+- prevent hyphens from going too far right, especially no further than end of line
+- stretch some lines a little bit
+
+If you prefer the old behavior, `\gresethyphenprotrusion{100}` should restore it (or at least differences should be small). The value 100 may be suprising, but many hyphens were not taken into account at all at end of lines previously, while they are now, hence the value.
+
 ### Oriscus orientation
 
 The oriscus orientation (whether it points up or down) is now dependent on the note the follows, even if the note is not directly connected to the oriscus (as it would be in a salicus or a pressus).  Appending a `1` to an unconnected oriscus in gabc will force the oriscus to point upwards and `0` will force the oriscus to point downwards.

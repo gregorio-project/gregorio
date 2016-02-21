@@ -962,6 +962,14 @@ Marco to determine how much space the hyphen at the end of a line occupies for t
   & \texttt{zero} & The hyphen is considered to take up no space
 \end{argtable}
 
+\macroname{\textbackslash gresethyphenprotrusion}{\{\#1\}}{gregoriotex-spaces.tex}
+Sets the protrusion factor of hyphens at end of lines. The default value is 50, a good compromise in the tested scores.
+
+\begin{argtable}
+  \#1 & \texttt{number} & The protrusion factor, over 100
+\end{argtable}
+
+Note that a proper interface for setting protrusion factor of punctuation signs might appear in the next version, deprecating this one.
 
 \subsubsection{Clef Visibility}
 
