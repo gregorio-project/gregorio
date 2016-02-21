@@ -385,8 +385,10 @@
 % dimen keeping the shift computed with next function
 \newdimen\gre@dimen@eolshift
 \newcount\gre@count@protrusion@hyphen@eol %
+
+% protrusion for hyphens inerted by Lua
 \gre@count@protrusion@hyphen@eol = 50
-%
+
 \def\gresethyphenprotrusion#1{%
   \gre@count@protrusion@hyphen@eol = #1\relax %
   \relax %

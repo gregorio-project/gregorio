@@ -66,14 +66,9 @@ The following spaces have been added:
 
 By default, these are sized one half millimeter larger than their "non-text" counterparts.  This may cause minor spacing changes in your existing scores.  Adjust them as necessary to get the look you want.
 
-### Protrusion of hyphens at end of line
+### Hyphens going right of staff lines
 
-The default protrusion factor for hyphens at end of lines is 50, meaning that 50% of the hyphen is ignored by horizontal spacing algorithm at end of line. This should:
-
-- prevent hyphens from going too far right, especially no further than end of line
-- stretch some lines a little bit
-
-If you prefer the old behavior, `\gresethyphenprotrusion{100}` should restore it (or at least differences should be small). The value 100 may be suprising, but many hyphens were not taken into account at all at end of lines previously, while they are now, hence the value.
+Hyphens should now not go right of staff lines. If you prefer the old behavior, `\gresethyphenprotrusion{100}` should restore it.
 
 ### Oriscus orientation
 
