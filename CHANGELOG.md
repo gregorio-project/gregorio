@@ -10,6 +10,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Added
 - It is now possible to turn off rythmic signs (separately or all together) with `\greprintsigns`, see GregorioRef for details (and [#936](https://github.com/gregorio-project/gregorio/issues/936) for request).
 - Added `maxbaroffsettextright@nobar` and `maxbaroffsettextleft@nobar` which function identically to the normal version except that they are used then the "bar" is empty (i.e. something like `*()` in gabc).
+- Added `notesonly` argument to `\gresetshiftaftermora` (see [#948](https://github.com/gregorio-project/gregorio/issues/948)).
 
 ## [4.1.0-rc1] - 2016-02-18
 ### Fixed
