@@ -288,7 +288,11 @@
       \fi %
     \fi %
   \or %
-    \gre@skip@minNotesDistance=\gre@space@skip@notebarspace\relax%
+    \ifgre@newbarspacing %
+      \gre@skip@minNotesDistance=0pt\relax%
+    \else %
+      \gre@skip@minNotesDistance=\gre@space@skip@notebarspace\relax%
+    \fi %
   \or %
     \ifnum#1=1\relax %
       \gre@skip@minNotesDistance=\gre@space@skip@interwordspacenotes@alteration\relax %
@@ -986,7 +990,7 @@
         \gre@skip@syllablefinalskip=\gre@space@dimen@intersyllablespacenotes\relax%
       \fi %
     \or %
-      \gre@skip@syllablefinalskip=\gre@space@skip@notebarspace\relax%
+      \gre@skip@syllablefinalskip=0pt\relax%
     \or %
       \ifnum#1=1\relax %
         \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacenotes@alteration\relax %
@@ -1566,20 +1570,62 @@
   \ifgre@scale@ascendinginclinatumtonobarmaxshift%
     \gre@changeonedimenfactor{ascendinginclinatumtonobarmaxshift}{#1}{#2}%
   \fi%
-  \ifgre@scale@spacearoundsmallbar%
-    \gre@changeonedimenfactor{spacearoundsmallbar}{#1}{#2}%
+  \ifgre@scale@bar@virgula%
+    \gre@changeonedimenfactor{bar@virgula}{#1}{#2}%
   \fi%
-  \ifgre@scale@spacearoundminor%
-    \gre@changeonedimenfactor{spacearoundminor}{#1}{#2}%
+  \ifgre@scale@bar@minima%
+    \gre@changeonedimenfactor{bar@minima}{#1}{#2}%
   \fi%
-  \ifgre@scale@spacearoundmaior%
-    \gre@changeonedimenfactor{spacearoundmaior}{#1}{#2}%
+  \ifgre@scale@bar@minor%
+    \gre@changeonedimenfactor{bar@minor}{#1}{#2}%
   \fi%
-  \ifgre@scale@spacearoundfinalis%
-    \gre@changeonedimenfactor{spacearoundfinalis}{#1}{#2}%
+  \ifgre@scale@bar@minor%
+    \gre@changeonedimenfactor{bar@dominican}{#1}{#2}%
   \fi%
-  \ifgre@scale@spacebeforefinalfinalis%
-    \gre@changeonedimenfactor{spacebeforefinalfinalis}{#1}{#2}%
+  \ifgre@scale@bar@maior%
+    \gre@changeonedimenfactor{bar@maior}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@finalis%
+    \gre@changeonedimenfactor{bar@finalis}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@finalfinalis%
+    \gre@changeonedimenfactor{bar@finalfinalis}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@virgula@standalone@text%
+    \gre@changeonedimenfactor{bar@virgula@standalone@text}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minima@standalone@text%
+    \gre@changeonedimenfactor{bar@minima@standalone@text}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minor@standalone@text%
+    \gre@changeonedimenfactor{bar@minor@standalone@text}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minor@standalone@text%
+    \gre@changeonedimenfactor{bar@dominican@standalone@text}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@maior@standalone@text%
+    \gre@changeonedimenfactor{bar@maior@standalone@text}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@finalis@standalone@text%
+    \gre@changeonedimenfactor{bar@finalis@standalone@text}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@virgula@standalone@notext%
+    \gre@changeonedimenfactor{bar@virgula@standalone@notext}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minima@standalone@notext%
+    \gre@changeonedimenfactor{bar@minima@standalone@notext}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minor@standalone@notext%
+    \gre@changeonedimenfactor{bar@minor@standalone@notext}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minor@standalone@notext%
+    \gre@changeonedimenfactor{bar@dominican@standalone@notext}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@maior@standalone@notext%
+    \gre@changeonedimenfactor{bar@maior@standalone@notext}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@finalis@standalone@notext%
+    \gre@changeonedimenfactor{bar@finalis@standalone@notext}{#1}{#2}%
   \fi%
   \ifgre@scale@spacearoundclefbars%
     \gre@changeonedimenfactor{spacearoundclefbars}{#1}{#2}%

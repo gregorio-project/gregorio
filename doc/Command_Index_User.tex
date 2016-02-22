@@ -1337,58 +1337,6 @@ Space between a punctum inclinatum and a no-bar (stemless) glyph three or four
 pitches above.
 \end{gdimension}
 
-\begin{gdimension}{spacearoundsmallbar}
-Space around virgula and divisio minima.
-\end{gdimension}
-
-\begin{gdimension}{spacearoundminor}
-Space around divisio minor.
-\end{gdimension}
-
-\begin{gdimension}{spacearoundmaior}
-Space around divisio maior.
-\end{gdimension}
-
-\begin{gdimension}{spacearoundfinalis}
-Space around divisio finalis.
-\end{gdimension}
-
-\begin{gdimension}{spacebeforefinalfinalis}
-A special space for finalis, for when it is the last glyph.
-\end{gdimension}
-
-\begin{gdimension}{spacearoundsmallbartext}
-Space around virgula and divisio minima with text underneath.
-\end{gdimension}
-
-\begin{gdimension}{spacearoundminortext}
-Space around divisio minor with text underneath.
-\end{gdimension}
-
-\begin{gdimension}{spacearoundmaiortext}
-Space around divisio maior with text underneath.
-\end{gdimension}
-
-\begin{gdimension}{spacearoundfinalistext}
-Space around divisio finalis with text underneath.
-\end{gdimension}
-
-\begin{gdimension}{spacebeforefinalfinalistext}
-A special space for finalis with text underneath, for when it is the last glyph.
-\end{gdimension}
-
-\begin{gdimension}{spacearoundclefbars}
-Additional space that will appear around bars that are preceded by a custos and followed by a key.
-\end{gdimension}
-
-\begin{gdimension}{textbartextspace}
-Space between the text of previous syllable and the text associated with the bar (old bar spacing algorithm only).
-\end{gdimension}
-
-\begin{gdimension}{notebarspace}
-Minimal space between a note and a bar.
-\end{gdimension}
-
 \begin{gdimension}{maximumspacewithoutdash}
 Maximal space between two syllables for which we consider a dash is not needed.
 \end{gdimension}
@@ -1520,22 +1468,6 @@ Distance an over-the-notes slur will be raised above the baseline of a note at t
 Distance an under-the-notes slur will be raised above the baseline of a note at the same height.
 \end{gdimension}
 
-\begin{gdimension}{maxbaroffsettextleft}
-Maximum distance by which the center of a bar and the center of its associated text can be separated, when the center of the text goes left of the center of the bar (new bar spacing algorithm only).
-\end{gdimension}
-
-\begin{gdimension}{maxbaroffsettextright}
-Same as \texttt{maxbaroffsettextleft} but when the center of the text goes right of the center of the bar.
-\end{gdimension}
-
-\begin{gdimension}{maxbaroffsettextleft@nobar}
-Maximum distance by which the center of a “no-bar” (\ie something like \texttt{*()} in gabc) and the center of its associated text can be separated, when the center of the text goes left of the center of the no-bar (new bar spacing algorithm only).
-\end{gdimension}
-
-\begin{gdimension}{maxbaroffsettextright@nobar}
-Same as \texttt{maxbaroffsettextleft@nobar} but when the center of the text goes right of the center of the no-bar.
-\end{gdimension}
-
 \begin{gdimension}{divisiofinalissep}
 Space separating the two bars of a divisio finalis.
 \end{gdimension}
@@ -1590,6 +1522,100 @@ Vertical distance to place a punctum mora for the second note in a porrectus (or
 
 \begin{gdimension}{raresignshift}
 Distance to place a ``rare'' sign above the top space in a score.
+\end{gdimension}
+
+\subsubsection*{Bar distances}
+
+\begin{gdimension}{bar@finalfinalis}
+A special space for finalis, for when it is the last glyph.
+\end{gdimension}
+
+Spaces around bars when they are typeset inside a syllable:
+
+\begin{gdimension}{bar@virgula}
+\end{gdimension}
+
+\begin{gdimension}{bar@minima}
+\end{gdimension}
+
+\begin{gdimension}{bar@minor}
+\end{gdimension}
+
+\begin{gdimension}{bar@dominican}
+\end{gdimension}
+
+\begin{gdimension}{bar@maior}
+\end{gdimension}
+
+\begin{gdimension}{bar@finalis}
+\end{gdimension}
+
+Spaces around bars in standalone syllables, when these have text (new bar spacing algorithm only):
+
+\begin{gdimension}{bar@virgula@standalone@text}
+\end{gdimension}
+
+\begin{gdimension}{bar@minima@standalone@text}
+\end{gdimension}
+
+\begin{gdimension}{bar@minor@standalone@text}
+\end{gdimension}
+
+\begin{gdimension}{bar@dominican@standalone@text}
+\end{gdimension}
+
+\begin{gdimension}{bar@maior@standalone@text}
+\end{gdimension}
+
+\begin{gdimension}{bar@finalis@standalone@text}
+\end{gdimension}
+
+Spaces around bars in standalone syllables, when these have no text (new bar spacing algorithm only):
+
+\begin{gdimension}{bar@virgula@standalone@notext}
+\end{gdimension}
+
+\begin{gdimension}{bar@minima@standalone@notext}
+\end{gdimension}
+
+\begin{gdimension}{bar@minor@standalone@notext}
+\end{gdimension}
+
+\begin{gdimension}{bar@dominican@standalone@notext}
+\end{gdimension}
+
+\begin{gdimension}{bar@maior@standalone@notext}
+\end{gdimension}
+
+\begin{gdimension}{bar@finalis@standalone@notext}
+\end{gdimension}
+
+\begin{gdimension}{spacearoundclefbars}
+Additional space that will appear around bars that are preceded by a custos and followed by a key.
+\end{gdimension}
+
+\begin{gdimension}{textbartextspace}
+Space between the text of previous syllable and the text associated with the bar (old bar spacing algorithm only).
+\end{gdimension}
+
+\begin{gdimension}{notebarspace}
+Minimal space between a note and a bar.
+\end{gdimension}
+
+\begin{gdimension}{maxbaroffsettextleft}
+Maximum distance by which the center of a bar and the center of its associated text can be separated, when the center of the text goes left of the center of the bar (new bar spacing algorithm only).
+\end{gdimension}
+
+\begin{gdimension}{maxbaroffsettextright}
+Same as \texttt{maxbaroffsettextleft} but when the center of the text goes right of the center of the bar.
+\end{gdimension}
+
+\begin{gdimension}{maxbaroffsettextleft@nobar}
+Maximum distance by which the center of a “no-bar” (\ie something like \texttt{*()} in gabc) and the center of its associated text can be separated, when the center of the text goes left of the center of the no-bar (new bar spacing algorithm only).
+\end{gdimension}
+
+\begin{gdimension}{maxbaroffsettextright@nobar}
+Same as \texttt{maxbaroffsettextleft@nobar} but when the center of the text goes right of the center of the no-bar.
 \end{gdimension}
 
 
