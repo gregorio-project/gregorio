@@ -271,7 +271,7 @@
     \else %
       \gre@skip@minNotesDistance=\gre@space@dimen@intersyllablespacenotes\relax%
     \fi %
-    \ifcase\gre@count@shiftaftermora\or\or\or\or %
+    \ifnum\gre@count@shiftaftermora>3\relax %
       \ifgre@thisendswithmora %
         % last syllable ends by a punctum mora, we want to ignore it.
         % this sets the distance to shift into \gre@skip@temp@four:
@@ -877,7 +877,7 @@
       % punctum mora adjustment only before bars
       \gre@get@unkern@aftermora{2}%
       \advance\gre@dimen@adjustedpreviousenddifference by \gre@skip@punctummorashift %
-    \or %
+    \or\or %
       % punctum mora adjustment always occurs
       \gre@get@unkern@aftermora{2}%
       \advance\gre@dimen@adjustedpreviousenddifference by \gre@skip@punctummorashift %
