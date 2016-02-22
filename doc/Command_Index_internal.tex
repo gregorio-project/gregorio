@@ -1515,7 +1515,10 @@ Boolean which indicates that the clef should be visible.
 Boolean which indicates that a hyphen after an empty first syllable should be forced.
 
 \macroname{\textbackslash ifgre@showhyphenafterthissyllable}{}{gregoriotex-syllable.tex}
-Boolean used by \verb=\GreSyllable= to decide if a hyphen should be shown after the syllable.
+Boolean set and used by \verb=\GreSyllable= to decide if a hyphen should be shown after the syllable.
+
+\macroname{\textbackslash ifgre@possibleluahyphenafterthissyllable}{}{gregoriotex-syllable.tex}
+Boolean set by \verb=\GreSyllable= indicating if the Lua pass may add an hyphen after the syllable, used by \verb=\gre@calculate@eolshift= for protrusion calculation.
 
 \macroname{\textbackslash ifgre@thirdlineadjustmentnecessary}{}{gregoriotex-syllable.tex}
 Boolean which indicates that a third-line adjustment to staff line width is necessary.
@@ -1596,6 +1599,12 @@ Box holding the text associated with a syllable.
 \macroname{\textbackslash gre@box@hep}{}{gregoriotex-chars.tex}
 Box holding the horizontal episema.
 
+
+\subsection{Protrusion factors}
+Protrusion factors are counts representing a protrusion factor over 100.
+
+\macroname{\textbackslash gre@count@protrusion@hyphen@eol}{}{gregoriotex-spaces.tex}
+Protrusion factor applied to hyphens at end of lines.
 
 
 \subsection{Distances}

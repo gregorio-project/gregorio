@@ -852,6 +852,17 @@ Macro to determine whether an automatic linebreak before a EUOUAE area is justif
   & \texttt{ragged} & Automatic line breaks before EUOUAE areas should be ragged\\
 \end{argtable}
 
+\textbf{Important:} When set to \texttt{ragged}, Gregorio\TeX{} will require a
+second pass (run of \texttt{lualatex} or \texttt{luatex}) to typeset the line
+endings correctly.  When an additional pass is required, Gregorio\TeX{} will
+emit the following warning:\par\medskip
+
+\begin{scriptsize}
+\begin{latexcode}
+Module gregoriotex warning: Line heights or variable brace lengths may have changed. Rerun to fix.
+\end{latexcode}
+\end{scriptsize}
+
 \macroname{\textbackslash gresetbreakineuouae}{\{\#1\}}{gregoriotex-main.tex}
 Macro to determine whether line breaks are allowed inside a EUOUAE area (delimited by \texttt{<eu></eu>} tags in gabc).
 
@@ -920,8 +931,9 @@ Macro to change the behaviour for separation between notes of two syllables when
 
 \begin{argtable}
   \#1 & \texttt{always} & punctum mora are always ignored (default)\\
-  & \texttt{barsonly} & punctum mora are ignored before bars\\
-  & \texttt{notextonly} & punctum mora are ignored before bars inside syllables, or bars having their own syllable without text\\
+  & \texttt{notesonly} & punctum mora are ignored before notes, not bars\\
+  & \texttt{barsonly} & punctum mora are ignored before bars, not notes\\
+  & \texttt{notextonly} & punctum mora are ignored only before bars inside syllables, or bars having their own syllable without text\\
   & \texttt{insideonly} & punctum mora are ignored only before bars inside syllables\\
   & \texttt{never} & punctum mora are never ignored\\
 \end{argtable}
@@ -978,6 +990,14 @@ Marco to determine how much space the hyphen at the end of a line occupies for t
   & \texttt{zero} & The hyphen is considered to take up no space
 \end{argtable}
 
+\macroname{\textbackslash gresethyphenprotrusion}{\{\#1\}}{gregoriotex-spaces.tex}
+Sets the protrusion factor of hyphens at end of lines. The default value is 50, a good compromise in the tested scores.
+
+\begin{argtable}
+  \#1 & \texttt{number} & The protrusion factor, percent
+\end{argtable}
+
+Note that a proper interface for setting protrusion factor of punctuation signs might appear in the next version, deprecating this one. Also, this protrusion factor does not apply to all hyphens (only those inserted by the Lua pass), so use it with caution.
 
 \subsubsection{Clef Visibility}
 

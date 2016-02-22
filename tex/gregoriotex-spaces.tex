@@ -271,7 +271,7 @@
     \else %
       \gre@skip@minNotesDistance=\gre@space@dimen@intersyllablespacenotes\relax%
     \fi %
-    \ifcase\gre@count@shiftaftermora\or\or\or\or %
+    \ifnum\gre@count@shiftaftermora>3\relax %
       \ifgre@thisendswithmora %
         % last syllable ends by a punctum mora, we want to ignore it.
         % this sets the distance to shift into \gre@skip@temp@four:
@@ -384,6 +384,15 @@
 
 % dimen keeping the shift computed with next function
 \newdimen\gre@dimen@eolshift
+\newcount\gre@count@protrusion@hyphen@eol %
+
+% protrusion for hyphens inerted by Lua
+\gre@count@protrusion@hyphen@eol = 50\relax
+
+\def\gresethyphenprotrusion#1{%
+  \gre@count@protrusion@hyphen@eol = #1\relax %
+  \relax %
+}
 
 %% @desc Macro used in \GreSyllable. Sets \gre@dimen@eolshift to the right kern
 %%       that should appear before an end of line.  When active this prevents
@@ -391,22 +400,25 @@
 %%
 %% @arg#1 The \gre@dimen@enddifference of the corresponding syllable
 \def\gre@calculate@eolshift#1{%
-  \global\gre@skip@temp@three=0pt\relax%
-  \global\gre@skip@temp@two=0pt\relax%
+  \gre@skip@temp@two=0pt\relax%
   % we only need a shift if the lyrics are longer than the notes
   \ifdim#1 <0pt\relax%
     % we only need to shift if there is a custos being printed
     \ifgre@blockeolcustos%
-      \global\gre@dimen@eolshift=0pt\relax%
+      \gre@dimen@eolshift=0pt\relax%
     \else%
       % The basic value for the eol shift is -enddifference
-      \global\gre@skip@temp@two=-#1\relax%
+      \gre@skip@temp@two=-#1\relax%
+      % if there is a possible hyphen (added afterwards in lua), we keep some room for it
+      \ifgre@possibleluahyphenafterthissyllable %
+        \setbox\gre@box@temp@width=\hbox{\GreHyph}%
+        \advance\gre@skip@temp@two by -\dimexpr(\wd\gre@box@temp@width * ((100 - \gre@count@protrusion@hyphen@eol) / 100))\relax%
+      \fi %
       % The maximum value is wd(custos) + spacebeforeeolcustos
       % Were the eolshift larger than this the lyrics would stick out
       % into the margin
       \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{\gre@pitch@g}}%
-      \global\advance\gre@skip@temp@three by %
-        \glueexpr(\wd\gre@box@temp@width+\gre@space@skip@spacebeforeeolcustos)\relax%
+      \gre@skip@temp@three = \glueexpr(\wd\gre@box@temp@width+\gre@space@skip@spacebeforeeolcustos)\relax%
       % pick the smaller of the two values calculated above
       \ifdim\gre@skip@temp@two>\gre@skip@temp@three%
         \gre@debugmsg{eolshift}{imposing limit}%
@@ -865,7 +877,7 @@
       % punctum mora adjustment only before bars
       \gre@get@unkern@aftermora{2}%
       \advance\gre@dimen@adjustedpreviousenddifference by \gre@skip@punctummorashift %
-    \or %
+    \or\or %
       % punctum mora adjustment always occurs
       \gre@get@unkern@aftermora{2}%
       \advance\gre@dimen@adjustedpreviousenddifference by \gre@skip@punctummorashift %
