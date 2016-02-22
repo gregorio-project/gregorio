@@ -852,6 +852,17 @@ Macro to determine whether an automatic linebreak before a EUOUAE area is justif
   & \texttt{ragged} & Automatic line breaks before EUOUAE areas should be ragged\\
 \end{argtable}
 
+\textbf{Important:} When set to \texttt{ragged}, Gregorio\TeX{} will require a
+second pass (run of \texttt{lualatex} or \texttt{luatex}) to typeset the line
+endings correctly.  When an additional pass is required, Gregorio\TeX{} will
+emit the following warning:\par\medskip
+
+\begin{scriptsize}
+\begin{latexcode}
+Module gregoriotex warning: Line heights or variable brace lengths may have changed. Rerun to fix.
+\end{latexcode}
+\end{scriptsize}
+
 \macroname{\textbackslash gresetbreakineuouae}{\{\#1\}}{gregoriotex-main.tex}
 Macro to determine whether line breaks are allowed inside a EUOUAE area (delimited by \texttt{<eu></eu>} tags in gabc).
 
