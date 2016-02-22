@@ -966,16 +966,6 @@
   %as with the text, we start by borrowing the minNotesDistance left over from the previous syllable
   \gre@debugmsg{barspacing}{bar width: \the\wd\gre@box@syllablenotes}%
   \gre@skip@bar@requirement = \wd\gre@box@syllablenotes\relax%
-  %now, if there is a visible bar for this syllable, we calculate this syllable’s equivalent of minNotesDistance
-  % gre@count@temp@one holds 0 if next is not a bar, 1 if it is, 2 if it starts with an alteration
-  \gre@count@temp@one=0%
-  \ifnum#2>9\relax %
-    \ifnum#2<20\relax %
-      \gre@count@temp@one=1\relax %
-    \else %
-      \gre@count@temp@one=2\relax %
-    \fi %
-  \fi %
   \ifdim\gre@skip@bar@allocation < \gre@skip@bar@requirement\relax%
     \advance\gre@skip@text@allocation by \glueexpr(\gre@skip@bar@requirement - \gre@skip@bar@allocation)\relax%
     \gre@skip@bar@allocation = \gre@skip@bar@requirement\relax%
