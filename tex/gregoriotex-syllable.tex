@@ -228,7 +228,12 @@
     \global\setbox\gre@box@temp@width=\hbox{\gre@fontchar@divisiofinalis}%
   \or %
     % case of no note
-    \global\setbox\gre@box@temp@width=\hbox{}%
+    \ifgre@newbarspacing%
+      \global\setbox\gre@box@temp@width=\hbox{}%
+    \else%
+      % under the old algorithm, syllables with no notes triggered a 0 in this function, so we duplicate the first case here
+      \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPPunctum}%
+    \fi%
   \fi%
   \relax%
 }%
@@ -842,12 +847,16 @@
 
 \newif\ifgre@newbarspacing%
 \gre@newbarspacingfalse%
+% the new bar spacing algorithm treats no note syllables as BarSyllables, while the old algorithm treated them as regular syllables.  In order to allow for this variant, we define NoNoteSyllable which aliases to the appropriate function
+\let\GreNoNoteSyllable\GreSyllable%
 
 \def\gresetbarspacing#1{%
   \IfStrEq{#1}{new}%
-    {\gre@newbarspacingtrue}%
+    {\gre@newbarspacingtrue%
+    \let\GreNoNoteSyllable\GreBarSyllable}%
     {\IfStrEq{#1}{old}%
-      {\gre@newbarspacingfalse}%
+      {\gre@newbarspacingfalse%
+      \let\GreNoNoteSyllable\GreSyllable}%
       {\gre@error{Unrecognized option for \protect\gresetbarspacing}}%
     }%
 }%

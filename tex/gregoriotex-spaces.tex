@@ -244,17 +244,25 @@
 %%  min_text_dist = prev_cur_word ? 0 : space_inter_words
   \ifnum#1=1\relax %
     \ifgre@in@euouae %
-      \ifnum#2=1\relax %
-        \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext@bars@euouae\relax%
-      \else %
+      \ifgre@newbarspacing%
+        \ifnum#2=1\relax %
+          \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext@bars@euouae\relax%
+        \else %
+          \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext@euouae\relax%
+        \fi %
+      \else%
         \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext@euouae\relax%
-      \fi %
+      \fi%
     \else %
-      \ifnum#2=1\relax %
-        \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext@bars\relax%
-      \else %
+      \ifgre@newbarspacing%
+        \ifnum#2=1\relax %
+          \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext@bars\relax%
+        \else %
+          \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext\relax%
+        \fi %
+      \else%
         \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext\relax%
-      \fi %
+      \fi%
     \fi %
   \else %
     \gre@skip@minTextDistance=0pt\relax%
@@ -925,7 +933,7 @@
   % first we check the text width
   % we have to account for the spacing around the text as well as the text itself
   % first we account for the spacing which is needed after the previous syllable text (by using the minTextDistance left over from the previous syllablefinalskip calculation)
-  \gre@debugmsg{barspacing}{text width: \the\wd\gre@box@syllabletext}
+  \gre@debugmsg{barspacing}{text width: \the\wd\gre@box@syllabletext}%
   \gre@debugmsg{barspacing}{previous syllable skip after text: \the\gre@skip@minTextDistance}%
   \gre@skip@text@requirement = \glueexpr\wd\gre@box@syllabletext + \gre@skip@minTextDistance\relax%
   %now we need to account for the spacing which goes after this syllable (if there is text to this syllable)
@@ -1022,23 +1030,21 @@
     \gre@dimen@text@shift = 0pt\relax%
     \gre@dimen@bar@shift = 0pt\relax%
   \else%
-    \gre@debugmsg{barspacing}{left offset limit: \gre@dimen@temp@three}%
-    \gre@debugmsg{barspacing}{right offset limit: \gre@dimen@temp@two}%
     \ifdim\gre@dimen@begindifference > \gre@dimen@temp@two\relax%
       %the two elements are too far apart and the text is to the right of the bar
       \gre@debugmsg{barspacing}{shifts for text right of bar}%
       % first we shift text to the left so that it has the correct offset
       \gre@dimen@bar@shift = 0pt\relax%
-      \gre@dimen@text@shift = \dimexpr(-\gre@dimen@begindifference + \gre@dimen@temp@two)\relax%
+      \gre@dimen@text@shift = \dimexpr(0pt - (\gre@dimen@begindifference - \gre@dimen@temp@two))\relax%
       % is the text too far to the left?
       \ifdim-\gre@dimen@text@shift > \dimexpr(\gre@skip@text@allocation/2-\gre@skip@text@requirement/2)\relax%
         % it is, so push both bar and text right to prevent a collision
         \gre@debugmsg{barspacing}{text collision detected}%
-        \gre@dimen@bar@shift = \dimexpr(-\gre@dimen@text@shift+\gre@skip@text@allocation/2-\gre@skip@text@requirement/2)\relax %
-        \gre@dimen@text@shift = \dimexpr(\gre@skip@text@allocation/2-\gre@skip@text@requirement/2)\relax %
+        \gre@dimen@bar@shift = \dimexpr(-\gre@dimen@text@shift-(\gre@skip@text@allocation/2-\gre@skip@text@requirement/2))\relax %
+        \gre@dimen@text@shift = \dimexpr(0pt - (\gre@skip@text@allocation/2 - \gre@skip@text@requirement/2))\relax %
         % is the bar too far to the right?
         % \gre@dimen@temp@one is excess shift
-        \gre@dimen@temp@one = \dimexpr\gre@dimen@bar@shift - \gre@skip@bar@allocation/2 + \gre@skip@bar@requirement/2\relax%
+        \gre@dimen@temp@one = \dimexpr\gre@dimen@bar@shift - (\gre@skip@bar@allocation/2 - \gre@skip@bar@requirement/2)\relax%
         \ifdim\gre@dimen@temp@one>0pt\relax %
           \gre@debugmsg{barspacing}{bar collision detected}%
           % it is, so allocate more space to prevent the collision
@@ -1048,12 +1054,12 @@
           \advance\gre@dimen@text@shift by -0.5\gre@dimen@temp@one\relax%
         \fi %
       \fi%
-    \else\ifdim\gre@dimen@begindifference < -\gre@dimen@temp@three\relax%
+    \else\ifdim-\gre@dimen@begindifference > \gre@dimen@temp@three\relax%
       %the two elements are too far apart and the text is to the left of the bar
       \gre@debugmsg{barspacing}{shifts for text to left of bar}%
       % first we shift text to the right so that it has the correct offset
       \gre@dimen@bar@shift = 0pt\relax %
-      \gre@dimen@text@shift = \dimexpr(-\gre@dimen@begindifference - \gre@dimen@temp@three)\relax %
+      \gre@dimen@text@shift = \dimexpr((-\gre@dimen@begindifference) - \gre@dimen@temp@three)\relax %
       % is the text too far to the right?
       \ifdim\gre@dimen@text@shift > \dimexpr(\gre@skip@text@allocation/2-\gre@skip@text@requirement/2)\relax %
         \gre@debugmsg{barspacing}{text collision detected}%
@@ -1062,7 +1068,7 @@
         \gre@dimen@text@shift = \dimexpr(\gre@skip@text@allocation/2-\gre@skip@text@requirement/2)\relax %
         % is the bar too far to the left?
         % gre@dimen@temp@one is the excess of bar@shift:
-        \gre@dimen@temp@one=\dimexpr(-\gre@skip@bar@allocation/2+\gre@skip@bar@requirement/2-\gre@dimen@bar@shift)\relax %
+        \gre@dimen@temp@one=\dimexpr(-\gre@dimen@bar@shift -(\gre@skip@bar@allocation/2-\gre@skip@bar@requirement/2))\relax %
         \ifdim\gre@dimen@temp@one>0pt\relax %
           \gre@debugmsg{barspacing}{bar collision detected}%
           % it is, so allocate more space to prevent the collision
@@ -1079,16 +1085,18 @@
       \gre@dimen@bar@shift = 0pt\relax%
     \fi\fi%
   \fi%
+  \gre@debugmsg{barspacing}{text shift: \the\gre@dimen@text@shift}%
+  \gre@debugmsg{barspacing}{bar shift: \the\gre@dimen@bar@shift}%
   %at this point we're going to correct the values of enddifference and begindifference so that they are right for calculations which reference them in the next syllable
   \gre@debugmsg{barspacing}{bar width: \the\wd\gre@box@syllablenotes}%
   \gre@debugmsg{barspacing}{text width: \the\wd\gre@box@syllabletext}%
   \gre@debugmsg{barspacing}{Correcting begindifference}%
   %same as before but now we need to account for the widths of the elements and the shifts
-  \gre@dimen@begindifference = \dimexpr(-\wd\gre@box@syllablenotes/2% go left the middle of the bar syllable (width is always positive so lead with plus to go left)
+  \gre@dimen@begindifference = \dimexpr(\wd\gre@box@syllablenotes/2% go right to the middle of the bar syllable (width is always positive so lead with plus to go right)
     -\gre@dimen@bar@shift% go from actual middle of bar to nominal middle of bar (bar@shift represents going the other way, so lead with minus)
     +\gre@dimen@begindifference% go from nominal middle of bar line to nominal middle of text (this is what begindifference currently holds, so lead with positive)
     +\gre@dimen@text@shift% go from nominal middle of text to actual middle of text (text@shift represents this move, so lead with positive)
-    -\wd\gre@box@syllabletext/2)\relax% go left from middle to begining of text (width is always positive, so lead with negative to go left
+    -\wd\gre@box@syllabletext/2)\relax% go left from middle to beginning of text (width is always positive, so lead with negative to go left
   \gre@debugmsg{barspacing}{begindifference: \the\gre@dimen@begindifference}%
   \gre@debugmsg{barspacing}{Correcting enddifference}%
   \gre@dimen@enddifference = \dimexpr-\wd\gre@box@syllabletext% go from end of text to beginning of text (width is always positive, so lead with negative to go left)

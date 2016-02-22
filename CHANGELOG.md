@@ -7,6 +7,9 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - hyphens now shouldn't go right of the staff lines (see [#845](https://github.com/gregorio-project/gregorio/issues/845)).
 - Offset limit calculations now function better in both directions for new bar spacing algorithm.
 
+### Changed
+- The treatment of syllables with no notes has been reverted when the old spacing algorithm is used.  Such syllables are now treated as notes syllables under the old algorithm (as was the case in 4.1.0-beta3 and earlier) and as bar syllables under the new algorithm.
+
 ### Added
 - It is now possible to turn off rythmic signs (separately or all together) with `\greprintsigns`, see GregorioRef for details (and [#936](https://github.com/gregorio-project/gregorio/issues/936) for request).
 - Added `maxbaroffsettextright@nobar` and `maxbaroffsettextleft@nobar` which function identically to the normal version except that they are used then the "bar" is empty (i.e. something like `*()` in gabc).

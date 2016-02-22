@@ -1666,17 +1666,22 @@
 }
 
 \def\gre@unkern@bar@aftermora{%
-  % don't apply a negative kern on the first glyph
-  % while boxing, otherwise the box width will be wrong
-  \ifgre@firstglyph %
-    \ifgre@boxing\else %
+  \ifgre@newbarspacing%
+    % don't apply a negative kern on the first glyph
+    % while boxing, otherwise the box width will be wrong
+    \ifgre@firstglyph %
+      \ifgre@boxing\else %
+        \gre@get@unkern@aftermora{2}%
+        \kern\gre@skip@punctummorashift %
+      \fi %
+    \else %
       \gre@get@unkern@aftermora{2}%
       \kern\gre@skip@punctummorashift %
     \fi %
-  \else %
+  \else%
     \gre@get@unkern@aftermora{2}%
     \kern\gre@skip@punctummorashift %
-  \fi %
+  \fi%
   \relax %
 }
 
