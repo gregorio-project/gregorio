@@ -965,8 +965,7 @@
   % now we check the bar width
   %as with the text, we start by borrowing the minNotesDistance left over from the previous syllable
   \gre@debugmsg{barspacing}{bar width: \the\wd\gre@box@syllablenotes}%
-  \gre@debugmsg{barspacing}{previous syllable skip after notes: \the\gre@skip@minNotesDistance}%
-  \gre@skip@bar@requirement = \glueexpr\wd\gre@box@syllablenotes + \gre@skip@minNotesDistance\relax%
+  \gre@skip@bar@requirement = \wd\gre@box@syllablenotes\relax%
   %now, if there is a visible bar for this syllable, we calculate this syllable’s equivalent of minNotesDistance
   % gre@count@temp@one holds 0 if next is not a bar, 1 if it is, 2 if it starts with an alteration
   \gre@count@temp@one=0%
@@ -977,30 +976,6 @@
       \gre@count@temp@one=2\relax %
     \fi %
   \fi %
-  \ifdim\wd\gre@box@syllablenotes > 0pt\relax%
-    %as with the text, this calculation is similar to what \gre@calculate@syllablefinalskip does, but only for the notes, so we’ll use syllablefinalskip to store it
-    \ifcase\gre@count@temp@one\relax %
-      \ifnum#1=1\relax %
-        \ifgre@in@euouae %
-          \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacenotes@euouae\relax%
-        \else %
-          \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacenotes\relax%
-        \fi %
-      \else %
-        \gre@skip@syllablefinalskip=\gre@space@dimen@intersyllablespacenotes\relax%
-      \fi %
-    \or %
-      \gre@skip@syllablefinalskip=0pt\relax%
-    \or %
-      \ifnum#1=1\relax %
-        \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacenotes@alteration\relax %
-      \else %
-        \gre@skip@syllablefinalskip=\gre@space@dimen@intersyllablespacenotes@alteration\relax%
-      \fi %
-    \fi %
-    \gre@debugmsg{syllablespacing}{this syllable skip after bar: \the\gre@skip@syllablefinalskip}%
-    \advance\gre@skip@bar@requirement by \gre@skip@syllablefinalskip%
-  \fi%
   \ifdim\gre@skip@bar@allocation < \gre@skip@bar@requirement\relax%
     \advance\gre@skip@text@allocation by \glueexpr(\gre@skip@bar@requirement - \gre@skip@bar@allocation)\relax%
     \gre@skip@bar@allocation = \gre@skip@bar@requirement\relax%
