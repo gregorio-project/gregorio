@@ -1023,13 +1023,13 @@
       \gre@debugmsg{barspacing}{shifts for text right of bar}%
       % first we shift text to the left so that it has the correct offset
       \gre@dimen@bar@shift = 0pt\relax%
-      \gre@dimen@text@shift = \dimexpr(-\gre@dimen@begindifference + \gre@dimen@temp@two)\relax%
+      \gre@dimen@text@shift = \dimexpr(0pt - (\gre@dimen@begindifference - \gre@dimen@temp@two))\relax%
       % is the text too far to the left?
       \ifdim-\gre@dimen@text@shift > \dimexpr(\gre@skip@text@allocation/2-\gre@skip@text@requirement/2)\relax%
         % it is, so push both bar and text right to prevent a collision
         \gre@debugmsg{barspacing}{text collision detected}%
         \gre@dimen@bar@shift = \dimexpr(-\gre@dimen@text@shift-(\gre@skip@text@allocation/2-\gre@skip@text@requirement/2))\relax %
-        \gre@dimen@text@shift = \dimexpr(-\gre@skip@text@allocation/2+\gre@skip@text@requirement/2)\relax %
+        \gre@dimen@text@shift = \dimexpr(0pt - (\gre@skip@text@allocation/2 - \gre@skip@text@requirement/2))\relax %
         % is the bar too far to the right?
         % \gre@dimen@temp@one is excess shift
         \gre@dimen@temp@one = \dimexpr\gre@dimen@bar@shift - (\gre@skip@bar@allocation/2 - \gre@skip@bar@requirement/2)\relax%
@@ -1080,11 +1080,11 @@
   \gre@debugmsg{barspacing}{text width: \the\wd\gre@box@syllabletext}%
   \gre@debugmsg{barspacing}{Correcting begindifference}%
   %same as before but now we need to account for the widths of the elements and the shifts
-  \gre@dimen@begindifference = \dimexpr(-\wd\gre@box@syllablenotes/2% go left the middle of the bar syllable (width is always positive so lead with plus to go left)
+  \gre@dimen@begindifference = \dimexpr(\wd\gre@box@syllablenotes/2% go right to the middle of the bar syllable (width is always positive so lead with plus to go right)
     -\gre@dimen@bar@shift% go from actual middle of bar to nominal middle of bar (bar@shift represents going the other way, so lead with minus)
     +\gre@dimen@begindifference% go from nominal middle of bar line to nominal middle of text (this is what begindifference currently holds, so lead with positive)
     +\gre@dimen@text@shift% go from nominal middle of text to actual middle of text (text@shift represents this move, so lead with positive)
-    -\wd\gre@box@syllabletext/2)\relax% go left from middle to begining of text (width is always positive, so lead with negative to go left
+    -\wd\gre@box@syllabletext/2)\relax% go left from middle to beginning of text (width is always positive, so lead with negative to go left
   \gre@debugmsg{barspacing}{begindifference: \the\gre@dimen@begindifference}%
   \gre@debugmsg{barspacing}{Correcting enddifference}%
   \gre@dimen@enddifference = \dimexpr-\wd\gre@box@syllabletext% go from end of text to beginning of text (width is always positive, so lead with negative to go left)
