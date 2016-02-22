@@ -2384,8 +2384,14 @@ static int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
                 result = 10;
                 break;
             case B_DIVISIO_MINIMA:
+                result = 11;
+                break;
             case B_DIVISIO_MINOR:
+                result = 12;
+                break;
             case B_DIVISIO_MAIOR:
+                result = 13;
+                break;
             case B_DIVISIO_MINOR_D1:
             case B_DIVISIO_MINOR_D2:
             case B_DIVISIO_MINOR_D3:
@@ -2394,10 +2400,10 @@ static int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
             case B_DIVISIO_MINOR_D6:
             case B_DIVISIO_MINOR_D7:
             case B_DIVISIO_MINOR_D8:
-                result = 11;
+                result = 14;
                 break;
             case B_DIVISIO_FINALIS:
-                result = 12;
+                result = 15;
                 break;
             default:
                 /* not reachable unless there's a programming error */
@@ -2473,7 +2479,7 @@ static int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
     }
     /* the only thing that should reach this point is an empty next syllable
      * we treat that kind of syllable as a bar */
-    return 13;
+    return 16;
 }
 
 static __inline void write_low_choral_sign(FILE *const f,
