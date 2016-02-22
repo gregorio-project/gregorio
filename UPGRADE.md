@@ -66,6 +66,10 @@ The following spaces have been added:
 
 By default, these are sized one half millimeter larger than their "non-text" counterparts.  This may cause minor spacing changes in your existing scores.  Adjust them as necessary to get the look you want.
 
+### Hyphens going right of staff lines
+
+Hyphens should now not go right of staff lines. If you prefer the old behavior, `\gresethyphenprotrusion{100}` should restore it.
+
 ### Oriscus orientation
 
 The oriscus orientation (whether it points up or down) is now dependent on the note the follows, even if the note is not directly connected to the oriscus (as it would be in a salicus or a pressus).  Appending a `1` to an unconnected oriscus in gabc will force the oriscus to point upwards and `0` will force the oriscus to point downwards.

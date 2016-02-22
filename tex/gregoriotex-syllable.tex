@@ -558,6 +558,11 @@
 \def\GreForceHyphen{\global\gre@showhyphenafterthissyllabletrue\gre@debugmsg{hyphen}{Forcing hyphen in gabc}}
 \def\GreEmptyFirstSyllableHyphen{\ifgre@forceemptyfirstsyllablehyphen\GreForceHyphen\fi}%
 
+% if an hyphen maybe be added by lua for this syllable. When syllable is not end of word and
+% no hyphen is added by TeX.
+\newif\ifgre@possibleluahyphenafterthissyllable
+\gre@possibleluahyphenafterthissyllablefalse
+
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : macro setting the letters of this syllable
 % #2 : reserved (unused)
@@ -576,6 +581,7 @@
   \gre@debugmsg{general}{}%
   \gre@debugmsg{general}{New syllable: \expandafter\unexpanded{#1}}%
   \gre@debugmsg{general}{}%
+  \global\gre@possibleluahyphenafterthissyllablefalse %
   \gre@showhyphenafterthissyllablefalse%
   \ifcase#4\ifgre@forcehyphen%
     \gre@debugmsg{hyphen}{Forcing hyphen}%
@@ -684,6 +690,7 @@
       \gre@attr@dash=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
       % we rebuild this box, in order it to have the attribute
       \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
+      \global\gre@possibleluahyphenafterthissyllabletrue %
     \fi %
   \fi%
   % then we reuse temp, we assign to it the \gre@dimen@begindifference, but only if it is positive, else it is 0
@@ -836,6 +843,8 @@
 %a macro to typeset a syllable with only a bar inside
 \def\GreBarSyllable#1#2#3#4#5#6#7#8#9{%
   \gre@debugmsg{general}{New bar syllable}%
+  \gre@possibleluahyphenafterthissyllablefalse %
+  \gre@showhyphenafterthissyllablefalse %
   % the algorithm of this function is *extremely* complex, and has been much painful to write... good luck to understand.
   % the main goal is, when there is no text under the bar, to put the bar in the middle of the space between the last note of the previous syllable and the first note of the next syllable. But there are limits : a bar can't go very far above text. For example if there is "nuncncncncn" with a punctum on the u, the bar can't go above the fourth n, the most far position is the position where the end of the bar is above the end of the word. The same limitation applies for the syllable after the bar.
   % there are two different cases that have almost nothing in common : the case where there is something written under the bar, and the case where there is nothing.
@@ -876,7 +885,7 @@
     \GreNoBreak %
     % all that extra stuff (translations and the like)
     #8%
-    \GreNoBreak % 
+    \GreNoBreak %
     %print the text, the raise is in case of a translation
     \raise\gre@dimen@textlower \copy\gre@box@syllabletext%
     %and the code which handles translation centering
