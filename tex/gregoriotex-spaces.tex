@@ -1645,6 +1645,9 @@
   \ifgre@scale@maxbaroffsettextleft@nobar%
     \gre@changeonedimenfactor{maxbaroffsettextleft@nobar}{#1}{#2}%
   \fi%
+  \ifgre@scale@divisiofinalissep%
+    \gre@changeonedimenfactor{divisiofinalissep}{#1}{#2}%
+  \fi%
   \ifgre@scale@stafflinefactor%
     \gre@count@temp@two = \numexpr((\gre@stafflinefactor * #2) / #1)\relax%
     \xdef\gre@stafflinefactor{\the\gre@count@temp@two}%
