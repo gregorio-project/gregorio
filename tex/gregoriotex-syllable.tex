@@ -158,20 +158,23 @@
 % this function is quite simple, it just sets \gre@box@temp@width with a box of the good width, watch the next function for the complete thing
 % we define the different alignments possible, of course they depend on the font
 % the first 10 (0-9) possible values are the same as in glyph
-%% 0 : one-note glyph or more than two notes glyph except porrectus : here we must put the aligncenter in the middle of the first note
-%% 1 : two notes glyph (podatus is considered as a one-note glyph) : here we put the aligncenter in the middle of the glyph
-%% 2 : porrectus : has a special align center
-%% 3 : initio-debilis : same as 1 but the first note is much smaller
-%% 4 : case of a glyph starting with a quilisma
-%% 5 : case of a glyph starting with an oriscus
-%% 6 : case of a punctum inclinatum
-%% 7 : case of a stropha
-%% 8 : flexus with an ambitus of one
-%% 9 : flexus deminutus
-%% 10 : virgula
-%% 11 : divisio minima, minor, maior or dominican bar
-%% 12 : divisio finalis
-%% 13 : no note
+%% 0: one-note glyph or more than two notes glyph except porrectus : here we must put the aligncenter in the middle of the first note
+%% 1: two notes glyph (podatus is considered as a one-note glyph) : here we put the aligncenter in the middle of the glyph
+%% 2: porrectus : has a special align center
+%% 3: initio-debilis : same as 1 but the first note is much smaller
+%% 4: case of a glyph starting with a quilisma
+%% 5: case of a glyph starting with an oriscus
+%% 6: case of a punctum inclinatum
+%% 7: case of a stropha
+%% 8: flexus with an ambitus of one
+%% 9: flexus deminutus
+%% 10: virgula
+%% 11: divisio minima
+%% 12: divisio minor
+%% 13: divisio maior
+%% 14: dominican bar
+%% 15 : divisio finalis
+%% 16 : no note
 % there is a tricky here : if notesaligncenter is not 0, it means that there is a flat before, so we simply add notes aligncenter
 % #2 is 0 if we are in the context of current syllable, 1 if we are in the context of next syllable
 \def\gre@calculate@simplenotesaligncenter#1#2{%
@@ -209,8 +212,17 @@
     % case of virgula
     \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPVirgula}%
   \or %
-    % case of divisio minima, minor, maior
-    \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPPunctumDeminutus}%
+    % case of divisio minima
+    \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioMinima}%
+  \or %
+    % case of divisio minor
+    \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioMinor}%
+  \or %
+    % case of divisio maior
+    \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioMaior}%
+  \or %
+    % case of dominican bar
+    \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioDominican}%
   \or %
     % case of divisiofinalis
     \global\setbox\gre@box@temp@width=\hbox{\gre@fontchar@divisiofinalis}%
