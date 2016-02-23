@@ -3105,7 +3105,7 @@ static void gregoriotex_print_change_line_clef(FILE *f,
     }
 }
 
-static __inline bool is_manual_custos(const gregorio_element *element)
+static __inline bool is_manual_custos(const gregorio_element *const element)
 {
     return element->type == GRE_CUSTOS && element->u.misc.pitched.force_pitch;
 }
@@ -3607,7 +3607,8 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             case GRE_BAR:
                 write_bar(f, element->u.misc.unpitched.info.bar,
                         element->u.misc.unpitched.special_sign,
-                        element->next && !is_manual_custos(element->next),
+                        element->next && !is_manual_custos(element->next)
+                        && element->next->type != GRE_END_OF_LINE,
                         !element->previous && syllable->text);
                 break;
 
