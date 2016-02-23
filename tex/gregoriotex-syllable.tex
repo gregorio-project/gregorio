@@ -861,6 +861,14 @@
     }%
 }%
 
+% macro to save new lines in bar syllables. With the new bar spacing algorithm, we
+% cannot allow (::z) to end the line right after the bar, so we just save the
+% end of line for later.
+\xdef\gre@newlinearg{-1}
+\gdef\gre@newlinecommondelayed#1{%
+  \xdef\gre@newlinearg{#1}%
+}
+
 %a macro to typeset a syllable with only a bar inside
 \def\GreBarSyllable#1#2#3#4#5#6#7#8#9{%
   \gre@debugmsg{general}{New bar syllable}%
@@ -919,7 +927,11 @@
     \kern\dimexpr(\gre@dimen@enddifference% move from end of text to end of bar line
       -\wd\gre@box@syllablenotes)\relax % back up from end of bar line to beginning
     \GreNoBreak%
+    \global\let\gre@newlinecommonsaved\gre@newlinecommon %
+    \global\let\gre@newlinecommon\gre@newlinecommondelayed %
+    \xdef\gre@newlinearg{-1}%
     #9%
+    \global\let\gre@newlinecommon\gre@newlinecommonsaved %
     \GreNoBreak%
     % get into position to place the penalty
     \ifdim\gre@dimen@enddifference < 0pt\relax%
@@ -934,28 +946,34 @@
       \gre@debugmsg{barspacing}{End of line shift: \the\gre@dimen@eolshift}%
       \kern \dimexpr(-\gre@dimen@eolshift-\gre@skip@bar@lastskip)\relax%
     \fi%
-    % add the penalty
-    \gre@debugmsg{barspacing}{after bar penalty: \greendafterbarpenalty}%
-    \gre@penalty{\greendafterbarpenalty}%
-    \ifgre@eolshiftsenabled%
-      %If the above penalties don't result in a line break, then we need to undo the eolshift to prevent the next syllable from overlapping with this one.  If the line break did occur, then this shift will occur at the beginning of a line and thus will be ignored automatically by TeX.
-      \kern \dimexpr(\gre@dimen@eolshift+\gre@skip@bar@lastskip)\relax%
-      \GreNoBreak%
-    \fi%
-    \ifdim\gre@dimen@enddifference < 0pt\relax%
-      %undo the earlier shift
-      \kern\gre@dimen@enddifference%
-      \GreNoBreak%
-    \fi%
-    %move to the beginning of the notes of the next syllable
-    \gre@hskip\glueexpr(-\wd\gre@box@syllablenotes/2% back up to middle of notes
-      -\gre@dimen@bar@shift% go back from actual middle to nominal middle of bar line
-      +\gre@skip@bar@allocation/2)\relax % go from nominal middle to the start of the next notes
-    \ifdim\gre@skip@nextbegindifference < 0pt\relax%
-      %we need to move back to where the text for the next syllable should start
-      \GreNoBreak %
-      \kern\gre@skip@nextbegindifference\relax%
-    \fi%
+    % if no end of line:
+    \ifnum\gre@newlinearg=-1\relax %
+      % add the penalty
+      \gre@debugmsg{barspacing}{after bar penalty: \greendafterbarpenalty}%
+      \gre@penalty{\greendafterbarpenalty}%
+      \ifgre@eolshiftsenabled%
+        %If the above penalties don't result in a line break, then we need to undo the eolshift to prevent the next syllable from overlapping with this one.  If the line break did occur, then this shift will occur at the beginning of a line and thus will be ignored automatically by TeX.
+        \kern \dimexpr(\gre@dimen@eolshift+\gre@skip@bar@lastskip)\relax%
+        \GreNoBreak%
+      \fi%
+      \ifdim\gre@dimen@enddifference < 0pt\relax%
+        %undo the earlier shift
+        \kern\gre@dimen@enddifference%
+        \GreNoBreak%
+      \fi%
+      %move to the beginning of the notes of the next syllable
+      \gre@hskip\glueexpr(-\wd\gre@box@syllablenotes/2% back up to middle of notes
+        -\gre@dimen@bar@shift% go back from actual middle to nominal middle of bar line
+        +\gre@skip@bar@allocation/2)\relax % go from nominal middle to the start of the next notes
+      \ifdim\gre@skip@nextbegindifference < 0pt\relax%
+        %we need to move back to where the text for the next syllable should start
+        \GreNoBreak %
+        \kern\gre@skip@nextbegindifference\relax%
+      \fi%
+    \else %
+      \gre@debugmsg{barspacing}{calling new line with argument: \gre@newlinearg}%
+      \gre@newlinecommon{\gre@newlinearg}%
+    \fi %
   \else%
     %
     % Old spacing algorithm
