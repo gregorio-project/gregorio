@@ -925,13 +925,26 @@
     \ifdim\gre@dimen@enddifference < 0pt\relax%
       % the text extends past the notes, so we need to get to the end of the text
       \kern-\gre@dimen@enddifference%
+      \GreNoBreak%
+    \fi%
+    \ifgre@eolshiftsenabled%
+      %this shift will shorten the line somewhat to allow the lyrics to extend under the custos should TeX decide to insert a line break after the syllable being ended
+      \gre@calculate@eolshift{\gre@dimen@enddifference}%
+      \gre@debugmsg{eolshift}{End of line shift: \the\gre@dimen@eolshift}%
+      \kern -\gre@dimen@eolshift\relax%
     \fi%
     % add the penalty
     \gre@debugmsg{barspacing}{after bar penalty: \greendafterbarpenalty}%
     \gre@penalty{\greendafterbarpenalty}%
+    \ifgre@eolshiftsenabled%
+      %If the above penalties don't result in a line break, then we need to undo the eolshift to prevent the next syllable from overlapping with this one.  If the line break did occur, then this shift will occur at the beginning of a line and thus will be ignored automatically by TeX.
+      \kern \gre@dimen@eolshift\relax%
+      \GreNoBreak%
+    \fi%
     \ifdim\gre@dimen@enddifference < 0pt\relax%
       %undo the earlier shift
       \kern\gre@dimen@enddifference%
+      \GreNoBreak%
     \fi%
     %move to the beginning of the notes of the next syllable
     \gre@hskip\glueexpr(-\wd\gre@box@syllablenotes/2% back up to middle of notes
