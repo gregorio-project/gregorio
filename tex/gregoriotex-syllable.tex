@@ -921,6 +921,18 @@
     \GreNoBreak%
     #9%
     \GreNoBreak%
+    % get into position to place the penalty
+    \ifdim\gre@dimen@enddifference < 0pt\relax%
+      % the text extends past the notes, so we need to get to the end of the text
+      \kern-\gre@dimen@enddifference%
+    \fi%
+    % add the penalty
+    \gre@debugmsg{barspacing}{after bar penalty: \greendafterbarpenalty}%
+    \gre@penalty{\greendafterbarpenalty}%
+    \ifdim\gre@dimen@enddifference < 0pt\relax%
+      %undo the earlier shift
+      \kern\gre@dimen@enddifference%
+    \fi%
     %move to the beginning of the notes of the next syllable
     \gre@hskip\glueexpr(-\wd\gre@box@syllablenotes/2% back up to middle of notes
       -\gre@dimen@bar@shift% go back from actual middle to nominal middle of bar line
@@ -930,9 +942,6 @@
       \GreNoBreak %
       \kern\gre@skip@nextbegindifference\relax%
     \fi%
-    %finally we end by adding the penalty
-    \gre@debugmsg{barspacing}{after bar penalty: \greendafterbarpenalty}%
-    \gre@penalty{\greendafterbarpenalty}%
   \else%
     %
     % Old spacing algorithm
