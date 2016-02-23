@@ -246,7 +246,7 @@
     \ifgre@in@euouae %
       \ifgre@newbarspacing%
         \ifnum#2=1\relax %
-          \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext@bars@euouae\relax%
+          \gre@skip@minTextDistance=\gre@space@dimen@interwordspacetext@bars@euouae\relax%
         \else %
           \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext@euouae\relax%
         \fi %
@@ -256,7 +256,7 @@
     \else %
       \ifgre@newbarspacing%
         \ifnum#2=1\relax %
-          \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext@bars\relax%
+          \gre@skip@minTextDistance=\gre@space@dimen@interwordspacetext@bars\relax%
         \else %
           \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext\relax%
         \fi %
@@ -950,9 +950,9 @@
     %this calculation is similar to what is done in \gre@calculate@syllablefinalskip, but is only for the text, so we'll use \gre@skip@syllablefinalskip to hold this value for now
     \ifnum#1=1\relax %
       \ifgre@in@euouae %
-        \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacetext@bars@euouae\relax%
+        \gre@skip@syllablefinalskip=\gre@space@dimen@interwordspacetext@bars@euouae\relax%
       \else %
-        \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacetext@bars\relax%
+        \gre@skip@syllablefinalskip=\gre@space@dimen@interwordspacetext@bars\relax%
       \fi %
     \else %
       \gre@skip@syllablefinalskip=0pt\relax%
@@ -1296,6 +1296,8 @@
     {maxbaroffsettextright}{\gre@rubberfalse}%
     {maxbaroffsettextleft@nobar}{\gre@rubberfalse}%
     {maxbaroffsettextright@nobar}{\gre@rubberfalse}%
+    {interwordspacetext@bars@euouae}{\gre@rubberfalse}%
+    {interwordspacetext@bars}{\gre@rubberfalse}%
     {overhepisemalowshift}{\gre@rubberfalse}%
     {overhepisemahighshift}{\gre@rubberfalse}%
     {underhepisemalowshift}{\gre@rubberfalse}%
@@ -1679,6 +1681,9 @@
   \fi%
   \ifgre@scale@maxbaroffsettextleft@nobar%
     \gre@changeonedimenfactor{maxbaroffsettextleft@nobar}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@rubber%
+    \gre@changeonedimenfactor{bar@rubber}{#1}{#2}%
   \fi%
   \ifgre@scale@divisiofinalissep%
     \gre@changeonedimenfactor{divisiofinalissep}{#1}{#2}%

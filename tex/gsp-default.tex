@@ -220,10 +220,12 @@
 % (new bar spacing algorithm only)
 % Note that the plus and minus values of interwordspacetext@bars or interwordspacetext@bars@euouae
 % are what will be used around bars in the new bar spacing algorithm
-\grecreatedim{interwordspacetext@bars}{0.15 cm plus 0.22787 cm minus 0.02 cm}{scalable}%
+\grecreatedim{interwordspacetext@bars}{0.15 cm}{scalable}%
 % minimal space between letters of different syllable texts for text around bars,
 % euouae context
-\grecreatedim{interwordspacetext@bars@euouae}{0.15 cm plus 0.22787 cm minus 0.02 cm}{scalable}%
+\grecreatedim{interwordspacetext@bars@euouae}{0.15 cm}{scalable}%
+% rubber length that will be added around bars in new bar spacing algorithm
+\grecreatedim{bar@rubber}{0 cm plus 0.22787 cm minus 0.02 cm}{scalable}%
 % additional space that will appear around bars that are preceded by a custos and followed by a key.
 \grecreatedim{spacearoundclefbars}{0.03645 cm plus 0.00455 cm minus 0.0009 cm}{scalable}%
 % space between the text of previous syllable and text associated with a bar (old bar spacing algorithm only)
