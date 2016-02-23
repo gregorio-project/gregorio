@@ -1229,10 +1229,6 @@ Minimum space between notes of syllables from different words.
 Minimum space between texts of different words. Please keep the same \texttt{plus} and \texttt{minus} as \texttt{interwordspacenotes}.
 \end{gdimension}
 
-\begin{gdimension}{interwordspacetext@bars}
-Minimum space between texts of different words when one of the syllable contains only a bar.
-\end{gdimension}
-
 \begin{gdimension}{interwordspacenotes@alteration}
 Same as \texttt{interwordspacenotes} for the case where the second syllable starts with an alteration.
 \end{gdimension}
@@ -1247,10 +1243,6 @@ Same as \texttt{interwordspacenotes} for \texttt{euouae} blocks.
 
 \begin{gdimension}{interwordspacetext@euouae}
 Same as \texttt{interwordspacetext} for \texttt{euouae} blocks.
-\end{gdimension}
-
-\begin{gdimension}{interwordspacetext@bars@euouae}
-Same as \texttt{interwordspacetext@bars} for \texttt{euouae} blocks.
 \end{gdimension}
 
 \begin{gdimension}{bitrivirspace}
@@ -1592,6 +1584,16 @@ Spaces around bars in standalone syllables, when these have no text (new bar spa
 
 \begin{gdimension}{spacearoundclefbars}
 Additional space that will appear around bars that are preceded by a custos and followed by a key.
+\end{gdimension}
+
+\begin{gdimension}{interwordspacetext@bars}
+Minimum space between texts of different words when one of the syllable contains only a bar (new bar spacing algorithm only).
+Note that the \texttt{plus} and \texttt{minus} values of \verb=interwordspacetext@bars= or \verb=interwordspacetext@bars@euouae=
+are what will be used around bars in the new bar spacing algorithm.
+\end{gdimension}
+
+\begin{gdimension}{interwordspacetext@bars@euouae}
+Same as \texttt{interwordspacetext@bars} for \texttt{euouae} blocks (so quite rare).
 \end{gdimension}
 
 \begin{gdimension}{textbartextspace}
