@@ -4,13 +4,14 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 
 ## [Unreleased][unreleased]
 ### Fixed
-- hyphens now shouldn't go right of the staff lines (see [#845](https://github.com/gregorio-project/gregorio/issues/845)).
+- Hyphens now shouldn't go right of the staff lines (see [#845](https://github.com/gregorio-project/gregorio/issues/845)).
 - Offset limit calculations now function better in both directions for new bar spacing algorithm.
+- Bars ending a line are now at a correct (closer) distance from end of line.
 
 ### Changed
 - The treatment of syllables with no notes has been reverted when the old spacing algorithm is used.  Such syllables are now treated as notes syllables under the old algorithm (as was the case in 4.1.0-beta3 and earlier) and as bar syllables under the new algorithm.
-- the names of the spaces around bars have changed, see `gsp-default` or GregorioRef for the new names. It is now possible to tune the spacing of the virgula separately from the divisio minima, and the dominican bar separately from the divisio minor.
-- when using the new bar spacing algorithm, it is now possible to assign different spaces to bar in three different cases: inside a syllable, in a separate syllable with text, and in a separate syllable without text (see [#944](https://github.com/gregorio-project/gregorio/issues/944) for request).
+- The names of the spaces around bars have changed, see `gsp-default` or GregorioRef for the new names. It is now possible to tune the spacing of the virgula separately from the divisio minima, and the dominican bar separately from the divisio minor.
+- When using the new bar spacing algorithm, it is now possible to assign different spaces to bar in three different cases: inside a syllable, in a separate syllable with text, and in a separate syllable without text (see [#944](https://github.com/gregorio-project/gregorio/issues/944) for request).
 
 ### Added
 - It is now possible to turn off rythmic signs (separately or all together) with `\greprintsigns`, see GregorioRef for details (and [#936](https://github.com/gregorio-project/gregorio/issues/936) for request).
