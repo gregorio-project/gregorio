@@ -910,8 +910,8 @@
     \gre@hskip\glueexpr(\gre@skip@bar@allocation/2% right from end of previous notes to nominal middle of bar line
       +\gre@dimen@bar@shift% from nominal middle of bar line to actual middle
       -\wd\gre@box@syllablenotes/2% back up to beginning of bar line
-      +\gre@dimen@begindifference%
-      +\gre@space@skip@bar@rubber)\relax % from beginning of bar line to beginning of text
+      +\gre@dimen@begindifference% from beginning of bar line to beginning of text
+      +\gre@space@skip@bar@rubber)\relax % the rubber component
     \GreNoBreak %
     % all that extra stuff (translations and the like)
     #8%
@@ -967,8 +967,8 @@
       %move to the beginning of the notes of the next syllable
       \gre@hskip\glueexpr(-\wd\gre@box@syllablenotes/2% back up to middle of notes
         -\gre@dimen@bar@shift% go back from actual middle to nominal middle of bar line
-        +\gre@skip@bar@allocation/2%
-        +\gre@space@skip@bar@rubber)\relax % go from nominal middle to the start of the next notes
+        +\gre@skip@bar@allocation/2% go from nominal middle to the start of the next notes
+        +\gre@space@skip@bar@rubber)\relax % the rubber component
       \ifdim\gre@skip@nextbegindifference < 0pt\relax%
         %we need to move back to where the text for the next syllable should start
         \GreNoBreak %

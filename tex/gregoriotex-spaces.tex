@@ -1204,6 +1204,14 @@
       \def\gre@prefix{dimen}%
     \fi%
   \fi%
+  % special check for bar@rubber
+  \IfStrEq*{#1}{bar@rubber}%
+    {%
+      \gre@skip@temp@one = #2\relax%
+      \ifdim\gre@skip@temp@one=0pt\relax\else%
+        \gre@error{bar@rubber cannot have a non-zero base}
+      \fi%
+    }{}%
   \expandafter\edef\csname gre@space@\gre@prefix @#1\endcsname{#2}%
   \relax %
 }
