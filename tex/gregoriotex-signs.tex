@@ -1691,6 +1691,8 @@
   \relax %
 }
 
+\newskip\gre@skip@bar@lastskip% skip after last bar
+
 %a macro to write a bar
 %% 1: the type of the bar : 0 for virgula, 1 for minima 2 for minor, 3 for major, 4 for finalis and 5 for the last finalis, 6 to 13 for dominican bars
 %% 2: is 0 if it is in a syllable containing only this bar, 1 otherwise
@@ -1741,6 +1743,7 @@
       \gre@count@temp@one=1\relax %
     \fi %
   \fi %
+  \gre@skip@temp@four=0pt\relax %
   \ifcase#1 % 0 : virgula
     \ifnum\gre@count@temp@one=1\relax %
       \gre@skip@temp@four = \csname gre@space@skip@bar@virgula\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
@@ -1935,7 +1938,9 @@
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \fi %
+  \global\gre@skip@bar@lastskip=\gre@skip@temp@four %
   \gre@debugmsg{spacing}{Width of bar just printed: \the\wd\gre@box@temp@width}%
+  \gre@debugmsg{spacing}{Last bar space: \the\gre@skip@temp@four}%
   \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
   \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
   \relax%

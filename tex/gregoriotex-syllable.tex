@@ -931,14 +931,14 @@
       %this shift will shorten the line somewhat to allow the lyrics to extend under the custos should TeX decide to insert a line break after the syllable being ended
       \gre@calculate@eolshift{\gre@dimen@enddifference}%
       \gre@debugmsg{eolshift}{End of line shift: \the\gre@dimen@eolshift}%
-      \kern -\gre@dimen@eolshift\relax%
+      \kern \dimexpr(-\gre@dimen@eolshift-\gre@skip@bar@lastskip)\relax%
     \fi%
     % add the penalty
     \gre@debugmsg{barspacing}{after bar penalty: \greendafterbarpenalty}%
     \gre@penalty{\greendafterbarpenalty}%
     \ifgre@eolshiftsenabled%
       %If the above penalties don't result in a line break, then we need to undo the eolshift to prevent the next syllable from overlapping with this one.  If the line break did occur, then this shift will occur at the beginning of a line and thus will be ignored automatically by TeX.
-      \kern \gre@dimen@eolshift\relax%
+      \kern \dimexpr(\gre@dimen@eolshift+\gre@skip@bar@lastskip)\relax%
       \GreNoBreak%
     \fi%
     \ifdim\gre@dimen@enddifference < 0pt\relax%
