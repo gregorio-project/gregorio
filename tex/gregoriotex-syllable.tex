@@ -942,9 +942,11 @@
     \ifgre@eolshiftsenabled%
       %this shift will shorten the line somewhat to allow the lyrics to extend under the custos should TeX decide to insert a line break after the syllable being ended
       \gre@calculate@eolshift{\dimexpr(\gre@dimen@enddifference-\gre@skip@bar@lastskip)\relax }%
-      \gre@debugmsg{eolshift}{End of line shift: \the\gre@dimen@eolshift}%
       \gre@debugmsg{barspacing}{End of line shift: \the\gre@dimen@eolshift}%
-      \kern \dimexpr(-\gre@dimen@eolshift-\gre@skip@bar@lastskip)\relax%
+      \ifdim\gre@dimen@eolshift<\gre@skip@bar@lastskip %
+        \gre@dimen@eolshift=\gre@skip@bar@lastskip\relax %
+      \fi %
+      \kern\glueexpr(-\gre@dimen@eolshift)\relax%
     \fi%
     % if no end of line:
     \ifnum\gre@newlinearg=-1\relax %
@@ -953,7 +955,7 @@
       \gre@penalty{\greendafterbarpenalty}%
       \ifgre@eolshiftsenabled%
         %If the above penalties don't result in a line break, then we need to undo the eolshift to prevent the next syllable from overlapping with this one.  If the line break did occur, then this shift will occur at the beginning of a line and thus will be ignored automatically by TeX.
-        \kern \dimexpr(\gre@dimen@eolshift+\gre@skip@bar@lastskip)\relax%
+        \kern \dimexpr(\gre@dimen@eolshift)\relax%
         \GreNoBreak%
       \fi%
       \ifdim\gre@dimen@enddifference < 0pt\relax%
