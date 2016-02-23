@@ -132,11 +132,6 @@
 % minimal space between letters of different words. Makes sense to have
 % the same plus and minus as interwordspacenotes.
 \grecreatedim{interwordspacetext}{0.38 cm plus 0.15 cm minus 0.05 cm}{scalable}%
-% minimal space between letters of different syllable texts for text around bars
-\grecreatedim{interwordspacetext@bars}{0.15 cm plus 0.2 cm minus 0.02 cm}{scalable}%
-% minimal space between letters of different syllable texts for text around bars,
-% euouae context
-\grecreatedim{interwordspacetext@bars@euouae}{0.15 cm plus 0.2 cm minus 0.02 cm}{scalable}%
 % Versions of interword spaces for euouae blocks
 \grecreatedim{interwordspacenotes@euouae}{0.19 cm plus 0.1 cm minus 0.05 cm}{scalable}%
 \grecreatedim{interwordspacetext@euouae}{0.27 cm plus 0.1 cm minus 0.05 cm}{scalable}%
@@ -203,23 +198,29 @@
 \grecreatedim{bar@finalfinalis}{0.29169 cm plus 0.07292 cm minus 0.27345 cm}{scalable}%
 %
 % bars having their own syllable, with text associated (new bar spacing algorithm only)
+% plus or minus here will trigger some problems
 %
-\grecreatedim{bar@virgula@standalone@text}{0.2323 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
-\grecreatedim{bar@minima@standalone@text}{0.2323 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
-\grecreatedim{bar@minor@standalone@text}{0.2323 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
-\grecreatedim{bar@dominican@standalone@text}{0.2323 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
-\grecreatedim{bar@maior@standalone@text}{0.2323 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
-\grecreatedim{bar@finalis@standalone@text}{0.2323 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
+\grecreatedim{bar@virgula@standalone@text}{0.2323 cm}{scalable}%
+\grecreatedim{bar@minima@standalone@text}{0.2323 cm}{scalable}%
+\grecreatedim{bar@minor@standalone@text}{0.2323 cm}{scalable}%
+\grecreatedim{bar@dominican@standalone@text}{0.2323 cm}{scalable}%
+\grecreatedim{bar@maior@standalone@text}{0.2323 cm}{scalable}%
+\grecreatedim{bar@finalis@standalone@text}{0.2323 cm}{scalable}%
 %
 % bars having their own syllable, with no text associated (new bar spacing algorithm only)
 %
-\grecreatedim{bar@virgula@standalone@notext}{0.2323 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
-\grecreatedim{bar@minima@standalone@notext}{0.2323 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
-\grecreatedim{bar@minor@standalone@notext}{0.2323 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
-\grecreatedim{bar@dominican@standalone@notext}{0.2323 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
-\grecreatedim{bar@maior@standalone@notext}{0.2323 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
-\grecreatedim{bar@finalis@standalone@notext}{0.2323 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
+\grecreatedim{bar@virgula@standalone@notext}{0.2323 cm plus 0.22787 cm minus 0.01 cm}{scalable}%
+\grecreatedim{bar@minima@standalone@notext}{0.2323 cm plus 0.22787 cm minus 0.01 cm}{scalable}%
+\grecreatedim{bar@minor@standalone@notext}{0.2323 cm plus 0.22787 cm minus 0.01 cm}{scalable}%
+\grecreatedim{bar@dominican@standalone@notext}{0.2323 cm plus 0.22787 cm minus 0.01 cm}{scalable}%
+\grecreatedim{bar@maior@standalone@notext}{0.2323 cm plus 0.22787 cm minus 0.01 cm}{scalable}%
+\grecreatedim{bar@finalis@standalone@notext}{0.2323 cm plus 0.22787 cm minus 0.01 cm}{scalable}%
 %
+% minimal space between letters of different syllable texts for text around bars
+\grecreatedim{interwordspacetext@bars}{0.15 cm plus 0.22787 cm minus 0.02 cm}{scalable}%
+% minimal space between letters of different syllable texts for text around bars,
+% euouae context
+\grecreatedim{interwordspacetext@bars@euouae}{0.15 cm plus 0.22787 cm minus 0.02 cm}{scalable}%
 % additional space that will appear around bars that are preceded by a custos and followed by a key.
 \grecreatedim{spacearoundclefbars}{0.03645 cm plus 0.00455 cm minus 0.0009 cm}{scalable}%
 % space between the text of previous syllable and text associated with a bar (old bar spacing algorithm only)

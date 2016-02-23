@@ -67,7 +67,7 @@ The spaces around bars are now:
 They have variants for the new bar spacing algorithm only:
 
 - `bar@xxx@standalone@text` (where `xxx` is `virgula` or `minima`, etc.) are used when the bar is in a standalone syllable with text
-- `bar@xxx@standalone@text` for bars in a standalone syllable without text
+- `bar@xxx@standalone@notext` for bars in a standalone syllable without text
 
 ### Hyphens going right of staff lines
 
