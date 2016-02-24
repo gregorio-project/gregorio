@@ -1810,13 +1810,18 @@
     \fi %
   \or % 5 : final finalis
     \ifnum\gre@count@temp@one=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@finalfinalis\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@finalfinalis\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gre@fontchar@divisiofinalis}%
     #4\relax %
     \gre@fontchar@divisiofinalis%
+    \ifgre@newbarspacing %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@finalfinalis\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@hskip\gre@skip@temp@four %
+      \GreNoBreak %
+    \fi %
   \or % 6 : dominican bar 1
     \gre@calculate@glyphraisevalue{\gre@pitch@e}{0}{}%
     % we need to adjust the height of the bar a little so that it is perfectly aligned with the bottom (or the top for some bars) of the staff line, which is not the case by default if \gre@stafflinefactor is not 10.
@@ -1977,10 +1982,6 @@
 \def\GreFinalDivisioFinalis#1{%
   \GreLastOfScore %
   \GreNoBreak %
-  \ifgre@newbarspacing\else %
-    \gre@hskip\gre@space@skip@bar@finalfinalis %
-    \GreNoBreak %
-  \fi %
   \GreBarSyllable{\GreSetThisSyllable{}{}{}{}{}}{}{}{1}{}{}{16}{\GreLastOfLine}{%
     \GreDivisioFinalis{0}{}%
     #1%
@@ -1992,10 +1993,6 @@
 \def\GreFinalDivisioMaior#1{%
   \GreLastOfScore %
   \GreNoBreak %
-  \ifgre@newbarspacing\else %
-    \gre@hskip\gre@space@skip@bar@maior %
-    \GreNoBreak %
-  \fi %
   \GreBarSyllable{\GreSetThisSyllable{}{}{}{}{}}{}{}{1}{}{}{16}{\GreLastOfLine}{%
     \GreDivisioMaior{0}{}%
     #1%
