@@ -998,12 +998,12 @@
     \gre@dimen@temp@three=\gre@space@dimen@maxbaroffsettextleft\relax%
     \gre@dimen@temp@two=\gre@space@dimen@maxbaroffsettextright\relax%
   \fi%
-  % in the event that the bar is occurring at the end of the line, we override the offset limits and set them to 0.
+  % in the event that the bar is occurring at the end of the line, we use different offset limits
   % for now this only works for explicit end of lines which occur in the same syllable as the bar line (e.g. `test(::z)`)
   \ifnum\gre@newlinearg=-1\relax\else%
     \gre@debugmsg{barspacing}{end of line override on offset limits}%
-    \gre@dimen@temp@three=0pt\relax%
-    \gre@dimen@temp@two=0pt\relax%
+    \gre@dimen@temp@three=\gre@space@dimen@maxbaroffsettextleft@eol\relax%
+    \gre@dimen@temp@two=\gre@space@dimen@maxbaroffsettextright@eol\relax%
   \fi%
   \gre@debugmsg{barspacing}{left offset limit: \the\gre@dimen@temp@three}%
   \gre@debugmsg{barspacing}{right offset limit: \the\gre@dimen@temp@two}%
@@ -1315,6 +1315,8 @@
     {maxbaroffsettextright}{\gre@rubberfalse}%
     {maxbaroffsettextleft@nobar}{\gre@rubberfalse}%
     {maxbaroffsettextright@nobar}{\gre@rubberfalse}%
+    {maxbaroffsettextleft@eol}{\gre@rubberfalse}%
+    {maxbaroffsettextright@eol}{\gre@rubberfalse}%
     {interwordspacetext@bars@euouae}{\gre@rubberfalse}%
     {interwordspacetext@bars}{\gre@rubberfalse}%
     {overhepisemalowshift}{\gre@rubberfalse}%
@@ -1700,6 +1702,12 @@
   \fi%
   \ifgre@scale@maxbaroffsettextleft@nobar%
     \gre@changeonedimenfactor{maxbaroffsettextleft@nobar}{#1}{#2}%
+  \fi%
+  \ifgre@scale@maxbaroffsettextleft@eol%
+    \gre@changeonedimenfactor{maxbaroffsettextleft@eol}{#1}{#2}%
+  \fi%
+  \ifgre@scale@maxbaroffsettextright@eol%
+    \gre@changeonedimenfactor{maxbaroffsettextright@eol}{#1}{#2}%
   \fi%
   \ifgre@scale@bar@rubber%
     \gre@changeonedimenfactor{bar@rubber}{#1}{#2}%
