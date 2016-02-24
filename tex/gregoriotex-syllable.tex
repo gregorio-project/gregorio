@@ -882,6 +882,9 @@
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}%
   \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
   \gre@debugmsg{barspacing}{Width of bar text: \the\wd\gre@box@syllabletext}%
+  \global\let\gre@newlinecommonsaved\gre@newlinecommon %
+  \global\let\gre@newlinecommon\gre@newlinecommondelayed %
+  \xdef\gre@newlinearg{-1}%
   \gre@syllablenotes{#9}%
   \gre@debugmsg{barspacing}{Width of bar line: \the\wd\gre@box@syllablenotes}%
   \gre@dimen@notesaligncenter=\dimexpr(\wd\gre@box@syllablenotes / 2)\relax %
@@ -928,9 +931,6 @@
     \kern\dimexpr(\gre@dimen@enddifference% move from end of text to end of bar line
       -\wd\gre@box@syllablenotes)\relax % back up from end of bar line to beginning
     \GreNoBreak%
-    \global\let\gre@newlinecommonsaved\gre@newlinecommon %
-    \global\let\gre@newlinecommon\gre@newlinecommondelayed %
-    \xdef\gre@newlinearg{-1}%
     #9%
     \global\let\gre@newlinecommon\gre@newlinecommonsaved %
     \GreNoBreak%
@@ -984,6 +984,7 @@
     %
     %This is the old algorithm.  I've kept it in case people still want to use it.
     % then we check if there is something to write
+    \global\let\gre@newlinecommon\gre@newlinecommonsaved %
     \gre@debugmsg{ifdim}{ wd(gre@box@syllabletext) = 0pt}%
     \ifdim\wd\gre@box@syllabletext = 0 pt\relax %
       % the most difficult case : when there is nothing to write

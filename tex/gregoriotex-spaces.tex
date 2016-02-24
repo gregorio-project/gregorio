@@ -986,16 +986,23 @@
   \gre@debugmsg{barspacing}{new begindifference approximation: \the\gre@dimen@begindifference}%
   % in order to avoid code duplication, we check whether or not there is a bar line now and set temp variables to the appropriate offset limits.  We’ll then use those temp variables in the code below.
   \ifdim\wd\gre@box@syllablenotes = 0pt\relax%
-    \gre@debugmsg{barspacing}{left offset limit: \gre@space@dimen@maxbaroffsettextleft@nobar}%
+    \gre@debugmsg{barspacing}{no bar offset limits}%
     \gre@dimen@temp@three=\gre@space@dimen@maxbaroffsettextleft@nobar\relax%
-    \gre@debugmsg{barspacing}{right offset limit: \gre@space@dimen@maxbaroffsettextright@nobar}%
     \gre@dimen@temp@two=\gre@space@dimen@maxbaroffsettextright@nobar\relax%
   \else%
-    \gre@debugmsg{barspacing}{left offset limit: \gre@space@dimen@maxbaroffsettextleft}%
+    \gre@debugmsg{barspacing}{normal offset limits}%
     \gre@dimen@temp@three=\gre@space@dimen@maxbaroffsettextleft\relax%
-    \gre@debugmsg{barspacing}{right offset limit: \gre@space@dimen@maxbaroffsettextright}%
     \gre@dimen@temp@two=\gre@space@dimen@maxbaroffsettextright\relax%
   \fi%
+  % in the event that the bar is occurring at the end of the line, we override the offset limits and set them to 0.
+  % for now this only works for explicit end of lines which occur in the same syllable as the bar line (e.g. `test(::z)`)
+  \ifnum\gre@newlinearg=-1\relax\else%
+    \gre@debugmsg{barspacing}{end of line override on offset limits}%
+    \gre@dimen@temp@three=0pt\relax%
+    \gre@dimen@temp@two=0pt\relax%
+  \fi%
+  \gre@debugmsg{barspacing}{left offset limit: \the\gre@dimen@temp@three}%
+  \gre@debugmsg{barspacing}{right offset limit: \the\gre@dimen@temp@two}%
   % All this worry about shifts is superfluous if the text isn’t present,
   % so now we check for that and set them to 0 if it is missing
   \ifdim\wd\gre@box@syllabletext = 0pt\relax%
