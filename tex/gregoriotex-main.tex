@@ -1340,10 +1340,12 @@
   %\gre@localleftbox{}% For an unknown reason, if I uncomment this line, the
   %blank line removing algorithm (in lua) will let some blank space after the
   %last line... (see bug #20953)
-  \gre@usemanualeolcustos%
+  \ifgre@boxing\else %
+    \gre@usemanualeolcustos%
+    \global\gre@endofscoretrue %
+  \fi %
   \global\gre@lastoflinecount=1\relax%
   \gre@debugmsg{eolshift}{set lastoflinecount to 1}%
-  \global\gre@endofscoretrue %
   \relax%
 }%
 

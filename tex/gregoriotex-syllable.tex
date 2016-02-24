@@ -143,9 +143,9 @@
   \gre@calculate@glyphraisevalue{#2}{0}{}%
   \raise\gre@dimen@glyphraisevalue\relax%
   \copy\gre@box@temp@width%
-  \ifgre@endofscore\else%
+  \ifgre@endofscore\else\ifgre@boxing\else %
     \GreNextCustos{#3}%
-  \fi %
+  \fi\fi %
   \ifgre@firstglyph% we check if it is the first glyph
     \gre@calculate@notesaligncenter{#4}%
     \global\gre@firstglyphfalse%
