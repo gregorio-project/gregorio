@@ -1321,7 +1321,7 @@
 
 \newcount\gre@lastoflinecount%
 
-% macro to tell gregorioTeX no to put a space after the current syllable (otherwise it may cause annoying black boxes in the pdf if written in plainTeX)
+% called at syllable level. Indicates that the syllable is the last of the line (or score)
 % 0 if nothing
 % 1 if the syllable is the last of the line
 % 2 after it has finished the syllable, so when it is two it means that the syllable is the first of a line
@@ -1335,7 +1335,7 @@
 \newif\ifgre@endofscore%
 \gre@endofscorefalse%
 
-% same as above, but for the score. For now it is the same behaviour.
+% called at element level, before the final element
 \def\GreLastOfScore{%
   %\gre@localleftbox{}% For an unknown reason, if I uncomment this line, the
   %blank line removing algorithm (in lua) will let some blank space after the

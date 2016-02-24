@@ -1556,11 +1556,12 @@ OFFSET_CASE(BarVirgula);
 OFFSET_CASE(BarDivisioFinalis);
 
 static void write_bar(FILE *f, gregorio_bar type,
-        gregorio_sign signs, bool is_inside_bar, bool has_text)
+        gregorio_sign signs, bool is_inside_bar, bool has_text, unsigned char first_of_disc)
 {
     /* the type number of function vepisemaorrare */
     const char *offset_case = BarStandard;
-    if (is_inside_bar) {
+    /* don't use "In" version of bars in the first argument of a GreDiscretionary */
+    if (is_inside_bar && first_of_disc != 1) {
         fprintf(f, "\\GreIn");
     } else {
         fprintf(f, "\\Gre");
@@ -3618,7 +3619,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                         element->u.misc.unpitched.special_sign,
                         element->next && !is_manual_custos(element->next)
                         && element->next->type != GRE_END_OF_LINE,
-                        !element->previous && syllable->text);
+                        !element->previous && syllable->text, first_of_disc);
                 break;
 
             case GRE_END_OF_LINE:
