@@ -3360,6 +3360,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     const char *syllable_type = NULL;
     bool event_anticipated = false;
     bool end_of_word;
+    bool end_of_line;
     gregorio_not_null(syllable, write_syllable, return);
     end_of_word = syllable->position == WORD_END
             || syllable->position == WORD_ONE_SYLLABLE || !syllable->text
@@ -3458,15 +3459,29 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     } else {
         fprintf(f, "{0}");
     }
+    end_of_line = gregoriotex_is_last_of_line(syllable);
     if (syllable->next_syllable) {
         fprintf(f, "{\\GreSetNextSyllable");
         write_text(f, syllable->next_syllable->text);
+        if (end_of_line) {
+            fprintf(f, "\\GreLastOfLine");
+        }
+        if (!syllable->next_syllable) {
+            fprintf(f, "\\GreLastOfScore");
+        }
         fprintf(f, "}{");
         write_syllable_point_and_click(f, syllable, status);
         fprintf(f, "}{%d}{",
                 gregoriotex_syllable_first_type(syllable->next_syllable));
     } else {
-        fprintf(f, "{\\GreSetNextSyllable{}{}{}{}{}}{");
+        fprintf(f, "{\\GreSetNextSyllable{}{}{}{}{}");
+        if (end_of_line) {
+            fprintf(f, "\\GreLastOfLine");
+        }
+        if (!syllable->next_syllable) {
+            fprintf(f, "\\GreLastOfScore");
+        }
+        fprintf(f, "}{");
         write_syllable_point_and_click(f, syllable, status);
         fprintf(f, "}{16}{");
     }
@@ -3486,12 +3501,6 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     if (syllable->abovelinestext) {
         fprintf(f, "%%\n\\GreSetTextAboveLines{%s}%%\n",
                 syllable->abovelinestext);
-    }
-    if (gregoriotex_is_last_of_line(syllable)) {
-        fprintf(f, "%%\n\\GreLastOfLine %%\n");
-    }
-    if (!syllable->next_syllable) {
-        fprintf(f, "%%\n\\GreLastOfScore %%\n");
     }
     fprintf(f, "}{%%\n");
 
