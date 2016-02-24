@@ -358,26 +358,25 @@
       \gre@calculate@glyphraisevalue{#1}{0}{}%
       %here we need some tricks to draw the line before the custos (for the color)
       \setbox\gre@box@temp@width=\hbox{%
-      % we type a hskip and the we type the custos
-      \gre@skip@temp@four = \gre@space@skip@spacebeforeeolcustos\relax%
-      \hskip\gre@skip@temp@four %
-      \gre@pickcustos{#1}\relax %
+        % we type a hskip and the we type the custos
+        \gre@hskip\gre@space@skip@spacebeforeeolcustos\relax %
+        \gre@pickcustos{#1}\relax %
       }%
       \gre@dimen@temp@three=\wd\gre@box@temp@width %
       % we make \wd\gre@box@temp@sign contain the width of a custos
       \setbox\gre@box@temp@sign=\hbox{%
-      \gre@pickcustos{#1}\relax %
+        \gre@pickcustos{#1}\relax %
       }%
       \gre@localrightbox{%
-      \ifgre@showlines %
-        \ifnum#1<\gre@pitch@belowstaff\relax %
-          \gre@additionalbottomcustoslineend %
-        \else\ifnum#1>\gre@pitch@abovestaff\relax %
-          \gre@additionaltopcustoslineend %
-        \fi\fi %
-      \fi %
-      \raise \gre@dimen@glyphraisevalue\relax%
-      \copy\gre@box@temp@width %
+        \ifgre@showlines %
+          \ifnum#1<\gre@pitch@belowstaff\relax %
+            \gre@additionalbottomcustoslineend %
+          \else\ifnum#1>\gre@pitch@abovestaff\relax %
+            \gre@additionaltopcustoslineend %
+          \fi\fi %
+        \fi %
+        \raise \gre@dimen@glyphraisevalue\relax%
+        \copy\gre@box@temp@width %
       }%
     \fi %
   \fi %
@@ -1983,13 +1982,12 @@
 
 %macro to end a line with a divisio finalis
 \def\GreFinalDivisioFinalis#1{%
-  \GreLastOfScore %
-  \GreNoBreak %
   \GreBarSyllable{\GreSetThisSyllable{}{}{}{}{}}{}{}{1}{\GreSetNextSyllable{}{}{}{}{}\GreLastOfLine}{}{16}{}{%
     \ifgre@newbarspacing\else %
       \gre@hskip\gre@space@skip@bar@finalfinalis %
       \GreNoBreak %
     \fi %
+    \GreLastOfScore %
     \GreDivisioFinalis{0}{}%
     #1%
   }%
@@ -1998,9 +1996,8 @@
 
 %macro to end a line with a divisio maior
 \def\GreFinalDivisioMaior#1{%
-  \GreLastOfScore %
-  \GreNoBreak %
   \GreBarSyllable{\GreSetThisSyllable{}{}{}{}{}}{}{}{1}{\GreSetNextSyllable{}{}{}{}{}\GreLastOfLine}{}{16}{}{%
+    \GreLastOfScore %
     \GreDivisioMaior{0}{}%
     #1%
   }%
