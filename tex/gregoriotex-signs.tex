@@ -1597,7 +1597,6 @@
   \relax%
 }%
 
-
 \def\GreInDivisioFinalis#1#2{%
   \ifgre@endofscore %
     \gre@writebar{5}{1}{#1}{#2}%
@@ -1976,14 +1975,13 @@
 
 %macro to end a line with a divisio finalis
 \def\GreFinalDivisioFinalis#1{%
-  \gre@localrightbox{}%
-  %\gre@localleftbox{}
+  \GreLastOfScore %
   \GreNoBreak %
-  \gre@skip@temp@four = \gre@space@skip@bar@finalfinalis\relax%
-  \gre@hskip\gre@skip@temp@four %
-  \GreNoBreak %
-  \GreBarSyllable{\GreSetThisSyllable{}{}{}{}{}}{}{}{1}{}{}{0}{\GreLastOfLine}{%
+  \ifgre@newbarspacing\else %
+    \gre@hskip\gre@space@skip@bar@finalfinalis %
     \GreNoBreak %
+  \fi %
+  \GreBarSyllable{\GreSetThisSyllable{}{}{}{}{}}{}{}{1}{}{}{0}{\GreLastOfLine}{%
     \GreDivisioFinalis{0}{}%
     #1%
   }%
@@ -1992,10 +1990,9 @@
 
 %macro to end a line with a divisio maior
 \def\GreFinalDivisioMaior#1{%
-  \gre@localrightbox{}%
-  \gre@localleftbox{}%
-    \GreBarSyllable{\GreSetThisSyllable{}{}{}{}{}}{}{}{1}{}{}{0}{}{%
-    \GreNoBreak %
+  \GreLastOfScore %
+  \GreNoBreak %
+  \GreBarSyllable{\GreSetThisSyllable{}{}{}{}{}}{}{}{1}{}{}{0}{\GreLastOfLine}{%
     \GreDivisioMaior{0}{}%
     #1%
   }%

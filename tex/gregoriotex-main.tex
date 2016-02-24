@@ -1235,6 +1235,7 @@
   \fi %
   \global\gre@knownline=1\relax %
   \global\gre@lastoflinecount=2\relax %
+  \global\gre@endofscorefalse %
   \relax%
 }%
 
@@ -1320,7 +1321,6 @@
 
 \newcount\gre@lastoflinecount%
 
-% TODO: case where we're at the beginning *and* end of a line... quite rare case though...
 % macro to tell gregorioTeX no to put a space after the current syllable (otherwise it may cause annoying black boxes in the pdf if written in plainTeX)
 % 0 if nothing
 % 1 if the syllable is the last of the line
@@ -1331,6 +1331,10 @@
   \relax%
 }%
 
+% Flag to mark the last syllable of the score
+\newif\ifgre@endofscore%
+\gre@endofscorefalse%
+
 % same as above, but for the score. For now it is the same behaviour.
 \def\GreLastOfScore{%
   %\gre@localleftbox{}% For an unknown reason, if I uncomment this line, the
@@ -1338,6 +1342,8 @@
   %last line... (see bug #20953)
   \gre@usemanualeolcustos%
   \global\gre@lastoflinecount=1\relax%
+  \gre@debugmsg{eolshift}{set lastoflinecount to 1}%
+  \global\gre@endofscoretrue %
   \relax%
 }%
 
