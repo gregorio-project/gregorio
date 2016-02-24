@@ -3468,7 +3468,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     } else {
         fprintf(f, "{\\GreSetNextSyllable{}{}{}{}{}}{");
         write_syllable_point_and_click(f, syllable, status);
-        fprintf(f, "}{0}{");
+        fprintf(f, "}{16}{");
     }
     if (syllable->translation) {
         if (syllable->translation_type == TR_WITH_CENTER_BEGINNING) {
