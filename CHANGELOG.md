@@ -19,6 +19,9 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Space between the two bars of a divisio finalis is now tunable through `divisiofinalissep`.
 - Added `notesonly` argument to `\gresetshiftaftermora` (see [#948](https://github.com/gregorio-project/gregorio/issues/948)).
 
+### Known bugs
+- When there is no manual break, the spacing around bars at the end of a line in the new spacing algorithm is not perfect, this should be visible ony in edge cases. If you encounter such a bad spacing, you are advised to force a line break manually. See [#959](https://github.com/gregorio-project/gregorio/issues/959).
+
 ## [4.1.0-rc1] - 2016-02-18
 ### Fixed
 - New bar spacing algorithm now accounts for translations (and other below lyrics stuff).
