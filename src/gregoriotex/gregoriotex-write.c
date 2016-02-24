@@ -3446,7 +3446,11 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
              * bar syllable */
             syllable_type = "\\GreBarSyllable";
         } else {
-            syllable_type = "\\GreSyllable";
+            if (first_of_disc == 1) {
+                syllable_type = "\\GreBarSyllable";
+            } else {
+                syllable_type = "\\GreSyllable";
+            }
         }
     } else {
         write_fixed_text_styles(f, syllable->text,
