@@ -1104,16 +1104,13 @@ static void gregoriotex_write_voice_info(FILE *f, gregorio_voice_info *voice_inf
             "file or voice_info passed as NULL", return);
 }
 
-/* this function indicates if the syllable is the last of the line. If it's the
- * last of the score it returns false, as it's handled another way */
-static bool gregoriotex_is_last_of_line(gregorio_syllable *syllable)
+/* this function indicates if the syllable is the last of the line or score. */
+static bool is_last_of_line(gregorio_syllable *syllable)
 {
     gregorio_element *current_element = NULL;
-    if (!(syllable->next_syllable)) {
-        return false;
-    }
-    if ((syllable->next_syllable->elements)[0]
-            && (syllable->next_syllable->elements)[0]->type == GRE_END_OF_LINE) {
+    if (!(syllable->next_syllable) || ((syllable->next_syllable->elements)[0]
+                && (syllable->next_syllable->elements)[0]->type
+                == GRE_END_OF_LINE)) {
         /* the next syllable start by an end of line */
         return true;
     }
@@ -1129,6 +1126,21 @@ static bool gregoriotex_is_last_of_line(gregorio_syllable *syllable)
                 }
             } else {
                 current_element = current_element->next;
+            }
+        }
+    }
+    return false;
+}
+
+/* determines if there are more GRE_GLYPHs */
+static bool has_more_notes(const gregorio_element *element) {
+    for (element = element->next; element; element = element->next) {
+        if (element->type == GRE_ELEMENT) {
+            const gregorio_glyph *glyph;
+            for (glyph = element->u.first_glyph; glyph; glyph = glyph->next) {
+                if (glyph->type == GRE_GLYPH) {
+                    return true;
+                }
             }
         }
     }
@@ -3464,15 +3476,12 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     } else {
         fprintf(f, "{0}");
     }
-    end_of_line = gregoriotex_is_last_of_line(syllable);
+    end_of_line = is_last_of_line(syllable);
     if (syllable->next_syllable) {
         fprintf(f, "{\\GreSetNextSyllable");
         write_text(f, syllable->next_syllable->text);
         if (end_of_line) {
             fprintf(f, "\\GreLastOfLine");
-        }
-        if (!syllable->next_syllable) {
-            fprintf(f, "\\GreLastOfScore");
         }
         fprintf(f, "}{");
         write_syllable_point_and_click(f, syllable, status);
@@ -3482,9 +3491,6 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
         fprintf(f, "{\\GreSetNextSyllable{}{}{}{}{}");
         if (end_of_line) {
             fprintf(f, "\\GreLastOfLine");
-        }
-        if (!syllable->next_syllable) {
-            fprintf(f, "\\GreLastOfScore");
         }
         fprintf(f, "}{");
         write_syllable_point_and_click(f, syllable, status);
@@ -3510,8 +3516,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     fprintf(f, "}{%%\n");
 
     if (syllable->elements) {
-        for (element = *syllable->elements; element;
-                element = element->next) {
+        for (element = *syllable->elements; element; element = element->next) {
             if (element->nabc_lines && element->nabc) {
                 size_t i;
                 for (i = 0; i < element->nabc_lines; i++) {
@@ -3520,6 +3525,9 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                                 element->nabc[i]);
                     }
                 }
+            }
+            if (!syllable->next_syllable && !has_more_notes(element)) {
+                fprintf(f, "\\GreLastOfScore");
             }
             switch (element->type) {
             case GRE_SPACE:
