@@ -351,7 +351,7 @@ Draws a round over-brace using \MP{}.
   \#1 & string & the width of the brace; if \texttt{*}, use the bar brace width.
 \end{argtable}
 
-\macroname{\textbackslash gre@render@fontbrace}{\#1\#2}{gregoriotex-signs.tex}
+\macroname{\textbackslash gre@draw@fontbrace}{\#1\#2}{gregoriotex-signs.tex}
 Draws a brace using the score font.
 
 \begin{argtable}
@@ -1163,8 +1163,11 @@ Workhorse function behind \verb=\GreDrawAdditionalLine=.
   \#6 & distance   & The distance to end the line after \#2 from this point if \#3 is \texttt{2}. \\
 \end{argtable}
 
-\macroname{\textbackslash gre@kern@bar@aftermora}{}{gregoriotex-signs.tex}
-Macro which kerns between a punctum mora and a kern according to the setting in \verb=\gre@count@barshiftaftermora=.
+\macroname{\textbackslash gre@get@unkern@aftermora}{}{gregoriotex-signs.tex}
+Calculates the amount of shift needed to take into account the presence of a punctum mora at the end of a syllable according to the setting in \verb=\gre@count@shiftaftermora=.
+
+\macroname{\textbackslash gre@unkern@bar@aftermora}{}{gregoriotex-signs.tex}
+Macro which kerns between a punctum mora and a bar according to the setting in \verb=\gre@count@shiftaftermora=.
 
 \macroname{\textbackslash gre@setgregoriofontscaled}{[\#1]\#2\#3}{gregoriotex-main.tex}
 Workhorse behind \verb=\gresetgregoriofontscaled=.
@@ -1176,6 +1179,39 @@ Workhorse behind \verb=\gresetgregoriofontscaled=.
   & \texttt{gregorio} & Use the Gregorio font.\\
   & \texttt{parmesan} & Use the Parmesan font.\\
   \#3 & integer & the scaling factor\\
+\end{argtable}
+
+\macroname{\textbackslash gre@calculate@barposition}{\#1\#2}{gregoriotex-spaces.tex}
+Macro for calculating the position of the elements of a bar syllable using the new bar positioning algorithm.
+
+\begin{argtable}
+  \#1 & 0 & bar is not the end of a word\\
+  & 1 & bar is the end of a word\\
+  \#2 & integer & alignment type of the first glyph in the next syllable.  See \nameref{notesalign}\\
+\end{argtable}
+
+\macroname{\textbackslash gre@newlinearg}{}{gregoriotex-syllable.tex}
+Macro for storing the argument for \verb=\gre@newlinecommon= when the line break must be delayed (i.e. in the new bar spacing algorithm).
+
+\macroname{\textbackslash gre@newlinecommondelayed}{}{gregoriotex-syllable.tex}
+Macro used in place of \verb=\gre@newlinecommon= when the line break must be delayed.
+
+\macroname{\textbackslash gre@newlinecommonsaved}{}{gregoriotex-syllable.tex}
+Macro for storing original behavior of \verb=\gre@newlinecommon= so that it can be restored after the delayed line break takes effect.
+
+\macroname{\textbackslash gre@punctum@mora}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
+Macro to typeset a punctum mora.
+
+\begin{argtable}
+  \#1 & pitch & height of the punctum mora (one of the \verb=\gre@pitch@...= macros.\\
+  \#2 & 0 & general case\\
+  & 1 & make the punctum mora zero-width\\
+  & 2 & shift the width of one punctum to the left\\
+  & 3 & same as 2 but with ambitus of one\\
+  \#3 & 1 & punctum mora in the note before the last note of a podatus, porrectus, or torculus resupinus\\
+  & 0 & other cases\\
+  \#4 & 1 & punctum inclinatum\\
+  & 0 & other cases\\
 \end{argtable}
 
 
@@ -1445,9 +1481,6 @@ Boolean which indicates if the previous syllable ends with a punctum mora (set g
 \macroname{\textbackslash ifgre@thisendswithmora}{}{gregoriotex-syllable.tex}
 Same as previous one but for current syllable.
 
-\macroname{\textbackslash ifgre@lastispunctumsave}{}{gregoriotex-signs.tex}
-Boolean for storing \verb=\ifgre@lastispunctum= so that it can be restored later.
-
 \macroname{\textbackslash ifgre@ledgerline@above}{}{gregoriotex-spaces.tex}
 Boolean which indicates whether the system should act as if there is a ledger line above the staff.
 
@@ -1535,8 +1568,8 @@ Boolean indicating whether the staff has a fourth line.
 \macroname{\textbackslash ifgre@haslinefive}{}{gregoriotex-spaces.tex}
 Boolean indicating whether the staff has a fifth line.
 
-\macroname{\textbackslash gre@count@barshiftaftermora}{}{gregoriotex-signs.tex}
-Count indicating when the presence of a punctum mora immediately before a bar line should affect the spacing.
+\macroname{\textbackslash gre@count@shiftaftermora}{}{gregoriotex-signs.tex}
+Count indicating when the presence of a punctum mora at the end of a syllable should affect the spacing with the next syllable.
 
 \macroname{\textbackslash gre@count@lastglyphiscavum}{}{gregoriotex-spaces.tex}
 Count indicating if the last glyph has a cavum (this includes flats, naturals, punctum cavum, etc.), when staff line shouldn't appear underneath this empty part. Can be:
@@ -1551,6 +1584,18 @@ Boolean which controls whether deprecated functions raise a warning (true) or an
 
 \macroname{\textbackslash ifgre@newbarspacing}{}{gregoriotex-syllable.tex}
 Boolean which controls whether the new bar spacing algorithm is activated.
+
+\macroname{\textbackslash ifgre@disablehepisema}{}{gregoriotex-signs.tex}
+Boolean to disable the printing of horizontal episemata.
+
+\macroname{\textbackslash ifgre@disablemora}{}{gregoriotex-signs.tex}
+Boolean to disable the printing of punctum morae.
+
+\macroname{\textbackslash ifgre@disablevepsiema}{}{gregoriotex-signs.tex}
+Boolean to disable the printing of vertical episemata.
+
+\macroname{\textbackslash ifgre@lastendswithmorasave}{}{gregoriotex-syllable.tex}
+Boolean for saving \verb=\ifgre@lastendswithmora= for later restoration.
 
 
 \subsection{Boxes}
@@ -1684,6 +1729,9 @@ For regular syllables and bar syllables using the old bar spacing algorithm this
 \macroname{\textbackslash gre@dimen@previousenddifference}{}{gregoriotex-spaces.tex}
 Stored value of enddifference prior to the current one.
 
+\macroname{\textbackslash gre@dimen@adjustedpreviousenddifference}{}{gregoriotex-spaces.tex}
+Stored value of enddifference prior to the current one after adjusting for the possibility of a punctum mora at the end of the last syllable (and the setting of \verb=\gre@count@aftermorashift=.
+
 \macroname{\textbackslash gre@skip@nextbegindifference}{}{gregoriotex-spaces.tex}
 The difference between the start of the notes and the start of the text for the next syllable.  Positive when when text begins first, negative in other case.
 
@@ -1752,6 +1800,31 @@ The final distance to skip at the end of a syllable.
 \macroname{\textbackslash greslurheight}{}{gregoriotex-signs.tex}
 Stores the computed height of a variable-length slur.  The control sequence name
 does not have the \texttt{@} symbol because this dimension is used within \MP{}.
+
+\macroname{\textbackslash gre@dimen@bar@shift}{}{gregoriotex-spaces.tex}
+Shift of the bar away from its center position to account for the offset limits in the new bar spacing algorithm.
+
+\macroname{\textbackslash gre@dimen@text@shift}{}{gregoriotex-spaces.tex}
+Shift of the text away from its center position to account for the offset limits in the new bar spacing algorithm.
+
+\macroname{\textbackslash gre@skip@bar@allocation}{}{gregoriotex-spaces.tex}
+Space allocated to the bar in the new bar spacing algorithm.
+
+\macroname{\textbackslash gre@skip@bar@requirement}{}{gregoriotex-spaces.tex}
+Space required by the bar in the new bar spacing algorithm.
+
+\macroname{\textbackslash gre@skip@text@allocation}{}{gregoriotex-spaces.tex}
+Space allocated to the text in the new bar spacing algorithm.
+
+\macroname{\textbackslash gre@skip@text@requirement}{}{gregoriotex-spaces.tex}
+Space required by the text in the new bar spacing algorithm.
+
+\macroname{\textbackslash gre@skip@bar@lastskip}{}{gregoriotex-signs.tex}
+Skip after the most recent bar.
+
+\macroname{\textbackslash gre@skip@punctummorashift}{}{gregoriotex-spaces.tex}
+Displacement of whole syllable to account for the presence of a punctum mora at the end of the previous syllable
+
 
 \subsection{Penalties}
 These are the macros that Gregorio\TeX\ uses to manipulate the penalties in order to control line and page breaks within a score without affect the surrounding text.

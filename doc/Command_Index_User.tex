@@ -62,12 +62,6 @@ Gregorio\TeX{} two-pass processing is compatible with \texttt{latexmk}.
 
 If you only need the special symbols which Gregorio\TeX\ contains, and not the ability to include scores or musical glyphs, then you can load \texttt{gregoriosyms} instead of \texttt{gregoriotex}.  It supports all of the above options except those specifically related to scores.  \textbf{You should not try to load both packages}.
 
-\subsubsection{Gregorio\TeX\ and \texttt{fontspec}}
-Due to recent changes (September 2015) in the \LaTeX\ kernel and the resulting updates to \texttt{fontspec} and Gregorio\TeX, these two packages must now be loaded in order: \texttt{fontspec} first and then \texttt{gregoirotex} (or \texttt{gregoriosyms}).  If you attempt to load them the other way around, you will get an error about undefined control sequences and will be unable to compile your document.
-
-Gregorio\TeX\ does not require \texttt{fontspec}, so documents which do not use \texttt{fontspec} are not affected by these changes.
-
-\textit{Nota bene:} Some font packages (such as \texttt{libertine}) make use of \texttt{fontspec} internally and thus must also be loaded before \texttt{gregoriotex}.
 
 \subsection{Commands}
 
@@ -1562,6 +1556,9 @@ Spaces around bars in standalone syllables, when these have text (new bar spacin
 \begin{gdimension}{bar@finalis@standalone@text}
 \end{gdimension}
 
+\begin{gdimension}{bar@finalfinalis@standalone@text}
+\end{gdimension}
+
 Spaces around bars in standalone syllables, when these have no text (new bar spacing algorithm only):
 
 \begin{gdimension}{bar@virgula@standalone@notext}
@@ -1580,6 +1577,9 @@ Spaces around bars in standalone syllables, when these have no text (new bar spa
 \end{gdimension}
 
 \begin{gdimension}{bar@finalis@standalone@notext}
+\end{gdimension}
+
+\begin{gdimension}{bar@finalfinalis@standalone@notext}
 \end{gdimension}
 
 \begin{gdimension}{spacearoundclefbars}
@@ -1622,6 +1622,14 @@ Maximum distance by which the center of a “no-bar” (\ie something like \text
 
 \begin{gdimension}{maxbaroffsettextright@nobar}
 Same as \texttt{maxbaroffsettextleft@nobar} but when the center of the text goes right of the center of the no-bar.
+\end{gdimension}
+
+\begin{gdimension}{maxbaroffsettextleft@eol}
+Maximum distance by which the center of a bar and the center of its associated text can be separated, when the center of the text goes left of the center of the bar and the bar syllable contains a manual line break (new bar spacing algorithm only).
+\end{gdimension}
+
+\begin{gdimension}{maxbaroffsettextright@eol}
+Same as \texttt{maxbaroffsettextleft@eol} but when the center of the text goes right of the center of the bar.
 \end{gdimension}
 
 
