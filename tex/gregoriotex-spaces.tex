@@ -217,7 +217,7 @@
 %%        an alteration
 %%
 %% @uses \gre@dimen@enddifference
-%% @uses \gre@dimen@nextbegindifference
+%% @uses \gre@skip@nextbegindifference
 %%
 %% Pseudo-code:
 %%  min_text_dist = same_word ? 0 : space_inter_words
@@ -246,7 +246,7 @@
     \ifgre@in@euouae %
       \ifgre@newbarspacing%
         \ifnum#2=1\relax %
-          \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext@bars@euouae\relax%
+          \gre@skip@minTextDistance=\gre@space@dimen@interwordspacetext@bars@euouae\relax%
         \else %
           \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext@euouae\relax%
         \fi %
@@ -256,7 +256,7 @@
     \else %
       \ifgre@newbarspacing%
         \ifnum#2=1\relax %
-          \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext@bars\relax%
+          \gre@skip@minTextDistance=\gre@space@dimen@interwordspacetext@bars\relax%
         \else %
           \gre@skip@minTextDistance=\gre@space@skip@interwordspacetext\relax%
         \fi %
@@ -288,7 +288,11 @@
       \fi %
     \fi %
   \or %
-    \gre@skip@minNotesDistance=\gre@space@skip@notebarspace\relax%
+    \ifgre@newbarspacing %
+      \gre@skip@minNotesDistance=0pt\relax%
+    \else %
+      \gre@skip@minNotesDistance=\gre@space@skip@notebarspace\relax%
+    \fi %
   \or %
     \ifnum#1=1\relax %
       \gre@skip@minNotesDistance=\gre@space@skip@interwordspacenotes@alteration\relax %
@@ -410,6 +414,7 @@
 \def\gre@calculate@eolshift#1{%
   \gre@skip@temp@two=0pt\relax%
   % we only need a shift if the lyrics are longer than the notes
+  \gre@debugmsg{eolshift}{eolshift called with enddifference: \the #1}%
   \ifdim#1 <0pt\relax%
     % we only need to shift if there is a custos being printed
     \ifgre@blockeolcustos%
@@ -421,12 +426,14 @@
       \ifgre@possibleluahyphenafterthissyllable %
         \setbox\gre@box@temp@width=\hbox{\GreHyph}%
         \advance\gre@skip@temp@two by -\dimexpr(\wd\gre@box@temp@width * ((100 - \gre@count@protrusion@hyphen@eol) / 100))\relax%
+        \gre@debugmsg{eolshift}{adjusted enddifference for protrusion: \the\gre@skip@temp@two}%
       \fi %
       % The maximum value is wd(custos) + spacebeforeeolcustos
       % Were the eolshift larger than this the lyrics would stick out
       % into the margin
       \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{\gre@pitch@g}}%
       \gre@skip@temp@three = \glueexpr(\wd\gre@box@temp@width+\gre@space@skip@spacebeforeeolcustos)\relax%
+      \gre@debugmsg{eolshift}{custos + space before custos = \the\gre@skip@temp@three}%
       % pick the smaller of the two values calculated above
       \ifdim\gre@skip@temp@two>\gre@skip@temp@three%
         \gre@debugmsg{eolshift}{imposing limit}%
@@ -438,6 +445,8 @@
   \else%
     \global\gre@dimen@eolshift=0pt\relax%
   \fi %
+  \gre@debugmsg{eolshift}{eolshift: \the\gre@dimen@eolshift}%
+  \relax %
 }
 
 %%%%%%%%%%%%%%%%%%%
@@ -803,15 +812,19 @@
 %% 3 : the end letters of the next syllable
 %% 4 : the type of notes alignment
 \def\gre@calculate@nextbegindifference#1#2#3#4{%
-  %to prevent the pollution of the normal values, we stock them into a temp value
-  \gre@dimen@temp@two=\gre@dimen@textaligncenter\relax%
-  \gre@calculate@textaligncenter{#1}{#2}{1}%
-  \global\gre@skip@nextbegindifference=-\gre@dimen@textaligncenter\relax%
-  \global\gre@dimen@textaligncenter=\gre@dimen@temp@two %
-  \gre@dimen@temp@two=\gre@dimen@notesaligncenter\relax%
-  \gre@calculate@nextnotesaligncenter{#4}% idem
-  \global\advance\gre@skip@nextbegindifference by \the\gre@dimen@notesaligncenter\relax%
-  \global\gre@dimen@notesaligncenter=\gre@dimen@temp@two %
+  \ifnum\gre@lastoflinecount=1\relax %
+    \global\gre@skip@nextbegindifference=0pt\relax%
+  \else %
+    %to prevent the pollution of the normal values, we stock them into a temp value
+    \gre@dimen@temp@two=\gre@dimen@textaligncenter\relax%
+    \gre@calculate@textaligncenter{#1}{#2}{1}%
+    \global\gre@skip@nextbegindifference=-\gre@dimen@textaligncenter\relax%
+    \global\gre@dimen@textaligncenter=\gre@dimen@temp@two %
+    \gre@dimen@temp@two=\gre@dimen@notesaligncenter\relax%
+    \gre@calculate@nextnotesaligncenter{#4}% idem
+    \global\advance\gre@skip@nextbegindifference by \the\gre@dimen@notesaligncenter\relax%
+    \global\gre@dimen@notesaligncenter=\gre@dimen@temp@two %
+  \fi %
   \relax %
 }%
 
@@ -941,9 +954,9 @@
     %this calculation is similar to what is done in \gre@calculate@syllablefinalskip, but is only for the text, so we'll use \gre@skip@syllablefinalskip to hold this value for now
     \ifnum#1=1\relax %
       \ifgre@in@euouae %
-        \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacetext@bars@euouae\relax%
+        \gre@skip@syllablefinalskip=\gre@space@dimen@interwordspacetext@bars@euouae\relax%
       \else %
-        \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacetext@bars\relax%
+        \gre@skip@syllablefinalskip=\gre@space@dimen@interwordspacetext@bars\relax%
       \fi %
     \else %
       \gre@skip@syllablefinalskip=0pt\relax%
@@ -959,44 +972,8 @@
   \gre@debugmsg{barspacing}{allocated text space: \the\gre@skip@text@allocation}%
   \gre@debugmsg{barspacing}{allocated notes space: \the\gre@skip@bar@allocation}%
   % now we check the bar width
-  %as with the text, we start by borrowing the minNotesDistance left over from the previous syllable
   \gre@debugmsg{barspacing}{bar width: \the\wd\gre@box@syllablenotes}%
-  \gre@debugmsg{barspacing}{previous syllable skip after notes: \the\gre@skip@minNotesDistance}%
-  \gre@skip@bar@requirement = \glueexpr\wd\gre@box@syllablenotes + \gre@skip@minNotesDistance\relax%
-  %now, if there is a visible bar for this syllable, we calculate this syllable’s equivalent of minNotesDistance
-  % gre@count@temp@one holds 0 if next is not a bar, 1 if it is, 2 if it starts with an alteration
-  \gre@count@temp@one=0%
-  \ifnum#2>9\relax %
-    \ifnum#2<20\relax %
-      \gre@count@temp@one=1\relax %
-    \else %
-      \gre@count@temp@one=2\relax %
-    \fi %
-  \fi %
-  \ifdim\wd\gre@box@syllablenotes > 0pt\relax%
-    %as with the text, this calculation is similar to what \gre@calculate@syllablefinalskip does, but only for the notes, so we’ll use syllablefinalskip to store it
-    \ifcase\gre@count@temp@one\relax %
-      \ifnum#1=1\relax %
-        \ifgre@in@euouae %
-          \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacenotes@euouae\relax%
-        \else %
-          \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacenotes\relax%
-        \fi %
-      \else %
-        \gre@skip@syllablefinalskip=\gre@space@dimen@intersyllablespacenotes\relax%
-      \fi %
-    \or %
-      \gre@skip@syllablefinalskip=\gre@space@skip@notebarspace\relax%
-    \or %
-      \ifnum#1=1\relax %
-        \gre@skip@syllablefinalskip=\gre@space@skip@interwordspacenotes@alteration\relax %
-      \else %
-        \gre@skip@syllablefinalskip=\gre@space@dimen@intersyllablespacenotes@alteration\relax%
-      \fi %
-    \fi %
-    \gre@debugmsg{syllablespacing}{this syllable skip after bar: \the\gre@skip@syllablefinalskip}%
-    \advance\gre@skip@bar@requirement by \gre@skip@syllablefinalskip%
-  \fi%
+  \gre@skip@bar@requirement = \wd\gre@box@syllablenotes\relax%
   \ifdim\gre@skip@bar@allocation < \gre@skip@bar@requirement\relax%
     \advance\gre@skip@text@allocation by \glueexpr(\gre@skip@bar@requirement - \gre@skip@bar@allocation)\relax%
     \gre@skip@bar@allocation = \gre@skip@bar@requirement\relax%
@@ -1013,16 +990,23 @@
   \gre@debugmsg{barspacing}{new begindifference approximation: \the\gre@dimen@begindifference}%
   % in order to avoid code duplication, we check whether or not there is a bar line now and set temp variables to the appropriate offset limits.  We’ll then use those temp variables in the code below.
   \ifdim\wd\gre@box@syllablenotes = 0pt\relax%
-    \gre@debugmsg{barspacing}{left offset limit: \gre@space@dimen@maxbaroffsettextleft@nobar}%
+    \gre@debugmsg{barspacing}{no bar offset limits}%
     \gre@dimen@temp@three=\gre@space@dimen@maxbaroffsettextleft@nobar\relax%
-    \gre@debugmsg{barspacing}{right offset limit: \gre@space@dimen@maxbaroffsettextright@nobar}%
     \gre@dimen@temp@two=\gre@space@dimen@maxbaroffsettextright@nobar\relax%
   \else%
-    \gre@debugmsg{barspacing}{left offset limit: \gre@space@dimen@maxbaroffsettextleft}%
+    \gre@debugmsg{barspacing}{normal offset limits}%
     \gre@dimen@temp@three=\gre@space@dimen@maxbaroffsettextleft\relax%
-    \gre@debugmsg{barspacing}{right offset limit: \gre@space@dimen@maxbaroffsettextright}%
     \gre@dimen@temp@two=\gre@space@dimen@maxbaroffsettextright\relax%
   \fi%
+  % in the event that the bar is occurring at the end of the line, we use different offset limits
+  % for now this only works for explicit end of lines which occur in the same syllable as the bar line (e.g. `test(::z)`)
+  \ifnum\gre@newlinearg=-1\relax\else%
+    \gre@debugmsg{barspacing}{end of line override on offset limits}%
+    \gre@dimen@temp@three=\gre@space@dimen@maxbaroffsettextleft@eol\relax%
+    \gre@dimen@temp@two=\gre@space@dimen@maxbaroffsettextright@eol\relax%
+  \fi%
+  \gre@debugmsg{barspacing}{left offset limit: \the\gre@dimen@temp@three}%
+  \gre@debugmsg{barspacing}{right offset limit: \the\gre@dimen@temp@two}%
   % All this worry about shifts is superfluous if the text isn’t present,
   % so now we check for that and set them to 0 if it is missing
   \ifdim\wd\gre@box@syllabletext = 0pt\relax%
@@ -1231,6 +1215,14 @@
       \def\gre@prefix{dimen}%
     \fi%
   \fi%
+  % special check for bar@rubber
+  \IfStrEq*{#1}{bar@rubber}%
+    {%
+      \gre@skip@temp@one = #2\relax%
+      \ifdim\gre@skip@temp@one=0pt\relax\else%
+        \gre@error{bar@rubber cannot have a non-zero base}
+      \fi%
+    }{}%
   \expandafter\edef\csname gre@space@\gre@prefix @#1\endcsname{#2}%
   \relax %
 }
@@ -1323,6 +1315,10 @@
     {maxbaroffsettextright}{\gre@rubberfalse}%
     {maxbaroffsettextleft@nobar}{\gre@rubberfalse}%
     {maxbaroffsettextright@nobar}{\gre@rubberfalse}%
+    {maxbaroffsettextleft@eol}{\gre@rubberfalse}%
+    {maxbaroffsettextright@eol}{\gre@rubberfalse}%
+    {interwordspacetext@bars@euouae}{\gre@rubberfalse}%
+    {interwordspacetext@bars}{\gre@rubberfalse}%
     {overhepisemalowshift}{\gre@rubberfalse}%
     {overhepisemahighshift}{\gre@rubberfalse}%
     {underhepisemalowshift}{\gre@rubberfalse}%
@@ -1566,20 +1562,62 @@
   \ifgre@scale@ascendinginclinatumtonobarmaxshift%
     \gre@changeonedimenfactor{ascendinginclinatumtonobarmaxshift}{#1}{#2}%
   \fi%
-  \ifgre@scale@spacearoundsmallbar%
-    \gre@changeonedimenfactor{spacearoundsmallbar}{#1}{#2}%
+  \ifgre@scale@bar@virgula%
+    \gre@changeonedimenfactor{bar@virgula}{#1}{#2}%
   \fi%
-  \ifgre@scale@spacearoundminor%
-    \gre@changeonedimenfactor{spacearoundminor}{#1}{#2}%
+  \ifgre@scale@bar@minima%
+    \gre@changeonedimenfactor{bar@minima}{#1}{#2}%
   \fi%
-  \ifgre@scale@spacearoundmaior%
-    \gre@changeonedimenfactor{spacearoundmaior}{#1}{#2}%
+  \ifgre@scale@bar@minor%
+    \gre@changeonedimenfactor{bar@minor}{#1}{#2}%
   \fi%
-  \ifgre@scale@spacearoundfinalis%
-    \gre@changeonedimenfactor{spacearoundfinalis}{#1}{#2}%
+  \ifgre@scale@bar@minor%
+    \gre@changeonedimenfactor{bar@dominican}{#1}{#2}%
   \fi%
-  \ifgre@scale@spacebeforefinalfinalis%
-    \gre@changeonedimenfactor{spacebeforefinalfinalis}{#1}{#2}%
+  \ifgre@scale@bar@maior%
+    \gre@changeonedimenfactor{bar@maior}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@finalis%
+    \gre@changeonedimenfactor{bar@finalis}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@finalfinalis%
+    \gre@changeonedimenfactor{bar@finalfinalis}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@virgula@standalone@text%
+    \gre@changeonedimenfactor{bar@virgula@standalone@text}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minima@standalone@text%
+    \gre@changeonedimenfactor{bar@minima@standalone@text}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minor@standalone@text%
+    \gre@changeonedimenfactor{bar@minor@standalone@text}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minor@standalone@text%
+    \gre@changeonedimenfactor{bar@dominican@standalone@text}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@maior@standalone@text%
+    \gre@changeonedimenfactor{bar@maior@standalone@text}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@finalis@standalone@text%
+    \gre@changeonedimenfactor{bar@finalis@standalone@text}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@virgula@standalone@notext%
+    \gre@changeonedimenfactor{bar@virgula@standalone@notext}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minima@standalone@notext%
+    \gre@changeonedimenfactor{bar@minima@standalone@notext}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minor@standalone@notext%
+    \gre@changeonedimenfactor{bar@minor@standalone@notext}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minor@standalone@notext%
+    \gre@changeonedimenfactor{bar@dominican@standalone@notext}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@maior@standalone@notext%
+    \gre@changeonedimenfactor{bar@maior@standalone@notext}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@finalis@standalone@notext%
+    \gre@changeonedimenfactor{bar@finalis@standalone@notext}{#1}{#2}%
   \fi%
   \ifgre@scale@spacearoundclefbars%
     \gre@changeonedimenfactor{spacearoundclefbars}{#1}{#2}%
@@ -1664,6 +1702,15 @@
   \fi%
   \ifgre@scale@maxbaroffsettextleft@nobar%
     \gre@changeonedimenfactor{maxbaroffsettextleft@nobar}{#1}{#2}%
+  \fi%
+  \ifgre@scale@maxbaroffsettextleft@eol%
+    \gre@changeonedimenfactor{maxbaroffsettextleft@eol}{#1}{#2}%
+  \fi%
+  \ifgre@scale@maxbaroffsettextright@eol%
+    \gre@changeonedimenfactor{maxbaroffsettextright@eol}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@rubber%
+    \gre@changeonedimenfactor{bar@rubber}{#1}{#2}%
   \fi%
   \ifgre@scale@divisiofinalissep%
     \gre@changeonedimenfactor{divisiofinalissep}{#1}{#2}%

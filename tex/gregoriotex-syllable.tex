@@ -143,9 +143,9 @@
   \gre@calculate@glyphraisevalue{#2}{0}{}%
   \raise\gre@dimen@glyphraisevalue\relax%
   \copy\gre@box@temp@width%
-  \ifgre@endofscore\else%
+  \ifgre@endofscore\else\ifgre@boxing\else %
     \GreNextCustos{#3}%
-  \fi %
+  \fi\fi %
   \ifgre@firstglyph% we check if it is the first glyph
     \gre@calculate@notesaligncenter{#4}%
     \global\gre@firstglyphfalse%
@@ -360,6 +360,7 @@
   \fi %
   \let\ifgre@lastendswithmora\ifgre@lastendswithmorasave %
   \global\gre@count@lastglyphiscavum=0\relax %
+  \global\gre@endofscorefalse %
   \relax %
 }%
 
@@ -378,10 +379,6 @@
 
 % count that will be 0 if in the last text there was no dash (or if it is the beginning of a word, and 1 if there was
 %\newcount\previousdash
-
-% Flag to mark the last syllable of the score
-\newif\ifgre@endofscore%
-\gre@endofscorefalse%
 
 % Flag to track if we are boxing the syllable notes or printing them
 \newif\ifgre@boxing%
@@ -861,6 +858,14 @@
     }%
 }%
 
+% macro to save new lines in bar syllables. With the new bar spacing algorithm, we
+% cannot allow (::z) to end the line right after the bar, so we just save the
+% end of line for later.
+\xdef\gre@newlinearg{-1}
+\gdef\gre@newlinecommondelayed#1{%
+  \xdef\gre@newlinearg{#1}%
+}
+
 %a macro to typeset a syllable with only a bar inside
 \def\GreBarSyllable#1#2#3#4#5#6#7#8#9{%
   \gre@debugmsg{general}{New bar syllable}%
@@ -874,6 +879,9 @@
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}%
   \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
   \gre@debugmsg{barspacing}{Width of bar text: \the\wd\gre@box@syllabletext}%
+  \global\let\gre@newlinecommonsaved\gre@newlinecommon %
+  \global\let\gre@newlinecommon\gre@newlinecommondelayed %
+  \xdef\gre@newlinearg{-1}%
   \gre@syllablenotes{#9}%
   \gre@debugmsg{barspacing}{Width of bar line: \the\wd\gre@box@syllablenotes}%
   \gre@dimen@notesaligncenter=\dimexpr(\wd\gre@box@syllablenotes / 2)\relax %
@@ -902,7 +910,8 @@
     \gre@hskip\glueexpr(\gre@skip@bar@allocation/2% right from end of previous notes to nominal middle of bar line
       +\gre@dimen@bar@shift% from nominal middle of bar line to actual middle
       -\wd\gre@box@syllablenotes/2% back up to beginning of bar line
-      +\gre@dimen@begindifference)\relax % from beginning of bar line to beginning of text
+      +\gre@dimen@begindifference% from beginning of bar line to beginning of text
+      +\gre@space@skip@bar@rubber)\relax % the rubber component
     \GreNoBreak %
     % all that extra stuff (translations and the like)
     #8%
@@ -920,25 +929,59 @@
       -\wd\gre@box@syllablenotes)\relax % back up from end of bar line to beginning
     \GreNoBreak%
     #9%
+    \global\let\gre@newlinecommon\gre@newlinecommonsaved %
     \GreNoBreak%
-    %move to the beginning of the notes of the next syllable
-    \gre@hskip\glueexpr(-\wd\gre@box@syllablenotes/2% back up to middle of notes
-      -\gre@dimen@bar@shift% go back from actual middle to nominal middle of bar line
-      +\gre@skip@bar@allocation/2)\relax % go from nominal middle to the start of the next notes
-    \ifdim\gre@skip@nextbegindifference < 0pt\relax%
-      %we need to move back to where the text for the next syllable should start
-      \GreNoBreak %
-      \kern\gre@skip@nextbegindifference\relax%
+    % get into position to place the penalty
+    \ifdim\gre@dimen@enddifference < 0pt\relax%
+      % the text extends past the notes, so we need to get to the end of the text
+      \kern-\gre@dimen@enddifference%
+      \GreNoBreak%
     \fi%
-    %finally we end by adding the penalty
-    \gre@debugmsg{barspacing}{after bar penalty: \greendafterbarpenalty}%
-    \gre@penalty{\greendafterbarpenalty}%
+    \ifgre@eolshiftsenabled%
+      %this shift will shorten the line somewhat to allow the lyrics to extend under the custos should TeX decide to insert a line break after the syllable being ended
+      \gre@calculate@eolshift{\dimexpr(\gre@dimen@enddifference-\gre@skip@bar@lastskip)\relax }%
+      \gre@debugmsg{barspacing}{End of line shift: \the\gre@dimen@eolshift}%
+      \ifdim\gre@dimen@eolshift<\gre@skip@bar@lastskip %
+        \gre@dimen@eolshift=\gre@skip@bar@lastskip\relax %
+      \fi %
+      \kern\glueexpr(-\gre@dimen@eolshift)\relax%
+    \fi%
+    % if no end of line:
+    \ifnum\gre@newlinearg=-1\relax %
+      % add the penalty
+      \gre@debugmsg{barspacing}{after bar penalty: \greendafterbarpenalty}%
+      \gre@penalty{\greendafterbarpenalty}%
+      \ifgre@eolshiftsenabled%
+        %If the above penalties don't result in a line break, then we need to undo the eolshift to prevent the next syllable from overlapping with this one.  If the line break did occur, then this shift will occur at the beginning of a line and thus will be ignored automatically by TeX.
+        \kern \dimexpr(\gre@dimen@eolshift)\relax%
+        \GreNoBreak%
+      \fi%
+      \ifdim\gre@dimen@enddifference < 0pt\relax%
+        %undo the earlier shift
+        \kern\gre@dimen@enddifference%
+        \GreNoBreak%
+      \fi%
+      %move to the beginning of the notes of the next syllable
+      \gre@hskip\glueexpr(-\wd\gre@box@syllablenotes/2% back up to middle of notes
+        -\gre@dimen@bar@shift% go back from actual middle to nominal middle of bar line
+        +\gre@skip@bar@allocation/2% go from nominal middle to the start of the next notes
+        +\gre@space@skip@bar@rubber)\relax % the rubber component
+      \ifdim\gre@skip@nextbegindifference < 0pt\relax%
+        %we need to move back to where the text for the next syllable should start
+        \GreNoBreak %
+        \kern\gre@skip@nextbegindifference\relax%
+      \fi%
+    \else %
+      \gre@debugmsg{barspacing}{calling new line with argument: \gre@newlinearg}%
+      \gre@newlinecommon{\gre@newlinearg}%
+    \fi %
   \else%
     %
     % Old spacing algorithm
     %
     %This is the old algorithm.  I've kept it in case people still want to use it.
     % then we check if there is something to write
+    \global\let\gre@newlinecommon\gre@newlinecommonsaved %
     \gre@debugmsg{ifdim}{ wd(gre@box@syllabletext) = 0pt}%
     \ifdim\wd\gre@box@syllabletext = 0 pt\relax %
       % the most difficult case : when there is nothing to write

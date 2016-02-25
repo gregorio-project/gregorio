@@ -965,13 +965,6 @@
   \relax %
 }%
 
-% macro called when we are after the second line of a big initial, to have normal lines back
-\def\grenormallines{%
-  \global\gre@dimen@stafflinewidth=\gre@dimen@linewidth\relax%
-  \gre@generatelines %
-  \relax %
-}%
-
 % Macro for fusion of larger neumes
 \def\GreFuseTwo#1#2{%
   #1\GreNoBreak #2\relax %
@@ -1235,6 +1228,7 @@
   \fi %
   \global\gre@knownline=1\relax %
   \global\gre@lastoflinecount=2\relax %
+  \global\gre@endofscorefalse %
   \relax%
 }%
 
@@ -1288,7 +1282,7 @@
   \relax%
 }%
 
-% macro called at the end of a bar. Almost the same, but not for the penalties
+% macro called at the end of a bar (old bar spacing algorithm only).
 \def\gre@endafterbar#1{%
   \gre@penalty{\greendafterbarpenalty }\relax %
   \ifnum#1=1\relax %
@@ -1320,8 +1314,7 @@
 
 \newcount\gre@lastoflinecount%
 
-% TODO: case where we're at the beginning *and* end of a line... quite rare case though...
-% macro to tell gregorioTeX no to put a space after the current syllable (otherwise it may cause annoying black boxes in the pdf if written in plainTeX)
+% called at syllable level. Indicates that the syllable is the last of the line (or score)
 % 0 if nothing
 % 1 if the syllable is the last of the line
 % 2 after it has finished the syllable, so when it is two it means that the syllable is the first of a line
@@ -1331,13 +1324,18 @@
   \relax%
 }%
 
-% same as above, but for the score. For now it is the same behaviour.
+% Flag to mark the last syllable of the score
+\newif\ifgre@endofscore%
+\gre@endofscorefalse%
+
+% called at element level, before the final element
 \def\GreLastOfScore{%
   %\gre@localleftbox{}% For an unknown reason, if I uncomment this line, the
   %blank line removing algorithm (in lua) will let some blank space after the
   %last line... (see bug #20953)
+  \global\gre@endofscoretrue %
   \gre@usemanualeolcustos%
-  \global\gre@lastoflinecount=1\relax%
+  \gre@debugmsg{eolshift}{set lastoflinecount to 1}%
   \relax%
 }%
 

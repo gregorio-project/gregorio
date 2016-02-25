@@ -349,32 +349,34 @@
 % the argument is the height
 \edef\gre@nextcustos{\gre@pitch@dummy}%
 \def\GreNextCustos#1{%
+  \gre@debugmsg{custos}{nextcustos = #1}%
   \ifnum\gre@insidediscretionary=0\relax %
+    \gre@debugmsg{custos}{not discretionary}%
     \edef\gre@nextcustos{#1}%
     \ifgre@blockeolcustos\else%
+      \gre@debugmsg{custos}{not blocked}%
       \gre@calculate@glyphraisevalue{#1}{0}{}%
       %here we need some tricks to draw the line before the custos (for the color)
       \setbox\gre@box@temp@width=\hbox{%
-      % we type a hskip and the we type the custos
-      \gre@skip@temp@four = \gre@space@skip@spacebeforeeolcustos\relax%
-      \hskip\gre@skip@temp@four %
-      \gre@pickcustos{#1}\relax %
+        % we type a hskip and the we type the custos
+        \gre@hskip\gre@space@skip@spacebeforeeolcustos\relax %
+        \gre@pickcustos{#1}\relax %
       }%
       \gre@dimen@temp@three=\wd\gre@box@temp@width %
       % we make \wd\gre@box@temp@sign contain the width of a custos
       \setbox\gre@box@temp@sign=\hbox{%
-      \gre@pickcustos{#1}\relax %
+        \gre@pickcustos{#1}\relax %
       }%
       \gre@localrightbox{%
-      \ifgre@showlines %
-        \ifnum#1<\gre@pitch@belowstaff\relax %
-          \gre@additionalbottomcustoslineend %
-        \else\ifnum#1>\gre@pitch@abovestaff\relax %
-          \gre@additionaltopcustoslineend %
-        \fi\fi %
-      \fi %
-      \raise \gre@dimen@glyphraisevalue\relax%
-      \copy\gre@box@temp@width %
+        \ifgre@showlines %
+          \ifnum#1<\gre@pitch@belowstaff\relax %
+            \gre@additionalbottomcustoslineend %
+          \else\ifnum#1>\gre@pitch@abovestaff\relax %
+            \gre@additionaltopcustoslineend %
+          \fi\fi %
+        \fi %
+        \raise \gre@dimen@glyphraisevalue\relax%
+        \copy\gre@box@temp@width %
       }%
     \fi %
   \fi %
@@ -1597,7 +1599,6 @@
   \relax%
 }%
 
-
 \def\GreInDivisioFinalis#1#2{%
   \ifgre@endofscore %
     \gre@writebar{5}{1}{#1}{#2}%
@@ -1616,8 +1617,14 @@
   \relax%
 }%
 
-% emits text if #1 is 0
-\def\gre@bar@text#1{\ifcase#1 \or text\fi}%
+% #1 is #2 of gre@writebar
+% #2 is #3 of gre@writebar
+% emits the suffix of the space
+\def\gre@bar@space@suffix#1#2{%
+  \ifcase#1\ifgre@newbarspacing %
+    \ifcase#2 @standalone@notext\or @standalone@text\fi %
+  \fi\fi %
+}%
 
 \newcount\gre@count@shiftaftermora
 \gre@count@shiftaftermora=5
@@ -1685,8 +1692,10 @@
   \relax %
 }
 
+\newskip\gre@skip@bar@lastskip% skip after last bar
+
 %a macro to write a bar
-%% 1: the type of the bar : 0 for virgula, 1 for minima 2 for minor, 3 for major, 4 for finalis and 5 for the last finalis
+%% 1: the type of the bar : 0 for virgula, 1 for minima 2 for minor, 3 for major, 4 for finalis and 5 for the last finalis, 6 to 13 for dominican bars
 %% 2: is 0 if it is in a syllable containing only this bar, 1 otherwise
 %% 3: is 0 if there's no text under the bar or 1 if there is text under the bar
 %% 4: macros that may happen before the skip after the bar (typically GreVEpisema)
@@ -1726,118 +1735,129 @@
   \gre@newglyphcommon %
   \gre@calculate@glyphraisevalue{\gre@pitch@bar}{0}{}% bar glyphs are made to be at this height
   \GreNoBreak %
+  % count indicating if we have to output space or not:
+  \gre@count@temp@one=0\relax %
+  \ifnum#2=1\relax %
+    \gre@count@temp@one=1\relax %
+  \else %
+    \ifgre@newbarspacing %
+      \gre@count@temp@one=1\relax %
+    \fi %
+  \fi %
+  \gre@skip@temp@four=0pt\relax %
   \ifcase#1 % 0 : virgula
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundsmallbar\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@virgula\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPVirgula}%
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPVirgula}%
     #4\relax %
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundsmallbar\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@virgula\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 1 : minima
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundsmallbar\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@minima\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioMinima}%
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioMinima}%
     #4\relax %
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundsmallbar\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@minima\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 2 : minor
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@minor\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioMinor}%
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioMinor}%
     #4\relax %
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@minor\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 3 : maior
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundmaior\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@maior\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioMaior}%
     \gre@fontchar@divisiomaior %
     #4\relax %
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundmaior\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@maior\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 4 : finalis
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundfinalis\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@finalis\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gre@fontchar@divisiofinalis}%
     #4\relax %
     \gre@fontchar@divisiofinalis%
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundfinalis\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@finalis\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
-  \or % 5 : finalis
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacebeforefinalfinalis\gre@bar@text{#3}\endcsname\relax%
+  \or % 5 : final finalis
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@finalfinalis\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gre@fontchar@divisiofinalis}%
     #4\relax %
     \gre@fontchar@divisiofinalis%
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundfinalis\gre@bar@text{#3}\endcsname\relax%
+    \ifgre@newbarspacing %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@finalfinalis\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
+      \GreNoBreak %
     \fi %
   \or % 6 : dominican bar 1
     \gre@calculate@glyphraisevalue{\gre@pitch@e}{0}{}%
     % we need to adjust the height of the bar a little so that it is perfectly aligned with the bottom (or the top for some bars) of the staff line, which is not the case by default if \gre@stafflinefactor is not 10.
     \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff\relax%
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioDominican}%
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioDominican}%
     #4\relax %
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 7 : dominican bar 2
     \gre@calculate@glyphraisevalue{\gre@pitch@e}{0}{}%
     \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff\relax%
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioDominicanAlt}%
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioDominicanAlt}%
     #4\relax %
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 8 : dominican bar 3
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1845,13 +1865,13 @@
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioDominican}%
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioDominican}%
     #4\relax %
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 9 : dominican bar 4
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1859,72 +1879,74 @@
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioDominicanAlt}%
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioDominicanAlt}%
     #4\relax %
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 10 : dominican bar 5
     \gre@calculate@glyphraisevalue{\gre@pitch@i}{0}{}%
     \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff\relax%
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioDominican}%
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioDominican}%
     #4\relax %
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 11 : dominican bar 6
     \gre@calculate@glyphraisevalue{\gre@pitch@i}{0}{}%
     \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff\relax%
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioDominicanAlt}%
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioDominicanAlt}%
     #4\relax %
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 12 : dominican bar 7
     \gre@calculate@glyphraisevalue{\gre@pitch@k}{0}{}%
     \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff\relax%
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioDominican}%
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioDominican}%
     #4\relax %
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 13 : dominican bar 8
     \gre@calculate@glyphraisevalue{\gre@pitch@k}{0}{}%
     \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff\relax%
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioDominicanAlt}%
     \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioDominicanAlt}%
     #4\relax %
-    \ifnum#2=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@spacearoundminor\gre@bar@text{#3}\endcsname\relax%
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \fi %
+  \global\gre@skip@bar@lastskip=\gre@skip@temp@four %
   \gre@debugmsg{spacing}{Width of bar just printed: \the\wd\gre@box@temp@width}%
+  \gre@debugmsg{spacing}{Last bar space: \the\gre@skip@temp@four}%
   \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
   \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
   \relax%
@@ -1960,14 +1982,12 @@
 
 %macro to end a line with a divisio finalis
 \def\GreFinalDivisioFinalis#1{%
-  \gre@localrightbox{}%
-  %\gre@localleftbox{}
-  \GreNoBreak %
-  \gre@skip@temp@four = \gre@space@skip@spacebeforefinalfinalis\relax%
-  \gre@hskip\gre@skip@temp@four %
-  \GreNoBreak %
-  \GreBarSyllable{\GreSetThisSyllable{}{}{}{}{}}{}{}{1}{}{}{0}{\GreLastOfLine}{%
-    \GreNoBreak %
+  \GreBarSyllable{\GreSetThisSyllable{}{}{}{}{}}{}{}{1}{\GreSetNextSyllable{}{}{}{}{}\GreLastOfLine}{}{16}{}{%
+    \ifgre@newbarspacing\else %
+      \gre@hskip\gre@space@skip@bar@finalfinalis %
+      \GreNoBreak %
+    \fi %
+    \GreLastOfScore %
     \GreDivisioFinalis{0}{}%
     #1%
   }%
@@ -1976,10 +1996,8 @@
 
 %macro to end a line with a divisio maior
 \def\GreFinalDivisioMaior#1{%
-  \gre@localrightbox{}%
-  \gre@localleftbox{}%
-    \GreBarSyllable{\GreSetThisSyllable{}{}{}{}{}}{}{}{1}{}{}{0}{}{%
-    \GreNoBreak %
+  \GreBarSyllable{\GreSetThisSyllable{}{}{}{}{}}{}{}{1}{\GreSetNextSyllable{}{}{}{}{}\GreLastOfLine}{}{16}{}{%
+    \GreLastOfScore %
     \GreDivisioMaior{0}{}%
     #1%
   }%
