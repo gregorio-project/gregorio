@@ -1,0 +1,41 @@
+% !TEX program = LuaLaTeX+se
+
+% This document produces a pdf containing the score with no margin.
+% It is based on this solution:
+% http://tex.stackexchange.com/questions/291630/best-way-to-know-bottom-line-height-of-a-pdf/291664#291664
+%
+% It contains advanced commands quite difficult to understand, but should be straightforward
+% to adapt to your needs.
+%
+\documentclass[11pt]{article}
+\usepackage{fontspec}
+\usepackage{graphicx}
+\usepackage{gregoriotex}
+\usepackage{libertine}
+% Do not load geometry, fullpage, or any package changing width
+% or margins.
+
+\hoffset-1in
+\voffset-1in
+\newbox\scorebox
+
+% using the "commentary" header of the gabc file
+\gresetheadercapture{commentary}{grecommentary}{string}
+
+\begin{document}
+
+% here the final "9" of the commentary would be cut too sharp. The reason is that
+% the italic "9" glyph in the libertine font is larger than its nominal width
+% (which is normal for italic), so we have to push the commentary left a little.
+% We use an admittedly strange trick to do so, redefining grecommentary.
+% You have to adapt the value 0.3mm to your configuration.
+\let\grevanillacommentary\grecommentary
+\def\grecommentary#1{\grevanillacommentary{#1\kern 0.3mm}}
+
+\setbox\scorebox=\vbox{\hsize=10cm\relax % change the width of the score here
+  \gregorioscore[a]{PopulusSion}
+}
+\pdfpagewidth\wd\scorebox
+\pdfpageheight\dimexpr\ht\scorebox+\dp\scorebox\relax
+\shipout\box\scorebox
+\end{document}
