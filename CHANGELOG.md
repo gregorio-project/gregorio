@@ -24,9 +24,10 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Added `maxbaroffsettextright@eol` and `maxbaroffsettextleft@eol` which function identically to the normal version except that they are used then the bar is immediately followed by a manual line break (i.e. something like `test(::z)` in gabc).
 
 ### Known Bugs
-- When there is no manual break, the spacing around bars at the end of a line in the new spacing algorithm is not perfect, this should be visible ony in edge cases. If you encounter such a bad spacing, you are advised to force a line break manually. See [#959](https://github.com/gregorio-project/gregorio/issues/959).
+- When there is no manual break, the spacing around bars at the end of a line in the new spacing algorithm is not perfect, this should be visible only in edge cases. If you encounter such a bad spacing, you are advised to force a line break manually. See [#959](https://github.com/gregorio-project/gregorio/issues/959).
 - Above lines text does not move to account for high notes which occur in the same place.  As a result the two may overlap.  You can work around this by changing `abovelinestextraise` but this is a global setting, affecting the entire score.  See [#960](https://github.com/gregorio-project/gregorio/issues/960).
 - A manual custos in a low note position will not push down the text associated with it, resulting in the two overlapping.  See [#961](https://github.com/gregorio-project/gregorio/issues/961).
+
 
 ## [4.1.0-rc1] - 2016-02-18
 ### Fixed
