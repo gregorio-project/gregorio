@@ -1990,6 +1990,9 @@
     \GreLastOfScore %
     \GreDivisioFinalis{0}{}%
     #1%
+    \ifgre@justifylastline%
+      \GreNewLine%
+    \fi%
   }%
   \relax%
 }%
@@ -2000,6 +2003,9 @@
     \GreLastOfScore %
     \GreDivisioMaior{0}{}%
     #1%
+    \ifgre@justifylastline%
+      \GreNewLine%
+    \fi%
   }%
   \relax%
 }%
