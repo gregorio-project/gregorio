@@ -32,7 +32,6 @@ local EXCLUDE = {
   PunctumLineBR = true,
   PunctumLineTR = true,
   PunctumSmall = true,
-  FlexusNobar = true,
   FlexusLineBL = true,
   FlexusAmOneLineBL = true,
   OriscusLineTR = true,
@@ -52,7 +51,6 @@ local EXCLUDE = {
   ['DivisioMaior.3'] = true,
   ['DivisioMaior.5'] = true,
   VirgaBaseLineBL = true,
-  PorrectusLongqueueTwoTwoDeminutus = true,
 }
 
 local GABC = {
@@ -123,6 +121,7 @@ local GABC = {
   Porrectus = [[geg]],
   PorrectusFlexus = [[gege]],
   PorrectusFlexusNobar = [[\excluded{e}gege]],
+  PorrectusLongqueue = [[hfh]],
   PorrectusNobar = [[@geg]],
   Punctum = [[g]],
   PunctumCavum = [[gr]],
@@ -166,6 +165,16 @@ local GABC = {
   Virgula = [[^^^^0060]],
 }
 
+local GABC_AMBITUS_ONE = {
+  PorrectusLongqueue = [[hgh]],
+  PorrectusFlexusLongqueue = [[hghg]],
+  FlexusOpenqueue = [[ba]],
+  FlexusOriscusScapusOpenqueue = [[bOa]],
+  PesQuadratumOpenqueue = [[aqb]],
+  PesQuilismaQuadratumOpenqueue = [[aWb]],
+}
+
+-- if the item is a table, the values will replace fuse_head and gabc
 local GABC_FUSE = {
   Upper = {
     Punctum = [[\excluded{e}@]],
@@ -173,6 +182,7 @@ local GABC_FUSE = {
     Pes = [[\excluded{e}@]],
     PesQuadratum = [[\excluded{e}@]],
     PesQuadratumLongqueue = [[\excluded{f}@]],
+    PesQuadratumOpenqueue = { [[\excluded{a}@]], [[bq[ll:0]c]] },
     PesQuassus = [[\excluded{e}@]],
     PesQuassusLongqueue = [[\excluded{f}@]],
     Flexus = [[\excluded{e}@]],
@@ -183,6 +193,7 @@ local GABC_FUSE = {
     Pes = [[\excluded{i}@]],
     PesQuadratum = [[\excluded{i}@]],
     PesQuadratumLongqueue = [[\excluded{j}@]],
+    PesQuadratumOpenqueue = [[\excluded{b}@]],
     PesQuassus = [[\excluded{i}@]],
     Flexus = [[\excluded{i}@]],
     FlexusOriscus = [[\excluded{i}@]],
@@ -269,7 +280,7 @@ function GregorioRef.emit_score_glyphs(cs_greciliae, cs_gregorio, cs_parmesan)
   local function emit_score_glyph(fusion, shape, ambitus, debilis, liquescence)
     local name = fusion..shape..ambitus..debilis..liquescence
     local char = common_glyphs[name]
-    local gabc = GABC[shape]
+    local gabc = GABC[shape] or GABC_AMBITUS_ONE[shape]
     if gabc then
       local fuse_head = ''
       local fuse_tail = ''
@@ -277,6 +288,9 @@ function GregorioRef.emit_score_glyphs(cs_greciliae, cs_gregorio, cs_parmesan)
         fuse_head = GABC_FUSE[fusion][shape]
         if fuse_head == nil then
           tex.error('No head fusion for '..name)
+        end
+        if type(fuse_head) == 'table' then
+          fuse_head, gabc = fuse_head[1], fuse_head[2]
         end
       end
       local liq = liquescence
@@ -326,6 +340,7 @@ function GregorioRef.emit_score_glyphs(cs_greciliae, cs_gregorio, cs_parmesan)
   local pattern = C(fusion^-1) * C(word^1) * C(ambitus^0) * C(debilis^-1) *
       C(liquescentia^-1) * -1
   local only_twos = P'Two'^1 * -1
+  local ambitus_one = P'One' * P'Two'^0 * -1
   for name in pairs(common_glyphs) do
     local a, b, c, d, e = pattern:match(name)
     if b then
@@ -357,8 +372,9 @@ function GregorioRef.emit_score_glyphs(cs_greciliae, cs_gregorio, cs_parmesan)
   local first = true
   local i, name
   for i, name in ipairs(glyph_names) do
-    if not EXCLUDE[name[1]] then
-      if (name[3] == '' and name[5] == '') or name[3] == '' or only_twos:match(name[3]) then
+    if not EXCLUDE[name[2]] then
+      if (name[3] == '' and name[5] == '') or name[3] == '' or only_twos:match(name[3])
+          or (GABC_AMBITUS_ONE[name[2]] and ambitus_one:match(name[3])) then
         if first then
           first = false
         else
