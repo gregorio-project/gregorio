@@ -542,9 +542,9 @@ static const char *fusible_queued_shape(const gregorio_note *const note,
         switch (queuetype_of(note)) {
         case Q_ON_SPACE_BELOW_BOTTOM_LINE:
         case Q_ON_SPACE_ABOVE_BOTTOM_LINE:
+        case Q_ON_BOTTOM_LINE:
             name = base_shape;
             break;
-        case Q_ON_BOTTOM_LINE:
         case Q_ON_LINE_ABOVE_BOTTOM_LINE:
             name = longqueue_shape;
             break;
