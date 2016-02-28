@@ -538,7 +538,7 @@ static const char *fusible_queued_shape(const gregorio_note *const note,
             break;
         }
     } else if (glyph->u.notes.fuse_to_next_glyph) {
-        // TODO (5.0?) handle queue size on upwards fusion
+        /* TODO (5.0?) handle queue size on upwards fusion */
         switch (queuetype_of(note)) {
         case Q_ON_SPACE_BELOW_BOTTOM_LINE:
         case Q_ON_SPACE_ABOVE_BOTTOM_LINE:
