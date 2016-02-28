@@ -1991,7 +1991,7 @@
     \GreDivisioFinalis{0}{}%
     #1%
     \ifgre@justifylastline%
-      \GreNewLine%
+      \def\gre@newlinearg{0}%
     \fi%
   }%
   \relax%
@@ -2004,7 +2004,7 @@
     \GreDivisioMaior{0}{}%
     #1%
     \ifgre@justifylastline%
-      \GreNewLine%
+      \def\gre@newlinearg{0}%
     \fi%
   }%
   \relax%
