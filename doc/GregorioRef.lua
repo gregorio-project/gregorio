@@ -171,6 +171,7 @@ local GABC_AMBITUS_ONE = {
   FlexusOpenqueue = [[ba]],
   FlexusOriscusScapusOpenqueue = [[bOa]],
   PesQuadratumOpenqueue = [[aqb]],
+  PesQuassusOpenqueue = [[aob]],
   PesQuilismaQuadratumOpenqueue = [[aWb]],
 }
 
@@ -185,6 +186,7 @@ local GABC_FUSE = {
     PesQuadratumOpenqueue = { [[\excluded{a}@]], [[bq[ll:0]c]] },
     PesQuassus = [[\excluded{e}@]],
     PesQuassusLongqueue = [[\excluded{f}@]],
+    PesQuassusOpenqueue = { [[\excluded{a}@]], [[bo[ll:0]c]] },
     Flexus = [[\excluded{e}@]],
   },
   Lower = {
