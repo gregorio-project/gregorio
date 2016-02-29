@@ -7,6 +7,10 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - New bar spacing algorithm now respects `\gresetlastline`.
 - Italic correction is applied to the default style of elision.
 
+### Changed
+- `spacebeforeeolcustos` has been increased, aproximately doubling its size.  It's also been made fixed by default, but is still capapble of accepting a rubber value should you so desire.
+
+
 ## [4.1.0-rc2] - 2016-02-25
 ### Fixed
 - Hyphens now shouldn't go right of the staff lines (see [#845](https://github.com/gregorio-project/gregorio/issues/845)).
