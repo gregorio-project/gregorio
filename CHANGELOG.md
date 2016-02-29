@@ -10,6 +10,9 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Changed
 - `spacebeforeeolcustos` has been increased, aproximately doubling its size.  It's also been made fixed by default, but is still capapble of accepting a rubber value should you so desire.
 
+### Added
+- `iterwordspacetext@bars@notext` and `interwordspacetext@bars@notext@euouae`: These spaces will be used by the new bar spacing algorithm as the minimal space between the text of the syllables adjacent to the bar syllable when the bar syllable itself has not text associated with it.  See [#978](https://github.com/gregorio-project/gregorio/issues/978).
+
 
 ## [4.1.0-rc2] - 2016-02-25
 ### Fixed
