@@ -150,12 +150,12 @@
   {\endgroup}%%% DEPRECATED for removal in 5.0
 
 \newenvironment{gre@style@translation}%
-  {\begingroup\begin{itshape}}%
-  {\end{itshape}\endgroup}%
+  {\begingroup\itshape}%
+  {\endgroup}%
 
 \newenvironment{gre@style@abovelinestext}%
-  {\begingroup\begin{small}\begin{itshape}}%
-  {\end{itshape}\end{small}\endgroup}%
+  {\begingroup\small\itshape}%
+  {\endgroup}%
 
 \newenvironment{gre@style@normalstafflines}%
   {\begingroup}%
@@ -190,8 +190,8 @@
   {\end{bfseries}\end{scshape}\endgroup}%
 
 \newenvironment{gre@style@modemodifier}%
-  {\begingroup\begin{itshape}\begin{bfseries}}%
-  {\end{bfseries}\end{itshape}\endgroup}%
+  {\begingroup\begin{bfseries}\itshape\@@italiccorr}%
+  {\@@italiccorr\end{bfseries}\endgroup}%
 
 \newenvironment{gre@style@modedifferentia}%
   {\begingroup\begin{bfseries}}%
@@ -202,12 +202,12 @@
   {\endgroup}%
 
 \newenvironment{gre@style@commentary}%
-  {\begingroup\begin{itshape}\footnotesize}%
-  {\end{itshape}\endgroup}%
+  {\begingroup\footnotesize\itshape}%
+  {\endgroup}%
 
 \newenvironment{gre@style@elision}%
-  {\begingroup\begin{itshape}\small}%
-  {\end{itshape}\endgroup}%
+  {\begingroup\small\itshape\@@italiccorr}%
+  {\@@italiccorr\endgroup}%
 
 \newenvironment{gre@style@nabc}%
   {\begingroup\color{red}}%
