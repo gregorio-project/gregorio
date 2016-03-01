@@ -842,11 +842,6 @@
   \relax%
 }%
 
-\newif\ifgre@newbarspacing%
-\gre@newbarspacingfalse%
-% the new bar spacing algorithm treats no note syllables as BarSyllables, while the old algorithm treated them as regular syllables.  In order to allow for this variant, we define NoNoteSyllable which aliases to the appropriate function
-\let\GreNoNoteSyllable\GreSyllable%
-
 \def\gresetbarspacing#1{%
   \IfStrEq{#1}{new}%
     {\gre@newbarspacingtrue%
@@ -1111,6 +1106,11 @@
   \fi\fi %
   \relax%
 }
+
+\newif\ifgre@newbarspacing%
+\gre@newbarspacingtrue%
+% the new bar spacing algorithm treats no note syllables as BarSyllables, while the old algorithm treated them as regular syllables.  In order to allow for this variant, we define NoNoteSyllable which aliases to the appropriate function
+\let\GreNoNoteSyllable\GreBarSyllable%
 
 %% internal macro to set the first syllable text after all parts are known
 %% #1 - First part of the syllable (before the vowel)
