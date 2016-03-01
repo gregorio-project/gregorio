@@ -1931,7 +1931,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % a zero-width hyphen, useful for fine tuning line endings. To input in gabc verb for example.
-\def\GreZeroHyph{%
+\def\gre@char@zerohyph{%
   \hbox to 0pt{%
   \char\the\hyphenchar\font %
   \hss %
@@ -1952,7 +1952,7 @@
   \IfStrEq{#1}{normal}%
     {\global\let\GreHyph\gre@char@normalhyphen}%
     {\IfStrEq{#1}{zero}%
-      {\global\let\GreHyph\GreZeroHyph}%
+      {\global\let\GreHyph\gre@char@zerohyph}%
       {\gre@error{Unrecognized option for \protect\greseteolhyphen}}%
     }%
 }%
