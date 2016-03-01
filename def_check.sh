@@ -44,8 +44,11 @@ sort -u -o$TEXFILE $TEXFILE
 
 #Extraction from c code
 cd ../src/gregoriotex
-
 grep -hE '\\\\Gre.*' gregoriotex-write.c > $CFILE
+
+cd ../gabc
+grep -hE '\\\\Gre.*' gabc-notes-determination.l >> $CFILE
+grep -hE '\\\\Gre.*' gabc-score-determination.y >> $CFILE
 
 #remove deprecated code
 sed -i.temp 's:.*OBSOLETE.*::' $CFILE
