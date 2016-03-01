@@ -915,7 +915,7 @@ local function is_ypos_different(index)
       tex.sprint([[\number0\relax ]])
     end
   else
-    tex.sprint([[\number0\relax ]])
+    tex.sprint([[\number1\relax ]])
   end
 end
 
