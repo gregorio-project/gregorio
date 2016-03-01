@@ -30,7 +30,13 @@ sed -i.temp 's:.*OBSOLETE.*::' $TEXFILE
 sed -i.temp 's:.*DEPRECATED.*::' $TEXFILE
 
 #Isolate function names
-sed -i.temp 's:.*\(Gre[a-zA-Z]*\).*:\1:' $TEXFILE
+sed -i.temp 's:Gre:\
+Gre:g' $TEXFILE
+sed -i.temp '/Gre/!d' $TEXFILE
+sed -i.temp 's:\(Gre[a-zA-Z]*\).*:\1:' $TEXFILE
+
+#label file
+echo "00 GreMacros Defined in TeX" >> $TEXFILE
 
 #alphabetize and remove duplicates
 sort -u -o$TEXFILE $TEXFILE
@@ -46,7 +52,13 @@ sed -i.temp 's:.*OBSOLETE.*::' $CFILE
 sed -i.temp 's:.*DEPRECATED.*::' $CFILE
 
 #Isolate function names
-sed -i.temp 's:.*\(Gre[a-zA-Z]*\).*:\1:' $CFILE
+sed -i.temp 's:Gre:\
+Gre:g' $CFILE
+sed -i.temp '/Gre/!d' $CFILE
+sed -i.temp 's:\(Gre[a-zA-Z]*\).*:\1:' $CFILE
+
+#label file
+echo "00 Macros Written by C" >> $CFILE
 
 #alphabetize and remove duplicates
 sort -u -o$CFILE $CFILE
