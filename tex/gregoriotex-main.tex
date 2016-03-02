@@ -216,14 +216,14 @@
 % macro called to go to the next line
 \def\GreNewLine{%
   \gre@debugmsg{lineheight}{GreNewLine}%
-  \gre@newlinecommon{0}{1}%
+  \gre@newlinecommon{0}{0}%
   \relax%
 }%
 
 % basically same as above, but this one does a \hfill, so the lines are not justified
 \def\GreNewParLine{%
   \gre@debugmsg{lineheight}{GreNewParLine}%
-  \gre@newlinecommon{1}{1}%
+  \gre@newlinecommon{1}{0}%
   \relax%
 }%
 
