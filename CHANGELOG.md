@@ -153,7 +153,7 @@ The old spacing can be activated with `\gresetbarspacing{old}`.  See the followi
 - `\setspaceafterinitial`, supplanted by `\grechangedim{afterinitialshift}...`
 - `\setspacebeforeinitial`, supplanted by `\grechangedim{beforeinitialshift}...`
 - `\setinitialspacing`, supplanted by `\grechangedim{beforeinitialshift}...`, `\grechangedim{manualinitialwidth}...`, and `\grechangedime{afterinitialshift}...`
-- `centering-scheme` gabc header, supplanted by `\grelyriccentering` in TeX.  See GregorioRef for syntax.
+- `centering-scheme` gabc header, supplanted by `\gresetlyriccentering` in TeX.  See GregorioRef for syntax.
 - `gregoriotex-font` gabc header, supplanted by `\gresetgregoriofont` in TeX.  See GregorioRef for syntax.
 - The meaningless `gabc-version` header in gabc (see [#664](https://github.com/gregorio-project/gregorio/issues/664)).
 
@@ -322,7 +322,7 @@ See GregorioRef.pdf for full details.
 - `\setspaceafterinitial`, supplanted by `\grechangedim{afterinitialshift}...`
 - `\setspacebeforeinitial`, supplanted by `\grechangedim{beforeinitialshift}...`
 - `\setinitialspacing`, supplanted by `\grechangedim{beforeinitialshift}...`, `\grechangedim{manualinitialwidth}...`, and `\grechangedime{afterinitialshift}...`
-- `centering-scheme` gabc header, supplanted by `\grelyriccentering` in TeX.  See GregorioRef for syntax.
+- `centering-scheme` gabc header, supplanted by `\gresetlyriccentering` in TeX.  See GregorioRef for syntax.
 - `gregoriotex-font` gabc header, supplanted by `\gresetgregoriofont` in TeX.  See GregorioRef for syntax.
 - The meaningless `gabc-version` header in gabc (see [#664](https://github.com/gregorio-project/gregorio/issues/664)).
 
