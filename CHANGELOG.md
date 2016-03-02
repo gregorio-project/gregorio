@@ -8,7 +8,6 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## [4.1.0] - 2016-03-01
 ### Fixed
 - Hyphens now shouldn't go right of the staff lines (see [#845](https://github.com/gregorio-project/gregorio/issues/845)).
-- New bar spacing algorithm now respects `\gresetlastline`.
 - Italic correction is applied to the default style of elision.
 - Horizontal episema on initio debilis is now sized correctly (see [#880](https://github.com/gregorio-project/gregorio/issues/880)).
 - Elisions immediately after the vowel are now properly left out of the center (see [#907](https://github.com/gregorio-project/gregorio/issues/907))
