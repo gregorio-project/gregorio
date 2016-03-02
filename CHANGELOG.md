@@ -2,15 +2,10 @@
 All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
-## [Unreleased][unreleased]
-
-
 ## [4.1.0] - 2016-03-01
 ### Fixed
 - Hyphens now shouldn't go right of the staff lines (see [#845](https://github.com/gregorio-project/gregorio/issues/845)).
-- Italic correction is applied to the default style of elision.
 - Horizontal episema on initio debilis is now sized correctly (see [#880](https://github.com/gregorio-project/gregorio/issues/880)).
-- Elisions immediately after the vowel are now properly left out of the center (see [#907](https://github.com/gregorio-project/gregorio/issues/907))
 - Space between the text of two syllables of the same word when no hyphen is necessary is now strictly 0 (see [#922](https://github.com/gregorio-project/gregorio/issues/922))
 - A horizontal episema on the first note of a torculus deminutus is now placed correctly.  See [#926](https://github.com/gregorio-project/gregorio/issues/926).
 - When a flat on a ledger line (`bx` or `lx`) was preceding a note also on a ledger line, the ledger line was partially visible inside the flat, see [#882](https://github.com/gregorio-project/gregorio/issues/882).
@@ -35,7 +30,6 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `system-setup.sh` has become `system-setup.command` so that it is double click executable on Mac.
 - Post install options for Windows installer have been simplified.  There are no longer separate options for MiKTeX and TeXLive.  Instead the installer will determine which you have itself and act accordingly.
 - Windows installer will check more locations for old installations to remove.
-- Stem length for virgas, flexus, pes quadratum, etc. are now tunable, and have been reviewed, see [#803](https://github.com/gregorio-project/gregorio/issues/803).
 - Height of the porrectus have been altered (first note moved up, second also moved up when second ambitus is more than one) so that they are more coherent with the punctum height. The porrectus stroke drawings have also been slightly altered to be slightly thinner and sharper around the bottom note (see [#858](https://github.com/gregorio-project/gregorio/issues/858)).
 - When a syllable is preceeded by a punctum mora, gregorio now ignores the punctum mora in the spacing of the syllables by default, and also adds a custom space (defaulting to 0). You can change this behavior with `\gresetshiftaftermora{}`, see GregorioRef for its arguments. To balance the output, space before a punctum mora has been made slightly thinner, more in line with old Solesmes books. (For the change requests, see [#795](https://github.com/gregorio-project/gregorio/issues/795) and [#871](https://github.com/gregorio-project/gregorio/issues/871)).
 - The `--admin` option is removed from the `initexmf` call for MiKTeX installations, allowing the installer to work better on Windows 10.
@@ -59,7 +53,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Controls for tuning horizontal episema vertical position.  See GregorioRef for details (for the change request, see [#872](https://github.com/gregorio-project/gregorio/issues/872)).
 - More dimensions are tunable: `overhepisemalowshift`, `overhepisemahighshift`, `underhepisemalowshift`, `underhepisemahighshift`, `hepisemamiddleshift`, `vepisemalowshift`, `vepisemahighshift`, `linepunctummorashift`, `spacepunctummorashift`, `spaceamonepespunctummorashift`, `lineporrectuspunctummorashift`, `spaceporrectuspunctummorashift`, `raresignshift`.  See GregorioRef for details (for the change request for most of these, see comments in [#872](https://github.com/gregorio-project/gregorio/issues/872)).
 - A new dimension, `intersyllablespacestretchhyphen` is now available to add stretching in the case of syllables separated by an hyphen (see comments in [#922](https://github.com/gregorio-project/gregorio/issues/922))
-- A new algorithm for placing bar syllables has been added.  The goal of the new algorithm is to place the bar line exactly between the notes which surround it and do the same with the text associated with the bar line while at the same time keeping the text and bar reasonably close together and with sufficent space between the bar syallable and the surrounding syllables (possibly introducing space to meet the competing interests).  The new algorithm introduces sevearl new spaces allowing the user to tune the algorithm:
+- A new algorithm for placing bar syllables has been added and is now the default. It should make both bars and text centered between respectively notes and text of previous and following syllable. It can be configured in many ways through the following:
   - `maxbaroffsettextright`
   - `maxbaroffsettextleft`
   - `maxbaroffsettextright@nobar`
@@ -73,7 +67,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
   - `interwordspacetext@bars@notext`
   - `interwordspacetext@bars@notext@euouae`
   - `bar@rubber`
-This algorithm is the new default.  The old spacing can be activated with `\gresetbarspacing{old}`.  See the following for various aspects of the implementation:
+The old spacing can be activated with `\gresetbarspacing{old}`.  See the following for various aspects of the implementation:
   - [#767](https://github.com/gregorio-project/gregorio/issues/767)
   - [#919](https://github.com/gregorio-project/gregorio/issues/919)
   - [#944](https://github.com/gregorio-project/gregorio/issues/944)
