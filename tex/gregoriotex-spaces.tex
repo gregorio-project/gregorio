@@ -1187,6 +1187,34 @@
     \gre@debugmsg{spacing}{Changing a dimen.}%
     \def\gre@prefix{dimen}%
   \fi%
+  \IfStrEqCase{#1}{% DEPRECATED
+    {spacearoundsmallbars}% DEPRECATED
+      {% DEPRECATED
+        \gre@deprecated{spacearoundsmallbars}{bar@virgula or bar@minima}% DEPRECATED
+        \grechangedim{bar@virgula}{#2}{#3}% DEPRECATED
+        \grechangedim{bar@minima}{#2}{#3}% DEPRECATED
+      }% DEPRECATED
+    {spacearoundminor}% DEPRECATED
+      {% DEPRECATED
+        \gre@deprecated{spacearoundminor}{bar@minor}% DEPRECATED
+        \grechangedim{bar@minor}{#2}{#3}% DEPRECATED
+      }% DEPRECATED
+    {spacearoundmaior}% DEPRECATED
+      {% DEPRECATED
+        \gre@deprecated{spacearoundmaior}{bar@maior}% DEPRECATED
+        \grechangedim{bar@maior}{#2}{#3}% DEPRECATED
+      }% DEPRECATED
+    {spacearoundfinalis}% DEPRECATED
+      {% DEPRECATED
+        \gre@deprecated{spacearoundfinalis}{bar@finalis}% DEPRECATED
+        \grechangedim{bar@finalis}{#2}{#3}% DEPRECATED
+      }% DEPRECATED
+    {spacebeforefinalfinalis}% DEPRECATED
+      {% DEPRECATED
+        \gre@deprecated{spacebeforfinalfinalis}{bar@finalfinalis}% DEPRECATED
+        \grechangedime{bar@finalfinalis}{#2}{#3}% DEPRECATED
+      }% DEPRECATED
+    }% DEPRECATED
   \ifcsname gre@space@\gre@prefix @#1\endcsname%
     \gre@debugmsg{spacing}{It does exist.}%
     \gre@dimension{#1}{#2}%

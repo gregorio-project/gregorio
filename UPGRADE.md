@@ -62,6 +62,8 @@ The spaces around bars are now:
 - `bar@minima` (both replacing `spacearoundsmallbars`)
 - `bar@minor` (replacing `spacearoundminor`)
 - `bar@maior` (replacing `spacearoundmaior`)
+- `bar@finalis` (replacing `spacearoundfinalis`)
+- `bar@finalifinalis` (replaceing `spacebeforefinalfinalis`)
 - `bar@dominican` (new)
 
 They have variants for the new bar spacing algorithm only:
