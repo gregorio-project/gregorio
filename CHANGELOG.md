@@ -8,20 +8,18 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Horizontal episema on initio debilis is now sized correctly (see [#880](https://github.com/gregorio-project/gregorio/issues/880)).
 - Space between the text of two syllables of the same word when no hyphen is necessary is now strictly 0 (see [#922](https://github.com/gregorio-project/gregorio/issues/922))
 - A horizontal episema on the first note of a torculus deminutus is now placed correctly.  See [#926](https://github.com/gregorio-project/gregorio/issues/926).
-- When a flat on a ledger line (`bx` or `lx`) was preceding a note also on a ledger line, the ledger line was partially visible inside the flat, see [#882](https://github.com/gregorio-project/gregorio/issues/882).
 - Compilation of documents produced with Gregorio should be slightly faster.
 - The alignment of the vertical episema under a punctum inclinatum deminutus is now correct (see [#742](https://github.com/gregorio-project/gregorio/issues/742)).
 - `<eu>` and `<nlba>` may now be ended on the final divisio maior/finalis (see [#743](https://github.com/gregorio-project/gregorio/issues/743)).
 - Sign positioning on the first note of quadratum figures is now correct (see [#752](https://github.com/gregorio-project/gregorio/issues/752)).
 - Interlinear spacing of annotations when font size was smaller than normal.  You should now see just the spacing specified by `annotationseparation`.
-- Spacing is now correct and ledger lines are now typeset for flats, sharps, and naturals above and below the staff (see [#790](https://github.com/gregorio-project/gregorio/issues/790)).
+- Spacing is now correct and ledger lines are now typeset for flats, sharps, and naturals above and below the staff (see [#790](https://github.com/gregorio-project/gregorio/issues/790) and [#882](https://github.com/gregorio-project/gregorio/issues/882)).
 - Forced hyphens at the end of words are no longer suppressed (see [#804](https://github.com/gregorio-project/gregorio/issues/804)).
 - Three descending, otherwise unmodified notes are now correctly grouped as a clivis followed by a punctum.  If you prefer three notes butted up against each other, separate them with `!`.
 
 ### Changed
 - `spacebeforeeolcustos` has been increased, aproximately doubling its size.  It's also been made fixed by default, but is still capapble of accepting a rubber value should you so desire.
 - The names of the spaces around bars have changed, see `gsp-default` or GregorioRef for the new names. It is now possible to tune the spacing of the virgula separately from the divisio minima, and the Dominican bar separately from the divisio minor.
-- Adjustments to the heuristic for ledger lines to include adjacent notes (see [#862](https://github.com/gregorio-project/gregorio/issues/862)).
 - The stem length determination will use the ledger line below the note with the stem (see [#863](https://github.com/gregorio-project/gregorio/issues/863)).
 - Made the oriscus orientation dependent on the note that follows.  Using `1` will force the ascending oriscus and `0` will force the descending oriscus.  The old behavior may be restored by setting the `oriscus-orientation` gabc header to `legacy`.  See UPGRADE.md for details (for the change request, see [#774](https://github.com/gregorio-project/gregorio/issues/774) and [#898](https://github.com/gregorio-project/gregorio/issues/898)).
 - Add new lines as needed to the gabc output. (see [#905](https://github.com/gregorio-project/gregorio/issues/905)).
@@ -39,7 +37,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\gresethyphen` no longer manipulates `maximumspacewithoutdash`, allowing for restoration of consistent behavior after this distance has been modified.  See [#705](https://github.com/gregorio-project/gregorio/issues/705).
 - The oriscus-based shapes in the greciliae font are more consistent.  The shape of a scandicus with a second ambitus of two is more consistent across all score fonts.
 - Minimal space between notes of different syllables (or words) has been reduced when the second syllable starts with an alteration.
-- The space between note and horizontal episema has been tightened for notes at the `c` or `k` height when there is no ledger line.  Due to the intricacies of measurement, the system tries to make a best guess as to the existence of the ledger line.  If the guess is wrong, you may use the `[hl:n]` and `[ll:n]` notations in gabc to override the guess.  See [UPGRADE.md](UPGRADE.md) for details (for the change request, see [#716](https://github.com/gregorio-project/gregorio/issues/716)).
+- The space between note and horizontal episema has been tightened for notes at the `c` or `k` height when there is no ledger line.  Due to the intricacies of measurement, the system tries to make a best guess as to the existence of the ledger line.  If the guess is wrong, you may use the `[hl:n]` and `[ll:n]` notations in gabc to override the guess.  See [UPGRADE.md](UPGRADE.md) for details (for aspects of change request, see [#716](https://github.com/gregorio-project/gregorio/issues/716), and [#862](https://github.com/gregorio-project/gregorio/issues/862)).
 - The custos that might appear immediately before a `<eu>` block is now suppressed by default.  This behavior is controlled by the `\greseteolcustosbeforeeuouae` command.  See GregorioRef and [UPGRADE.md](UPGRADE.md) for details (for the change request, see [#761](https://github.com/gregorio-project/gregorio/issues/761)).
 - Different glyphs will now be used for the liquescent stropha on a line or between lines, if supported by the font.  If you prefer the old behavior, use `\grechangeglyph{StrophaAuctaLongtail}{*}{StrophaAucta}` in your TeX file.  See [#773](https://github.com/gregorio-project/gregorio/issues/773).
 - Headers not recognized by gregorio, rather than inducing an error, are now simply accepted by gregorio.  Most of the old "standard" headers, like `book` and `manuscript-location`, are now handled in this way and thus are no longer limited to one instance.  See GregorioRef for details.
