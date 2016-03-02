@@ -517,12 +517,14 @@ Count to track where on the line we are.  Values are \texttt{0} (we are not near
 \macroname{\textbackslash gre@savedlastoflinecount}{}{gregoriotex-main.tex}
 A spot to save the \verb=\gre@lastoflinecount= so we can change it temporarily and revert to the saved value later.
 
-\macroname{\textbackslash gre@newlinecommon}{\#1}{gregoriotex-main.tex}
+\macroname{\textbackslash gre@newlinecommon}{\#1\#2}{gregoriotex-main.tex}
 The macro which needs to be called each time a new lines is started.
 
 \begin{argtable}
   \#1 & \texttt{0} & Justifying the line being ended\\
   & \texttt{1} & Do not justify the line being ended\\
+  \#2 & \texttt{0} & Take care of eolshift\\
+  & \texttt{1} & Do not adjust end of line (when already done by the new spacing algorithm)\\
 \end{argtable}
 
 \macroname{\textbackslash gre@endafterbar}{\#1}{gregoriotex-main.tex}
