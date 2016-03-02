@@ -216,19 +216,21 @@
 % macro called to go to the next line
 \def\GreNewLine{%
   \gre@debugmsg{lineheight}{GreNewLine}%
-  \gre@newlinecommon{0}%
+  \gre@newlinecommon{0}{1}%
   \relax%
 }%
 
 % basically same as above, but this one does a \hfill, so the lines are not justified
 \def\GreNewParLine{%
   \gre@debugmsg{lineheight}{GreNewParLine}%
-  \gre@newlinecommon{1}%
+  \gre@newlinecommon{1}{1}%
   \relax%
 }%
 
 % the macro we call each time we force a changing of line, it automatically sets \gre@knownline, and adjusts left spaces
-\def\gre@newlinecommon#1{%
+% #1 is 0 in case of gabc z, 1 for Z
+% #2 is 0 in the normal case, 1 after a bar in the new spacing algorithm
+\def\gre@newlinecommon#1#2{%
   \ifgre@blockeolcustos\ifnum\gre@insidediscretionary=0\relax %
      \gre@localrightbox{}%
   \fi\fi %
@@ -244,21 +246,24 @@
     \fi %
     \global\advance\gre@knownline by 1\relax %
     \global\gre@lastoflinecount=2\relax %
-    % we have to repeat the end of syllable shifts here because the manual line breaks will occur before we get to the regular shifting code in \GreSyllable
-    \ifdim\gre@dimen@enddifference <0pt\relax%
-      %% important, else we are not really at the end of the syllable
-      \kern -\gre@dimen@enddifference\relax%
-    \fi%
-    \ifgre@eolshiftsenabled%
-      \GreNoBreak% we want to make sure this shift doesn't get separated from the previous one if both occur
-      \gre@calculate@eolshift{\gre@dimen@enddifference}%
-      \gre@debugmsg{eolshift}{Manual end of line shift: \the\gre@dimen@eolshift}%
-      \kern -\gre@dimen@eolshift\relax%
-    \fi%
+    \ifnum#2=0\relax %
+      % we have to repeat the end of syllable shifts here because the manual line breaks will occur before we get to the regular shifting code in \GreSyllable
+      \ifdim\gre@dimen@enddifference <0pt\relax%
+        %% important, else we are not really at the end of the syllable
+        \kern -\gre@dimen@enddifference\relax%
+      \fi%
+      \ifgre@eolshiftsenabled%
+        \GreNoBreak% we want to make sure this shift doesn't get separated from the previous one if both occur
+        \gre@calculate@eolshift{\gre@dimen@enddifference}%
+        \gre@debugmsg{eolshift}{Manual end of line shift: \the\gre@dimen@eolshift}%
+        \kern -\gre@dimen@eolshift\relax%
+      \fi%
+    \fi %
     \ifnum\gre@insidediscretionary=0\relax %
       \gre@updateleftbox %
     \fi %
     \ifnum#1=1\relax %
+      \GreNoBreak %
       \hfill %
     \fi %
     \gre@penalty{-10001}%
@@ -1646,7 +1651,7 @@
   \ifgre@raggedbreakbeforeeuouae %
     \directlua{gregoriotex.save_pos(#1,2)}%
     \ifcase\directlua{gregoriotex.is_ypos_different(#1)}\relax%
-      \gre@newlinecommon{1}%
+      \gre@newlinecommon{1}{1}%
     \fi %
   \fi %
   \gre@in@euouaetrue %
