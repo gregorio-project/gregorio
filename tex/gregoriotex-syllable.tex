@@ -857,7 +857,7 @@
 % cannot allow (::z) to end the line right after the bar, so we just save the
 % end of line for later.
 \xdef\gre@newlinearg{-1}
-\gdef\gre@newlinecommondelayed#1{%
+\gdef\gre@newlinecommondelayed#1#2{%
   \xdef\gre@newlinearg{#1}%
 }
 
@@ -976,7 +976,7 @@
       \fi%
     \else\ifgre@endofscore\else %
       \gre@debugmsg{barspacing}{calling new line with argument: \gre@newlinearg}%
-      \gre@newlinecommon{\gre@newlinearg}%
+      \gre@newlinecommon{\gre@newlinearg}{1}%
     \fi\fi%
   \else%
     %
