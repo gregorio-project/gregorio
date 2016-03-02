@@ -23,7 +23,7 @@
 \def\gregoriotex@symbols@loaded{}%
 
 \gre@debugmsg{general}{Loading gregoriotex-symbols.tex}%
-\gre@declarefileversion{gregoriotex-symbols.tex}{4.1.0-rc2}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-symbols.tex}{4.1.0}% GREGORIO_VERSION
 
 \RequireLuaModule{gregoriotex}%
 
@@ -229,9 +229,9 @@
 \gresetspecial{oe}{\oe{}}%
 \gresetspecial{*}{\GreStar{}}%
 \gresetspecial{+}{\GreDagger{}}%
-\gresetspecial{-}{\GreZeroHyph{}}%
+\gresetspecial{-}{\gre@char@zerohyph{}}%
 \gresetspecial{\string\092}{\textbackslash{}}%
 \gresetspecial{\string\038}{\&{}}%
 \gresetspecial{\string\035}{\#{}}%
 \gresetspecial{\string\095}{\_{}}%
-\gresetspecial{\string\126}{\GreTilde{}}%
+\gresetspecial{\string\126}{\gretilde{}}%
