@@ -3909,10 +3909,10 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
         fprintf(f, "}%%\n");
     }
 
-    /* DEPRECATED by 4.1 */
+    /* DEPRECATED for removal in 5.0 */
     /* LCOV_EXCL_START */
-    if (score->initial_style != INITIAL_NOT_SPECIFIED) { /* DEPRECATED by 4.1 */
-        fprintf(f, "\\GreSetInitialStyle{%d}%%\n", score->initial_style); /* DEPRECATED by 4.1 */
+    if (score->initial_style != INITIAL_NOT_SPECIFIED) { /* DEPRECATED for removal in 5.0 */
+        fprintf(f, "\\GreSetInitialStyle{%d}%%\n", score->initial_style); /* DEPRECATED for removal in 5.0 */
     }
     /* LCOV_EXCL_STOP */
 

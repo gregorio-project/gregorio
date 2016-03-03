@@ -691,7 +691,7 @@ typedef struct gregorio_score {
     char *annotation[MAX_ANNOTATIONS];
     /* field giving informations on the initial (no initial, normal initial
      * or two lines initial) */
-    signed char initial_style; /* DEPRECATED */
+    signed char initial_style; /* DEPRECATED for removal in 5.0 */
     size_t nabc_lines;
     char *user_notes;
     /* the determination method (maximal ambitus, etc.) */
@@ -742,7 +742,7 @@ extern gregorio_clef_info gregorio_default_clef;
 
 #define MONOPHONY 0
 
-/* the different initial styles - DEPRECATED by 4.1 */
+/* the different initial styles - DEPRECATED for removal in 5.0 */
 #define INITIAL_NOT_SPECIFIED -1
 
 #define USELESS_VALUE 0
