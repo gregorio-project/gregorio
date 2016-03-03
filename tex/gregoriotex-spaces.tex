@@ -1177,28 +1177,6 @@
     \gre@debugmsg{spacing}{Changing a dimen.}%
     \def\gre@prefix{dimen}%
   \fi%
-  \IfStrEqCase{#1}{% OBSOLETE
-    {spacearoundsmallbars}% OBSOLETE
-      {% OBSOLETE
-        \gre@obsolete{spacearoundsmallbars}{bar@virgula or bar@minima}% OBSOLETE
-      }% OBSOLETE
-    {spacearoundminor}% OBSOLETE
-      {% OBSOLETE
-        \gre@obsolete{spacearoundminor}{bar@minor}% OBSOLETE
-      }% OBSOLETE
-    {spacearoundmaior}% OBSOLETE
-      {% OBSOLETE
-        \gre@obsolete{spacearoundmaior}{bar@maior}% OBSOLETE
-      }% OBSOLETE
-    {spacearoundfinalis}% OBSOLETE
-      {% OBSOLETE
-        \gre@obsolete{spacearoundfinalis}{bar@finalis}% OBSOLETE
-      }% OBSOLETE
-    {spacebeforefinalfinalis}% OBSOLETE
-      {% OBSOLETE
-        \gre@obsolete{spacebeforfinalfinalis}{bar@finalfinalis}% OBSOLETE
-      }% OBSOLETE
-    }% OBSOLETE
   \ifcsname gre@space@\gre@prefix @#1\endcsname%
     \gre@debugmsg{spacing}{It does exist.}%
     \gre@dimension{#1}{#2}%
@@ -1215,7 +1193,30 @@
         }%
       }%
   \else%
-    \gre@error{#1 is not a recognized distance.}%
+    \IfStrEqCase{#1}{% OBSOLETE
+      {spacearoundsmallbars}% OBSOLETE
+        {% OBSOLETE
+          \gre@obsolete{spacearoundsmallbars}{bar@virgula or bar@minima}% OBSOLETE
+        }% OBSOLETE
+      {spacearoundminor}% OBSOLETE
+        {% OBSOLETE
+          \gre@obsolete{spacearoundminor}{bar@minor}% OBSOLETE
+        }% OBSOLETE
+      {spacearoundmaior}% OBSOLETE
+        {% OBSOLETE
+          \gre@obsolete{spacearoundmaior}{bar@maior}% OBSOLETE
+        }% OBSOLETE
+      {spacearoundfinalis}% OBSOLETE
+        {% OBSOLETE
+          \gre@obsolete{spacearoundfinalis}{bar@finalis}% OBSOLETE
+        }% OBSOLETE
+      {spacebeforefinalfinalis}% OBSOLETE
+        {% OBSOLETE
+          \gre@obsolete{spacebeforfinalfinalis}{bar@finalfinalis}% OBSOLETE
+        }% OBSOLETE
+      }[% OBSOLETE
+        \gre@error{#1 is not a recognized distance.}% keep this line
+      ]% OBSOLETE
   \fi%
 }%
 
