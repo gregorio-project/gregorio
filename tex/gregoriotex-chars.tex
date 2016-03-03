@@ -107,31 +107,32 @@
 %%%%%%%%%%%%%%%%%
 
 \def\gresetglyphstyle#1{%
-  \IfStrEq{#1}{default}%
-    {%
-      \greresetglyph{Flat}%
-      \greresetglyph{FlatHole}%
-      \greresetglyph{Natural}%
-      \greresetglyph{NaturalHole}%
-      \greresetglyph{Sharp}%
-      \greresetglyph{SharpHole}%
-      \greresetglyph{CClef}%
-      \greresetglyph{FClef}%
-      \greresetglyph{CClefChange}%
-      \greresetglyph{FClefChange}%
-      \greresetglyph{AuctumMora}%
-      \greresetglyph{VEpisema}%
-      \greresetglyph{CustosUpLong}%
-      \greresetglyph{CustosUpShort}%
-      \greresetglyph{CustosUpMedium}%
-      \greresetglyph{CustosDownLong}%
-      \greresetglyph{CustosDownShort}%
-      \greresetglyph{CustosDownMedium}%
-      \greresetglyph{BarBrace}%
-      \greresetglyph{Punctum}%
-      \relax %
-    }%
-    {\IfStrEq{#1}{medicaea}%
+  \IfStrEqCase{#1}{%
+    {default}%
+      {%
+        \greresetglyph{Flat}%
+        \greresetglyph{FlatHole}%
+        \greresetglyph{Natural}%
+        \greresetglyph{NaturalHole}%
+        \greresetglyph{Sharp}%
+        \greresetglyph{SharpHole}%
+        \greresetglyph{CClef}%
+        \greresetglyph{FClef}%
+        \greresetglyph{CClefChange}%
+        \greresetglyph{FClefChange}%
+        \greresetglyph{AuctumMora}%
+        \greresetglyph{VEpisema}%
+        \greresetglyph{CustosUpLong}%
+        \greresetglyph{CustosUpShort}%
+        \greresetglyph{CustosUpMedium}%
+        \greresetglyph{CustosDownLong}%
+        \greresetglyph{CustosDownShort}%
+        \greresetglyph{CustosDownMedium}%
+        \greresetglyph{BarBrace}%
+        \greresetglyph{Punctum}%
+        \relax %
+      }%
+    {medicaea}%
       {%
         \gresetglyphstyle{default}\gre@usestylecommon %
         \grechangeglyph{CustosUpLong}{greextra}{MedicaeaCustosUpLong}%
@@ -148,54 +149,37 @@
         \grechangeglyph{FlatHole}{greextra}{MedicaeaFlatHole}%
         \relax %
       }%
-      {\IfStrEq{#1}{hufnagel}%
-        {%
-          \gresetglyphstyle{default}\gre@usestylecommon %
-          \grechangeglyph{CustosUpLong}{greextra}{HufnagelCustosUpLong}%
-          \grechangeglyph{CustosUpShort}{greextra}{HufnagelCustosUpShort}%
-          \grechangeglyph{CustosUpMedium}{greextra}{HufnagelCustosUpMedium}%
-          \grechangeglyph{CustosDownLong}{greextra}{HufnagelCustosDownLong}%
-          \grechangeglyph{CustosDownShort}{greextra}{HufnagelCustosDownShort}%
-          \grechangeglyph{CustosDownMedium}{greextra}{HufnagelCustosDownMedium}%
-          \grechangeglyph{CClef}{greextra}{HufnagelCClef}%
-          \grechangeglyph{FClef}{greextra}{HufnagelFClef}%
-          \grechangeglyph{CClefChange}{greextra}{HufnagelCClefChange}%
-          \grechangeglyph{FClefChange}{greextra}{HufnagelFClefChange}%
-          \grechangeglyph{Flat}{greextra}{HufnagelFlat}%
-          \grechangeglyph{FlatHole}{greextra}{HufnagelFlatHole}%
-          \relax %
-        }%
-        {\IfStrEq{#1}{mensural}%
-          {%
-            \gresetglyphstyle{default}\gre@usestylecommon %
-            \grechangeglyph{CustosUpLong}{greextra}{MensuralCustosUpLong}%
-            \grechangeglyph{CustosUpShort}{greextra}{MensuralCustosUpShort}%
-            \grechangeglyph{CustosUpMedium}{greextra}{MensuralCustosUpMedium}%
-            \grechangeglyph{CustosDownLong}{greextra}{MensuralCustosDownLong}%
-            \grechangeglyph{CustosDownShort}{greextra}{MensuralCustosDownShort}%
-            \grechangeglyph{CustosDownMedium}{greextra}{MensuralCustosDownMedium}%
-            \grechangeglyph{Flat}{greextra}{MensuralFlat}%
-            \grechangeglyph{FlatHole}{greextra}{MensuralFlatHole}%
-            \relax %
-          }%
-          {\gre@error{Unrecognized option for \protect\gresetglyphstyle}}%
-        }%
+    {hufnagel}%
+      {%
+        \gresetglyphstyle{default}\gre@usestylecommon %
+        \grechangeglyph{CustosUpLong}{greextra}{HufnagelCustosUpLong}%
+        \grechangeglyph{CustosUpShort}{greextra}{HufnagelCustosUpShort}%
+        \grechangeglyph{CustosUpMedium}{greextra}{HufnagelCustosUpMedium}%
+        \grechangeglyph{CustosDownLong}{greextra}{HufnagelCustosDownLong}%
+        \grechangeglyph{CustosDownShort}{greextra}{HufnagelCustosDownShort}%
+        \grechangeglyph{CustosDownMedium}{greextra}{HufnagelCustosDownMedium}%
+        \grechangeglyph{CClef}{greextra}{HufnagelCClef}%
+        \grechangeglyph{FClef}{greextra}{HufnagelFClef}%
+        \grechangeglyph{CClefChange}{greextra}{HufnagelCClefChange}%
+        \grechangeglyph{FClefChange}{greextra}{HufnagelFClefChange}%
+        \grechangeglyph{Flat}{greextra}{HufnagelFlat}%
+        \grechangeglyph{FlatHole}{greextra}{HufnagelFlatHole}%
+        \relax %
       }%
-    }%
-}%
-
-\def\greusedefaultstyle{%OBSOLETE
-  \gre@obsolete{\protect\greusedefaultstyle}{\protect\gresetglyphstyle{default}}%
-}%
-
-\def\greusemedicaeastyle{%OBSOLETE
-  \gre@obsolete{\protect\greusemedicaeastyle}{\protect\gresetglyphstyle{medicaea}}%
-}%
-
-\def\greusehufnagelstyle{%OBSOLETE
-  \gre@obsolete{\protect\greusehufnagelstyle}{\protect\gresetglyphstyle{hufnagel}}%
-}%
-
-\def\greusemensuralstyle{%OBSOLETE
-  \gre@obsolete{\protect\greusemensuralstyle}{\protect\gresetglyphstyle{mensural}}%
+    {mensural}%
+      {%
+        \gresetglyphstyle{default}\gre@usestylecommon %
+        \grechangeglyph{CustosUpLong}{greextra}{MensuralCustosUpLong}%
+        \grechangeglyph{CustosUpShort}{greextra}{MensuralCustosUpShort}%
+        \grechangeglyph{CustosUpMedium}{greextra}{MensuralCustosUpMedium}%
+        \grechangeglyph{CustosDownLong}{greextra}{MensuralCustosDownLong}%
+        \grechangeglyph{CustosDownShort}{greextra}{MensuralCustosDownShort}%
+        \grechangeglyph{CustosDownMedium}{greextra}{MensuralCustosDownMedium}%
+        \grechangeglyph{Flat}{greextra}{MensuralFlat}%
+        \grechangeglyph{FlatHole}{greextra}{MensuralFlatHole}%
+        \relax %
+      }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetglyphstyle\MessageBreak Possible options are: 'default', 'medicaea', 'hufnagel' and 'mensural'}%
+    ]%
 }%

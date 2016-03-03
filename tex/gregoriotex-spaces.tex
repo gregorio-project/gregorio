@@ -149,9 +149,6 @@
   \relax %
 }%
 
-\def\setstafflinethickness{%OBSOLETE
-  \gre@obsolete{\protect\setstafflinethickness}{\protect\grechangestafflinethickness}%
-}%
 
 %constantglyphraise is the space between the 0 of the gregorian fonts and the effective 0 of the TeX score
 \newdimen\gre@dimen@constantglyphraise\relax%
@@ -459,12 +456,14 @@
 \newif\ifgre@useledgerlineheuristic%
 \gre@useledgerlineheuristictrue%
 \def\gresetledgerlineheuristic#1{%
-  \IfStrEq{#1}{enable}%
-    {\gre@useledgerlineheuristictrue}%
-    {\IfStrEq{#1}{disable}%
+  \IfStrEqCase{#1}{%
+    {enable}%
+      {\gre@useledgerlineheuristictrue}%
+    {disable}%
       {\gre@useledgerlineheuristicfalse}%
-      {\gre@error{Unrecognized option in \protect\gresetledgerlineheuristic}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" in \protect\gresetledgerlineheuristic\MessageBreak Possible options are: 'enable' and 'disable'}%
+    ]%
 }%
 % for backwards compatibility, we set these to true by default, and the
 % system will set them appropriately if the heuristics determine a ledger
@@ -788,10 +787,6 @@
   \gre@generatelines %
   \gre@calculate@constantglyphraise %
   \endgre@style@translation%
-  \ifx\gre@empty@translationformat\gretranslationformat% OBSOLETE
-  \else%  OBSOLETE
-    \gre@obsolete{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  OBSOLETE
-  \fi%  OBSOLETE
   \relax %
 }%
 
@@ -1158,23 +1153,16 @@
 \def\grecreatedim#1#2#3{%
   \gre@dimension{#1}{#2}%
   \csname newif\expandafter\endcsname\csname ifgre@scale@#1\endcsname%
-  \IfStrEq{#3}{1}%
-    {\gre@obsolete{A numerical (1) last argument for \protect\grecreatedim}{'scalable'}}%
-    {\IfStrEq{#3}{0}%
-      {\gre@obsolete{A numerical (0) last argument for \protect\grecreatedim}{'fixed'}}%
-      {\IfStrEq{#3}{scalable}%
-        {\grescaledim{#1}{true}}%
-        {\IfStrEq{#3}{fixed}%
-          {\grescaledim{#1}{false}}%
-          {\gre@error{Unrecognized option for \protect\grecreatedim}}%
-        }%
-      }%
-    }%
+  \IfStrEqCase{#3}{
+    {scalable}%
+      {\grescaledim{#1}{true}}%
+    {fixed}%
+      {\grescaledim{#1}{false}}%
+    }[% all other cases
+      \gre@error{Unrecognized option "#3" for \protect\grecreatedim\MessageBreak Possible options are: 'scalable' and 'fixed'}%
+    ]%
 }%
 
-\def\gresetdim{%OBSOLETE
-  \gre@obsolete{\protect\gresetdim}{\protect\grecreatedim}%
-}%
 
 % a macro for changing a dimension.  Unlike \grecreatedim, this function won’t create a new distance, just change an existing one.
 \def\grechangedim#1#2#3{%
@@ -1187,51 +1175,41 @@
     \gre@debugmsg{spacing}{Changing a dimen.}%
     \def\gre@prefix{dimen}%
   \fi%
-  \IfStrEqCase{#1}{% DEPRECATED
-    {spacearoundsmallbars}% DEPRECATED
-      {% DEPRECATED
-        \gre@deprecated{spacearoundsmallbars}{bar@virgula or bar@minima}% DEPRECATED
-        \grechangedim{bar@virgula}{#2}{#3}% DEPRECATED
-        \grechangedim{bar@minima}{#2}{#3}% DEPRECATED
-      }% DEPRECATED
-    {spacearoundminor}% DEPRECATED
-      {% DEPRECATED
-        \gre@deprecated{spacearoundminor}{bar@minor}% DEPRECATED
-        \grechangedim{bar@minor}{#2}{#3}% DEPRECATED
-      }% DEPRECATED
-    {spacearoundmaior}% DEPRECATED
-      {% DEPRECATED
-        \gre@deprecated{spacearoundmaior}{bar@maior}% DEPRECATED
-        \grechangedim{bar@maior}{#2}{#3}% DEPRECATED
-      }% DEPRECATED
-    {spacearoundfinalis}% DEPRECATED
-      {% DEPRECATED
-        \gre@deprecated{spacearoundfinalis}{bar@finalis}% DEPRECATED
-        \grechangedim{bar@finalis}{#2}{#3}% DEPRECATED
-      }% DEPRECATED
-    {spacebeforefinalfinalis}% DEPRECATED
-      {% DEPRECATED
-        \gre@deprecated{spacebeforfinalfinalis}{bar@finalfinalis}% DEPRECATED
-        \grechangedime{bar@finalfinalis}{#2}{#3}% DEPRECATED
-      }% DEPRECATED
-    }% DEPRECATED
   \ifcsname gre@space@\gre@prefix @#1\endcsname%
     \gre@debugmsg{spacing}{It does exist.}%
     \gre@dimension{#1}{#2}%
-    \IfStrEq{#3}{1}%
-      {\gre@obsolete{A numerical (1) last argument for \protect\grechangedim}{'scalable'}}%
-      {\IfStrEq{#3}{0}%
-        {\gre@obsolete{A numerical (0) last argument for \protect\grechangedim}{'fixed'}}%
-        {\IfStrEq{#3}{scalable}%
-          {\grescaledim{#1}{true}}%
-          {\IfStrEq{#3}{fixed}%
-            {\grescaledim{#1}{false}}%
-            {\gre@error{Unrecognized option for \protect\grechangedim}}%
-          }%
-        }%
-      }%
+    \IfStrEqCase{#3}{%
+      {scalable}%
+        {\grescaledim{#1}{true}}%
+      {fixed}%
+        {\grescaledim{#1}{false}}%
+      % all other cases
+      }[\gre@error{Unrecognized option "#3" for \protect\grechangedim\MessageBreak Possible options are: 'scalable' and 'fixed'}]%
   \else%
-    \gre@error{#1 is not a recognized distance.}%
+    \IfStrEqCase{#1}{% OBSOLETE
+      {spacearoundsmallbars}% OBSOLETE
+        {% OBSOLETE
+          \gre@obsolete{spacearoundsmallbars}{bar@virgula or bar@minima}% OBSOLETE
+        }% OBSOLETE
+      {spacearoundminor}% OBSOLETE
+        {% OBSOLETE
+          \gre@obsolete{spacearoundminor}{bar@minor}% OBSOLETE
+        }% OBSOLETE
+      {spacearoundmaior}% OBSOLETE
+        {% OBSOLETE
+          \gre@obsolete{spacearoundmaior}{bar@maior}% OBSOLETE
+        }% OBSOLETE
+      {spacearoundfinalis}% OBSOLETE
+        {% OBSOLETE
+          \gre@obsolete{spacearoundfinalis}{bar@finalis}% OBSOLETE
+        }% OBSOLETE
+      {spacebeforefinalfinalis}% OBSOLETE
+        {% OBSOLETE
+          \gre@obsolete{spacebeforfinalfinalis}{bar@finalfinalis}% OBSOLETE
+        }% OBSOLETE
+      }[% OBSOLETE
+        \gre@error{#1 is not a recognized distance.}% keep this line
+      ]% OBSOLETE
   \fi%
 }%
 
@@ -1267,31 +1245,24 @@
 
 %a macro to use if all you want to do is turn on or off the scaling for a particular distance
 \def\grescaledim#1#2{%
-  \IfStrEq{#2}{true}%
-    {\csname gre@scale@#1true\endcsname}%
-    {\IfStrEq{#2}{yes}%
+  \IfStrEqCase{#2}{%
+    {true}%
+      {\csname gre@scale@#1true\endcsname}%
+    {yes}%
       {\grescaledim{true}}%
-      {\IfStrEq{#2}{on}%
-        {\grescaledim{true}}%
-        {\IfStrEq{#2}{scalable}%
-          {\grescaledim{true}}%
-          {\csname gre@scale@#1false\endcsname}%
-        }%
-      }%
-    }%
+    {on}%
+      {\grescaledim{true}}%
+    {scalable}%
+      {\grescaledim{true}}%
+    }[% all other cases
+      \csname gre@scale@#1false\endcsname%
+    ]%
 }
 
-\def\grenoscaledim#1{%OBSOLETE
-  \gre@obsolete{\protect\grenoscaledim}{\protect\grescaledim{...}{no}}%
-}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % space configuration loading
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\def\GreLoadSpaceConf#1{%OBSOLETE
-  \gre@obsolete{\protect\GreLoadSpaceConf}{\protect\greloadspaceconf}%
-}%
 
 \newcount\greconffactor%
 \def\greloadspaceconf#1{%
@@ -1766,37 +1737,4 @@
     \xdef\gre@stafflinefactor{\the\gre@count@temp@two}%
   \fi%
   \relax %
-}%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  Some Macros for changing the spacing around the initial
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%Seeing as these are the distances that people will want to change the most often,
-%we give them their own set of macros to make that easier.
-
-% To change the spacing between annotations.
-%First argument is distance, second is whether it should scale when \gre@factor changes.
-\def\setaboveinitialseparation#1#2{%OBSOLETE
-  \gre@obsolete{\protect\setaboveinitialseparation}{\protect\grechangedim\{annotationseparation\}}%
-}%
-
-
-%To change the space after the initial
-%First argument is distance, second is whether it should scale when \gre@factor changes.
-\def\setspaceafterinitial#1#2{%OBSOLETE
-  \gre@obsolete{\protect\setspaceafterinitial}{\protect\grechangedim{afterinitialshift}}%
-}
-
-%To change the space before the initial
-%First argument is distance, second is whether it should scale when \gre@factor changes.
-\def\setspacebeforeinitial#1#2{%OBSOLETE
-  \gre@obsolete{\protect\setspacebeforeinitial}{\protect\grechangedim{beforeinitialshift}}%
-}%
-
-
-%To change all the distances associated with the initial.
-%First three arguments are distances, last is whether they should scale when \gre@factor changes.
-\def\setinitialspacing#1#2#3#4{%OBSOLETE
-  \gre@obsolete{\protect\setinitialspacing}{\protect\grechangedim{beforeinitialshift}, \protect\grechangedim{manualinitialwidth}, and \protect\grechangedim{afterinitialshift}}%
 }%

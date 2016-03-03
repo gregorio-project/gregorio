@@ -70,7 +70,7 @@
 
 \def\gre@nothing{}
 
-\AtBeginDocument{\IfStrEq{\gre@debug}{}{}{\typeout{GregorioTeX is in debug mode}\typeout{\gre@debug\space messages will be printed to the log.}}}%
+\AtBeginDocument{\IfStrEq{\gre@debug}{}{}{\directlua{gregoriotex.set_debug_string([[\gre@debug]])}\typeout{GregorioTeX is in debug mode}\typeout{\gre@debug\space messages will be printed to the log.}}}%
 
 % Depending on version of TeX / LaTeX, some primitives may or may not have a
 % luatex prefix, so we need to check and handle either
@@ -381,10 +381,6 @@
       \gre@debugmsg{initial}{Fill initial box a}%
       \setbox\gre@box@initial=\hbox{\gre@style@initial\gre@fixedtextformat{#1}\endgre@style@initial}%
     \fi%
-    \ifx\gre@empty@initialformat\greinitialformat% OBSOLETE
-    \else%  OBSOLETE
-      \gre@obsolete{\protect\greinitialformat}{\protect\grechangestyle{initial}}%  OBSOLETE
-    \fi%  OBSOLETE
     \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
     \ifdim\gre@space@dimen@manualinitialwidth=0 pt\relax%
       \global\gre@dimen@initialwidth=\wd\gre@box@initial %
@@ -392,10 +388,6 @@
       \gre@style@initial%
       \global\gre@dimen@initialwidth=\gre@space@dimen@manualinitialwidth\relax%
       \endgre@style@initial%
-      \ifx\gre@empty@initialformat\greinitialformat% OBSOLETE
-      \else%  OBSOLETE
-        \gre@obsolete{\protect\greinitialformat}{\protect\grechangestyle{initial}}%  OBSOLETE
-      \fi%  OBSOLETE
     \fi%
     \gre@debugmsg{ifdim}{ wd(gre@box@annotation) > initialwidth}%
     \ifdim\wd\gre@box@annotation>\gre@dimen@initialwidth\relax%
@@ -407,10 +399,6 @@
     \gre@style@initial%
     \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax%
     \endgre@style@initial%
-    \ifx\gre@empty@initialformat\greinitialformat% OBSOLETE
-    \else%  OBSOLETE
-      \gre@obsolete{\protect\greinitialformat}{\protect\grechangestyle{initial}}%  OBSOLETE
-    \fi%  OBSOLETE
   \else %
     \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
       \gre@warning{biginitial style is deprecated, but the old\MessageBreak behavior will be used since deprecated usage is\MessageBreak currently enabled. This behavior will disappear\MessageBreak in 5.0, so consider disabling deprecated usage\MessageBreak and switching to the initial style instead. (See\MessageBreak UPGRADE.md for more information)}%%% DEPRECATED for removal in 5.0
@@ -431,10 +419,6 @@
         \setbox\gre@box@initial=\hbox{\gre@style@initial\gre@fixedtextformat{#1}\endgre@style@initial}% keep this line
       \fi%%% DEPRECATED for removal in 5.0
     \fi%
-    \ifx\gre@empty@biginitialformat\grebiginitialformat% OBSOLETE
-    \else%  OBSOLETE
-      \gre@obsolete{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  OBSOLETE
-    \fi%  OBSOLETE
     \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
     \ifdim\gre@space@dimen@manualinitialwidth=0 pt\relax%
       \global\gre@dimen@initialwidth=\wd\gre@box@initial %
@@ -448,10 +432,6 @@
         \global\gre@dimen@initialwidth=\gre@space@dimen@manualinitialwidth\relax% keep this line
         \endgre@style@initial% keep this line
       \fi%%% DEPRECATED for removal in 5.0
-      \ifx\gre@empty@biginitialformat\grebiginitialformat% OBSOLETE
-      \else%  OBSOLETE
-        \gre@obsolete{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  OBSOLETE
-      \fi%  OBSOLETE
     \fi%
     \gre@debugmsg{ifdim}{ wd(GreAboveinitialfirstbox) > initialwidth}%
     \ifdim\wd\gre@box@annotation>\gre@dimen@initialwidth\relax%
@@ -467,10 +447,6 @@
       \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax% keep this line
       \endgre@style@initial% keep this line
     \fi%%% DEPRECATED for removal in 5.0
-    \ifx\gre@empty@biginitialformat\grebiginitialformat% OBSOLETE
-    \else%  OBSOLETE
-      \gre@obsolete{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  OBSOLETE
-    \fi%  OBSOLETE
   \fi %
   \hskip\gre@dimen@temp@four %
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four %
@@ -480,10 +456,6 @@
     \gre@style@initial%
     \global\gre@dimen@temp@four = \gre@space@dimen@afterinitialshift\relax%
     \endgre@style@initial%
-    \ifx\gre@empty@initialformat\greinitialformat% OBSOLETE
-    \else%  OBSOLETE
-      \gre@obsolete{\protect\greinitialformat}{\protect\grechangestyle{initial}}%  OBSOLETE
-    \fi%  OBSOLETE
   \else%
     \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
       \gre@style@biginitial%%% DEPRECATED for removal in 5.0
@@ -494,10 +466,6 @@
       \global\gre@dimen@temp@four = \gre@space@dimen@afterinitialshift\relax% keep this line
       \endgre@style@initial% keep this line
     \fi%%% DEPRECATED for removal in 5.0
-    \ifx\gre@empty@biginitialformat\grebiginitialformat% OBSOLETE
-    \else%  OBSOLETE
-      \gre@obsolete{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  OBSOLETE
-    \fi%  OBSOLETE
   \fi%
   \hskip\gre@dimen@temp@four %
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four%
@@ -538,12 +506,14 @@
 \gre@annotationbottomlinefalse%
 
 \def\gresetannotationby#1{%
-  \IfStrEq{#1}{topline}%
-    {\gre@annotationbottomlinefalse}%
-    {\IfStrEq{#1}{bottomline}%
+  \IfStrEqCase{#1}{%
+    {topline}%
+      {\gre@annotationbottomlinefalse}%
+    {bottomline}%
       {\gre@annotationbottomlinetrue}%
-      {\gre@error{Unrecognized option for \protect\gresetannotationby}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetannotationby\MessageBreak Possible options are: 'topline' and 'bottomline'}%
+    ]%
 }%
 
 % This flag controls whether the top (0), baseline (1), or bottom (2) of the control line is aligned with the top line of the staff before applying annotationraise.
@@ -551,15 +521,16 @@
 \gre@count@annotationvalign=1%
 
 \def\gresetannotationvalign#1{%
-  \IfStrEq{#1}{top}%
-    {\gre@count@annotationvalign=0}%
-    {\IfStrEq{#1}{baseline}%
+  \IfStrEqCase{#1}{%
+    {top}%
+      {\gre@count@annotationvalign=0}%
+    {baseline}%
       {\gre@count@annotationvalign=1}%
-      {\IfStrEq{#1}{bottom}%
-        {\gre@count@annotationvalign=2}%
-        {\gre@error{Unrecognized option for \protect\gresetannotationvalign}}%
-      }%
-    }%
+    {bottom}%
+      {\gre@count@annotationvalign=2}%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetannotationvalign\MessageBreak Possible options are: 'top', 'baseline' and 'bottom'}%
+    ]%
 }%
 
 \def\gre@annotation[#1]#2{%
@@ -625,42 +596,13 @@
 }%
 
 
-\def\gresetfirstlineaboveinitial#1#2{%OBSOLETE
-  \gre@obsolete{\protect\gresetfirstlineaboveinitial}{\protect\greannotation}%
-}%
-
-\def\gresetfirstannotation#1{%OBSOLETE
-  \gre@obsolete{\protect\gresetfirstannotation}{\protect\greannotation}%
-}%
-
-\let\setfirstannotation\gresetfirstannotation%OBSOLETE
-
-\def\gresetsecondannotation#1{%OBSOLETE
-  \gre@obsolete{\protect\gresetsecondannotation}{\protect\greannotation}%
-}%
-
-\let\setsecondannotation\gresetsecondannotation%OBSOLETE
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the score reference (unused)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\grescorereference#1{% DEPRECATED by 4.1
-  \ifgre@allowdeprecated%
-    \gre@warning{\protect\grescorereference\space is deprecated.\MessageBreak It does nothing; stop using it.}%
-  \else%
-    \gre@error{\protect\grescorereference\space is deprecated.\MessageBreak It does nothing; stop using it.}%
-  \fi%
+\def\grescorereference#1{% OBSOLETE
+  \gre@error{\protect\grescorereference\space is obsolete.\MessageBreak It does nothing; stop using it.}%
   \relax %
-}%
-
-\def\GreScoreReference#1{%OBSOLETE
-  \gre@error{\protect\GreScoreReference\space is obsolete.\MessageBreak It does nothing; stop using it.}%
-  \relax%
-}%
-
-\def\scorereference#1{%OBSOLETE
-  \gre@error{\protect\scorereference\space is obsolete.\MessageBreak It does nothing; stop using it.}%
 }%
 
 
@@ -688,15 +630,16 @@
 \def\gre@romannumeral@majuscule#1{\uppercase\expandafter{\romannumeral#1\relax}}%
 \def\gre@romannumeral@minuscule#1{\romannumeral#1\relax}%
 \def\gresetmodenumbersystem#1{%
-  \IfStrEq{#1}{roman-majuscule}%
-    {\let\GreModeNumber\gre@romannumeral@majuscule}%
-    {\IfStrEq{#1}{roman-minuscule}%
+  \IfStrEqCase{#1}{%
+    {roman-majuscule}%
+      {\let\GreModeNumber\gre@romannumeral@majuscule}%
+    {roman-minuscule}%
       {\let\GreModeNumber\gre@romannumeral@minuscule}%
-      {\IfStrEq{#1}{arabic}%
-        {\let\GreModeNumber\relax}%
-        {\gre@error{Unrecognized option in \protect\gresetmodenumbersystem}}%
-      }%
-    }%
+    {arabic}%
+      {\let\GreModeNumber\relax}%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" in \protect\gresetmodenumbersystem\MessageBreak Possible options are: 'roman-majuscule', 'roman-minuscule', and 'arabic'}%
+    ]%
 }%
 \gresetmodenumbersystem{roman-minuscule}%
 
@@ -741,19 +684,9 @@
   \fi%
 }
 
-\def\commentary#1{%OBSOLETE
-  \gre@obsolete{\protect\commentary}{\protect\grecommentary}%
-}%
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macro for putting text above lines for annotations and the like
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% format for text above the lines
-\def\greabovelinestextstyle#1{% OBSOLETE
-  \relax %
-}%
-\let\gre@empty@abovelinestextstyle\greabovelinestextstyle%
 
 % set space above the text lines - almost the same as for the translation
 \def\gre@addspaceabove{%
@@ -761,10 +694,6 @@
   \global\gre@dimen@currentabovelinestextheight=\gre@space@dimen@abovelinestextheight\relax%
   \gre@generatelines %
   \endgre@style@abovelinestext%
-  \ifx\gre@empty@abovelinestextstyle\greabovelinestextstyle% OBSOLETE
-  \else%  OBSOLETE
-    \gre@obsolete{\protect\greabovelinestextstyle}{\protect\grechangestyle{abovelinestext}}%  OBSOLETE
-  \fi%  OBSOLETE
   \relax %
 }%
 
@@ -795,10 +724,6 @@
   \gre@debugmsg{spacing}{Raise alt text: \gre@space@dimen@abovelinestextraise}%
   \global\gre@dimen@temp@five=\gre@space@dimen@abovelinestextraise\relax%
   \endgre@style@abovelinestext%
-  \ifx\gre@empty@abovelinestextstyle\greabovelinestextstyle% OBSOLETE
-  \else%  OBSOLETE
-    \gre@obsolete{\protect\greabovelinestextstyle}{\protect\grechangestyle{abovelinestext}}%  OBSOLETE
-  \fi%  OBSOLETE
   \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
   \advance\gre@dimen@temp@five by \dimexpr(4\gre@dimen@stafflineheight %
     + 4\gre@dimen@interstafflinespace %
@@ -809,10 +734,6 @@
   \gre@mark@abovelinestext %
   \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
     \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\gre@style@abovelinestext#1\endgre@style@abovelinestext\hss}%
-  \ifx\gre@empty@abovelinestextstyle\greabovelinestextstyle% OBSOLETE
-  \else%  OBSOLETE
-    \gre@obsolete{\protect\greabovelinestextstyle}{\protect\grechangestyle{abovelinestext}}%  OBSOLETE
-  \fi%  OBSOLETE
   \relax %
 }%
 
@@ -825,21 +746,15 @@
 \gre@showlinestrue
 
 \def\gresetlines#1{%
-  \IfStrEq{#1}{visible}%
-    {\gre@showlinestrue}%
-    {\IfStrEq{#1}{invisible}%
+  \IfStrEqCase{#1}{%
+    {visible}%
+      {\gre@showlinestrue}%
+    {invisible}%
       {\gre@showlinesfalse}%
-      {\gre@error{Unrecognized option for \protect\gresetlines}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetlines\MessageBreak Possible options are: 'visible' and 'invisible'}%
+    ]%
 }
-
-\def\greremovelines{%OBSOLETE
-  \gre@obsolete{\protect\greremovelines}{\protect\gresetlines{invisible}}%
-}%
-
-\def\gredonotremovelines{%OBSOLETE
-  \gre@obsolete{\protect\gredonotremovelines}{\protect\gresetlines{visible}}%
-}%
 
 %% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
 \def\gre@drawfirstlines{%
@@ -849,10 +764,6 @@
   \hbox to 0pt{%
     \vbox{%
       \gre@style@normalstafflines%
-      \ifx\gre@empty@normalstafflinesformat\grenormalstafflinesformat% OBSOLETE
-      \else%  OBSOLETE
-        \gre@obsolete{\protect\grenormalstafflinesformat}{\protect\grechangestyle{normalstafflines}}%  OBSOLETE
-      \fi%  OBSOLETE
       \vskip\gre@dimen@currentabovelinestextheight\relax%
       \vskip\gre@dimen@additionaltopspace\relax%
       \ifgre@showlines %
@@ -914,10 +825,6 @@
   \setbox\gre@box@lines=\hbox to 0pt{%
     \vbox{%
       \gre@style@normalstafflines%
-      \ifx\gre@empty@normalstafflinesformat\grenormalstafflinesformat% OBSOLETE
-      \else%  OBSOLETE
-        \gre@obsolete{\protect\grenormalstafflinesformat}{\protect\grechangestyle{normalstafflines}}%  OBSOLETE
-      \fi%  OBSOLETE
       \vskip\gre@space@skip@spaceabovelines\relax%
       \vskip\gre@dimen@currentabovelinestextheight\relax%
       \ifgre@showlines %
@@ -1013,16 +920,14 @@
 \gre@translationcenteringfalse
 
 \def\gresettranslationcentering#1{%
-  \IfStrEq{#1}{left}%
-    {\gre@translationcenteringfalse}%
-    {\IfStrEq{#1}{center}%
+  \IfStrEqCase{#1}{%
+    {left}%
+      {\gre@translationcenteringfalse}%
+    {center}%
       {\gre@translationcenteringtrue}%
-      {\gre@error{Unrecognized option for \protect\gresettranslationcentering}}%
-    }%
-}%
-
-\def\setgretranslationcenteringscheme#1{%OBSOLETE
-  \gre@obsolete{\protect\setgretranslationcenteringscheme}{\protect\gresettranslationcentering}%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresettranslationcentering\MessageBreak Possible options are: 'left' and 'center'}%
+    ]%
 }%
 
 
@@ -1030,16 +935,14 @@
 \gre@breakintranslationfalse%
 
 \def\gresetbreakintranslation#1{%
-  \IfStrEq{#1}{allow}%
-    {\gre@breakintranslationtrue}%
-    {\IfStrEq{#1}{prohibit}%
+  \IfStrEqCase{#1}{%
+    {allow}%
+      {\gre@breakintranslationtrue}%
+    {prohibit}%
       {\gre@breakintranslationfalse}%
-      {\gre@error{Unrecognized option in \protect\gresetbreakintranslation}}%
-    }%
-}%
-
-\def\gresetnlbintranslation#1{%OBSOLETE
-  \gre@obsolete{\protect\gresetnlbintranslation}{\protect\gresetbreakintranslation}%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" in \protect\gresetbreakintranslation\MessageBreak Possible options are: 'allow' and 'prohibit'}%
+    ]%
 }%
 
 \def\GreWriteTranslation#1{%
@@ -1049,18 +952,10 @@
     \gre@mark@translation %
     \kern\gre@dimen@temp@five %
     \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}}%
-    \ifx\gre@empty@translationformat\gretranslationformat% OBSOLETE
-    \else%  OBSOLETE
-      \gre@obsolete{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  OBSOLETE
-    \fi%  OBSOLETE
     \kern-\gre@dimen@temp@five %
   \else %
     \gre@mark@translation %
     \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}}%
-    \ifx\gre@empty@translationformat\gretranslationformat% OBSOLETE
-    \else%  OBSOLETE
-      \gre@obsolete{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  OBSOLETE
-    \fi%  OBSOLETE
   \fi %
 }%
 
@@ -1071,10 +966,6 @@
   \gre@attr@center=1\relax %
   \gre@mark@translation %
   \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\kern 0pt\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}\kern 0pt}%
-  \ifx\gre@empty@translationformat\gretranslationformat% OBSOLETE
-  \else%  OBSOLETE
-    \gre@obsolete{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  OBSOLETE
-  \fi%  OBSOLETE
   \unsetluatexattribute{\gre@attr@center}%
   \relax %
 }%
@@ -1106,23 +997,27 @@
 \gre@justifylastlinefalse%
 
 \def\gresetlastline#1{%
-  \IfStrEq{#1}{justified}%
-    {\gre@justifylastlinetrue}%
-    {\IfStrEq{#1}{ragged}%
+  \IfStrEqCase{#1}{%
+    {justified}%
+      {\gre@justifylastlinetrue}%
+    {ragged}%
       {\gre@justifylastlinefalse}%
-      {\gre@error{Unrecognized option for \protect\gresetlastline}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetlastline\MessageBreak Possible options are: 'justified' and 'ragged'}%
+    ]%
 }%
 
 % make this a count so that it can be read more easily in Lua
 \newcount\gre@variableheightexpansion\gre@variableheightexpansion=1\relax %
 \def\gresetlineheightexpansion#1{%
-  \IfStrEq{#1}{uniform}%
-    {\gre@variableheightexpansion=0\relax }%
-    {\IfStrEq{#1}{variable}%
+  \IfStrEqCase{#1}{%
+    {uniform}%
+      {\gre@variableheightexpansion=0\relax }%
+    {variable}%
       {\gre@variableheightexpansion=1\relax }%
-      {\gre@error{Unrecognized option for \protect\gresetlineheightexpansion}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetlineheightexpansion\MessageBreak Possible options are: 'uniform' and 'variable'}%
+    ]%
 }%
 
 % gre@attr@dash (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
@@ -1205,8 +1100,7 @@
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \xdef\gre@gabcname{#6}%
   \gre@setstafflines{#7}%
-  \global\let\gre@save@englishcentering\gre@lyriccentering\relax % OBSOLETE
-  \global\let\gre@opening@initialstyle\gre@initiallines\relax % DEPRECATED by 4.1
+  \global\let\gre@opening@initialstyle\gre@initiallines\relax % DEPRECATED for removal in 5.0
   \ifgre@justifylastline%
     \xdef\gre@save@parfillskip{\the\parfillskip}%
     \parfillskip=0pt plus 0pt minus 0pt\relax%
@@ -1282,7 +1176,6 @@
   \ifgre@justifylastline%
     \parfillskip=\gre@save@parfillskip\relax%
   \fi %
-  \global\let\gre@lyriccentering\gre@save@englishcentering\relax % OBSOLETE
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \relax%
 }%
@@ -1350,12 +1243,14 @@
 \gre@bolshiftsenabledtrue
 
 \def\gresetbolshifts#1{%
-  \IfStrEq{#1}{enable}%
-    {\gre@bolshiftsenabledtrue}%
-    {\IfStrEq{#1}{disable}%
+  \IfStrEqCase{#1}{%
+    {enable}%
+      {\gre@bolshiftsenabledtrue}%
+    {disable}%
       {\gre@bolshiftsenabledfalse}%
-      {\gre@error{Unrecognized option in \protect\gresetbolshifts}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" in \protect\gresetbolshifts\MessageBreak Possible options are: 'enable' and 'disable'}%
+    ]%
 }%
 
 % a flag to disable (or reenable) the shift for last syllables of lines
@@ -1365,21 +1260,16 @@
 \gre@eolshiftsenabledtrue
 
 \def\greseteolshifts#1{%
-  \IfStrEq{#1}{enable}%
-    {\gre@eolshiftsenabledtrue}%
-    {\IfStrEq{#1}{disable}%
+  \IfStrEqCase{#1}{%
+    {enable}%
+      {\gre@eolshiftsenabledtrue}%
+    {disable}%
       {\gre@eolshiftsenabledfalse}%
-      {\gre@error{Unrecognized option in \protect\greseteolshifts}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" in \protect\greseteolshifts\MessageBreak Possible options are: 'enable' and 'diable'}%
+    ]%
 }%
 
-\def\gredisableeolshifts{%OBSOLETE
-  \gre@obsolete{\protect\gredisableeolshifts}{\protect\greseteolshifts{disable}}%
-}%
-
-\def\greenableeolshifts{%OBSOLETE
-  \gre@obsolete{\protect\greenableeolshifts}{\protect\greseteolshifts{enable}}%
-}%
 
 % Flag indicating if we block the custos. We just block custos at the end of a score, to prevent a bug.
 \newif\ifgre@blockeolcustos%
@@ -1391,41 +1281,42 @@
   \gre@blockeolcustosfalse%
 }%
 \def\greseteolcustos#1{%
-  \IfStrEq{#1}{manual}%
-    {\global\let\gre@reseteolcustos\gre@usemanualeolcustos\relax}%
-    {\IfStrEq{#1}{auto}%
+  \IfStrEqCase{#1}{%
+    {manual}%
+      {\global\let\gre@reseteolcustos\gre@usemanualeolcustos\relax}%
+    {auto}%
       {\global\let\gre@reseteolcustos\gre@useautoeolcustos\relax}%
-      {\gre@error{Unrecognized option for \protect\greseteolcustos}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\greseteolcustos\MessageBreak Possible options are: 'manual' and 'auto'}%
+    ]%
 }%
 \greseteolcustos{auto}%
 
 \newif\ifgre@blockeolcustosbeforeeuouae%
 \def\greseteolcustosbeforeeuouae#1{%
-  \IfStrEq{#1}{suppressed}%
-    {\gre@blockeolcustosbeforeeuouaetrue\relax}%
-    {\IfStrEq{#1}{auto}%
+  \IfStrEqCase{#1}{%
+    {suppressed}%
+      {\gre@blockeolcustosbeforeeuouaetrue\relax}%
+    {auto}%
       {\gre@blockeolcustosbeforeeuouaefalse\relax}%
-      {\gre@error{Unrecognized option for \protect\greseteolcustosbeforeeuouae}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\greseteolcustosbeforeeuouae\MessageBreak Possible options are: 'suppressed' and 'auto'}%
+    ]%
 }%
 \greseteolcustosbeforeeuouae{suppressed}%
 
 \newif\ifgre@raggedbreakbeforeeuouae%
 \def\gresetbreakbeforeeuouae#1{%
-  \IfStrEq{#1}{ragged}%
-    {\gre@raggedbreakbeforeeuouaetrue\relax}%
-    {\IfStrEq{#1}{justified}%
+  \IfStrEqCase{#1}{%
+    {ragged}%
+      {\gre@raggedbreakbeforeeuouaetrue\relax}%
+    {justified}%
       {\gre@raggedbreakbeforeeuouaefalse\relax}%
-      {\gre@error{Unrecognized option for \protect\greseteolcustosbeforeeuouae}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\greseteolcustosbeforeeuouae\MessageBreak Possible options are: 'ragged' and 'justified'}%
+    ]%
 }%
 \gresetbreakbeforeeuouae{justified}%
-
-% macro to suppress the custos
-\def\greblockcustos{%OBSOLETE
-  \gre@obsolete{\protect\greblockcustos}{\protect\greseteolcustos{manual}}%
-}%
 
 \def\GreAdHocSpaceEndOfElement#1#2{%
   \gre@skip@temp@four = \gre@space@skip@interelementspace\relax %
@@ -1632,12 +1523,14 @@
 \gre@euouae@implies@nlbatrue
 
 \def\gresetbreakineuouae#1{%
-  \IfStrEq{#1}{allow}%
-    {\gre@euouae@implies@nlbafalse}%
-    {\IfStrEq{#1}{prohibit}%
+  \IfStrEqCase{#1}{%
+    {allow}%
+      {\gre@euouae@implies@nlbafalse}%
+    {prohibit}%
       {\gre@euouae@implies@nlbatrue}%
-      {\gre@error{Unrecognized option in \protect\gresetbreakineuouae}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" in \protect\gresetbreakineuouae\MessageBreak Possible options are: 'allow' and 'prohibit'}%
+    ]%
 }%
 
 
@@ -1650,9 +1543,6 @@
   \fi %
   \ifgre@raggedbreakbeforeeuouae %
     \directlua{gregoriotex.save_pos(#1,2)}%
-    \ifcase\directlua{gregoriotex.is_ypos_different(#1)}\relax%
-      \gre@newlinecommon{1}{1}%
-    \fi %
   \fi %
   \gre@in@euouaetrue %
   % as soon as the EUOUAE starts, we stop blocking the EOL custos that might
@@ -1726,38 +1616,6 @@
   \relax%
 }%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% The following style functions are defined for backwards compatibility.  They will eventually be removed.
-\def\greinitialformat#1{% OBSOLETE
-  \relax %
-}
-\let\gre@empty@initialformat\greinitialformat
-
-\def\grebiginitialformat#1{% OBSOLETE
-  \relax %
-}
-\let\gre@empty@biginitialformat\grebiginitialformat
-
-\def\gretranslationformat#1{% OBSOLETE
-  \relax %
-}%
-\let\gre@empty@translationformat\gretranslationformat
-
-\def\grenormalstafflinesformat{% OBSOLETE
-  \relax %
-}%
-\let\gre@empty@normalstafflinesformat\grenormalstafflinesformat
-
-\def\greadditionalstafflinesformat{% OBSOLETE
-  \relax %
-}%
-\let\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\def\GreSetStaffLinesFormat#1{%OBSOLETE
-  \gre@obsolete{\protect\GreSetStaffLinesFormat}{\protect\grechangestyle{normalstafflines}}%
-}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Master function for changing element formats
@@ -1786,10 +1644,6 @@
   \relax %
 }%
 
-\def\setgrefactor#1{%OBSOLETE
-  \gre@obsolete{\protect\setgrefactor}{\protect\grechangestaffsize}%
-}%
-
 %%%%%%%%%%%%%%%%%%%
 %% headers
 %%%%%%%%%%%%%%%%%%%
@@ -1813,32 +1667,15 @@
 
 % User macro to change compilation behavior
 \def\gresetcompilegabc#1{%
-  \IfStrEq{#1}{force}{\gdef\gre@compilegabc{2}}{%
-    \IfStrEq{#1}{auto}{\gdef\gre@compilegabc{1}}{%
-      \IfStrEq{#1}{never}{\gdef\gre@compilegabc{0}}{%
-        \gre@error{Unrecognized argument for \protect\gresetcompilegabc.}%
-      }%
-    }%
-  }%
+  \IfStrEqCase{#1}{%
+    {force}{\gdef\gre@compilegabc{2}}%
+    {auto}{\gdef\gre@compilegabc{1}}%
+    {never}{\gdef\gre@compilegabc{0}}%
+    }[% all other cases
+      \gre@error{Unrecognized argument for \protect\gresetcompilegabc.}%
+    ]%
 }%
 
-
-% User macro to force gregriotex to recompile gabc files. Useful for when there
-% are changes to gregoriotex but the GREGORIOTEX API VERSION is not changed.
-\def\forcecompilegabc{%OBSOLETE
-  \gre@obsolete{\protect\forcecompilegabc}{\protect\gresetcompilegabc{force}}%
-}%
-
-% User macro to let gregoriotex auto recompile gabc files as necessary.
-% Intended to be used in the main tex file to revert the previous macro.
-\def\autocompilegabc{%OBSOLETE
-  \gre@obsolete{\protect\autocompilegabc}{\protect\gresetcompilegabc{auto}}%
-}%
-
-% User macro to force score inclusion without compilation.
-\def\nevercompilegabc{%OBSOLETE
-  \gre@obsolete{\protect\nevercompilegabc}{\protect\gresetcompilegabc{never}}%
-}
 
 
 % Internal marco which includes a score when \gregorioscore is called without the optional argument.  Behavior is determined by the value of \gre@compilegabc flag.
@@ -1885,7 +1722,7 @@
         \gre@debugmsg{compile}{Override auto compiling #2}%
         \directlua{gregoriotex.include_score([[#2]], nil)}%
       \else%
-        \gre@error{Unrecognized option [#1] for \protect\includescore}%
+        \gre@error{Unrecognized option "#1" for \protect\includescore\MessageBreak Possible options are: 'f', 'a', and 'n'}%
       \fi%
     \fi%
   \fi%
@@ -1893,10 +1730,6 @@
 }%
 
 % The main macro used by the user to input scores into the document.
-
-\def\includescore{%OBSOLETE
-  \gre@obsolete{\protect\includescore}{\protect\gregorioscore}%
-}%
 
 \def\gregorioscore{\@ifnextchar[{\gre@gregorioscore@option}%
     {\gre@gregorioscore}%
@@ -1919,7 +1752,7 @@
 
 % Macros for compiling short snippets of GABC directly expressed in TeX
 
-\long\def\gre@gabcsnippet@option[#1]#2{%%% DEPRECATED by 4.1
+\long\def\gre@gabcsnippet@option[#1]#2{%%% DEPRECATED for removal in 5.0
   \gre@deprecated{\protect\gabcsnippet  with initial-style argument}{\protect\gresetinitiallines}%
   \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#2}}", "initial-style: #1;")}%
 }%
@@ -1928,7 +1761,7 @@
   \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#1}}")}%
 }%
 
-%%% \gre@gabcsnipper@option is DEPRECATED by 4.1
+%%% \gre@gabcsnipper@option is DEPRECATED for removal in 5.0
 \def\gabcsnippet{\@ifnextchar[{\gre@gabcsnippet@option}{\gre@gabcsnippet}}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1954,31 +1787,27 @@
 
 % macro to change the definition of the hyphen:
 \def\greseteolhyphen#1{%
-  \IfStrEq{#1}{normal}%
-    {\global\let\GreHyph\gre@char@normalhyphen}%
-    {\IfStrEq{#1}{zero}%
+  \IfStrEqCase{#1}{%
+    {normal}%
+      {\global\let\GreHyph\gre@char@normalhyphen}%
+    {zero}%
       {\global\let\GreHyph\gre@char@zerohyph}%
-      {\gre@error{Unrecognized option for \protect\greseteolhyphen}}%
-    }%
-}%
-
-\def\GreUseNormalHyphen{%OBSOLETE
-  \gre@obsolete{\protect\GreUseNormalHyphen}{\protect\greseteolhyphen{normal}}%
-}%
-
-\def\GreUseZeroHyphen{%OBSOLETE
-  \gre@obsolete{\protect\GreUseZeroHyphen}{\protect\greseteolhyphen{zero}}%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\greseteolhyphen\MessageBreak Possible options are: 'normal' and 'zero'}%
+    ]%
 }%
 
 % macro to force hyphenation of all syllables.
 \newif\ifgre@forcehyphen\gre@forcehyphenfalse%
 \def\gresethyphen#1{%
-  \IfStrEq{#1}{force}%
-    {\gre@forcehyphentrue}%
-    {\IfStrEq{#1}{auto}%
+  \IfStrEqCase{#1}{%
+    {force}%
+      {\gre@forcehyphentrue}%
+    {auto}%
       {\gre@forcehyphenfalse}%
-      {\gre@error{Unrecognized option in \protect\gresethyphen}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" in \protect\gresethyphen\MessageBreak Possible options are: 'force' and 'auto'}%
+    ]%
 }%
 
 % macro called before the headers of a given inclusion
