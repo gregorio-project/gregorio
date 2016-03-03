@@ -42,24 +42,26 @@
 \newcount\gre@generate@pointandclick\gre@generate@pointandclick=0\relax %
 
 \def\gresetpointandclick#1{%
-  \IfStrEq{#1}{on}{%
-    \ifx\pdfoutput\undefined %
-      \gre@warning{Unable to enable point-and-click because \protect\pdfoutput \MessageBreak is not defined}%
-      \gre@generate@pointandclick=0\relax %
-    \else %
-      \ifnum\pdfoutput=1\relax %
-        \gre@generate@pointandclick=1\relax %
-      \else %
-        \gre@warning{Unable to enable point-and-click when not\MessageBreak generating a PDF}%
-        \gre@generate@pointandclick=0\relax %
-      \fi %
-    \fi %
-  }{%
-    \IfStrEq{#1}{off}{%
-      \gre@generate@pointandclick=0\relax %
-    }{%
+  \IfStrEqCase{#1}{%
+    {on}
+      {%
+        \ifx\pdfoutput\undefined %
+          \gre@warning{Unable to enable point-and-click because \protect\pdfoutput \MessageBreak is not defined}%
+          \gre@generate@pointandclick=0\relax %
+        \else %
+          \ifnum\pdfoutput=1\relax %
+            \gre@generate@pointandclick=1\relax %
+          \else %
+            \gre@warning{Unable to enable point-and-click when not\MessageBreak generating a PDF}%
+            \gre@generate@pointandclick=0\relax %
+          \fi %
+        \fi %
+      }%
+    {off}%
+      {\gre@generate@pointandclick=0\relax}
+    }[% all other cases
       \gre@error{Unrecognized option for \protect\gresetpointandclick}%
-    }%
+    ]%
   }%
 }%
 
@@ -500,15 +502,16 @@
 %%%%%%%%%%%%%%%
 
 \def\gresetlyriccentering#1{%
-  \IfStrEq{#1}{vowel}%
-    {\xdef\gre@lyriccentering{1}}%
-    {\IfStrEq{#1}{syllable}%
+  \IfStrEqCase{#1}{%
+    {vowel}%
+      {\xdef\gre@lyriccentering{1}}%
+    {syllable}%
       {\xdef\gre@lyriccentering{0}}%
-      {\IfStrEq{#1}{firstletter}%
-        {\xdef\gre@lyriccentering{2}}%
-        {\gre@error{Unrecognized option for \protect\gresetlyriccentering}}%
-      }%
-    }%
+    {firstletter}%
+      {\xdef\gre@lyriccentering{2}}%
+    }[% all other cases
+      \gre@error{Unrecognized option for \protect\gresetlyriccentering}%
+    ]%
 }%
 
 \xdef\gre@lyriccentering{1}%
@@ -534,15 +537,16 @@
 
 
 \def\gresetclivisalignment#1{%
-  \IfStrEq{#1}{always}%
-    {\global\gre@clivisalignment=0\relax}%
-    {\IfStrEq{#1}{never}%
+  \IfStrEqCase{#1}{
+    {always}%
+      {\global\gre@clivisalignment=0\relax}%
+    {never}%
       {\global\gre@clivisalignment=1\relax}%
-      {\IfStrEq{#1}{special}%
-        {\global\gre@clivisalignment=2\relax}%
-        {\gre@error{Unrecognized option for \protect\gresetclivisalignment}}%
-      }%
-    }%
+    {special}%
+      {\global\gre@clivisalignment=2\relax}%
+    }[% all other cases
+      \gre@error{Unrecognized option for \protect\gresetclivisalignment}%
+    ]%
 }%
 
 \def\clivisalignmentalways{%OBSOLETE
@@ -560,12 +564,14 @@
 \newif\ifgre@forceemptyfirstsyllablehyphen%
 \gre@forceemptyfirstsyllablehyphentrue%
 \def\gresetemptyfirstsyllablehyphen#1{%
-  \IfStrEq{#1}{auto}%
-    {\gre@forceemptyfirstsyllablehyphenfalse}%
-    {\IfStrEq{#1}{force}%
+  \IfStrEqCase{#1}{
+    {auto}%
+      {\gre@forceemptyfirstsyllablehyphenfalse}%
+    {force}%
       {\gre@forceemptyfirstsyllablehyphentrue}%
-      {\gre@error{Unrecognized option for \protect\gresetlyriccentering}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option for \protect\gresetlyriccentering}%
+    ]%
 }%
 
 \newif\ifgre@showhyphenafterthissyllable%
@@ -843,14 +849,20 @@
 }%
 
 \def\gresetbarspacing#1{%
-  \IfStrEq{#1}{new}%
-    {\gre@newbarspacingtrue%
-    \let\GreNoNoteSyllable\GreBarSyllable}%
-    {\IfStrEq{#1}{old}%
-      {\gre@newbarspacingfalse%
-      \let\GreNoNoteSyllable\GreSyllable}%
-      {\gre@error{Unrecognized option for \protect\gresetbarspacing}}%
-    }%
+  \IfStrEqCase{#1}{%
+    {new}%
+      {%
+        \gre@newbarspacingtrue%
+        \let\GreNoNoteSyllable\GreBarSyllable%
+      }%
+    {old}%
+      {%
+        \gre@newbarspacingfalse%
+        \let\GreNoNoteSyllable\GreSyllable%
+      }%
+    }[% all other cases
+      \gre@error{Unrecognized option for \protect\gresetbarspacing}%
+    ]%
 }%
 
 % macro to save new lines in bar syllables. With the new bar spacing algorithm, we

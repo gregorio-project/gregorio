@@ -459,12 +459,14 @@
 \newif\ifgre@useledgerlineheuristic%
 \gre@useledgerlineheuristictrue%
 \def\gresetledgerlineheuristic#1{%
-  \IfStrEq{#1}{enable}%
-    {\gre@useledgerlineheuristictrue}%
-    {\IfStrEq{#1}{disable}%
+  \IfStrEqCase{#1}{%
+    {enable}%
+      {\gre@useledgerlineheuristictrue}%
+    {disable}%
       {\gre@useledgerlineheuristicfalse}%
-      {\gre@error{Unrecognized option in \protect\gresetledgerlineheuristic}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option in \protect\gresetledgerlineheuristic}%
+    ]%
 }%
 % for backwards compatibility, we set these to true by default, and the
 % system will set them appropriately if the heuristics determine a ledger
@@ -1158,18 +1160,18 @@
 \def\grecreatedim#1#2#3{%
   \gre@dimension{#1}{#2}%
   \csname newif\expandafter\endcsname\csname ifgre@scale@#1\endcsname%
-  \IfStrEq{#3}{1}%
-    {\gre@obsolete{A numerical (1) last argument for \protect\grecreatedim}{'scalable'}}%
-    {\IfStrEq{#3}{0}%
+  \IfStrEqCase{#3}{
+    {1}%
+      {\gre@obsolete{A numerical (1) last argument for \protect\grecreatedim}{'scalable'}}%
+    {0}%
       {\gre@obsolete{A numerical (0) last argument for \protect\grecreatedim}{'fixed'}}%
-      {\IfStrEq{#3}{scalable}%
-        {\grescaledim{#1}{true}}%
-        {\IfStrEq{#3}{fixed}%
-          {\grescaledim{#1}{false}}%
-          {\gre@error{Unrecognized option for \protect\grecreatedim}}%
-        }%
-      }%
-    }%
+    {scalable}%
+      {\grescaledim{#1}{true}}%
+    {fixed}%
+      {\grescaledim{#1}{false}}%
+    }[% all other cases
+      \gre@error{Unrecognized option for \protect\grecreatedim}%
+    ]%
 }%
 
 \def\gresetdim{%OBSOLETE
@@ -1218,18 +1220,17 @@
   \ifcsname gre@space@\gre@prefix @#1\endcsname%
     \gre@debugmsg{spacing}{It does exist.}%
     \gre@dimension{#1}{#2}%
-    \IfStrEq{#3}{1}%
-      {\gre@obsolete{A numerical (1) last argument for \protect\grechangedim}{'scalable'}}%
-      {\IfStrEq{#3}{0}%
+    \IfStrEqCase{#3}{%
+      {1}%
+        {\gre@obsolete{A numerical (1) last argument for \protect\grechangedim}{'scalable'}}%
+      {0}%
         {\gre@obsolete{A numerical (0) last argument for \protect\grechangedim}{'fixed'}}%
-        {\IfStrEq{#3}{scalable}%
-          {\grescaledim{#1}{true}}%
-          {\IfStrEq{#3}{fixed}%
-            {\grescaledim{#1}{false}}%
-            {\gre@error{Unrecognized option for \protect\grechangedim}}%
-          }%
-        }%
-      }%
+      {scalable}%
+        {\grescaledim{#1}{true}}%
+      {fixed}%
+        {\grescaledim{#1}{false}}%
+      % all other cases
+      }[\gre@error{Unrecognized option for \protect\grechangedim}]%
   \else%
     \gre@error{#1 is not a recognized distance.}%
   \fi%
@@ -1267,18 +1268,18 @@
 
 %a macro to use if all you want to do is turn on or off the scaling for a particular distance
 \def\grescaledim#1#2{%
-  \IfStrEq{#2}{true}%
-    {\csname gre@scale@#1true\endcsname}%
-    {\IfStrEq{#2}{yes}%
+  \IfStrEqCase{#2}{%
+    {true}%
+      {\csname gre@scale@#1true\endcsname}%
+    {yes}%
       {\grescaledim{true}}%
-      {\IfStrEq{#2}{on}%
-        {\grescaledim{true}}%
-        {\IfStrEq{#2}{scalable}%
-          {\grescaledim{true}}%
-          {\csname gre@scale@#1false\endcsname}%
-        }%
-      }%
-    }%
+    {on}%
+      {\grescaledim{true}}%
+    {scalable}%
+      {\grescaledim{true}}%
+    }[% all other cases
+      \csname gre@scale@#1false\endcsname%
+    ]%
 }
 
 \def\grenoscaledim#1{%OBSOLETE
