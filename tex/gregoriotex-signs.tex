@@ -44,32 +44,40 @@
 \gre@disablemorafalse
 
 \def\greprintsigns#1#2{%
-  \IfStrEq{#2}{enable}%
-    {%
-      \IfStrEq{#1}{vepisema}{\global\gre@disablevepisemafalse}{%
-        \IfStrEq{#1}{hepisema}{\global\gre@disablehepisemafalse}{%
-          \IfStrEq{#1}{mora}{\global\gre@disablemorafalse}{%
-            \IfStrEq{#1}{all}{\global\gre@disablemorafalse\global\gre@disablevepisemafalse\global\gre@disablehepisemafalse}{%
-              {\gre@error{Unrecognized first argument for \protect\greprintsigns}}%
-            }%
-          }%
-        }%
-      }%
-    }%
-    {\IfStrEq{#2}{disable}%
+  \IfStrEqCase{#2}{%
+    {enable}%
       {%
-        \IfStrEq{#1}{vepisema}{\global\gre@disablevepisematrue}{%
-          \IfStrEq{#1}{hepisema}{\global\gre@disablehepisematrue}{%
-            \IfStrEq{#1}{mora}{\global\gre@disablemoratrue}{%
-              \IfStrEq{#1}{all}{\global\gre@disablemoratrue\global\gre@disablevepisematrue\global\gre@disablehepisematrue}{%
-                {\gre@error{Unrecognized first argument for \protect\greprintsigns}}%
-              }%
-            }%
-          }%
-        }%
+        \IfStrEqCase{#1}{%
+          {vepisema}%
+            {\global\gre@disablevepisemafalse}%
+          {hepisema}%
+            {\global\gre@disablehepisemafalse}%
+          {mora}%
+            {\global\gre@disablemorafalse}%
+          {all}%
+            {\global\gre@disablemorafalse\global\gre@disablevepisemafalse\global\gre@disablehepisemafalse}%
+          }[% all other cases
+            \gre@error{Unrecognized first argument for \protect\greprintsigns}%
+          ]%
       }%
-      {\gre@error{Unrecognized second argument for \protect\greprintsigns}}%
-    }%
+    {disable}%
+      {%
+        \IfStrEqCase{#1}{%
+          {vepisema}%
+            {\global\gre@disablevepisematrue}%
+          {hepisema}%
+            {\global\gre@disablehepisematrue}%
+          {mora}%
+            {\global\gre@disablemoratrue}%
+          {all}%
+            {\global\gre@disablemoratrue\global\gre@disablevepisematrue\global\gre@disablehepisematrue}%
+          }[% all other cases
+            \gre@error{Unrecognized first argument for \protect\greprintsigns}%
+          ]%
+      }%
+    }[% all other cases	
+      \gre@error{Unrecognized second argument for \protect\greprintsigns}%
+    ]%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -124,12 +132,14 @@
 \gre@showcleftrue
 
 \def\gresetclef#1{%
-  \IfStrEq{#1}{visible}%
-    {\gre@showcleftrue}%
-    {\IfStrEq{#1}{invisible}%
+  \IfStrEqCase{#1}{%
+    {visible}%
+      {\gre@showcleftrue}%
+    {invisible}%
       {\gre@showcleffalse}%
-      {\gre@error{Unrecognized option for \protect\gresetclef}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetclef\MessageBreak Possible options are: 'visible' and 'invisible'}%
+    ]%
 }%
 
 
@@ -570,13 +580,13 @@
     {underbrace}{\gre@@setbracerendering{#1}{#2}}%
     {curlybrace}{\gre@@setbracerendering{#1}{#2}}%
     {barbrace}{\gre@@setbracerendering{#1}{#2}}%
-  }[\gre@error{Unrecognized option for \protect\gresetbracerendering}]%
+  }[\gre@error{Unrecognized option "#1" for \protect\gresetbracerendering\MessageBreak Possible options are: 'brace', 'underbrace', 'curlybrace', and 'barbrace'}]%
 }%
 \def\gre@@setbracerendering#1#2{%
   \IfStrEqCase{#2}{%
     {font}{\csname gre@metapost@#1false\endcsname}%
     {metapost}{\csname gre@metapost@#1true\endcsname}%
-  }[\gre@error{Unrecognized option for \protect\gresetbracerendering}]%
+  }[\gre@error{Unrecognized option "#2" for \protect\gresetbracerendering\MessageBreak Possible options are: 'font' and 'metapost'}]%
 }%
 
 \gdef\gre@fontchar@curlybrace{\gre@font@music\GreCPCurlyBrace}%
@@ -1455,12 +1465,14 @@
 }%
 
 \def\gresethepisema#1{%
-  \IfStrEq{#1}{bridge}%
-    {\gre@hepisemabridgetrue}%
-    {\IfStrEq{#1}{break}%
+  \IfStrEqCase{#1}{%
+    {bridge}%
+      {\gre@hepisemabridgetrue}%
+    {break}%
       {\gre@hepisemabridgefalse}%
-      {\gre@error{Unrecognized option for \protect\gresethepisema}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option, #1, for \protect\gresethepisema\MessageBreak Possible options are: 'bridge' and 'break'}%
+    ]%
 }%
 
 % same but for a "bridge episema" after the last note of a glyph (element, syllable) if the next episema is at the same height
@@ -1630,24 +1642,22 @@
 \gre@count@shiftaftermora=5
 
 \def\gresetshiftaftermora#1{%
-  \IfStrEq{#1}{always}%
-    {\gre@count@shiftaftermora=5}%
-    {\IfStrEq{#1}{notesonly}%
+  \IfStrEqCase{#1}{%
+    {always}%
+      {\gre@count@shiftaftermora=5}%
+    {notesonly}%
       {\gre@count@shiftaftermora=4}%
-      {\IfStrEq{#1}{barsonly}%
-        {\gre@count@shiftaftermora=3}%
-        {\IfStrEq{#1}{barsnotextonly}%
-          {\gre@count@shiftaftermora=2}%
-          {\IfStrEq{#1}{barsinsideonly}%
-            {\gre@count@shiftaftermora=1}%
-            {\IfStrEq{#1}{never}%
-              {\gre@count@shiftaftermora=0}%
-              {\gre@error{Unrecognized option "#1" in gresetshiftaftermora , use 'always', 'barsonly', 'notesonly', 'barsnotextonly', 'barsinsideonly' or 'never'}}%
-            }%
-          }%
-        }%
-      }%
-    }%
+    {barsonly}%
+      {\gre@count@shiftaftermora=3}%
+    {barsnotextonly}%
+      {\gre@count@shiftaftermora=2}%
+    {barsinsideonly}%
+      {\gre@count@shiftaftermora=1}%
+    {never}%
+      {\gre@count@shiftaftermora=0}%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" in gresetshiftaftermora\MessageBreak Possible options are: 'always', 'barsonly', 'notesonly', 'barsnotextonly', 'barsinsideonly' and 'never'}%
+    ]%
 }%
 
 % width of a punctum mora, reinitalized at each score
@@ -2029,12 +2039,14 @@
 
 % macro for manipulating above flag
 \def\gresetlinesbehindpunctumcavum#1{%
-  \IfStrEq{#1}{visible}%
-    {\gre@hidepclinesfalse}%
-    {\IfStrEq{#1}{invisible}%
+  \IfStrEqCase{#1}{%
+    {visible}%
+      {\gre@hidepclinesfalse}%
+    {invisible}%
       {\gre@hidepclinestrue}%
-      {\gre@error{Unrecognized option for \protect\gresetlinesbehindpunctumcavum}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetlinesbehindpunctumcavum\MessageBreak Possible options are: 'visible' and 'invisible'}%
+    ]%
 }%
 
 \def\GreHidePCLines{%OBSOLETE
@@ -2052,12 +2064,14 @@
 
 % macro for manipulating above flag
 \def\gresetlinesbehindalteration#1{%
-  \IfStrEq{#1}{visible}%
-    {\gre@hidealtlinesfalse}%
-    {\IfStrEq{#1}{invisible}%
+  \IfStrEqCase{#1}{%
+    {visible}%
+      {\gre@hidealtlinesfalse}%
+    {invisible}%
       {\gre@hidealtlinestrue}%
-      {\gre@error{Unrecognized option for \protect\gresetlinesbehindalteration}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetlinesbehindalteration\MessageBreak Possible options are: 'visible' and 'invisible'}%
+    ]%
 }%
 
 \def\GreHideAltLines{%OBSOLETE
@@ -2177,22 +2191,24 @@
 \def\gre@fontchar@lineapunctumcavumhole{\gre@font@music\GreCPLineaPunctumCavumHole}%
 
 \def\gresetpunctumcavum#1{%
-  \IfStrEq{#1}{alternate}%
-    {%
-      \grechangeglyph{PunctumCavum}{greciliae}{.caeciliae}%
-      \grechangeglyph{LineaPunctumCavum}{greciliae}{.caeciliae}%
-      \grechangeglyph{PunctumCavumHole}{greciliae}{.caeciliae}%
-      \grechangeglyph{LineaPunctumCavumHole}{greciliae}{.caeciliae}%
-    }%
-    {\IfStrEq{#1}{normal}%
+  \IfStrEqCase{#1}{%
+    {alternate}%
+      {%
+        \grechangeglyph{PunctumCavum}{greciliae}{.caeciliae}%
+        \grechangeglyph{LineaPunctumCavum}{greciliae}{.caeciliae}%
+        \grechangeglyph{PunctumCavumHole}{greciliae}{.caeciliae}%
+        \grechangeglyph{LineaPunctumCavumHole}{greciliae}{.caeciliae}%
+      }%
+    {normal}%
       {%
         \greresetglyph{PunctumCavum}%
         \greresetglyph{LineaPunctumCavum}%
         \greresetglyph{PunctumCavumHole}%
         \greresetglyph{LineaPunctumCavumHole}%
       }%
-      {\gre@error{Unrecognized option for \protect\gresetpunctumcavum}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetpunctumcavum\MessageBreak Possible options are: 'alternate' and 'normal'}%
+    ]%
 }%
 
 
