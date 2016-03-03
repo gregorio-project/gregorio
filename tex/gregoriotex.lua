@@ -39,6 +39,8 @@ local err, warn, info, log = luatexbase.provides_module({
 
 gregoriotex.module = { err = err, warn = warn, info = info, log = log }
 
+local format = string.format
+
 local hlist = node.id('hlist')
 local vlist = node.id('vlist')
 local glyph = node.id('glyph')
@@ -327,6 +329,22 @@ local function center_translation(startnode, endnode, ratio, sign, order)
   startnode.head.next.next.kern = -X
 end
 
+local debug_types_activated = {['linesglues'] = false}
+
+local function set_debug_string(debugstring)
+  for debugtype in string.gmatch(debugstring, "[^,]+") do
+    debug_types_activated[debugtype] = true
+  end
+end
+
+local glue_sign_name = {[0] = 'normal', [1] = 'stretching', [2] = 'shrinking'}
+
+local function debugmessage(type, message)
+  if (debug_types_activated[type] or debug_types_activated['all']) then
+    texio.write_nl('GregorioTeX debug: ('..type..'): '..message)
+  end
+end
+
 -- in each function we check if we really are inside a score,
 -- which we can see with the dash_attr being set or not
 local function process (h, groupcode, glyphes)
@@ -341,6 +359,7 @@ local function process (h, groupcode, glyphes)
   local line_bottom             = nil
   local line_has_translation    = false
   local line_has_abovelinestext = false
+  local linenum                 = 0
   -- we explore the lines
   for line in traverse(h) do
     if line.id == glue then
@@ -356,6 +375,8 @@ local function process (h, groupcode, glyphes)
         --log("eating line")
         h, line = remove(h, line)
       else
+        linenum = linenum + 1
+        debugmessage('linesglues', format('line %d: %s factor %d%%', linenum, glue_sign_name[line.glue_sign], line.glue_set*100))
         centerstartnode = nil
         line_id = nil
         line_top = nil
@@ -1024,6 +1045,7 @@ gregoriotex.save_pos             = save_pos
 gregoriotex.late_save_pos        = late_save_pos
 gregoriotex.is_ypos_different    = is_ypos_different
 gregoriotex.mode_part            = mode_part
+gregoriotex.set_debug_string     = set_debug_string
 
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))
