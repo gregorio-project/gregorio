@@ -506,12 +506,14 @@
 \gre@annotationbottomlinefalse%
 
 \def\gresetannotationby#1{%
-  \IfStrEq{#1}{topline}%
-    {\gre@annotationbottomlinefalse}%
-    {\IfStrEq{#1}{bottomline}%
+  \IfStrEqCase{#1}{%
+    {topline}%
+      {\gre@annotationbottomlinefalse}%
+    {bottomline}%
       {\gre@annotationbottomlinetrue}%
-      {\gre@error{Unrecognized option for \protect\gresetannotationby}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetannotationby\MessageBreak Possible options are: 'topline' and 'bottomline'}%
+    ]%
 }%
 
 % This flag controls whether the top (0), baseline (1), or bottom (2) of the control line is aligned with the top line of the staff before applying annotationraise.
@@ -519,15 +521,16 @@
 \gre@count@annotationvalign=1%
 
 \def\gresetannotationvalign#1{%
-  \IfStrEq{#1}{top}%
-    {\gre@count@annotationvalign=0}%
-    {\IfStrEq{#1}{baseline}%
+  \IfStrEqCase{#1}{%
+    {top}%
+      {\gre@count@annotationvalign=0}%
+    {baseline}%
       {\gre@count@annotationvalign=1}%
-      {\IfStrEq{#1}{bottom}%
-        {\gre@count@annotationvalign=2}%
-        {\gre@error{Unrecognized option for \protect\gresetannotationvalign}}%
-      }%
-    }%
+    {bottom}%
+      {\gre@count@annotationvalign=2}%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetannotationvalign\MessageBreak Possible options are: 'top', 'baseline' and 'bottom'}%
+    ]%
 }%
 
 \def\gre@annotation[#1]#2{%
@@ -627,15 +630,16 @@
 \def\gre@romannumeral@majuscule#1{\uppercase\expandafter{\romannumeral#1\relax}}%
 \def\gre@romannumeral@minuscule#1{\romannumeral#1\relax}%
 \def\gresetmodenumbersystem#1{%
-  \IfStrEq{#1}{roman-majuscule}%
-    {\let\GreModeNumber\gre@romannumeral@majuscule}%
-    {\IfStrEq{#1}{roman-minuscule}%
+  \IfStrEqCase{#1}{%
+    {roman-majuscule}%
+      {\let\GreModeNumber\gre@romannumeral@majuscule}%
+    {roman-minuscule}%
       {\let\GreModeNumber\gre@romannumeral@minuscule}%
-      {\IfStrEq{#1}{arabic}%
-        {\let\GreModeNumber\relax}%
-        {\gre@error{Unrecognized option in \protect\gresetmodenumbersystem}}%
-      }%
-    }%
+    {arabic}%
+      {\let\GreModeNumber\relax}%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" in \protect\gresetmodenumbersystem\MessageBreak Possible options are: 'roman-majuscule', 'roman-minuscule', and 'arabic'}%
+    ]%
 }%
 \gresetmodenumbersystem{roman-minuscule}%
 
@@ -742,12 +746,14 @@
 \gre@showlinestrue
 
 \def\gresetlines#1{%
-  \IfStrEq{#1}{visible}%
-    {\gre@showlinestrue}%
-    {\IfStrEq{#1}{invisible}%
+  \IfStrEqCase{#1}{%
+    {visible}%
+      {\gre@showlinestrue}%
+    {invisible}%
       {\gre@showlinesfalse}%
-      {\gre@error{Unrecognized option for \protect\gresetlines}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetlines\MessageBreak Possible options are: 'visible' and 'invisible'}%
+    ]%
 }
 
 %% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
@@ -914,12 +920,14 @@
 \gre@translationcenteringfalse
 
 \def\gresettranslationcentering#1{%
-  \IfStrEq{#1}{left}%
-    {\gre@translationcenteringfalse}%
-    {\IfStrEq{#1}{center}%
+  \IfStrEqCase{#1}{%
+    {left}%
+      {\gre@translationcenteringfalse}%
+    {center}%
       {\gre@translationcenteringtrue}%
-      {\gre@error{Unrecognized option for \protect\gresettranslationcentering}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresettranslationcentering\MessageBreak Possible options are: 'left' and 'center'}%
+    ]%
 }%
 
 
@@ -927,12 +935,14 @@
 \gre@breakintranslationfalse%
 
 \def\gresetbreakintranslation#1{%
-  \IfStrEq{#1}{allow}%
-    {\gre@breakintranslationtrue}%
-    {\IfStrEq{#1}{prohibit}%
+  \IfStrEqCase{#1}{%
+    {allow}%
+      {\gre@breakintranslationtrue}%
+    {prohibit}%
       {\gre@breakintranslationfalse}%
-      {\gre@error{Unrecognized option in \protect\gresetbreakintranslation}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" in \protect\gresetbreakintranslation\MessageBreak Possible options are: 'allow' and 'prohibit'}%
+    ]%
 }%
 
 \def\GreWriteTranslation#1{%
@@ -987,23 +997,27 @@
 \gre@justifylastlinefalse%
 
 \def\gresetlastline#1{%
-  \IfStrEq{#1}{justified}%
-    {\gre@justifylastlinetrue}%
-    {\IfStrEq{#1}{ragged}%
+  \IfStrEqCase{#1}{%
+    {justified}%
+      {\gre@justifylastlinetrue}%
+    {ragged}%
       {\gre@justifylastlinefalse}%
-      {\gre@error{Unrecognized option for \protect\gresetlastline}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetlastline\MessageBreak Possible options are: 'justified' and 'ragged'}%
+    ]%
 }%
 
 % make this a count so that it can be read more easily in Lua
 \newcount\gre@variableheightexpansion\gre@variableheightexpansion=1\relax %
 \def\gresetlineheightexpansion#1{%
-  \IfStrEq{#1}{uniform}%
-    {\gre@variableheightexpansion=0\relax }%
-    {\IfStrEq{#1}{variable}%
+  \IfStrEqCase{#1}{%
+    {uniform}%
+      {\gre@variableheightexpansion=0\relax }%
+    {variable}%
       {\gre@variableheightexpansion=1\relax }%
-      {\gre@error{Unrecognized option for \protect\gresetlineheightexpansion}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetlineheightexpansion\MessageBreak Possible options are: 'uniform' and 'variable'}%
+    ]%
 }%
 
 % gre@attr@dash (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
@@ -1229,12 +1243,14 @@
 \gre@bolshiftsenabledtrue
 
 \def\gresetbolshifts#1{%
-  \IfStrEq{#1}{enable}%
-    {\gre@bolshiftsenabledtrue}%
-    {\IfStrEq{#1}{disable}%
+  \IfStrEqCase{#1}{%
+    {enable}%
+      {\gre@bolshiftsenabledtrue}%
+    {disable}%
       {\gre@bolshiftsenabledfalse}%
-      {\gre@error{Unrecognized option in \protect\gresetbolshifts}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" in \protect\gresetbolshifts\MessageBreak Possible options are: 'enable' and 'disable'}%
+    ]%
 }%
 
 % a flag to disable (or reenable) the shift for last syllables of lines
@@ -1244,12 +1260,14 @@
 \gre@eolshiftsenabledtrue
 
 \def\greseteolshifts#1{%
-  \IfStrEq{#1}{enable}%
-    {\gre@eolshiftsenabledtrue}%
-    {\IfStrEq{#1}{disable}%
+  \IfStrEqCase{#1}{%
+    {enable}%
+      {\gre@eolshiftsenabledtrue}%
+    {disable}%
       {\gre@eolshiftsenabledfalse}%
-      {\gre@error{Unrecognized option in \protect\greseteolshifts}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" in \protect\greseteolshifts\MessageBreak Possible options are: 'enable' and 'diable'}%
+    ]%
 }%
 
 
@@ -1263,34 +1281,40 @@
   \gre@blockeolcustosfalse%
 }%
 \def\greseteolcustos#1{%
-  \IfStrEq{#1}{manual}%
-    {\global\let\gre@reseteolcustos\gre@usemanualeolcustos\relax}%
-    {\IfStrEq{#1}{auto}%
+  \IfStrEqCase{#1}{%
+    {manual}%
+      {\global\let\gre@reseteolcustos\gre@usemanualeolcustos\relax}%
+    {auto}%
       {\global\let\gre@reseteolcustos\gre@useautoeolcustos\relax}%
-      {\gre@error{Unrecognized option for \protect\greseteolcustos}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\greseteolcustos\MessageBreak Possible options are: 'manual' and 'auto'}%
+    ]%
 }%
 \greseteolcustos{auto}%
 
 \newif\ifgre@blockeolcustosbeforeeuouae%
 \def\greseteolcustosbeforeeuouae#1{%
-  \IfStrEq{#1}{suppressed}%
-    {\gre@blockeolcustosbeforeeuouaetrue\relax}%
-    {\IfStrEq{#1}{auto}%
+  \IfStrEqCase{#1}{%
+    {suppressed}%
+      {\gre@blockeolcustosbeforeeuouaetrue\relax}%
+    {auto}%
       {\gre@blockeolcustosbeforeeuouaefalse\relax}%
-      {\gre@error{Unrecognized option for \protect\greseteolcustosbeforeeuouae}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\greseteolcustosbeforeeuouae\MessageBreak Possible options are: 'suppressed' and 'auto'}%
+    ]%
 }%
 \greseteolcustosbeforeeuouae{suppressed}%
 
 \newif\ifgre@raggedbreakbeforeeuouae%
 \def\gresetbreakbeforeeuouae#1{%
-  \IfStrEq{#1}{ragged}%
-    {\gre@raggedbreakbeforeeuouaetrue\relax}%
-    {\IfStrEq{#1}{justified}%
+  \IfStrEqCase{#1}{%
+    {ragged}%
+      {\gre@raggedbreakbeforeeuouaetrue\relax}%
+    {justified}%
       {\gre@raggedbreakbeforeeuouaefalse\relax}%
-      {\gre@error{Unrecognized option for \protect\greseteolcustosbeforeeuouae}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\greseteolcustosbeforeeuouae\MessageBreak Possible options are: 'ragged' and 'justified'}%
+    ]%
 }%
 \gresetbreakbeforeeuouae{justified}%
 
@@ -1499,12 +1523,14 @@
 \gre@euouae@implies@nlbatrue
 
 \def\gresetbreakineuouae#1{%
-  \IfStrEq{#1}{allow}%
-    {\gre@euouae@implies@nlbafalse}%
-    {\IfStrEq{#1}{prohibit}%
+  \IfStrEqCase{#1}{%
+    {allow}%
+      {\gre@euouae@implies@nlbafalse}%
+    {prohibit}%
       {\gre@euouae@implies@nlbatrue}%
-      {\gre@error{Unrecognized option in \protect\gresetbreakineuouae}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" in \protect\gresetbreakineuouae\MessageBreak Possible options are: 'allow' and 'prohibit'}%
+    ]%
 }%
 
 
@@ -1644,13 +1670,13 @@
 
 % User macro to change compilation behavior
 \def\gresetcompilegabc#1{%
-  \IfStrEq{#1}{force}{\gdef\gre@compilegabc{2}}{%
-    \IfStrEq{#1}{auto}{\gdef\gre@compilegabc{1}}{%
-      \IfStrEq{#1}{never}{\gdef\gre@compilegabc{0}}{%
-        \gre@error{Unrecognized argument for \protect\gresetcompilegabc.}%
-      }%
-    }%
-  }%
+  \IfStrEqCase{#1}{%
+    {force}{\gdef\gre@compilegabc{2}}%
+    {auto}{\gdef\gre@compilegabc{1}}%
+    {never}{\gdef\gre@compilegabc{0}}%
+    }[% all other cases
+      \gre@error{Unrecognized argument for \protect\gresetcompilegabc.}%
+    ]%
 }%
 
 
@@ -1699,7 +1725,7 @@
         \gre@debugmsg{compile}{Override auto compiling #2}%
         \directlua{gregoriotex.include_score([[#2]], nil)}%
       \else%
-        \gre@error{Unrecognized option [#1] for \protect\includescore}%
+        \gre@error{Unrecognized option "#1" for \protect\includescore\MessageBreak Possible options are: 'f', 'a', and 'n'}%
       \fi%
     \fi%
   \fi%
@@ -1764,23 +1790,27 @@
 
 % macro to change the definition of the hyphen:
 \def\greseteolhyphen#1{%
-  \IfStrEq{#1}{normal}%
-    {\global\let\GreHyph\gre@char@normalhyphen}%
-    {\IfStrEq{#1}{zero}%
+  \IfStrEqCase{#1}{%
+    {normal}%
+      {\global\let\GreHyph\gre@char@normalhyphen}%
+    {zero}%
       {\global\let\GreHyph\gre@char@zerohyph}%
-      {\gre@error{Unrecognized option for \protect\greseteolhyphen}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\greseteolhyphen\MessageBreak Possible options are: 'normal' and 'zero'}%
+    ]%
 }%
 
 % macro to force hyphenation of all syllables.
 \newif\ifgre@forcehyphen\gre@forcehyphenfalse%
 \def\gresethyphen#1{%
-  \IfStrEq{#1}{force}%
-    {\gre@forcehyphentrue}%
-    {\IfStrEq{#1}{auto}%
+  \IfStrEqCase{#1}{%
+    {force}%
+      {\gre@forcehyphentrue}%
+    {auto}%
       {\gre@forcehyphenfalse}%
-      {\gre@error{Unrecognized option in \protect\gresethyphen}}%
-    }%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" in \protect\gresethyphen\MessageBreak Possible options are: 'force' and 'auto'}%
+    ]%
 }%
 
 % macro called before the headers of a given inclusion
