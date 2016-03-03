@@ -1151,17 +1151,11 @@
 \def\grecreatedim#1#2#3{%
   \gre@dimension{#1}{#2}%
   \csname newif\expandafter\endcsname\csname ifgre@scale@#1\endcsname%
-  \IfStrEq{#3}{1}%
-    {\gre@obsolete{A numerical (1) last argument for \protect\grecreatedim}{'scalable'}}%
-    {\IfStrEq{#3}{0}%
-      {\gre@obsolete{A numerical (0) last argument for \protect\grecreatedim}{'fixed'}}%
-      {\IfStrEq{#3}{scalable}%
-        {\grescaledim{#1}{true}}%
-        {\IfStrEq{#3}{fixed}%
-          {\grescaledim{#1}{false}}%
-          {\gre@error{Unrecognized option for \protect\grecreatedim}}%
-        }%
-      }%
+  \IfStrEq{#3}{scalable}%
+    {\grescaledim{#1}{true}}%
+    {\IfStrEq{#3}{fixed}%
+      {\grescaledim{#1}{false}}%
+      {\gre@error{Unrecognized option for \protect\grecreatedim}}%
     }%
 }%
 
@@ -1180,17 +1174,11 @@
   \ifcsname gre@space@\gre@prefix @#1\endcsname%
     \gre@debugmsg{spacing}{It does exist.}%
     \gre@dimension{#1}{#2}%
-    \IfStrEq{#3}{1}%
-      {\gre@obsolete{A numerical (1) last argument for \protect\grechangedim}{'scalable'}}%
-      {\IfStrEq{#3}{0}%
-        {\gre@obsolete{A numerical (0) last argument for \protect\grechangedim}{'fixed'}}%
-        {\IfStrEq{#3}{scalable}%
-          {\grescaledim{#1}{true}}%
-          {\IfStrEq{#3}{fixed}%
-            {\grescaledim{#1}{false}}%
-            {\gre@error{Unrecognized option for \protect\grechangedim}}%
-          }%
-        }%
+    \IfStrEq{#3}{scalable}%
+      {\grescaledim{#1}{true}}%
+      {\IfStrEq{#3}{fixed}%
+        {\grescaledim{#1}{false}}%
+        {\gre@error{Unrecognized option for \protect\grechangedim}}%
       }%
   \else%
     \IfStrEqCase{#1}{% OBSOLETE
