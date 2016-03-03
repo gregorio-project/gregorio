@@ -332,7 +332,6 @@ end
 local debug_types_activated = {['linesglues'] = false}
 
 local function set_debug_string(debugstring)
-  texio.write_nl(debugstring)
   for debugtype in string.gmatch(debugstring, "[^,]+") do
     debug_types_activated[debugtype] = true
   end
