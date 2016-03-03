@@ -70,7 +70,7 @@
 
 \def\gre@nothing{}
 
-\AtBeginDocument{\IfStrEq{\gre@debug}{}{}{\typeout{GregorioTeX is in debug mode}\typeout{\gre@debug\space messages will be printed to the log.}}}%
+\AtBeginDocument{\IfStrEq{\gre@debug}{}{}{\directlua{gregoriotex.set_debug_string([[\gre@debug]])}\typeout{GregorioTeX is in debug mode}\typeout{\gre@debug\space messages will be printed to the log.}}}%
 
 % Depending on version of TeX / LaTeX, some primitives may or may not have a
 % luatex prefix, so we need to check and handle either
