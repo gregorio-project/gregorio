@@ -465,7 +465,7 @@ Macro to typeset an horizontal episema.
     flexus.\\
   \#4 & \texttt{0} & an horizontal episema\\
   & \texttt{1} & an horizontal episema under a note\\
-  & \texttt{2} & a line at the top\\ 
+  & \texttt{2} & a line at the top\\
   & \texttt{3} & a line at the bottom\\
   \#5 & \texttt{f} & a normal episema\\
   & \texttt{l} & a small episema aligned left\\
@@ -628,11 +628,12 @@ where this macro is called.
   \#1 & integer & Height number of the custos.\\
 \end{argtable}
 
-\macroname{\textbackslash GreNextSyllableBeginsEUOUAE}{\#1}{gregoriotex-syllable.tex}
+\macroname{\textbackslash GreNextSyllableBeginsEUOUAE}{\#1\#2}{gregoriotex-syllable.tex}
 Indicates that the syllable which follows begins a EUOUAE block.
 
 \begin{argtable}
   \#1 & integer & The identifier of the EUOUAE block.\\
+  \#2 & integer & 0 in the genral case, 1 if there is a line break between this macro and the beginning of the EUOUAE block.\\
 \end{argtable}
 
 \macroname{\textbackslash GreOriscusCavum}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}

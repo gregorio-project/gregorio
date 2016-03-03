@@ -752,16 +752,19 @@
   \relax %
 }%
 
-\def\GreNextSyllableBeginsEUOUAE#1{%
+% #1 is the id of the euouae block (assigned by the C code)
+% #2 is whether there is a line break between here and the actuall beginning of
+%      the euouae block. 1 if there is a linebreak, 0 in the general case.
+\def\GreNextSyllableBeginsEUOUAE#1#2{%
   \GreNoBreak %
   \ifgre@blockeolcustosbeforeeuouae %
     \gre@usemanualeolcustos %
   \fi %
   \ifgre@raggedbreakbeforeeuouae %
     \directlua{gregoriotex.save_pos(#1,1)}%
-    \ifcase\directlua{gregoriotex.is_ypos_different(#1)}\relax%
+    \ifcase#2\ifcase\directlua{gregoriotex.is_ypos_different(#1)}\relax%
       \gre@newlinecommon{1}{1}%
-    \fi %
+    \fi\fi %
   \fi %
   \relax %
 }%

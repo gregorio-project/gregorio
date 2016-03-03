@@ -1645,7 +1645,7 @@
 \gre@in@euouaefalse
 
 \newif\ifgre@firstin@euouae
-\gre@in@euouaefalse
+\gre@firstin@euouaefalse
 \newcount\gre@lasteuouaeindex
 \gre@lasteuouaeindex=0
 
@@ -1668,6 +1668,7 @@
     \GreEndNLBArea{#1}{0}%
   \fi %
   \gre@in@euouaefalse %
+  \gre@firstin@euouaefalse %
 }
 
 \input gregoriotex-symbols.tex%
