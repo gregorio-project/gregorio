@@ -497,9 +497,19 @@
 }%
 
 \def\GreSetNextSyllable#1#2#3#4#5{%
-  \gdef\gre@nextfirstsyllablepart{#1}%
-  \gdef\gre@nextmiddlesyllablepart{#2}%
-  \gdef\gre@nextendsyllablepart{#3}%
+  \ifcase\gre@lyriccentering% 0 - syllable centering
+    \gdef\gre@nextfirstsyllablepart{}%
+    \gdef\gre@nextmiddlesyllablepart{#1#2#3}%
+    \gdef\gre@nextendsyllablepart{}%
+  \or % 1 - vowel centering
+    \gdef\gre@nextfirstsyllablepart{#1}%
+    \gdef\gre@nextmiddlesyllablepart{#2}%
+    \gdef\gre@nextendsyllablepart{#3}%
+  \or % 2 - first-letter centering
+    \gdef\gre@nextfirstsyllablepart{}%
+    \gdef\gre@nextmiddlesyllablepart{#4}%
+    \gdef\gre@nextendsyllablepart{#5}%
+  \fi %
 }%
 
 %%%%%%%%%%%%%%%
