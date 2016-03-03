@@ -341,8 +341,8 @@ end
 local glue_sign_name = {[0] = 'normal', [1] = 'stretching', [2] = 'shrinking'}
 
 local function debugmessage(type, message)
-  if (debug_types_activated[type]) then
-    texio.write_nl(message)
+  if (debug_types_activated[type] or debug_types_activated['all']) then
+    texio.write_nl('GregorioTeX debug: ('..type..'): '..message)
   end
 end
 
