@@ -754,6 +754,10 @@
   \ifgre@raggedbreakbeforeeuouae %
     \directlua{gregoriotex.save_pos(#1,1)}%
   \fi %
+  \ifcase\directlua{gregoriotex.is_ypos_different(#1)}\relax%
+    \gre@newlinecommon{1}{1}%
+  \fi %
+  \relax %
 }%
 
 %% @desc Macro to make a few checks and call the right macros between
