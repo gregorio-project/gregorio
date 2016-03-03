@@ -1650,9 +1650,6 @@
   \fi %
   \ifgre@raggedbreakbeforeeuouae %
     \directlua{gregoriotex.save_pos(#1,2)}%
-    \ifcase\directlua{gregoriotex.is_ypos_different(#1)}\relax%
-      \gre@newlinecommon{1}{1}%
-    \fi %
   \fi %
   \gre@in@euouaetrue %
   % as soon as the EUOUAE starts, we stop blocking the EOL custos that might
