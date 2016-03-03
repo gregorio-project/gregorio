@@ -1644,12 +1644,18 @@
 \newif\ifgre@in@euouae
 \gre@in@euouaefalse
 
+\newif\ifgre@firstin@euouae
+\gre@in@euouaefalse
+\newcount\gre@lasteuouaeindex
+\gre@lasteuouaeindex=0
+
 \def\GreBeginEUOUAE#1{%
   \ifgre@euouae@implies@nlba %
     \GreBeginNLBArea{0}{0}%
   \fi %
   \ifgre@raggedbreakbeforeeuouae %
-    \directlua{gregoriotex.save_pos(#1,2)}%
+    \gre@lasteuouaeindex=#1\relax %
+    \gre@firstin@euouaetrue %
   \fi %
   \gre@in@euouaetrue %
   % as soon as the EUOUAE starts, we stop blocking the EOL custos that might

@@ -99,6 +99,12 @@
     \global\gre@count@lastglyphiscavum=0\relax %
   \fi %
   \global\gre@lastendswithmorafalse %
+  \ifgre@boxing\else\ifgre@firstin@euouae %
+    \ifgre@raggedbreakbeforeeuouae %
+      \directlua{gregoriotex.save_pos(\the\gre@lasteuouaeindex,2)}%
+    \fi %
+    \gre@firstin@euouaefalse %
+  \fi\fi %
   \relax %
 }%
 
@@ -753,9 +759,9 @@
   \fi %
   \ifgre@raggedbreakbeforeeuouae %
     \directlua{gregoriotex.save_pos(#1,1)}%
-  \fi %
-  \ifcase\directlua{gregoriotex.is_ypos_different(#1)}\relax%
-    \gre@newlinecommon{1}{1}%
+    \ifcase\directlua{gregoriotex.is_ypos_different(#1)}\relax%
+      \gre@newlinecommon{1}{1}%
+    \fi %
   \fi %
   \relax %
 }%
