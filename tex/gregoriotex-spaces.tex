@@ -149,9 +149,6 @@
   \relax %
 }%
 
-\def\setstafflinethickness{%OBSOLETE
-  \gre@obsolete{\protect\setstafflinethickness}{\protect\grechangestafflinethickness}%
-}%
 
 %constantglyphraise is the space between the 0 of the gregorian fonts and the effective 0 of the TeX score
 \newdimen\gre@dimen@constantglyphraise\relax%
@@ -788,10 +785,6 @@
   \gre@generatelines %
   \gre@calculate@constantglyphraise %
   \endgre@style@translation%
-  \ifx\gre@empty@translationformat\gretranslationformat% OBSOLETE
-  \else%  OBSOLETE
-    \gre@obsolete{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  OBSOLETE
-  \fi%  OBSOLETE
   \relax %
 }%
 
@@ -1172,9 +1165,6 @@
     }%
 }%
 
-\def\gresetdim{%OBSOLETE
-  \gre@obsolete{\protect\gresetdim}{\protect\grecreatedim}%
-}%
 
 % a macro for changing a dimension.  Unlike \grecreatedim, this function won’t create a new distance, just change an existing one.
 \def\grechangedim#1#2#3{%
@@ -1281,17 +1271,10 @@
     }%
 }
 
-\def\grenoscaledim#1{%OBSOLETE
-  \gre@obsolete{\protect\grenoscaledim}{\protect\grescaledim{...}{no}}%
-}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % space configuration loading
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\def\GreLoadSpaceConf#1{%OBSOLETE
-  \gre@obsolete{\protect\GreLoadSpaceConf}{\protect\greloadspaceconf}%
-}%
 
 \newcount\greconffactor%
 \def\greloadspaceconf#1{%
@@ -1766,37 +1749,4 @@
     \xdef\gre@stafflinefactor{\the\gre@count@temp@two}%
   \fi%
   \relax %
-}%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  Some Macros for changing the spacing around the initial
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%Seeing as these are the distances that people will want to change the most often,
-%we give them their own set of macros to make that easier.
-
-% To change the spacing between annotations.
-%First argument is distance, second is whether it should scale when \gre@factor changes.
-\def\setaboveinitialseparation#1#2{%OBSOLETE
-  \gre@obsolete{\protect\setaboveinitialseparation}{\protect\grechangedim\{annotationseparation\}}%
-}%
-
-
-%To change the space after the initial
-%First argument is distance, second is whether it should scale when \gre@factor changes.
-\def\setspaceafterinitial#1#2{%OBSOLETE
-  \gre@obsolete{\protect\setspaceafterinitial}{\protect\grechangedim{afterinitialshift}}%
-}
-
-%To change the space before the initial
-%First argument is distance, second is whether it should scale when \gre@factor changes.
-\def\setspacebeforeinitial#1#2{%OBSOLETE
-  \gre@obsolete{\protect\setspacebeforeinitial}{\protect\grechangedim{beforeinitialshift}}%
-}%
-
-
-%To change all the distances associated with the initial.
-%First three arguments are distances, last is whether they should scale when \gre@factor changes.
-\def\setinitialspacing#1#2#3#4{%OBSOLETE
-  \gre@obsolete{\protect\setinitialspacing}{\protect\grechangedim{beforeinitialshift}, \protect\grechangedim{manualinitialwidth}, and \protect\grechangedim{afterinitialshift}}%
 }%
