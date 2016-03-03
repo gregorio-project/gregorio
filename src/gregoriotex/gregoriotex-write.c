@@ -3360,12 +3360,14 @@ static __inline void anticipate_event(FILE *f, gregorio_syllable *syllable) {
     static unsigned short euouae_id = 0;
     bool eol_forces_custos = false;
     bool eol_forces_custos_on = false;
+    bool has_intervening_linebreak = false;
 
     if (syllable->next_syllable) {
         for (syllable = syllable->next_syllable;
                 syllable && syllable->elements && *(syllable->elements)
                 && (*(syllable->elements))->type == GRE_END_OF_LINE;
                 syllable = syllable->next_syllable) {
+            has_intervening_linebreak = true;
             /* we are at an end-of-line, so check if custos is forced */
             scan_syllable_for_eol(syllable, &eol_forces_custos,
                     &eol_forces_custos_on);
@@ -3376,7 +3378,8 @@ static __inline void anticipate_event(FILE *f, gregorio_syllable *syllable) {
 
             if (syllable->euouae == EUOUAE_BEGINNING) {
                 syllable->euouae_id = ++euouae_id;
-                fprintf(f, "%%\n\\GreNextSyllableBeginsEUOUAE{%hu}%%\n", euouae_id);
+                fprintf(f, "%%\n\\GreNextSyllableBeginsEUOUAE{%hu}{%c}%%\n",
+                        euouae_id, has_intervening_linebreak ? '1' : '0');
             }
         }
         if (eol_forces_custos) {
