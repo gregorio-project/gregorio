@@ -138,7 +138,7 @@
     {invisible}%
       {\gre@showcleffalse}%
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\gresetclef}%
+      \gre@error{Unrecognized option "#1" for \protect\gresetclef\MessageBreak Possible options are: 'visible' and 'invisible'}%
     ]%
 }%
 
@@ -580,13 +580,13 @@
     {underbrace}{\gre@@setbracerendering{#1}{#2}}%
     {curlybrace}{\gre@@setbracerendering{#1}{#2}}%
     {barbrace}{\gre@@setbracerendering{#1}{#2}}%
-  }[\gre@error{Unrecognized option for \protect\gresetbracerendering}]%
+  }[\gre@error{Unrecognized option "#1" for \protect\gresetbracerendering\MessageBreak Possible options are: 'brace', 'underbrace', 'curlybrace', and 'barbrace'}]%
 }%
 \def\gre@@setbracerendering#1#2{%
   \IfStrEqCase{#2}{%
     {font}{\csname gre@metapost@#1false\endcsname}%
     {metapost}{\csname gre@metapost@#1true\endcsname}%
-  }[\gre@error{Unrecognized option for \protect\gresetbracerendering}]%
+  }[\gre@error{Unrecognized option "#2" for \protect\gresetbracerendering\MessageBreak Possible options are: 'font' and 'metapost'}]%
 }%
 
 \gdef\gre@fontchar@curlybrace{\gre@font@music\GreCPCurlyBrace}%
@@ -1471,7 +1471,7 @@
     {break}%
       {\gre@hepisemabridgefalse}%
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\gresethepisema}%
+      \gre@error{Unrecognized option, #1, for \protect\gresethepisema\MessageBreak Possible options are: 'bridge' and 'break'}%
     ]%
 }%
 
@@ -1656,7 +1656,7 @@
     {never}%
       {\gre@count@shiftaftermora=0}%
     }[% all other cases
-      \gre@error{Unrecognized option "#1" in gresetshiftaftermora , use 'always', 'barsonly', 'notesonly', 'barsnotextonly', 'barsinsideonly' or 'never'}%
+      \gre@error{Unrecognized option "#1" in gresetshiftaftermora\MessageBreak Possible options are: 'always', 'barsonly', 'notesonly', 'barsnotextonly', 'barsinsideonly' and 'never'}%
     ]%
 }%
 
@@ -2045,7 +2045,7 @@
     {invisible}%
       {\gre@hidepclinestrue}%
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\gresetlinesbehindpunctumcavum}%
+      \gre@error{Unrecognized option "#1" for \protect\gresetlinesbehindpunctumcavum\MessageBreak Possible options are: 'visible' and 'invisible'}%
     ]%
 }%
 
@@ -2070,7 +2070,7 @@
     {invisible}%
       {\gre@hidealtlinestrue}%
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\gresetlinesbehindalteration}%
+      \gre@error{Unrecognized option "#1" for \protect\gresetlinesbehindalteration\MessageBreak Possible options are: 'visible' and 'invisible'}%
     ]%
 }%
 
@@ -2207,7 +2207,7 @@
         \greresetglyph{LineaPunctumCavumHole}%
       }%
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\gresetpunctumcavum}%
+      \gre@error{Unrecognized option "#1" for \protect\gresetpunctumcavum\MessageBreak Possible options are: 'alternate' and 'normal'}%
     ]%
 }%
 

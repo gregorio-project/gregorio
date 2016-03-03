@@ -465,7 +465,7 @@
     {disable}%
       {\gre@useledgerlineheuristicfalse}%
     }[% all other cases
-      \gre@error{Unrecognized option in \protect\gresetledgerlineheuristic}%
+      \gre@error{Unrecognized option "#1" in \protect\gresetledgerlineheuristic\MessageBreak Possible options are: 'enable' and 'disable'}%
     ]%
 }%
 % for backwards compatibility, we set these to true by default, and the
@@ -1170,7 +1170,7 @@
     {fixed}%
       {\grescaledim{#1}{false}}%
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\grecreatedim}%
+      \gre@error{Unrecognized option "#3" for \protect\grecreatedim\MessageBreak Possible options are: 'scalable' and 'fixed'}%
     ]%
 }%
 
@@ -1230,7 +1230,7 @@
       {fixed}%
         {\grescaledim{#1}{false}}%
       % all other cases
-      }[\gre@error{Unrecognized option for \protect\grechangedim}]%
+      }[\gre@error{Unrecognized option "#3" for \protect\grechangedim\MessageBreak Possible options are: 'scalable' and 'fixed'}]%
   \else%
     \gre@error{#1 is not a recognized distance.}%
   \fi%

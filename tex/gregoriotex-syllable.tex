@@ -60,7 +60,7 @@
     {off}%
       {\gre@generate@pointandclick=0\relax}
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\gresetpointandclick}%
+      \gre@error{Unrecognized option "#1" for \protect\gresetpointandclick\MessageBreak Possible options are: 'on' and 'off'}%
     ]%
 }%
 
@@ -509,7 +509,7 @@
     {firstletter}%
       {\xdef\gre@lyriccentering{2}}%
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\gresetlyriccentering}%
+      \gre@error{Unrecognized option "#1" for \protect\gresetlyriccentering\MessageBreak Possible options are: 'vowel', 'syllable' and 'firstletter'}%
     ]%
 }%
 
@@ -544,7 +544,7 @@
     {special}%
       {\global\gre@clivisalignment=2\relax}%
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\gresetclivisalignment}%
+      \gre@error{Unrecognized option "#1" for \protect\gresetclivisalignment\MessageBreak Possible options are 'always', 'never', and 'special'}%
     ]%
 }%
 
@@ -569,7 +569,7 @@
     {force}%
       {\gre@forceemptyfirstsyllablehyphentrue}%
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\gresetlyriccentering}%
+      \gre@error{Unrecognized option "#1" for \protect\gresetlyriccentering\MessageBreak Possible options are 'auto' and 'force'}%
     ]%
 }%
 
@@ -860,7 +860,7 @@
         \let\GreNoNoteSyllable\GreSyllable%
       }%
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\gresetbarspacing}%
+      \gre@error{Unrecognized option "#1" for \protect\gresetbarspacing\MessageBreak Possible options are: 'new' and 'old'}%
     ]%
 }%
 

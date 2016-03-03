@@ -544,7 +544,7 @@
     {bottomline}%
       {\gre@annotationbottomlinetrue}%
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\gresetannotationby}%
+      \gre@error{Unrecognized option "#1" for \protect\gresetannotationby\MessageBreak Possible options are: 'topline' and 'bottomline'}%
     ]%
 }%
 
@@ -561,7 +561,7 @@
     {bottom}%
       {\gre@count@annotationvalign=2}%
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\gresetannotationvalign}%
+      \gre@error{Unrecognized option "#1" for \protect\gresetannotationvalign\MessageBreak Possible options are: 'top', 'baseline' and 'bottom'}%
     ]%
 }%
 
@@ -699,7 +699,7 @@
     {arabic}%
       {\let\GreModeNumber\relax}%
     }[% all other cases
-      \gre@error{Unrecognized option in \protect\gresetmodenumbersystem}%
+      \gre@error{Unrecognized option "#1" in \protect\gresetmodenumbersystem\MessageBreak Possible options are: 'roman-majuscule', 'roman-minuscule', and 'arabic'}%
     ]%
 }%
 \gresetmodenumbersystem{roman-minuscule}%
@@ -835,7 +835,7 @@
     {invisible}%
       {\gre@showlinesfalse}%
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\gresetlines}%
+      \gre@error{Unrecognized option "#1" for \protect\gresetlines\MessageBreak Possible options are: 'visible' and 'invisible'}%
     ]%
 }
 
@@ -1025,7 +1025,7 @@
     {center}%
       {\gre@translationcenteringtrue}%
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\gresettranslationcentering}%
+      \gre@error{Unrecognized option "#1" for \protect\gresettranslationcentering\MessageBreak Possible options are: 'left' and 'center'}%
     ]%
 }%
 
@@ -1044,7 +1044,7 @@
     {prohibit}%
       {\gre@breakintranslationfalse}%
     }[% all other cases
-      \gre@error{Unrecognized option in \protect\gresetbreakintranslation}%
+      \gre@error{Unrecognized option "#1" in \protect\gresetbreakintranslation\MessageBreak Possible options are: 'allow' and 'prohibit'}%
     ]%
 }%
 
@@ -1122,7 +1122,7 @@
     {ragged}%
       {\gre@justifylastlinefalse}%
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\gresetlastline}%
+      \gre@error{Unrecognized option "#1" for \protect\gresetlastline\MessageBreak Possible options are: 'justified' and 'ragged'}%
     ]%
 }%
 
@@ -1135,7 +1135,7 @@
     {variable}%
       {\gre@variableheightexpansion=1\relax }%
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\gresetlineheightexpansion}%
+      \gre@error{Unrecognized option "#1" for \protect\gresetlineheightexpansion\MessageBreak Possible options are: 'uniform' and 'variable'}%
     ]%
 }%
 
@@ -1370,7 +1370,7 @@
     {disable}%
       {\gre@bolshiftsenabledfalse}%
     }[% all other cases
-      \gre@error{Unrecognized option in \protect\gresetbolshifts}%
+      \gre@error{Unrecognized option "#1" in \protect\gresetbolshifts\MessageBreak Possible options are: 'enable' and 'disable'}%
     ]%
 }%
 
@@ -1387,7 +1387,7 @@
     {disable}%
       {\gre@eolshiftsenabledfalse}%
     }[% all other cases
-      \gre@error{Unrecognized option in \protect\greseteolshifts}%
+      \gre@error{Unrecognized option "#1" in \protect\greseteolshifts\MessageBreak Possible options are: 'enable' and 'diable'}%
     ]%
 }%
 
@@ -1415,7 +1415,7 @@
     {auto}%
       {\global\let\gre@reseteolcustos\gre@useautoeolcustos\relax}%
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\greseteolcustos}%
+      \gre@error{Unrecognized option "#1" for \protect\greseteolcustos\MessageBreak Possible options are: 'manual' and 'auto'}%
     ]%
 }%
 \greseteolcustos{auto}%
@@ -1428,7 +1428,7 @@
     {auto}%
       {\gre@blockeolcustosbeforeeuouaefalse\relax}%
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\greseteolcustosbeforeeuouae}%
+      \gre@error{Unrecognized option "#1" for \protect\greseteolcustosbeforeeuouae\MessageBreak Possible options are: 'suppressed' and 'auto'}%
     ]%
 }%
 \greseteolcustosbeforeeuouae{suppressed}%
@@ -1441,7 +1441,7 @@
     {justified}%
       {\gre@raggedbreakbeforeeuouaefalse\relax}%
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\greseteolcustosbeforeeuouae}%
+      \gre@error{Unrecognized option "#1" for \protect\greseteolcustosbeforeeuouae\MessageBreak Possible options are: 'ragged' and 'justified'}%
     ]%
 }%
 \gresetbreakbeforeeuouae{justified}%
@@ -1662,7 +1662,7 @@
     {prohibit}%
       {\gre@euouae@implies@nlbatrue}%
     }[% all other cases
-      \gre@error{Unrecognized option in \protect\gresetbreakineuouae}%
+      \gre@error{Unrecognized option "#1" in \protect\gresetbreakineuouae\MessageBreak Possible options are: 'allow' and 'prohibit'}%
     ]%
 }%
 
@@ -1911,7 +1911,7 @@
         \gre@debugmsg{compile}{Override auto compiling #2}%
         \directlua{gregoriotex.include_score([[#2]], nil)}%
       \else%
-        \gre@error{Unrecognized option [#1] for \protect\includescore}%
+        \gre@error{Unrecognized option "#1" for \protect\includescore\MessageBreak Possible options are: 'f', 'a', and 'n'}%
       \fi%
     \fi%
   \fi%
@@ -1986,7 +1986,7 @@
     {zero}%
       {\global\let\GreHyph\gre@char@zerohyph}%
     }[% all other cases
-      \gre@error{Unrecognized option for \protect\greseteolhyphen}%
+      \gre@error{Unrecognized option "#1" for \protect\greseteolhyphen\MessageBreak Possible options are: 'normal' and 'zero'}%
     ]%
 }%
 
@@ -2007,7 +2007,7 @@
     {auto}%
       {\gre@forcehyphenfalse}%
     }[% all other cases
-      \gre@error{Unrecognized option in \protect\gresethyphen}%
+      \gre@error{Unrecognized option "#1" in \protect\gresethyphen\MessageBreak Possible options are: 'force' and 'auto'}%
     ]%
 }%
 
