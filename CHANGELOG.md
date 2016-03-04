@@ -6,7 +6,11 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Fixed
 - Custos now shouldn't go right of the staff lines (was visible only in edge cases, see [#990](https://github.com/gregorio-project/gregorio/issues/990)).
 - Corrected the end-of-line shift for a ragged line break before `<eu>` blocks (see [#988](https://github.com/gregorio-project/gregorio/issues/988)).
+- Additional space is now added on top of lines with very high notes or signs (see [#883](https://github.com/gregorio-project/gregorio/issues/883)).
+- High notes are now taken into account for vertical placement of above lines test (see [#960](https://github.com/gregorio-project/gregorio/issues/960)).
 
+### Added
+- The macro `\grechangecount` now allows to change some numeric values of the configuration. This version introduces two of them: `additionaltopspacethreshold` and `additionaltopspacealtthreshold`, see GregorioRef for details.
 
 ## [4.1.0] - 2016-03-01
 ### Fixed
