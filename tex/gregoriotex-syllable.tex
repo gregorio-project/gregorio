@@ -774,6 +774,15 @@
   \relax %
 }%
 
+% #1 is the id of the euouae block (assigned by the C code)
+% #2 is whether there is a line break between here and the actuall beginning of
+%      the euouae block. 1 if there is a linebreak, 0 in the general case.
+\def\GreLastSyllableBeforeEUOUAE#1#2{%
+  \ifcase#2\ifcase\directlua{gregoriotex.is_ypos_different(#1)}\relax%
+    \GreLastOfLine%
+  \fi\fi %
+}%
+
 %% @desc Macro to make a few checks and call the right macros between
 %%       \endbeforebar, \endofword, \endofsyllable
 %% @arg#1 next syllable type (#7 of \GreSyllable)
