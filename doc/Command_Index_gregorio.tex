@@ -170,11 +170,12 @@ defined and re-defined by the \verb=\gresetgregoriofont= macro.
 \macroname{\textbackslash GreCP...}{}{gregoriotex-main.tex}
 A class of macros which point to the individual characters in a Gregoiro\TeX\ compatible font.  This class of macros is dynamically mapped from the glyph names embedded in the \texttt{ttf} file via a Lua script to ensure that the code points match up with the installed font.
 
-\macroname{\textbackslash GreCustos}{\#1}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreCustos}{\#1\#2}{gregoriotex-signs.tex}
 Typesets a custos.
 
 \begin{argtable}
   \#1 & integer & Height number of custos.\\
+  \#2 & integer & Indicate if the custo is the last of the score.\\
 \end{argtable}
 
 \macroname{\textbackslash GreDagger}{}{gregoriotex-symbols.tex}

@@ -3687,7 +3687,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                      */
                     /* we also print an unbreakable larger space before the custo */
                     handle_last_of_score(f, syllable, element);
-                    fprintf(f, "\\GreEndOfElement{1}{1}%%\n\\GreCustos{%d}"
+                    fprintf(f, "\\GreEndOfElement{1}{1}%%\n\\GreCustos{%d}{0}"
                             "\\GreNextCustos{%d}%%\n",
                             pitch_value(element->u.misc.pitched.pitch),
                             pitch_value(gregorio_determine_next_pitch(syllable,
