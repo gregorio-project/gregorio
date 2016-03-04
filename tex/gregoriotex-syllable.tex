@@ -43,7 +43,7 @@
 
 \def\gresetpointandclick#1{%
   \IfStrEqCase{#1}{%
-    {on}
+    {on}%
       {%
         \ifx\pdfoutput\undefined %
           \gre@warning{Unable to enable point-and-click because \protect\pdfoutput \MessageBreak is not defined}%
@@ -58,7 +58,7 @@
         \fi %
       }%
     {off}%
-      {\gre@generate@pointandclick=0\relax}
+      {\gre@generate@pointandclick=0\relax}%
     }[% all other cases
       \gre@error{Unrecognized option "#1" for \protect\gresetpointandclick\MessageBreak Possible options are: 'on' and 'off'}%
     ]%
@@ -552,7 +552,7 @@
 
 
 \def\gresetclivisalignment#1{%
-  \IfStrEqCase{#1}{
+  \IfStrEqCase{#1}{%
     {always}%
       {\global\gre@clivisalignment=0\relax}%
     {never}%
@@ -579,7 +579,7 @@
 \newif\ifgre@forceemptyfirstsyllablehyphen%
 \gre@forceemptyfirstsyllablehyphentrue%
 \def\gresetemptyfirstsyllablehyphen#1{%
-  \IfStrEqCase{#1}{
+  \IfStrEqCase{#1}{%
     {auto}%
       {\gre@forceemptyfirstsyllablehyphenfalse}%
     {force}%

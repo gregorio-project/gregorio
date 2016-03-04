@@ -1160,7 +1160,7 @@
 \def\grecreatedim#1#2#3{%
   \gre@dimension{#1}{#2}%
   \csname newif\expandafter\endcsname\csname ifgre@scale@#1\endcsname%
-  \IfStrEqCase{#3}{
+  \IfStrEqCase{#3}{%
     {1}%
       {\gre@obsolete{A numerical (1) last argument for \protect\grecreatedim}{'scalable'}}%
     {0}%
@@ -1260,7 +1260,7 @@
     {%
       \gre@skip@temp@one = #2\relax%
       \ifdim\gre@skip@temp@one=0pt\relax\else%
-        \gre@error{bar@rubber cannot have a non-zero base}
+        \gre@error{bar@rubber cannot have a non-zero base}%
       \fi%
     }{}%
   \expandafter\edef\csname gre@space@\gre@prefix @#1\endcsname{#2}%
