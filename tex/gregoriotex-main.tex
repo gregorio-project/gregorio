@@ -797,19 +797,19 @@
 \def\gre@typesettextabovelines#1{%
   \gre@style@abovelinestext%
   \gre@debugmsg{spacing}{Raise alt text: \gre@space@dimen@abovelinestextraise}%
-  \global\gre@dimen@temp@five=\gre@space@dimen@abovelinestextraise\relax%
   \endgre@style@abovelinestext%
   \ifx\gre@empty@abovelinestextstyle\greabovelinestextstyle% OBSOLETE
   \else%  OBSOLETE
     \gre@obsolete{\protect\greabovelinestextstyle}{\protect\grechangestyle{abovelinestext}}%  OBSOLETE
   \fi%  OBSOLETE
-  \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
-  \advance\gre@dimen@temp@five by \dimexpr(4\gre@dimen@stafflineheight %
+  \gre@dimen@temp@five=\dimexpr(4\gre@dimen@stafflineheight %
     + 4\gre@dimen@interstafflinespace %
     + \gre@space@dimen@spacebeneathtext %
     + \gre@dimen@currenttranslationheight %
     + \gre@space@dimen@spacelinestext %
-    + \gre@dimen@additionalbottomspace)\relax%
+    + \gre@dimen@additionalbottomspace %
+    + \gre@dimen@additionaltopspacealt %
+    + \gre@space@dimen@abovelinestextraise)\relax%
   \gre@mark@abovelinestext %
   \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
     \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\gre@style@abovelinestext#1\endgre@style@abovelinestext\hss}%
@@ -924,8 +924,7 @@
       \else%  OBSOLETE
         \gre@obsolete{\protect\grenormalstafflinesformat}{\protect\grechangestyle{normalstafflines}}%  OBSOLETE
       \fi%  OBSOLETE
-      \vskip\gre@space@skip@spaceabovelines\relax%
-      \vskip\gre@dimen@currentabovelinestextheight\relax%
+      \vskip\glueexpr(\gre@dimen@additionaltopspace+\gre@space@skip@spaceabovelines+\gre@dimen@currentabovelinestextheight)\relax%
       \ifgre@showlines %
         \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
       \else %
@@ -965,10 +964,7 @@
           \vskip\gre@dimen@stafflineheight\relax%
         \fi %
       \fi %
-      \vskip\gre@space@dimen@spacelinestext\relax%
-      \vskip\gre@dimen@additionalbottomspace\relax%
-      \vskip\gre@space@dimen@spacebeneathtext\relax%
-      \vskip\gre@dimen@currenttranslationheight\relax%
+      \kern\dimexpr(\gre@space@dimen@spacelinestext+\gre@dimen@additionalbottomspace+\gre@space@dimen@spacebeneathtext+\gre@dimen@currenttranslationheight)\relax%
       \endgre@style@normalstafflines %
     }%
     \hss%
