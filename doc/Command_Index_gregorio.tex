@@ -558,6 +558,15 @@ Macro to set \verb=\gre@lastoflinecount= to 1 (\ie, mark that this syllable is t
 \macroname{\textbackslash GreLastOfScore}{}{gregoriotex-main.tex}
 Macro to mark the syllable as the last of the score.
 
+\macroname{\textbackslash GreLastSyllableBeforeEUOUAE}{\#1\#2}{gregoriotex-syllable.tex}
+Indicates that this syllable is the last syllable before a EUOUAE block.
+
+\begin{argtable}
+  \#1 & integer & The identifier of the EUOUAE block.\\
+  \#2 & \texttt{0} & There is no line break between this syllable and the EUOUAE block.\\
+      & \texttt{1} & There is a line break between this syllable and the beginning of the EUOUAE block.\\
+\end{argtable}
+
 \macroname{\textbackslash GreLinea}{\#1\#2\#3}{gregoriotex-signs.tex}
 Macro for typesetting a linea.
 
@@ -633,7 +642,8 @@ Indicates that the syllable which follows begins a EUOUAE block.
 
 \begin{argtable}
   \#1 & integer & The identifier of the EUOUAE block.\\
-  \#2 & integer & 0 in the genral case, 1 if there is a line break between this macro and the beginning of the EUOUAE block.\\
+  \#2 & \texttt{0} & There is no line break between this syllable and the EUOUAE block.\\
+      & \texttt{1} & There is a line break between this syllable and the beginning of the EUOUAE block.\\
 \end{argtable}
 
 \macroname{\textbackslash GreOriscusCavum}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
