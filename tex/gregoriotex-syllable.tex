@@ -93,6 +93,7 @@
   \ifnum\gre@lastoflinecount=2\relax %
     \global\gre@lastoflinecount=0\relax %
   \fi %
+  \global\gre@skip@bar@lastskip=0pt\relax %
   \gre@currenttextabovelines %
   \ifcase\gre@count@lastglyphiscavum\or %
     \global\gre@count@lastglyphiscavum=2\relax %
@@ -367,6 +368,7 @@
   \fi %
   \let\ifgre@lastendswithmora\ifgre@lastendswithmorasave %
   \global\gre@count@lastglyphiscavum=0\relax %
+  \global\gre@skip@bar@lastskip=0pt\relax %
   \global\gre@endofscorefalse %
   \relax %
 }%
