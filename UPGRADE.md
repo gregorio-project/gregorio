@@ -2,6 +2,12 @@
 
 This file contains instructions to upgrade to a new release of Gregorio.
 
+## Unreleased
+
+### Vertical spacings
+
+High notes are now taken into account in vertical spacings. If you would like to come back to the old way, use `\grechangecount{additionaltopspacethreshold}{6}`. High notes also influence vertical placement of alt text. If you would like to come back to the old way, give a high value to `\grechangecount{additionaltopspacealtthreshold}{6}`.
+
 ## 4.1
 
 ### Initial handling

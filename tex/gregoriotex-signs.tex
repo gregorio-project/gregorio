@@ -321,7 +321,9 @@
 }%
 
 % custos just typesets a custos, useful for before the key changes for example
-\def\GreCustos#1{%
+% #1 is the height
+% #2 is indicating if the custo ends the line
+\def\GreCustos#1#2{%
   \gre@skip@temp@four = \gre@space@skip@spacebeforeinlinecustos\relax%
   \kern\gre@skip@temp@four%
   \gre@calculate@glyphraisevalue{#1}{0}{}%
@@ -337,23 +339,27 @@
   \fi %
   \raise \gre@dimen@glyphraisevalue\relax%
   \copy\gre@box@temp@width %
-  % for now we consider we always have a bar after the custos
-  % we don't want to end the line here
-  \GreNoBreak %
-  \gre@skip@temp@four = -\gre@space@skip@spacearoundclefbars\relax%
-  \gre@hskip\gre@skip@temp@four %
-  \GreNoBreak %
+  \ifnum#2=0\relax %
+    % for now we consider we always have a bar after the custos
+    % we don't want to end the line here
+    \GreNoBreak %
+    \gre@skip@temp@four = -\gre@space@skip@spacearoundclefbars\relax%
+    \gre@hskip\gre@skip@temp@four %
+    \GreNoBreak %
+  \fi %
   \relax %
 }%
 
 % typesets a custos for the end of the score
 \def\GreFinalCustos#1{%
   \GreNoBreak%
-  % yes, we are computing as a glue and then casting to a dimen
-  \gre@dimen@temp@four = \glueexpr(\gre@space@skip@spacebeforeeolcustos+\gre@space@skip@interelementspace)\relax%
-  \hbox to \gre@dimen@temp@four{}%
-  \GreNoBreak%
-  \GreCustos{#1}%
+  % computing as a glue and then casting to a dimen
+  \ifgre@newbarspacing\else %
+    \gre@dimen@temp@four = \glueexpr(\gre@space@skip@spacebeforeeolcustos+\gre@space@skip@interelementspace)\relax%
+    \hbox to \gre@dimen@temp@four{}%
+    \GreNoBreak%
+  \fi %
+  \GreCustos{#1}{1}%
 }
 
 % the argument is the height
@@ -2013,7 +2019,14 @@
     \fi %
     \GreLastOfScore %
     \GreDivisioFinalis{0}{}%
-    #1%
+    \setbox\gre@box@temp@width=\hbox{#1}%
+    \ifdim\wd\gre@box@temp@width>0pt\relax %
+      \global\gre@skip@bar@lastskip=0pt\relax %
+      \GreNoBreak %
+      #1%
+    \else %
+      #1%
+    \fi %
   }%
   \relax%
 }%
