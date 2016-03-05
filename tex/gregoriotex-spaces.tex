@@ -697,7 +697,16 @@
 
 % two dimensions for the additionalspaces
 \newdimen\gre@dimen@additionalbottomspace\relax%
+% the one taken into account to adjust space between lines
 \newdimen\gre@dimen@additionaltopspace\relax%
+% the one taken into account for above lines text height
+\newdimen\gre@dimen@additionaltopspacealt\relax%
+
+\newcount\gre@space@count@additionaltopspacethreshold\relax%
+\gre@space@count@additionaltopspacethreshold=2
+
+\newcount\gre@space@count@additionaltopspacealtthreshold\relax%
+\gre@space@count@additionaltopspacethreshold=0
 
 % #1 is the high height
 % #2 is the low height
@@ -705,15 +714,21 @@
 % #4 is if 1 if we have space above the staff
 \def\gre@calculate@additionalspaces#1#2#3#4{%
   \gre@debugmsg{lineheight}{gre@calculate@additional@spaces called with #1 #2 #3 #4}%
-  \gre@count@temp@one=\numexpr(#1 - \gre@pitch@adjust@top)\relax %
+  \gre@count@temp@one=\numexpr(#1 - \gre@pitch@adjust@top - \gre@space@count@additionaltopspacethreshold)\relax %
   \ifnum\gre@count@temp@one>0\relax %
-    \global\gre@dimen@additionaltopspace=\dimexpr(15000 sp * \gre@count@temp@one * \gre@factor)\relax %
+    \global\gre@dimen@additionaltopspace=\dimexpr(15750 sp * \gre@count@temp@one * \gre@factor)\relax %
   \else %
     \global\gre@dimen@additionaltopspace=0 sp%
   \fi %
+  \gre@count@temp@one=\numexpr(#1 - \gre@pitch@adjust@top - \gre@space@count@additionaltopspacealtthreshold)\relax %
+  \ifnum\gre@count@temp@one>0\relax %
+    \global\gre@dimen@additionaltopspacealt=\dimexpr(15750 sp * \gre@count@temp@one * \gre@factor)\relax %
+  \else %
+    \global\gre@dimen@additionaltopspacealt=0 sp%
+  \fi %
   \gre@count@temp@one=\numexpr((#2 - \gre@pitch@adjust@bottom) * -1)\relax %
   \ifnum\gre@count@temp@one>0\relax %
-    \global\gre@dimen@additionalbottomspace=\dimexpr(15000 sp * \gre@count@temp@one * \gre@factor)\relax %
+    \global\gre@dimen@additionalbottomspace=\dimexpr(15750 sp * \gre@count@temp@one * \gre@factor)\relax %
   \else %
     \global\gre@dimen@additionalbottomspace=0 sp%
   \fi %
@@ -1229,13 +1244,18 @@
       {spacebeforefinalfinalis}% DEPRECATED
         {% DEPRECATED
           \gre@deprecated{spacebeforfinalfinalis}{bar@finalfinalis}% DEPRECATED
-          \grechangedime{bar@finalfinalis}{#2}{#3}% DEPRECATED
+          \grechangedim{bar@finalfinalis}{#2}{#3}% DEPRECATED
         }% DEPRECATED
       }[% DEPRECATED
         \gre@error{#1 is not a recognized distance.}% keep this line
       ]% DEPRECATED
   \fi%
 }%
+
+\def\grechangecount#1#2{%
+  \expandafter\csname gre@space@count@#1\endcsname=#2%
+  \relax %
+}
 
 % The common internals for \grecreatedim and \grechangedim.
 \def\gre@dimension#1#2{%
