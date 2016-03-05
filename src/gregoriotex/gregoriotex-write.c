@@ -3546,7 +3546,8 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     anticipate_event(syllable, &euouae_follows, &eol_forces_custos,
             &next_euouae_id);
     if (syllable->next_syllable) {
-        fprintf(f, "{%s\\GreSetNextSyllable", syllable->forced_center?
+        fprintf(f, "{%s\\GreSetNextSyllable",
+                syllable->next_syllable->forced_center?
                 "\\GreGABCNextForceCenters" : "");
         write_text(f, syllable->next_syllable->text);
         if (end_of_line) {
