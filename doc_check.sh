@@ -62,6 +62,9 @@ sed -i.temp 's:.*\(\\csname.*\\endcsname\).*:\1:' $CODEFILE
 grep -hE '\\definecolor.*' *.sty >> $CODEFILE
 sed -i.temp 's:\\definecolor{\([a-zA-Z]*\)}.*:\1:' $CODEFILE
 
+#counts
+sed -i.temp 's:.*gre@space@count@\([a-z@]*\).*:\1:' $CODEFILE
+
 #distances
 grep -h '\\grecreatedim{.*' gsp-default.tex >> $CODEFILE
 sed -i.temp 's:\\grecreatedim{\([a-z@]*\)}.*:\1:' $CODEFILE
@@ -82,6 +85,9 @@ sed -i.temp 's:.*count@temp@.*::' $CODEFILE
 #block documented items
 sed -i.temp 's:\\gre@pitch.*::' $CODEFILE
 sed -i.temp 's:.*gre@char@he@.*::' $CODEFILE
+
+#label file
+echo "00 Macros Defined in TeX" >> $CODEFILE
 
 #alphabetize and remove duplicates
 sort -u -o$CODEFILE $CODEFILE
@@ -130,6 +136,9 @@ sed -i.temp 's:.*\\gre@deprecated{.*::' $DOCFILE
 sed -i.temp 's:.*\\gre@obsolete{.*::' $DOCFILE
 sed -i.temp 's:}.*::' $DOCFILE
 
+#label file
+echo "00 Macros Documented" >> $DOCFILE
+
 #alphabetize and remove duplicates
 sort -u -o$DOCFILE $DOCFILE
 
@@ -147,3 +156,6 @@ rm $DOCFILE
 rm $CODEFILE.temp
 rm $CODEFILE
 rm $DIFFFILE
+
+#open result
+open $RESFILE
