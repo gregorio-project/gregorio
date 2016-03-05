@@ -3368,13 +3368,14 @@ static __inline void scan_syllable_for_eol(
  */
 static __inline void anticipate_event(gregorio_syllable *syllable,
         char *const euouae_follows, char *const eol_forces_custos,
-        short *const next_euouae_id)
+        unsigned short *const next_euouae_id)
 {
     static unsigned short euouae_id = 0;
     bool has_intervening_linebreak = false;
 
     *euouae_follows = '\0';
     *eol_forces_custos = '\0';
+    *next_euouae_id = 0;
 
     if (syllable->next_syllable) {
         for (syllable = syllable->next_syllable;
@@ -3435,7 +3436,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     bool end_of_line;
     char euouae_follows;
     char eol_forces_custos;
-    short next_euouae_id;
+    unsigned short next_euouae_id;
 
     gregorio_not_null(syllable, write_syllable, return);
     end_of_word = syllable->position == WORD_END
