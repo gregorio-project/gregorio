@@ -34,6 +34,8 @@
 \xdef\greendafterbarpenalty{-200}%
 % penalty right after a bar with nothing printed
 \xdef\greendafterbaraltpenalty{-200}%
+% penalty at the end of the score
+\xdef\grefinalpenalty{0}%
 % penalty at the end of a breakable neumatic element (typically at a space
 % between elements)
 \xdef\greendofelementpenalty{-50}%
@@ -47,7 +49,7 @@
 
 %% These macro enable the tuning of linepenalty, tolerance, pretolerance
 %% and emergencystretch
-\def\grelooseness{\looseness}%
+\def\grelooseness{-1}%
 \def\gretolerance{9000}%
 % Workaround for bug 842 (http://tracker.luatex.org/view.php?id=842)
 % see http://tug.org/pipermail/luatex/2013-July/004516.html

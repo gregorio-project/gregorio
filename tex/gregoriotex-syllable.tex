@@ -110,6 +110,14 @@
   \relax %
 }%
 
+\def\gre@endofglyphcommon{%
+  \ifgre@endofscore %
+    \gre@penalty{\grefinalpenalty}%
+    \gre@localleftbox{}%
+    \gre@localrightbox{}%
+  \fi %
+}
+
 % passes the glyph height limits:
 % #1: the high height
 % #2: the low height
@@ -160,6 +168,7 @@
   \fi%
   #6\relax %
   \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
+  \gre@endofglyphcommon %
   \relax%
 }%
 
@@ -525,7 +534,7 @@
     \gdef\gre@firstsyllablepart{#1}%
     \gdef\gre@middlesyllablepart{#2}%
     \gdef\gre@endsyllablepart{#3}%
-  \else%	
+  \else%
     \ifcase\gre@lyriccentering% 0 - syllable centering
       \gdef\gre@firstsyllablepart{}%
       \gdef\gre@middlesyllablepart{#1#2#3}%
@@ -1071,10 +1080,16 @@
         \GreNoBreak %
         \kern\gre@skip@nextbegindifference\relax%
       \fi%
-    \else\ifgre@endofscore\else %
-      \gre@debugmsg{barspacing}{calling new line with argument: \gre@newlinearg}%
-      \gre@newlinecommon{\gre@newlinearg}{1}%
-    \fi\fi%
+    \else %
+      \ifgre@endofscore %
+        \luatexlocalleftbox{}%
+        \gre@debugmsg{barspacing}{after bar penalty: \greendafterbarpenalty}%
+        \gre@penalty{\grefinalpenalty}%
+      \else %
+        \gre@debugmsg{barspacing}{calling new line with argument: \gre@newlinearg}%
+        \gre@newlinecommon{\gre@newlinearg}{1}%
+      \fi %
+    \fi%
   \else%
     %
     % Old spacing algorithm

@@ -10,9 +10,11 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - High notes are now taken into account for vertical placement of above lines test (see [#960](https://github.com/gregorio-project/gregorio/issues/960)).
 - Forced syllable centers can be used in to override alignment issues when lyric centering is set to `syllable` or `firstletter`.  This is a restoration of old behavior (pre-4.0), but can be turned off with `\gresetgabcforcecenters{prohibit}`.  See [968](https://github.com/gregorio-project/gregorio/issues/968).
 - Deminutus figures in nabc work again (see [#1015](https://github.com/gregorio-project/gregorio/issues/1015)).
+- Orphaned syllables should appear less frequently at end of score (see [1019](https://github.com/gregorio-project/gregorio/issues/1019)).
 
 ### Added
 - The macro `\grechangecount` now allows to change some numeric values of the configuration. This version introduces two of them: `additionaltopspacethreshold` and `additionaltopspacealtthreshold`, see GregorioRef for details.
+- The penalty `grefinalpenalty` (0 by default) is added at the end of the score. Be sure you know what you're doing before modifying it.
 
 ## [4.1.0] - 2016-03-01
 ### Fixed
