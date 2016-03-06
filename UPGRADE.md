@@ -10,7 +10,7 @@ High notes are now taken into account in vertical spacings. If you would like to
 
 ### Last line of score behavior
 
-`\grelooseness` is now `-1` by default. This should prevent orphaned syllable at end of score. If you prefer the old behavior, use `\def\grelooseness{-1}` befor including your scores.
+`\grelooseness` is now `-1` by default. This should prevent orphaned syllable at end of score. If you prefer the old behavior, use `\def\grelooseness{\looseness}` befor including your scores.
 
 ## 4.1
 
