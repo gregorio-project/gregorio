@@ -2534,20 +2534,31 @@ static int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
 static __inline void write_low_choral_sign(FILE *const f,
         const gregorio_note *const note, int special)
 {
-    fprintf(f, "\\GreLowChoralSign{%d}{%s%s%s}{%d}%%\n",
-            pitch_value(note->u.note.pitch),
-            note->choral_sign_is_nabc? "\\GreNABCChar{" : "",
-            note->choral_sign, note->choral_sign_is_nabc? "}" : "", special);
+    if (note->choral_sign_is_nabc) {
+        fprintf(f, "\\GreLowChoralSign{%d}{\\GreNABCChar{",
+                pitch_value(note->u.note.pitch));
+        tex_escape_text(f, note->choral_sign);
+        fprintf(f, "}}{%d}%%\n", special);
+    } else {
+        fprintf(f, "\\GreLowChoralSign{%d}{%s}{%d}%%\n",
+                pitch_value(note->u.note.pitch), note->choral_sign,
+                special);
+    }
 }
 
 static __inline void write_high_choral_sign(FILE *const f,
         const gregorio_note *const note, int pitch_offset)
 {
-    fprintf(f, "\\GreHighChoralSign{%d}{%s%s%s}{\\GreOCase%s}%%\n",
-            pitch_value(note->u.note.pitch + pitch_offset),
-            note->choral_sign_is_nabc? "\\GreNABCChar{" : "",
-            note->choral_sign, note->choral_sign_is_nabc? "}" : "",
-            note->gtex_offset_case);
+    if (note->choral_sign_is_nabc) {
+        fprintf(f, "\\GreHighChoralSign{%d}{\\GreNABCChar{",
+                pitch_value(note->u.note.pitch + pitch_offset));
+        tex_escape_text(f, note->choral_sign);
+        fprintf(f, "}}{\\GreOCase%s}%%\n", note->gtex_offset_case);
+    } else {
+        fprintf(f, "\\GreHighChoralSign{%d}{%s}{\\GreOCase%s}%%\n",
+                pitch_value(note->u.note.pitch + pitch_offset),
+                note->choral_sign, note->gtex_offset_case);
+    }
 }
 
 static void gregoriotex_write_choral_sign(FILE *f, gregorio_glyph *glyph,
@@ -3597,8 +3608,9 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                 size_t i;
                 for (i = 0; i < element->nabc_lines; i++) {
                     if (element->nabc[i]) {
-                        fprintf(f, "\\GreNABCNeumes{%d}{%s}%%\n", (int)(i+1),
-                                element->nabc[i]);
+                        fprintf(f, "\\GreNABCNeumes{%d}{", (int)(i+1));
+                        tex_escape_text(f, element->nabc[i]);
+                        fprintf(f, "}%%\n");
                     }
                 }
             }
