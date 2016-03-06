@@ -8,6 +8,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Corrected the end-of-line shift for a ragged line break before `<eu>` blocks (see [#988](https://github.com/gregorio-project/gregorio/issues/988)).
 - Additional space is now added on top of lines with very high notes or signs (see [#883](https://github.com/gregorio-project/gregorio/issues/883)).
 - High notes are now taken into account for vertical placement of above lines test (see [#960](https://github.com/gregorio-project/gregorio/issues/960)).
+- Forced syllable centers can be used in to override alignment issues when lyric centering is set to `syllable` or `firstletter`.  This is a restoration of old behavior (pre-4.0), but can be turned off with `\gresetgabcforcecenters{prohibit}`.  See [968](https://github.com/gregorio-project/gregorio/issues/968).
 
 ### Added
 - The macro `\grechangecount` now allows to change some numeric values of the configuration. This version introduces two of them: `additionaltopspacethreshold` and `additionaltopspacealtthreshold`, see GregorioRef for details.
