@@ -37,20 +37,18 @@
   \gre@nabcfontloadedtrue%
 }
 
-\newcommand{\grenabccharno}[3]{{\directlua{
-  tex.sprint(gregoriotex.parse_nabc("\luatexluaescapestring{#1}", "\luatexluaescapestring{#2}", \luatexluaescapestring{#3}))
+\def\grenabccharno#1#2#3{{\directlua{
+  gregoriotex.print_nabc(gregoriotex.parse_nabc("#1", "\luatexluaescapestring{#2}", #3))
 }}}
 
-\def\GreNABCChar#1{%
-  \begingroup %
-    \catcode`\~=12{}%
-    \catcode`\@=11{}%
-    \gre@font@nabc %
-    \gre@style@nabc %
-    \grenabccharno{#1}{\gre@nabcfontname}{1}%
-    \endgre@style@nabc%
-  \endgroup %
-}
+\def\GreNABCChar#1{{%
+  %\catcode`\~=12{}%
+  %\catcode`\@=11{}%
+  \gre@font@nabc %
+  \gre@style@nabc %
+  \grenabccharno{#1}{\gre@nabcfontname}{1}%
+  \endgre@style@nabc%
+}}
 
 \def\GreNABCNeumes#1#2{%
   \GreSetTextAboveLines{\GreNABCChar{#2}}%

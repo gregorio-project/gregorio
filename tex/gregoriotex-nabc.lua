@@ -22,6 +22,8 @@
 
 -- GREGORIO_VERSION 4.1.0
 
+local catcode_at_letter = luatexbase.catcodetables['gre@atletter']
+
 local gregallaliases = {
   ["ci~"] = "cl>",
   ["pe~"] = "ta>",
@@ -413,6 +415,11 @@ local function init_font(fontname)
   end
 end
 
+local function print_nabc(nabc)
+  tex.sprint(catcode_at_letter, nabc)
+end
+
 gregoriotex.parse_nabc = gregallparse_neumes
+gregoriotex.print_nabc = print_nabc
 gregoriotex.init_nabc_font = init_font
 gregoriotex.nabc_font_tables = gregalltab
