@@ -820,6 +820,14 @@ You can also define your own languages in \texttt{gregorio-vowels.dat}.  If you 
 
 Finally, in cases where you want some sort of exceptional alignment, you can force Gregorio to consider a particular part of the syllable to be the ``vowel'' by enclosing it in curly braces (``\{'' and ``\}'') in your gabc file.  Curly braces only affect alignment when using vowel centering.  Syllable centering will always use the entire syllable, and firstletter centering will always use the first character of the syllable --- regardless of curly braces in the gabc file.
 
+\macroname{\textbackslash gresetgabcforcecenters}{\{\#1\}}{gregoriotex-syllable.tex}
+Macro to determine whether a forced center (\ie, one specified by curly braces (``\{'' and ``\}'') in your gabc file) should influence the alignment of that syllable when \texttt{syllable} and \texttt{firstletter} alignments are in effect.
+
+\begin{argtable}
+  \#1 & \texttt{allow} & Forced centers in gabc are allowed to influence the syllable alignment (default).\\
+  & \texttt{prohibit} & Forced centers in gabc do not influence the syllable alignment.\\
+\end{argtable}
+
 \macroname{\textbackslash gresettranslationcentering}{\{\#1\}}{gregoriotex-main.tex}
 Macro to specify how the translation text should be aligned with it respective syllable text.
 
