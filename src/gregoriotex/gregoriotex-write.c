@@ -3575,9 +3575,6 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
         fprintf(f, "{\\GreSetNextSyllable{}{}{}{}{}");
         if (end_of_line) {
             fprintf(f, "\\GreLastOfLine");
-        } else if (euouae_follows) {
-            fprintf(f, "\\GreLastSyllableBeforeEUOUAE{%hu}{%c}",
-                    next_euouae_id, euouae_follows);
         }
         fprintf(f, "}{");
         write_syllable_point_and_click(f, syllable, status);
