@@ -364,6 +364,7 @@
   \kern\gre@dimen@temp@four %
   \GreNoBreak%
   \GreCustos{#1}%
+  \gre@endofglyphcommon %
 }
 
 % the argument is the height
@@ -2023,7 +2024,6 @@
     \fi %
     \GreLastOfScore %
     \GreDivisioFinalis{0}{}%
-    \setbox\gre@box@temp@width=\hbox{#1}%
     #1%
   }%
   \relax%
