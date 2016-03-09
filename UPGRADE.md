@@ -56,7 +56,7 @@ In the past, Gregorio handled the notes of an `<eu>` block like any other, which
 
 #### New algorithm
 
-A new algorithm has been implemented but is turned on by default.  We hope this will be a significant improvement over the previous one.  The goal of the new algorithm is to place the bar line exactly between the notes which surround it and do the same with the text associated with the bar line while at the same time keeping the text and bar reasonably close together and with sufficent space between the bar syallable and the surrounding syllables (possibly introducing space to meet the competing interests).  The new algorithm introduces sevearl new spaces allowing the user to tune the algorithm:
+A new algorithm has been implemented and is turned on by default.  We hope this will be a significant improvement over the previous one.  The primary goal of the new algorithm is to place the bar line exactly between the notes which surround it and do the same with the text associated with the bar line.  However, it will also keep the text and bar reasonably close together and with sufficent space between the bar syallable and the surrounding syllables (possibly introducing space to meet the competing interests).  The new algorithm introduces several new spaces allowing the user to tune the algorithm:
   - `maxbaroffsettextright`
   - `maxbaroffsettextleft`
   - `maxbaroffsettextright@nobar`
