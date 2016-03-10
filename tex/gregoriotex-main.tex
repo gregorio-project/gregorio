@@ -1684,7 +1684,7 @@
     ]%
 }%
 
-
+\def\gre@allowdeprecated@asboolean{\ifgre@allowdeprecated true\else false\fi}%
 
 % Internal marco which includes a score when \gregorioscore is called without the optional argument.  Behavior is determined by the value of \gre@compilegabc flag.
 %
@@ -1705,10 +1705,10 @@
     \input #1%
   \or% case 1, auto compile
     \gre@debugmsg{compile}{Auto compile #1}%
-    \directlua{gregoriotex.include_score([[#1]], nil)}%
+    \directlua{gregoriotex.include_score([[#1]], nil, \gre@allowdeprecated@asboolean)}%
   \or% case 2, force compile
     \gre@debugmsg{compile}{Forced to compile #1}%
-    \directlua{gregoriotex.include_score([[#1]], true)}%
+    \directlua{gregoriotex.include_score([[#1]], true, \gre@allowdeprecated@asboolean)}%
   \fi%
   \relax%
 }%
@@ -1724,11 +1724,11 @@
   \else%
     \ifx #1f\relax%
       \gre@debugmsg{compile}{Override force compiling #2}%
-      \directlua{gregoriotex.include_score([[#2]], true)}%
+      \directlua{gregoriotex.include_score([[#2]], true, \gre@allowdeprecated@asboolean)}%
     \else%
       \ifx #1a\relax%
         \gre@debugmsg{compile}{Override auto compiling #2}%
-        \directlua{gregoriotex.include_score([[#2]], nil)}%
+        \directlua{gregoriotex.include_score([[#2]], nil, \gre@allowdeprecated@asboolean)}%
       \else%
         \gre@error{Unrecognized option "#1" for \protect\includescore\MessageBreak Possible options are: 'f', 'a', and 'n'}%
       \fi%
@@ -1762,11 +1762,11 @@
 
 \long\def\gre@gabcsnippet@option[#1]#2{%%% DEPRECATED for removal in 5.0
   \gre@deprecated{\protect\gabcsnippet  with initial-style argument}{\protect\gresetinitiallines}%
-  \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#2}}", "initial-style: #1;")}%
+  \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#2}}", "initial-style: #1;", \gre@allowdeprecated@asboolean)}%
 }%
 
 \long\def\gre@gabcsnippet#1{%
-  \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#1}}")}%
+  \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#1}}", nil, \gre@allowdeprecated@asboolean)}%
 }%
 
 %%% \gre@gabcsnipper@option is DEPRECATED for removal in 5.0
