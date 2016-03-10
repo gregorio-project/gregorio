@@ -54,8 +54,9 @@ else
     ./build.sh --arch=x86_64
     # If the build process fails we halt this script here, since we can't build the
     # package without a properly compiled version of Gregorio.
-    if [ ! $? -eq 0 ]; then
-        exit $?
+    exit_code=$?
+    if [ ! $exit_code -eq 0 ]; then
+        exit $exit_code
     fi
     make DESTDIR=$BUILDDIR install
     ./install-gtex.sh dir:$BUILDDIR/tmp/gregorio

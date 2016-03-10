@@ -56,13 +56,28 @@ In the past, Gregorio handled the notes of an `<eu>` block like any other, which
 
 #### New algorithm
 
-A new algorithm has been implemented but is turned off by default. We hope this will be a significant improvement over previous one, but it still has a few bugs. You can turn it on with
+A new algorithm has been implemented and is turned on by default.  We hope this will be a significant improvement over the previous one.  The primary goal of the new algorithm is to place the bar line exactly between the notes which surround it and do the same with the text associated with the bar line.  However, it will also keep the text and bar reasonably close together and with sufficent space between the bar syallable and the surrounding syllables (possibly introducing space to meet the competing interests).  The new algorithm introduces several new spaces allowing the user to tune the algorithm:
+  - `maxbaroffsettextright`
+  - `maxbaroffsettextleft`
+  - `maxbaroffsettextright@nobar`
+  - `maxbaroffsettextleft@nobar`
+  - `maxbaroffsettextright@eol`
+  - `maxbaroffsettextleft@eol`
+  - `bar@*@standalone@text` (where `*` is the type of bar)
+  - `bar@*@standalone@notext` (where `*` is the type of bar)
+  - `interwordspacetext@bars`
+  - `interwordspacetext@bars@euouae`
+  - `interwordspacetext@bars@notext`
+  - `interwordspacetext@bars@notext@euouae`
+  - `bar@rubber`
+If you prefer the old bar spacing algorithm, you can revert to that with:
 
 ```
-\gresetbarspacing{new}
+\gresetbarspacing{old}
 ```
 
-If you do give it a try, please be sure to report any bugs you find.
+Another big change in this algorithm is that empty syllables, i.e. ones without any notes, are now treated as a 0-width bar, not as a 0-width note.  Thus if you were using this sort of syllable to insert space into your score, chances are the results will be different under the new algorithm and will require you to re-tweak your scores.
+
 
 #### Renaming of spaces
 
@@ -102,6 +117,7 @@ If you were using `\scorereference`, `\GreScoreReference`, and/or `\grescorerefe
 ### Three descending notes
 
 Three descending notes that have no other markings (such as liquescentia) will now be rendered as a clivis followed by a punctum.  The older, incorrect behavior was to group them as three punctums joined by `!`.  If you prefer this behavior, explicitly separate the notes with `!`.
+
 
 ## 4.0
 

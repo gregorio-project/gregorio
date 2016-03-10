@@ -1249,6 +1249,11 @@
 
 %macro called at the end of a score
 \def\GreEndScore{%
+  \ifnum\gre@biginitial=1\relax%
+    \ifnum\gre@knownline<3\relax%
+      \gre@error{Score ended before finding the end\MessageBreak of the second line of a 2-line initial.  Make sure\MessageBreak you have at least two manual line breaks in \MessageBreak your gabc}%
+    \fi%
+  \fi%
   \global\gre@lastoflinecount=0\relax %
   \gre@useautoeolcustos%
   \GreEndEUOUAE{}%
