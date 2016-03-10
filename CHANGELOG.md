@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 [Unreleased][unreleased]
+
+
+## [4.1.1] - 2016-03-10
 ### Fixed
 - Custos now shouldn't go right of the staff lines (was visible only in edge cases, see [#990](https://github.com/gregorio-project/gregorio/issues/990)).
 - Corrected the end-of-line shift for a ragged line break before `<eu>` blocks (see [#988](https://github.com/gregorio-project/gregorio/issues/988)).
