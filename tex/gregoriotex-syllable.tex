@@ -43,7 +43,7 @@
 
 \def\gresetpointandclick#1{%
   \IfStrEqCase{#1}{%
-    {on}
+    {on}%
       {%
         \ifx\pdfoutput\undefined %
           \gre@warning{Unable to enable point-and-click because \protect\pdfoutput \MessageBreak is not defined}%
@@ -58,7 +58,7 @@
         \fi %
       }%
     {off}%
-      {\gre@generate@pointandclick=0\relax}
+      {\gre@generate@pointandclick=0\relax}%
     }[% all other cases
       \gre@error{Unrecognized option "#1" for \protect\gresetpointandclick\MessageBreak Possible options are: 'on' and 'off'}%
     ]%
@@ -93,6 +93,7 @@
   \ifnum\gre@lastoflinecount=2\relax %
     \global\gre@lastoflinecount=0\relax %
   \fi %
+  \global\gre@skip@bar@lastskip=0pt\relax %
   \gre@currenttextabovelines %
   \ifcase\gre@count@lastglyphiscavum\or %
     \global\gre@count@lastglyphiscavum=2\relax %
@@ -100,8 +101,22 @@
     \global\gre@count@lastglyphiscavum=0\relax %
   \fi %
   \global\gre@lastendswithmorafalse %
+  \ifgre@boxing\else\ifgre@firstin@euouae %
+    \ifgre@raggedbreakbeforeeuouae %
+      \directlua{gregoriotex.save_pos(\the\gre@lasteuouaeindex,2)}%
+    \fi %
+    \gre@firstin@euouaefalse %
+  \fi\fi %
   \relax %
 }%
+
+\def\gre@endofglyphcommon{%
+  \ifgre@endofscore %
+    \gre@penalty{\grefinalpenalty}%
+    \gre@localleftbox{}%
+    \gre@localrightbox{}%
+  \fi %
+}
 
 % passes the glyph height limits:
 % #1: the high height
@@ -153,6 +168,7 @@
   \fi%
   #6\relax %
   \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
+  \gre@endofglyphcommon %
   \relax%
 }%
 
@@ -361,6 +377,7 @@
   \fi %
   \let\ifgre@lastendswithmora\ifgre@lastendswithmorasave %
   \global\gre@count@lastglyphiscavum=0\relax %
+  \global\gre@skip@bar@lastskip=0pt\relax %
   \global\gre@endofscorefalse %
   \relax %
 }%
@@ -469,31 +486,93 @@
 
 \def\GreUnstyled#1{#1}%
 
+\newif\ifgre@forcedcentering%
+\gre@forcedcenteringfalse%
+\newif\ifgre@nextforcedcentering%
+\gre@nextforcedcenteringfalse%
+
+\def\GreGABCForceCenters{%
+  \ifgre@gabcforcecenters%
+    \gre@forcedcenteringtrue%
+  \else%
+    \gre@forcedcenteringfalse%
+  \fi%
+}%
+
+\def\GreGABCNextForceCenters{%
+  \ifgre@gabcforcecenters%
+    \gre@nextforcedcenteringtrue%
+  \else%
+    \gre@nextforcedcenteringfalse%
+  \fi%
+}%
+
+\newif\ifgre@gabcforcecenters%
+\gre@gabcforcecenterstrue%
+
+\def\gresetgabcforcecenters#1{%
+  \ifcase\gre@lyriccentering\or
+    \gre@warning{\protect\gresetgabcforcecenters\space has no effect when lyrics are centered on the vowels}%
+  \fi%
+  \IfStrEqCase{#1}{%
+    {allow}%
+      {\gre@gabcforcecenterstrue}%
+    {prohibit}%
+      {\gre@gabcforcecentersfalse}%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetgabcforcecenters\MessageBreak Possible options are: 'allow' and 'prohibit'}%
+    ]%
+}%
+
 % #1 : the first letters of the syllable, that don't count for the alignment
 % #2 : the middle letters of the syllable, we must align in the middle of them
 % #3 : the end letters, they don't count
 % #4 : the very first letter
 % #5 : all the letters after the first letter
 \def\GreSetThisSyllable#1#2#3#4#5{%
-  \ifcase\gre@lyriccentering% 0 - syllable centering
-    \gdef\gre@firstsyllablepart{}%
-    \gdef\gre@middlesyllablepart{#1#2#3}%
-    \gdef\gre@endsyllablepart{}%
-  \or % 1 - vowel centering
+  \ifgre@forcedcentering%
     \gdef\gre@firstsyllablepart{#1}%
     \gdef\gre@middlesyllablepart{#2}%
     \gdef\gre@endsyllablepart{#3}%
-  \or % 2 - first-letter centering
-    \gdef\gre@firstsyllablepart{}%
-    \gdef\gre@middlesyllablepart{#4}%
-    \gdef\gre@endsyllablepart{#5}%
-  \fi %
+  \else%
+    \ifcase\gre@lyriccentering% 0 - syllable centering
+      \gdef\gre@firstsyllablepart{}%
+      \gdef\gre@middlesyllablepart{#1#2#3}%
+      \gdef\gre@endsyllablepart{}%
+    \or % 1 - vowel centering
+      \gdef\gre@firstsyllablepart{#1}%
+      \gdef\gre@middlesyllablepart{#2}%
+      \gdef\gre@endsyllablepart{#3}%
+    \or % 2 - first-letter centering
+      \gdef\gre@firstsyllablepart{}%
+      \gdef\gre@middlesyllablepart{#4}%
+      \gdef\gre@endsyllablepart{#5}%
+    \fi %
+  \fi%
+  \gre@forcedcenteringfalse%
 }%
 
 \def\GreSetNextSyllable#1#2#3#4#5{%
-  \gdef\gre@nextfirstsyllablepart{#1}%
-  \gdef\gre@nextmiddlesyllablepart{#2}%
-  \gdef\gre@nextendsyllablepart{#3}%
+  \ifgre@nextforcedcentering%
+    \gdef\gre@nextfirstsyllablepart{#1}%
+    \gdef\gre@nextmiddlesyllablepart{#2}%
+    \gdef\gre@nextendsyllablepart{#3}%
+  \else%
+    \ifcase\gre@lyriccentering% 0 - syllable centering
+      \gdef\gre@nextfirstsyllablepart{}%
+      \gdef\gre@nextmiddlesyllablepart{#1#2#3}%
+      \gdef\gre@nextendsyllablepart{}%
+    \or % 1 - vowel centering
+      \gdef\gre@nextfirstsyllablepart{#1}%
+      \gdef\gre@nextmiddlesyllablepart{#2}%
+      \gdef\gre@nextendsyllablepart{#3}%
+    \or % 2 - first-letter centering
+      \gdef\gre@nextfirstsyllablepart{}%
+      \gdef\gre@nextmiddlesyllablepart{#4}%
+      \gdef\gre@nextendsyllablepart{#5}%
+    \fi %
+  \fi%
+  \gre@nextforcedcenteringfalse%
 }%
 
 %%%%%%%%%%%%%%%
@@ -529,7 +608,7 @@
 
 
 \def\gresetclivisalignment#1{%
-  \IfStrEqCase{#1}{
+  \IfStrEqCase{#1}{%
     {always}%
       {\global\gre@clivisalignment=0\relax}%
     {never}%
@@ -545,7 +624,7 @@
 \newif\ifgre@forceemptyfirstsyllablehyphen%
 \gre@forceemptyfirstsyllablehyphentrue%
 \def\gresetemptyfirstsyllablehyphen#1{%
-  \IfStrEqCase{#1}{
+  \IfStrEqCase{#1}{%
     {auto}%
       {\gre@forceemptyfirstsyllablehyphenfalse}%
     {force}%
@@ -733,18 +812,30 @@
   \relax %
 }%
 
-\def\GreNextSyllableBeginsEUOUAE#1{%
+% #1 is the id of the euouae block (assigned by the C code)
+% #2 is whether there is a line break between here and the actuall beginning of
+%      the euouae block. 1 if there is a linebreak, 0 in the general case.
+\def\GreNextSyllableBeginsEUOUAE#1#2{%
   \GreNoBreak %
   \ifgre@blockeolcustosbeforeeuouae %
     \gre@usemanualeolcustos %
   \fi %
   \ifgre@raggedbreakbeforeeuouae %
     \directlua{gregoriotex.save_pos(#1,1)}%
-  \fi %
-  \ifcase\directlua{gregoriotex.is_ypos_different(#1)}\relax%
-    \gre@newlinecommon{1}{1}%
+    \ifcase#2\ifcase\directlua{gregoriotex.is_ypos_different(#1)}\relax%
+      \gre@newlinecommon{1}{1}%
+    \fi\fi %
   \fi %
   \relax %
+}%
+
+% #1 is the id of the euouae block (assigned by the C code)
+% #2 is whether there is a line break between here and the actuall beginning of
+%      the euouae block. 1 if there is a linebreak, 0 in the general case.
+\def\GreLastSyllableBeforeEUOUAE#1#2{%
+  \ifcase#2\ifcase\directlua{gregoriotex.is_ypos_different(#1)}\relax%
+    \GreLastOfLine%
+  \fi\fi %
 }%
 
 %% @desc Macro to make a few checks and call the right macros between
@@ -971,10 +1062,16 @@
         \GreNoBreak %
         \kern\gre@skip@nextbegindifference\relax%
       \fi%
-    \else\ifgre@endofscore\else %
-      \gre@debugmsg{barspacing}{calling new line with argument: \gre@newlinearg}%
-      \gre@newlinecommon{\gre@newlinearg}{1}%
-    \fi\fi%
+    \else %
+      \ifgre@endofscore %
+        \gre@localleftbox{}%
+        \gre@debugmsg{barspacing}{after bar penalty: \greendafterbarpenalty}%
+        \gre@penalty{\grefinalpenalty}%
+      \else %
+        \gre@debugmsg{barspacing}{calling new line with argument: \gre@newlinearg}%
+        \gre@newlinecommon{\gre@newlinearg}{1}%
+      \fi %
+    \fi%
   \else%
     %
     % Old spacing algorithm
@@ -1125,7 +1222,21 @@
   }%
 }%
 
-\def\gresetinitiallines#1{\def\gre@initiallines{#1}}%
+\def\gresetinitiallines#1{%
+  \IfInteger{#1}%
+    {%
+      \ifnum#1>-1\relax%
+        \ifnum#1<3\relax%
+          \def\gre@initiallines{#1}%
+        \else%
+          \gre@error{The argument for \protect\gresetinitiallines\space must be 0, 1, or 2}%
+        \fi%
+      \else%
+        \gre@error{The argument for \protect\gresetinitiallines\space must be positive}%
+      \fi%
+    }%
+    {\gre@error{\protect\gresetinitiallines\space takes a positive integer argument}}%
+}%
 \gresetinitiallines{1}% default to one-line initials
 
 \def\GreSetInitialStyle#1{%%% DEPRECATED for removal in 5.0

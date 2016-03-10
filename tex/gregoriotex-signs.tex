@@ -75,7 +75,7 @@
             \gre@error{Unrecognized first argument for \protect\greprintsigns}%
           ]%
       }%
-    }[% all other cases	
+    }[% all other cases
       \gre@error{Unrecognized second argument for \protect\greprintsigns}%
     ]%
 }%
@@ -313,7 +313,12 @@
 }%
 
 % custos just typesets a custos, useful for before the key changes for example
+% #1 is the height
+% #2 is indicating if the custo ends the line
 \def\GreCustos#1{%
+  \ifdim\gre@skip@bar@lastskip=0pt\else % we're after a bar:
+    \kern-\gre@skip@bar@lastskip %
+  \fi %
   \gre@skip@temp@four = \gre@space@skip@spacebeforeinlinecustos\relax%
   \kern\gre@skip@temp@four%
   \gre@calculate@glyphraisevalue{#1}{0}{}%
@@ -329,23 +334,29 @@
   \fi %
   \raise \gre@dimen@glyphraisevalue\relax%
   \copy\gre@box@temp@width %
-  % for now we consider we always have a bar after the custos
-  % we don't want to end the line here
-  \GreNoBreak %
-  \gre@skip@temp@four = -\gre@space@skip@spacearoundclefbars\relax%
-  \gre@hskip\gre@skip@temp@four %
-  \GreNoBreak %
+  \ifdim\gre@skip@bar@lastskip=0pt\relax %
+    % for now we consider we always have a bar after the custos
+    % we don't want to end the line here
+    \GreNoBreak %
+    \gre@skip@temp@four = -\gre@space@skip@spacearoundclefbars\relax%
+    \gre@hskip\gre@skip@temp@four %
+    \GreNoBreak %
+  \else %
+    \GreNoBreak %
+    \kern\gre@skip@bar@lastskip %
+    \GreNoBreak %
+  \fi %
   \relax %
 }%
 
 % typesets a custos for the end of the score
 \def\GreFinalCustos#1{%
   \GreNoBreak%
-  % yes, we are computing as a glue and then casting to a dimen
-  \gre@dimen@temp@four = \glueexpr(\gre@space@skip@spacebeforeeolcustos+\gre@space@skip@interelementspace)\relax%
-  \hbox to \gre@dimen@temp@four{}%
+  \gre@dimen@temp@four = \glueexpr(\gre@space@skip@spacebeforeeolcustos)\relax%
+  \kern\gre@dimen@temp@four %
   \GreNoBreak%
   \GreCustos{#1}%
+  \gre@endofglyphcommon %
 }
 
 % the argument is the height

@@ -79,3 +79,6 @@ rm $CFILE
 rm $TEXFILE.temp
 rm $TEXFILE
 rm $DIFFFILE
+
+#open result
+open $RESFILE
