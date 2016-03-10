@@ -722,15 +722,15 @@
 \def\gre@typesettextabovelines#1{%
   \gre@style@abovelinestext%
   \gre@debugmsg{spacing}{Raise alt text: \gre@space@dimen@abovelinestextraise}%
-  \global\gre@dimen@temp@five=\gre@space@dimen@abovelinestextraise\relax%
   \endgre@style@abovelinestext%
-  \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
-  \advance\gre@dimen@temp@five by \dimexpr(4\gre@dimen@stafflineheight %
+  \gre@dimen@temp@five=\dimexpr(4\gre@dimen@stafflineheight %
     + 4\gre@dimen@interstafflinespace %
     + \gre@space@dimen@spacebeneathtext %
     + \gre@dimen@currenttranslationheight %
     + \gre@space@dimen@spacelinestext %
-    + \gre@dimen@additionalbottomspace)\relax%
+    + \gre@dimen@additionalbottomspace %
+    + \gre@dimen@additionaltopspacealt %
+    + \gre@space@dimen@abovelinestextraise)\relax%
   \gre@mark@abovelinestext %
   \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
     \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\gre@style@abovelinestext#1\endgre@style@abovelinestext\hss}%
@@ -825,8 +825,7 @@
   \setbox\gre@box@lines=\hbox to 0pt{%
     \vbox{%
       \gre@style@normalstafflines%
-      \vskip\gre@space@skip@spaceabovelines\relax%
-      \vskip\gre@dimen@currentabovelinestextheight\relax%
+      \vskip\glueexpr(\gre@dimen@additionaltopspace+\gre@space@skip@spaceabovelines+\gre@dimen@currentabovelinestextheight)\relax%
       \ifgre@showlines %
         \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
       \else %
@@ -866,10 +865,7 @@
           \vskip\gre@dimen@stafflineheight\relax%
         \fi %
       \fi %
-      \vskip\gre@space@dimen@spacelinestext\relax%
-      \vskip\gre@dimen@additionalbottomspace\relax%
-      \vskip\gre@space@dimen@spacebeneathtext\relax%
-      \vskip\gre@dimen@currenttranslationheight\relax%
+      \kern\dimexpr(\gre@space@dimen@spacelinestext+\gre@dimen@additionalbottomspace+\gre@space@dimen@spacebeneathtext+\gre@dimen@currenttranslationheight)\relax%
       \endgre@style@normalstafflines %
     }%
     \hss%
@@ -1133,6 +1129,11 @@
 
 %macro called at the end of a score
 \def\GreEndScore{%
+  \ifnum\gre@biginitial=1\relax%
+    \ifnum\gre@knownline<3\relax%
+      \gre@error{Score ended before finding the end\MessageBreak of the second line of a 2-line initial.  Make sure\MessageBreak you have at least two manual line breaks in \MessageBreak your gabc}%
+    \fi%
+  \fi%
   \global\gre@lastoflinecount=0\relax %
   \gre@useautoeolcustos%
   \GreEndEUOUAE{}%
@@ -1537,12 +1538,18 @@
 \newif\ifgre@in@euouae
 \gre@in@euouaefalse
 
+\newif\ifgre@firstin@euouae
+\gre@firstin@euouaefalse
+\newcount\gre@lasteuouaeindex
+\gre@lasteuouaeindex=0
+
 \def\GreBeginEUOUAE#1{%
   \ifgre@euouae@implies@nlba %
     \GreBeginNLBArea{0}{0}%
   \fi %
   \ifgre@raggedbreakbeforeeuouae %
-    \directlua{gregoriotex.save_pos(#1,2)}%
+    \gre@lasteuouaeindex=#1\relax %
+    \gre@firstin@euouaetrue %
   \fi %
   \gre@in@euouaetrue %
   % as soon as the EUOUAE starts, we stop blocking the EOL custos that might
@@ -1555,6 +1562,7 @@
     \GreEndNLBArea{#1}{0}%
   \fi %
   \gre@in@euouaefalse %
+  \gre@firstin@euouaefalse %
 }
 
 \input gregoriotex-symbols.tex%
