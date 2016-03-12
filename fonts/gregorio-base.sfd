@@ -43,7 +43,7 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 1
-WinInfo: 0 19 8
+WinInfo: 0 18 9
 BeginPrivate: 0
 EndPrivate
 Grid
@@ -152,7 +152,7 @@ EndSplineSet
 Validated: 1
 EndChar
 
-StartChar: OriscusReversus
+StartChar: DescendensOriscus
 Encoding: 4 -1 4
 Width: 164
 VWidth: 2048
@@ -179,7 +179,7 @@ EndSplineSet
 Validated: 1
 EndChar
 
-StartChar: Oriscus
+StartChar: AscendensOriscus
 Encoding: 5 -1 5
 Width: 164
 VWidth: 2048
@@ -832,7 +832,7 @@ EndSplineSet
 Validated: 33
 EndChar
 
-StartChar: OriscusLineTR
+StartChar: AscendensOriscusLineTR
 Encoding: 41 -1 35
 Width: 164
 VWidth: 2048
@@ -1753,7 +1753,7 @@ StartChar: hepisemaright
 Encoding: 83 -1 74
 Width: 2
 VWidth: 1968
-Flags: HWO
+Flags: HW
 HStem: -489 15 -174 15 141 15 456 15
 LayerCount: 2
 Fore
@@ -2130,7 +2130,7 @@ EndSplineSet
 Validated: 33
 EndChar
 
-StartChar: odbase
+StartChar: DescendensOriscusLineBR
 Encoding: 103 -1 92
 Width: 164
 VWidth: 2048
@@ -2412,7 +2412,7 @@ EndSplineSet
 Validated: 33
 EndChar
 
-StartChar: OriscusLineBL
+StartChar: AscendensOriscusLineBL
 Encoding: 113 -1 102
 Width: 164
 VWidth: 2048
@@ -2440,7 +2440,7 @@ EndSplineSet
 Validated: 1
 EndChar
 
-StartChar: SalicusOriscus
+StartChar: AscendensOriscusLineBLTR
 Encoding: 114 -1 103
 Width: 164
 VWidth: 2048
@@ -2873,7 +2873,7 @@ EndSplineSet
 Validated: 1
 EndChar
 
-StartChar: OriscusReversusLineTLBR
+StartChar: DescendensOriscusLineTLBR
 Encoding: 148 -1 121
 Width: 164
 VWidth: 2048
@@ -2899,7 +2899,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: OriscusReversusLineTL
+StartChar: DescendensOriscusLineTL
 Encoding: 149 -1 122
 Width: 164
 VWidth: 2048
@@ -2950,7 +2950,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: OriscusCavum
+StartChar: AscendensOriscusCavum
 Encoding: 152 -1 124
 Width: 164
 VWidth: 2048
@@ -2985,7 +2985,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: OriscusCavumHole
+StartChar: AscendensOriscusCavumHole
 Encoding: 153 -1 125
 Width: 164
 VWidth: 2048
@@ -3006,7 +3006,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: OriscusCavumReversus
+StartChar: DescendensOriscusCavum
 Encoding: 154 -1 126
 Width: 164
 VWidth: 2048
@@ -3041,7 +3041,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: OriscusCavumReversusHole
+StartChar: DescendensOriscusCavumHole
 Encoding: 155 -1 127
 Width: 164
 VWidth: 2048
@@ -3487,7 +3487,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: OriscusReversusLineBL
+StartChar: DescendensOriscusLineBL
 Encoding: 177 -1 150
 Width: 164
 VWidth: 2048
@@ -3514,7 +3514,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: osbase
+StartChar: AscendensOriscusLineBLBR
 Encoding: 178 -1 151
 Width: 164
 VWidth: 2048

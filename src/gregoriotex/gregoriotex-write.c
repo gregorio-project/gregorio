@@ -85,14 +85,14 @@ SHAPE(Linea);
 SHAPE(LineaPunctum);
 SHAPE(LineaPunctumCavum);
 SHAPE(Natural);
-SHAPE(Oriscus);
-SHAPE(OriscusCavum);
-SHAPE(OriscusCavumAuctus);
+SHAPE(AscendensOriscus);
+SHAPE(AscendensOriscusCavum);
+SHAPE(DescendensOriscusCavum);
 SHAPE(OriscusCavumDeminutus);
 SHAPE(OriscusDeminutus);
-SHAPE(OriscusLineBL);
-SHAPE(OriscusReversus);
-SHAPE(OriscusReversusLineTL);
+SHAPE(AscendensOriscusLineBL);
+SHAPE(DescendensOriscus);
+SHAPE(DescendensOriscusLineTL);
 SHAPE(OriscusScapus);
 SHAPE(OriscusScapusLongqueue);
 SHAPE(OriscusScapusOpenqueue);
@@ -238,6 +238,8 @@ static grestyle_style gregoriotex_next_ignore_style = ST_NO_STYLE;
  *
  * They also are and must be the same as in squarize.py.
  */
+
+static const char *temp_oriscus = "Oriscus";
 
 static const char *gregoriotex_determine_liquescentia(
         gtex_glyph_liquescentia type, const gregorio_glyph *const glyph)
@@ -393,12 +395,16 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
         break;
     }
 
-    if ((*fuse_tail && shape == SHAPE_OriscusReversus)
-            || ((shape == SHAPE_OriscusReversus || shape == SHAPE_OriscusScapus
+    if ((*fuse_tail && (shape == SHAPE_AscendensOriscus || shape == SHAPE_DescendensOriscus))
+            || ((shape == SHAPE_AscendensOriscus || shape == SHAPE_DescendensOriscus || shape == SHAPE_OriscusScapus
                     || shape == SHAPE_OriscusScapusLongqueue
                     || shape == SHAPE_OriscusScapusOpenqueue)
                 && is_fused(glyph->u.notes.liquescentia))) {
-        shape = SHAPE_Oriscus;
+        if (*fuse_head || *fuse_tail) {
+            shape = temp_oriscus;
+        } else {
+            shape = SHAPE_AscendensOriscus;
+        }
     }
 
     if (*fuse_tail) {
@@ -406,7 +412,7 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
             if (shape == SHAPE_OriscusScapusReversus
                     || shape == SHAPE_OriscusScapusReversusLongqueue
                     || shape == SHAPE_OriscusScapusReversusOpenqueue) {
-                shape = SHAPE_Oriscus;
+                shape = temp_oriscus;
             }
         } else {
             if (shape == SHAPE_OriscusScapusReversus) {
@@ -429,14 +435,14 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
             if (fuse_head == FUSE_Upper) {
                 if (shape == SHAPE_Punctum) {
                     shape = SHAPE_PunctumLineBL;
-                } else if (shape == SHAPE_Oriscus) {
-                    shape = SHAPE_OriscusLineBL;
+                } else if (shape == SHAPE_AscendensOriscus || shape == temp_oriscus) {
+                    shape = SHAPE_AscendensOriscusLineBL;
                 }
             } else if (fuse_head == FUSE_Lower) {
                 if (shape == SHAPE_Punctum) {
                     shape = SHAPE_PunctumLineTL;
-                } else if (shape == SHAPE_Oriscus) {
-                    shape = SHAPE_OriscusReversusLineTL;
+                } else if (shape == SHAPE_AscendensOriscus || shape == temp_oriscus) {
+                    shape = SHAPE_DescendensOriscusLineTL;
                 }
             }
             fuse_head = "";
@@ -649,10 +655,10 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
         }
     case S_ORISCUS_ASCENDENS:
         *type = AT_ORISCUS;
-        return compute_glyph_name(glyph, SHAPE_Oriscus, LG_NONE, true);
+        return compute_glyph_name(glyph, SHAPE_AscendensOriscus, LG_NONE, true);
     case S_ORISCUS_DESCENDENS:
         *type = AT_ORISCUS;
-        return compute_glyph_name(glyph, SHAPE_OriscusReversus, LG_NONE, true);
+        return compute_glyph_name(glyph, SHAPE_DescendensOriscus, LG_NONE, true);
     case S_ORISCUS_DEMINUTUS:
         *type = AT_ORISCUS;
         return SHAPE_OriscusDeminutus;
@@ -691,10 +697,10 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
         return SHAPE_PunctumCavumInclinatumAuctus;
     case S_ORISCUS_CAVUM_ASCENDENS:
         *type = AT_ORISCUS;
-        return SHAPE_OriscusCavum;
+        return SHAPE_AscendensOriscusCavum;
     case S_ORISCUS_CAVUM_DESCENDENS:
         *type = AT_ORISCUS;
-        return SHAPE_OriscusCavumAuctus;
+        return SHAPE_DescendensOriscusCavum;
     case S_ORISCUS_CAVUM_DEMINUTUS:
         *type = AT_ORISCUS;
         return SHAPE_OriscusCavumDeminutus;
@@ -2372,12 +2378,12 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
                 type);
         break;
     case S_ORISCUS_CAVUM_ASCENDENS:
-        fprintf(f, "\\GreOriscusCavum{%d}{%d}{%d}",
+        fprintf(f, "\\GreAscendensOriscusCavum{%d}{%d}{%d}",
                 pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
                 type);
         break;
     case S_ORISCUS_CAVUM_DESCENDENS:
-        fprintf(f, "\\GreOriscusCavumAuctus{%d}{%d}{%d}",
+        fprintf(f, "\\GreDescendensOriscusCavum{%d}{%d}{%d}",
                 pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
                 type);
         break;
