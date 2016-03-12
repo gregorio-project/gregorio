@@ -73,6 +73,8 @@ local new_var_brace_positions = nil
 local pos_saves = nil
 local new_pos_saves = nil
 local auxname = nil
+local snippet_filename = nil
+local snippet_logname = nil
 
 local space_below_staff = 5
 local space_above_staff = 13
@@ -221,8 +223,12 @@ local function init(arg, enable_height_computation)
   end
   if outputdir and lfs.isdir(outputdir) then
     auxname = outputdir..'/'..tex.jobname..'.gaux'
+    snippet_filename = outputdir..'/'..tex.jobname..'.gsnippet'
+    snippet_logname = outputdir..'/'..tex.jobname..'.gsniplog'
   else
     auxname = tex.jobname..'.gaux'
+    snippet_filename = tex.jobname..'.gsnippet'
+    snippet_logname = tex.jobname..'.gsniplog'
   end
 
   -- to get latexmk to realize the aux file is a dependency
@@ -647,21 +653,19 @@ end
 
 local function direct_gabc(gabc, header, allow_deprecated)
   info('Processing gabc snippet...')
-  local tmpname = os.tmpname()
-  local tmplog = os.tmpname()
   local deprecated
   if allow_deprecated then
     deprecated = ''
   else
     deprecated = '-D '
   end
-  local f = io.open(tmpname, 'w')
+  local f = io.open(snippet_filename, 'w')
   -- trims spaces on both ends (trim6 from http://lua-users.org/wiki/StringTrim)
   gabc = gabc:match('^()%s*$') and '' or gabc:match('^%s*(.*%S)')
   f:write('name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par ', '\n'))
   f:close()
-  local cmd = string.format('gregorio -W %s-S -l %s %s', deprecated, tmplog,
-      tmpname)
+  local cmd = string.format('gregorio -W %s-S -l %s %s', deprecated, snippet_logname,
+      snippet_filename)
   local p = io.popen(cmd, 'r')
   if p == nil then
     err("\nSomething went wrong when executing\n    %s\n"
@@ -673,9 +677,9 @@ local function direct_gabc(gabc, header, allow_deprecated)
     tex.print(p:read("*a"):explode('\n'))
     p:close()
   end
-  local glog = io.open(tmplog, 'a+')
+  local glog = io.open(snippet_logname, 'a+')
   if glog == nil then
-    err("\n Unable to open %s", tmplog)
+    err("\n Unable to open %s", snippet_logname)
   else
     local size = glog:seek('end')
     if size > 0 then
@@ -688,8 +692,8 @@ local function direct_gabc(gabc, header, allow_deprecated)
     end
     glog:close()
   end
-  os.remove(tmpname)
-  os.remove(tmplog)
+  os.remove(snippet_filename)
+  os.remove(snippet_logname)
 end
 
 local function get_gregorioversion()
