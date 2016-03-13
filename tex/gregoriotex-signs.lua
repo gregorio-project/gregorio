@@ -432,7 +432,7 @@ local offset_cases = {
   {
     case = 'LeadingOriscus',
     v = [[\gre@vepisemaorrareaux{0}{\GreCPAscendensOriscus}{0}{0}{#2}{#3}{#4}]],
-    h = [[\gre@hepisorlineaux{\GreCPOriscusTwoUp}{\gre@char@he@oriscus{#4}}{2}{#3}]],
+    h = [[\gre@hepisorlineaux{\GreCPAscendensOriscusTwoUp}{\gre@char@he@oriscus{#4}}{2}{#3}]],
   },
   -- flat
   {

@@ -78,7 +78,11 @@ SHAPE(FlexusLongqueue);
 SHAPE(FlexusNobar);
 SHAPE(FlexusOpenqueue);
 SHAPE(FlexusOriscus);
+SHAPE(FlexusOriscusInusitatus);
 SHAPE(FlexusOriscusScapus);
+SHAPE(FlexusOriscusScapusInusitatus);
+SHAPE(FlexusOriscusScapusInusitatusLongqueue);
+SHAPE(FlexusOriscusScapusInusitatusOpenqueue);
 SHAPE(FlexusOriscusScapusLongqueue);
 SHAPE(FlexusOriscusScapusOpenqueue);
 SHAPE(Linea);
@@ -91,19 +95,24 @@ SHAPE(DescendensOriscusCavum);
 SHAPE(OriscusCavumDeminutus);
 SHAPE(OriscusDeminutus);
 SHAPE(AscendensOriscusLineBL);
+SHAPE(AscendensOriscusLineTL);
 SHAPE(DescendensOriscus);
+SHAPE(DescendensOriscusLineBL);
 SHAPE(DescendensOriscusLineTL);
-SHAPE(OriscusScapus);
-SHAPE(OriscusScapusLongqueue);
-SHAPE(OriscusScapusOpenqueue);
-SHAPE(OriscusScapusReversus);
-SHAPE(OriscusScapusReversusLongqueue);
-SHAPE(OriscusScapusReversusOpenqueue);
+SHAPE(AscendensOriscusScapus);
+SHAPE(AscendensOriscusScapusLongqueue);
+SHAPE(AscendensOriscusScapusOpenqueue);
+SHAPE(DescendensOriscusScapus);
+SHAPE(DescendensOriscusScapusLongqueue);
+SHAPE(DescendensOriscusScapusOpenqueue);
 SHAPE(Pes);
 SHAPE(PesQuadratum);
 SHAPE(PesQuadratumLongqueue);
 SHAPE(PesQuadratumOpenqueue);
 SHAPE(PesQuassus);
+SHAPE(PesQuassusInusitatus);
+SHAPE(PesQuassusInusitatusLongqueue);
+SHAPE(PesQuassusInusitatusOpenqueue);
 SHAPE(PesQuassusLongqueue);
 SHAPE(PesQuassusOpenqueue);
 SHAPE(PesQuilisma);
@@ -239,8 +248,6 @@ static grestyle_style gregoriotex_next_ignore_style = ST_NO_STYLE;
  * They also are and must be the same as in squarize.py.
  */
 
-static const char *temp_oriscus = "Oriscus";
-
 static const char *gregoriotex_determine_liquescentia(
         gtex_glyph_liquescentia type, const gregorio_glyph *const glyph)
 {
@@ -332,10 +339,6 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
 
     switch (glyph->u.notes.glyph_type) {
     case G_PODATUS:
-        gregorio_assert(is_tail_liquescentia(glyph->u.notes.liquescentia)
-                || fuse_from_previous_note >= 0, compute_glyph_name,
-                "unexpected fusible podatus", break);
-        /* else fall through */
     case G_PUNCTUM:
     case G_FLEXA:
         /* directionally head-fusible */
@@ -344,19 +347,6 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
                 && glyph->u.notes.first_note->u.note.shape
                 != S_QUILISMA_QUADRATUM) {
             fuse_head = FUSE_Lower;
-        } else if (fuse_from_previous_note < 0) {
-            gregorio_note *previous_note = gregorio_glyph_last_note(
-                    gregorio_previous_non_texverb_glyph(glyph));
-            switch (previous_note->u.note.shape) {
-            case S_ORISCUS_ASCENDENS:
-            case S_ORISCUS_DESCENDENS:
-            case S_ORISCUS_SCAPUS_ASCENDENS:
-            case S_ORISCUS_SCAPUS_DESCENDENS:
-                fuse_head = FUSE_Lower;
-                break;
-            default:
-                break;
-            }
         } else if (fuse_from_previous_note > 1) {
             fuse_head = FUSE_Upper;
         }
@@ -395,33 +385,23 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
         break;
     }
 
-    if ((*fuse_tail && (shape == SHAPE_AscendensOriscus || shape == SHAPE_DescendensOriscus))
-            || ((shape == SHAPE_AscendensOriscus || shape == SHAPE_DescendensOriscus || shape == SHAPE_OriscusScapus
-                    || shape == SHAPE_OriscusScapusLongqueue
-                    || shape == SHAPE_OriscusScapusOpenqueue)
-                && is_fused(glyph->u.notes.liquescentia))) {
-        if (*fuse_head || *fuse_tail) {
-            shape = temp_oriscus;
-        } else {
+    if (is_fused(glyph->u.notes.liquescentia)) {
+        if (shape == SHAPE_AscendensOriscusScapus
+                || shape == SHAPE_AscendensOriscusScapusLongqueue
+                || shape == SHAPE_AscendensOriscusScapusOpenqueue) {
             shape = SHAPE_AscendensOriscus;
-        }
-    }
-
-    if (*fuse_tail) {
-        if (is_fused(glyph->u.notes.liquescentia)) {
-            if (shape == SHAPE_OriscusScapusReversus
-                    || shape == SHAPE_OriscusScapusReversusLongqueue
-                    || shape == SHAPE_OriscusScapusReversusOpenqueue) {
-                shape = temp_oriscus;
-            }
-        } else {
-            if (shape == SHAPE_OriscusScapusReversus) {
-                shape = SHAPE_OriscusScapus;
-            } else if (shape == SHAPE_OriscusScapusReversusLongqueue) {
-                shape = SHAPE_OriscusScapusLongqueue;
-            } else if (shape == SHAPE_OriscusScapusReversusOpenqueue) {
-                shape = SHAPE_OriscusScapusOpenqueue;
-            }
+        } else if (shape == SHAPE_DescendensOriscusScapus
+                || shape == SHAPE_DescendensOriscusScapusLongqueue
+                || shape == SHAPE_DescendensOriscusScapusOpenqueue) {
+            shape = SHAPE_DescendensOriscus;
+        } else if (shape == SHAPE_FlexusOriscusScapus
+                || shape == SHAPE_FlexusOriscusScapusLongqueue
+                || shape == SHAPE_FlexusOriscusScapusOpenqueue) {
+            shape = SHAPE_FlexusOriscus;
+        } else if (shape == SHAPE_FlexusOriscusScapusInusitatus
+                || shape == SHAPE_FlexusOriscusScapusInusitatusLongqueue
+                || shape == SHAPE_FlexusOriscusScapusInusitatusOpenqueue) {
+            shape = SHAPE_FlexusOriscusInusitatus;
         }
     }
 
@@ -435,13 +415,17 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
             if (fuse_head == FUSE_Upper) {
                 if (shape == SHAPE_Punctum) {
                     shape = SHAPE_PunctumLineBL;
-                } else if (shape == SHAPE_AscendensOriscus || shape == temp_oriscus) {
+                } else if (shape == SHAPE_AscendensOriscus) {
                     shape = SHAPE_AscendensOriscusLineBL;
+                } else if (shape == SHAPE_DescendensOriscus) {
+                    shape = SHAPE_DescendensOriscusLineBL;
                 }
             } else if (fuse_head == FUSE_Lower) {
                 if (shape == SHAPE_Punctum) {
                     shape = SHAPE_PunctumLineTL;
-                } else if (shape == SHAPE_AscendensOriscus || shape == temp_oriscus) {
+                } else if (shape == SHAPE_AscendensOriscus) {
+                    shape = SHAPE_AscendensOriscusLineTL;
+                } else if (shape == SHAPE_DescendensOriscus) {
                     shape = SHAPE_DescendensOriscusLineTL;
                 }
             }
@@ -666,12 +650,13 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
         *type = AT_QUILISMA;
         return compute_glyph_name(glyph, SHAPE_Quilisma, LG_NONE, true);
     case S_ORISCUS_SCAPUS_ASCENDENS:
-        return fusible_queued_shape(note, glyph, SHAPE_OriscusScapus,
-                SHAPE_OriscusScapusLongqueue, SHAPE_OriscusScapusOpenqueue);
+        return fusible_queued_shape(note, glyph, SHAPE_AscendensOriscusScapus,
+                SHAPE_AscendensOriscusScapusLongqueue,
+                SHAPE_AscendensOriscusScapusOpenqueue);
     case S_ORISCUS_SCAPUS_DESCENDENS:
-        return fusible_queued_shape(note, glyph, SHAPE_OriscusScapusReversus,
-                SHAPE_OriscusScapusReversusLongqueue,
-                SHAPE_OriscusScapusReversusOpenqueue);
+        return fusible_queued_shape(note, glyph, SHAPE_DescendensOriscusScapus,
+                SHAPE_DescendensOriscusScapusLongqueue,
+                SHAPE_DescendensOriscusScapusOpenqueue);
     case S_STROPHA:
         *type = AT_STROPHA;
         if (!(note->u.note.liquescentia &
@@ -883,13 +868,20 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
             ltype = LG_NO_INITIO;
             break;
         case S_ORISCUS_ASCENDENS:
-        case S_ORISCUS_DESCENDENS:
         case S_ORISCUS_SCAPUS_ASCENDENS:
-        case S_ORISCUS_SCAPUS_DESCENDENS:
             *type = AT_ORISCUS;
             *gtype = T_PESQUASSUS;
             shape = quadratum_shape(glyph, SHAPE_PesQuassus,
                     SHAPE_PesQuassusLongqueue, SHAPE_PesQuassusOpenqueue);
+            ltype = LG_NO_INITIO;
+            break;
+        case S_ORISCUS_DESCENDENS:
+        case S_ORISCUS_SCAPUS_DESCENDENS:
+            *type = AT_ORISCUS;
+            *gtype = T_PESQUASSUS;
+            shape = quadratum_shape(glyph, SHAPE_PesQuassusInusitatus,
+                    SHAPE_PesQuassusInusitatusLongqueue,
+                    SHAPE_PesQuassusInusitatusOpenqueue);
             ltype = LG_NO_INITIO;
             break;
         default:
@@ -944,6 +936,11 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
         }
         switch (glyph->u.notes.first_note->u.note.shape) {
         case S_ORISCUS_ASCENDENS:
+            *gtype = T_FLEXUS_ORISCUS;
+            shape = SHAPE_FlexusOriscusInusitatus;
+            ltype = LG_NO_INITIO;
+            break;
+
         case S_ORISCUS_DESCENDENS:
             *gtype = T_FLEXUS_ORISCUS;
             shape = SHAPE_FlexusOriscus;
@@ -951,6 +948,14 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
             break;
 
         case S_ORISCUS_SCAPUS_ASCENDENS:
+            *gtype = T_FLEXUS_ORISCUS_SCAPUS;
+            shape = flexus_shape(glyph, ambitus,
+                    SHAPE_FlexusOriscusScapusInusitatus,
+                    SHAPE_FlexusOriscusScapusInusitatusLongqueue,
+                    SHAPE_FlexusOriscusScapusInusitatusOpenqueue);
+            ltype = LG_NO_INITIO;
+            break;
+
         case S_ORISCUS_SCAPUS_DESCENDENS:
             *gtype = T_FLEXUS_ORISCUS_SCAPUS;
             shape = flexus_shape(glyph, ambitus, SHAPE_FlexusOriscusScapus,

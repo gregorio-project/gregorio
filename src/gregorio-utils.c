@@ -139,8 +139,8 @@ static char *get_base_filename(char *fbasename)
     int l;
     char *ret;
     p = strrchr(fbasename, '.');
-    if (!p) {
-        return NULL;
+    if (!p || strchr(p, '/') || strchr(p, '\\')) {
+        return gregorio_strdup(fbasename);
     }
     l = strlen(fbasename) - strlen(p);
     ret = (char *) gregorio_malloc(l + 1);
