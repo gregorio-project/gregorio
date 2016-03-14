@@ -2,7 +2,13 @@
 
 This file contains instructions to upgrade to a new release of Gregorio.
 
-## Unreleased
+## 4.2
+
+### Stemmed oriscus flexus orientation
+
+As of version 4.2, the orientation of the stemmed oriscus flexus `(gOe)` is consistent with the unstemmed oriscus flexus `(goe)` in that the oriscus points downward (since the note which follows is of lower pitch).  If you prefer the oriscus to point upward, you will need to use the `1` modifier (as in `(gO1e)`), which will force an upward orientation of the oriscus.
+
+## 4.1.1
 
 ### Vertical spacings
 
@@ -11,10 +17,6 @@ High notes are now taken into account in vertical spacings. If you would like to
 ### Last line of score behavior
 
 `\grelooseness` is now `-1` by default. This should prevent orphaned syllable at end of score. If you prefer the old behavior, use `\def\grelooseness{\looseness}` befor including your scores.
-
-### Stemmed oriscus flexus orientation
-
-As of version 4.2, the orientation of the stemmed oriscus flexus `(gOe)` is consistent with the unstemmed oriscus flexus `(goe)` in that the oriscus points downward (since the note which follows is of lower pitch).  If you prefer the oriscus to point upward, you will need to use the `1` modifier (as in `(gO1e)`), which will force an upward orientation of the oriscus.
 
 ## 4.1
 
