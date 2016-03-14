@@ -137,7 +137,7 @@ Old command names should still work for now, but will raise a deprecation warnin
 
 - `\grescaledim`: This function now takes two arguments.  The second should be `yes`, `true`, `on`, or `scalable` to acheive the old behavior.
 
-Additionally a new package option has been added. This option, `deprecated=false`, is helpful if you wish to ensure that your TeX file is compliant with the new naming system. This option causes all deprecated commands to raise an error, halting TeX, thus allowing you to actively find all deprecated commands and update them in your TeX file.
+Additionally a new package option has been added. This option, `allowdeprecated=false`, is helpful if you wish to ensure that your TeX file is compliant with the new naming system. This option causes all deprecated commands to raise an error, halting TeX, thus allowing you to actively find all deprecated commands and update them in your TeX file.
 
 ### Barred letters
 
