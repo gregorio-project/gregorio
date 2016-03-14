@@ -48,6 +48,11 @@ Macro that handles obsolescence errors.
   \#2 & string & name of the correct macro to use\\
 \end{argtable}
 
+\macroname{\textbackslash gre@allowdeprecated@asboolean}{}{gregoriotex-main.tex}
+Macro that evaluates \texttt{true} or \texttt{false} depending on whether
+deprecated usage is allowed.  This is used to pass the value of
+\verb=\ifgre@allowdeprecated= to Lua.
+
 \macroname{\textbackslash gre@loadgregoriofont}{}{gregoriotex-main.tex}
 Loads the chosen font for the neumes at the correct size.
 

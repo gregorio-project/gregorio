@@ -73,6 +73,8 @@ local new_var_brace_positions = nil
 local pos_saves = nil
 local new_pos_saves = nil
 local auxname = nil
+local snippet_filename = nil
+local snippet_logname = nil
 
 local space_below_staff = 5
 local space_above_staff = 13
@@ -221,8 +223,12 @@ local function init(arg, enable_height_computation)
   end
   if outputdir and lfs.isdir(outputdir) then
     auxname = outputdir..'/'..tex.jobname..'.gaux'
+    snippet_filename = outputdir..'/'..tex.jobname..'.gsnippet'
+    snippet_logname = outputdir..'/'..tex.jobname..'.gsniplog'
   else
     auxname = tex.jobname..'.gaux'
+    snippet_filename = tex.jobname..'.gsnippet'
+    snippet_logname = tex.jobname..'.gsniplog'
   end
 
   -- to get latexmk to realize the aux file is a dependency
@@ -527,19 +533,43 @@ local function clean_old_gtex_files(file_withdir)
   end
 end
 
-local function compile_gabc(gabc_file, gtex_file)
+local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
   info("compiling the score %s...", gabc_file)
   local extra_args = ''
   if tex.count['gre@generate@pointandclick'] == 1 then
-    extra_args = ' -p'
+    extra_args = extra_args..' -p'
+  end
+  if not allow_deprecated then
+    extra_args = extra_args..' -D'
   end
 
-  res = os.execute(string.format("gregorio %s -o %s %s", extra_args, gtex_file, gabc_file))
+  local cmd = string.format("gregorio %s -W -o %s -l %s %s",
+      extra_args, gtex_file, glog_file, gabc_file)
+  res = os.execute(cmd)
   if res == nil then
-    err("\nSomething went wrong when executing\n    'gregorio -o %s %s'.\n"
-    .."shell-escape mode may not be activated. Try\n\n%s --shell-escape %s.tex\n\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", gtex_file, gabc_file, tex.formatname, tex.jobname)
+    err("\nSomething went wrong when executing\n    '%s'.\n"
+        .."shell-escape mode may not be activated. Try\n\n"
+        .."%s --shell-escape %s.tex\n\n"
+        .."See the documentation of gregorio or your TeX\n"
+        .."distribution to automatize it.",
+        cmd, tex.formatname, tex.jobname)
   elseif res ~= 0 then
-    err("\nAn error occured when compiling the score file\n'%s' with gregorio.\nPlease check your score file.", gabc_file)
+    local glog = io.open(glog_file, 'a+')
+    if glog == nil then
+      err("\n Unable to open %s", glog_file)
+    else
+      local size = glog:seek('end')
+      if size > 0 then
+        glog:seek('set')
+        local line
+        for line in glog:lines() do
+          warn(line)
+        end
+      end
+      glog:close()
+    end
+    err("\nAn error occured when compiling the score file\n"
+        .."'%s' with gregorio.\nPlease check your score file.", gabc_file)
   else
     -- open the gtex file for writing so that LuaTeX records output to it
     -- when the -recorder option is used
@@ -549,10 +579,25 @@ local function compile_gabc(gabc_file, gtex_file)
     else
       gtex:close()
     end
+    local glog = io.open(glog_file, 'a+')
+    if glog == nil then
+      err("\n Unable to open %s", glog_file)
+    else
+      local size = glog:seek('end')
+      if size > 0 then
+        glog:seek('set')
+        local line
+        for line in glog:lines() do
+          warn(line)
+        end
+        warn("*** end of warnings for %s ***", gabc_file)
+      end
+      glog:close()
+    end
   end
 end
 
-local function include_score(input_file, force_gabccompile)
+local function include_score(input_file, force_gabccompile, allow_deprecated)
   local file_root
   if string.match(input_file:sub(-5), '%.gtex') then
     file_root = input_file:sub(1,-6)
@@ -564,6 +609,7 @@ local function include_score(input_file, force_gabccompile)
     file_root = input_file
   end
   local gtex_file = file_root.."-"..internalversion:gsub("%.", "_")..".gtex"
+  local glog_file = file_root.."-"..internalversion:gsub("%.", "_")..".glog"
   local gabc_file = file_root..".gabc"
   if not lfs.isfile(gtex_file) then
     clean_old_gtex_files(file_root)
@@ -576,7 +622,7 @@ local function include_score(input_file, force_gabccompile)
       else
         gabc:close()
       end
-      compile_gabc(gabc_file, gtex_file)
+      compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
       tex.print(string.format([[\input %s\relax]], gtex_file))
       return
     else
@@ -597,29 +643,57 @@ local function include_score(input_file, force_gabccompile)
   end
   if gtex_timestamp < gabc_timestamp then
     log("%s has been modified and %s needs to be updated. Recompiling the gabc file.", gabc_file, gtex_file)
-    compile_gabc(gabc_file, gtex_file)
+    compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
   elseif force_gabccompile then
-    compile_gabc(gabc_file, gtex_file)
+    compile_gabc(gabc_file, gtex_file, glog_file)
   end
   tex.print(string.format([[\input %s\relax]], gtex_file))
   return
 end
 
-local function direct_gabc(gabc, header)
-  tmpname = os.tmpname()
-  local f = io.open(tmpname, 'w')
+local function direct_gabc(gabc, header, allow_deprecated)
+  info('Processing gabc snippet...')
+  local deprecated
+  if allow_deprecated then
+    deprecated = ''
+  else
+    deprecated = '-D '
+  end
+  local f = io.open(snippet_filename, 'w')
   -- trims spaces on both ends (trim6 from http://lua-users.org/wiki/StringTrim)
   gabc = gabc:match('^()%s*$') and '' or gabc:match('^%s*(.*%S)')
   f:write('name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par ', '\n'))
   f:close()
-  local p = io.popen('gregorio -S '..tmpname, 'r')
+  local cmd = string.format('gregorio -W %s-S -l %s %s', deprecated, snippet_logname,
+      snippet_filename)
+  local p = io.popen(cmd, 'r')
   if p == nil then
-    err("\nSomething went wrong when executing\n    gregorio -S "..tmpname..".\n"
-    .."shell-escape mode may not be activated. Try\n\n%s --shell-escape %s.tex\n\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", tex.formatname, tex.jobname)
+    err("\nSomething went wrong when executing\n    %s\n"
+        .."shell-escape mode may not be activated. Try\n\n"
+        .."%s --shell-escape %s.tex\n\n"
+        .."See the documentation of gregorio or your TeX\n"
+        .."distribution to automatize it.", cmd, tex.formatname, tex.jobname)
+  else
+    tex.print(p:read("*a"):explode('\n'))
+    p:close()
   end
-  tex.print(p:read("*a"):explode('\n'))
-  p:close()
-  os.remove(tmpname)
+  local glog = io.open(snippet_logname, 'a+')
+  if glog == nil then
+    err("\n Unable to open %s", snippet_logname)
+  else
+    local size = glog:seek('end')
+    if size > 0 then
+      glog:seek('set')
+      local line
+      for line in glog:lines() do
+        warn(line)
+      end
+      warn("*** end of warnings/errors processing snippet ***")
+    end
+    glog:close()
+  end
+  os.remove(snippet_filename)
+  os.remove(snippet_logname)
 end
 
 local function get_gregorioversion()
