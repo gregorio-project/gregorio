@@ -1486,26 +1486,26 @@ def flexus():
         write_flexus(i, "rvbase", 'PunctumLineTL', S_FLEXUS_LONGQUEUE, qtype='long')
     write_flexus(1, "rvbase", 'PunctumLineTL', S_FLEXUS_OPENQUEUE, qtype='open')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineBLBR", 'PunctumLineTL',
+        write_flexus(i, "DescendensOriscusLineBLBR", 'PunctumLineTL',
                      S_FLEXUS_ORISCUS_SCAPUS, stemshape=S_FLEXUS_ORISCUS_SCAPUS,
                      qtype='short')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineBLBR", 'PunctumLineTL',
+        write_flexus(i, "DescendensOriscusLineBLBR", 'PunctumLineTL',
                      S_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE,
                      stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='long')
-    write_flexus(1, "AscendensOriscusLineBLBR", 'PunctumLineTL',
+    write_flexus(1, "DescendensOriscusLineBLBR", 'PunctumLineTL',
                  S_FLEXUS_ORISCUS_SCAPUS_OPENQUEUE,
                  stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='open')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineBLBR", 'PunctumLineTL',
+        write_flexus(i, "AscendensOriscusLineBLBR", 'PunctumLineTL',
                      S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS,
                      stemshape=S_FLEXUS_ORISCUS_SCAPUS,
                      qtype='short')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineBLBR", 'PunctumLineTL',
+        write_flexus(i, "AscendensOriscusLineBLBR", 'PunctumLineTL',
                      S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS_LONGQUEUE,
                      stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='long')
-    write_flexus(1, "DescendensOriscusLineBLBR", 'PunctumLineTL',
+    write_flexus(1, "AscendensOriscusLineBLBR", 'PunctumLineTL',
                  S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS_OPENQUEUE,
                  stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='open')
     precise_message("flexus deminutus")
@@ -1545,27 +1545,27 @@ def flexus():
     write_flexus(1, "rvbase",
                  'auctusa1', S_FLEXUS_OPENQUEUE, L_ASCENDENS, qtype='open')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineBLBR",
+        write_flexus(i, "DescendensOriscusLineBLBR",
                      'auctusa1', S_FLEXUS_ORISCUS_SCAPUS,
                      L_ASCENDENS, stemshape = S_FLEXUS_ORISCUS_SCAPUS, qtype='short')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineBLBR",
+        write_flexus(i, "DescendensOriscusLineBLBR",
                      'auctusa1', S_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE,
                      L_ASCENDENS, stemshape = S_FLEXUS_ORISCUS_SCAPUS, qtype='long')
-    write_flexus(1, "AscendensOriscusLineBLBR",
+    write_flexus(1, "DescendensOriscusLineBLBR",
                  'auctusa1', S_FLEXUS_ORISCUS_SCAPUS_OPENQUEUE, L_ASCENDENS,
                  stemshape = S_FLEXUS_ORISCUS_SCAPUS, qtype='open')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineBLBR",
+        write_flexus(i, "AscendensOriscusLineBLBR",
                      'auctusa1', S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS,
                      L_ASCENDENS, stemshape = S_FLEXUS_ORISCUS_SCAPUS,
                      qtype='short')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineBLBR",
+        write_flexus(i, "AscendensOriscusLineBLBR",
                      'auctusa1', S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS_LONGQUEUE,
                      L_ASCENDENS, stemshape = S_FLEXUS_ORISCUS_SCAPUS,
                      qtype='long')
-    write_flexus(1, "DescendensOriscusLineBLBR",
+    write_flexus(1, "AscendensOriscusLineBLBR",
                  'auctusa1', S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS_OPENQUEUE,
                  L_ASCENDENS, stemshape = S_FLEXUS_ORISCUS_SCAPUS, qtype='open')
     precise_message("flexus auctus descendens")
@@ -1587,30 +1587,30 @@ def flexus():
     write_flexus(1, "rvbase",
                  'auctusd1', S_FLEXUS_OPENQUEUE, L_DESCENDENS, qtype='open')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineBLBR",
+        write_flexus(i, "DescendensOriscusLineBLBR",
                      'auctusd1', S_FLEXUS_ORISCUS_SCAPUS,
                      L_DESCENDENS, S_FLEXUS_ORISCUS_SCAPUS,
                      stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='short')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineBLBR",
+        write_flexus(i, "DescendensOriscusLineBLBR",
                      'auctusd1', S_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE,
                      L_DESCENDENS, S_FLEXUS_ORISCUS_SCAPUS,
                      stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='long')
-    write_flexus(1, "AscendensOriscusLineBLBR",
+    write_flexus(1, "DescendensOriscusLineBLBR",
                  'auctusd1', S_FLEXUS_ORISCUS_SCAPUS_OPENQUEUE, L_DESCENDENS,
                  S_FLEXUS_ORISCUS_SCAPUS, stemshape=S_FLEXUS_ORISCUS_SCAPUS,
                  qtype='open')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineBLBR",
+        write_flexus(i, "AscendensOriscusLineBLBR",
                      'auctusd1', S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS,
                      L_DESCENDENS, S_FLEXUS_ORISCUS_SCAPUS,
                      stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='short')
     for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineBLBR",
+        write_flexus(i, "AscendensOriscusLineBLBR",
                      'auctusd1', S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS_LONGQUEUE,
                      L_DESCENDENS, S_FLEXUS_ORISCUS_SCAPUS,
                      stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='long')
-    write_flexus(1, "DescendensOriscusLineBLBR",
+    write_flexus(1, "AscendensOriscusLineBLBR",
                  'auctusd1', S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS_OPENQUEUE,
                  L_DESCENDENS, S_FLEXUS_ORISCUS_SCAPUS,
                  stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='open')
