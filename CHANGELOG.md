@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 [Unreleased][unreleased]
+### Added
+- It is now possible to invert the oriscus orientation on pes quassus and oriscus flexus shapes.  Use `o0` or `o1` to force the oriscus into the orientation you desire.  It is also possible to fuse the oriscus from either direction in either orientation.  see [#898](https://github.com/gregorio-project/gregorio/issues/898) and [#972](https://github.com/gregorio-project/gregorio/issues/972).
+
 ### Removed
 - `\grescorereference`
 
