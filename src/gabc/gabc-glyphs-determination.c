@@ -675,10 +675,14 @@ static gregorio_note *close_fusion_glyph(gregorio_glyph **last_glyph,
             gregorio_free_one_note(first_note);
         }
 
-        gregorio_assert(
-                *first_note != last_note && (next = (*first_note)->next),
-                close_fusion_glyph, "Unexpected single note during fusion",
-                return last_note);
+        if (*first_note == last_note) {
+            close_fused_glyph(last_glyph, G_PUNCTUM, first_note,
+                        liquescentia & ~TAIL_LIQUESCENTIA_MASK, last_note);
+            return last_note;
+        }
+
+        gregorio_assert((*first_note)->next, close_fusion_glyph,
+                "Unexpected single note during fusion", return last_note);
 
         next = next_non_texverb_note(*first_note, last_note);
 
@@ -999,13 +1003,20 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                     switch (current_note->u.note.shape) {
                     case S_PUNCTUM:
                     case S_ORISCUS_UNDETERMINED:
+                    case S_ORISCUS_ASCENDENS:
+                    case S_ORISCUS_DESCENDENS:
                     case S_ORISCUS_SCAPUS_UNDETERMINED:
+                    case S_ORISCUS_SCAPUS_ASCENDENS:
+                    case S_ORISCUS_SCAPUS_DESCENDENS:
                     case S_QUILISMA:
                     case S_QUADRATUM:
                     case S_QUILISMA_QUADRATUM:
                         /* these are fusible */
-                        if (current_glyph_type <= G_PUNCTA_INCLINATA) {
+                        if (current_glyph_type <= G_PUNCTA_INCLINATA
+                                || current_note->u.note.shape != S_PUNCTUM) {
                             /* if we had some puncta inclinata, then end them */
+                            /* if the current shape is not a punctum, start a
+                             * new shape */
                             close_glyph(&last_glyph, current_glyph_type,
                                     &current_glyph_first_note,
                                     liquescentia, current_note->previous);
