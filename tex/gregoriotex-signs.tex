@@ -314,13 +314,21 @@
 
 % custos just typesets a custos, useful for before the key changes for example
 % #1 is the height
-% #2 is indicating if the custo ends the line
 \def\GreCustos#1{%
   \ifdim\gre@skip@bar@lastskip=0pt\else % we're after a bar:
     \kern-\gre@skip@bar@lastskip %
   \fi %
-  \gre@skip@temp@four = \gre@space@skip@spacebeforeinlinecustos\relax%
+  \ifgre@firstglyph% we check if it is the first glyph
+    \global\gre@firstglyphfalse%
+  \else%
+    \ifgre@endofscore %
+      \gre@skip@temp@four=\gre@space@skip@spacebeforeeolcustos %
+    \else %
+      \gre@skip@temp@four=\gre@space@skip@spacebeforeinlinecustos %
+    \fi %
+  \fi %
   \kern\gre@skip@temp@four%
+  \GreNoBreak %
   \gre@calculate@glyphraisevalue{#1}{0}{}%
   %here we need some tricks to draw the line before the custos (for the color)
   \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{#1}}%
@@ -351,9 +359,6 @@
 
 % typesets a custos for the end of the score
 \def\GreFinalCustos#1{%
-  \GreNoBreak%
-  \gre@dimen@temp@four = \glueexpr(\gre@space@skip@spacebeforeeolcustos)\relax%
-  \kern\gre@dimen@temp@four %
   \GreNoBreak%
   \GreCustos{#1}%
   \gre@endofglyphcommon %
