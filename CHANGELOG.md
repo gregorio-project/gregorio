@@ -5,6 +5,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 [Unreleased][unreleased]
 ### Added
 - It is now possible to invert the oriscus orientation on pes quassus and oriscus flexus shapes.  Use `o0` or `o1` to force the oriscus into the orientation you desire.  It is also possible to fuse the oriscus from either direction in either orientation.  See [#898](https://github.com/gregorio-project/gregorio/issues/898) and [#972](https://github.com/gregorio-project/gregorio/issues/972).
+- Formerly missing torculus figures starting with an oriscus are now rendered using neume fusion (see [#1013](https://github.com/gregorio-project/gregorio/issues/1013)).
 
 ### Changed
 The stemmed oriscus flexus `(gOe)` is now consistent with the unstemmed oriscus flexus `(goe)` in that the oriscus points downward at the note that follows.  If you prefer to have the oriscus point upward, use `(gO1e)` for force upward orientation.
