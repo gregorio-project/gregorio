@@ -1071,8 +1071,10 @@
         \gre@debugmsg{barspacing}{after bar penalty: \greendafterbarpenalty}%
         \gre@penalty{\grefinalpenalty}%
       \else %
-        \gre@debugmsg{barspacing}{calling new line with argument: \gre@newlinearg}%
-        \gre@newlinecommon{\gre@newlinearg}{1}%
+        \ifnum\gre@newlinearg=-1\else %
+          \gre@debugmsg{barspacing}{calling new line with argument: \gre@newlinearg}%
+          \gre@newlinecommon{\gre@newlinearg}{1}%
+        \fi %
       \fi %
     \fi%
   \else%
