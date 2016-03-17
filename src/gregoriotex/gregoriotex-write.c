@@ -3545,7 +3545,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
              * bar syllable */
             syllable_type = "\\GreBarSyllable";
         } else {
-            if (first_of_disc == 1) {
+            if (first_of_disc != 0) {
                 syllable_type = "\\GreBarSyllable";
             } else {
                 syllable_type = "\\GreSyllable";
@@ -3572,7 +3572,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                 syllable->next_syllable->forced_center?
                 "\\GreGABCNextForceCenters" : "");
         write_text(f, syllable->next_syllable->text);
-        if (end_of_line) {
+        if (end_of_line || first_of_disc == 1) {
             fprintf(f, "\\GreLastOfLine");
         } else if (euouae_follows) {
             fprintf(f, "\\GreLastSyllableBeforeEUOUAE{%hu}{%c}",
@@ -3584,7 +3584,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                 gregoriotex_syllable_first_type(syllable->next_syllable));
     } else {
         fprintf(f, "{\\GreSetNextSyllable{}{}{}{}{}");
-        if (end_of_line) {
+        if (end_of_line || first_of_disc == 1) {
             fprintf(f, "\\GreLastOfLine");
         }
         fprintf(f, "}{");

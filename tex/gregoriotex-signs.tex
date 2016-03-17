@@ -306,29 +306,42 @@
     \gre@skip@temp@four = -\gre@space@skip@spacearoundclefbars\relax%
     \gre@hskip\gre@skip@temp@four %
   \fi %
+  \GreNoBreak %
   \gre@typeclef{#1}{#2}{1}{0}{#4}{#5}{#6}{#7}%
-  \gre@skip@temp@four = \gre@space@skip@clefchangespace\relax%
+  \ifnum\gre@insidediscretionary=0\relax %
+    \gre@skip@temp@four = \gre@space@skip@clefchangespace\relax%
+  \else %
+    \gre@skip@temp@four = \gre@space@skip@interwordspacenotes\relax%
+  \fi %
   \gre@hskip\gre@skip@temp@four %
+  \GreNoBreak %
   \relax%
 }%
 
 % custos just typesets a custos, useful for before the key changes for example
 % #1 is the height
 \def\GreCustos#1{%
+  \GreNoBreak %
   \ifdim\gre@skip@bar@lastskip=0pt\else % we're after a bar:
     \kern-\gre@skip@bar@lastskip %
+    \GreNoBreak %
   \fi %
   \ifgre@firstglyph% we check if it is the first glyph
     \global\gre@firstglyphfalse%
+    \ifnum\gre@insidediscretionary=0\else %
+      \gre@skip@temp@four=\gre@space@skip@interwordspacenotes %
+      \kern\gre@skip@temp@four%
+      \GreNoBreak %
+    \fi %
   \else%
     \ifgre@endofscore %
       \gre@skip@temp@four=\gre@space@skip@spacebeforeeolcustos %
     \else %
       \gre@skip@temp@four=\gre@space@skip@spacebeforeinlinecustos %
     \fi %
+    \kern\gre@skip@temp@four%
+    \GreNoBreak %
   \fi %
-  \kern\gre@skip@temp@four%
-  \GreNoBreak %
   \gre@calculate@glyphraisevalue{#1}{0}{}%
   %here we need some tricks to draw the line before the custos (for the color)
   \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{#1}}%
@@ -1936,6 +1949,7 @@
   \gre@debugmsg{spacing}{Last bar space: \the\gre@skip@temp@four}%
   \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
   \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
+  \global\gre@firstglyphfalse %
   \relax%
 }%
 
