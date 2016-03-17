@@ -314,7 +314,6 @@
 
 % custos just typesets a custos, useful for before the key changes for example
 % #1 is the height
-% #2 is indicating if the custo ends the line
 \def\GreCustos#1{%
   \ifdim\gre@skip@bar@lastskip=0pt\else % we're after a bar:
     \kern-\gre@skip@bar@lastskip %
@@ -323,7 +322,7 @@
   \kern\gre@skip@temp@four%
   \gre@calculate@glyphraisevalue{#1}{0}{}%
   %here we need some tricks to draw the line before the custos (for the color)
-  \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{#1}}%
+  \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{#1}{1}}%
   \gre@dimen@temp@three=\wd\gre@box@temp@width %
   \ifgre@showlines %
     \ifnum#1<\gre@pitch@belowstaff\relax %
@@ -346,6 +345,7 @@
     \kern\gre@skip@bar@lastskip %
     \GreNoBreak %
   \fi %
+  \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
   \relax %
 }%
 
@@ -373,12 +373,12 @@
       \setbox\gre@box@temp@width=\hbox{%
         % we type a hskip and the we type the custos
         \gre@hskip\gre@space@skip@spacebeforeeolcustos\relax %
-        \gre@pickcustos{#1}\relax %
+        \gre@pickcustos{#1}{2}\relax %
       }%
       \gre@dimen@temp@three=\wd\gre@box@temp@width %
       % we make \wd\gre@box@temp@sign contain the width of a custos
       \setbox\gre@box@temp@sign=\hbox{%
-        \gre@pickcustos{#1}\relax %
+        \gre@pickcustos{#1}{0}\relax %
       }%
       \gre@localrightbox{%
         \ifgre@showlines %
@@ -480,7 +480,18 @@
   \relax %
 }%
 
-\def\gre@pickcustos#1{%
+% #2 is 0 for measurement only, 1 in the normal case, 2 for the right box
+\def\gre@pickcustos#1#2{%
+  % set attributes to adjust the line height for the pitch of the custos
+  \ifcase#2% 0
+  \or % 1
+    \global\advance\gre@attr@glyph@id by 1\relax %
+    \GreGlyphHeights{#1}{#1}%
+  \or % 2
+    \ifgre@eolshiftsenabled %
+      \GreGlyphHeights{#1}{#1}%
+    \fi %
+  \fi %
   \ifcase#1%
   \or\or%
   \or\gre@fontchar@custostopmiddle %
