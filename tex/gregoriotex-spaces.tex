@@ -428,7 +428,7 @@
       % The maximum value is wd(custos) + spacebeforeeolcustos
       % Were the eolshift larger than this the lyrics would stick out
       % into the margin
-      \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{\gre@pitch@g}}%
+      \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{\gre@pitch@g}{0}}%
       \gre@skip@temp@three = \glueexpr(\wd\gre@box@temp@width+\gre@space@skip@spacebeforeeolcustos)\relax%
       \gre@debugmsg{eolshift}{custos + space before custos = \the\gre@skip@temp@three}%
       % pick the smaller of the two values calculated above

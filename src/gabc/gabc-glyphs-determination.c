@@ -167,7 +167,7 @@ static char gregorio_add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
                 *end_of_glyph = DET_END_OF_PREVIOUS;
             }
             break;
-        case G_VIRGA_STRATA:
+        case G_VIRGA_STRATA: /* really a pes stratus */
             if (current_pitch > last_pitch) {
                 next_glyph_type = G_SALICUS;
             } else {
@@ -752,6 +752,22 @@ static gregorio_note *close_glyph(gregorio_glyph **last_glyph,
         gregorio_glyph_type glyph_type, gregorio_note **first_note,
         gregorio_liquescentia liquescentia, gregorio_note *current_note)
 {
+    /* special case for fusion when rarer shapes don't exist */
+    if (glyph_type == G_TORCULUS) {
+        switch ((*first_note)->u.note.shape) {
+        case S_ORISCUS_UNDETERMINED:
+        case S_ORISCUS_ASCENDENS:
+        case S_ORISCUS_DESCENDENS:
+        case S_ORISCUS_SCAPUS_UNDETERMINED:
+        case S_ORISCUS_SCAPUS_ASCENDENS:
+        case S_ORISCUS_SCAPUS_DESCENDENS:
+            glyph_type = G_FUSED;
+            break;
+        default:
+            break;
+        }
+    }
+
     if (glyph_type == G_FUSED) {
         return close_fusion_glyph(last_glyph, first_note, liquescentia,
                 current_note);
