@@ -302,9 +302,11 @@
     \gre@skip@temp@four = \gre@space@skip@clefchangespace\relax%
     \gre@hskip\gre@skip@temp@four %
   \else %
-    % here it means that there is a bar before the clef, so we skip the difference between the normal space and the space around bars with clef changes
-    \gre@skip@temp@four = -\gre@space@skip@spacearoundclefbars\relax%
-    \gre@hskip\gre@skip@temp@four %
+    \ifdim\gre@skip@bar@lastskip=0pt\else % we're after a bar:
+      % here it means that there is a bar before the clef, so we skip the difference between the normal space and the space around bars with clef changes
+      \gre@skip@temp@four = -\gre@space@skip@spacearoundclefbars\relax%
+      \gre@hskip\gre@skip@temp@four %
+    \fi %
   \fi %
   \GreNoBreak %
   \gre@typeclef{#1}{#2}{1}{0}{#4}{#5}{#6}{#7}%

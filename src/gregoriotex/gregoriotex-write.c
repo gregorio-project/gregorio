@@ -3691,7 +3691,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                     fprintf(f, "\\GreChangeClef{%c}{%d}{%c}{%d}{%c}{%d}{%d}%%\n",
                             gregorio_clef_to_char(element->u.misc.clef.clef),
                             element->u.misc.clef.line,
-                            (element->previous && element->previous->type
+                            (!element->previous || element->previous->type
                              == GRE_BAR)? '0' : '1',
                             clef_flat_height(element->u.misc.clef.clef,
                                     element->u.misc.clef.line,
