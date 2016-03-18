@@ -1034,9 +1034,12 @@
     \ifnum\gre@newlinearg=-1\else %
       \gre@count@temp@one=1\relax %
     \fi %
+    \ifnum\gre@lastoflinecount=1\relax %
+      \gre@count@temp@one=1\relax %
+    \fi %
     \ifgre@endofscore %
       \gre@count@temp@one=1\relax %
-     \fi %
+    \fi %
     % if no end of line or end of score
     \ifnum\gre@count@temp@one=0\relax %
       % add the penalty
@@ -1068,8 +1071,10 @@
         \gre@debugmsg{barspacing}{after bar penalty: \greendafterbarpenalty}%
         \gre@penalty{\grefinalpenalty}%
       \else %
-        \gre@debugmsg{barspacing}{calling new line with argument: \gre@newlinearg}%
-        \gre@newlinecommon{\gre@newlinearg}{1}%
+        \ifnum\gre@newlinearg=-1\else %
+          \gre@debugmsg{barspacing}{calling new line with argument: \gre@newlinearg}%
+          \gre@newlinecommon{\gre@newlinearg}{1}%
+        \fi %
       \fi %
     \fi%
   \else%

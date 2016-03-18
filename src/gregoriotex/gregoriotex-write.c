@@ -3545,7 +3545,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
              * bar syllable */
             syllable_type = "\\GreBarSyllable";
         } else {
-            if (first_of_disc == 1) {
+            if (first_of_disc != 0) {
                 syllable_type = "\\GreBarSyllable";
             } else {
                 syllable_type = "\\GreSyllable";
@@ -3572,7 +3572,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                 syllable->next_syllable->forced_center?
                 "\\GreGABCNextForceCenters" : "");
         write_text(f, syllable->next_syllable->text);
-        if (end_of_line) {
+        if (end_of_line || first_of_disc == 1) {
             fprintf(f, "\\GreLastOfLine");
         } else if (euouae_follows) {
             fprintf(f, "\\GreLastSyllableBeforeEUOUAE{%hu}{%c}",
@@ -3584,7 +3584,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                 gregoriotex_syllable_first_type(syllable->next_syllable));
     } else {
         fprintf(f, "{\\GreSetNextSyllable{}{}{}{}{}");
-        if (end_of_line) {
+        if (end_of_line || first_of_disc == 1) {
             fprintf(f, "\\GreLastOfLine");
         }
         fprintf(f, "}{");
@@ -3691,7 +3691,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                     fprintf(f, "\\GreChangeClef{%c}{%d}{%c}{%d}{%c}{%d}{%d}%%\n",
                             gregorio_clef_to_char(element->u.misc.clef.clef),
                             element->u.misc.clef.line,
-                            (element->previous && element->previous->type
+                            (!element->previous || element->previous->type
                              == GRE_BAR)? '0' : '1',
                             clef_flat_height(element->u.misc.clef.clef,
                                     element->u.misc.clef.line,
@@ -3712,7 +3712,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                      */
                     /* we also print an unbreakable larger space before the custo */
                     handle_last_of_score(f, syllable, element);
-                    fprintf(f, "\\GreEndOfElement{1}{1}%%\n\\GreCustos{%d}"
+                    fprintf(f, "\\GreCustos{%d}"
                             "\\GreNextCustos{%d}%%\n",
                             pitch_value(element->u.misc.pitched.pitch),
                             pitch_value(gregorio_determine_next_pitch(syllable,
