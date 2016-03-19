@@ -739,6 +739,7 @@ typedef struct gregorio_hepisema_adjustment {
 #define F_KEY 'f'
 #define NO_KEY -5
 
+extern unsigned short tex_position_id;
 extern gregorio_clef_info gregorio_default_clef;
 
 #define MONOPHONY 0

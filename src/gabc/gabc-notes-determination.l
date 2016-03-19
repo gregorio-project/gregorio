@@ -42,19 +42,18 @@ static char char_for_brace;
 static unsigned int nbof_isolated_episema;
 static char *notesmacros[10];
 static char tempstr[256];
-static int brace_var_counter = 0;
-static int overbrace_var = 0, underbrace_var = 0;
+static unsigned short overbrace_var = 0, underbrace_var = 0;
 static const char *overbrace_var_kind;
 static int before_ledger_type;
 static char *before_ledger_length = NULL;
-static int ledger_var[2] = { 0, 0 };
+static unsigned short ledger_var[2] = { 0, 0 };
 static unsigned char staff_lines;
 static signed char highest_pitch;
 static bool legacy_oriscus_orientation;
 static unsigned short he_adjustment_index[2] = { 0, 0 };
 
 typedef struct slur_info {
-    int var;
+    unsigned short var;
     char shift;
     gregorio_note *start;
 } slur_info;
@@ -274,10 +273,10 @@ static void add_variable_ledger(const gregorio_sign_orientation type,
             after_ledger_length = after_ledger;
         }
 
-        ledger_var[type] = ++brace_var_counter;
+        ledger_var[type] = ++tex_position_id;
         gregorio_snprintf(tempstr, sizeof tempstr,
-                "\\GreVarBraceSavePos{%d}{0}{1}"
-                "\\GreDrawAdditionalLine{%d}{\\GreVarBraceLength{%d}}"
+                "\\GreVarBraceSavePos{%hu}{0}{1}"
+                "\\GreDrawAdditionalLine{%d}{\\GreVarBraceLength{%hu}}"
                 "{%d}{%s}{%d}{%s}",
                 ledger_var[type], type, ledger_var[type], before_ledger_type,
                 before_ledger_length, after_ledger_type, after_ledger_length);
@@ -301,7 +300,7 @@ static void end_variable_ledger(const gregorio_sign_orientation type)
                 "%s-staff ledger line start"), typename, typename);
     } else {
         gregorio_snprintf(tempstr, sizeof tempstr,
-                "\\GreVarBraceSavePos{%d}{0}{2}", ledger_var[type]);
+                "\\GreVarBraceSavePos{%hu}{0}{2}", ledger_var[type]);
         ledger_var[type] = 0;
         gregorio_add_texverb_as_note(&current_note, gregorio_strdup(tempstr),
                 GRE_TEXVERB_GLYPH, &notes_lloc);
@@ -440,7 +439,7 @@ static void start_var_slur(void)
         return;
     }
 
-    slur[index].var = ++brace_var_counter;
+    slur[index].var = ++tex_position_id;
     parse_slur_shift(&(slur[index].shift));
     slur[index].start = current_note;
 }
@@ -470,8 +469,8 @@ static void end_var_slur(void)
     parse_slur_shift(&shift);
 
     gregorio_snprintf(tempstr, sizeof tempstr,
-            "\\GreVarBraceSavePos{%d}{%c}{1}"
-            "\\GreSlur{%d}{%d}{%c}{\\GreVarBraceLength{%d}}{}{%d}",
+            "\\GreVarBraceSavePos{%hu}{%c}{1}"
+            "\\GreSlur{%d}{%d}{%c}{\\GreVarBraceLength{%hu}}{}{%d}",
             slur[index].var, slur[index].shift,
             slur[index].start->u.note.pitch + direction, direction,
             slur[index].shift, slur[index].var,
@@ -479,7 +478,7 @@ static void end_var_slur(void)
     gregorio_add_texverb_to_note(slur[index].start, gregorio_strdup(tempstr));
 
     gregorio_snprintf(tempstr, sizeof tempstr,
-            "\\GreVarBraceSavePos{%d}{%c}{2}", slur[index].var, shift);
+            "\\GreVarBraceSavePos{%hu}{%c}{2}", slur[index].var, shift);
     gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
 
 
@@ -713,11 +712,11 @@ void gabc_det_notes_finish(void)
                                 "previous overbrace"));
         } else {
             char_for_brace = gabc_notes_determination_text[4]-'0';
-            overbrace_var = ++brace_var_counter;
+            overbrace_var = ++tex_position_id;
             overbrace_var_kind = "ob";
             gregorio_snprintf(tempstr, sizeof tempstr,
-                    "\\GreVarBraceSavePos{%d}{%d}{1}"
-                    "\\GreOverBrace{\\GreVarBraceLength{%d}}{0pt}{0pt}{%d}",
+                    "\\GreVarBraceSavePos{%hu}{%d}{1}"
+                    "\\GreOverBrace{\\GreVarBraceLength{%hu}}{0pt}{0pt}{%d}",
                     overbrace_var, char_for_brace, overbrace_var, char_for_brace);
             gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
         }
@@ -729,10 +728,10 @@ void gabc_det_notes_finish(void)
                                 "previous underbrace"));
         } else {
             char_for_brace = gabc_notes_determination_text[4]-'0';
-            underbrace_var = ++brace_var_counter;
+            underbrace_var = ++tex_position_id;
             gregorio_snprintf(tempstr, sizeof tempstr,
-                    "\\GreVarBraceSavePos{%d}{%d}{1}"
-                    "\\GreUnderBrace{\\GreVarBraceLength{%d}}{0pt}{0pt}{%d}",
+                    "\\GreVarBraceSavePos{%hu}{%d}{1}"
+                    "\\GreUnderBrace{\\GreVarBraceLength{%hu}}{0pt}{0pt}{%d}",
                     underbrace_var, char_for_brace, underbrace_var, char_for_brace);
             gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
         }
@@ -744,11 +743,11 @@ void gabc_det_notes_finish(void)
                                 "previous overbrace"));
         } else {
             char_for_brace = gabc_notes_determination_text[5]-'0';
-            overbrace_var = ++brace_var_counter;
+            overbrace_var = ++tex_position_id;
             overbrace_var_kind = "ocb";
             gregorio_snprintf(tempstr, sizeof tempstr,
-                    "\\GreVarBraceSavePos{%d}{%d}{1}"
-                    "\\GreOverCurlyBrace{\\GreVarBraceLength{%d}}{0pt}{0pt}{%d}{0}",
+                    "\\GreVarBraceSavePos{%hu}{%d}{1}"
+                    "\\GreOverCurlyBrace{\\GreVarBraceLength{%hu}}{0pt}{0pt}{%d}{0}",
                     overbrace_var, char_for_brace, overbrace_var, char_for_brace);
             gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
         }
@@ -760,11 +759,11 @@ void gabc_det_notes_finish(void)
                                 "previous overbrace"));
         } else {
             char_for_brace = gabc_notes_determination_text[6]-'0';
-            overbrace_var = ++brace_var_counter;
+            overbrace_var = ++tex_position_id;
             overbrace_var_kind = "ocba";
             gregorio_snprintf(tempstr, sizeof tempstr,
-                    "\\GreVarBraceSavePos{%d}{%d}{1}"
-                    "\\GreOverCurlyBrace{\\GreVarBraceLength{%d}}{0pt}{0pt}{%d}{1}",
+                    "\\GreVarBraceSavePos{%hu}{%d}{1}"
+                    "\\GreOverCurlyBrace{\\GreVarBraceLength{%hu}}{0pt}{0pt}{%d}{1}",
                     overbrace_var, char_for_brace, overbrace_var, char_for_brace);
             gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
         }
@@ -782,7 +781,7 @@ void gabc_det_notes_finish(void)
         } else {
             char_for_brace = gabc_notes_determination_text[4]-'0';
             gregorio_snprintf(tempstr, sizeof tempstr,
-                    "\\GreVarBraceSavePos{%d}{%d}{2}", overbrace_var,
+                    "\\GreVarBraceSavePos{%hu}{%d}{2}", overbrace_var,
                     char_for_brace);
             overbrace_var = 0;
             gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
@@ -796,7 +795,7 @@ void gabc_det_notes_finish(void)
         } else {
             char_for_brace = gabc_notes_determination_text[4]-'0';
             gregorio_snprintf(tempstr, sizeof tempstr,
-                    "\\GreVarBraceSavePos{%d}{%d}{2}", underbrace_var,
+                    "\\GreVarBraceSavePos{%hu}{%d}{2}", underbrace_var,
                     char_for_brace);
             underbrace_var = 0;
             gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
@@ -815,7 +814,7 @@ void gabc_det_notes_finish(void)
         } else {
             char_for_brace = gabc_notes_determination_text[5]-'0';
             gregorio_snprintf(tempstr, sizeof tempstr,
-                    "\\GreVarBraceSavePos{%d}{%d}{2}", overbrace_var,
+                    "\\GreVarBraceSavePos{%hu}{%d}{2}", overbrace_var,
                     char_for_brace);
             overbrace_var = 0;
             gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
@@ -834,7 +833,7 @@ void gabc_det_notes_finish(void)
         } else {
             char_for_brace = gabc_notes_determination_text[6]-'0';
             gregorio_snprintf(tempstr, sizeof tempstr,
-                    "\\GreVarBraceSavePos{%d}{%d}{2}", overbrace_var,
+                    "\\GreVarBraceSavePos{%hu}{%d}{2}", overbrace_var,
                     char_for_brace);
             overbrace_var = 0;
             gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));

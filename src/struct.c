@@ -53,6 +53,8 @@
 #include "characters.h"
 #include "support.h"
 
+unsigned short tex_position_id = 0;
+
 gregorio_clef_info gregorio_default_clef = {
     /*.line =*/ 3,
     /*.secondary_line =*/ 0,

@@ -103,7 +103,7 @@
   \global\gre@lastendswithmorafalse %
   \ifgre@boxing\else\ifgre@firstin@euouae %
     \ifgre@raggedbreakbeforeeuouae %
-      \directlua{gregoriotex.save_pos(\the\gre@lasteuouaeindex,2)}%
+      \directlua{gregoriotex.save_euouae(\the\gre@lasteuouaeindex,2)}%
     \fi %
     \gre@firstin@euouaefalse %
   \fi\fi %
@@ -821,7 +821,7 @@
     \gre@usemanualeolcustos %
   \fi %
   \ifgre@raggedbreakbeforeeuouae %
-    \directlua{gregoriotex.save_pos(#1,1)}%
+    \directlua{gregoriotex.save_euouae(#1,1)}%
     \ifcase#2\ifcase\directlua{gregoriotex.is_ypos_different(#1)}\relax%
       \gre@newlinecommon{1}{1}%
     \fi\fi %

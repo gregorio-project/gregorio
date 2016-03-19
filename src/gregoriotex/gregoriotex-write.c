@@ -3391,7 +3391,6 @@ static __inline void anticipate_event(gregorio_syllable *syllable,
         char *const euouae_follows, char *const eol_forces_custos,
         unsigned short *const next_euouae_id)
 {
-    static unsigned short euouae_id = 0;
     bool has_intervening_linebreak = false;
 
     *euouae_follows = '\0';
@@ -3411,7 +3410,7 @@ static __inline void anticipate_event(gregorio_syllable *syllable,
             scan_syllable_for_eol(syllable, eol_forces_custos);
 
             if (syllable->euouae == EUOUAE_BEGINNING) {
-                *next_euouae_id = syllable->euouae_id = ++euouae_id;
+                *next_euouae_id = syllable->euouae_id = ++tex_position_id;
                 *euouae_follows = has_intervening_linebreak? '1' : '0';
             }
         }
