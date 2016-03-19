@@ -3094,9 +3094,18 @@ static void write_element(FILE *f, gregorio_syllable *syllable,
                         }
                     } else if (is_puncta_inclinata(
                                 glyph->next->u.notes.glyph_type)
-                            || glyph->next->u.notes.glyph_type ==
-                            G_PUNCTA_INCLINATA) {
-                        fprintf(f, "\\GreEndOfGlyph{9}%%\n");
+                            || glyph->next->u.notes.glyph_type
+                            == G_PUNCTA_INCLINATA) {
+                        if ((is_puncta_inclinata(glyph->u.notes.glyph_type)
+                                    || glyph->u.notes.glyph_type
+                                    == G_PUNCTA_INCLINATA)
+                                && glyph->next->u.notes.first_note->u.note.pitch
+                                == gregorio_glyph_last_note(glyph)->u.note.pitch) {
+                            /* special case for unison puncta inclinata */
+                            fprintf(f, "\\GreEndOfGlyph{23}%%\n");
+                        } else {
+                            fprintf(f, "\\GreEndOfGlyph{9}%%\n");
+                        }
                     } else if (glyph->u.notes.glyph_type != G_ALTERATION
                             || !glyph->next) {
                         fprintf(f, "\\GreEndOfGlyph{0}%%\n");
