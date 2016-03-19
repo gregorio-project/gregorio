@@ -68,10 +68,11 @@ local line_heights = nil
 local new_line_heights = nil
 local score_heights = nil
 local new_score_heights = nil
-local var_brace_positions = nil
-local new_var_brace_positions = nil
-local pos_saves = nil
-local new_pos_saves = nil
+local saved_positions = nil
+local saved_lengths = nil
+local new_saved_lengths = nil
+local saved_newline_before_euouae = nil
+local new_saved_newline_before_euouae = nil
 local auxname = nil
 local snippet_filename = nil
 local snippet_logname = nil
@@ -136,7 +137,35 @@ local function keys_changed(tab1, tab2)
   return false
 end
 
-local function heights_changed()
+local function saved_computations_changed(tab1, tab2)
+  local score_ids = {}
+  local id,_
+  for id,_ in pairs(tab1) do
+    score_ids[id] = true
+  end
+  for id,_ in pairs(tab2) do
+    score_ids[id] = true
+  end
+  for id,_ in pairs(score_ids) do
+    local inner1 = tab1[id]
+    local inner2 = tab2[id]
+    if inner1 == nil or inner2 == nil then return true end
+    local keys = {}
+    local index
+    for index,_ in pairs(inner1) do
+      keys[index] = true
+    end
+    for index,_ in pairs(inner2) do
+      keys[index] = true
+    end
+    for index,_ in pairs(keys) do
+      if inner1[index] ~= inner2[index] then return true end
+    end
+  end
+  return false
+end
+
+local function is_greaux_write_needed()
   local id, tab
   for id, tab in pairs(new_line_heights) do
     if keys_changed(tab, line_heights[id]) then return true end
@@ -144,30 +173,24 @@ local function heights_changed()
   for id, tab in pairs(line_heights) do
     if keys_changed(tab, new_line_heights[id]) then return true end
   end
-  for id, tab in pairs(new_var_brace_positions) do
-    if keys_changed(tab, var_brace_positions[id]) then return true end
+  if saved_computations_changed(saved_lengths, new_saved_lengths) then
+    return true
   end
-  for id, tab in pairs(var_brace_positions) do
-    if keys_changed(tab, new_var_brace_positions[id]) then return true end
-  end
-  for id, tab in pairs(new_pos_saves) do
-    if keys_changed(tab, pos_saves[id]) then return true end
-  end
-  for id, tab in pairs(pos_saves) do
-    if keys_changed(tab, new_pos_saves[id]) then return true end
+  if saved_computations_changed(saved_newline_before_euouae, new_saved_newline_before_euouae) then
+    return true
   end
   return false
 end
 
 local function write_greaux()
-  if heights_changed() then
+  if is_greaux_write_needed() then
     -- only write this if heights change; since table ordering is not
     -- predictable, this ensures a steady state if the heights are unchanged.
     local aux = io.open(auxname, 'w')
     if aux then
       log("Writing %s", auxname)
       aux:write('return {\n ["line_heights"]={\n')
-      local id, tab, id2, line
+      local id, tab, id2, line, value
       for id, tab in pairs(new_line_heights) do
         aux:write(string.format('  ["%s"]={\n', id))
         for id2, line in pairs(tab) do
@@ -176,25 +199,26 @@ local function write_greaux()
         end
         aux:write('  },\n')
       end
-      aux:write(' },\n ["var_brace_positions"]={\n')
-      for id, tab in pairs(new_var_brace_positions) do
+      aux:write(' },\n ["saved_lengths"]={\n')
+      for id, tab in pairs(new_saved_lengths) do
         aux:write(string.format('  ["%s"]={\n', id))
-        for id2, line in pairs(tab) do
-          if line[1] ~= nil and line[2] ~= nil then
-            aux:write(string.format('   [%d]={%d,%d},\n', id2, line[1],
-                line[2]))
+        for id2, value in pairs(tab) do
+          if value ~= nil then
+            aux:write(string.format('   [%d]=%d,\n', id2, value))
           end
         end
         aux:write('  },\n')
       end
-      aux:write(' },\n ["pos_saves"]={\n')
-      for id, tab in pairs(new_pos_saves) do
+      aux:write(' },\n ["saved_newline_before_euouae"]={\n')
+      for id, tab in pairs(new_saved_newline_before_euouae) do
         aux:write(string.format('  ["%s"]={\n', id))
-        for id2, line in pairs(tab) do
-          if line[1] ~= nil and line[2] ~= nil and line[3] ~= nil and
-              line[4] ~= nil then
-            aux:write(string.format('   [%d]={%d,%d,%d,%d},\n', id2, line[1],
-                line[2], line[3], line[4]))
+        for id2, value in pairs(tab) do
+          if value ~= nil then
+            if value then
+              aux:write(string.format('   [%d]=true,\n', id2))
+            else
+              aux:write(string.format('   [%d]=false,\n', id2))
+            end
           end
         end
         aux:write('  },\n')
@@ -237,12 +261,12 @@ local function init(arg, enable_height_computation)
     log("Reading %s", auxname)
     local score_info = dofile(auxname)
     line_heights = score_info.line_heights or {}
-    var_brace_positions = score_info.var_brace_positions or {}
-    pos_saves = score_info.pos_saves or {}
+    saved_lengths = score_info.saved_lengths or {}
+    saved_newline_before_euouae = score_info.saved_newline_before_euouae or {}
   else
     line_heights = {}
-    var_brace_positions = {}
-    pos_saves = {}
+    saved_lengths = {}
+    saved_newline_before_euouae = {}
   end
 
   if enable_height_computation then
@@ -268,8 +292,9 @@ local function init(arg, enable_height_computation)
         'line heights.  Remove or undefine \\greskipheightcomputation to '..
         'resume height computation.')
   end
-  new_var_brace_positions = {}
-  new_pos_saves = {}
+  saved_positions = {}
+  new_saved_lengths = {}
+  new_saved_newline_before_euouae = {}
 end
 
 -- node factory
@@ -954,64 +979,97 @@ local function adjust_line_height(inside_discretionary)
   end
 end
 
-local function var_brace_note_pos(brace, start_end)
-  tex.print(string.format([[\luatexlatelua{gregoriotex.late_brace_note_pos('%s', %d, %d, \number\pdflastxpos)}]], cur_score_id, brace, start_end))
+local function prep_save_position(index, fn)
+  if saved_positions[cur_score_id] == nil then
+    saved_positions[cur_score_id] = {}
+  end
+  saved_positions[cur_score_id][index] = { fn = fn }
 end
 
-local function late_brace_note_pos(score_id, brace, start_end, pos)
-  if new_var_brace_positions[score_id] == nil then
-    new_var_brace_positions[score_id] = {}
+local function save_position(index, which)
+  tex.print(string.format([[\luatexlatelua{gregoriotex.late_save_position('%s', %d, %d, \number\pdflastxpos, \number\pdflastypos)}]], cur_score_id, index, which))
+end
+
+local function late_save_position(score_id, index, which, xpos, ypos)
+  info('saving %s, %d [%d] (%d,%d)', score_id, index, which, xpos, ypos)
+  local pos = saved_positions[score_id][index]
+  if pos == nil then
+    err('Attempting to use unprepared position save slot %d', index)
+    return
   end
-  if new_var_brace_positions[score_id][brace] == nil then
-    new_var_brace_positions[score_id][brace] = {}
+  --[[
+  if pos.fn == nil then
+    err('Attempting to reuse position save slot %d', index)
+    return
   end
-  new_var_brace_positions[score_id][brace][start_end] = pos
+  --]]
+  pos['x'..which] = xpos
+  pos['y'..which] = ypos
+  if pos.x1 ~= nil and pos.y1 ~= nil and pos.x2 ~= nil and pos.y2 ~= nil then
+    pos.fn(score_id, index, pos)
+    --pos.fn = nil
+  end
+end
+
+local function compute_saved_length(score_id, index, pos)
+  if new_saved_lengths[score_id] == nil then
+    new_saved_lengths[score_id] = {}
+  end
+  new_saved_lengths[score_id][index] = pos.x2 - pos.x1
+  info('computed length for %s, %d: %d', score_id, index,
+      new_saved_lengths[score_id][index])
+end
+
+local function save_length(index, which)
+  if which == 1 then
+    prep_save_position(index, compute_saved_length)
+  end
+  save_position(index, which)
+end
+
+local function compute_saved_newline_before_euouae(score_id, index, pos)
+  if new_saved_newline_before_euouae[score_id] == nil then
+    new_saved_newline_before_euouae[score_id] = {}
+  end
+  new_saved_newline_before_euouae[score_id][index] = pos.y2 ~= pos.y1
+  info('computed euouae for %s, %d: %s', score_id, index,
+      new_saved_newline_before_euouae[score_id][index])
+end
+
+local function save_euouae(index, which)
+  if which == 1 then
+    prep_save_position(index, compute_saved_newline_before_euouae)
+  end
+  tex.sprint([[\pdfsavepos]])
+  save_position(index, which)
 end
 
 local function var_brace_len(brace)
-  if var_brace_positions[cur_score_id] ~= nil then
-    if var_brace_positions[cur_score_id][brace] ~= nil then
-      local posend = var_brace_positions[cur_score_id][brace][2]
-      local posstart = var_brace_positions[cur_score_id][brace][1]
-      if posend > posstart then
-        tex.print(string.format('%dsp', posend - posstart))
+  if saved_lengths[cur_score_id] ~= nil then
+    local length = saved_lengths[cur_score_id][brace]
+    if saved_lengths[cur_score_id][brace] ~= nil then
+      if length > 0 then
+        tex.print(string.format('%dsp', length))
+        return
       else
-        warn('Dynamically sized braces spanning multiple lines unsupported, using length 2mm.')
-        tex.print('2mm')
+        warn('Dynamically sized signs spanning multiple lines unsupported, using length 2mm.')
       end
-      return
     end
   end
   tex.print('2mm')
 end
 
-local function save_pos(index, which)
-  tex.print(string.format([[\pdfsavepos\luatexlatelua{gregoriotex.late_save_pos('%s', %d, %d, \number\pdflastxpos, \number\pdflastypos)}]], cur_score_id, index, which))
-end
-
-local function late_save_pos(score_id, index, which, xpos, ypos)
-  if new_pos_saves[score_id] == nil then
-    new_pos_saves[score_id] = {}
-  end
-  if new_pos_saves[score_id][index] == nil then
-    new_pos_saves[score_id][index] = {}
-  end
-  new_pos_saves[score_id][index][(2 * which) - 1] = xpos
-  new_pos_saves[score_id][index][2 * which] = ypos
-end
-
 -- this function is meant to be used from \ifcase; prints 0 for true and 1 for false
 local function is_ypos_different(index)
-  if pos_saves[cur_score_id] ~= nil then
-    local saved_pos = pos_saves[cur_score_id][index]
-    if saved_pos == nil or saved_pos[2] == saved_pos[4] then
-      tex.sprint([[\number1\relax ]])
-    else
+  if saved_newline_before_euouae[cur_score_id] ~= nil then
+    local newline_before_euouae =
+        saved_newline_before_euouae[cur_score_id][index]
+    if newline_before_euouae then
       tex.sprint([[\number0\relax ]])
+      return
     end
-  else
-    tex.sprint([[\number1\relax ]])
   end
+  tex.sprint([[\number1\relax ]])
 end
 
 local function width_to_bp(width, value_if_star)
@@ -1105,8 +1163,7 @@ gregoriotex.font_size            = font_size
 gregoriotex.direct_gabc          = direct_gabc
 gregoriotex.adjust_line_height   = adjust_line_height
 gregoriotex.var_brace_len        = var_brace_len
-gregoriotex.var_brace_note_pos   = var_brace_note_pos
-gregoriotex.late_brace_note_pos  = late_brace_note_pos
+gregoriotex.save_length          = save_length
 gregoriotex.mark_translation     = mark_translation
 gregoriotex.mark_abovelinestext  = mark_abovelinestext
 gregoriotex.width_to_bp          = width_to_bp
@@ -1115,11 +1172,11 @@ gregoriotex.rotation             = rotation
 gregoriotex.scale_space          = scale_space
 gregoriotex.set_header_capture   = set_header_capture
 gregoriotex.capture_header       = capture_header
-gregoriotex.save_pos             = save_pos
-gregoriotex.late_save_pos        = late_save_pos
 gregoriotex.is_ypos_different    = is_ypos_different
+gregoriotex.save_euouae          = save_euouae
 gregoriotex.mode_part            = mode_part
 gregoriotex.set_debug_string     = set_debug_string
+gregoriotex.late_save_position   = late_save_position
 
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))
