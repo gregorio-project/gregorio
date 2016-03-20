@@ -402,7 +402,21 @@
     \endgre@style@initial%
   \else %
     \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
-      \gre@warning{biginitial style is deprecated, but the old\MessageBreak behavior will be used since deprecated usage is\MessageBreak currently enabled. This behavior will disappear\MessageBreak in 5.0, so consider disabling deprecated usage\MessageBreak and switching to the initial style instead. (See\MessageBreak UPGRADE.md for more information)}%%% DEPRECATED for removal in 5.0
+      \gre@warning{%
+      biginitial style is deprecated, but since you are\MessageBreak %
+      allowing deprecated usage, Gregorio will continue\MessageBreak %
+      to use your biginitial style as it did before.\MessageBreak %
+      However, in upcoming version 5.0, Gregorio will\MessageBreak %
+      only support one initial style for both big and\MessageBreak %
+      small initials. Consider disabling deprecated\MessageBreak %
+      usage by passing the [allowdeprecated=false]\MessageBreak %
+      package option, which will then require you to\MessageBreak %
+      set the initial style before the appropriate\MessageBreak %
+      scores to style all initials: set the initial\MessageBreak %
+      style for a big initial before a score with a big\MessageBreak %
+      initial and back for a small initial afterwards.\MessageBreak %
+      (See UPGRADE.md for more information)\MessageBreak %
+      ...}%%% DEPRECATED for removal in 5.0
     \fi%%% DEPRECATED for removal in 5.0
     \advance\gre@dimen@temp@five by \dimexpr(-\gre@dimen@additionalbottomspace %
       - \gre@space@dimen@spacebeneathtext %
