@@ -239,6 +239,16 @@ static gregorio_element *gabc_det_elements_from_glyphs(
                     }
                     break;
 
+                case G_PODATUS:
+                    if (current_glyph->u.notes.glyph_type == G_VIRGA) {
+                        ambitus = glyph_note_ambitus(current_glyph, previous_glyph);
+                        if (ambitus >= 0) {
+                            do_not_cut = false;
+                            break_early = true;
+                        }
+                    }
+                    break;
+
                 default:
                     /* do nothing in particular */
                     break;

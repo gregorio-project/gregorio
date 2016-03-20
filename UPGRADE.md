@@ -8,6 +8,10 @@ This file contains instructions to upgrade to a new release of Gregorio.
 
 As of version 4.2, the orientation of the stemmed oriscus flexus `(gOe)` is consistent with the unstemmed oriscus flexus `(goe)` in that the oriscus points downward (since the note which follows is of lower pitch).  If you prefer the oriscus to point upward, you will need to use the `1` modifier (as in `(gO1e)`), which will force an upward orientation of the oriscus.
 
+### Podatus followed by a virga
+
+As of version 4.2, a podatus followed by a virga of the same or higher pitch as the second note in the podatus (e.g., `(eghv)`) will be kept together, disallowing a line break between the two shapes.  If you would like to allow a line break between the two shapes, use a `/` or some other breakable space between them (e.g., `(eg/hv)`).
+
 ## 4.1.1
 
 ### Vertical spacings
