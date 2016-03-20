@@ -14,6 +14,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Changed
 - The stemmed oriscus flexus `(gOe)` is now consistent with the unstemmed oriscus flexus `(goe)` in that the oriscus points downward at the note that follows.  If you prefer to have the oriscus point upward, use `(gO1e)` for force upward orientation.
 - Space before a custos appearing in the middle of a line is now set by `spacebeforeinlinecustos`.
+- The space between two puncta inclinata at the unison may be tuned by changing `punctuminclinatumunisonshift` (see [#1042](https://github.com/gregorio-project/gregorio/issues/1042)).
 
 ### Removed
 - `\grescorereference`
