@@ -939,6 +939,21 @@ Macro to determine whether the last line of the score should be justified or not
   & \texttt{ragged} & Set the last line ragged (default)
 \end{argtable}
 
+\macroname{\textbackslash gresetunbreakablesyllablenote}{\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-syllable.tex}
+Configures how notes should be kept together on line breaks.
+
+\begin{argtable}
+  \#1 & integer & The minimum number of notes in the syllable before the
+                  syllable may be broken across lines.  Defaults to
+                  \getgrecount{unbreakabletotalnotes}.\\
+  \#2 & integer & The minimum number of notes at the start of a syllable that
+                  must be kept together when the syllable is broken across
+                  lines.  Defaults to \getgrecount{unbreakableinitialnotes}.\\
+  \#3 & integer & The minimum number of notes at the end of a syllable that
+                  must be kept together when the syllable is broken across
+                  lines.  Defaults to \getgrecount{unbreakablefinalnotes}.\\
+\end{argtable}
+
 
 \subsubsection{Bar spacing}
 
