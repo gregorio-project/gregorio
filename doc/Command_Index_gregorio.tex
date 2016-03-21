@@ -61,13 +61,14 @@ Macro to typeset the additional line above or below the staff.
   \#3 & integer & Set horizontal episema (0), horizontal episema under a note (1), line at top of staff (2), line at bottom of staff (3), choral sign (4).\\
 \end{argtable}
 
-\macroname{\textbackslash GreAdHocSpaceEndOfElement}{\#1\#2}{gregoriotex-main.tex}
+\macroname{\textbackslash GreAdHocSpaceEndOfElement}{\#1\#2\#3}{gregoriotex-main.tex}
 Macro to end an element with an ad-hoc space.
 
 \begin{argtable}
   \#1 & float & The factor to scale the default space for use as an ad-hoc space.\\
   \#2 & \texttt{0} & Space is breakable.\\
   & \texttt{1} & Space is unbreakable.\\
+  \#3 & integer & The number of notes in the syllable prior to this macro.\\
 \end{argtable}
 
 \macroname{\textbackslash GreAugmentumDuplex}{\#1\#2\#3}{gregoriotex-signs.tex}
@@ -273,7 +274,7 @@ Macro to mark the end of a EUOUAE block.
   & \texttt{3} & before bar
 \end{argtable}
 
-\macroname{\textbackslash GreEndOfElement}{\#1\#2}{gregoriotex-main.tex}
+\macroname{\textbackslash GreEndOfElement}{\#1\#2\#3}{gregoriotex-main.tex}
 Macro to end elements.
 
 \begin{argtable}
@@ -284,6 +285,7 @@ Macro to end elements.
   & \texttt{4} & Ad-hoc space.\\
   \#2 & \texttt{0} & Space is breakable.\\
   & \texttt{1} & Space is unbreakable.\\
+  \#3 & integer & The number of notes in the syllable prior to this macro.\\
 \end{argtable}
 
 \macroname{\textbackslash GreEndNLBArea}{\#1\#2}{gregoriotex-main.tex}
@@ -961,6 +963,13 @@ Macro to typeset the syllable.
   \#7 & & alignment type of the first next glyph\\
   \#8 &\TeX\ code & other macros (translation, double text, etc.) that don't fit in the limitation of the number of arguments\\
   \#9 & Gregorio\TeX\ glyphs & all the notes
+\end{argtable}
+
+\macroname{\textbackslash GreSyllableNoteCount}{\#1}{gregoriotex-syllable.tex}
+Indicates the number of notes in the current syllable.
+
+\begin{argtable}
+  \#1 & integer & The number of notes in the current syllable.\\
 \end{argtable}
 
 \macroname{\textbackslash GreTranslationCenterEnd}{}{gregoriotex-main.tex}

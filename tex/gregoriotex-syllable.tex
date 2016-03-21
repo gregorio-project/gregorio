@@ -643,6 +643,24 @@
 \newif\ifgre@possibleluahyphenafterthissyllable
 \gre@possibleluahyphenafterthissyllablefalse
 
+\newcount\gre@count@unbreakabletotalnotes %
+\newcount\gre@count@unbreakableinitialnotes %
+\newcount\gre@count@unbreakablefinalnotes %
+% #1 : minimum notes in the syllable before the syllable may be split across lines
+% #2 : minimum notes to keep together at the start of a syllable
+% #3 : minimum notes to keep together at the end of a syllable
+\def\gresetunbreakablesyllablenotes#1#2#3{%
+  \gre@count@unbreakabletotalnotes=\number#1\relax %
+  \gre@count@unbreakableinitialnotes=\number#2\relax %
+  \gre@count@unbreakablefinalnotes=\number#3\relax %
+}%
+\gresetunbreakablesyllablenotes{10}{4}{4}%
+
+\newcount\gre@count@syllablenotes %
+\def\GreSyllableNoteCount#1{%
+  \gre@count@syllablenotes=\number#1\relax %
+}%
+
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : macro setting the letters of this syllable
 % #2 : reserved (unused)

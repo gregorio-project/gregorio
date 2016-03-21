@@ -1627,6 +1627,23 @@ Boolean indicating that the current syllable had a forced center in the gabc whi
 \macroname{\textbackslash ifgre@nextforcedcentering}{}{gregoriotex-syllable.tex}
 Boolean indicating that the next syllable had a forced center in the gabc which is to be respected.
 
+\macroname{\textbackslash ifgre@unbreakableendofelement}{}{gregoriotex-main.tex}
+Boolean used by \verb=\GreEndOfElement= to store whether the line may be broken at that point.
+
+\macroname{\textbackslash gre@count@syllablenotes}{}{gregoriotex-syllable.tex}
+Count containing the number of notes in the syllable.
+
+\macroname{\textbackslash gre@count@unbreakabletotalnotes}{}{gregoriotex-syllable.tex}
+Count containing the minimum number of notes in the syllable before the syllable
+may be broken across lines.
+
+\macroname{\textbackslash gre@count@unbreakableinitialnotes}{}{gregoriotex-syllable.tex}
+Count containing the minimum number of notes at the start of a syllable that
+must be kept together when the syllable is broken across lines.
+
+\macroname{\textbackslash gre@count@unbreakablefinalnotes}{}{gregoriotex-syllable.tex}
+Count containing the minimum number of notes at the end of a syllable that must
+be kept together when the syllable is broken across lines.
 
 \subsection{Boxes}
 

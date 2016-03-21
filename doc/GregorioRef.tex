@@ -137,6 +137,10 @@
   \gre@style@modemodifier #2\endgre@style@modemodifier %
   \gre@style@modedifferentia #3\endgre@style@modedifferentia %
 }
+
+\newcommand{\getgrecount}[1]{%
+  \the\csname gre@count@#1\endcsname%
+}
 \makeatother
 
 \setlength{\parindent}{0mm} % Default is 15pt

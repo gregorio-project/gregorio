@@ -3038,13 +3038,26 @@ static void write_glyph(FILE *f, gregorio_syllable *syllable,
     }
 }
 
+static __inline unsigned int glyph_note_units(const gregorio_glyph *glyph)
+{
+    unsigned int count = 0;
+    const gregorio_note *note;
+    if (glyph->u.notes.glyph_type != G_ALTERATION) {
+        for (note = glyph->u.notes.first_note; note; note = note->next) {
+            ++count;
+        }
+    }
+    return count;
+}
+
 /* here we absolutely need to pass the syllable as an argument, because we
  * will need the next note, that may be contained in the next syllable */
 
-static void write_element(FILE *f, gregorio_syllable *syllable,
+static unsigned int write_element(FILE *f, gregorio_syllable *syllable,
         gregorio_element *element, gregoriotex_status *status,
         const gregorio_score *const score)
 {
+    unsigned int note_unit_count = 0;
     if (element->type == GRE_ELEMENT) {
         gregorio_glyph *glyph;
         for (glyph = element->u.first_glyph; glyph; glyph = glyph->next) {
@@ -3081,6 +3094,7 @@ static void write_element(FILE *f, gregorio_syllable *syllable,
                 /* at this point glyph->type is GRE_GLYPH */
                 assert(glyph->type == GRE_GLYPH);
                 write_glyph(f, syllable, element, glyph, status, score);
+                note_unit_count += glyph_note_units(glyph);
                 if (glyph->next && glyph->next->type == GRE_GLYPH &&
                         glyph->next->u.notes.glyph_type != G_ALTERATION) {
                     if (is_fused(glyph->next->u.notes.liquescentia)) {
@@ -3115,6 +3129,7 @@ static void write_element(FILE *f, gregorio_syllable *syllable,
             }
         }
     }
+    return note_unit_count;
 }
 
 static void write_fixed_text_styles(FILE *f, gregorio_character *syllable_text,
@@ -3439,6 +3454,22 @@ static __inline void write_anticipated_event(FILE *f, const char euouae_follows,
     }
 }
 
+static __inline unsigned int count_note_units(const gregorio_element *element)
+{
+    unsigned int count = 0;
+    for (; element; element = element->next) {
+        if (element->type == GRE_ELEMENT) {
+            const gregorio_glyph *glyph;
+            for (glyph = element->u.first_glyph; glyph; glyph = glyph->next) {
+                if (glyph->type == GRE_GLYPH) {
+                    count += glyph_note_units(glyph);
+                }
+            }
+        }
+    }
+    return count;
+}
+
 /*
  * Arguments are relatively obvious. The most obscure is certainly first_of_disc
  * which is 0 all the time, except in the case of a "clef change syllable". In
@@ -3466,6 +3497,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     char euouae_follows;
     char eol_forces_custos;
     unsigned short next_euouae_id;
+    unsigned int note_unit_count;
 
     gregorio_not_null(syllable, write_syllable, return);
     end_of_word = syllable->position == WORD_END
@@ -3618,6 +3650,10 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     }
     fprintf(f, "}{%%\n");
 
+    fprintf(f, "\\GreSyllableNoteCount{%u}%%\n", syllable->elements?
+            count_note_units(*syllable->elements) : 0);
+
+    note_unit_count = 0;
     if (syllable->elements) {
         for (element = *syllable->elements; element; element = element->next) {
             if (element->nabc_lines && element->nabc) {
@@ -3634,30 +3670,38 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             case GRE_SPACE:
                 switch (element->u.misc.unpitched.info.space) {
                 case SP_LARGER_SPACE:
-                    fprintf(f, "\\GreEndOfElement{1}{0}%%\n");
+                    fprintf(f, "\\GreEndOfElement{1}{0}{%u}%%\n",
+                            note_unit_count);
                     break;
                 case SP_GLYPH_SPACE:
-                    fprintf(f, "\\GreEndOfElement{2}{0}%%\n");
+                    fprintf(f, "\\GreEndOfElement{2}{0}{%u}%%\n",
+                            note_unit_count);
                     break;
                 case SP_NEUMATIC_CUT:
-                    fprintf(f, "\\GreEndOfElement{0}{0}%%\n");
+                    fprintf(f, "\\GreEndOfElement{0}{0}{%u}%%\n",
+                            note_unit_count);
                     break;
                 case SP_AD_HOC_SPACE:
-                    fprintf(f, "\\GreAdHocSpaceEndOfElement{%s}{0}%%\n",
-                            element->u.misc.unpitched.info.ad_hoc_space_factor);
+                    fprintf(f, "\\GreAdHocSpaceEndOfElement{%s}{0}{%u}%%\n",
+                            element->u.misc.unpitched.info.ad_hoc_space_factor,
+                            note_unit_count);
                     break;
                 case SP_GLYPH_SPACE_NB:
-                    fprintf(f, "\\GreEndOfElement{2}{1}%%\n");
+                    fprintf(f, "\\GreEndOfElement{2}{1}{%u}%%\n",
+                            note_unit_count);
                     break;
                 case SP_LARGER_SPACE_NB:
-                    fprintf(f, "\\GreEndOfElement{1}{1}%%\n");
+                    fprintf(f, "\\GreEndOfElement{1}{1}{%u}%%\n",
+                            note_unit_count);
                     break;
                 case SP_NEUMATIC_CUT_NB:
-                    fprintf(f, "\\GreEndOfElement{0}{1}%%\n");
+                    fprintf(f, "\\GreEndOfElement{0}{1}{%u}%%\n",
+                            note_unit_count);
                     break;
                 case SP_AD_HOC_SPACE_NB:
-                    fprintf(f, "\\GreAdHocSpaceEndOfElement{%s}{1}%%\n",
-                            element->u.misc.unpitched.info.ad_hoc_space_factor);
+                    fprintf(f, "\\GreAdHocSpaceEndOfElement{%s}{1}{%u}%%\n",
+                            element->u.misc.unpitched.info.ad_hoc_space_factor,
+                            note_unit_count);
                     break;
                 default:
                     /* not reachable unless there's a programming error */
@@ -3720,11 +3764,11 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                      */
                     /* we also print an unbreakable larger space before the custo */
                     handle_last_of_score(f, syllable, element);
-                    fprintf(f, "\\GreCustos{%d}"
-                            "\\GreNextCustos{%d}%%\n",
+                    fprintf(f, "\\GreCustos{%d}\\GreNextCustos{%d}%%\n",
                             pitch_value(element->u.misc.pitched.pitch),
                             pitch_value(gregorio_determine_next_pitch(syllable,
                                     element, NULL)));
+                    ++note_unit_count;
                 }
                 break;
 
@@ -3755,13 +3799,15 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                 /* here current_element->type is GRE_ELEMENT */
                 assert(element->type == GRE_ELEMENT);
                 handle_last_of_score(f, syllable, element);
-                write_element(f, syllable, element, status, score);
+                note_unit_count += write_element(f, syllable, element, status,
+                        score);
                 if (element->next && (element->next->type == GRE_ELEMENT
                                 || (element->next->next
                                         && element->next->type == GRE_ALT
                                         && element->next->next->type ==
                                         GRE_ELEMENT))) {
-                    fprintf(f, "\\GreEndOfElement{0}{0}%%\n");
+                    fprintf(f, "\\GreEndOfElement{0}{0}{%u}%%\n",
+                            note_unit_count);
                 }
                 break;
             }
