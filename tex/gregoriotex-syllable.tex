@@ -112,7 +112,7 @@
 
 \def\gre@endofglyphcommon{%
   \ifgre@endofscore %
-    \gre@penalty{\grefinalpenalty}%
+    \gre@penalty{\the\gre@space@count@finalpenalty}%
     \gre@localleftbox{}%
     \gre@localrightbox{}%
   \fi %
@@ -908,14 +908,14 @@
   \fi%
   \ifnum#3=1\relax %
     \GreNoBreak %
-    \gre@debugmsg{syllablespacing}{ set penalty \grenobreakpenalty}%
+    \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@nobreakpenalty}%
   \else %
     \ifnum#2=1\relax %
-      \gre@penalty{\greendofwordpenalty}%
-      \gre@debugmsg{syllablespacing}{ set penalty \greendofwordpenalty}%
+      \gre@penalty{\the\gre@space@count@endofwordpenalty}%
+      \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@endofwordpenalty}%
     \else %
-      \gre@penalty{\greendofsyllablepenalty}%
-      \gre@debugmsg{syllablespacing}{ set penalty \greendofsyllablepenalty}%
+      \gre@penalty{\the\gre@space@count@endofsyllablepenalty}%
+      \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@endofsyllablepenalty}%
     \fi %
   \fi %
   \ifgre@eolshiftsenabled%
@@ -1061,8 +1061,8 @@
     % if no end of line or end of score
     \ifnum\gre@count@temp@one=0\relax %
       % add the penalty
-      \gre@debugmsg{barspacing}{after bar penalty: \greendafterbarpenalty}%
-      \gre@penalty{\greendafterbarpenalty}%
+      \gre@debugmsg{barspacing}{after bar penalty: \the\gre@space@count@endafterbarpenalty}%
+      \gre@penalty{\the\gre@space@count@endafterbarpenalty}%
       \ifgre@eolshiftsenabled%
         %If the above penalties don't result in a line break, then we need to undo the eolshift to prevent the next syllable from overlapping with this one.  If the line break did occur, then this shift will occur at the beginning of a line and thus will be ignored automatically by TeX.
         \kern \dimexpr(\gre@dimen@eolshift)\relax%
@@ -1086,8 +1086,8 @@
     \else %
       \ifgre@endofscore %
         \gre@localleftbox{}%
-        \gre@debugmsg{barspacing}{after bar penalty: \greendafterbarpenalty}%
-        \gre@penalty{\grefinalpenalty}%
+        \gre@debugmsg{barspacing}{after bar penalty: \gre@space@count@endafterbarpenalty}%
+        \gre@penalty{\the\gre@space@count@finalpenalty}%
       \else %
         \ifnum\gre@newlinearg=-1\else %
           \gre@debugmsg{barspacing}{calling new line with argument: \gre@newlinearg}%
@@ -1155,7 +1155,7 @@
         \gre@mustdotranslationcenterendfalse%
       \fi %
       #9\relax %
-      \gre@penalty{\greendafterbaraltpenalty }% TODO: isn't it a bit buggy?
+      \gre@penalty{\the\gre@space@count@endafterbaraltpenalty }% TODO: isn't it a bit buggy?
       % end of same code as syllable
       \ifnum\gre@lastoflinecount=1\relax %
         \global\gre@lastoflinecount=2\relax %

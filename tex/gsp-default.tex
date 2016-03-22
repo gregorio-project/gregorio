@@ -22,51 +22,50 @@
 %% First, the penalties
 
 % penalty to force a break on a new line
-\xdef\grenewlinepenalty{-10001}%
+\grechangecount{newlinepenalty}{-10001}%
 % penalty to prevent a line break
-\xdef\grenobreakpenalty{10001}%
+\grechangecount{nobreakpenalty}{10001}%
 % penalty at the end of a syllable which is the end of a word
-\xdef\greendofwordpenalty{-100}%
+\grechangecount{endofwordpenalty}{-100}%
 % penalty at the end of a syllable which is not the end of a word
-\xdef\greendofsyllablepenalty{-50}%
+\grechangecount{endofsyllablepenalty}{-50}%
 % penalty at the end of a syllable which is just a bar, with something printed
 % under it
-\xdef\greendafterbarpenalty{-200}%
+\grechangecount{endafterbarpenalty}{-200}%
 % penalty right after a bar with nothing printed
-\xdef\greendafterbaraltpenalty{-200}%
+\grechangecount{endafterbaraltpenalty}{-200}%
 % penalty at the end of the score
-\xdef\grefinalpenalty{0}%
+\grechangecount{finalpenalty}{0}%
 % penalty at the end of a breakable neumatic element (typically at a space
 % between elements)
-\xdef\greendofelementpenalty{-50}%
+\grechangecount{endofelementpenalty}{-50}%
 % hyphenpenalty will be used in discretionaries, in Gregorio this is used for
 % a bar with clef change for example. It also set \exhyphenpenalty. It should
-% be close to \greendafterbarpenalty
-\xdef\grehyphenpenalty{-200}%
+% be close to endafterbarpenalty
+\grechangecount{hyphenpenalty}{-200}%
 % broken penalty is the vertical penalty inserted after a break on a clef change
 % I'm not sure it should be set, but it might be useful...
-\xdef\grebrokenpenalty{0}%
+\grechangecount{brokenpenalty}{0}%
 
 %% These macro enable the tuning of linepenalty, tolerance, pretolerance
 %% and emergencystretch
-\def\grelooseness{-1}%
-\def\gretolerance{9000}%
+\grechangecount{looseness}{-1}%
+\grechangecount{tolerance}{9000}%
 % Workaround for bug 842 (http://tracker.luatex.org/view.php?id=842)
 % see http://tug.org/pipermail/luatex/2013-July/004516.html
 % The idea is that we use discretionaries (explicit hyphens, though more than hyphens in our case) for clef changes, and we need to give them a special penalty, which is not taken into account if pretolerance is > -1 on LuaTeX < 0.80. For a more detailed explanation see http://tug.org/pipermail/luatex/2013-July/004516.html.
 \ifnum\the\luatexversion < 78\relax %
-  \global\def\grepretolerance{-1}%
+  \grechangecount{pretolerance}{-1}%
 \else %
-  \global\def\grepretolerance{\pretolerance}%
+  \grechangecount{pretolerance}{\the\pretolerance}%
 \fi %
-\def\greemergencystretch{\emergencystretch}%
+\grecreatedim{emergencystretch}{\the\emergencystretch}{scalable}%
 % By default, we don't care if a line of score is alone on the page,
 % if you think it is bad, you can modify the two following values. Assigning
 % 10000 to them will prevent all orphaned lines (this will certainly improve
 % some spacings a lot).
-\def\grewidowpenalty{0}%
-\def\greclubpenalty{0}%
-
+\grechangecount{widowpenalty}{0}%
+\grechangecount{clubpenalty}{0}%
 
 
 %%%%%%%%%%%%%%%%%%%

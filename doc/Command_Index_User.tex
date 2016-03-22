@@ -259,10 +259,10 @@ Macro to turn on or off scaling with the staff size for a particular distance.
 \textbf{Nota bene:} This macro also can be used to change whether or not the staff line thickness scales with the staff size by specifying \texttt{stafflinefactor} for the first argument.
 
 \macroname{\textbackslash grechangecount}{\{\#1\}\{\#2\}}{gregoriotex-spaces.tex}
-Macro to change one of Gregorio\TeX’s counts (numeric values).
+Macro to change one of Gregorio\TeX’s counts or penalities (numeric values).
 
 \begin{argtable}
-  \#1 & string & The name of the count to be changed.  See \nameref{counts} below.\\
+  \#1 & string & The name of the count to be changed.  See \nameref{counts} and \nameref{penalties} below.\\
   \#2 & integer & The new value.\\
 \end{argtable}
 
@@ -1164,22 +1164,18 @@ Macro to set the font to be used for the ancient notation.
 
 Each of the following counts controls some aspect of the configuration of the Gregorio\TeX\ score.  They are changed using \verb=\grechangecount=, documented above.
 
-\macroname{additionaltopspacethreshold}{}{gsp-default.tex}
-
+\begin{gcount}{additionaltopspacethreshold}
 The threshold above which we start accounting notes above lines for additional
 vertical space. For instance with a threshold of \texttt{2}, notes with a pitch
 of \texttt{k} and \texttt{l} will not interfere with the space above lines.
 Set it to a high value if you don't want high notes to interfere with space
 above lines.
+\end{gcount}
 
-Default: \texttt{2}
-
-\macroname{additionaltopspacealtthreshold}{}{gsp-default.tex}
-
+\begin{gcount}{additionaltopspacealtthreshold}
 Same as \texttt{additionaltopspacethreshold} but setting the threshold for
 notes taken into account with above lines text vertical placement.
-
-Default: \texttt{0}
+\end{gcount}
 
 \subsection{Distances}\label{distances}
 
@@ -1704,87 +1700,74 @@ Same as \texttt{maxbaroffsettextleft@eol} but when the center of the text goes r
 
 
 \subsection{Penalties}\label{penalties}
-Penalties are used by \TeX\ to determine where line and page breaks should occur.  Gregorio\TeX\ modifies or defines a few of its own to help with that process in scores.
+Penalties are used by \TeX\ to determine where line and page breaks should occur.  Gregorio\TeX\ modifies or defines a few of its own to help with that process in scores.  With the exception of \texttt{emergencystretch} (which should be changed using \verb=\grechangedim=) these should be changed using \verb=\grechangecount=, described above.
 
-\macroname{\textbackslash grebrokenpenalty}{}{gsp-default.tex}
+\begin{gcount}{brokenpenalty}
 The vertical penalty inserted after a break on a clef change.
+\end{gcount}
 
-Default: 0
-
-\macroname{\textbackslash greclubpenalty}{}{gsp-default.tex}
+\begin{gcount}{clubpenalty}
 The club penalty (determines how important it is to prevent orphans from occurring).
+\end{gcount}
 
-Default: 0
-
-\macroname{\textbackslash grewidowpenalty}{}{gsp-default.tex}
+\begin{gcount}{widowpenalty}
 The widow penalty (determines how important it is to prevent widows from occurring).
+\end{gcount}
 
-Default: 0
-
-\macroname{\textbackslash greemergencystretch}{}{gsp-default.tex}
-The value of the last ditch stretch for overfull boxes.
+\macroname{emergencystretch}{}{gsp-default.tex}
+The value of the last ditch stretch for overfull boxes.  This should be set using \verb=\grechangedim=.
 
 Default: \verb=\emergencystretch=
 
-\macroname{\textbackslash greendafterbarpenalty}{}{gsp-default.tex}
+\begin{gcount}{endafterbarpenalty}
 The end after bar penalty.
+\end{gcount}
 
-Default: $-200$
-
-\macroname{\textbackslash greendafterbaraltpenalty}{}{gsp-default.tex}
+\begin{gcount}{endafterbaraltpenalty}{}{gsp-default.tex}
 The alternate end after bar penalty (used when there is no text under the bar).
+\end{gcount}
 
-Default: $-200$
-
-\macroname{\textbackslash greendofelementpenalty}{}{gsp-default.tex}
+\begin{gcount}{endofelementpenalty}{}{gsp-default.tex}
 The end of element penalty.
+\end{gcount}
 
-Default: $-50$
-
-\macroname{\textbackslash greendofsyllablepenalty}{}{gsp-default.tex}
+\begin{gcount}{endofsyllablepenalty}{}{gsp-default.tex}
 The end of element penalty.
+\end{gcount}
 
-Default: $-50$
-
-\macroname{\textbackslash greendofwordpenalty}{}{gsp-default.tex}
+\begin{gcount}{endofwordpenalty}{}{gsp-default.tex}
 The end of element penalty.
+\end{gcount}
 
-Default: $-100$
-
-\macroname{\textbackslash grehyphenpenalty}{}{gsp-default.tex}
+\begin{gcount}{hyphenpenalty}{}{gsp-default.tex}
 The hyphen penalty.
+\end{gcount}
 
-Default: $-200$
-
-\macroname{\textbackslash grenobreakpenalty}{}{gsp-default.tex}
+\begin{gcount}{nobreakpenalty}{}{gsp-default.tex}
 Penalty to prevent a line break.
+\end{gcount}
 
-Default: 10001
-
-\macroname{\textbackslash grenewlinepenalty}{}{gsp-default.tex}
+\begin{gcount}{newlinepenalty}
 Penalty to force a line break.
+\end{gcount}
 
-Default: $-10001$
-
-\macroname{\textbackslash grefinalpenalty}{}{gsp-default.tex}
+\begin{gcount}{finalpenalty}
 The penalty applied after the final element of a score.
+\end{gcount}
 
-Default: $0$
-
-\macroname{\textbackslash grelooseness}{}{gsp-default.tex}
+\macroname{looseness}{}{gsp-default.tex}
 The \TeX\ looseness within a score.
 
 Default: \verb=\looseness=
 
-\macroname{\textbackslash gretolerance}{}{gsp-default.tex}
+\begin{gcount}{tolerance}
 The \TeX\ tolerance within a score.  See \url{https://en.wikibooks.org/wiki/TeX/tolerance} for an explanation of what tolerance is.
+\end{gcount}
 
-Default: 9000
-
-\macroname{\textbackslash grepretolerance}{}{gsp-default.tex}
+\macroname{pretolerance}{}{gsp-default.tex}
 The \TeX\ pretolerance within a score.  See \url{https://en.wikibooks.org/wiki/TeX/pretolerance} for an explanation of what pretolerance is.
 
-Default: $-1$ (Lua\TeX\ versions prior to 0.80) or \verb=\pretolerance= (versions after, and including, 0.80)
+Default: $-1$ (Lua\TeX\ versions prior to 0.80) or \verb=\pretolerance= (versions after, and including, 0.80)]
 
 \textit{Nota bene:} For more details on why this is necessary see the comments in gsp-default.tex.
 
