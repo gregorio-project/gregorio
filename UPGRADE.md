@@ -12,6 +12,30 @@ As of version 4.2, the orientation of the stemmed oriscus flexus `(gOe)` is cons
 
 As of version 4.2, a podatus followed by a virga of the same or higher pitch as the second note in the podatus (e.g., `(eghv)`) will be kept together, disallowing a line break between the two shapes.  If you would like to allow a line break between the two shapes, use a `/` or some other breakable space between them (e.g., `(eg/hv)`).
 
+### Penalties
+
+As of version 4.2, the penalties should be changed by using `\grechangecount` rather than the old way of redefining macros.  The following tunable values are available (they have the same name as their old macro counterparts, minus the `gre`):
+
+- `brokenpenalty`
+- `clubpenalty`
+- `endafterbaraltpenalty`
+- `endafterbarpenalty`
+- `endofelementpenalty`
+- `endofsyllablepenalty`
+- `endofwordpenalty`
+- `finalpenalty`
+- `hyphenpenalty`
+- `looseness`
+- `newlinepenalty`
+- `nobreakpenalty`
+- `pretolerance`
+- `tolerance`
+- `widowpenalty`
+
+See GregorioRef for descriptions.
+
+Additionally, if you were redefining `\greemergencystretch`, you should now be changing the `emergencystretch` dimension using the `\grechangedim` command.
+
 ## 4.1.1
 
 ### Vertical spacings

@@ -1198,7 +1198,7 @@
 
 % macro called at the end of a bar (old bar spacing algorithm only).
 \def\gre@endafterbar#1{%
-  \gre@penalty{\greendafterbarpenalty }\relax %
+  \gre@penalty{\the\gre@space@count@endafterbarpenalty }\relax %
   \ifnum#1=1\relax %
     \gre@debugmsg{ifdim}{ enddifference > 0pt}%
     \ifdim\gre@dimen@enddifference > 0 pt\relax%
@@ -1221,7 +1221,7 @@
       \fi %
     \fi %
   \fi %
-  %\gre@penalty{\greendafterbarpenalty }\relax
+  %\gre@penalty{\the\gre@space@count@endafterbarpenalty }\relax
   %\global\gre@dimen@enddifference=0pt
   \relax %
 }%
@@ -1371,7 +1371,7 @@
   \ifgre@unbreakableendofelement %
     \GreNoBreak %
   \else %
-    \gre@penalty{\greendofelementpenalty}%
+    \gre@penalty{\the\gre@space@count@endofelementpenalty}%
   \fi %
   \ifcase#1%
     \gre@skip@temp@four = \gre@space@skip@interelementspace\relax%
@@ -1490,6 +1490,13 @@
 % 2: no line break area due to <nlba> tag
 \xdef\gre@nlbstate{0}%
 
+\newcount\gre@nobreakpenaltysave%
+\newcount\gre@endofwordpenaltysave%
+\newcount\gre@endofsyllablepenaltysave%
+\newcount\gre@endafterbarpenaltysave%
+\newcount\gre@endafterbaraltpenaltysave%
+\newcount\gre@endofelementpenaltysave%
+\newcount\gre@hyphenpenaltysave%
 % first argument is if if the nlba is starting in neumes or not
 % second argument is if it is called from translation centering or not
 \def\GreBeginNLBArea#1#2{%
@@ -1506,20 +1513,21 @@
       \fi %
   \fi %
   \ifnum\gre@nlbinitialstate=0\relax %
-      \xdef\gre@nobreakpenaltysave{\grenobreakpenalty }%
-      \xdef\grenobreakpenalty{10001}%
-      \xdef\gre@endofwordpenaltysave{\greendofwordpenalty }%
-      \xdef\greendofwordpenalty{10001}%
-      \xdef\gre@endofsyllablepenaltysave{\greendofsyllablepenalty }%
-      \xdef\greendofsyllablepenalty{10001}%
-      \xdef\gre@endafterbarpenaltysave{\greendafterbarpenalty }%
-      \xdef\greendafterbarpenalty{10001}%
-      \xdef\gre@endafterbaraltpenaltysave{\greendafterbaraltpenalty }%
-      \xdef\greendafterbaraltpenalty{10001}%
-      \xdef\gre@endofelementpenaltysave{\greendofelementpenalty }%
-      \xdef\greendofelementpenalty{10001}%
-      \xdef\gre@hyphenpenaltysave{\grehyphenpenalty }%
-      \xdef\grehyphenpenalty{10001}%
+      \global\gre@nobreakpenaltysave=\gre@space@count@nobreakpenalty\relax %
+      \global\gre@endofwordpenaltysave=\gre@space@count@endofwordpenalty\relax %
+      \global\gre@endofsyllablepenaltysave=\gre@space@count@endofsyllablepenalty\relax %
+      \global\gre@endafterbarpenaltysave=\gre@space@count@endafterbarpenalty\relax %
+      \global\gre@endafterbaraltpenaltysave=\gre@space@count@endafterbaraltpenalty\relax %
+      \global\gre@endofelementpenaltysave=\gre@space@count@endofelementpenalty\relax %
+      \global\gre@hyphenpenaltysave=\gre@space@count@hyphenpenalty\relax %
+      %
+      \global\gre@space@count@nobreakpenalty=10001\relax %
+      \global\gre@space@count@endofwordpenalty=10001\relax %
+      \global\gre@space@count@endofsyllablepenalty=10001\relax %
+      \global\gre@space@count@endafterbarpenalty=10001\relax %
+      \global\gre@space@count@endafterbaraltpenalty=10001\relax %
+      \global\gre@space@count@endofelementpenalty=10001\relax %
+      \global\gre@space@count@hyphenpenalty=10001\relax %
   \fi %
 }%
 
@@ -1539,17 +1547,17 @@
   % if gre@nlbstate is not 0, then nothing should happend
   \ifnum\gre@nlbstate=0\relax %
     \ifnum\gre@nlbinitialstate=0\else %
-      \xdef\grenobreakpenalty{\gre@nobreakpenaltysave }%
-      \xdef\greendofwordpenalty{\gre@endofwordpenaltysave}%
-      \xdef\greendofsyllablepenalty{\gre@endofsyllablepenaltysave}%
-      \xdef\greendafterbarpenalty{\gre@endafterbarpenaltysave}%
-      \xdef\greendafterbaraltpenalty{\gre@endafterbaraltpenaltysave}%
-      \xdef\greendofelementpenalty{\gre@endofelementpenaltysave}%
-      \xdef\grehyphenpenalty{\gre@hyphenpenaltysave}%
+      \global\gre@space@count@nobreakpenalty=\gre@nobreakpenaltysave\relax %
+      \global\gre@space@count@endofwordpenalty=\gre@endofwordpenaltysave\relax %
+      \global\gre@space@count@endofsyllablepenalty=\gre@endofsyllablepenaltysave\relax %
+      \global\gre@space@count@endafterbarpenalty=\gre@endafterbarpenaltysave\relax %
+      \global\gre@space@count@endafterbaraltpenalty=\gre@endafterbaraltpenaltysave\relax %
+      \global\gre@space@count@endofelementpenalty=\gre@endofelementpenaltysave\relax %
+      \global\gre@space@count@hyphenpenalty=\gre@hyphenpenaltysave\relax %
       \ifcase #1\relax % 0
-        \gre@penalty{\greendofelementpenalty}%
+        \gre@penalty{\the\gre@space@count@endofelementpenalty}%
       \or % 1
-        \gre@penalty{\greendofsyllablepenalty}%
+        \gre@penalty{\the\gre@space@count@endofsyllablepenalty}%
       \or % 2
         % end of score, no penalty needs to be added
       \or % 3

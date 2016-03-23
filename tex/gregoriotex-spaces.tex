@@ -29,38 +29,51 @@
 %% The following macros enable users to tune penalties used in Gregorio
 
 % macro to force a break on a new line
-\def\GreForceBreak{\gre@penalty{\grenewlinepenalty}}%
+\def\GreForceBreak{\gre@penalty{\the\gre@space@count@newlinepenalty}}%
 
 % macro to prevent a line break
-\def\GreNoBreak{\gre@penalty{\grenobreakpenalty}}%
+\def\GreNoBreak{\gre@penalty{\the\gre@space@count@nobreakpenalty}}%
 
 
+
+\newcount\gre@hyphenpenaltysave%
+\newcount\gre@exhyphenpenaltysave%
+\newcount\gre@doublehyphendemeritssave%
+\newcount\gre@finalhyphendemeritssave%
+\newcount\gre@brokenpenaltysave%
+\newcount\gre@loosenesssave%
+\newcount\gre@tolerancesave%
+\newcount\gre@pretolerancesave%
+\newskip\gre@emergencystretchsave%
+\newcount\gre@widowpenaltysave%
+\newcount\gre@clubpenaltysave%
 %% The following macros cancel some useless penalties, and reinstates them
 %% at the end of a score
 
 \def\gre@cancelpenalties{%
-  \xdef\gre@hyphenpenaltysave{\the\hyphenpenalty }%
-  \xdef\gre@exhyphenpenaltysave{\the\exhyphenpenalty }%
-  \xdef\gre@doublehyphendemeritssave{\the\doublehyphendemerits }%
-  \xdef\gre@finalhyphendemeritssave{\the\finalhyphendemerits }%
-  \xdef\gre@brokenpenaltysave{\the\brokenpenalty }%
-  \hyphenpenalty=\grehyphenpenalty\relax %
-  \exhyphenpenalty=\grehyphenpenalty\relax %
+  \global\gre@hyphenpenaltysave=\hyphenpenalty\relax %
+  \global\gre@exhyphenpenaltysave=\exhyphenpenalty\relax %
+  \global\gre@doublehyphendemeritssave=\doublehyphendemerits\relax %
+  \global\gre@finalhyphendemeritssave=\finalhyphendemerits\relax %
+  \global\gre@brokenpenaltysave=\brokenpenalty\relax %
+  \global\gre@loosenesssave=\looseness\relax %
+  \global\gre@tolerancesave=\tolerance\relax %
+  \global\gre@pretolerancesave=\pretolerance\relax %
+  \global\gre@emergencystretchsave=\emergencystretch\relax %
+  \global\gre@widowpenaltysave=\widowpenalty\relax %
+  \global\gre@clubpenaltysave=\clubpenalty\relax %
+
+  \hyphenpenalty=\gre@space@count@hyphenpenalty %
+  \exhyphenpenalty=\gre@space@count@hyphenpenalty %
   \doublehyphendemerits=0\relax %
   \finalhyphendemerits=0\relax %
-  \brokenpenalty=\grebrokenpenalty\relax %
-  \xdef\gre@loosenesssave{\the\looseness}%
-  \xdef\gre@tolerancesave{\the\tolerance}%
-  \xdef\gre@pretolerancesave{\the\pretolerance}%
-  \xdef\gre@emergencystretchsave{\the\emergencystretch}%
-  \xdef\gre@widowpenaltysave{\the\widowpenalty}%
-  \xdef\gre@clubpenaltysave{\the\clubpenalty}%
-  \looseness=\grelooseness %
-  \tolerance=\gretolerance %
-  \pretolerance=\grepretolerance %
-  \emergencystretch=\greemergencystretch %
-  \widowpenalty=\grewidowpenalty %
-  \clubpenalty=\greclubpenalty %
+  \brokenpenalty=\gre@space@count@brokenpenalty %
+  \looseness=\gre@space@count@looseness %
+  \tolerance=\gre@space@count@tolerance %
+  \pretolerance=\gre@space@count@pretolerance %
+  \emergencystretch=\gre@space@skip@emergencystretch\relax %
+  \widowpenalty=\gre@space@count@widowpenalty %
+  \clubpenalty=\gre@space@count@clubpenalty %
 }%
 
 \def\gre@restorepenalties{%
@@ -1285,6 +1298,21 @@
     ]%
 }
 
+\newcount\gre@space@count@newlinepenalty%
+\newcount\gre@space@count@nobreakpenalty%
+\newcount\gre@space@count@endofwordpenalty%
+\newcount\gre@space@count@endofsyllablepenalty%
+\newcount\gre@space@count@endafterbarpenalty%
+\newcount\gre@space@count@endafterbaraltpenalty%
+\newcount\gre@space@count@finalpenalty%
+\newcount\gre@space@count@endofelementpenalty%
+\newcount\gre@space@count@hyphenpenalty%
+\newcount\gre@space@count@brokenpenalty%
+\newcount\gre@space@count@looseness%
+\newcount\gre@space@count@tolerance%
+\newcount\gre@space@count@pretolerance%
+\newcount\gre@space@count@widowpenalty%
+\newcount\gre@space@count@clubpenalty%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % space configuration loading
