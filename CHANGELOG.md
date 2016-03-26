@@ -17,7 +17,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Space before a custos appearing in the middle of a line is now set by `spacebeforeinlinecustos`.
 - The space between two puncta inclinata at the unison may be tuned by changing `punctuminclinatumunisonshift` (see [#1042](https://github.com/gregorio-project/gregorio/issues/1042)).
 - A podatus followed by a virga `(eghv)` will now be kept together (no line break between the shapes),  If you would like to allow a line break there, use `(eg/hv)` instead (see UPGRADE.md and [#1045](https://github.com/gregorio-project/gregorio/issues/1045)).
-- Penalties must now we changed using the `\grechangecount` command.  See GregorioRef and [UPGRADE.md](UPGRADE.md) for details (for the change request, see [#1021](https://github.com/gregorio-project/gregorio/issues/1021)).
+- Penalties must now be changed using the `\grechangecount` command.  See GregorioRef and [UPGRADE.md](UPGRADE.md) for details (for the change request, see [#1021](https://github.com/gregorio-project/gregorio/issues/1021)).
 - `\greemergencystretch` must now be set by changing `emergencystretch` using `\grechangedim` instead of redefining the macro.
 
 ### Removed
