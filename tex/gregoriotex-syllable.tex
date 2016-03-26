@@ -348,6 +348,18 @@
 % box that we will use to determine the width of the notes, to determine wether we typeset a - or not after the letters
 \newbox\gre@box@syllablenotes%
 
+\newif\ifgre@showlyrics%
+\gre@showlyricstrue%
+
+\def\gresetlyrics#1{%
+  \IfStrEqCase{#1}{%
+    {visible}{\gre@showlyricstrue}%
+    {invisible}{\gre@showlyricsfalse}%
+    }[% all other cases
+      \gre@error{Unknown option, "#1" for \protect\gresetlyrics\MessageBreak Possible options are: 'visible' and 'invisible'}%
+    ]%
+}%
+
 % Macro used to fill \gre@box@syllablenotes with everything contained in #1. This
 % saves and restores a few values so that when really typesetting #1 in \GreSyllable,
 % the result is identical.
@@ -739,7 +751,11 @@
   #5%
   \gre@calculate@nextbegindifference{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@nextendsyllablepart}{#7}%
   \gre@unsetfixednexttextformat %
-  \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
+  \ifgre@showlyrics%
+    \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
+  \else%
+    \setbox\gre@box@syllabletext=\box\voidb@x%
+  \fi%
   \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
   % gre@count@temp@one holds 0 if next is a not bar, 1 if it is
   \gre@count@temp@one=0%
@@ -775,9 +791,17 @@
     \gre@debugmsg{hyphen}{Showing the hyphen}%
     % if it's the last syllable of line, the hyphen will be \GreHyph
     \ifnum\gre@lastoflinecount=1\relax %
-      \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart#3{\GreHyph}\relax}{#6}}}%
+      \ifgre@showlyrics%
+        \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart#3{\GreHyph}\relax}{#6}}}%
+      \else%
+        \setbox\gre@box@syllabletext=\box\voidb@x%
+      \fi%
     \else %
-      \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart#3{-}}{#6}}}%
+      \ifgre@showlyrics%
+        \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart#3{-}}{#6}}}%
+      \else%
+        \setbox\gre@box@syllabletext=\box\voidb@x%
+      \fi%
     \fi %
     % recomputing end difference and final skip with the final hyphen
     \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{0}%
@@ -787,7 +811,11 @@
       \gre@debugmsg{hyphen}{No hyphen}%
       \gre@attr@dash=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
       % we rebuild this box, in order it to have the attribute
-      \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
+      \ifgre@showlyrics%
+        \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
+      \else%
+        \setbox\gre@box@syllabletext=\box\voidb@x%
+      \fi%
       \global\gre@possibleluahyphenafterthissyllabletrue %
     \fi %
   \fi%
@@ -978,7 +1006,11 @@
   % first of all we need to calculate previousenddifference, begindifference, enddifference and nextbegindifference.
   #1%
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}%
-  \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
+  \ifgre@showlyrics%
+    \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
+  \else%
+    \setbox\gre@box@syllabletext=\box\voidb@x%
+  \fi%
   \gre@debugmsg{barspacing}{Width of bar text: \the\wd\gre@box@syllabletext}%
   \global\let\gre@newlinecommonsaved\gre@newlinecommon %
   \global\let\gre@newlinecommon\gre@newlinecommondelayed %
