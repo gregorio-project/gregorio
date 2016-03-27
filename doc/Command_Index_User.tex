@@ -780,7 +780,7 @@ Macro to add an illuminated initial.
 
 \textbf{Nota Bene:} Usually the argument of this command should be an \verb=\includegraphics= command, but you may use what ever you want as the illuminated initial.
 
-\macroname{\textbackslash gresetinitiallines}{\#1}{gregoriotex-syllable.tex}
+\macroname{\textbackslash gresetinitiallines}{\{\#1\}}{gregoriotex-syllable.tex}
 Sets the number of lines the score initial requires.
 
 \begin{argtable}
@@ -789,7 +789,7 @@ Sets the number of lines the score initial requires.
 
 \textbf{Nota Bene:} As currently implemented, you cannot set an initial which is larger than 2 lines and in order to do so you must set manual line breaks in the gabc for the first two lines.
 
-\macroname{\textbackslash gresetmodenumbersystem}{\#1}{gregoriotex-main.tex}
+\macroname{\textbackslash gresetmodenumbersystem}{\{\#1\}}{gregoriotex-main.tex}
 Sets the number system used for the mode number.
 
 \begin{argtable}
@@ -797,6 +797,15 @@ Sets the number system used for the mode number.
       & \texttt{roman-majuscule} & Use upper-case Roman numerals.\\
       & \texttt{arabic} & Use Arabic numerals.\\
 \end{argtable}
+
+\macroname{\textbackslash gresetlyrics}{\{\#1\}}{gregoriotex-syllable.tex}
+Sets the visibility of the lyrics.
+
+\begin{argtable}
+  \#1 & \texttt{visible} & Lyrics are visible (default).\\
+  & \texttt{invisible} & Lyrics are not visible.\\
+\end{argtable}
+
 
 \subsubsection{Text Alignment}
 Gregorio\TeX\ allows you to manipulate the global alignment behavior of some text elements using the following commands.
@@ -981,6 +990,16 @@ Macro to activate the new bar spacing algorithm.  The new algorithm attempts to 
 
 \subsubsection{Sign printing}
 
+\macroname{\textbackslash gresetnotes}{\{\#1\}}{gregoriotex-syllable.tex}
+Sets the visibility of the notes.
+
+\begin{argtable}
+  \#1 & \texttt{visible} & Notes are visible (default).\\
+  & \texttt{invisible} & Notes are not visible.\\
+\end{argtable}
+
+\textbf{Nota Bene:} If the notes are set to be invisible, then bar lines, rythmic signs, and the like will also be invisible.  However, the staff lines and clefs will still show up (since their visibility is controlled by other settings).
+
 \macroname{\textbackslash greprintsigns}{\{\#1\}\{\#2\}}{gregoriotex-signs.tex}
 Macro to prevent rythmic signs from printing (all signs are printed by default):
 
@@ -990,7 +1009,7 @@ Macro to prevent rythmic signs from printing (all signs are printed by default):
   & \texttt{mora} & sets the printing of punctum mora and auctum duplex\\
   & \texttt{all} & set the printing of all of these\\
   \#2 & \texttt{enable} & enable the printing\\
-  & \texttt{disable} & disable the priting\\
+  & \texttt{disable} & disable the printing\\
 \end{argtable}
 
 Note that punctum mora and auctum duplex have an influence on spacings, so removing them will have an impact on that matter.
