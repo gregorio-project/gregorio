@@ -363,6 +363,15 @@
 \newif\ifgre@shownotes%
 \gre@shownotestrue%
 
+\def\gresetnotes#1{%
+  \IfStrEqCase{#1}{%
+    {visible}{\gre@shownotestrue}%
+    {invisible}{\gre@shownotesfalse}%
+    }[% all other cases
+      \gre@error{Unknown option, "#1" for \protect\gresetnotes\MessageBreak Possible options are: 'visible' and 'invisible'}%
+    ]%
+}%
+
 % Macro used to fill \gre@box@syllablenotes with everything contained in #1. This
 % saves and restores a few values so that when really typesetting #1 in \GreSyllable,
 % the result is identical.
@@ -374,7 +383,11 @@
   \global\gre@boxingtrue%
   \let\ifgre@lastendswithmorasave\ifgre@lastendswithmora%
   \xdef\gre@savedlastoflinecount{\number\gre@lastoflinecount\relax }%
-  \setbox\gre@box@syllablenotes=\hbox{#1}%
+  \ifgre@shownotes%
+    \setbox\gre@box@syllablenotes=\hbox{#1}%
+  \else%
+    \setbox\gre@box@syllablenotes=\box\voidb@x%
+  \fi%
   \gre@debugmsg{spacing}{Width of notes: \the\wd\gre@box@syllablenotes}%
   \global\gre@boxingfalse%
   \global\gre@lastoflinecount=\gre@savedlastoflinecount\relax %
@@ -843,7 +856,9 @@
   % here we need to unset \gre@attr@dash for the typesetting of notes
   \gre@attr@dash=0\relax %
   \GreNoBreak % no line breaks between text and notes
-  #9% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
+  \ifgre@shownotes%
+    #9% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
+  \fi%
   \GreNoBreak % no line breaks between notes and end of syllable skips
   \gre@debugmsg{ifdim}{ enddifference < 0pt}%
   \ifdim\gre@dimen@enddifference <0pt\relax%
@@ -1064,7 +1079,9 @@
     \kern\dimexpr(\gre@dimen@enddifference% move from end of text to end of bar line
       -\wd\gre@box@syllablenotes)\relax % back up from end of bar line to beginning
     \GreNoBreak%
-    #9%
+    \ifgre@shownotes%
+      #9%
+    \fi%
     \global\let\gre@newlinecommon\gre@newlinecommonsaved %
     \GreNoBreak%
     % get into position to place the penalty
@@ -1189,7 +1206,9 @@
         \gre@dotranslationcenterend %
         \gre@mustdotranslationcenterendfalse%
       \fi %
-      #9\relax %
+      \ifgre@shownotes%
+        #9\relax %
+      \fi%
       \gre@penalty{\the\gre@space@count@endafterbaraltpenalty }% TODO: isn't it a bit buggy?
       % end of same code as syllable
       \ifnum\gre@lastoflinecount=1\relax %
@@ -1233,7 +1252,9 @@
       \kern\gre@skip@temp@one %
       \gre@skip@temp@one = -\gre@dimen@begindifference\relax%
       \kern\gre@skip@temp@one %
-      #9%
+      \ifgre@shownotes%
+        #9%
+      \fi%
       \gre@debugmsg{ifdim}{ enddifference < 0pt}%
       \ifdim\gre@dimen@enddifference <0pt\relax%
         %% important, else we are not really at the end of the syllable
