@@ -466,7 +466,11 @@
   \hskip\gre@dimen@temp@four %
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four %
   \gre@debugmsg{annotation}{Ready to place initial.}%
-  \box\gre@box@initial%
+  \ifgre@showlyrics%
+    \box\gre@box@initial%
+  \else%
+    \kern\wd\gre@box@initial%
+  \fi%
   \ifnum\gre@biginitial=0\relax%
     \gre@style@initial%
     \global\gre@dimen@temp@four = \gre@space@dimen@afterinitialshift\relax%

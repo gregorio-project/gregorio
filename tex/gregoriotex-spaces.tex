@@ -455,6 +455,10 @@
   \else%
     \global\gre@dimen@eolshift=0pt\relax%
   \fi %
+  % if the notes are not visible, then there's no shifting allowed.
+  \ifgre@shownotes\else%
+    \global\gre@dimen@eolshift=0pt\relax%
+  \fi%
   \gre@debugmsg{eolshift}{eolshift: \the\gre@dimen@eolshift}%
   \relax %
 }
