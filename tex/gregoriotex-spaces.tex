@@ -1288,18 +1288,22 @@
 
 %a macro to use if all you want to do is turn on or off the scaling for a particular distance
 \def\grescaledim#1#2{%
-  \IfStrEqCase{#2}{%
-    {true}%
-      {\csname gre@scale@#1true\endcsname}%
-    {yes}%
-      {\grescaledim{true}}%
-    {on}%
-      {\grescaledim{true}}%
-    {scalable}%
-      {\grescaledim{true}}%
-    }[% all other cases
-      \csname gre@scale@#1false\endcsname%
-    ]%
+  \ifcsname ifgre@scale@#1\endcsname%
+    \IfStrEqCase{#2}{%
+      {true}%
+        {\csname gre@scale@#1true\endcsname}%
+      {yes}%
+        {\grescaledim{true}}%
+      {on}%
+        {\grescaledim{true}}%
+      {scalable}%
+        {\grescaledim{true}}%
+      }[% all other cases
+        \csname gre@scale@#1false\endcsname%
+      ]%
+  \else%
+    \gre@error{Unrecognized distance "#1" in \protect\grescaledim}
+  \fi%
 }
 
 \newcount\gre@space@count@newlinepenalty%
