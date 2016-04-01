@@ -1694,22 +1694,22 @@ Same as \texttt{maxbaroffsettextleft@eol} but when the center of the text goes r
 \end{gdimension}
 
 \subsubsection{Distances tied to font size}
-In some cases it is desirable to link a distance with the size of the text font, rather than the score's staff size.  This can be accomplished in the following way:
+Each text font defines 7 distances related to how it is spaced (see \url{http://tex.stackexchange.com/questions/88991/what-do-different-fontdimennum-mean} for a description of these).  These distances are accessed in \LaTeX\ via the \texttt{\textbackslash fontdimen<int>\textbackslash font} interface (where \texttt{<int>} is an integer between 1 and 7).  In some cases it is desirable to link a Gregorio\TeX\ distance with the one of these distances, rather than the score's staff size.  This can be accomplished in the following way:
 
 \begin{enumerate}
-  \item The distance should be defined in terms of the various \texttt{\textbackslash fontdimen} values (there are 7).  These should be prepended by \verb=\the= and can be combined or scaled using \verb=\dimexpr= and \verb=\glueexpr= (which also need to be prepended by \verb=\the= when used).
+  \item When using \texttt{\textbackslash fontdimen} values in defining a Gregorio\TeX\ distance, they should be prepended by \verb=\the= and can be combined or scaled using \verb=\dimexpr= and \verb=\glueexpr= (which also need to be prepended by \verb=\the= when used).
   \item To prevent premature expansion, the entire value for the distance should be enclosed in \verb=\unexpanded=.
-  \item The distance should be defined as \texttt{fixed} relative to the staff size.  If the distance is \texttt{scalable} then any link between the distance and the font size will be broken if \verb=\grechangestaffsize= is called.
+  \item The distance should be defined as \texttt{fixed} relative to the staff size.  If the distance is \texttt{scalable} then any link between the distance and the font distance will be broken if \verb=\grechangestaffsize= is called.
 \end{enumerate}
 
 Example:\par\medskip
 {\footnotesize
 \begin{latexcode}
-  \grechangedim{interwordspacetext}{\unexpanded{\the\fontdimen6\font}}{fixed}%
+  \grechangedim{interwordspacetext}{\unexpanded{\the\fontdimen2\font}}{fixed}%
 \end{latexcode}
 }
 
-This definition for \texttt{interwordspacetext} will make it equal to the size of the font.
+This definition for \texttt{interwordspacetext} will make it equal to the standard space for the font.
 
 Each of the following distances has a default which is defined in this way.  The actual definition is shown first (without the \verb=\unexpanded=), followed by the numerical default for 12pt Linux Libertine (the font in use in this document).
 

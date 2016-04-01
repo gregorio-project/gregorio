@@ -132,6 +132,7 @@
 \grecreatedim{intersyllablespacestretchhyphen}{0cm plus 0.05cm}{scalable}%
 % minimal space between letters of different words.
 % The use of the various `\fontdimen` values ties this distance (and others which do the same) to the font size of the lyrics.  In order to make this tie dynamic, we use eTeX's `\unexpanded` primitive to prevent premature expansion (we want the `\fontdimen` values to expand at time of use, not right now).  We also declare this distance as "fixed" so that it GregorioTeX won't try to scale it when the staff size changes, as doing so would break the tie to the lyric font size.
+% See http://tex.stackexchange.com/questions/88991/what-do-different-fontdimennum-mean for a description of the available `\fontdimen` values.
 \grecreatedim{interwordspacetext}{\unexpanded{\the\fontdimen2\font plus \the\gluestretch\gre@space@skip@interwordspacenotes minus \the\glueshrink\gre@space@skip@interwordspacenotes}}{fixed}%
 % Versions of interword spaces for euouae blocks
 \grecreatedim{interwordspacenotes@euouae}{0.19 cm plus 0.1 cm minus 0.05 cm}{scalable}%
