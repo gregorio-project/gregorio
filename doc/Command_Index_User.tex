@@ -1291,10 +1291,6 @@ separated with an automatic hyphen.
 Minimum space between notes of syllables from different words.
 \end{gdimension}
 
-\begin{gdimension}{interwordspacetext}
-Minimum space between texts of different words. Please keep the same \texttt{plus} and \texttt{minus} as \texttt{interwordspacenotes}.
-\end{gdimension}
-
 \begin{gdimension}{interwordspacenotes@alteration}
 Same as \texttt{interwordspacenotes} for the case where the second syllable starts with an alteration.
 \end{gdimension}
@@ -1305,10 +1301,6 @@ Same as \texttt{intersyllablespacenotes} for the case where the second syllable 
 
 \begin{gdimension}{interwordspacenotes@euouae}
 Same as \texttt{interwordspacenotes} for \texttt{euouae} blocks.
-\end{gdimension}
-
-\begin{gdimension}{interwordspacetext@euouae}
-Same as \texttt{interwordspacetext} for \texttt{euouae} blocks.
 \end{gdimension}
 
 \begin{gdimension}{bitrivirspace}
@@ -1587,7 +1579,7 @@ Vertical distance to place a punctum mora for the second note in a porrectus (or
 Distance to place a ``rare'' sign above the top space in a score.
 \end{gdimension}
 
-\subsubsection*{Bar distances}
+\subsubsection{Bar distances}
 
 \begin{gdimension}{bar@finalfinalis}
 This space is added before the final divisio final of a score (old bar spacing algorithm only).
@@ -1669,22 +1661,6 @@ A rubber value applied on both sides of all bars in standalone syllables, in new
 \textbf{Nota Bene:} This distance should always have a base value of 0pt.
 \end{gdimension}
 
-\begin{gdimension}{interwordspacetext@bars}
-Minimum space between texts of different words when one of the syllable contains only a bar (new bar spacing algorithm only).
-\end{gdimension}
-
-\begin{gdimension}{interwordspacetext@bars@euouae}
-Same as \texttt{interwordspacetext@bars} for \texttt{euouae} blocks (so quite rare).
-\end{gdimension}
-
-\begin{gdimension}{interwordspacetext@bars@notext}
-Minimum space between texts of adjacent words when they are separated by a bar syllable which has no text associated with it (new bar spacing algorithm only).
-\end{gdimension}
-
-\begin{gdimension}{interwordspacetext@bars@notext@euouae}
-Same as \texttt{interwordspacetext@bars@notext} for \texttt{euouae} blocks (so quite rare).
-\end{gdimension}
-
 \begin{gdimension}{textbartextspace}
 Space between the text of previous syllable and the text associated with the bar (old bar spacing algorithm only).
 \end{gdimension}
@@ -1716,6 +1692,65 @@ Maximum distance by which the center of a bar and the center of its associated t
 \begin{gdimension}{maxbaroffsettextright@eol}
 Same as \texttt{maxbaroffsettextleft@eol} but when the center of the text goes right of the center of the bar.
 \end{gdimension}
+
+\subsubsection{Distances tied to font size}
+In some cases it is desirable to link a distance with the size of the text font, rather than the score's staff size.  This can be accomplished in the following way:
+
+\begin{enumerate}
+  \item The distance should be defined in terms of the various \texttt{\textbackslash fontdimen} values (there are 7).  These should be prepended by \verb=\the= and can be combined or scaled using \verb=\dimexpr= and \verb=\glueexpr= (which also need to be prepended by \verb=\the= when used).
+  \item To prevent premature expansion, the entire value for the distance should be enclosed in \verb=\unexpanded=.
+  \item The distance should be defined as \texttt{fixed} relative to the staff size.  If the distance is \texttt{scalable} then any link between the distance and the font size will be broken if \verb=\grechangestaffsize= is called.
+\end{enumerate}
+
+Example:\par\medskip
+{\footnotesize
+\begin{latexcode}
+  \grechangedim{interwordspacetext}{\unexpanded{\the\fontdimen6\font}}{fixed}%
+\end{latexcode}
+}
+
+This definition for \texttt{interwordspacetext} will make it equal to the size of the font.
+
+Each of the following distances has a default which is defined in this way.  The actual definition is shown first (without the \verb=\unexpanded=), followed by the numerical default for 12pt Linux Libertine (the font in use in this document).
+
+\begin{gdimension}{interwordspacetext}
+Minimum space between texts of different words. 
+
+\textbf{Nota Bene:} To avoid unpredictable differences in the stretching/shrinking between words, the same \texttt{plus} and \texttt{minus} as \texttt{interwordspacenotes} should be used.  To ensure this here, we make use of \verb=\gluestretch= and \verb=\glueshrink= in order to call those values directly.  When combined with the call of \verb=\unexpanded= which is necessary for linking the base distance to a \texttt{\textbackslash fontdimen}, this ensures that they will always match.
+
+\definition{interwordspacetext}
+\end{gdimension}
+
+\begin{gdimension}{interwordspacetext@euouae}
+Same as \texttt{interwordspacetext} for \texttt{euouae} blocks.
+
+\definition{interwordspacetext@euouae}
+\end{gdimension}
+
+\begin{gdimension}{interwordspacetext@bars}
+Minimum space between texts of different words when one of the syllable contains only a bar (new bar spacing algorithm only).
+
+\definition{interwordspacetext@bars}
+\end{gdimension}
+
+\begin{gdimension}{interwordspacetext@bars@euouae}
+Same as \texttt{interwordspacetext@bars} for \texttt{euouae} blocks (so quite rare).
+
+\definition{interwordspacetext@bars@euouae}
+\end{gdimension}
+
+\begin{gdimension}{interwordspacetext@bars@notext}
+Minimum space between texts of adjacent words when they are separated by a bar syllable which has no text associated with it (new bar spacing algorithm only).
+
+\definition{interwordspacetext@bars@notext}
+\end{gdimension}
+
+\begin{gdimension}{interwordspacetext@bars@notext@euouae}
+Same as \texttt{interwordspacetext@bars@notext} for \texttt{euouae} blocks (so quite rare).
+
+\definition{interwordspacetext@bars@notext@euouae}
+\end{gdimension}
+
 
 
 \subsection{Penalties}\label{penalties}
