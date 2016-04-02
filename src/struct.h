@@ -402,7 +402,7 @@ typedef union gregorio_misc_element_info {
     struct {
         /* The pitch of the glyph. */
         signed char pitch;
-        /* boolean indicating a clef with a B-flat */
+        /* boolean indicating whether the pitch is forced */
         bool force_pitch:1;
     } pitched;
     /* clef is used for GRE_CLEF */
@@ -779,6 +779,7 @@ static __inline bool is_fused(char liquescentia)
 #define LOWEST_PITCH 3
 #define DUMMY_PITCH (LOWEST_PITCH + 6)
 #define LOW_LEDGER_LINE_PITCH (LOWEST_PITCH + 1)
+#define MAX_PITCH (LOWEST_PITCH + 4 + (2 * 5))
 
 #define NO_PITCH -128
 
@@ -880,8 +881,9 @@ void gregorio_begin_style(gregorio_character **current_character,
 void gregorio_end_style(gregorio_character **current_character,
         grestyle_style style);
 gregorio_character *gregorio_clone_characters(const gregorio_character *source);
-signed char gregorio_determine_next_pitch(gregorio_syllable *syllable,
-        gregorio_element *element, gregorio_glyph *glyph);
+signed char gregorio_determine_next_pitch(const gregorio_syllable *syllable,
+        const gregorio_element *element, const gregorio_glyph *glyph,
+        gregorio_shape *next_pitch_alteration);
 const char *gregorio_unknown(int value);
 gregorio_element *gregorio_get_clef_change(gregorio_syllable *syllable);
 unsigned short gregorio_add_hepisema_adjustment(

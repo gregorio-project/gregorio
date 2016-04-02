@@ -140,7 +140,7 @@ static void fix_custos(gregorio_score *score_to_check)
                 while (current_element) {
                     if (current_element->type == GRE_CLEF) {
                         pitch = gregorio_determine_next_pitch( current_syllable,
-                                current_element, NULL);
+                                current_element, NULL, NULL);
                         newkey = gregorio_calculate_new_key(
                                 current_element->u.misc.clef);
                         pitch_difference = (char) newkey - (char) current_key;

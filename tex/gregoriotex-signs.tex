@@ -322,7 +322,7 @@
 
 % custos just typesets a custos, useful for before the key changes for example
 % #1 is the height
-\def\GreCustos#1{%
+\def\GreCustos#1#2{%
   \GreNoBreak %
   \ifdim\gre@skip@bar@lastskip=0pt\else % we're after a bar:
     \kern-\gre@skip@bar@lastskip %
@@ -344,6 +344,8 @@
     \kern\gre@skip@temp@four%
     \GreNoBreak %
   \fi %
+  \gre@custosalteration{#1}{#2}%
+  \GreNoBreak%
   \gre@calculate@glyphraisevalue{#1}{0}{}%
   %here we need some tricks to draw the line before the custos (for the color)
   \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{#1}{1}}%
@@ -374,19 +376,21 @@
 }%
 
 % typesets a custos for the end of the score
-\def\GreFinalCustos#1{%
+\def\GreFinalCustos#1#2{%
   \GreNoBreak%
-  \GreCustos{#1}%
+  \GreCustos{#1}{#2}%
   \gre@endofglyphcommon %
 }
 
 % the argument is the height
-\edef\gre@nextcustos{\gre@pitch@dummy}%
-\def\GreNextCustos#1{%
-  \gre@debugmsg{custos}{nextcustos = #1}%
+\edef\gre@nextcustospitch{\gre@pitch@dummy}%
+\edef\gre@nextcustosalteration{}%
+\def\GreNextCustos#1#2{%
+  \gre@debugmsg{custos}{nextcustos = #1,#2}%
   \ifnum\gre@insidediscretionary=0\relax %
     \gre@debugmsg{custos}{not discretionary}%
-    \edef\gre@nextcustos{#1}%
+    \edef\gre@nextcustospitch{#1}%
+    \edef\gre@nextcustosalteration{#2}%
     \ifgre@blockeolcustos\else%
       \gre@debugmsg{custos}{not blocked}%
       \gre@calculate@glyphraisevalue{#1}{0}{}%
@@ -394,11 +398,18 @@
       \setbox\gre@box@temp@width=\hbox{%
         % we type a hskip and the we type the custos
         \gre@hskip\gre@space@skip@spacebeforeeolcustos\relax %
-        \gre@pickcustos{#1}{2}\relax %
+        \gre@custosalteration{#1}{#2}%
+        \GreNoBreak%
+        \raise \gre@dimen@glyphraisevalue\relax%
+        \hbox{%
+          \gre@pickcustos{#1}{2}\relax %
+        }%
       }%
       \gre@dimen@temp@three=\wd\gre@box@temp@width %
       % we make \wd\gre@box@temp@sign contain the width of a custos
       \setbox\gre@box@temp@sign=\hbox{%
+        \gre@custosalteration{#1}{#2}%
+        \GreNoBreak%
         \gre@pickcustos{#1}{0}\relax %
       }%
       \gre@localrightbox{%
@@ -409,7 +420,6 @@
             \gre@additionaltopcustoslineend %
           \fi\fi %
         \fi %
-        \raise \gre@dimen@glyphraisevalue\relax%
         \copy\gre@box@temp@width %
       }%
     \fi %
@@ -499,6 +509,22 @@
     \endgre@style@additionalstafflines%
   }%
   \relax %
+}%
+
+\newif\ifgre@usecustosalteration%
+\gre@usecustosalterationtrue%
+\def\gresetcustosalteration#1{%
+  \IfStrEqCase{#1}{%
+    {visible}{\gre@usecustosalterationtrue}%
+    {invisible}{\gre@usecustosalterationfalse}%
+  }[% all other cases
+    \gre@error{Unrecognized option "#1" for \protect\gresetcustosalteration\MessageBreak Possible options are: 'visible' and 'invisible'}%
+  ]%
+}%
+\def\gre@custosalteration#1#2{%
+  \ifgre@usecustosalteration %
+    \IfStrEq{#2}{}{}{\csname Gre#2\endcsname{#1}{0}{}{}{}}%
+  \fi %
 }%
 
 % #2 is 0 for measurement only, 1 in the normal case, 2 for the right box
