@@ -20,6 +20,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - A podatus followed by a virga `(eghv)` will now be kept together (no line break between the shapes),  If you would like to allow a line break there, use `(eg/hv)` instead (see UPGRADE.md and [#1045](https://github.com/gregorio-project/gregorio/issues/1045)).
 - Penalties must now be changed using the `\grechangecount` command.  See GregorioRef and [UPGRADE.md](UPGRADE.md) for details (for the change request, see [#1021](https://github.com/gregorio-project/gregorio/issues/1021)).
 - `\greemergencystretch` must now be set by changing `emergencystretch` using `\grechangedim` instead of redefining the macro.
+- An isolated stropha will now be considered part of the previous neume group and line breaks will be prevented at that point.  In order to force a line break there, use a breaking space such as `/` before the stropha in gabc.  See [#1056](https://github.com/gregorio-project/gregorio/issues/1056).
 
 ### Removed
 - `\grescorereference`

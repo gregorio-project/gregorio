@@ -198,8 +198,15 @@ static gregorio_element *gabc_det_elements_from_glyphs(
             }
             break;
 
+        case G_STROPHA_AUCTA:
+        case G_STROPHA:
+            if (current_glyph->u.notes.liquescentia
+                    & (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS)) {
+                force_cut = true;
+            }
+            /* fall through */
         case PUNCTA_INCLINATA_DESCENDENS_GLYPH:
-            /* we don't cut before, so we don't do anything */
+            /* we don't cut before, so we don't do anything else */
             if (do_not_cut) {
                 do_not_cut = false;
             }
