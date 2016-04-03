@@ -137,27 +137,6 @@
   Default: \expandafter$\expandafter\the\csname gre@space@count@#1\endcsname$
 }
 
-\newcommand\definition[1]{%
-  \gre@rubberpermit{#1}%
-  \ifgre@rubber%
-    \expandafter
-      \let
-    \expandafter
-      \temp
-    \csname gre@space@skip@#1\endcsname%
-  \else%
-    \expandafter
-      \let
-    \expandafter
-      \temp
-    \csname gre@space@dimen@#1\endcsname%
-  \fi%
-  Definition:
-  {\ttfamily%
-  \expandafter\strip@prefix\meaning\temp
-  }%
-}
-
 \newcommand{\writemode}[3]{%
   \gre@style@modeline #1\endgre@style@modeline %
   \gre@style@modemodifier #2\endgre@style@modemodifier %

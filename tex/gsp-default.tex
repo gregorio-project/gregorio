@@ -131,12 +131,10 @@
 % separated with an automatic hyphen
 \grecreatedim{intersyllablespacestretchhyphen}{0cm plus 0.05cm}{scalable}%
 % minimal space between letters of different words.
-% The use of the various `\fontdimen` values ties this distance (and others which do the same) to the font size of the lyrics.  In order to make this tie dynamic, we use eTeX's `\unexpanded` primitive to prevent premature expansion (we want the `\fontdimen` values to expand at time of use, not right now).  We also declare this distance as "fixed" so that it GregorioTeX won't try to scale it when the staff size changes, as doing so would break the tie to the lyric font size.
-% See http://tex.stackexchange.com/questions/88991/what-do-different-fontdimennum-mean for a description of the available `\fontdimen` values.
-\grecreatedim{interwordspacetext}{\unexpanded{\the\fontdimen2\font plus \the\gluestretch\gre@space@skip@interwordspacenotes minus \the\glueshrink\gre@space@skip@interwordspacenotes}}{fixed}%
+\grecreatedim{interwordspacetext}{1ex plus 0.15cm minus 0.05cm}{fixed}%
 % Versions of interword spaces for euouae blocks
 \grecreatedim{interwordspacenotes@euouae}{0.19 cm plus 0.1 cm minus 0.05 cm}{scalable}%
-\grecreatedim{interwordspacetext@euouae}{\unexpanded{\the\dimexpr((\the\fontdimen2\font) * 8 / 10)\relax plus \the\gluestretch\gre@space@skip@interwordspacenotes@euouae minus \the\glueshrink\gre@space@skip@interwordspacenotes@euouae}}{fixed}%
+\grecreatedim{interwordspacetext@euouae}{08.ex plus 01.cm minus 0.05cm}{fixed}%
 % versions of note spaces when the first note of the second syllable is an alteration
 % those are used in euouae blocks
 \grecreatedim{interwordspacenotes@alteration}{0.1 cm plus 0.07 cm minus 0.01 cm}{scalable}%
@@ -225,14 +223,14 @@
 %
 % minimal space between letters of different syllable texts for text around bars
 % (new bar spacing algorithm only)
-\grecreatedim{interwordspacetext@bars}{\unexpanded{\the\dimexpr((\the\fontdimen2\font)*7/10)\relax}}{fixed}%
+\grecreatedim{interwordspacetext@bars}{0.7ex}{fixed}%
 % minimal space between letters of different syllable texts for text around bars,
 % euouae context
-\grecreatedim{interwordspacetext@bars@euouae}{\unexpanded{\the\dimexpr((\the\fontdimen2\font)*7/10)\relax}}{fixed}%
-\grecreatedim{interwordspacetext@bars@notext}{\unexpanded{\the\fontdimen2\font}}{fixed}%
+\grecreatedim{interwordspacetext@bars@euouae}{0.7ex}{fixed}%
+\grecreatedim{interwordspacetext@bars@notext}{1ex}{fixed}%
 % minimal space between letters of different syllable texts for text around bars,
 % euouae context
-\grecreatedim{interwordspacetext@bars@notext@euouae}{\unexpanded{\the\dimexpr((\the\fontdimen2\font)*7/10)\relax}}{fixed}%
+\grecreatedim{interwordspacetext@bars@notext@euouae}{0.7ex}{fixed}%
 % rubber length that will be added around bars in new bar spacing algorithm
 \grecreatedim{bar@rubber}{0 cm plus 0.22787 cm minus 0.02 cm}{scalable}%
 % additional space that will appear around bars that are preceded by a custos and followed by a key.
