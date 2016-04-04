@@ -904,6 +904,15 @@ Macro to determine whether line breaks are allowed inside a translation.
   & \texttt{prohibit} & Line breaks are prohibited, the entire translation should appear on one line
 \end{argtable}
 
+\macroname{\textbackslash gresetcustosalteration}{\{\#1\}}{gregoriotex-signs.tex}
+Macro for setting whether an alteration (flat, sharp, or natural) should be
+rendered before a custos or not.
+
+\begin{argtable}
+  \#1 & \texttt{visible} & The custos alteration should be printed (default)\\
+      & \texttt{invisible} & The custos alteration should not be printed
+\end{argtable}
+
 \macroname{\textbackslash greseteolcustos}{\{\#1\}}{gregoriotex-main.tex}
 Macro to determine whether Gregorio\TeX\ should automatically place the custos at a line break.
 

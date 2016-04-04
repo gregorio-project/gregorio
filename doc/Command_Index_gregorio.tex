@@ -176,7 +176,10 @@ Typesets a custos.
 
 \begin{argtable}
   \#1 & integer & Height number of custos.\\
-  \#2 & integer & Indicate if the custo is the last of the score.\\
+  \#2 & \texttt{Flat} & The custos should have a flat.\\
+      & \texttt{Natural} & The custos should have a natural.\\
+      & \texttt{Sharp} & The custos should have a sharp.\\
+      & \textit{empty} & The custos should not have an alteration.\\
 \end{argtable}
 
 \macroname{\textbackslash GreDagger}{}{gregoriotex-symbols.tex}
@@ -329,11 +332,15 @@ Macro to end a glyph without ending the element.
   & \texttt{22} & Half-space. \\
 \end{argtable}
 
-\macroname{\textbackslash GreFinalCustos}{\#1}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreFinalCustos}{\#1\#2}{gregoriotex-signs.tex}
 Typesets a custos after the final bar in a score.
 
 \begin{argtable}
   \#1 & integer & Height number of custos.\\
+  \#2 & \texttt{Flat} & The custos should have a flat.\\
+      & \texttt{Natural} & The custos should have a natural.\\
+      & \texttt{Sharp} & The custos should have a sharp.\\
+      & \textit{empty} & The custos should not have an alteration.\\
 \end{argtable}
 
 \macroname{\textbackslash GreFinalDivisioFinalis}{\#1}{gregoriotex-signs.tex}
@@ -417,7 +424,7 @@ Macro to typeset a glyph.
 \begin{argtable}
   \#1 & character & the character that it must call\\
   \#2 & integer & The number for where the glyph is located.  \texttt{a} in gabc is 1, \texttt{b} is 2, \etc\\
-  \#3 & integer & height number of the next note\\
+  \#3 & \TeX\ code & code to set the next custos (using \verb=\GreNextCustos=)\\
   \#4 & \texttt{0} & One-note glyph or more than two notes glyph except porrectus: \ie,  we must put the aligncenter in the middle of the first note\\
   & \texttt{1} & Two notes glyph (podatus is considered as a one-note glyph): \ie, we put the aligncenter in the middle of the glyph\\
   & \texttt{2} & Porrectus: has a special align center.\\
@@ -632,12 +639,16 @@ Macro to call if you want to go to the next line.
 \macroname{\textbackslash GreNewParLine}{}{gregoriotex-main.tex}
 Same as \verb=\GreNewLine= except line is not justified.
 
-\macroname{\textbackslash GreNextCustos}{\#1}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreNextCustos}{\#1\#2}{gregoriotex-signs.tex}
 Sets the pitch to use for the next custos if it were to happen at the point
 where this macro is called.
 
 \begin{argtable}
   \#1 & integer & Height number of the custos.\\
+  \#2 & \texttt{Flat} & The custos should have a flat.\\
+      & \texttt{Natural} & The custos should have a natural.\\
+      & \texttt{Sharp} & The custos should have a sharp.\\
+      & \textit{empty} & The custos should not have an alteration.\\
 \end{argtable}
 
 \macroname{\textbackslash GreNextSyllableBeginsEUOUAE}{\#1\#2}{gregoriotex-syllable.tex}
