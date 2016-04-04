@@ -321,7 +321,7 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
     static char buf[BUFSIZE];
 
     const char *liquescentia = gregoriotex_determine_liquescentia(ltype, glyph);
-    gregorio_note *current_note;
+    const gregorio_note *current_note;
     int ambitus1, ambitus2, ambitus3, fuse_ambitus = 0;
     const char *fuse_head = "", *fuse_tail = "";
     const gregorio_glyph *previous = gregorio_previous_non_texverb_glyph(glyph);
@@ -557,14 +557,14 @@ static const char *fusible_queued_shape(const gregorio_note *const note,
     return compute_glyph_name(glyph, name, LG_NONE, true);
 }
 
-static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
-        gregorio_glyph *glyph, gtex_alignment *type)
+static const char *determine_note_glyph_name(const gregorio_note *const note,
+        const gregorio_glyph *glyph, gtex_alignment *type)
 {
     static char buf[128];
     const char *name = "";
 
-    gregorio_assert(note, gregoriotex_determine_note_glyph_name,
-            "called with NULL pointer", return "");
+    gregorio_assert(note, determine_note_glyph_name, "called with NULL pointer",
+            return "");
 
     *type = AT_ONE_NOTE;
     switch (note->u.note.shape) {
@@ -698,7 +698,7 @@ static const char *gregoriotex_determine_note_glyph_name(gregorio_note *note,
     default:
         /* not reachable unless there's a programming error */
         /* LCOV_EXCL_START */
-        gregorio_fail2(gregoriotex_determine_note_glyph_name,
+        gregorio_fail2(determine_note_glyph_name,
                 "called with unknown shape: %s",
                 gregorio_shape_to_string(note->u.note.shape));
         return "";
@@ -844,7 +844,7 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
     const char *shape = NULL;
     gtex_glyph_liquescentia ltype;
     signed char ambitus;
-    gregorio_note *second_note;
+    const gregorio_note *second_note;
     gregorio_assert(glyph, gregoriotex_determine_glyph_name,
             "called with NULL pointer", return "");
     gregorio_assert(glyph->u.notes.first_note, gregoriotex_determine_glyph_name,
@@ -1711,8 +1711,8 @@ static __inline char *suppose_low_ledger_line(const gregorio_note *const note)
  * glyph, which would be weird but sure why not, we just typeset two puncta
  * spaced of 2.
  */
-static void gregoriotex_write_auctum_duplex(FILE *f,
-        gregorio_note *current_note)
+static void write_auctum_duplex(FILE *f,
+        const gregorio_note *const current_note)
 {
     char pitch = current_note->u.note.pitch;
     char previous_pitch = 0;
@@ -1759,8 +1759,8 @@ static void gregoriotex_write_auctum_duplex(FILE *f,
  * Writes \c \\GrePunctumMora in the gtex file, with the appropriate arguments. You might think this function
  * more straightforward than it actually is...
  */
-static void gregoriotex_write_punctum_mora(FILE *f, gregorio_glyph *glyph,
-        gregorio_note *current_note, int fuse_to_next_note)
+static void write_punctum_mora(FILE *f, const gregorio_glyph *glyph,
+        const gregorio_note *current_note, const int fuse_to_next_note)
 {
     /* in this if we consider that the puncta are only on the last two notes
      * (maybe it would be useful to consider it more entirely, but it would be
@@ -1778,7 +1778,7 @@ static void gregoriotex_write_punctum_mora(FILE *f, gregorio_glyph *glyph,
     /* a variable to know if we are on a punctum inclinatum or not */
     unsigned char punctum_inclinatum = 0;
     /* a temp variable */
-    gregorio_note *tmpnote;
+    const gregorio_note *tmpnote;
     /* we go into this switch only if it is the note before the last note */
     if (current_note->next) {
         switch (glyph->u.notes.glyph_type) {
@@ -2044,7 +2044,7 @@ static __inline int get_punctum_inclinatum_to_nobar_space_case(
                     || (next->u.notes.glyph_type == G_FLEXA
                         && !next->u.notes.fuse_to_next_glyph))) {
             int descent;
-            gregorio_note *note = gregorio_glyph_last_note(glyph);
+            const gregorio_note *note = gregorio_glyph_last_note(glyph);
             descent = note->u.note.pitch -
                 glyph->next->u.notes.first_note->u.note.pitch;
             /* a negative descent is an ascent */
@@ -2187,7 +2187,7 @@ static void gregoriotex_write_hepisema(FILE *const f,
 /* a macro to write an additional line */
 
 static void write_additional_line(FILE *f, int i, gtex_type type, bool bottom,
-        gregorio_note *current_note, const gregorio_score *const score)
+        const gregorio_note *current_note, const gregorio_score *const score)
 {
     char ambitus = 0;
     gregorio_assert(current_note, write_additional_line, "called with no note",
@@ -2271,7 +2271,7 @@ static void write_additional_line(FILE *f, int i, gtex_type type, bool bottom,
  *
  */
 
-static void gregoriotex_write_vepisema(FILE *f, gregorio_note *note)
+static void write_vepisema(FILE *f, const gregorio_note *const note)
 {
     fprintf(f, "\\GreVEpisema{%d}{\\GreOCase%s}%%\n",
             pitch_value(note->v_episema_height), note->gtex_offset_case);
@@ -2281,8 +2281,8 @@ static void gregoriotex_write_vepisema(FILE *f, gregorio_note *note)
  * a function that writes the rare signs in GregorioTeX. i is the position of
  * the note in the glyph */
 
-static void gregoriotex_write_rare(FILE *f, gregorio_note *current_note,
-        gregorio_sign rare)
+static void write_rare_sign(FILE *f, const gregorio_note *const current_note,
+        const gregorio_sign rare)
 {
     switch (rare) {
     case _ACCENTUS:
@@ -2321,19 +2321,47 @@ static void gregoriotex_write_rare(FILE *f, gregorio_note *current_note,
     }
 }
 
+static __inline const char *alteration_name(
+        const gregorio_shape next_note_alteration)
+{
+    switch (next_note_alteration) {
+    case S_FLAT:
+        return "Flat";
+    case S_SHARP:
+        return "Sharp";
+    case S_NATURAL:
+        return "Natural";
+    default:
+        return "";
+    }
+}
+
+static const char *next_custos(const signed char next_note_pitch,
+        const gregorio_shape next_note_alteration)
+{
+    static char buf[30];
+
+    gregorio_snprintf(buf, sizeof buf, "\\GreNextCustos{%d}{%s}", 
+            pitch_value(next_note_pitch),
+            alteration_name(next_note_alteration));
+
+    return buf;
+}
+
 /*
  * function used when the glyph is only one note long
  */
 
-static void gregoriotex_write_note(FILE *f, gregorio_note *note,
-        gregorio_glyph *glyph, char next_note_pitch)
+static void write_note(FILE *f, gregorio_note *note,
+        const gregorio_glyph *glyph, const char next_note_pitch,
+        const gregorio_shape next_note_alteration)
 {
     unsigned int initial_shape = note->u.note.shape;
     const char *shape;
     int space_case;
     /* type in the sense of GregorioTeX alignment type */
     gtex_alignment type = AT_ONE_NOTE;
-    gregorio_assert(note, gregoriotex_write_note, "called with NULL pointer",
+    gregorio_assert(note, write_note, "called with NULL pointer",
             return);
     if (note->u.note.shape == S_PUNCTUM) {
         switch (note->u.note.liquescentia) {
@@ -2358,7 +2386,7 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
             break;
         }
     }
-    shape = gregoriotex_determine_note_glyph_name(note, glyph, &type);
+    shape = determine_note_glyph_name(note, glyph, &type);
     note->u.note.shape = initial_shape;
     /* special things for puncta inclinata */
     space_case = get_punctum_inclinatum_space_case(note);
@@ -2368,43 +2396,43 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
 
     switch (note->u.note.shape) {
     case S_PUNCTUM_CAVUM:
-        fprintf(f, "\\GrePunctumCavum{%d}{%d}{%d}",
-                pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
-                type);
+        fprintf(f, "\\GrePunctumCavum{%d}{%s}{%d}",
+                pitch_value(note->u.note.pitch),
+                next_custos(next_note_pitch, next_note_alteration), type);
         break;
     case S_PUNCTUM_CAVUM_INCLINATUM:
-        fprintf(f, "\\GrePunctumCavumInclinatum{%d}{%d}{%d}",
-                pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
-                type);
+        fprintf(f, "\\GrePunctumCavumInclinatum{%d}{%s}{%d}",
+                pitch_value(note->u.note.pitch),
+                next_custos(next_note_pitch, next_note_alteration), type);
         break;
     case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
-        fprintf(f, "\\GrePunctumCavumInclinatumAuctus{%d}{%d}{%d}",
-                pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
-                type);
+        fprintf(f, "\\GrePunctumCavumInclinatumAuctus{%d}{%s}{%d}",
+                pitch_value(note->u.note.pitch),
+                next_custos(next_note_pitch, next_note_alteration), type);
         break;
     case S_ORISCUS_CAVUM_ASCENDENS:
-        fprintf(f, "\\GreAscendensOriscusCavum{%d}{%d}{%d}",
-                pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
-                type);
+        fprintf(f, "\\GreAscendensOriscusCavum{%d}{%s}{%d}",
+                pitch_value(note->u.note.pitch),
+                next_custos(next_note_pitch, next_note_alteration), type);
         break;
     case S_ORISCUS_CAVUM_DESCENDENS:
-        fprintf(f, "\\GreDescendensOriscusCavum{%d}{%d}{%d}",
-                pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
-                type);
+        fprintf(f, "\\GreDescendensOriscusCavum{%d}{%s}{%d}",
+                pitch_value(note->u.note.pitch),
+                next_custos(next_note_pitch, next_note_alteration), type);
         break;
     case S_ORISCUS_CAVUM_DEMINUTUS:
-        fprintf(f, "\\GreOriscusCavumDeminutus{%d}{%d}{%d}",
-                pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
-                type);
+        fprintf(f, "\\GreOriscusCavumDeminutus{%d}{%s}{%d}",
+                pitch_value(note->u.note.pitch),
+                next_custos(next_note_pitch, next_note_alteration), type);
         break;
     case S_LINEA_PUNCTUM_CAVUM:
-        fprintf(f, "\\GreLineaPunctumCavum{%d}{%d}{%d}",
-                pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
-                type);
+        fprintf(f, "\\GreLineaPunctumCavum{%d}{%s}{%d}",
+                pitch_value(note->u.note.pitch),
+                next_custos(next_note_pitch, next_note_alteration), type);
         break;
     case S_LINEA:
-        fprintf(f, "\\GreLinea{%d}{%d}{%d}", pitch_value(note->u.note.pitch),
-                pitch_value(next_note_pitch), type);
+        fprintf(f, "\\GreLinea{%d}{%s}{%d}", pitch_value(note->u.note.pitch),
+                next_custos(next_note_pitch, next_note_alteration), type);
         break;
     case S_FLAT:
         fprintf(f, "\\GreFlat{%d}{0}", pitch_value(note->u.note.pitch));
@@ -2416,9 +2444,9 @@ static void gregoriotex_write_note(FILE *f, gregorio_note *note,
         fprintf(f, "\\GreSharp{%d}{0}", pitch_value(note->u.note.pitch));
         break;
     default:
-        fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%d}{%d}", shape,
-                pitch_value(note->u.note.pitch), pitch_value(next_note_pitch),
-                type);
+        fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%s}{%d}", shape,
+                pitch_value(note->u.note.pitch),
+                next_custos(next_note_pitch, next_note_alteration), type);
         break;
     }
 }
@@ -2521,7 +2549,7 @@ static int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
                     case G_TRISTROPHA_AUCTA:
                     case G_BIVIRGA:
                     case G_TRIVIRGA:
-                        gregoriotex_determine_note_glyph_name
+                        determine_note_glyph_name
                                 (glyph->u.notes.first_note, glyph, &type);
                         break;
                     default:
@@ -2572,8 +2600,8 @@ static __inline void write_high_choral_sign(FILE *const f,
     }
 }
 
-static void gregoriotex_write_choral_sign(FILE *f, gregorio_glyph *glyph,
-        gregorio_note *current_note, bool low)
+static void write_choral_sign(FILE *f, const gregorio_glyph *glyph,
+        const gregorio_note *current_note, bool low)
 {
     bool kind_of_pes;
     /* false in the normal case (sign above the note), true in the case of it's
@@ -2687,14 +2715,14 @@ static __inline void fixup_height_extrema(signed char *const top_height,
     }
 }
 
-static void gregoriotex_write_signs(FILE *f, gtex_type type,
-        gregorio_glyph *glyph, gregorio_note *note,
+static void write_signs(FILE *f, gtex_type type,
+        const gregorio_glyph *glyph, const gregorio_note *note,
         int fuse_to_next_note, gregoriotex_status *const status,
         const gregorio_score *const score)
 {
     /* i is the number of the note for which we are typesetting the sign. */
     int i;
-    gregorio_note *current_note;
+    const gregorio_note *current_note;
     signed char high_pitch = UNDETERMINED_HEIGHT;
     signed char low_pitch = UNDETERMINED_HEIGHT;
     bool found = false;
@@ -2727,7 +2755,7 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
             current_note = current_note->next, ++i) {
         if (current_note->choral_sign) {
             found = _found(f, found);
-            gregoriotex_write_choral_sign(f, glyph, current_note, false);
+            write_choral_sign(f, glyph, current_note, false);
         }
         if (type == T_ONE_NOTE) {
             break;
@@ -2741,10 +2769,10 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
             found = _found(f, found);
             gregoriotex_write_hepisema(f, current_note, i, type, glyph);
         }
-        /* write_rare also writes the vepisema */
+        /* write_rare_sign also writes the vepisema */
         if (current_note->special_sign) {
             found = _found(f, found);
-            gregoriotex_write_rare(f, current_note, current_note->special_sign);
+            write_rare_sign(f, current_note, current_note->special_sign);
         }
         if (current_note->signs != _NO_SIGN) {
             found = _found(f, found);
@@ -2753,7 +2781,7 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
         case _V_EPISEMA:
         case _V_EPISEMA_PUNCTUM_MORA:
         case _V_EPISEMA_AUCTUM_DUPLEX:
-            gregoriotex_write_vepisema(f, current_note);
+            write_vepisema(f, current_note);
             break;
         default:
             /* do nothing */
@@ -2769,19 +2797,18 @@ static void gregoriotex_write_signs(FILE *f, gtex_type type,
         switch (current_note->signs) {
         case _PUNCTUM_MORA:
         case _V_EPISEMA_PUNCTUM_MORA:
-            gregoriotex_write_punctum_mora(f, glyph, current_note,
-                    fuse_to_next_note);
+            write_punctum_mora(f, glyph, current_note, fuse_to_next_note);
             break;
         case _AUCTUM_DUPLEX:
         case _V_EPISEMA_AUCTUM_DUPLEX:
-            gregoriotex_write_auctum_duplex(f, current_note);
+            write_auctum_duplex(f, current_note);
             break;
         default:
             break;
         }
         if (current_note->choral_sign) {
             found = _found(f, found);
-            gregoriotex_write_choral_sign(f, glyph, current_note, true);
+            write_choral_sign(f, glyph, current_note, true);
         }
         if (type == T_ONE_NOTE) {
             break;
@@ -2825,6 +2852,31 @@ static char *determine_leading_shape(gregorio_glyph *glyph)
     return buf;
 }
 
+static __inline void write_composed_multinote_glyph(FILE *const f,
+        gregorio_note *current_note, const gregorio_glyph *glyph,
+        const signed char next_note_pitch,
+        const gregorio_shape next_note_alteration,
+        const int fuse_to_next_note, gregoriotex_status *const status,
+        const gregorio_score *const score, const char *glyph_end_between_notes)
+{
+    while (current_note) {
+        const bool has_next = current_note->next != NULL;
+        if (has_next) {
+            write_note(f, current_note, glyph, current_note->next->u.note.pitch,
+                    S_UNDETERMINED);
+        } else {
+            write_note(f, current_note, glyph, next_note_pitch,
+                    next_note_alteration);
+        }
+        write_signs(f, T_ONE_NOTE, glyph, current_note,
+                has_next ? 0 : fuse_to_next_note, status, score);
+        current_note = current_note->next;
+        if (current_note && glyph_end_between_notes) {
+            fputs(glyph_end_between_notes, f);
+        }
+    }
+}
+
 static void write_glyph(FILE *f, gregorio_syllable *syllable,
         gregorio_element *element, gregorio_glyph *glyph,
         gregoriotex_status *const status, const gregorio_score *const score)
@@ -2845,6 +2897,7 @@ static void write_glyph(FILE *f, gregorio_syllable *syllable,
     int fuse_to_next_note, fuse_from_previous_note =
             (prev_glyph && prev_glyph->type == GRE_GLYPH)
             ? prev_glyph->u.notes.fuse_to_next_glyph : 0;
+    gregorio_shape next_note_alteration;
     gregorio_assert(glyph, write_glyph, "called with NULL pointer", return);
     gregorio_assert(glyph->type == GRE_GLYPH && glyph->u.notes.first_note,
             write_glyph, "called with glyph without note", return);
@@ -2852,7 +2905,8 @@ static void write_glyph(FILE *f, gregorio_syllable *syllable,
     if (fuse_from_previous_note) {
         fprintf(f, "\\GreFuse");
     }
-    next_note_pitch = gregorio_determine_next_pitch(syllable, element, glyph);
+    next_note_pitch = gregorio_determine_next_pitch(syllable, element, glyph,
+            &next_note_alteration);
     current_note = glyph->u.notes.first_note;
     /* first we check if it is really a unique glyph in gregoriotex... the
      * glyphs that are not a unique glyph are : trigonus and pucta inclinata
@@ -2868,48 +2922,34 @@ static void write_glyph(FILE *f, gregorio_syllable *syllable,
     case G_3_PUNCTA_INCLINATA_ASCENDENS:
     case G_4_PUNCTA_INCLINATA_ASCENDENS:
     case G_5_PUNCTA_INCLINATA_ASCENDENS:
-        while (current_note) {
-            gregoriotex_write_note(f, current_note, glyph, next_note_pitch);
-            gregoriotex_write_signs(f, T_ONE_NOTE, glyph, current_note,
-                    current_note->next ? 0 : fuse_to_next_note, status, score);
-            current_note = current_note->next;
-        }
-        /* TODO: handle fusion to next note */
+        write_composed_multinote_glyph(f, current_note, glyph,
+                next_note_pitch, next_note_alteration, fuse_to_next_note,
+                status, score, NULL);
         break;
     case G_SCANDICUS:
         if ((glyph->u.notes.liquescentia & L_DEMINUTUS)
                 || glyph->u.notes.liquescentia == L_NO_LIQUESCENTIA
                 || glyph->u.notes.liquescentia == L_FUSED) {
             shape = gregoriotex_determine_glyph_name(glyph, &type, &gtype);
-            fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%d}{%d}", shape,
+            fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%s}{%d}", shape,
                     pitch_value(glyph->u.notes.first_note->u.note.pitch),
-                    pitch_value(next_note_pitch), type);
-            gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note,
+                    next_custos(next_note_pitch, next_note_alteration), type);
+            write_signs(f, gtype, glyph, glyph->u.notes.first_note,
                     fuse_to_next_note, status, score);
         } else {
-            while (current_note) {
-                if (current_note->next) {
-                    gregoriotex_write_note(f, current_note, glyph,
-                            current_note->next->u.note.pitch);
-                } else {
-                    gregoriotex_write_note(f, current_note, glyph,
-                            next_note_pitch);
-                }
-                gregoriotex_write_signs(f, T_ONE_NOTE, glyph, current_note,
-                        current_note->next ? 0 : fuse_to_next_note, status,
-                        score);
-                current_note = current_note->next;
-            }
+            write_composed_multinote_glyph(f, current_note, glyph,
+                    next_note_pitch, next_note_alteration, fuse_to_next_note,
+                    status, score, NULL);
         }
         break;
     case G_ANCUS:
         gregorio_assert(glyph->u.notes.liquescentia & L_DEMINUTUS,
                 write_glyph, "encountered a non-deminutus ancus", break);
         shape = gregoriotex_determine_glyph_name(glyph, &type, &gtype);
-        fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%d}{%d}", shape,
+        fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%s}{%d}", shape,
                 pitch_value(glyph->u.notes.first_note->u.note.pitch),
-                pitch_value(next_note_pitch), type);
-        gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note,
+                next_custos(next_note_pitch, next_note_alteration), type);
+        write_signs(f, gtype, glyph, glyph->u.notes.first_note,
                 fuse_to_next_note, status, score);
         break;
     case G_TORCULUS_RESUPINUS_FLEXUS:
@@ -2920,40 +2960,28 @@ static void write_glyph(FILE *f, gregorio_syllable *syllable,
         glyph->u.notes.glyph_type = G_PORRECTUS_FLEXUS_NO_BAR;
         glyph->u.notes.first_note = current_note->next;
         shape = gregoriotex_determine_glyph_name(glyph, &type, &gtype);
-        fprintf(f, "\\GreGlyph{\\GreFuseTwo{\\GreCP%s}{\\GreCP%s}}{%d}{%d}{%d}",
-                leading_shape, shape,
+        fprintf(f, "\\GreGlyph{\\GreFuseTwo{\\GreCP%s}{\\GreCP%s}}{%d}"
+                "{%s}{%d}", leading_shape, shape,
                 pitch_value(glyph->u.notes.first_note->u.note.pitch),
-                pitch_value(next_note_pitch), type);
+                next_custos(next_note_pitch, next_note_alteration), type);
         glyph->u.notes.first_note = current_note;
         glyph->u.notes.glyph_type = G_TORCULUS_RESUPINUS_FLEXUS;
-        gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note,
+        write_signs(f, gtype, glyph, glyph->u.notes.first_note,
                 fuse_to_next_note, status, score);
         break;
     case G_BIVIRGA:
     case G_TRIVIRGA:
-        while (current_note) {
-            gregoriotex_write_note(f, current_note, glyph, next_note_pitch);
-            gregoriotex_write_signs(f, T_ONE_NOTE, glyph, current_note,
-                    current_note->next ? 0 : fuse_to_next_note, status, score);
-            current_note = current_note->next;
-            if (current_note) {
-                fprintf(f, "\\GreEndOfGlyph{4}%%\n");
-            }
-        }
+        write_composed_multinote_glyph(f, current_note, glyph,
+                next_note_pitch, next_note_alteration, fuse_to_next_note,
+                status, score, "\\GreEndOfGlyph{4}%%\n");
         break;
     case G_TRISTROPHA:
     case G_TRISTROPHA_AUCTA:
     case G_DISTROPHA:
     case G_DISTROPHA_AUCTA:
-        while (current_note) {
-            gregoriotex_write_note(f, current_note, glyph, next_note_pitch);
-            gregoriotex_write_signs(f, T_ONE_NOTE, glyph, current_note,
-                    current_note->next ? 0 : fuse_to_next_note, status, score);
-            current_note = current_note->next;
-            if (current_note) {
-                fprintf(f, "\\GreEndOfGlyph{5}%%\n");
-            }
-        }
+        write_composed_multinote_glyph(f, current_note, glyph,
+                next_note_pitch, next_note_alteration, fuse_to_next_note,
+                status, score, "\\GreEndOfGlyph{5}%%\n");
         break;
 
     case G_PUNCTUM:
@@ -2999,10 +3027,10 @@ static void write_glyph(FILE *f, gregorio_syllable *syllable,
     case G_STROPHA:
     case G_STROPHA_AUCTA:
     case G_ALTERATION:
-        gregoriotex_write_note(f, glyph->u.notes.first_note, glyph,
-                next_note_pitch);
-        gregoriotex_write_signs(f, T_ONE_NOTE, glyph, current_note,
-                fuse_to_next_note, status, score);
+        write_note(f, glyph->u.notes.first_note, glyph, next_note_pitch,
+                next_note_alteration);
+        write_signs(f, T_ONE_NOTE, glyph, current_note, fuse_to_next_note,
+                status, score);
         break;
     default:
         /* we retain this "old-style" fusion as it does look marginally better
@@ -3018,20 +3046,20 @@ static void write_glyph(FILE *f, gregorio_syllable *syllable,
             glyph->u.notes.first_note = current_note->next;
             shape = gregoriotex_determine_glyph_name(glyph, &type, &gtype);
             fprintf(f, "\\GreGlyph{\\GreFuseTwo{\\GreCP%s}{\\GreCP%s}}"
-                    "{%d}{%d}{%d}", leading_shape, shape,
+                    "{%d}{%s}{%d}", leading_shape, shape,
                     pitch_value(glyph->u.notes.first_note->u.note.pitch),
-                    pitch_value(next_note_pitch), type);
+                    next_custos(next_note_pitch, next_note_alteration), type);
             glyph->u.notes.first_note = current_note;
             glyph->u.notes.glyph_type = G_TORCULUS_RESUPINUS;
-            gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note,
+            write_signs(f, gtype, glyph, glyph->u.notes.first_note,
                     fuse_to_next_note, status, score);
             break;
         } else {
             shape = gregoriotex_determine_glyph_name(glyph, &type, &gtype);
-            fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%d}{%d}", shape,
-                    pitch_value(glyph->u.notes.first_note->u.note.pitch),
-                    pitch_value(next_note_pitch), type);
-            gregoriotex_write_signs(f, gtype, glyph, glyph->u.notes.first_note,
+            fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%s}{%d}",
+                    shape, pitch_value(glyph->u.notes.first_note->u.note.pitch),
+                    next_custos(next_note_pitch, next_note_alteration), type);
+            write_signs(f, gtype, glyph, glyph->u.notes.first_note,
                     fuse_to_next_note, status, score);
             break;
         }
@@ -3274,7 +3302,7 @@ static void handle_final_bar(FILE *f, const char *type, gregorio_syllable *sylla
 
         case GRE_CUSTOS:
             assert(element->u.misc.pitched.force_pitch);
-            fprintf(f, "\\GreFinalCustos{%d}%%\n",
+            fprintf(f, "\\GreFinalCustos{%d}{}%%\n",
                     pitch_value(element->u.misc.pitched.pitch));
             break;
 
@@ -3759,15 +3787,22 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
 
             case GRE_CUSTOS:
                 if (first_of_disc != 1) {
+                    signed char next_note_pitch;
+                    gregorio_shape next_note_alteration;
+                    const char *alteration = "";
                     /*
                      * We don't print custos before a bar at the end of a line
                      */
                     /* we also print an unbreakable larger space before the custo */
                     handle_last_of_score(f, syllable, element);
-                    fprintf(f, "\\GreCustos{%d}\\GreNextCustos{%d}%%\n",
-                            pitch_value(element->u.misc.pitched.pitch),
-                            pitch_value(gregorio_determine_next_pitch(syllable,
-                                    element, NULL)));
+                    next_note_pitch = gregorio_determine_next_pitch(syllable,
+                            element, NULL, &next_note_alteration);
+                    if (!element->u.misc.pitched.force_pitch) {
+                        alteration = alteration_name(next_note_alteration);
+                    }
+                    fprintf(f, "\\GreCustos{%d}{%s}%s%%\n",
+                            pitch_value(element->u.misc.pitched.pitch), alteration,
+                            next_custos(next_note_pitch, next_note_alteration));
                     ++note_unit_count;
                 }
                 break;

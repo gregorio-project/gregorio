@@ -36,6 +36,10 @@ See GregorioRef for descriptions.
 
 Additionally, if you were redefining `\greemergencystretch`, you should now be changing the `emergencystretch` dimension using the `\grechangedim` command.
 
+### Custos with alteration
+
+If the note following a custos has an alteration (flat, natural, or sharp), the custos will now also have that alteration typeset before it.  If you prefer the old behavior, use `\gresetcustosalteration{invisible}`.  This setting may be switched to `visible` and `invisible` between scores.
+
 ## 4.1.1
 
 ### Vertical spacings

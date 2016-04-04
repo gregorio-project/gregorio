@@ -132,7 +132,7 @@
 % macro to typeset the glyph. attributes are :
 % #1: character : the character that it must call
 % #2: height : the height it must be raised : can be negative (must be calculated by a preprocessor)
-% #3: height of the next note : we define the custos with that
+% #3: typesets the next custos
 % #4: type : the type of glyph, to determine the aligncenter; can be :
 %%%%%%%% 0 : one-note glyph or more than two notes glyph except porrectus : here we must put the aligncenter in the middle of the first note
 %%%%%%%% 1 : two notes glyph (podatus is considered as a one-note glyph) : here we put the aligncenter in the middle of the glyph
@@ -160,7 +160,7 @@
   \raise\gre@dimen@glyphraisevalue\relax%
   \copy\gre@box@temp@width%
   \ifgre@endofscore\else\ifgre@boxing\else %
-    \GreNextCustos{#3}%
+    #3%
   \fi\fi %
   \ifgre@firstglyph% we check if it is the first glyph
     \gre@calculate@notesaligncenter{#4}%
@@ -1354,7 +1354,7 @@
     \gre@usemanualeolcustos %
   \or % 1 - forced on
     \gre@useautoeolcustos %
-    \GreNextCustos{\gre@nextcustos}%
+    \GreNextCustos{\gre@nextcustospitch}{\gre@nextcustosalteration}%
   \fi %
 }%
 
