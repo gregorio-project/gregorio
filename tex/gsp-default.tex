@@ -130,12 +130,11 @@
 % stretching added in the case where the text of two syllables of the same word are
 % separated with an automatic hyphen
 \grecreatedim{intersyllablespacestretchhyphen}{0cm plus 0.05cm}{scalable}%
-% minimal space between letters of different words. Makes sense to have
-% the same plus and minus as interwordspacenotes.
-\grecreatedim{interwordspacetext}{0.38 cm plus 0.15 cm minus 0.05 cm}{scalable}%
+% minimal space between letters of different words.
+\grecreatedim{interwordspacetext}{1ex plus 0.15cm minus 0.05cm}{fixed}%
 % Versions of interword spaces for euouae blocks
 \grecreatedim{interwordspacenotes@euouae}{0.19 cm plus 0.1 cm minus 0.05 cm}{scalable}%
-\grecreatedim{interwordspacetext@euouae}{0.27 cm plus 0.1 cm minus 0.05 cm}{scalable}%
+\grecreatedim{interwordspacetext@euouae}{0.8ex plus 01.cm minus 0.05cm}{fixed}%
 % versions of note spaces when the first note of the second syllable is an alteration
 % those are used in euouae blocks
 \grecreatedim{interwordspacenotes@alteration}{0.1 cm plus 0.07 cm minus 0.01 cm}{scalable}%
@@ -224,14 +223,14 @@
 %
 % minimal space between letters of different syllable texts for text around bars
 % (new bar spacing algorithm only)
-\grecreatedim{interwordspacetext@bars}{0.15 cm}{scalable}%
+\grecreatedim{interwordspacetext@bars}{0.7ex}{fixed}%
 % minimal space between letters of different syllable texts for text around bars,
 % euouae context
-\grecreatedim{interwordspacetext@bars@euouae}{0.15 cm}{scalable}%
-\grecreatedim{interwordspacetext@bars@notext}{0.4 cm}{scalable}%
+\grecreatedim{interwordspacetext@bars@euouae}{0.7ex}{fixed}%
+\grecreatedim{interwordspacetext@bars@notext}{1ex}{fixed}%
 % minimal space between letters of different syllable texts for text around bars,
 % euouae context
-\grecreatedim{interwordspacetext@bars@notext@euouae}{0.3 cm}{scalable}%
+\grecreatedim{interwordspacetext@bars@notext@euouae}{0.7ex}{fixed}%
 % rubber length that will be added around bars in new bar spacing algorithm
 \grecreatedim{bar@rubber}{0 cm plus 0.22787 cm minus 0.02 cm}{scalable}%
 % additional space that will appear around bars that are preceded by a custos and followed by a key.
