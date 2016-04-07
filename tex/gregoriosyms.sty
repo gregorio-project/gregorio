@@ -30,6 +30,7 @@
 \RequirePackage{luaotfload}
 \RequirePackage{luamplib}%
 \RequirePackage{xstring}%
+\RequirePackage{xcolor}%
 
 \newluatexcatcodetable\gre@atletter %
 \setluatexcatcodetable\gre@atletter{%
@@ -105,3 +106,10 @@
 % Test to make sure that gregoriotex.lua is of the same version.
 \IfStrEq*{\gre@gregoriotexluaversion}{\gre@gregorioversion}{}{%else
     \gre@error{uncoherent file versions: gregoriosyms.sty is in version \number\gre@gregorioversion \space\space while gregoriotex.lua is in version \gre@gregoriotexluaversion}}%
+
+%%%%%%%%%
+%% Color definitions
+%%%%%%%%%
+
+\definecolor{grebackgroundcolor}{RGB}{255,255,255}%
+\definecolor{gregoriocolor}{RGB}{229,53,44}%
