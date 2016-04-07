@@ -33,6 +33,7 @@
 \input luaotfload.sty%
 \input graphicx.tex % for \resizebox
 \input xstring.sty%
+\input color.sty%
 
 \def\gre@error#1{\begingroup%
 \def\MessageBreak{^^J}%
@@ -91,6 +92,14 @@
 \long\def\gre@iflatex#1{}%
 \input gregoriotex-main.tex
 
+
+%%%%%%%%%
+%% Color definitions
+%%%%%%%%%
+
+\definecolor{grebackgroundcolor}{RGB}{255,255,255}%
+\definecolor{gregoriocolor}{RGB}{229,53,44}%
+
 %%%%%%%%%
 %% PlainTeX specific definitions for fonts
 %%%%%%%%%
@@ -115,15 +124,15 @@
   \relax %
 }%
 
-% Note since underlining and coloring don’t exist in PlainTeX, but we need the following commands to maintain compatibility with LaTeX.
-\def\GreUnderline#1{%
-  \gre@warning{Underlining cannot be done in PlainTeX}%
-  {#1}%
-  \relax %
+\def\GreColored#1{%
+  {%
+    \color{gregoriocolor}#1%
+  }%
 }%
 
-\def\GreColored#1{%
-  \gre@warning{Text color cannot be changed in PlainTeX}%
+% Note since underlining don’t exist in PlainTeX, we need the following command to maintain compatibility with LaTeX, but all it does is raise a warning.
+\def\GreUnderline#1{%
+  \gre@warning{Underlining cannot be done in PlainTeX}%
   {#1}%
   \relax %
 }%
@@ -135,8 +144,7 @@
 % Colors don't work in PlainTeX, but we need these functions for interoperability with LaTeX.
 
 \def\gresetlinecolor#1{%
-  \gre@warning{Line color cannot be changed in PlainTeX}%
-  \relax%
+  \gre@changestyle{normalstafflines}{\color{#1}}[\relax]%
 }
 
 
@@ -265,7 +273,7 @@
 
 \def\gre@style@nabc{%
   \begingroup%
-  \relax% we do nothing since colors are not implemented in PlainTeX
+  \color{gregoriocolor}%
 }
 \def\endgre@style@nabc{\endgroup}%
 
