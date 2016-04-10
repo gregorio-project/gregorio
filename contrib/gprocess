@@ -170,7 +170,6 @@ __END__
 \documentclass[12pt, letterpaper]{article}
 \usepackage{fullpage}
 \usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
 \usepackage{palatino}
 \usepackage[autocompile,allowdeprecated=false]{gregoriotex}
 \pagestyle{empty}
