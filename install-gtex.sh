@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Copyright (C) 2015 The Gregorio Project (see CONTRIBUTORS.md)
-# 
+#
 # This file is part of Gregorio.
 #
 # Gregorio is free software: you can redistribute it and/or modify
@@ -57,17 +57,24 @@
 #   Creates a TDS-ready archive named gregoriotex.tds.zip
 #
 
-TEXFILES=(tex/*.tex tex/gregorio*.sty tex/*.lua tex/*.dat)
+VERSION=`head -1 .gregorio-version`
+FILEVERSION=`echo $VERSION | sed 's/\./_/g'`
+
+TEXFILES=(tex/gregoriotex*.tex tex/gsp-default.tex tex/gregoriotex*.lua tex/*.dat)
+LATEXFILES=(tex/gregorio*.sty)
 TTFFILES=(gregorio.ttf greciliae.ttf parmesan.ttf gregorio-op.ttf
           greciliae-op.ttf parmesan-op.ttf greextra.ttf gregall.ttf
           gresgmodern.ttf)
-DOCFILES=(fonts/README.md)
+DOCFILES=(doc/Appendix*.tex doc/Command*.tex doc/Gabc.tex
+          doc/*Ref.tex doc/*Ref.lua doc/*.gabc doc/Gregorio*Ref-$FILEVERSION.pdf)
+EXAMPLEFILES=(examples/FactusEst.gabc examples/PopulusSion.gabc examples/main-lualatex.tex)
 FONTSRCFILES=(gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd
               greextra.sfd squarize.py convertsfdtottf.py gregall.sfd
-              gresgmodern.sfd)
+              gresgmodern.sfd README.md)
 
 NAME=${NAME:-gregoriotex}
 FORMAT=${FORMAT:-luatex}
+LATEXFORMAT=${LATEXFORMAT:-lualatex}
 TEXHASH=${TEXHASH:-texhash}
 KPSEWHICH=${KPSEWHICH:-kpsewhich}
 CP=${CP:-cp}
@@ -140,8 +147,10 @@ function install_to {
 
 echo "Installing in '${TEXMFROOT}'."
 install_to "${TEXMFROOT}/tex/${FORMAT}/${NAME}" "${TEXFILES[@]}"
+install_to "${TEXMFROOT}/tex/${LATEXFORMAT}/${NAME}" "${LATEXFILES[@]}"
 install_to "${TEXMFROOT}/fonts/truetype/public/${NAME}" "${TTFFILES[@]}"
 install_to "${TEXMFROOT}/doc/${FORMAT}/${NAME}" "${DOCFILES[@]}"
+install_to "${TEXMFROOT}/doc/${FORMAT}/${NAME}/examples" "${EXAMPLEFILES[@]}"
 install_to "${TEXMFROOT}/fonts/source/${NAME}" "${FONTSRCFILES[@]}"
 
 if [ "$arg" = 'tds' ]
