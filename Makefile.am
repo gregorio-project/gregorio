@@ -1,5 +1,5 @@
 # Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
-# 
+#
 # This file is part of Gregorio.
 #
 # Gregorio is free software: you can redistribute it and/or modify
@@ -22,6 +22,8 @@ ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = README.md CHANGELOG.md CONTRIBUTING.md CONTRIBUTORS.md \
 			 UPGRADE.md COPYING.md .gregorio-version VersionManager.py \
 			 build.sh install.sh install-gtex.sh
+dist-hook:
+	rm -f `find $(distdir) -name ".DS_Store"`
 
 fonts: make-fonts
 make-fonts:
