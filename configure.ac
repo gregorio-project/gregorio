@@ -105,6 +105,7 @@ AC_CONFIG_FILES([
     src/Makefile
     examples/Makefile
     contrib/Makefile
+    contrib/TeXShop/Makefile
     doc/Makefile
     tex/Makefile
     fonts/Makefile
