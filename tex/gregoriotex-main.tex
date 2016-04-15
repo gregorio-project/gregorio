@@ -27,6 +27,10 @@
   \gre@error{Error: this document must be compiled with LuaTeX (lualatex)}%
 \fi%
 
+%%%%%%%%%
+%% Debugging
+%%%%%%%%%
+
 \def\gre@debugmsg#1#2{%
   \IfStrEq{\gre@debug}{}{}%
     %false
@@ -34,16 +38,31 @@
       %true
       {\gre@error{Debug error: ‘all’ is not a permitted keyword}}%
       %false
-      {\IfStrEq{\gre@debug}{all}%
+      {\IfStrEq{\gre@debug}{,all,}%
         %true
         {\gre@typeout{GregorioTeX debug: (#1) #2}}%
         %false
-        {\IfSubStr{\gre@debug}{#1}%
+        {\IfSubStr{\gre@debug}{,#1,}%
           %true
           {\gre@typeout{GregorioTeX debug: (#1) #2}}%
           %false
           {\relax}%
         }%
+      }%
+    }%
+}%
+
+\AtBeginDocument{%
+  \IfStrEq{\gre@debug}{}%
+    {}%
+    {%
+      \directlua{gregoriotex.set_debug_string([[\gre@debug]])}%
+      \typeout{GregorioTeX is in debug mode}%
+      \typeout{\gre@debug\space messages will be printed to the log.}%
+      {% we're starting a group in order to localize \exploregroups
+        \exploregroups%
+        \StrRemoveBraces{\gre@debug}[\gre@debug]%
+        \xdef\gre@debug{,\gre@debug,}%
       }%
     }%
 }%
@@ -69,8 +88,6 @@
 
 
 \def\gre@nothing{}
-
-\AtBeginDocument{\IfStrEq{\gre@debug}{}{}{\directlua{gregoriotex.set_debug_string([[\gre@debug]])}\typeout{GregorioTeX is in debug mode}\typeout{\gre@debug\space messages will be printed to the log.}}}%
 
 % Depending on version of TeX / LaTeX, some primitives may or may not have a
 % luatex prefix, so we need to check and handle either
