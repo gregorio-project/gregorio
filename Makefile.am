@@ -32,5 +32,5 @@ export TOP_LEVEL_MAKE = true
 gregoriotex.tds.zip: install-gtex.sh
 	./install-gtex.sh tds
 
-ctan: dist install-gtex.sh
+ctan: dist gregoriotex.tds.zip
 	./build-ctan.sh

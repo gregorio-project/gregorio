@@ -6,10 +6,10 @@ VERSION=`head -1 .gregorio-version`
 FILEVERSION=`echo $VERSION | sed 's/\./_/g'`
 
 rm -rf ctan
-mkdir -p ctan/gregorio/
+mkdir -p ctan/gregoriotex/
 cp gregoriotex.tds.zip ctan/gregoriotex.tds.zip
-cp gregorio-$VERSION.tar.bz2 ctan/gregorio/
-cd ctan/gregorio
+cp gregorio-$VERSION.tar.bz2 ctan/gregoriotex/
+cd ctan/gregoriotex
 tar xf gregorio-$VERSION.tar.bz2
 rm gregorio-$VERSION.tar.bz2
 cp ../../*.md .
@@ -34,10 +34,9 @@ mkdir fonts/truetype/
 mv fonts/*.ttf fonts/truetype
 mv fonts/*.* fonts/sources
 cd gregorio-$VERSION
-zip -r gregorio-$VERSION.zip * --exclude=*.DS_Store*
+zip -r ../gregorio-$VERSION.zip * --exclude=*.DS_Store*
 cd ..
 rm -rf gregorio-$VERSION
 cd ..
-zip -r ../gregorio.zip gregorio
-zip ../gregorio.zip gregoriotex.tds.zip
+zip -r ../gregoriotex.zip gregoriotex gregoriotex.tds.zip
 cd ..
