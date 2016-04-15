@@ -1081,7 +1081,10 @@ Macro to generate the point-and-click links.
 \end{argtable}
 
 \macroname{\textbackslash gre@prefix}{}{gregoriotex-spaces.tex}
-Either ``skip’’ or ``dimen’’ according to the distance being set or changed at the given moment.
+Either \texttt{skip} or \texttt{dimen} according to the distance being set or changed at the given moment.
+
+\macroname{\textbackslash gre@prefixII}{}{gregoriotex-spaces.tex}
+Same as \verb=\gre@prefix=.  Used when we were dealing with two distances simultaneously.
 
 \macroname{\textbackslash gre@rubberpermit}{\#1}{gregoriotex-spaces.tex}
 Determines whether the given distance is allowed to take a rubber length.
@@ -1136,7 +1139,7 @@ Alias for \verb=\luatexlocalrightbox= or \verb=\localrightbox=, depending on \La
 Alias for \verb=\resizebox=.
 
 \macroname{\textbackslash gre@dimension}{}{gregoriotex-spaces.tex}
-Workhorse function behind \verb=\grecreatedim= and \verb=\grechangedim=.
+Workhorse function for setting distances in \verb=\grecreatedim= and \verb=\grechangedim=.
 
 \macroname{\textbackslash gre@setstafflines}{\#1}{gregoriotex-main.tex}
 Sets the number of staff lines.

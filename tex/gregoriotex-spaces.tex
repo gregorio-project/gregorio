@@ -1183,16 +1183,18 @@
 %% Note: the distances created by this function are stored as strings, not skip or dimension registers.  This allows the user to specify a distance in em or ex units even though the font parameters may not be the same at the time the distance is specified and the time the distance is used.
 \newif\ifgre@checklength%
 \def\grecreatedim#1#2#3{%
-  \gre@dimension{#1}{#2}%
   \csname newif\expandafter\endcsname\csname ifgre@scale@#1\endcsname%
   \IfStrEqCase{#3}{
     {scalable}%
       {\grescaledim{#1}{true}}%
     {fixed}%
       {\grescaledim{#1}{false}}%
+    {inherited}%
+      {\grescaledim{#1}{false}}%
     }[% all other cases
       \gre@error{Unrecognized option "#3" for \protect\grecreatedim\MessageBreak Possible options are: 'scalable' and 'fixed'}%
     ]%
+  \gre@dimension{#1}{#2}{#3}%
 }%
 
 
@@ -1209,14 +1211,28 @@
   \fi%
   \ifcsname gre@space@\gre@prefix @#1\endcsname%
     \gre@debugmsg{spacing}{It does exist.}%
-    \gre@dimension{#1}{#2}%
     \IfStrEqCase{#3}{%
       {scalable}%
         {\grescaledim{#1}{true}}%
       {fixed}%
         {\grescaledim{#1}{false}}%
+      {inherited}%
+        {%
+          \gre@rubberpermit{#2}%
+          \ifgre@rubber%
+            \def\gre@prefixII{skip}%
+          \else%
+            \def\gre@prefixII{dimen}%
+          \fi%
+          \ifcsname gre@space@\gre@prefixII @#2\endcsname%
+            \grescaledim{#1}{false}%
+          \else%
+            \gre@error{'#1' cannot inherit from '#2'\MessageBreak Please make sure '#2' is a valid GregorioTeX distance}%
+          \fi%
+        }%
       % all other cases
-      }[\gre@error{Unrecognized option "#3" for \protect\grechangedim\MessageBreak Possible options are: 'scalable' and 'fixed'}]%
+      }[\gre@error{Unrecognized option "#3" for \protect\grechangedim\MessageBreak Possible options are: 'scalable', 'fixed', and 'inherited'}]%
+    \gre@dimension{#1}{#2}{#3}%
   \else%
     \IfStrEqCase{#1}{% DEPRECATED
       {spacearoundsmallbars}% DEPRECATED
@@ -1257,33 +1273,59 @@
 }
 
 % The common internals for \grecreatedim and \grechangedim.
-\def\gre@dimension#1#2{%
-  \gre@checklengthfalse%
-  %check if #2 is a rubber length (contains plus and/or minus)
-  \IfSubStr{#2}{plus}{\gre@checklengthtrue}{\relax}%
-  \IfSubStr{#2}{minus}{\gre@checklengthtrue}{\relax}%
-  %if #1 is one of the distances which cannot be rubber.
-  \gre@rubberpermit{#1}%
-  % do we try to assign a rubber to one where it's not permitted?
-  \ifgre@rubber%
-    \def\gre@prefix{skip}%
-  \else%
-    \ifgre@checklength%
-      \gre@error{#1 cannot be a rubber length.}%
+\def\gre@dimension#1#2#3{%
+  \IfStrEq{#3}{inherited}{%
+    \gre@debugmsg{spacing}{setting inherited distance}
+    \gre@rubberpermit{#1}%
+    \ifgre@rubber%
+      \def\gre@prefix{skip}%
     \else%
       \def\gre@prefix{dimen}%
     \fi%
-  \fi%
-  % special check for bar@rubber
-  \IfStrEq*{#1}{bar@rubber}%
-    {%
-      \gre@skip@temp@one = #2\relax%
-      \ifdim\gre@skip@temp@one=0pt\relax\else%
-        \gre@error{bar@rubber cannot have a non-zero base}%
+    \gre@rubberpermit{#2}%
+    \ifgre@rubber%
+      \def\gre@prefixII{skip}%
+    \else%
+      \def\gre@prefixII{dimen}%
+    \fi%
+    \expandafter\edef\csname gre@space@\gre@prefix @#1\endcsname{\expandafter\unexpanded{\csname gre@space@\gre@prefixII @#2\endcsname}}%
+  }{%
+    \gre@rubberpermit{#2}%
+    \ifgre@rubber%
+      \def\gre@prefixII{skip}%
+    \else%
+      \def\gre@prefixII{dimen}%
+    \fi%
+    \ifcsname gre@space@\gre@prefixII @#2\endcsname%
+      \gre@error{'#1' cannot be '#3' and depend on '#2' at the same time\MessageBreak Either use 'inherited' in the third argument\MessageBreak or give an actual distance in the second}
+    \fi%
+    \gre@checklengthfalse%
+    %check if #2 is a rubber length (contains plus and/or minus)
+    \IfSubStr{#2}{plus}{\gre@checklengthtrue}{\relax}%
+    \IfSubStr{#2}{minus}{\gre@checklengthtrue}{\relax}%
+    %if #1 is one of the distances which cannot be rubber.
+    \gre@rubberpermit{#1}%
+    % do we try to assign a rubber to one where it's not permitted?
+    \ifgre@rubber%
+      \def\gre@prefix{skip}%
+    \else%
+      \ifgre@checklength%
+        \gre@error{#1 cannot be a rubber length.}%
+      \else%
+        \def\gre@prefix{dimen}%
       \fi%
-    }{}%
-  \expandafter\edef\csname gre@space@\gre@prefix @#1\endcsname{#2}%
-  \relax %
+    \fi%
+    % special check for bar@rubber
+    \IfStrEq*{#1}{bar@rubber}%
+      {%
+        \gre@skip@temp@one = #2\relax%
+        \ifdim\gre@skip@temp@one=0pt\relax\else%
+          \gre@error{bar@rubber cannot have a non-zero base}%
+        \fi%
+      }{}%
+    \expandafter\edef\csname gre@space@\gre@prefix @#1\endcsname{#2}%
+    \relax %
+  }%
 }
 
 %a macro to use if all you want to do is turn on or off the scaling for a particular distance
