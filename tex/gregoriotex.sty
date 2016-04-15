@@ -74,10 +74,12 @@
 \gresetlinesbehindalteration{invisible}
 \gresetlinesbehindpunctumcavum{invisible}
 
-%% We now redefine some things in a more LaTeX friendly way.
+%%%%%%%%%
+%% Color definitions
+%%%%%%%%%
 
 \definecolor{grebackgroundcolor}{RGB}{255,255,255}%
-\definecolor{gregoriocolor}{RGB}{229,53,44}
+\definecolor{gregoriocolor}{RGB}{229,53,44}%
 
 %%%%%%%%%
 %% LaTeX specific definitions for fonts
@@ -193,7 +195,7 @@
   {\@@italiccorr\endgroup}%
 
 \newenvironment{gre@style@nabc}%
-  {\begingroup\color{red}}%
+  {\begingroup\color{gregoriocolor}}%
   {\endgroup}%
 
 \def\gre@changestyle#1#2[#3]{%

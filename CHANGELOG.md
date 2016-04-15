@@ -13,6 +13,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Gregorio will keep together (prevent line breaks between) a user-configurable number of notes (by default, 4) at the start and end of the syllable.  Further, Gregorio will prevent line breaks in a syllable with fewer than a user-configurable number of notes (by default, 10).  These values may be changed by using the `\gresetunbreakablesyllablenotes` command.  See GregorioRef for details (for the change request, see [#1044](https://github.com/gregorio-project/gregorio/issues/1044)).
 - The visibility of notes and lyrics can now be toggled on an off using `\gresetlyrics` and `\gresetnotes`.  See [#1039](https://github.com/gregorio-project/gregorio/issues/1039).
 - An alteration (flat, natural, or sharp) will now appear on a custos if the next note is so altered.  Use `\gresetcustosalteration{invisible}` if you prefer the old behavior.  See [#1049](https://github.com/gregorio-project/gregorio/issues/1049).
+- `gregoriosyms.sty` and `gregoriotex.tex` now contain definitions for `gregoriocolor` and `grebackgroundcolor` and the appropriate score commands dealing with color now work under PlainTeX
 
 ### Changed
 - The stemmed oriscus flexus `(gOe)` is now consistent with the unstemmed oriscus flexus `(goe)` in that the oriscus points downward at the note that follows.  If you prefer to have the oriscus point upward, use `(gO1e)` for force upward orientation.
