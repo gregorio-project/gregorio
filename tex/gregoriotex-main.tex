@@ -1654,17 +1654,22 @@
 }%
 
 \def\gre@setgregoriofontscaled[#1]#2#3{%
-  \if\relax\detokenize{#1}\relax %
-    \xdef\gre@gregoriofontname{#2}%
-    \expandafter\xdef\csname gre@fontfactor@#2\endcsname{#3}%
-    \gre@loadgregoriofont%
-    \gdef\GreCPVirgaReversaAscendensOnDLine##1{##1}%
-  \else %
-    \xdef\gre@gregoriofontname{#2-#1}%
-    \expandafter\xdef\csname gre@fontfactor@#2-#1\endcsname{#3}%
-    \gre@loadgregoriofont%
-    \gdef\GreCPVirgaReversaAscendensOnDLine##1{\GreCPVirgaReversaLongqueueAscendens}%
-  \fi %
+  \IfStrEq{#2}{parmesan}{%%% DEPRECATED for removal in 5.0
+    \gre@deprecated{parmesan font}{granapadano font}%%% DEPRECATED for removal in 5.0
+    \gre@setgregoriofontscaled[#1]{granapadano}{#3}%%% DEPRECATED for removal in 5.0
+  }{%%% DEPRECATED for removal in 5.0
+    \if\relax\detokenize{#1}\relax %
+      \xdef\gre@gregoriofontname{#2}%
+      \expandafter\xdef\csname gre@fontfactor@#2\endcsname{#3}%
+      \gre@loadgregoriofont%
+      \gdef\GreCPVirgaReversaAscendensOnDLine##1{##1}%
+    \else %
+      \xdef\gre@gregoriofontname{#2-#1}%
+      \expandafter\xdef\csname gre@fontfactor@#2-#1\endcsname{#3}%
+      \gre@loadgregoriofont%
+      \gdef\GreCPVirgaReversaAscendensOnDLine##1{\GreCPVirgaReversaLongqueueAscendens}%
+    \fi %
+  }%%% DEPRECATED for removal in 5.0
   \relax %
 }%
 
