@@ -15,6 +15,10 @@ To better comply with the TeXLive directory structure, the location of `gregorio
 *Windows users:* Your installer already should remove old versions of GregorioTeX before installing the new ones. Please file a bug report if you have a problem with this process.
 
 
+### Parmesan font renamed to Grana Padano
+
+To avoid conflicts with the LilyPond Parmesan font, the Gregorio Parmesan font is now called Grana Padano.  If you were using `\gresetgregoriofont{parmesan}`, you should now use `\gresetgregoriofont{granapadano}`.
+
 ## 4.1.1
 
 ### Vertical spacings
