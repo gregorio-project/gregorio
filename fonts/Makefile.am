@@ -18,10 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
-TTFFILES = gregorio.ttf greciliae.ttf parmesan.ttf \
-		   gregorio-op.ttf greciliae-op.ttf parmesan-op.ttf \
+TTFFILES = gregorio.ttf greciliae.ttf granapadano.ttf \
+		   gregorio-op.ttf greciliae-op.ttf granapadano-op.ttf \
 		   greextra.ttf gregall.ttf gresgmodern.ttf
-SOURCEFILES = gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd \
+SOURCEFILES = gregorio-base.sfd granapadano-base.sfd greciliae-base.sfd \
 			  greextra.sfd gregall.sfd gresgmodern.sfd
 
 EXTRA_DIST = $(TTFFILES) $(SOURCEFILES) squarize.py stemsschemas.py convertsfdtottf.py README.md simplify.py
