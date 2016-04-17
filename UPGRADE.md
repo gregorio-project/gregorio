@@ -40,6 +40,10 @@ Additionally, if you were redefining `\greemergencystretch`, you should now be c
 
 If the note following a custos has an alteration (flat, natural, or sharp), the custos will now also have that alteration typeset before it.  If you prefer the old behavior, use `\gresetcustosalteration{invisible}`.  This setting may be switched to `visible` and `invisible` between scores.
 
+### Parmesan font renamed to Grana Padano
+
+To avoid conflicts with the LilyPond Parmesan font, the Gregorio Parmesan font is now called Grana Padano.  If you were using `\gresetgregoriofont{parmesan}`, you should now use `\gresetgregoriofont{granapadano}`.
+
 ## 4.1.1
 
 ### Vertical spacings
