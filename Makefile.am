@@ -29,8 +29,8 @@ make-fonts:
 
 export TOP_LEVEL_MAKE = true
 
-gregoriotex.tds.zip: install-gtex.sh
+gregoriotex.tds.zip: dist install-gtex.sh
 	./install-gtex.sh tds
 
-ctan: dist gregoriotex.tds.zip
+ctan: dist gregoriotex.tds.zip build-ctan.sh
 	./build-ctan.sh
