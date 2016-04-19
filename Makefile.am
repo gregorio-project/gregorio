@@ -1,5 +1,5 @@
 # Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
-# 
+#
 # This file is part of Gregorio.
 #
 # Gregorio is free software: you can redistribute it and/or modify
@@ -28,3 +28,9 @@ make-fonts:
 	make -C fonts fonts
 
 export TOP_LEVEL_MAKE = true
+
+gregoriotex.tds.zip: dist install-gtex.sh
+	./install-gtex.sh tds
+
+ctan: dist gregoriotex.tds.zip build-ctan.sh
+	./build-ctan.sh
