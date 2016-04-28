@@ -2,7 +2,20 @@
 
 This file contains instructions to upgrade to a new release of Gregorio.
 
-## Unreleased
+## 4.1.2
+
+### Changes to texmf tree
+
+To better comply with the TeXLive directory structure, the location of `gregoriotex.sty` and `gregoriosyms.sty` have changed.
+
+*Linux and other users installing from source:* You will need to manually remove the old versions of these files to avoid version conflicts. `install-gtex.sh` will be modified in a future beta to do this for you.
+
+*Mac users installing via pkg:* Please run Uninstall-Gregorio.pkg before installing 4.2.
+
+*Windows users:* Your installer already should remove old versions of GregorioTeX before installing the new ones. Please file a bug report if you have a problem with this process.
+
+
+## 4.1.1
 
 ### Vertical spacings
 
