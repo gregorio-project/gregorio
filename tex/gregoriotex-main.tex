@@ -68,7 +68,7 @@
 }%
 
 
-\def\gre@nothing{}
+\def\gre@nothing{}%
 
 \AtBeginDocument{\IfStrEq{\gre@debug}{}{}{\directlua{gregoriotex.set_debug_string([[\gre@debug]])}\typeout{GregorioTeX is in debug mode}\typeout{\gre@debug\space messages will be printed to the log.}}}%
 
@@ -725,7 +725,7 @@
 
 \newbox\gre@box@commentary
 
-\def\grecommentary{\@ifnextchar[{\gre@commentary}{\gre@commentary[0pt]}}
+\def\grecommentary{\@ifnextchar[{\gre@commentary}{\gre@commentary[0pt]}}%
 
 \def\gre@commentary[#1]#2{%
   % we initialize commentarytrueraise here, but will only calculate it's final value just before placing the commentary so that we make sure we have the correct values for the distances which go into it
@@ -1840,7 +1840,7 @@
 % 0 = never compile (default)
 % 1 = auto compile (compile outdated scores and those lacking a compiled version)
 % 2 = compile all scores
-\def\gre@compilegabc{0}
+\def\gre@compilegabc{0}%
 
 % User macro to change compilation behavior
 \def\gresetcompilegabc#1{%

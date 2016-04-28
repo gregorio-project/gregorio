@@ -511,7 +511,7 @@
 \gre@gabcforcecenterstrue%
 
 \def\gresetgabcforcecenters#1{%
-  \ifcase\gre@lyriccentering\or
+  \ifcase\gre@lyriccentering\or%
     \gre@warning{\protect\gresetgabcforcecenters\space has no effect when lyrics are centered on the vowels}%
   \fi%
   \IfStrEqCase{#1}{%
