@@ -1184,7 +1184,7 @@
 \newif\ifgre@checklength%
 \def\grecreatedim#1#2#3{%
   \csname newif\expandafter\endcsname\csname ifgre@scale@#1\endcsname%
-  \IfStrEqCase{#3}{
+  \IfStrEqCase{#3}{%
     {scalable}%
       {\grescaledim{#1}{true}}%
     {fixed}%
@@ -1275,7 +1275,7 @@
 % The common internals for \grecreatedim and \grechangedim.
 \def\gre@dimension#1#2#3{%
   \IfStrEq{#3}{inherited}{%
-    \gre@debugmsg{spacing}{setting inherited distance}
+    \gre@debugmsg{spacing}{setting inherited distance}%
     \gre@rubberpermit{#1}%
     \ifgre@rubber%
       \def\gre@prefix{skip}%
@@ -1297,7 +1297,7 @@
       \def\gre@prefixII{dimen}%
     \fi%
     \ifcsname gre@space@\gre@prefixII @#2\endcsname%
-      \gre@error{'#1' cannot be '#3' and depend on '#2' at the same time\MessageBreak Either use 'inherited' in the third argument\MessageBreak or give an actual distance in the second}
+      \gre@error{'#1' cannot be '#3' and depend on '#2' at the same time\MessageBreak Either use 'inherited' in the third argument\MessageBreak or give an actual distance in the second}%
     \fi%
     \gre@checklengthfalse%
     %check if #2 is a rubber length (contains plus and/or minus)
@@ -1344,7 +1344,7 @@
         \csname gre@scale@#1false\endcsname%
       ]%
   \else%
-    \gre@error{Unrecognized distance "#1" in \protect\grescaledim}
+    \gre@error{Unrecognized distance "#1" in \protect\grescaledim}%
   \fi%
 }
 
