@@ -17,7 +17,7 @@ GRETEXDIR="${GRETEXDIR%/gregoriotex.tex}"
 GRELATEXDIR="${GRETEXDIR/luatex/lualatex}"
 TEXMFLOCAL="${GRETEXDIR%/tex/luatex/gregoriotex}"
 GREFONTDIR="$TEXMFLOCAL/fonts/truetype/public/gregoriotex"
-GREFONTSOURCE="$TEXMFLOCAL/source/gregoriotex"
+GREFONTSOURCE="$TEXMFLOCAL/fonts/source/gregoriotex"
 GREDOCDIR="$TEXMFLOCAL/doc/luatex/gregoriotex"
 
 rm "$BINDIR/gregorio"
