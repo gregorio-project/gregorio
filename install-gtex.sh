@@ -78,7 +78,8 @@ LEGACYFILES=(tex/luatex/gregoriotex/gregoriotex.sty
              tex/luatex/gregoriotex/gregoriosyms.sty
              tex/luatex/gregoriotex/gregoriotex-ictus.tex
              fonts/truetype/public/gregoriotex/parmesan.ttf
-             fonts/truetype/public/gregoriotex/parmesan-op.ttf)
+             fonts/truetype/public/gregoriotex/parmesan-op.ttf
+             fonts/source/gregoriotex/parmesan-base.sfd)
 
 NAME=${NAME:-gregoriotex}
 FORMAT=${FORMAT:-luatex}
