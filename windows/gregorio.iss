@@ -58,13 +58,9 @@ Source: "../README.md"; DestDir: "{app}";
 Source: "../CONTRIBUTORS.md"; DestDir: "{app}";
 Source: "../UPGRADE.md"; DestDir: "{app}";
 ; PARSE_VERSION_FILE_NEXTLINE
-Source: "../doc/GregorioRef-4_1_1.pdf"; DestDir: "{app}";
+Source: "../doc/Gregorio*Ref-4_1_1.pdf"; DestDir: "{app}";
 ; PARSE_VERSION_FILE_NEXTLINE
-Source: "../doc/GregorioRef-4_1_1.pdf"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
-; PARSE_VERSION_FILE_NEXTLINE
-Source: "../doc/GregorioNabcRef-4_1_1.pdf"; DestDir: "{app}";
-; PARSE_VERSION_FILE_NEXTLINE
-Source: "../doc/GregorioNabcRef-4_1_1.pdf"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
+Source: "../doc/Gregorio*Ref-4_1_1.pdf"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
 Source: "../COPYING.md"; DestDir: "{app}";
 Source: "../contrib/system-setup.bat"; DestDir: "{app}";
 Source: "../contrib/*"; DestDir: "{app}\contrib"; Excludes: "Makefile*,TeXShop\*,*.command";
