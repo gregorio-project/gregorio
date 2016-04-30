@@ -72,9 +72,13 @@ FONTSRCFILES=(gregorio-base.sfd granapadano-base.sfd greciliae-base.sfd
               greextra.sfd squarize.py convertsfdtottf.py gregall.sfd
               gresgmodern.sfd README.md)
 # Files which have been eliminated, or whose installation location have been
-# changed.  We will remove existing versions of these files before installing.
-LEGACYFILES=(gregoriotex.sty gregoriosyms.sty gregoriotex-ictus.tex
-             gregsmodern.ttf parmesan.ttf parmesan-op.ttf)
+# changed.  We will remove existing versions of these files in the target texmf
+# tree before installing.
+LEGACYFILES=(tex/luatex/gregoriotex/gregoriotex.sty
+             tex/luatex/gregoriotex/gregoriosyms.sty
+             tex/luatex/gregoriotex/gregoriotex-ictus.tex
+             fonts/truetype/public/gregoriotex/parmesan.ttf
+             fonts/truetype/public/gregoriotex/parmesan-op.ttf)
 
 NAME=${NAME:-gregoriotex}
 FORMAT=${FORMAT:-luatex}
@@ -152,13 +156,15 @@ function install_to {
 
 function find_and_remove {
     for files in $1; do
-        target=`${KPSEWHICH} -all "$files"`
-        $RM -f "$target"
+        target="${TEXMFROOT}/${files}"
+        if [ -e "$target" ]; then
+            $RM -f "$target"
+        fi
     done
 }
 
 echo "Removing old files"
-find_and_remove "${LEGACYFILES}"
+find_and_remove "${LEGACYFILES[@]}"
 
 echo "Installing in '${TEXMFROOT}'."
 install_to "${TEXMFROOT}/tex/${FORMAT}/${NAME}" "${TEXFILES[@]}"
