@@ -67,7 +67,7 @@ TTFFILES=(gregorio.ttf greciliae.ttf granapadano.ttf gregorio-op.ttf
           gresgmodern.ttf)
 DOCFILES=(doc/Appendix*.tex doc/Command*.tex doc/Gabc.tex
           doc/*Ref.tex doc/*Ref.lua doc/*.gabc doc/Gregorio*Ref-$FILEVERSION.pdf)
-EXAMPLEFILES=(examples/FactusEst.gabc examples/PopulusSion.gabc examples/main-lualatex.tex)
+EXAMPLEFILES=(examples/FactusEst.gabc examples/PopulusSion.gabc examples/main-lualatex.tex examples/debugging.tex)
 FONTSRCFILES=(gregorio-base.sfd granapadano-base.sfd greciliae-base.sfd
               greextra.sfd squarize.py convertsfdtottf.py gregall.sfd
               gresgmodern.sfd README.md)
