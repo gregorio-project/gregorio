@@ -682,7 +682,7 @@ text directly.
 \textbf{Nota Bene:} The same rules apply for \#1 as in \verb=\gresetspecial=.
 
 \macroname{\textbackslash gretilde}{}{gregoriotex-main.tex}
-Macro to print $\sim$.  This macro is set using the above for \texttt{<sp>~</sp>}.
+Macro to print $\sim$.  This macro is set using the above for \texttt{<sp>$\sim$</sp>}.
 
 
 
@@ -720,7 +720,7 @@ Different elements of an include score have different styles applied.  These ele
 \footnotemark[1]\textit{Special:} By default, \texttt{additionalstafflines} inherits its properties from \texttt{normalstafflines}.  To decouple these environments, you must manually change \texttt{additionalstafflines} using \texttt{\textbackslash grechangestyle}.
 \renewcommand{\thefootnote}{\arabic{footnote}}\breakabletrue
 
-\macroname{\textbackslash grechangestyle}{\{\#1\}\{\#2\}[\#3]}{gregoriotex.sty \textup{and} gregoriotex.tex}
+\macroname{\textbackslash grechangestyle}{\{\#1\}\{\#2\}[\optional{\#3}]}{gregoriotex.sty \textup{and} gregoriotex.tex}
 Command to change styling of a score element.
 
 \begin{argtable}
@@ -750,7 +750,7 @@ Each element will be typeset within an isolated group to prevent styling command
 \subsubsection{Text Elements}
 While the gabc headers provide support for some of the text elements commonly found on chant scores, Gregorio\TeX\ provides the following functions to allow you to enter and control those elements with a greater degree of precision than the gabc headers.
 
-\macroname{\textbackslash greannotation}{[\#1]\{\#2\}}{gregoriotex-main.tex}
+\macroname{\textbackslash greannotation}{[\optional{\#1}]\{\#2\}}{gregoriotex-main.tex}
 Macro to add annotations (the text which appears above the initial) to a score.  While a single call of the function does not support multiple lines, successive calls to the function will be added to the annotation as a new line below what is already there.
 
 \begin{argtable}
@@ -762,7 +762,7 @@ Macro to add annotations (the text which appears above the initial) to a score. 
 
 \textbf{Nota Bene:} The first argument does not affect the alignment of lines already in the annotation, only the way the new line aligns with the existing lines as a whole.
 
-\macroname{\textbackslash grecommentary}{[\optional{\#2}]\{\#1\}}{gregoriotex-main.tex}
+\macroname{\textbackslash grecommentary}{[\optional{\#1}]\{\#2\}}{gregoriotex-main.tex}
 Macro to add commentary (the text flush right at the top, usually a scripture reference) to a score.  While a single call of this function does not support multiple lines, successive calls to the function will add a new line to the commentary directly below the previous.
 
 \begin{argtable}
