@@ -880,7 +880,7 @@ local function adjust_line_height(inside_discretionary)
 end
 
 local function var_brace_note_pos(brace, start_end)
-  tex.print(string.format([[\luatexlatelua{gregoriotex.late_brace_note_pos('%s', %d, %d, \number\pdflastxpos)}]], cur_score_id, brace, start_end))
+  tex.print(catcode_at_letter, string.format([[\luatexlatelua{gregoriotex.late_brace_note_pos('%s', %d, %d, \number\gre@lastxpos)}]], cur_score_id, brace, start_end))
 end
 
 local function late_brace_note_pos(score_id, brace, start_end, pos)
@@ -911,7 +911,7 @@ local function var_brace_len(brace)
 end
 
 local function save_pos(index, which)
-  tex.print(string.format([[\pdfsavepos\luatexlatelua{gregoriotex.late_save_pos('%s', %d, %d, \number\pdflastxpos, \number\pdflastypos)}]], cur_score_id, index, which))
+  tex.print(catcode_at_letter, string.format([[\gre@savepos\luatexlatelua{gregoriotex.late_save_pos('%s', %d, %d, \number\gre@lastxpos, \number\gre@lastypos)}]], cur_score_id, index, which))
 end
 
 local function late_save_pos(score_id, index, which, xpos, ypos)
