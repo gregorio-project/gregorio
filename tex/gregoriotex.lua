@@ -986,7 +986,7 @@ local function prep_save_position(index, fn)
 end
 
 local function save_position(index, which)
-  tex.print(string.format([[\luatexlatelua{gregoriotex.late_save_position('%s', %d, %d, \number\pdflastxpos, \number\pdflastypos)}]], cur_score_id, index, which))
+  tex.print(catcode_at_letter, string.format([[\luatexlatelua{gregoriotex.late_save_position('%s', %d, %d, \number\gre@lastxpos, \number\gre@lastypos)}]], cur_score_id, index, which))
 end
 
 local function late_save_position(score_id, index, which, xpos, ypos)
@@ -1039,7 +1039,7 @@ local function save_euouae(index, which)
   if which == 1 then
     prep_save_position(index, compute_saved_newline_before_euouae)
   end
-  tex.sprint([[\pdfsavepos]])
+  tex.sprint(catcode_at_letter, [[\gre@savepos]])
   save_position(index, which)
 end
 
