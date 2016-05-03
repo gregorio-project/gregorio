@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-# Script to be executed by make ctan-dist
+# Script to be executed by make ctan
 
 VERSION=`head -1 .gregorio-version`
 FILEVERSION=`echo $VERSION | sed 's/\./_/g'`
