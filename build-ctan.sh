@@ -38,5 +38,5 @@ zip -r ../gregorio-$VERSION.zip * --exclude=*.DS_Store*
 cd ..
 rm -rf gregorio-$VERSION
 cd ..
-zip -r ../gregoriotex.zip gregoriotex gregoriotex.tds.zip --exclude=*.DS_Store*
+zip -r ../gregoriotex.ctan.zip gregoriotex gregoriotex.tds.zip --exclude=*.DS_Store*
 cd ..
