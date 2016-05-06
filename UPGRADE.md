@@ -8,11 +8,13 @@ This file contains instructions to upgrade to a new release of Gregorio.
 
 To better comply with the TeXLive directory structure, the location of `gregoriotex.sty` and `gregoriosyms.sty` have changed.
 
-*Linux and other users installing from source:* You will need to manually remove the old versions of these files to avoid version conflicts. `install-gtex.sh` will be modified in a future beta to do this for you.
+*Linux and other users installing from source:* `install-gtex.sh` should remove the old versions before installing the new one.
 
-*Mac users installing via pkg:* Please run Uninstall-Gregorio.pkg before installing 4.2.
+*Mac users installing via pkg installer:* The installer does not attempt to remove the old versions before installing the new ones.  Please run Uninstall-Gregorio.pkg before installing 4.2 to ensure that the old versions don't cause any problems.
 
-*Windows users:* Your installer already should remove old versions of GregorioTeX before installing the new ones. Please file a bug report if you have a problem with this process.
+*Windows users:* Your installer already should remove old versions of GregorioTeX before installing the new ones.
+
+As always, please file a bug report if you have any problems with the update process.
 
 
 ### Parmesan font renamed to Grana Padano
