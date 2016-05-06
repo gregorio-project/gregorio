@@ -34,6 +34,8 @@ Name: "{app}\texmf"
 Name: "{app}\texmf\tex"
 Name: "{app}\texmf\tex\luatex"
 Name: "{app}\texmf\tex\luatex\gregoriotex"
+Name: "{app}\texmf\tex\lualatex"
+Name: "{app}\texmf\tex\lualatex\gregoriotex"
 Name: "{app}\texmf\fonts"
 Name: "{app}\texmf\fonts\truetype"
 Name: "{app}\texmf\fonts\truetype\public"
@@ -43,6 +45,7 @@ Name: "{app}\texmf\fonts\source\gregoriotex"
 Name: "{app}\texmf\doc"
 Name: "{app}\texmf\doc\luatex"
 Name: "{app}\texmf\doc\luatex\gregoriotex"
+Name: "{app}\texmf\doc\luatex\gregoriotex\examples"
 
 [Files]
 Source: "../src/gregorio.exe"; DestDir: "{app}\bin";
@@ -55,22 +58,31 @@ Source: "../README.md"; DestDir: "{app}";
 Source: "../CONTRIBUTORS.md"; DestDir: "{app}";
 Source: "../UPGRADE.md"; DestDir: "{app}";
 ; PARSE_VERSION_FILE_NEXTLINE
-Source: "../doc/GregorioRef-4_2_0-beta1.pdf"; DestDir: "{app}";
+Source: "../doc/Gregorio*Ref-4_2_0-beta1.pdf"; DestDir: "{app}";
 ; PARSE_VERSION_FILE_NEXTLINE
-Source: "../doc/GregorioNabcRef-4_2_0-beta1.pdf"; DestDir: "{app}";
+Source: "../doc/Gregorio*Ref-4_2_0-beta1.pdf"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
 Source: "../COPYING.md"; DestDir: "{app}";
 Source: "../contrib/system-setup.bat"; DestDir: "{app}";
 Source: "../contrib/*"; DestDir: "{app}\contrib"; Excludes: "Makefile*,TeXShop\*,*.command";
 Source: "../examples/*.gabc"; DestDir: "{app}\examples";
+Source: "../examples/*.gabc"; DestDir: "{app}\texmf\doc\luatex\gregoriotex\examples";
 Source: "../examples/*.tex"; DestDir: "{app}\examples";
+Source: "../examples/*.tex"; DestDir: "{app}\texmf\doc\luatex\gregoriotex\examples";
 Source: "../tex/*.tex"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
-Source: "../tex/*.sty"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
+Source: "../tex/*.sty"; DestDir: "{app}\texmf\tex\lualatex\gregoriotex";
 Source: "../tex/*.lua"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
 Source: "../tex/gregorio-vowels.dat"; DestDir: "{app}\texmf\tex\luatex\gregoriotex";
 Source: "../fonts/*.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriotex";
 Source: "../fonts/*.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/*.py"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
+Source: "../fonts/README.md"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../README.md"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
+Source: "../doc/Appendix*.tex"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
+Source: "../doc/Command*.tex"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
+Source: "../doc/Gabc.tex"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
+Source: "../doc/*Ref.tex"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
+Source: "../doc/*Ref.lua"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
+Source: "../doc/*.gabc"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
 
 [InstallDelete]
 Type: files; Name: "{app}\gregorio.exe"
