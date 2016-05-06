@@ -14,15 +14,17 @@ writelog 6 "Uninstalling Gregorio Components"
 
 GRETEXDIR=`$KPSEWHICH gregoriotex.tex`
 GRETEXDIR="${GRETEXDIR%/gregoriotex.tex}"
+GRELATEXDIR="${GRETEXDIR/luatex/lualatex}"
 TEXMFLOCAL="${GRETEXDIR%/tex/luatex/gregoriotex}"
 GREFONTDIR="$TEXMFLOCAL/fonts/truetype/public/gregoriotex"
-GREFONTSOURCE="$TEXMFLOCAL/source/gregoriotex"
+GREFONTSOURCE="$TEXMFLOCAL/fonts/source/gregoriotex"
 GREDOCDIR="$TEXMFLOCAL/doc/luatex/gregoriotex"
 
 rm "$BINDIR/gregorio"
 rm "$PKGCONFIGDIR/gregorio.pc"
 rm -rf "$GREINCLUDEDIR"
 rm -rf "$GRETEXDIR"
+rm -rf "$GRELATEXDIR"
 rm -rf "$GREFONTDIR"
 rm -rf "$GREFONTSOURCE"
 rm -rf "$GREDOCDIR"
