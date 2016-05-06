@@ -60,14 +60,17 @@
 VERSION=`head -1 .gregorio-version`
 FILEVERSION=`echo $VERSION | sed 's/\./_/g'`
 
-TEXFILES=(tex/gregoriotex*.tex tex/gsp-default.tex tex/gregoriotex*.lua tex/*.dat)
+TEXFILES=(tex/gregoriotex*.tex tex/gsp-default.tex tex/gregoriotex*.lua
+          tex/*.dat)
 LATEXFILES=(tex/gregorio*.sty)
 TTFFILES=(gregorio.ttf greciliae.ttf granapadano.ttf gregorio-op.ttf
           greciliae-op.ttf granapadano-op.ttf greextra.ttf gregall.ttf
           gresgmodern.ttf)
 DOCFILES=(doc/Appendix*.tex doc/Command*.tex doc/Gabc.tex
-          doc/*Ref.tex doc/*Ref.lua doc/*.gabc doc/Gregorio*Ref-$FILEVERSION.pdf)
-EXAMPLEFILES=(examples/FactusEst.gabc examples/PopulusSion.gabc examples/main-lualatex.tex examples/debugging.tex)
+          doc/*Ref.tex doc/*Ref.lua doc/*.gabc
+          doc/Gregorio*Ref-$FILEVERSION.pdf)
+EXAMPLEFILES=(examples/FactusEst.gabc examples/PopulusSion.gabc
+              examples/main-lualatex.tex examples/debugging.tex)
 FONTSRCFILES=(gregorio-base.sfd granapadano-base.sfd greciliae-base.sfd
               greextra.sfd squarize.py convertsfdtottf.py gregall.sfd
               gresgmodern.sfd README.md)
