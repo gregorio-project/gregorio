@@ -2,7 +2,7 @@
  * Gregorio is a program that translates gabc files to GregorioTeX
  * This file contains functions for writing GregorioTeX from Gregorio structures.
  *
- * Copyright (C) 2008-2015 The Gregorio Project (see CONTRIBUTORS.md)
+ * Copyright (C) 2008-2016 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
  *
@@ -72,6 +72,22 @@ static const char *tex_ambitus[] = {
 #define SHAPE(NAME) static const char *const SHAPE_##NAME = #NAME
 SHAPE(Ancus);
 SHAPE(AncusLongqueue);
+SHAPE(AscendensOriscus);
+SHAPE(AscendensOriscusCavum);
+SHAPE(AscendensOriscusLineBL);
+SHAPE(AscendensOriscusLineTL);
+SHAPE(AscendensOriscusScapus);
+SHAPE(AscendensOriscusScapusLongqueue);
+SHAPE(AscendensOriscusScapusOpenqueue);
+SHAPE(AscendensPunctumInclinatum);
+SHAPE(DescendensOriscus);
+SHAPE(DescendensOriscusCavum);
+SHAPE(DescendensOriscusLineBL);
+SHAPE(DescendensOriscusLineTL);
+SHAPE(DescendensOriscusScapus);
+SHAPE(DescendensOriscusScapusLongqueue);
+SHAPE(DescendensOriscusScapusOpenqueue);
+SHAPE(DescendensPunctumInclinatum);
 SHAPE(Flat);
 SHAPE(Flexus);
 SHAPE(FlexusLongqueue);
@@ -89,22 +105,8 @@ SHAPE(Linea);
 SHAPE(LineaPunctum);
 SHAPE(LineaPunctumCavum);
 SHAPE(Natural);
-SHAPE(AscendensOriscus);
-SHAPE(AscendensOriscusCavum);
-SHAPE(DescendensOriscusCavum);
 SHAPE(OriscusCavumDeminutus);
 SHAPE(OriscusDeminutus);
-SHAPE(AscendensOriscusLineBL);
-SHAPE(AscendensOriscusLineTL);
-SHAPE(DescendensOriscus);
-SHAPE(DescendensOriscusLineBL);
-SHAPE(DescendensOriscusLineTL);
-SHAPE(AscendensOriscusScapus);
-SHAPE(AscendensOriscusScapusLongqueue);
-SHAPE(AscendensOriscusScapusOpenqueue);
-SHAPE(DescendensOriscusScapus);
-SHAPE(DescendensOriscusScapusLongqueue);
-SHAPE(DescendensOriscusScapusOpenqueue);
 SHAPE(Pes);
 SHAPE(PesQuadratum);
 SHAPE(PesQuadratumLongqueue);
@@ -132,7 +134,6 @@ SHAPE(PunctumCavumInclinatum);
 SHAPE(PunctumCavumInclinatumAuctus);
 SHAPE(PunctumDeminutus);
 SHAPE(PunctumDescendens);
-SHAPE(PunctumInclinatum);
 SHAPE(PunctumInclinatumAuctus);
 SHAPE(PunctumInclinatumDeminutus);
 SHAPE(PunctumLineBL);
@@ -568,9 +569,12 @@ static const char *determine_note_glyph_name(const gregorio_note *const note,
 
     *type = AT_ONE_NOTE;
     switch (note->u.note.shape) {
-    case S_PUNCTUM_INCLINATUM:
+    case S_PUNCTUM_INCLINATUM_ASCENDENS:
         *type = AT_PUNCTUM_INCLINATUM;
-        return SHAPE_PunctumInclinatum;
+        return SHAPE_AscendensPunctumInclinatum;
+    case S_PUNCTUM_INCLINATUM_DESCENDENS:
+        *type = AT_PUNCTUM_INCLINATUM;
+        return SHAPE_DescendensPunctumInclinatum;
     case S_PUNCTUM_INCLINATUM_DEMINUTUS:
         return SHAPE_PunctumInclinatumDeminutus;
     case S_PUNCTUM_INCLINATUM_AUCTUS:
@@ -1858,7 +1862,8 @@ static void write_punctum_mora(FILE *f, const gregorio_glyph *glyph,
         break;
     }
     switch (current_note->u.note.shape) {
-    case S_PUNCTUM_INCLINATUM:
+    case S_PUNCTUM_INCLINATUM_ASCENDENS:
+    case S_PUNCTUM_INCLINATUM_DESCENDENS:
     case S_PUNCTUM_INCLINATUM_DEMINUTUS:
         punctum_inclinatum = 1;
         break;
@@ -1946,7 +1951,32 @@ static __inline int get_punctum_inclinatum_space_case(
     char temp;
 
     switch (note->u.note.shape) {
-    case S_PUNCTUM_INCLINATUM:
+    case S_PUNCTUM_INCLINATUM_ASCENDENS:
+        if (note->previous) {
+            /* means that it is the first note of the puncta inclinata
+             * sequence */
+            temp = note->previous->u.note.pitch - note->u.note.pitch;
+            /* negative values = ascending ambitus */
+            /* not sure we ever need to consider a larger ambitus here */
+            // TODO: positive numbers should all use one (new) case
+            switch (temp) {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                return 25;
+            case -1:
+            default:
+                return 12;
+            case -2:
+                return 14;
+            case -3:
+            case -4:
+                return 15;
+            }
+        }
+        break;
+    case S_PUNCTUM_INCLINATUM_DESCENDENS:
     case S_PUNCTUM_CAVUM_INCLINATUM:
         if (note->previous) {
             /* means that it is the first note of the puncta inclinata
@@ -1954,6 +1984,7 @@ static __inline int get_punctum_inclinatum_space_case(
             temp = note->previous->u.note.pitch - note->u.note.pitch;
             /* negative values = ascending ambitus */
             /* not sure we ever need to consider a larger ambitus here */
+            // TODO: negative numbers should all use one (new) case
             switch (temp) {
             case 1:
             default:
@@ -1964,12 +1995,10 @@ static __inline int get_punctum_inclinatum_space_case(
             case 4:
                 return 11;
             case -1:
-                return 12;
             case -2:
-                return 14;
             case -3:
             case -4:
-                return 15;
+                return 24;
             }
         }
         break;
@@ -2125,7 +2154,10 @@ static __inline void write_single_hepisema(FILE *const f, int hepisema_case,
                             suppose_low_ledger_line(note),
                             adj->nudge? adj->nudge : "", adj->vbasepos);
                 } else if (note->next
-                        && (note->next->u.note.shape == S_PUNCTUM_INCLINATUM
+                        && (note->next->u.note.shape
+                            == S_PUNCTUM_INCLINATUM_ASCENDENS
+                            || note->next->u.note.shape
+                            == S_PUNCTUM_INCLINATUM_DESCENDENS
                             || note->next->u.note.shape
                             == S_PUNCTUM_INCLINATUM_DEMINUTUS
                             || note->next->u.note.shape

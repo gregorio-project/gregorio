@@ -174,9 +174,12 @@ echo "Installing in '${TEXMFROOT}'."
 install_to "${TEXMFROOT}/tex/${FORMAT}/${NAME}" "${TEXFILES[@]}"
 install_to "${TEXMFROOT}/tex/${LATEXFORMAT}/${NAME}" "${LATEXFILES[@]}"
 install_to "${TEXMFROOT}/fonts/truetype/public/${NAME}" "${TTFFILES[@]}"
-install_to "${TEXMFROOT}/doc/${FORMAT}/${NAME}" "${DOCFILES[@]}"
-install_to "${TEXMFROOT}/doc/${FORMAT}/${NAME}/examples" "${EXAMPLEFILES[@]}"
-install_to "${TEXMFROOT}/fonts/source/${NAME}" "${FONTSRCFILES[@]}"
+${INSTALLDOCS:true} &&
+    install_to "${TEXMFROOT}/doc/${FORMAT}/${NAME}" "${DOCFILES[@]}"
+${INSTALLEXAMPLES:true} &&
+    install_to "${TEXMFROOT}/doc/${FORMAT}/${NAME}/examples" "${EXAMPLEFILES[@]}"
+${INSTALLSOURCES:true} &&
+    install_to "${TEXMFROOT}/fonts/source/${NAME}" "${FONTSRCFILES[@]}"
 
 if [ "$arg" = 'tds' ]
 then

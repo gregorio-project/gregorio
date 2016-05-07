@@ -2,7 +2,7 @@
  * Gregorio is a program that translates gabc files to GregorioTeX
  * This file contains the logic for positioning signs on neumes.
  *
- * Copyright (C) 2008-2015 The Gregorio Project (see CONTRIBUTORS.md)
+ * Copyright (C) 2008-2016 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
  * 
@@ -909,7 +909,8 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             note->gtex_offset_case = FinalInclinatumDeminutus;
             break;
         case S_PUNCTUM_INCLINATUM_AUCTUS:
-        case S_PUNCTUM_INCLINATUM:
+        case S_PUNCTUM_INCLINATUM_ASCENDENS:
+        case S_PUNCTUM_INCLINATUM_DESCENDENS:
         case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
         case S_PUNCTUM_CAVUM_INCLINATUM:
             note->gtex_offset_case = FinalInclinatum;
@@ -1336,7 +1337,8 @@ static __inline bool is_connectable_interglyph_ambitus(
 
 static __inline bool has_space_to_left(const gregorio_note *const note) {
     switch (note->u.note.shape) {
-    case S_PUNCTUM_INCLINATUM:
+    case S_PUNCTUM_INCLINATUM_ASCENDENS:
+    case S_PUNCTUM_INCLINATUM_DESCENDENS:
     case S_PUNCTUM_INCLINATUM_DEMINUTUS:
     case S_PUNCTUM_INCLINATUM_AUCTUS:
         return !is_connectable_interglyph_ambitus(note->previous, note);

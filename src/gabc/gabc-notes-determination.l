@@ -3,7 +3,7 @@
  * Gregorio is a program that translates gabc files to GregorioTeX
  * This file implements the note parser.
  *
- * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
+ * Copyright (C) 2006-2016 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
  *
@@ -104,13 +104,17 @@ static __inline char pitch_letter_to_height(const char pitch) {
     return result;
 }
 
-static gregorio_shape punctum(const char pitch)
+static gregorio_shape punctum_inclinatum(const char orientation)
 {
-    if (pitch < 'a') {
-        return S_PUNCTUM_INCLINATUM;
-    } else {
-        return S_PUNCTUM;
+    switch (orientation) {
+    case '0':
+        return S_PUNCTUM_INCLINATUM_DESCENDENS;
+
+    case '1':
+        return S_PUNCTUM_INCLINATUM_ASCENDENS;
     }
+
+    return S_PUNCTUM_INCLINATUM_UNDETERMINED;
 }
 
 static __inline void lex_add_note(int i, gregorio_shape shape, char signs,
@@ -1206,17 +1210,26 @@ y   {
 [a-npA-NP]sss(\<|\>) {
         lex_add_note(0, S_TRISTROPHA, _NO_SIGN, L_AUCTUS_ASCENDENS);
     }
-[a-npA-NP] {
-        lex_add_note(0, punctum(gabc_notes_determination_text[0]), _NO_SIGN,
-                L_NO_LIQUESCENTIA);
+[a-np] {
+        lex_add_note(0, S_PUNCTUM, _NO_SIGN, L_NO_LIQUESCENTIA);
     }
--[a-npA-NP] {
-        lex_add_note(1, punctum(gabc_notes_determination_text[1]), _NO_SIGN,
-                L_INITIO_DEBILIS);
+-[a-np] {
+        lex_add_note(1, S_PUNCTUM, _NO_SIGN, L_INITIO_DEBILIS);
     }
-@[a-npA-NP] {
-        lex_add_note(1, punctum(gabc_notes_determination_text[1]), _NO_SIGN,
-                L_FUSED);
+@[a-np] {
+        lex_add_note(1, S_PUNCTUM, _NO_SIGN, L_FUSED);
+    }
+[A-NP][01]? {
+        lex_add_note(0, punctum_inclinatum(gabc_notes_determination_text[1]),
+                _NO_SIGN, L_NO_LIQUESCENTIA);
+    }
+-[A-NP][01]? {
+        lex_add_note(1, punctum_inclinatum(gabc_notes_determination_text[2]),
+                _NO_SIGN, L_INITIO_DEBILIS);
+    }
+@[A-NP][01]? {
+        lex_add_note(1, punctum_inclinatum(gabc_notes_determination_text[2]),
+                _NO_SIGN, L_FUSED);
     }
 \'[01]? {
         add_sign(_V_EPISEMA);

@@ -69,6 +69,7 @@ local GABC = {
   AscendensOriscusScapus = [[gO1]],
   AscendensOriscusScapusLongqueue = [[hO1]],
   AscendensOriscusScapusOpenqueue = [[aO1]],
+  AscendensPunctumInclinatum = [[G1]],
   AuctumMora = [[\excluded{g}.]],
   BarBrace = [[\excluded{,}\_]],
   CClef = [[c3]],
@@ -89,6 +90,7 @@ local GABC = {
   DescendensOriscusScapus = [[gO0]],
   DescendensOriscusScapusLongqueue = [[hO0]],
   DescendensOriscusScapusOpenqueue = [[aO0]],
+  DescendensPunctumInclinatum = [[G0]],
   DivisioDominican = [[,3]],
   DivisioDominicanAlt = [[,4]],
   DivisioMaior = [[:]],
@@ -141,8 +143,8 @@ local GABC = {
   PunctumCavumInclinatum = [[Gr]],
   PunctumCavumInclinatumHole = [[\excluded{Gr}]],
   Punctum = [[g]],
+  PunctumInclinatum = [[G]], -- for deminutus
   PunctumInclinatumAuctus = [[G>]],
-  PunctumInclinatum = [[G]],
   PunctumLineBL = [[\excluded{e}@g]],
   PunctumLineTL = [[\excluded{i}@g]],
   Quilisma = [[gw]],
@@ -334,6 +336,8 @@ function GregorioRef.emit_score_glyphs(cs_greciliae, cs_gregorio, cs_granapadano
         liq = ''
       end
       gabc = '('..fuse_head..DEBILIS[debilis]..gabc..LIQUESCENCE[liq]..fuse_tail..')'
+    else
+      texio.write_nl('GregorioRef Warning: missing GABC for '..name)
     end
     tex.sprint(string.format(
         [[{\scriptsize %s{\bfseries %s}{\itshape %s}%s%s}&{\ttfamily\small %s}&{\%s\char%d}&{\%s\char%d}&{\%s\char%d}&]],

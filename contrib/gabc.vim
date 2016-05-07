@@ -10,7 +10,8 @@ endif
 syn match gabcAttributeName /^[^:]*:/
 syn match gabcAttributeEnd ";"
 syn match gabcNoteError "." contained
-syn match gabcBasicNote "[a-npA-NP]" contained
+syn match gabcBasicNote "[a-np]" contained
+syn match gabcBasicNote "[A-NP][01]\?" contained
 syn match gabcAlteration "[\<\>~xy#vVwWqQR\-Ss\.+]" contained
 syn match gabcAlteration "_[0-5]*" contained
 syn match gabcAlteration "[oO'\.][01]\?" contained

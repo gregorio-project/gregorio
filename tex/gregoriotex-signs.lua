@@ -111,8 +111,8 @@ local offset_cases = {
   -- punctum inclinatum as last note
   {
     case = 'FinalInclinatum',
-    v = [[\gre@vepisemaorrareaux{0}{\GreCPPunctumInclinatum}{0}{30\the\gre@factor }{#2}{#3}{#4}]],
-    h = [[\gre@hepisorlineaux{\GreCPPunctumInclinatum}{\gre@char@he@inclinatum{#4}}{2}{#3}]],
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPDescendensPunctumInclinatum}{0}{30\the\gre@factor }{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPDescendensPunctumInclinatum}{\gre@char@he@inclinatum{#4}}{2}{#3}]],
   },
   -- punctum inclinatum deminutus as last note
   {
