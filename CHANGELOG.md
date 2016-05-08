@@ -5,6 +5,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## [Unreleased][unreleased]
 ### Changed
 - The parmesan font is now called granapadano.  If you were using `\gresetgregoriofont{parmesan}`, you should now use `\gresetgregoriofont{granapadano}`.  See [#1075](https://github.com/gregorio-project/gregorio/issues/1075).
+- GregorioTeX is now compatible with TeXLive 2016
 
 
 ## [4.1.1] - 2016-03-10
