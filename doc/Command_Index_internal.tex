@@ -398,6 +398,13 @@ Evaluates to \verb=#1= if running under \LaTeX{}.
   \#1 & \TeX{} code & the \TeX{} code to use if running under \LaTeX{}.
 \end{argtable}
 
+\macroname{\textbackslash gre@ifnotlatex}{\#1}{gregoriotex.sty \textup{and} gregoriotex.tex}
+Evaluates to \verb=#1= if not running under \LaTeX{}.
+
+\begin{argtable}
+  \#1 & \TeX{} code & the \TeX{} code to use if not running under \LaTeX{}.
+\end{argtable}
+
 \macroname{\textbackslash gre@latex@barredsymbol}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
 Internal method used by \verb=\grelatexsimpledefarredsymbol= to simplify
 the cascading of conditionals used to implement that macro.
