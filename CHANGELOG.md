@@ -6,6 +6,9 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Fixed
 - The `900_gregorio.xml` file for Scribus now matches `main-lualatex.tex` again (see [#1087](https://github.com/gregorio-project/gregorio/issues/1087)).
 
+### Added
+- Nabc now supports pitches `hn` and `hp` in addition to previously supported `ha` through `hm`.
+
 
 ## [4.2.0-beta1] - 2016-04-27
 ### Fixed
