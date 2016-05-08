@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 [Unreleased][unreleased]
+### Added
+- Nabc now supports pitches `hn` and `hp` in addition to previously supported `ha` through `hm`.
 
 
 ## [4.2.0-beta1] - 2016-04-27
@@ -17,7 +19,6 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - The visibility of notes and lyrics can now be toggled on an off using `\gresetlyrics` and `\gresetnotes`.  See [#1039](https://github.com/gregorio-project/gregorio/issues/1039).
 - An alteration (flat, natural, or sharp) will now appear on a custos if the next note is so altered.  Use `\gresetcustosalteration{invisible}` if you prefer the old behavior.  See [#1049](https://github.com/gregorio-project/gregorio/issues/1049).
 - `gregoriosyms.sty` and `gregoriotex.tex` now contain definitions for `gregoriocolor` and `grebackgroundcolor` and the appropriate score commands dealing with color now work under PlainTeX
-- Nabc now supports pitches `hn` and `hp` in addition to previously supported `ha` through `hm`.
 
 ### Changed
 - The stemmed oriscus flexus `(gOe)` is now consistent with the unstemmed oriscus flexus `(goe)` in that the oriscus points downward at the note that follows.  If you prefer to have the oriscus point upward, use `(gO1e)` for force upward orientation.
