@@ -1958,7 +1958,6 @@ static __inline int get_punctum_inclinatum_space_case(
             temp = note->previous->u.note.pitch - note->u.note.pitch;
             /* negative values = ascending ambitus */
             /* not sure we ever need to consider a larger ambitus here */
-            // TODO: positive numbers should all use one (new) case
             switch (temp) {
             case 1:
             case 2:
@@ -1984,7 +1983,6 @@ static __inline int get_punctum_inclinatum_space_case(
             temp = note->previous->u.note.pitch - note->u.note.pitch;
             /* negative values = ascending ambitus */
             /* not sure we ever need to consider a larger ambitus here */
-            // TODO: negative numbers should all use one (new) case
             switch (temp) {
             case 1:
             default:
