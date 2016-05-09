@@ -5,6 +5,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 [Unreleased][unreleased]
 ### Added
 - Nabc now supports pitches `hn` and `hp` in addition to previously supported `ha` through `hm`.
+- 29 new St. Gall neume glyphs have been added to the `gregall` font and glyphs for nabc `po-1pp2su1sux1` and `po-1su1sux1` have been changed.
 
 
 ## [4.2.0-beta1] - 2016-04-27
