@@ -2,7 +2,7 @@
  * Gregorio is a program that translates gabc files to GregorioTeX
  * This file implements the Gregorio data structures.
  *
- * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
+ * Copyright (C) 2006-2016 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
  *
@@ -432,7 +432,9 @@ void gregorio_change_shape(gregorio_note *const note,
     case S_PUNCTUM_CAVUM:
         /* S_PUNCTUM_CAVUM morphs other shapes */
         switch (old_shape) {
-        case S_PUNCTUM_INCLINATUM:
+        case S_PUNCTUM_INCLINATUM_UNDETERMINED:
+        case S_PUNCTUM_INCLINATUM_ASCENDENS:
+        case S_PUNCTUM_INCLINATUM_DESCENDENS:
             note->u.note.shape = S_PUNCTUM_CAVUM_INCLINATUM;
             fix_punctum_cavum_inclinatum_liquescentia(note);
             break;

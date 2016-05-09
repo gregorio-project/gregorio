@@ -2,8 +2,8 @@
  * Gregorio is a program that translates gabc files to GregorioTeX
  * This header shares definitions between the score parser and lexer.
  *
- * Gregorio score determination in gabc input.
- * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
+ * Gregorio score determination from gabc.
+ * Copyright (C) 2006-2016 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
  * 
@@ -21,6 +21,11 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
+#ifndef GABC_SCORE_DETERMINATION_H
+#define GABC_SCORE_DETERMINATION_H
+
+#include "bool.h"
+#include "struct.h"
 #include "gabc.h"
 
 typedef union gabc_score_determination_lval_t {
@@ -35,3 +40,11 @@ int gabc_score_determination_lex(void);
 #define YY_DECL int gabc_score_determination_lex(void)
 
 #define YYLTYPE gregorio_scanner_location
+
+void fix_custos(gregorio_score *score_to_check);
+bool check_score_integrity(gregorio_score *score_to_check);
+bool check_infos_integrity(gregorio_score *score_to_check);
+void determine_oriscus_orientation(const gregorio_score *score);
+void determine_punctum_inclinatum_orientation(const gregorio_score *score);
+
+#endif

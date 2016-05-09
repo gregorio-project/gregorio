@@ -54,6 +54,12 @@ To better comply with the TeXLive directory structure, the location of `gregorio
 
 *Windows users:* Your installer already should remove old versions of GregorioTeX before installing the new ones. Please file a bug report if you have a problem with this process.
 
+### Punctum inclinatum orientation
+
+As of version 4.2, a different glyph is used for puncta inclinata in an ascent versus puncta inclinata in a descent.  However, because the two shapes clash with each other, Gregorio will attempt to use the same shape for all notes within a string of puncta inclinata.  This is accomplished by a heuristic algorithm that determines the glyph to use, but tastes differ, so you may override the shape by appending `0` (to force descending) or `1` (to force ascending) after the letter used for the punctum inclinatum.
+
+Two additional distances have been added to handle strings of puncta inclinata which both ascend and descend.  `descendingpunctuminclinatumascendingshift` will be used between two descending punctum inclinatum glyphs which ascend in pitch, and `ascendingpunctuminclinatumdescendingshift` will be used between two ascending punctum inclinatum glyphs which descend in pitch.
+
 
 ## 4.1.1
 
