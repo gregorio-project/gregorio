@@ -23,7 +23,7 @@
 \def\grebarbracewidth{.58879}%
 
 \gre@debugmsg{general}{Loading gregoriotex-signs.tex}%
-\gre@declarefileversion{gregoriotex-signs.tex}{4.1.1}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-signs.tex}{4.1.2}% GREGORIO_VERSION
 
 \def\gre@usestylecommon{%
   \ifgre@usestylefont\else %
@@ -918,18 +918,18 @@
   \ifgre@boxing\else %
     \ifcase#2 % 0
       \gre@debugmsg{general}{save case 0}%
-      \pdfsavepos %
+      \gre@savepos %
     \or % 1
       \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
       \kern-\wd\gre@box@temp@sign %
-      \pdfsavepos %
+      \gre@savepos %
       \kern\wd\gre@box@temp@sign %
     \or % 2
       \gre@debugmsg{general}{save case 2}%
       \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
       \gre@dimen@temp@five=\wd\gre@box@temp@sign %
       \kern-.5\wd\gre@box@temp@sign %
-      \pdfsavepos %
+      \gre@savepos %
       \kern.5\wd\gre@box@temp@sign %
     \fi %
     \directlua{gregoriotex.var_brace_note_pos(#1, #3)}%

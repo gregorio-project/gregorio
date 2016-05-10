@@ -20,7 +20,7 @@
 % this file contains definitions of the glyphs and the syllables
 
 \gre@debugmsg{general}{Loading gregoriotex-syllable.tex}%
-\gre@declarefileversion{gregoriotex-syllable.tex}{4.1.1}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-syllable.tex}{4.1.2}% GREGORIO_VERSION
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of the different glyphs
@@ -74,12 +74,12 @@
       #1%
     \else %
       \ifnum\gre@generate@pointandclick=1\relax %
-        \pdfstartlink user{%
+        \gre@startlink user{%
           /Subtype/Link/Border[0 0 0]%
           /A<</Type/Action/S/URI/URI(textedit://\gre@gabcname:#2)>>%
         }%
         #1%
-        \pdfendlink %
+        \gre@endlink %
       \else %
         #1%
       \fi %
@@ -511,7 +511,7 @@
 \gre@gabcforcecenterstrue%
 
 \def\gresetgabcforcecenters#1{%
-  \ifcase\gre@lyriccentering\or
+  \ifcase\gre@lyriccentering\or%
     \gre@warning{\protect\gresetgabcforcecenters\space has no effect when lyrics are centered on the vowels}%
   \fi%
   \IfStrEqCase{#1}{%

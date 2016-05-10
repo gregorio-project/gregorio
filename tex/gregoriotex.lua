@@ -24,13 +24,13 @@ local hpack, traverse, traverse_id, has_attribute, count, remove, insert_after, 
 gregoriotex = gregoriotex or {}
 local gregoriotex = gregoriotex
 
-local internalversion = '4.1.1' -- GREGORIO_VERSION (comment used by VersionManager.py)
+local internalversion = '4.1.2' -- GREGORIO_VERSION (comment used by VersionManager.py)
 
 local err, warn, info, log = luatexbase.provides_module({
     name               = "gregoriotex",
-    version            = '4.1.1', -- GREGORIO_VERSION
+    version            = '4.1.2', -- GREGORIO_VERSION
     greinternalversion = internalversion,
-    date               = "2016/03/10", -- GREGORIO_DATE_LTX
+    date               = "2016/05/08", -- GREGORIO_DATE_LTX
     description        = "GregorioTeX module.",
     author             = "The Gregorio Project (see CONTRIBUTORS.md)",
     copyright          = "2008-2015 - The Gregorio Project",
@@ -696,10 +696,9 @@ local function check_font_version()
   local gregoriofont = get_font_by_name('gre@font@music')
   if gregoriofont then
     local fontversion = gregoriofont.shared.rawdata.metadata.version
-    if fontversion ~= internalversion then
+    if fontversion and string.match(fontversion, "%d+%.%d+%.%d+") ~= string.match(internalversion, "%d+%.%d+%.%d+") then
       local fontname = gregoriofont.shared.rawdata.metadata.fontname
-      local fontfile = gregoriofont.shared.rawdata.metadata.origname
-      err("\nUncoherent file versions!\ngregoriotex.tex is version %s\nwhile %s.ttf is version %s\nplease update file\n%s", internalversion, fontname, fontversion, fontfile)
+      err("\nUncoherent file versions!\ngregoriotex.tex is version %s\nwhile %s.ttf is version %s\nplease reinstall one so that the\nversions match", string.match(internalversion, "%d+%.%d+%.%d+"), fontname, string.match(fontversion, "%d+%.%d+%.%d+"))
     end
   end
 end
@@ -881,7 +880,7 @@ local function adjust_line_height(inside_discretionary)
 end
 
 local function var_brace_note_pos(brace, start_end)
-  tex.print(string.format([[\luatexlatelua{gregoriotex.late_brace_note_pos('%s', %d, %d, \number\pdflastxpos)}]], cur_score_id, brace, start_end))
+  tex.print(catcode_at_letter, string.format([[\luatexlatelua{gregoriotex.late_brace_note_pos('%s', %d, %d, \number\gre@lastxpos)}]], cur_score_id, brace, start_end))
 end
 
 local function late_brace_note_pos(score_id, brace, start_end, pos)
@@ -912,7 +911,7 @@ local function var_brace_len(brace)
 end
 
 local function save_pos(index, which)
-  tex.print(string.format([[\pdfsavepos\luatexlatelua{gregoriotex.late_save_pos('%s', %d, %d, \number\pdflastxpos, \number\pdflastypos)}]], cur_score_id, index, which))
+  tex.print(catcode_at_letter, string.format([[\gre@savepos\luatexlatelua{gregoriotex.late_save_pos('%s', %d, %d, \number\gre@lastxpos, \number\gre@lastypos)}]], cur_score_id, index, which))
 end
 
 local function late_save_pos(score_id, index, which, xpos, ypos)

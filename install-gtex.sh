@@ -60,17 +60,29 @@
 VERSION=`head -1 .gregorio-version`
 FILEVERSION=`echo $VERSION | sed 's/\./_/g'`
 
-TEXFILES=(tex/gregoriotex*.tex tex/gsp-default.tex tex/gregoriotex*.lua tex/*.dat)
+TEXFILES=(tex/gregoriotex*.tex tex/gsp-default.tex tex/gregoriotex*.lua
+          tex/*.dat)
 LATEXFILES=(tex/gregorio*.sty)
-TTFFILES=(gregorio.ttf greciliae.ttf parmesan.ttf gregorio-op.ttf
-          greciliae-op.ttf parmesan-op.ttf greextra.ttf gregall.ttf
+TTFFILES=(gregorio.ttf greciliae.ttf granapadano.ttf gregorio-op.ttf
+          greciliae-op.ttf granapadano-op.ttf greextra.ttf gregall.ttf
           gresgmodern.ttf)
 DOCFILES=(doc/Appendix*.tex doc/Command*.tex doc/Gabc.tex
-          doc/*Ref.tex doc/*Ref.lua doc/*.gabc doc/Gregorio*Ref-$FILEVERSION.pdf)
-EXAMPLEFILES=(examples/FactusEst.gabc examples/PopulusSion.gabc examples/main-lualatex.tex)
-FONTSRCFILES=(gregorio-base.sfd parmesan-base.sfd greciliae-base.sfd
+          doc/*Ref.tex doc/*Ref.lua doc/*.gabc
+          doc/Gregorio*Ref-$FILEVERSION.pdf)
+EXAMPLEFILES=(examples/FactusEst.gabc examples/PopulusSion.gabc
+              examples/main-lualatex.tex examples/debugging.tex)
+FONTSRCFILES=(gregorio-base.sfd granapadano-base.sfd greciliae-base.sfd
               greextra.sfd squarize.py convertsfdtottf.py gregall.sfd
               gresgmodern.sfd README.md)
+# Files which have been eliminated, or whose installation location have been
+# changed.  We will remove existing versions of these files in the target texmf
+# tree before installing.
+LEGACYFILES=(tex/luatex/gregoriotex/gregoriotex.sty
+             tex/luatex/gregoriotex/gregoriosyms.sty
+             tex/luatex/gregoriotex/gregoriotex-ictus.tex
+             fonts/truetype/public/gregoriotex/parmesan.ttf
+             fonts/truetype/public/gregoriotex/parmesan-op.ttf
+             fonts/source/gregoriotex/parmesan-base.sfd)
 
 NAME=${NAME:-gregoriotex}
 FORMAT=${FORMAT:-luatex}
@@ -78,6 +90,7 @@ LATEXFORMAT=${LATEXFORMAT:-lualatex}
 TEXHASH=${TEXHASH:-texhash}
 KPSEWHICH=${KPSEWHICH:-kpsewhich}
 CP=${CP:-cp}
+RM=${RM:-rm}
 
 TTFFILES=("${TTFFILES[@]/#/fonts/}")
 FONTSRCFILES=("${FONTSRCFILES[@]/#/fonts/}")
@@ -144,6 +157,18 @@ function install_to {
     mkdir -p "$dir" || die
     $CP "$@" "$dir" || die
 }
+
+function find_and_remove {
+    for files in $1; do
+        target="${TEXMFROOT}/${files}"
+        if [ -e "$target" ]; then
+            $RM -f "$target"
+        fi
+    done
+}
+
+echo "Removing old files"
+find_and_remove "${LEGACYFILES[@]}"
 
 echo "Installing in '${TEXMFROOT}'."
 install_to "${TEXMFROOT}/tex/${FORMAT}/${NAME}" "${TEXFILES[@]}"

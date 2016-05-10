@@ -27,6 +27,10 @@
   \gre@error{Error: this document must be compiled with LuaTeX (lualatex)}%
 \fi%
 
+%%%%%%%%%
+%% Debugging
+%%%%%%%%%
+
 \def\gre@debugmsg#1#2{%
   \IfStrEq{\gre@debug}{}{}%
     %false
@@ -68,13 +72,18 @@
 }%
 
 
-\def\gre@nothing{}
+\def\gre@nothing{}%
 
 \AtBeginDocument{\IfStrEq{\gre@debug}{}{}{\directlua{gregoriotex.set_debug_string([[\gre@debug]])}\typeout{GregorioTeX is in debug mode}\typeout{\gre@debug\space messages will be printed to the log.}}}%
 
-% Depending on version of TeX / LaTeX, some primitives may or may not have a
-% luatex prefix, so we need to check and handle either
+%%%%%%%%%%%%%%%
+%% Backwards Compatibility
+%%%%%%%%%%%%%%%
 
+% Depending on version of LuaTeX / LaTeX, some primitives have different names
+% We define local aliases for this eventuality, using \ifdefined to determine which
+% version of the primative is available.  In all cases the 'true' branch should be the
+% more recent version.
 \ifdefined\localleftbox%
   \let\gre@localleftbox\localleftbox%
 \else%
@@ -85,6 +94,32 @@
 \else%
   \let\gre@localrightbox\luatexlocalrightbox%
 \fi%
+\ifdefined\pdfextension%
+  \def\gre@startlink{\pdfextension startlink }%
+  \def\gre@endlink{\pdfextension endlink\relax}%
+\else%
+  \let\gre@startlink\pdfstartlink%
+  \let\gre@endlink\pdfendlink%
+\fi%
+\ifdefined\savepos%
+  \let\gre@savepos\savepos%
+\else%
+  \let\gre@savepos\pdfsavepos%
+\fi%
+\ifdefined\lastxpos%
+  \let\gre@lastxpos\lastxpos%
+\else%
+  \let\gre@lastxpos\pdflastxpos%
+\fi%
+\ifdefined\lastypos%
+  \let\gre@lastypos\lastypos%
+\else%
+  \let\gre@lastypos\pdflastypos%
+\fi%
+
+%%%%%%%%%%%%%%%
+
+
 % an attribute we put on the text nodes.
 % if it is 1, it means that there may be a dash here if this syllable is at the end of a line
 % if it is 2, it means that it's never useful to typeset a dash
@@ -108,7 +143,7 @@
 
 % The version of gregorio. All gregoriotex*.tex files must have the same.
 % All gtex files must also have the same version.
-\xdef\gre@gregorioversion{4.1.1}% GREGORIO_VERSION - VersionManager.py
+\xdef\gre@gregorioversion{4.1.2}% GREGORIO_VERSION - VersionManager.py
 
 % first some macros to allow checks for version:
 % Tests that all gregoriotex files are of the same version.
@@ -725,7 +760,7 @@
 
 \newbox\gre@box@commentary
 
-\def\grecommentary{\@ifnextchar[{\gre@commentary}{\gre@commentary[0pt]}}
+\def\grecommentary{\@ifnextchar[{\gre@commentary}{\gre@commentary[0pt]}}%
 
 \def\gre@commentary[#1]#2{%
   % we initialize commentarytrueraise here, but will only calculate it's final value just before placing the commentary so that we make sure we have the correct values for the distances which go into it
@@ -1719,17 +1754,22 @@
 }%
 
 \def\gre@setgregoriofontscaled[#1]#2#3{%
-  \if\relax\detokenize{#1}\relax %
-    \xdef\gre@gregoriofontname{#2}%
-    \expandafter\xdef\csname gre@fontfactor@#2\endcsname{#3}%
-    \gre@loadgregoriofont%
-    \gdef\GreCPVirgaReversaAscendensOnDLine##1{##1}%
-  \else %
-    \xdef\gre@gregoriofontname{#2-#1}%
-    \expandafter\xdef\csname gre@fontfactor@#2-#1\endcsname{#3}%
-    \gre@loadgregoriofont%
-    \gdef\GreCPVirgaReversaAscendensOnDLine##1{\GreCPVirgaReversaLongqueueAscendens}%
-  \fi %
+  \IfStrEq{#2}{parmesan}{%%% DEPRECATED for removal in 5.0
+    \gre@deprecated{'parmesan' font}{'granapadano' font}%%% DEPRECATED for removal in 5.0
+    \gre@setgregoriofontscaled[#1]{granapadano}{#3}%%% DEPRECATED for removal in 5.0
+  }{%%% DEPRECATED for removal in 5.0
+    \if\relax\detokenize{#1}\relax %
+      \xdef\gre@gregoriofontname{#2}%
+      \expandafter\xdef\csname gre@fontfactor@#2\endcsname{#3}%
+      \gre@loadgregoriofont%
+      \gdef\GreCPVirgaReversaAscendensOnDLine##1{##1}%
+    \else %
+      \xdef\gre@gregoriofontname{#2-#1}%
+      \expandafter\xdef\csname gre@fontfactor@#2-#1\endcsname{#3}%
+      \gre@loadgregoriofont%
+      \gdef\GreCPVirgaReversaAscendensOnDLine##1{\GreCPVirgaReversaLongqueueAscendens}%
+    \fi %
+  }%%% DEPRECATED for removal in 5.0
   \relax %
 }%
 
@@ -1840,7 +1880,7 @@
 % 0 = never compile (default)
 % 1 = auto compile (compile outdated scores and those lacking a compiled version)
 % 2 = compile all scores
-\def\gre@compilegabc{0}
+\def\gre@compilegabc{0}%
 
 % User macro to change compilation behavior
 \def\gresetcompilegabc#1{%
