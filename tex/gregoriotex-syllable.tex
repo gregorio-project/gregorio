@@ -74,12 +74,12 @@
       #1%
     \else %
       \ifnum\gre@generate@pointandclick=1\relax %
-        \pdfstartlink user{%
+        \gre@startlink user{%
           /Subtype/Link/Border[0 0 0]%
           /A<</Type/Action/S/URI/URI(textedit://\gre@gabcname:#2)>>%
         }%
         #1%
-        \pdfendlink %
+        \gre@endlink %
       \else %
         #1%
       \fi %
