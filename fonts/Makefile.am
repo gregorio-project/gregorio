@@ -42,6 +42,9 @@ RM = rm
 
 fonts: $(TTFFILES)
 
+clean-fonts:
+	$(RM) -f $(TTFFILES)
+
 %: %.ttf
 
 MAINTAINERCLEANFILES = $(TTFFILES)

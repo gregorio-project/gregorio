@@ -50,7 +50,6 @@ AX_CHECK_COMPILE_FLAG([-Wstrict-prototypes], [CFLAGS+=" -Wstrict-prototypes"])
 AX_CHECK_COMPILE_FLAG([-Wdeclaration-after-statement], [CFLAGS+=" -Wdeclaration-after-statement"])
 AX_CHECK_COMPILE_FLAG([-Wall], [CFLAGS+=" -Wall"])
 AX_CHECK_COMPILE_FLAG([-Wextra], [CFLAGS+=" -Wextra"])
-CPPFLAGS+=" -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 "
 AX_CHECK_LINK_FLAG([-Wl,-z,relro], [LDFLAGS+=" -Wl,-z,relro"])
 AX_CHECK_LINK_FLAG([-Wl,-z,now], [LDFLAGS+=" -Wl,-z,now"])
 AX_CHECK_LINK_FLAG([-fPIE], [LDFLAGS+=" -fPIE"])
@@ -96,7 +95,11 @@ AC_ARG_ENABLE([debug], AS_HELP_STRING([--enable-debug@<:@=sanitize,coverage@:>@]
             AX_CHECK_COMPILE_FLAG([--coverage], [CFLAGS+=" --coverage"])
             AX_CHECK_LINK_FLAG([--coverage], [LDFLAGS+=" --coverage"])
         ])
+    ], [
+        CPPFLAGS+=" -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 "
     ])
+], [
+    CPPFLAGS+=" -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 "
 ])
 
 AC_CONFIG_HEADERS([src/config_.h])
