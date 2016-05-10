@@ -99,6 +99,7 @@
 \AtBeginDocument{\IfStrEq{\gre@debug}{}{}{\typeout{GregorioTeX is in debug mode}\typeout{\gre@debug\space messages will be printed to the log.}}}%
 
 \long\def\gre@iflatex#1{#1}
+\long\def\gre@ifnotlatex#1{}
 \input gregoriotex-symbols.tex
 
 \xdef\gre@gregoriotexluaversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%

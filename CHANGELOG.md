@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 [Unreleased][unreleased]
+### Fixed
+- The `900_gregorio.xml` file for Scribus now matches `main-lualatex.tex` again (see [#1087](https://github.com/gregorio-project/gregorio/issues/1087)).
+
 ### Added
 - Nabc now supports pitches `hn` and `hp` in addition to previously supported `ha` through `hm`.
 - 29 new St. Gall neume glyphs have been added to the `gregall` font and glyphs for nabc `po-1pp2su1sux1` and `po-1su1sux1` have been changed.
