@@ -157,13 +157,13 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\grescorereference`
 
 ### Removed
-- `\GreSetStaffLinesFormat`, supplanted by `\grechangeformat{normalstafflines}...`
-- `\greinitialformat`, if you were redefining this command, use `\grechangeformat{initial}...` instead
-- `\grebiginitialformat`, if you were redefining this command, use `\grechangeformat{biginitial}...` instead
-- `\gretranslationformat`, if you were redefining this command, use `\grechangeformat{translation}...` instead
-- `\greabovelinestextstyle`, if you were redefining this command, use `\grechangeformat{abovelinestext}...` instead
-- `\grelowchoralsignstyle`, if you were redefining this command, use `\grechangeformat{lowchoralsign}...` instead
-- `\grehighchoralsignstyle`, if you were redefining this command, use `\grechangeformat{highchoralsign}...` instead
+- `\GreSetStaffLinesFormat`, supplanted by `\grechangestyle{normalstafflines}...`
+- `\greinitialformat`, if you were redefining this command, use `\grechangestyle{initial}...` instead
+- `\grebiginitialformat`, if you were redefining this command, use `\grechangestyle{biginitial}...` instead
+- `\gretranslationformat`, if you were redefining this command, use `\grechangestyle{translation}...` instead
+- `\greabovelinestextstyle`, if you were redefining this command, use `\grechangestyle{abovelinestext}...` instead
+- `\grelowchoralsignstyle`, if you were redefining this command, use `\grechangestyle{lowchoralsign}...` instead
+- `\grehighchoralsignstyle`, if you were redefining this command, use `\grechangestyle{highchoralsign}...` instead
 - `\setaboveinitialseparation`, supplanted by `\grechangedim{annotationseparation}...`
 - `\scorereference`
 - `\GreScoreReference`
