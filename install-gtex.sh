@@ -56,6 +56,10 @@
 #
 #   Creates a TDS-ready archive named gregoriotex.tds.zip
 #
+# In special situations, you may want to skip some parts of the installation.
+# To do this, set the SKIP environment variable to a comma-separated list of
+# the parts you want don't want installed: tex, latex, fonts, docs, examples,
+# and/or font-sources
 
 VERSION=`head -1 .gregorio-version`
 FILEVERSION=`echo $VERSION | sed 's/\./_/g'`
@@ -167,18 +171,38 @@ function find_and_remove {
     done
 }
 
+function not_installing {
+    echo "install-gtex.sh: not installing $@"
+}
+
 echo "Removing old files"
 find_and_remove "${LEGACYFILES[@]}"
 
+declare -A skip_install
+if [ -n "$SKIP" ]
+then
+    IFS=, read -r -a skip <<< "$SKIP"
+    for skipped in "${skip[@]}"
+    do
+        # trim spaces
+        skipped="${skipped#"${skipped%%[![:space:]]*}"}"
+        skipped="${skipped%"${skipped##*[![:space:]]}"}"
+        skip_install[$skipped]=true
+    done
+fi
+
 echo "Installing in '${TEXMFROOT}'."
-install_to "${TEXMFROOT}/tex/${FORMAT}/${NAME}" "${TEXFILES[@]}"
-install_to "${TEXMFROOT}/tex/${LATEXFORMAT}/${NAME}" "${LATEXFILES[@]}"
-install_to "${TEXMFROOT}/fonts/truetype/public/${NAME}" "${TTFFILES[@]}"
-${INSTALLDOCS:true} &&
+${skip_install[tex]:-false} && not_installing tex files ||
+    install_to "${TEXMFROOT}/tex/${FORMAT}/${NAME}" "${TEXFILES[@]}"
+${skip_install[latex]:-false} && not_installing latex files ||
+    install_to "${TEXMFROOT}/tex/${LATEXFORMAT}/${NAME}" "${LATEXFILES[@]}"
+${skip_install[fonts]:-false} && not_installing fonts ||
+    install_to "${TEXMFROOT}/fonts/truetype/public/${NAME}" "${TTFFILES[@]}"
+${skip_install[docs]:-false} && not_installing docs ||
     install_to "${TEXMFROOT}/doc/${FORMAT}/${NAME}" "${DOCFILES[@]}"
-${INSTALLEXAMPLES:true} &&
+${skip_install[examples]:-false} && not_installing examples ||
     install_to "${TEXMFROOT}/doc/${FORMAT}/${NAME}/examples" "${EXAMPLEFILES[@]}"
-${INSTALLSOURCES:true} &&
+${skip_install[font-sources]:-false} && not_installing font sources ||
     install_to "${TEXMFROOT}/fonts/source/${NAME}" "${FONTSRCFILES[@]}"
 
 if [ "$arg" = 'tds' ]

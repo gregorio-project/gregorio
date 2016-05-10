@@ -46,15 +46,19 @@ doc: GregorioRef-$(FILENAME_VERSION).pdf GregorioNabcRef-$(FILENAME_VERSION).pdf
 
 pdf-local: doc
 
-distclean-local:
+clean-doc-intermediate:
 	latexmk -quiet -c -f -jobname=GregorioRef-@FILENAME_VERSION@ GregorioRef.tex
 	latexmk -quiet -c -f -jobname=GregorioNabcRef-@FILENAME_VERSION@ GregorioNabcRef.tex
-	rm -rf _minted* *.gtex *.aux *.gaux
+	rm -rf _minted* *.gtex *.aux *.gaux *.glog
+
+clean-doc: clean-doc-intermediate
+	rm -rf GregorioRef*.pdf
+	rm -rf GregorioRef-* GregorioNabcRef-*
+
+distclean-local: clean-doc-intermediate
+
+maintainer-clean-local: clean-doc
 
 EXTRA_DIST = $(SRCFILES) $(NABCSRCFILES) \
 	     GregorioRef-@FILENAME_VERSION@.pdf \
 	     GregorioNabcRef-@FILENAME_VERSION@.pdf
-
-maintainer-clean-local:
-	rm -rf GregorioRef*.pdf
-	rm -rf GregorioRef-* GregorioNabcRef-*
