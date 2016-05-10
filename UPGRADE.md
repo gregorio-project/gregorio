@@ -4,18 +4,6 @@ This file contains instructions to upgrade to a new release of Gregorio.
 
 ## 4.2
 
-### Changes to texmf tree
-
-To better comply with the TeXLive directory structure, the location of `gregoriotex.sty` and `gregoriosyms.sty` have changed.
-
-*Linux and other users installing from source:* `install-gtex.sh` should remove the old versions before installing the new one.
-
-*Mac users installing via pkg installer:* The installer does not attempt to remove the old versions before installing the new ones.  Please run Uninstall-Gregorio.pkg before installing 4.2 to ensure that the old versions don't cause any problems.
-
-*Windows users:* Your installer already should remove old versions of GregorioTeX before installing the new ones.
-
-As always, please file a bug report if you have any problems with the update process.
-
 ### Stemmed oriscus flexus orientation
 
 As of version 4.2, the orientation of the stemmed oriscus flexus `(gOe)` is consistent with the unstemmed oriscus flexus `(goe)` in that the oriscus points downward (since the note which follows is of lower pitch).  If you prefer the oriscus to point upward, you will need to use the `1` modifier (as in `(gO1e)`), which will force an upward orientation of the oriscus.
@@ -51,6 +39,21 @@ Additionally, if you were redefining `\greemergencystretch`, you should now be c
 ### Custos with alteration
 
 If the note following a custos has an alteration (flat, natural, or sharp), the custos will now also have that alteration typeset before it.  If you prefer the old behavior, use `\gresetcustosalteration{invisible}`.  This setting may be switched to `visible` and `invisible` between scores.
+
+
+## 4.1.2
+
+### Changes to texmf tree
+
+To better comply with the TeXLive directory structure, the location of `gregoriotex.sty` and `gregoriosyms.sty` have changed.
+
+*Linux and other users installing from source:* `install-gtex.sh` should remove the old versions before installing the new one.
+
+*Mac users installing via pkg installer:* The installer does not attempt to remove the old versions before installing the new ones.  Please run Uninstall-Gregorio.pkg before installing 4.2 to ensure that the old versions don't cause any problems.
+
+*Windows users:* Your installer already should remove old versions of GregorioTeX before installing the new ones.
+
+As always, please file a bug report if you have any problems with the update process.
 
 ### Parmesan font renamed to Grana Padano
 

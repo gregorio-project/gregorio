@@ -42,4 +42,4 @@ zip -r ../gregoriotex.ctan.zip gregoriotex gregoriotex.tds.zip --exclude=*.DS_St
 cd ..
 rm -rf ctan
 rm gregorio-$VERSION.tar.bz2
-rm gregorio.tds.zip
+rm gregoriotex.tds.zip

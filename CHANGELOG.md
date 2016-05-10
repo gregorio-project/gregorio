@@ -28,7 +28,6 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - An isolated stropha will now be considered part of the previous neume group and line breaks will be prevented at that point.  In order to force a line break there, use a breaking space such as `/` before the stropha in gabc.  See [#1056](https://github.com/gregorio-project/gregorio/issues/1056).
 - `interwordspacetext` and it's related distances have been redefined to be smaller and dependent on a font based distance (`ex`).  They are also no longer scale with the staff size by default.  See [#1036](https://github.com/gregorio-project/gregorio/issues/1036) & [gregoriot-test#208](https://github.com/gregorio-project/gregorio-test/pull/208).
 - `\grecreatedim` and `\grechangedim` can now be used to link two distances.  To do this the second argument should be the name of the master distance and the third argument should be `inherited`.  See [#962](https://github.com/gregorio-project/gregorio/issues/962).
-- The parmesan font is now called granapadano.  If you were using `\gresetgregoriofont{parmesan}`, you should now use `\gresetgregoriofont{granapadano}`.  See [#1075](https://github.com/gregorio-project/gregorio/issues/1075).
 
 ### Removed
 - `\grescorereference`
@@ -48,6 +47,12 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\gretolerance`
 - `\grepretolerance`
 - `\greemergencystretch`
+
+
+## [4.1.2] - 2016-05-08
+### Changed
+- The parmesan font is now called granapadano.  If you were using `\gresetgregoriofont{parmesan}`, you should now use `\gresetgregoriofont{granapadano}`.  See [#1075](https://github.com/gregorio-project/gregorio/issues/1075).
+- GregorioTeX is now compatible with TeXLive 2016
 
 
 ## [4.1.1] - 2016-03-10
