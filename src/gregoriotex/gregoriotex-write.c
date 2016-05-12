@@ -179,7 +179,9 @@ LIQ(Nothing);
 
 #define FUSE(NAME) static const char *const FUSE_##NAME = #NAME
 FUSE(Lower);
+FUSE(LowerOblatus);
 FUSE(Upper);
+FUSE(UpperOblatus);
 FUSE(Down);
 FUSE(Up);
 
@@ -343,13 +345,30 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
     case G_PUNCTUM:
     case G_FLEXA:
         /* directionally head-fusible */
-        if (fuse_from_previous_note < -1
-                && glyph->u.notes.first_note->u.note.shape != S_QUILISMA
+        if (fuse_from_previous_note < 0) {
+            if (glyph->u.notes.first_note->u.note.shape != S_QUILISMA
                 && glyph->u.notes.first_note->u.note.shape
                 != S_QUILISMA_QUADRATUM) {
-            fuse_head = FUSE_Lower;
-        } else if (fuse_from_previous_note > 1) {
-            fuse_head = FUSE_Upper;
+                if (fuse_from_previous_note < -1) {
+                    fuse_head = FUSE_Lower;
+                } else if (glyph->u.notes.first_note->u.note.shape
+                        == S_ORISCUS_DESCENDENS
+                        || glyph->u.notes.first_note->u.note.shape
+                        == S_ORISCUS_SCAPUS_DESCENDENS) {
+                    /* fuse_from_previous_note will be -1 here */
+                    fuse_head = FUSE_LowerOblatus;
+                }
+            }
+        } else if (fuse_from_previous_note > 0) {
+            if (fuse_from_previous_note > 1) {
+                fuse_head = FUSE_Upper;
+            } else if (glyph->u.notes.first_note->u.note.shape
+                    == S_ORISCUS_ASCENDENS
+                    || glyph->u.notes.first_note->u.note.shape
+                    == S_ORISCUS_SCAPUS_ASCENDENS) {
+                /* fuse_from_previous_note will be 1 here */
+                fuse_head = FUSE_UpperOblatus;
+            }
         }
         break;
 
@@ -411,7 +430,8 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
         if (liquescentia == LIQ_Nothing) {
             liquescentia = "";
         }
-        if (!(*fuse_tail)) {
+        if (!(*fuse_tail) && fuse_head != FUSE_UpperOblatus
+                && fuse_head != FUSE_LowerOblatus) {
             /* single note fused shapes have weird names */
             if (fuse_head == FUSE_Upper) {
                 if (shape == SHAPE_Punctum) {
