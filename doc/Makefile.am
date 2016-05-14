@@ -31,16 +31,18 @@ GregorioRef.pdf: $(SRCFILES)
 	../src/gregorio -o factus.gtex $(<D)/factus.gabc
 	TEXINPUTS=$(<D):$(<D)/../tex: LUAINPUTS=$(<D):$(<D)/../tex: \
 		 TTFONTS=$(<D)/../fonts: PATH=../src:${PATH} latexmk -recorder -pdf \
+		 -interaction=nonstopmode -halt-on-error \
 		 -pdflatex='lualatex --shell-escape %O %S' \
-		 -jobname=GregorioRef $<
+		 -jobname=GregorioRef $< || rm $@
 
 GregorioNabcRef.pdf: $(NABCSRCFILES)
 	$(MAKE) $(AM_MAKEFLAGS) -C ../src gregorio
 	../src/gregorio -o veni.gtex $(<D)/veni.gabc
 	TEXINPUTS=$(<D):$(<D)/../tex: LUAINPUTS=$(<D):$(<D)/../tex: \
 		 TTFONTS=$(<D)/../fonts: PATH=../src:${PATH} latexmk -recorder -pdf \
+		 -interaction=nonstopmode -halt-on-error \
 		 -pdflatex='lualatex --shell-escape %O %S' \
-		 -jobname=GregorioNabcRef $<
+		 -jobname=GregorioNabcRef $< || rm $@
 
 doc: GregorioRef.pdf GregorioNabcRef.pdf
 
