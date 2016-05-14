@@ -1,0 +1,3 @@
+#!/usr/bin/dh-exec
+usr/share/texmf/doc/luatex/gregoriotex/GregorioRef-${FILEVERSION}.pdf usr/share/doc/gregoriotex/GregorioRef-${FILEVERSION}.pdf
+usr/share/texmf/doc/luatex/gregoriotex/GregorioNabcRef-${FILEVERSION}.pdf usr/share/doc/gregoriotex/GregorioNabcRef-${FILEVERSION}.pdf
