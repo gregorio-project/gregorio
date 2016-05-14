@@ -1,0 +1,12 @@
+Document: gregoriotex-nabc
+Title: nabc language for gregorio
+Author: The Gregorio Project
+Abstract: The nabc language provides the ability to describe some
+ adiastematic neumes, for now just the St. Gallen style. The language is
+ partially based on Dom Eugène Cardine’s Table of neumatic signs, but for
+ more complex neumes doesn’t always match how the neumes are called; instead
+ attempts to make it easier to compose complex neumes from basic glyphs.
+Section: Typesetting
+
+Format: PDF
+Files: /usr/share/texmf/doc/luatex/gregoriotex/GregorioNabcRef-*.pdf
