@@ -1,0 +1,10 @@
+Document: gregoriotex
+Title: Gregorio and GregorioTeX: Tools for gregorian score engraving.
+Author: The Gregorio Project
+Abstract: This is the reference manual for Gregorio and GregorioTeX.
+ Developers can also use this manual as a reference for information
+ on the internal workings of Gregorio.
+Section: Typesetting
+
+Format: PDF
+Files: /usr/share/texmf/doc/luatex/gregoriotex/GregorioRef.pdf
