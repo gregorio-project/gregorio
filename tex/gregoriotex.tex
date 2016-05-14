@@ -21,7 +21,7 @@
 
 
 % This file needs to be marked with the version number.  For now I've done this with the following comment, but we should check to see if PlainTeX has something similar to the version declaration of LaTeX and use that if it does.
-% 		[2016/05/08 v4.1.2 GregorioTeX system.]% PARSE_VERSION_DATE_LTX
+% 		[2016/04/27 v4.2.0-beta1 GregorioTeX system.]% PARSE_VERSION_DATE_LTX
 
 
 \edef\greoldcatcode{\the\catcode`@}
@@ -33,6 +33,7 @@
 \input luaotfload.sty%
 \input graphicx.tex % for \resizebox
 \input xstring.sty%
+\input color.sty%
 
 \def\gre@error#1{\begingroup%
 \def\MessageBreak{^^J}%
@@ -89,7 +90,16 @@
 \def\gre@strip@pt{\expandafter\gre@rem@pt\the}%
 
 \long\def\gre@iflatex#1{}%
+\long\def\gre@ifnotlatex#1{#1}%
 \input gregoriotex-main.tex
+
+
+%%%%%%%%%
+%% Color definitions
+%%%%%%%%%
+
+\definecolor{grebackgroundcolor}{RGB}{255,255,255}%
+\definecolor{gregoriocolor}{RGB}{229,53,44}%
 
 %%%%%%%%%
 %% PlainTeX specific definitions for fonts
@@ -115,15 +125,15 @@
   \relax %
 }%
 
-% Note since underlining and coloring don’t exist in PlainTeX, but we need the following commands to maintain compatibility with LaTeX.
-\def\GreUnderline#1{%
-  \gre@warning{Underlining cannot be done in PlainTeX}%
-  {#1}%
-  \relax %
+\def\GreColored#1{%
+  {%
+    \color{gregoriocolor}#1%
+  }%
 }%
 
-\def\GreColored#1{%
-  \gre@warning{Text color cannot be changed in PlainTeX}%
+% Note since underlining don’t exist in PlainTeX, we need the following command to maintain compatibility with LaTeX, but all it does is raise a warning.
+\def\GreUnderline#1{%
+  \gre@warning{Underlining cannot be done in PlainTeX}%
   {#1}%
   \relax %
 }%
@@ -135,26 +145,9 @@
 % Colors don't work in PlainTeX, but we need these functions for interoperability with LaTeX.
 
 \def\gresetlinecolor#1{%
-  \gre@warning{Line color cannot be changed in PlainTeX}%
-  \relax%
+  \gre@changestyle{normalstafflines}{\color{#1}}[\relax]%
 }
 
-
-\def\grecoloredlines#1#2#3{%OBSOLETE
-  \gre@obsolete{\protect\grecoloredlines}{\protect\gresetlinecolor}%
-}
-
-\def\greredlines{%OBSOLETE
-  \gre@obsolete{\protect\greredlines}{\protect\gresetlinecolor{gregoriocolor}}%
-}
-
-\let\redlines\greredlines%OBSOLETE
-
-\def\grenormallines{%OBSOLETE
-  \gre@obsolete{\protect\grenormallines}{\protect\gresetlinecolor{black}}%
-}
-
-\let\normallines\grenormallines%OBSOLETE
 
 %%%%%%%%%%%%%%%%%%%%
 %% Formatting environments
@@ -281,13 +274,13 @@
 
 \def\gre@style@nabc{%
   \begingroup%
-  \relax% we do nothing since colors are not implemented in PlainTeX
+  \color{gregoriocolor}%
 }
 \def\endgre@style@nabc{\endgroup}%
 
 \def\gre@changestyle#1#2[#3]{%
-  \gdef\csname gre@style@#1\endcsname{\begingroup#2}%
-  \gdef\csname endgre@style@#1\endcsname{#3\endgroup}%
+  \expandafter\gdef\csname gre@style@#1\endcsname{\begingroup#2}%
+  \expandafter\gdef\csname endgre@style@#1\endcsname{#3\endgroup}%
 }%
 
 \catcode`\@=\greoldcatcode

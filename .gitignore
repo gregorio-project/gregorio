@@ -44,6 +44,7 @@
 *.out
 *.toc
 *.gaux
+*.glog
 *.idx
 *.ilg
 *.ind

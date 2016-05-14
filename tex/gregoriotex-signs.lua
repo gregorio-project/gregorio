@@ -19,7 +19,7 @@
 
 -- this file contains lua functions to support signs used by GregorioTeX.
 
--- GREGORIO_VERSION 4.1.2
+-- GREGORIO_VERSION 4.2.0-beta1
 
 local err = gregoriotex.module.err
 local warn = gregoriotex.module.warn
@@ -111,8 +111,8 @@ local offset_cases = {
   -- punctum inclinatum as last note
   {
     case = 'FinalInclinatum',
-    v = [[\gre@vepisemaorrareaux{0}{\GreCPPunctumInclinatum}{0}{30\the\gre@factor }{#2}{#3}{#4}]],
-    h = [[\gre@hepisorlineaux{\GreCPPunctumInclinatum}{\gre@char@he@inclinatum{#4}}{2}{#3}]],
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPDescendensPunctumInclinatum}{0}{30\the\gre@factor }{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPDescendensPunctumInclinatum}{\gre@char@he@inclinatum{#4}}{2}{#3}]],
   },
   -- punctum inclinatum deminutus as last note
   {
@@ -135,8 +135,8 @@ local offset_cases = {
   -- oriscus as last note
   {
     case = 'FinalOriscus',
-    v = [[\gre@vepisemaorrareaux{0}{\GreCPOriscus}{0}{0}{#2}{#3}{#4}]],
-    h = [[\gre@hepisorlineaux{\GreCPOriscus}{\gre@char@he@oriscus{#4}}{2}{#3}]],
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPAscendensOriscus}{0}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPAscendensOriscus}{\gre@char@he@oriscus{#4}}{2}{#3}]],
   },
   -- second-to-last note, with a second ambitus of one, when last note is a
   -- standard punctum (like the second note of ghg)
@@ -155,7 +155,7 @@ local offset_cases = {
   -- oriscus as first note, disconnected from next note
   {
     case = 'InitialOriscus',
-    v = [[\gre@vepisemaorrareaux{0}{\GreCPOriscusReversus}{0}{0}{#2}{#3}{#4}]],
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPDescendensOriscus}{0}{0}{#2}{#3}{#4}]],
     h = [[\gre@hepisorlineaux{0}{\gre@char@he@oriscus{#4}}{0}{#3}]],
   },
   -- quilisma as first note, disconnected from next note
@@ -370,7 +370,7 @@ local offset_cases = {
   -- oriscus as first note, connected to next higher note
   {
     case = 'InitialConnectedOriscus',
-    v = [[\gre@vepisemaorrareaux{0}{\GreCPOriscusLineTR}{0}{0}{#2}{#3}{#4}]],
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPAscendensOriscusLineTR}{0}{0}{#2}{#3}{#4}]],
     h = [[\gre@hepisorlineaux{0}{\gre@char@he@oriscus@line@tr{#4}}{0}{#3}]],
   },
   -- punctum as last note, connected to prior higher note
@@ -407,13 +407,13 @@ local offset_cases = {
   -- least two
   {
     case = 'SalicusOriscusWide',
-    v = [[\gre@vepisemaorrareaux{\GreCPVirgaStrataThreeNothing}{\GreCPSalicusOriscus}{3}{0}{#2}{#3}{#4}]],
+    v = [[\gre@vepisemaorrareaux{\GreCPVirgaStrataThreeNothing}{\GreCPAscendensOriscusLineBLTR}{3}{0}{#2}{#3}{#4}]],
     h = [[\gre@hepisorlineaux{\GreCPVirgaStrataThreeNothing}{\gre@char@he@salicus@oriscus{#4}}{4}{#3}]],
   },
   -- "oriscus" as the middle note of a salicus with a second ambitus of one
   {
     case = 'SalicusOriscusOne',
-    v = [[\gre@vepisemaorrareaux{\GreCPVirgaStrataOneNothing}{\GreCPOriscus}{3}{0}{#2}{#3}{#4}]],
+    v = [[\gre@vepisemaorrareaux{\GreCPVirgaStrataOneNothing}{\GreCPAscendensOriscus}{3}{0}{#2}{#3}{#4}]],
     h = [[\gre@hepisorlineaux{\GreCPVirgaStrataOneNothing}{\gre@char@he@salicus@oriscus{#4}}{4}{#3}]],
   },
   -- punctum fused to the next note
@@ -431,8 +431,8 @@ local offset_cases = {
   -- oriscus fused to the next note
   {
     case = 'LeadingOriscus',
-    v = [[\gre@vepisemaorrareaux{0}{\GreCPOriscus}{0}{0}{#2}{#3}{#4}]],
-    h = [[\gre@hepisorlineaux{\GreCPOriscusTwoUp}{\gre@char@he@oriscus{#4}}{2}{#3}]],
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPAscendensOriscus}{0}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPAscendensOriscusTwoUp}{\gre@char@he@oriscus{#4}}{2}{#3}]],
   },
   -- flat
   {

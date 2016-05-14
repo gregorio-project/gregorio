@@ -3,8 +3,8 @@
  * Gregorio is a program that translates gabc files to GregorioTeX
  * This file implements the score parser.
  *
- * Gregorio score determination in gabc input.
- * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
+ * Gregorio score determination from gabc.
+ * Copyright (C) 2006-2016 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
  * 
@@ -100,6 +100,23 @@ static bool got_staff_lines = false;
 static bool started_first_word = false;
 static struct sha1_ctx digester;
 
+/* punctum_inclinatum_orientation maintains the running punctum inclinatum
+ * orientation in order to decide if the glyph needs to be cut when a punctum
+ * inclinatum with forced orientation is encountered.  This should be set to
+ * the shape of a non-liquescent punctum inclinatum with forced orientation
+ * when one is encountered, be left alone when a non-liquescent punctum
+ * inclinatum with undetermined orientation is encountered, or be reset to
+ * S_PUNCTUM_INCLINATUM_UNDETERMINED otherwise (because such ends any previous
+ * run of punctum inclinatum notes).  Based on the assumption that a punctum
+ * inclinatum with forced orientation changes all the punctum inclinatum shapes
+ * with undetermined orientation in the same run of notes before and after it
+ * unless influenced by an earlier punctum inclinatum with forced orientation,
+ * the value of punctum_inclinatum_orientation can be used to determine if a
+ * punctum inclinatum with a forced orientation will have a different
+ * orientation than the punctum inclinatum immediately before it, which would
+ * require a cut of the glyph. */
+static gregorio_shape punctum_inclinatum_orientation;
+
 static __inline void check_multiple(const char *name, bool exists) {
     if (exists) {
         gregorio_messagef("det_score", VERBOSITY_WARNING, 0,
@@ -112,128 +129,6 @@ static void gabc_score_determination_error(const char *error_str)
 {
     gregorio_message(error_str, (const char *) "gabc_score_determination_parse",
             VERBOSITY_ERROR, 0);
-}
-
-static void fix_custos(gregorio_score *score_to_check)
-{
-    gregorio_syllable *current_syllable;
-    gregorio_element *current_element;
-    gregorio_element *custo_element;
-    char pitch = 0;
-    char pitch_difference = 0;
-    int newkey;
-    int current_key;
-    if (!score_to_check || !score_to_check->first_syllable
-            || !score_to_check->first_voice_info) {
-        return;
-    }
-    current_key = gregorio_calculate_new_key(
-            score_to_check->first_voice_info->initial_clef);
-    current_syllable = score_to_check->first_syllable;
-    while (current_syllable) {
-        current_element = (current_syllable->elements)[0];
-        while (current_element) {
-            if (current_element->type == GRE_CUSTOS) {
-                custo_element = current_element;
-                pitch = custo_element->u.misc.pitched.pitch;
-                /* we look for the key */
-                while (current_element) {
-                    if (current_element->type == GRE_CLEF) {
-                        pitch = gregorio_determine_next_pitch( current_syllable,
-                                current_element, NULL);
-                        newkey = gregorio_calculate_new_key(
-                                current_element->u.misc.clef);
-                        pitch_difference = (char) newkey - (char) current_key;
-                        pitch -= pitch_difference;
-                        current_key = newkey;
-                    }
-                    if (!custo_element->u.misc.pitched.force_pitch) {
-                        while (pitch < LOWEST_PITCH) {
-                            pitch += 7;
-                        }
-                        while (pitch > score_to_check->highest_pitch) {
-                            pitch -= 7;
-                        }
-                        custo_element->u.misc.pitched.pitch = pitch;
-                    }
-                    assert(custo_element->u.misc.pitched.pitch >= LOWEST_PITCH 
-                            && custo_element->u.misc.pitched.pitch
-                            <= score_to_check->highest_pitch);
-                    current_element = current_element->next;
-                }
-            }
-            if (current_element) {
-                if (current_element->type == GRE_CLEF) {
-                    current_key = gregorio_calculate_new_key(
-                            current_element->u.misc.clef);
-                }
-                current_element = current_element->next;
-            }
-        }
-        current_syllable = current_syllable->next_syllable;
-    }
-}
-
-/*
- * A function that checks the score integrity.
- */
-
-static bool check_score_integrity(gregorio_score *score_to_check)
-{
-    bool good = true;
-
-    gregorio_assert(score_to_check, check_score_integrity, "score is NULL",
-            return false);
-
-    if (score_to_check->first_syllable
-            && score_to_check->first_syllable->elements
-            && *(score_to_check->first_syllable->elements)) {
-        gregorio_character *ch;
-        if ((score_to_check->first_syllable->elements)[0]->type
-                == GRE_END_OF_LINE) {
-            gregorio_message(
-                    "line break is not supported on the first syllable",
-                    "check_score_integrity", VERBOSITY_ERROR, 0);
-            good = false;
-        }
-        if (gregorio_get_clef_change(score_to_check->first_syllable)) {
-            gregorio_message(
-                    "clef change is not supported on the first syllable",
-                    "check_score_integrity", VERBOSITY_ERROR, 0);
-            good = false;
-        }
-        /* check first syllable for elision at the beginning */
-        for (ch = score_to_check->first_syllable->text; ch;
-                ch = ch->next_character) {
-            if (ch->is_character) {
-                break;
-            } else if (ch->cos.s.style == ST_VERBATIM
-                    || ch->cos.s.style == ST_SPECIAL_CHAR) {
-                break;
-            } else if (ch->cos.s.style == ST_ELISION) {
-                gregorio_message(
-                        _("score initial may not be in an elision"),
-                        "check_score_integrity", VERBOSITY_ERROR, 0);
-                break;
-            }
-        }
-    }
-
-    return good;
-}
-
-/*
- * Another function to be improved: this one checks the validity of the voice_infos.
- */
-
-static bool check_infos_integrity(gregorio_score *score_to_check)
-{
-    if (!score_to_check->name) {
-        gregorio_message(_("no name specified, put `name:...;' at the "
-                "beginning of the file, can be dangerous with some output "
-                "formats"), "det_score", VERBOSITY_WARNING, 0);
-    }
-    return true;
 }
 
 /*
@@ -266,6 +161,7 @@ static void initialize_variables(void)
     got_language = false;
     got_staff_lines = false;
     started_first_word = false;
+    punctum_inclinatum_orientation = S_PUNCTUM_INCLINATUM_UNDETERMINED;
 }
 
 /*
@@ -555,118 +451,6 @@ void gabc_digest(const void *const buf, const size_t size)
     sha1_process_bytes(buf, size, &digester);
 }
 
-static void determine_oriscus_orientation(gregorio_score *score) {
-    gregorio_syllable *syllable;
-    gregorio_element *element;
-    gregorio_glyph *glyph;
-    gregorio_note *note;
-    gregorio_note *oriscus = NULL;
-
-    for (syllable = score->first_syllable; syllable;
-            syllable = syllable->next_syllable) {
-        for (element = syllable->elements[0]; element;
-                element = element->next) {
-            if (element->type == GRE_ELEMENT) {
-                for (glyph = element->u.first_glyph; glyph;
-                        glyph = glyph->next) {
-                    if (glyph->type == GRE_GLYPH) {
-                        for (note = glyph->u.notes.first_note; note;
-                                note = note->next) {
-                            if (note->type == GRE_NOTE) {
-                                if (oriscus) {
-                                    if (note->u.note.pitch
-                                            < oriscus->u.note.pitch) {
-                                        switch(oriscus->u.note.shape) {
-                                        case S_ORISCUS_UNDETERMINED:
-                                            oriscus->u.note.shape =
-                                                    S_ORISCUS_DESCENDENS;
-                                            break;
-                                        case S_ORISCUS_SCAPUS_UNDETERMINED:
-                                            oriscus->u.note.shape =
-                                                    S_ORISCUS_SCAPUS_DESCENDENS;
-                                            break;
-                                        case S_ORISCUS_CAVUM_UNDETERMINED:
-                                            oriscus->u.note.shape =
-                                                    S_ORISCUS_CAVUM_DESCENDENS;
-                                            break;
-                                        default:
-                                            /* not reachable unless there's a
-                                             * programming error */
-                                            /* LCOV_EXCL_START */
-                                            gregorio_fail(
-                                                    determine_oriscus_orientation,
-                                                    "bad_shape");
-                                            break;
-                                            /* LCOV_EXCL_STOP */
-                                        }
-                                    } else { /* ascending or the same */
-                                        switch(oriscus->u.note.shape) {
-                                        case S_ORISCUS_UNDETERMINED:
-                                            oriscus->u.note.shape =
-                                                    S_ORISCUS_ASCENDENS;
-                                            break;
-                                        case S_ORISCUS_SCAPUS_UNDETERMINED:
-                                            oriscus->u.note.shape =
-                                                    S_ORISCUS_SCAPUS_ASCENDENS;
-                                            break;
-                                        case S_ORISCUS_CAVUM_UNDETERMINED:
-                                            oriscus->u.note.shape =
-                                                    S_ORISCUS_CAVUM_ASCENDENS;
-                                            break;
-                                        default:
-                                            /* not reachable unless there's a
-                                             * programming error */
-                                            /* LCOV_EXCL_START */
-                                            gregorio_fail(
-                                                    determine_oriscus_orientation,
-                                                    "bad_shape");
-                                            break;
-                                            /* LCOV_EXCL_STOP */
-                                        }
-                                    }
-                                    oriscus = NULL;
-                                }
-
-                                switch (note->u.note.shape) {
-                                case S_ORISCUS_UNDETERMINED:
-                                case S_ORISCUS_SCAPUS_UNDETERMINED:
-                                case S_ORISCUS_CAVUM_UNDETERMINED:
-                                    oriscus = note;
-                                    break;
-
-                                default:
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    if (oriscus) {
-        /* oriscus at the end of the score */
-        switch(oriscus->u.note.shape) {
-        case S_ORISCUS_UNDETERMINED:
-            oriscus->u.note.shape = S_ORISCUS_DESCENDENS;
-            break;
-        case S_ORISCUS_SCAPUS_UNDETERMINED:
-            oriscus->u.note.shape = S_ORISCUS_SCAPUS_DESCENDENS;
-            break;
-        case S_ORISCUS_CAVUM_UNDETERMINED:
-            oriscus->u.note.shape = S_ORISCUS_CAVUM_DESCENDENS;
-            break;
-        default:
-            /* not reachable unless there's a programming error */
-            /* LCOV_EXCL_START */
-            gregorio_fail(determine_oriscus_orientation, "bad_shape");
-            break;
-            /* LCOV_EXCL_STOP */
-        }
-    }
-}
-
 /*
  * The "main" function. It is the function that is called when we have to read
  * a gabc file. It takes a file descriptor, that is to say a file that is
@@ -691,6 +475,7 @@ gregorio_score *gabc_read_score(FILE *f_in)
     if (!score->legacy_oriscus_orientation) {
         determine_oriscus_orientation(score);
     }
+    determine_punctum_inclinatum_orientation(score);
     gregorio_fix_initial_keys(score, gregorio_default_clef);
     rebuild_score_characters();
     fix_custos(score);
@@ -711,12 +496,13 @@ size_t nabc_lines = 0;
 static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
     if (nabc_state == 0) {
         if (!elements[voice]) {
-            elements[voice] = gabc_det_elements_from_string(notes,
-                    &current_key, macros, &loc, score);
+            elements[voice] = gabc_det_elements_from_string(notes, &current_key,
+                    macros, &loc, &punctum_inclinatum_orientation, score);
             current_element = elements[voice];
         } else {
             gregorio_element *new_elements = gabc_det_elements_from_string(
-                    notes, &current_key, macros, &loc, score);
+                    notes, &current_key, macros, &loc,
+                    &punctum_inclinatum_orientation, score);
             gregorio_element *last_element = elements[voice];
             while (last_element->next) {
                 last_element = last_element->next;
@@ -756,7 +542,7 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
 %token LANGUAGE STAFF_LINES ORISCUS_ORIENTATION
 %token DEF_MACRO OTHER_HEADER
 %token ANNOTATION MODE MODE_MODIFIER MODE_DIFFERENTIA
-%token INITIAL_STYLE /* DEPRECATED by 4.1 */
+%token INITIAL_STYLE /* DEPRECATED for removal in 5.0 */
 %token END_OF_DEFINITIONS END_OF_FILE
 %token COLON SEMICOLON SPACE CHARACTERS NOTES HYPHEN ATTRIBUTE
 %token OPENING_BRACKET CLOSING_BRACKET CLOSING_BRACKET_WITH_SPACE
@@ -866,7 +652,7 @@ definition:
     }
     | INITIAL_STYLE attribute {
         if ($2.text) {
-            /* DEPRECATED by 4.1 */
+            /* DEPRECATED for removal in 5.0 */
             gregorio_message("\"initial-style\" header is deprecated. Please "
             "use \\gresetinitiallines in TeX instead.",
             "gabc_score_determination_parse", VERBOSITY_DEPRECATION, 0);

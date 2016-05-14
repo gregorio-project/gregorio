@@ -23,7 +23,7 @@
 \def\grebarbracewidth{.58879}%
 
 \gre@debugmsg{general}{Loading gregoriotex-signs.tex}%
-\gre@declarefileversion{gregoriotex-signs.tex}{4.1.2}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-signs.tex}{4.2.0-beta1}% GREGORIO_VERSION
 
 \def\gre@usestylecommon{%
   \ifgre@usestylefont\else %
@@ -142,14 +142,6 @@
     ]%
 }%
 
-
-\def\greremoveclef{% OBSOLETE
-  \gre@obsolete{\protect\greremoveclef}{\protect\gresetclef{invisible}}%
-}%
-
-\def\grenormalclef{% OBSOLETE
-  \gre@obsolete{\protect\grenormalclef}{\protect\gresetclef{visible}}%
-}%
 
 %% marcro to define the clef that will appear at the beginning of the lines
 % the first argument is the type : f or c, and the second is the height
@@ -310,28 +302,53 @@
     \gre@skip@temp@four = \gre@space@skip@clefchangespace\relax%
     \gre@hskip\gre@skip@temp@four %
   \else %
-    % here it means that there is a bar before the clef, so we skip the difference between the normal space and the space around bars with clef changes
-    \gre@skip@temp@four = -\gre@space@skip@spacearoundclefbars\relax%
-    \gre@hskip\gre@skip@temp@four %
+    \ifdim\gre@skip@bar@lastskip=0pt\else % we're after a bar:
+      % here it means that there is a bar before the clef, so we skip the difference between the normal space and the space around bars with clef changes
+      \gre@skip@temp@four = -\gre@space@skip@spacearoundclefbars\relax%
+      \gre@hskip\gre@skip@temp@four %
+    \fi %
   \fi %
+  \GreNoBreak %
   \gre@typeclef{#1}{#2}{1}{0}{#4}{#5}{#6}{#7}%
-  \gre@skip@temp@four = \gre@space@skip@clefchangespace\relax%
+  \ifnum\gre@insidediscretionary=0\relax %
+    \gre@skip@temp@four = \gre@space@skip@clefchangespace\relax%
+  \else %
+    \gre@skip@temp@four = \gre@space@skip@interwordspacenotes\relax%
+  \fi %
   \gre@hskip\gre@skip@temp@four %
+  \GreNoBreak %
   \relax%
 }%
 
 % custos just typesets a custos, useful for before the key changes for example
 % #1 is the height
-% #2 is indicating if the custo ends the line
-\def\GreCustos#1{%
+\def\GreCustos#1#2{%
+  \GreNoBreak %
   \ifdim\gre@skip@bar@lastskip=0pt\else % we're after a bar:
     \kern-\gre@skip@bar@lastskip %
+    \GreNoBreak %
   \fi %
-  \gre@skip@temp@four = \gre@space@skip@spacebeforeinlinecustos\relax%
-  \kern\gre@skip@temp@four%
+  \ifgre@firstglyph% we check if it is the first glyph
+    \global\gre@firstglyphfalse%
+    \ifnum\gre@insidediscretionary=0\else %
+      \gre@skip@temp@four=\gre@space@skip@interwordspacenotes %
+      \kern\gre@skip@temp@four%
+      \GreNoBreak %
+    \fi %
+  \else%
+    \ifgre@endofscore %
+      \gre@skip@temp@four=\gre@space@skip@spacebeforeeolcustos %
+    \else %
+      \gre@skip@temp@four=\gre@space@skip@spacebeforeinlinecustos %
+    \fi %
+    \kern\gre@skip@temp@four%
+    \GreNoBreak %
+  \fi %
+  \gre@custosalteration{#1}{#2}%
+  \GreNoBreak%
   \gre@calculate@glyphraisevalue{#1}{0}{}%
   %here we need some tricks to draw the line before the custos (for the color)
-  \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{#1}}%
+  \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{#1}{1}}%
   \gre@dimen@temp@three=\wd\gre@box@temp@width %
   \ifgre@showlines %
     \ifnum#1<\gre@pitch@belowstaff\relax %
@@ -354,26 +371,26 @@
     \kern\gre@skip@bar@lastskip %
     \GreNoBreak %
   \fi %
+  \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
   \relax %
 }%
 
 % typesets a custos for the end of the score
-\def\GreFinalCustos#1{%
+\def\GreFinalCustos#1#2{%
   \GreNoBreak%
-  \gre@dimen@temp@four = \glueexpr(\gre@space@skip@spacebeforeeolcustos)\relax%
-  \kern\gre@dimen@temp@four %
-  \GreNoBreak%
-  \GreCustos{#1}%
+  \GreCustos{#1}{#2}%
   \gre@endofglyphcommon %
 }
 
 % the argument is the height
-\edef\gre@nextcustos{\gre@pitch@dummy}%
-\def\GreNextCustos#1{%
-  \gre@debugmsg{custos}{nextcustos = #1}%
+\edef\gre@nextcustospitch{\gre@pitch@dummy}%
+\edef\gre@nextcustosalteration{}%
+\def\GreNextCustos#1#2{%
+  \gre@debugmsg{custos}{nextcustos = #1,#2}%
   \ifnum\gre@insidediscretionary=0\relax %
     \gre@debugmsg{custos}{not discretionary}%
-    \edef\gre@nextcustos{#1}%
+    \edef\gre@nextcustospitch{#1}%
+    \edef\gre@nextcustosalteration{#2}%
     \ifgre@blockeolcustos\else%
       \gre@debugmsg{custos}{not blocked}%
       \gre@calculate@glyphraisevalue{#1}{0}{}%
@@ -381,12 +398,19 @@
       \setbox\gre@box@temp@width=\hbox{%
         % we type a hskip and the we type the custos
         \gre@hskip\gre@space@skip@spacebeforeeolcustos\relax %
-        \gre@pickcustos{#1}\relax %
+        \gre@custosalteration{#1}{#2}%
+        \GreNoBreak%
+        \raise \gre@dimen@glyphraisevalue\relax%
+        \hbox{%
+          \gre@pickcustos{#1}{2}\relax %
+        }%
       }%
       \gre@dimen@temp@three=\wd\gre@box@temp@width %
       % we make \wd\gre@box@temp@sign contain the width of a custos
       \setbox\gre@box@temp@sign=\hbox{%
-        \gre@pickcustos{#1}\relax %
+        \gre@custosalteration{#1}{#2}%
+        \GreNoBreak%
+        \gre@pickcustos{#1}{0}\relax %
       }%
       \gre@localrightbox{%
         \ifgre@showlines %
@@ -396,7 +420,6 @@
             \gre@additionaltopcustoslineend %
           \fi\fi %
         \fi %
-        \raise \gre@dimen@glyphraisevalue\relax%
         \copy\gre@box@temp@width %
       }%
     \fi %
@@ -416,10 +439,6 @@
   \raise\gre@dimen@temp@five %
   \hbox to 0pt{%
     \gre@style@additionalstafflines %
-    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% OBSOLETE
-    \else % OBSOLETE
-      \gre@obsolete{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% OBSOLETE
-    \fi% OBSOLETE
     \kern\gre@dimen@temp@three %
     \gre@dimen@temp@five=\dimexpr(\wd\gre@box@temp@sign + \gre@space@dimen@additionalcustoslineswidth)\relax%
     \kern-\gre@dimen@temp@five %
@@ -440,10 +459,6 @@
   \raise\gre@dimen@temp@five %
   \hbox to 0pt{%
     \gre@style@additionalstafflines %
-    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% OBSOLETE
-    \else % OBSOLETE
-      \gre@obsolete{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% OBSOLETE
-    \fi% OBSOLETE
     \kern\gre@dimen@temp@three %
     \gre@dimen@temp@five=\dimexpr(\wd\gre@box@temp@sign+\gre@space@dimen@additionalcustoslineswidth)\relax%
     \kern-\gre@dimen@temp@five %
@@ -466,10 +481,6 @@
   \raise\gre@dimen@temp@five %
   \hbox to 0pt{%
     \gre@style@additionalstafflines %
-    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% OBSOLETE
-    \else % OBSOLETE
-      \gre@obsolete{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% OBSOLETE
-    \fi% OBSOLETE
     \hss %
     \kern\gre@dimen@temp@three %
     \gre@dimen@temp@five=\dimexpr((\gre@space@dimen@additionalcustoslineswidth*2)+\wd\gre@box@temp@sign)\relax %
@@ -490,10 +501,6 @@
   \raise\gre@dimen@temp@five %
   \hbox to 0pt{%
     \gre@style@additionalstafflines %
-    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% OBSOLETE
-    \else % OBSOLETE
-      \gre@obsolete{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% OBSOLETE
-    \fi% OBSOLETE
     \hss %
     \kern\gre@dimen@temp@three %
     \gre@dimen@temp@five=\dimexpr((\gre@space@dimen@additionalcustoslineswidth*2)+\wd\gre@box@temp@sign)\relax %
@@ -504,7 +511,34 @@
   \relax %
 }%
 
-\def\gre@pickcustos#1{%
+\newif\ifgre@usecustosalteration%
+\gre@usecustosalterationtrue%
+\def\gresetcustosalteration#1{%
+  \IfStrEqCase{#1}{%
+    {visible}{\gre@usecustosalterationtrue}%
+    {invisible}{\gre@usecustosalterationfalse}%
+  }[% all other cases
+    \gre@error{Unrecognized option "#1" for \protect\gresetcustosalteration\MessageBreak Possible options are: 'visible' and 'invisible'}%
+  ]%
+}%
+\def\gre@custosalteration#1#2{%
+  \ifgre@usecustosalteration %
+    \IfStrEq{#2}{}{}{\csname Gre#2\endcsname{#1}{0}{}{}{}}%
+  \fi %
+}%
+
+% #2 is 0 for measurement only, 1 in the normal case, 2 for the right box
+\def\gre@pickcustos#1#2{%
+  % set attributes to adjust the line height for the pitch of the custos
+  \ifcase#2% 0
+  \or % 1
+    \global\advance\gre@attr@glyph@id by 1\relax %
+    \GreGlyphHeights{#1}{#1}%
+  \or % 2
+    \ifgre@eolshiftsenabled %
+      \GreGlyphHeights{#1}{#1}%
+    \fi %
+  \fi %
   \ifcase#1%
   \or\or%
   \or\gre@fontchar@custostopmiddle %
@@ -932,7 +966,7 @@
       \gre@savepos %
       \kern.5\wd\gre@box@temp@sign %
     \fi %
-    \directlua{gregoriotex.var_brace_note_pos(#1, #3)}%
+    \directlua{gregoriotex.save_length(#1, #3)}%
   \fi %
   \relax %
 }%
@@ -1040,11 +1074,6 @@
   \relax %
 }%
 
-\gdef\grelowchoralsignstyle#1{\relax}% OBSOLETE
-\let\gre@empty@lowchoralsignstyle\grelowchoralsignstyle%
-\gdef\grehighchoralsignstyle#1{\relax}% OBSOLETE
-\let\gre@empty@highchoralsignstyle\grehighchoralsignstyle%
-
 % quite simple function: #1 is the height, #2 is the string, #3 is #2 of punctum mora, #4 is #3 of punctum mora
 % #3 is 1 if it must be a bit higher
 \def\GreLowChoralSign#1#2#3{%
@@ -1058,20 +1087,12 @@
     \gre@calculate@glyphraisevalue{#1}{10}{}%
   \fi %
   \raise\gre@dimen@glyphraisevalue\hbox{\gre@style@lowchoralsign#2\endgre@style@lowchoralsign}%
-  \ifx\gre@empty@lowchoralsignstyle\grelowchoralsignstyle% OBSOLETE
-  \else%  OBSOLETE
-    \gre@obsolete{\protect\grelowchoralsignstyle}{\protect\grechangestyle{lowchoralsign}}%  OBSOLETE
-  \fi%  OBSOLETE
   \relax %
 }%
 
 \def\GreHighChoralSign#1#2#3{%
   \GreNoBreak %
   \gre@vepisemaorrare{#1}{#3}{}{3}{\gre@style@highchoralsign#2\endgre@style@highchoralsign}%
-  \ifx\gre@empty@highchoralsignstyle\grehighchoralsignstyle%  OBSOLETE
-  \else%  OBSOLETE
-    \gre@obsolete{\protect\grehighchoralsignstyle}{\protect\grechangestyle{highchoralsign}}%  OBSOLETE
-  \fi% OBSOLETE
   \relax %
 }%
 
@@ -1321,10 +1342,6 @@
     \ifgre@boxing\else %
       \xdef\gre@dimen@savedglyphraise{\the\gre@dimen@glyphraisevalue}%
       \gre@style@additionalstafflines %
-      \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% OBSOLETE
-      \else % OBSOLETE
-        \gre@obsolete{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% OBSOLETE
-      \fi% OBSOLETE
       \gre@hepisorline{\gre@pitch@dummy}{#1}{#2}{#3}{f}{}{}%
       \endgre@style@additionalstafflines%
       \gre@dimen@glyphraisevalue=\gre@dimen@savedglyphraise\relax%
@@ -1348,10 +1365,6 @@
   \ifgre@showlines %
     \xdef\gre@dimen@savedglyphraise{\the\gre@dimen@glyphraisevalue}%
     \gre@style@additionalstafflines %
-    \ifx\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat% OBSOLETE
-    \else % OBSOLETE
-      \gre@obsolete{\protect\greadditionalstafflinesformat}{\protect\grechangestyle{additionalstafflinesformat}}% OBSOLETE
-    \fi% OBSOLETE
     \gre@drawadditionalline{#1}{#2}{#3}{#4}{#5}{#6}%
     \endgre@style@additionalstafflines%
     \gre@dimen@glyphraisevalue=\gre@dimen@savedglyphraise\relax%
@@ -1466,14 +1479,6 @@
 
 \newif\ifgre@hepisemabridge
 \gre@hepisemabridgetrue
-
-\def\AddHEpisemusBridges{%OBSOLETE
-  \gre@obsolete{\protect\AddHEpisemusBridges}{\protect\gresethepisema{bridge}}%
-}%
-
-\def\RemoveHEpisemusBridges{%OBSOLETE
-  \gre@obsolete{\protect\RemoveHEpisemusBridges}{\protect\gresethepisema{break}}%
-}%
 
 \def\gresethepisema#1{%
   \IfStrEqCase{#1}{%
@@ -1984,6 +1989,7 @@
   \gre@debugmsg{spacing}{Last bar space: \the\gre@skip@temp@four}%
   \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
   \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
+  \global\gre@firstglyphfalse %
   \relax%
 }%
 
@@ -2060,14 +2066,6 @@
     ]%
 }%
 
-\def\GreHidePCLines{%OBSOLETE
-  \gre@obsolete{\protect\GreHidePCLines}{\protect\gresetlinesbehindpunctumcavum{invisible}}%
-}%
-
-\def\GreDontHidePCLines{%OBSOLETE
-  \gre@obsolete{\protect\GreDontHidePCLines}{\protect\gresetlinesbehindpunctumcavum{visible}}%
-}%
-
 % flag to indicate that lines behind an alteration should be hidden
 \newif\ifgre@hidealtlines
 % default state is to not hide them
@@ -2083,14 +2081,6 @@
     }[% all other cases
       \gre@error{Unrecognized option "#1" for \protect\gresetlinesbehindalteration\MessageBreak Possible options are: 'visible' and 'invisible'}%
     ]%
-}%
-
-\def\GreHideAltLines{%OBSOLETE
-  \gre@obsolete{\protect\GreHideAltLines}{\protect\gresetlinesbehindalteration{invisible}}%
-}%
-
-\def\GreDontHideAltLines{%OBSOLETE
-  \gre@obsolete{\protect\GreDontHideAltLines}{\protect\gresetlinesbehindalteration{visible}}%
 }%
 
 % is last glyph a cavum?
@@ -2223,14 +2213,6 @@
 }%
 
 
-\def\UseAlternatePunctumCavum{%OBSOLETE
-  \gre@obsolete{\protect\UseAlternatePunctumCavum}{\protect\gresetpunctumcavum{alternate}}%
-}%
-
-\def\UseNormalPunctumCavum{%OBSOLETE
-  \gre@obsolete{\protect\UseNormalPunctumCavum}{\protect\gresetpunctumcavum{normal}}%
-}%
-
 \def\gre@char@cavum#1#2#3#4#5#6#7#8{%
   \setbox\gre@box@temp@width=\hbox{#7}%
   \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
@@ -2266,14 +2248,14 @@
   {\gre@font@music\GreCPPunctumCavumInclinatumAuctus}{\gre@font@music\GreCPPunctumCavumInclinatumAuctusHole}%
 }%
 
-\def\GreOriscusCavum#1#2#3#4#5#6{%
+\def\GreAscendensOriscusCavum#1#2#3#4#5#6{%
   \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
-  {\gre@font@music\GreCPOriscusCavum}{\gre@font@music\GreCPOriscusCavumHole}%
+  {\gre@font@music\GreCPAscendensOriscusCavum}{\gre@font@music\GreCPAscendensOriscusCavumHole}%
 }%
 
-\def\GreOriscusCavumAuctus#1#2#3#4#5#6{%
+\def\GreDescendensOriscusCavum#1#2#3#4#5#6{%
   \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
-  {\gre@font@music\GreCPOriscusCavumReversus}{\gre@font@music\GreCPOriscusCavumReversusHole}%
+  {\gre@font@music\GreCPDescendensOriscusCavum}{\gre@font@music\GreCPDescendensOriscusCavumHole}%
 }%
 
 \def\GreOriscusCavumDeminutus#1#2#3#4#5#6{%

@@ -11,7 +11,7 @@
 #      --build=    : build system for mingw32 cross-compilation
 #      --arch=     : crosscompile for ARCH on OS X
 #      --jobs=     : the number of jobs to run simultaneously in the make step
-#      --force=    : force autoreconf or font building
+#      --force=    : force autoreconf
 #      {other)     : anything else is passed to configure verbatim
       
 # try to find bash, in case the standard shell is not capable of
@@ -45,7 +45,6 @@ MACCROSS=FALSE
 MAKEOPTS=
 OTHERARGS=
 FORCE_AUTORECONF=
-FORCE_FONTS=
 
 until [ -z "$1" ]; do
   case "$1" in
@@ -55,7 +54,6 @@ until [ -z "$1" ]; do
     --arch=*    ) MACCROSS=TRUE; ARCH=`echo $1 | sed 's/--arch=\(.*\)/\1/' ` ;;
     -j*|--jobs=*) MAKEOPTS="$MAKEOPTS $1" ;;
     --force=autoreconf) FORCE_AUTORECONF=TRUE ;;
-    --force=fonts) FORCE_FONTS=TRUE ;;
     *           ) OTHERARGS="$OTHERARGS $1" ;;
   esac
   shift
@@ -124,17 +122,8 @@ echo "Configuring build files; options: $CONFIGURE_ARGS"
 echo
 
 echo "Building Gregorio; options:$MAKEOPTS"
-${MAKE} ${MAKEOPTS} || die "build Gregorio"
+${MAKE} ${MAKEOPTS} all doc || die "build Gregorio"
 echo
-
-if [ "$FORCE_FONTS" = "TRUE" -o ! -e fonts/greciliae.ttf ]
-then
-  echo "Building fonts; options:$MAKEOPTS"
-  cd fonts
-  ${MAKE} ${MAKEOPTS} fonts || die "build fonts"
-  cd ..
-  echo
-fi
 
 if [ "$MINGWCROSS" = "TRUE" ]
 then

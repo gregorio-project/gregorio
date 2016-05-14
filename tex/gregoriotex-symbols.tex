@@ -23,7 +23,7 @@
 \def\gregoriotex@symbols@loaded{}%
 
 \gre@debugmsg{general}{Loading gregoriotex-symbols.tex}%
-\gre@declarefileversion{gregoriotex-symbols.tex}{4.1.2}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-symbols.tex}{4.2.0-beta1}% GREGORIO_VERSION
 
 \RequireLuaModule{gregoriotex}%
 
@@ -193,9 +193,6 @@
   \fi%
 }%
 
-\def\gresep#1#2{%OBSOLETE
-  \gre@obsolete{\protect\gresep}{\protect\greseparator}%
-}
 
 %%%%%%%%%%%
 %% Ornamentation
@@ -221,9 +218,7 @@
 \gresetspecial{\string\037}{\%{}}%
 \gresetspecial{R/}{\Rbar{}}%
 \gresetspecial{V/}{\Vbar{}}%
-\gresetspecial{'æ}{\'\ae{}}%
 \gresetspecial{'ae}{\'\ae{}}%
-\gresetspecial{'œ}{\'\oe{}}%
 \gresetspecial{'oe}{\'\oe{}}%
 \gresetspecial{ae}{\ae{}}%
 \gresetspecial{oe}{\oe{}}%
@@ -235,3 +230,13 @@
 \gresetspecial{\string\035}{\#{}}%
 \gresetspecial{\string\095}{\_{}}%
 \gresetspecial{\string\126}{\gretilde{}}%
+\gre@iflatex{%
+  \@ifpackageloaded{luainputenc}{}{%
+    \gresetspecial{'æ}{\'\ae{}}%
+    \gresetspecial{'œ}{\'\oe{}}%
+  }%
+}%
+\gre@ifnotlatex{%
+  \gresetspecial{'æ}{\'\ae{}}%
+  \gresetspecial{'œ}{\'\oe{}}%
+}%

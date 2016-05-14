@@ -18,7 +18,7 @@
 % along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
 \gre@debugmsg{general}{Loading gregoriotex-chars.tex}%
-\gre@declarefileversion{gregoriotex-chars.tex}{4.1.2}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-chars.tex}{4.2.0-beta1}% GREGORIO_VERSION
 
 \def\gre@char@fuse@punctum@one{\GreFuseTwo{\GreCPLeadingPunctumOne}{\GreCPPunctum}}%
 \def\gre@char@fuse@quilisma@one{\GreFuseTwo{\GreCPLeadingQuilismaOne}{\GreCPPunctum}}%
@@ -61,7 +61,7 @@
 \gre@def@char@he{punctum@line@bl}{PunctumLineBL}%
 \gre@def@char@he{punctum@line@blbr}{PunctumLineBLBR}%
 \gre@def@char@he{punctumauctus@line@bl}{PunctumAuctusLineBL}%
-\gre@def@char@he{salicus@oriscus}{SalicusOriscus}%
+\gre@def@char@he{salicus@oriscus}{AscendensOriscusLineBLTR}%
 \gre@def@char@he{flexus}{FlexusDeminutus}%
 \gre@def@char@he{initio}{Debilis}%
 \gre@def@char@he{virga}{Virga}%
@@ -74,8 +74,8 @@
 \gre@def@char@he@porr{porrectusfl}{PorrectusFlexus}%
 \gre@def@char@he{quilisma}{Quilisma}%
 \gre@def@char@he{quilisma@line@tr}{QuilismaLineTR}%
-\gre@def@char@he{oriscus}{Oriscus}%
-\gre@def@char@he{oriscus@line@tr}{OriscusLineTR}%
+\gre@def@char@he{oriscus}{AscendensOriscus}%
+\gre@def@char@he{oriscus@line@tr}{AscendensOriscusLineTR}%
 \gre@def@char@he{smallpunctum}{HighPes}% "smallpunctum" is the top punctum in a pes
 \gre@def@char@he{flat}{Flat}%
 \gre@def@char@he{sharp}{Sharp}%
@@ -182,20 +182,4 @@
     }[% all other cases
       \gre@error{Unrecognized option "#1" for \protect\gresetglyphstyle\MessageBreak Possible options are: 'default', 'medicaea', 'hufnagel' and 'mensural'}%
     ]%
-}%
-
-\def\greusedefaultstyle{%OBSOLETE
-  \gre@obsolete{\protect\greusedefaultstyle}{\protect\gresetglyphstyle{default}}%
-}%
-
-\def\greusemedicaeastyle{%OBSOLETE
-  \gre@obsolete{\protect\greusemedicaeastyle}{\protect\gresetglyphstyle{medicaea}}%
-}%
-
-\def\greusehufnagelstyle{%OBSOLETE
-  \gre@obsolete{\protect\greusehufnagelstyle}{\protect\gresetglyphstyle{hufnagel}}%
-}%
-
-\def\greusemensuralstyle{%OBSOLETE
-  \gre@obsolete{\protect\greusemensuralstyle}{\protect\gresetglyphstyle{mensural}}%
 }%

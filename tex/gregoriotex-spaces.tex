@@ -20,7 +20,7 @@
 % this file contains definitions of spaces
 
 \gre@debugmsg{general}{Loading gregoriotex-spaces.tex}%
-\gre@declarefileversion{gregoriotex-spaces.tex}{4.1.2}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-spaces.tex}{4.2.0-beta1}% GREGORIO_VERSION
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for tuning penalties
@@ -29,38 +29,51 @@
 %% The following macros enable users to tune penalties used in Gregorio
 
 % macro to force a break on a new line
-\def\GreForceBreak{\gre@penalty{\grenewlinepenalty}}%
+\def\GreForceBreak{\gre@penalty{\the\gre@space@count@newlinepenalty}}%
 
 % macro to prevent a line break
-\def\GreNoBreak{\gre@penalty{\grenobreakpenalty}}%
+\def\GreNoBreak{\gre@penalty{\the\gre@space@count@nobreakpenalty}}%
 
 
+
+\newcount\gre@hyphenpenaltysave%
+\newcount\gre@exhyphenpenaltysave%
+\newcount\gre@doublehyphendemeritssave%
+\newcount\gre@finalhyphendemeritssave%
+\newcount\gre@brokenpenaltysave%
+\newcount\gre@loosenesssave%
+\newcount\gre@tolerancesave%
+\newcount\gre@pretolerancesave%
+\newskip\gre@emergencystretchsave%
+\newcount\gre@widowpenaltysave%
+\newcount\gre@clubpenaltysave%
 %% The following macros cancel some useless penalties, and reinstates them
 %% at the end of a score
 
 \def\gre@cancelpenalties{%
-  \xdef\gre@hyphenpenaltysave{\the\hyphenpenalty }%
-  \xdef\gre@exhyphenpenaltysave{\the\exhyphenpenalty }%
-  \xdef\gre@doublehyphendemeritssave{\the\doublehyphendemerits }%
-  \xdef\gre@finalhyphendemeritssave{\the\finalhyphendemerits }%
-  \xdef\gre@brokenpenaltysave{\the\brokenpenalty }%
-  \hyphenpenalty=\grehyphenpenalty\relax %
-  \exhyphenpenalty=\grehyphenpenalty\relax %
+  \global\gre@hyphenpenaltysave=\hyphenpenalty\relax %
+  \global\gre@exhyphenpenaltysave=\exhyphenpenalty\relax %
+  \global\gre@doublehyphendemeritssave=\doublehyphendemerits\relax %
+  \global\gre@finalhyphendemeritssave=\finalhyphendemerits\relax %
+  \global\gre@brokenpenaltysave=\brokenpenalty\relax %
+  \global\gre@loosenesssave=\looseness\relax %
+  \global\gre@tolerancesave=\tolerance\relax %
+  \global\gre@pretolerancesave=\pretolerance\relax %
+  \global\gre@emergencystretchsave=\emergencystretch\relax %
+  \global\gre@widowpenaltysave=\widowpenalty\relax %
+  \global\gre@clubpenaltysave=\clubpenalty\relax %
+  %
+  \hyphenpenalty=\gre@space@count@hyphenpenalty %
+  \exhyphenpenalty=\gre@space@count@hyphenpenalty %
   \doublehyphendemerits=0\relax %
   \finalhyphendemerits=0\relax %
-  \brokenpenalty=\grebrokenpenalty\relax %
-  \xdef\gre@loosenesssave{\the\looseness}%
-  \xdef\gre@tolerancesave{\the\tolerance}%
-  \xdef\gre@pretolerancesave{\the\pretolerance}%
-  \xdef\gre@emergencystretchsave{\the\emergencystretch}%
-  \xdef\gre@widowpenaltysave{\the\widowpenalty}%
-  \xdef\gre@clubpenaltysave{\the\clubpenalty}%
-  \looseness=\grelooseness %
-  \tolerance=\gretolerance %
-  \pretolerance=\grepretolerance %
-  \emergencystretch=\greemergencystretch %
-  \widowpenalty=\grewidowpenalty %
-  \clubpenalty=\greclubpenalty %
+  \brokenpenalty=\gre@space@count@brokenpenalty %
+  \looseness=\gre@space@count@looseness %
+  \tolerance=\gre@space@count@tolerance %
+  \pretolerance=\gre@space@count@pretolerance %
+  \emergencystretch=\gre@space@skip@emergencystretch\relax %
+  \widowpenalty=\gre@space@count@widowpenalty %
+  \clubpenalty=\gre@space@count@clubpenalty %
 }%
 
 \def\gre@restorepenalties{%
@@ -149,9 +162,6 @@
   \relax %
 }%
 
-\def\setstafflinethickness{%OBSOLETE
-  \gre@obsolete{\protect\setstafflinethickness}{\protect\grechangestafflinethickness}%
-}%
 
 %constantglyphraise is the space between the 0 of the gregorian fonts and the effective 0 of the TeX score
 \newdimen\gre@dimen@constantglyphraise\relax%
@@ -431,7 +441,7 @@
       % The maximum value is wd(custos) + spacebeforeeolcustos
       % Were the eolshift larger than this the lyrics would stick out
       % into the margin
-      \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{\gre@pitch@g}}%
+      \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{\gre@pitch@g}{0}}%
       \gre@skip@temp@three = \glueexpr(\wd\gre@box@temp@width+\gre@space@skip@spacebeforeeolcustos)\relax%
       \gre@debugmsg{eolshift}{custos + space before custos = \the\gre@skip@temp@three}%
       % pick the smaller of the two values calculated above
@@ -445,6 +455,10 @@
   \else%
     \global\gre@dimen@eolshift=0pt\relax%
   \fi %
+  % if the notes are not visible, then there's no shifting allowed.
+  \ifgre@shownotes\else%
+    \global\gre@dimen@eolshift=0pt\relax%
+  \fi%
   \gre@debugmsg{eolshift}{eolshift: \the\gre@dimen@eolshift}%
   \relax %
 }
@@ -805,10 +819,6 @@
   \gre@generatelines %
   \gre@calculate@constantglyphraise %
   \endgre@style@translation%
-  \ifx\gre@empty@translationformat\gretranslationformat% OBSOLETE
-  \else%  OBSOLETE
-    \gre@obsolete{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  OBSOLETE
-  \fi%  OBSOLETE
   \relax %
 }%
 
@@ -1173,25 +1183,20 @@
 %% Note: the distances created by this function are stored as strings, not skip or dimension registers.  This allows the user to specify a distance in em or ex units even though the font parameters may not be the same at the time the distance is specified and the time the distance is used.
 \newif\ifgre@checklength%
 \def\grecreatedim#1#2#3{%
-  \gre@dimension{#1}{#2}%
   \csname newif\expandafter\endcsname\csname ifgre@scale@#1\endcsname%
   \IfStrEqCase{#3}{%
-    {1}%
-      {\gre@obsolete{A numerical (1) last argument for \protect\grecreatedim}{'scalable'}}%
-    {0}%
-      {\gre@obsolete{A numerical (0) last argument for \protect\grecreatedim}{'fixed'}}%
     {scalable}%
       {\grescaledim{#1}{true}}%
     {fixed}%
       {\grescaledim{#1}{false}}%
+    {inherited}%
+      {\grescaledim{#1}{false}}%
     }[% all other cases
       \gre@error{Unrecognized option "#3" for \protect\grecreatedim\MessageBreak Possible options are: 'scalable' and 'fixed'}%
     ]%
+  \gre@dimension{#1}{#2}{#3}%
 }%
 
-\def\gresetdim{%OBSOLETE
-  \gre@obsolete{\protect\gresetdim}{\protect\grecreatedim}%
-}%
 
 % a macro for changing a dimension.  Unlike \grecreatedim, this function won’t create a new distance, just change an existing one.
 \def\grechangedim#1#2#3{%
@@ -1206,18 +1211,28 @@
   \fi%
   \ifcsname gre@space@\gre@prefix @#1\endcsname%
     \gre@debugmsg{spacing}{It does exist.}%
-    \gre@dimension{#1}{#2}%
     \IfStrEqCase{#3}{%
-      {1}%
-        {\gre@obsolete{A numerical (1) last argument for \protect\grechangedim}{'scalable'}}%
-      {0}%
-        {\gre@obsolete{A numerical (0) last argument for \protect\grechangedim}{'fixed'}}%
       {scalable}%
         {\grescaledim{#1}{true}}%
       {fixed}%
         {\grescaledim{#1}{false}}%
+      {inherited}%
+        {%
+          \gre@rubberpermit{#2}%
+          \ifgre@rubber%
+            \def\gre@prefixII{skip}%
+          \else%
+            \def\gre@prefixII{dimen}%
+          \fi%
+          \ifcsname gre@space@\gre@prefixII @#2\endcsname%
+            \grescaledim{#1}{false}%
+          \else%
+            \gre@error{'#1' cannot inherit from '#2'\MessageBreak Please make sure '#2' is a valid GregorioTeX distance}%
+          \fi%
+        }%
       % all other cases
-      }[\gre@error{Unrecognized option "#3" for \protect\grechangedim\MessageBreak Possible options are: 'scalable' and 'fixed'}]%
+      }[\gre@error{Unrecognized option "#3" for \protect\grechangedim\MessageBreak Possible options are: 'scalable', 'fixed', and 'inherited'}]%
+    \gre@dimension{#1}{#2}{#3}%
   \else%
     \IfStrEqCase{#1}{% DEPRECATED
       {spacearoundsmallbars}% DEPRECATED
@@ -1258,62 +1273,100 @@
 }
 
 % The common internals for \grecreatedim and \grechangedim.
-\def\gre@dimension#1#2{%
-  \gre@checklengthfalse%
-  %check if #2 is a rubber length (contains plus and/or minus)
-  \IfSubStr{#2}{plus}{\gre@checklengthtrue}{\relax}%
-  \IfSubStr{#2}{minus}{\gre@checklengthtrue}{\relax}%
-  %if #1 is one of the distances which cannot be rubber.
-  \gre@rubberpermit{#1}%
-  % do we try to assign a rubber to one where it's not permitted?
-  \ifgre@rubber%
-    \def\gre@prefix{skip}%
-  \else%
-    \ifgre@checklength%
-      \gre@error{#1 cannot be a rubber length.}%
+\def\gre@dimension#1#2#3{%
+  \IfStrEq{#3}{inherited}{%
+    \gre@debugmsg{spacing}{setting inherited distance}%
+    \gre@rubberpermit{#1}%
+    \ifgre@rubber%
+      \def\gre@prefix{skip}%
     \else%
       \def\gre@prefix{dimen}%
     \fi%
-  \fi%
-  % special check for bar@rubber
-  \IfStrEq*{#1}{bar@rubber}%
-    {%
-      \gre@skip@temp@one = #2\relax%
-      \ifdim\gre@skip@temp@one=0pt\relax\else%
-        \gre@error{bar@rubber cannot have a non-zero base}%
+    \gre@rubberpermit{#2}%
+    \ifgre@rubber%
+      \def\gre@prefixII{skip}%
+    \else%
+      \def\gre@prefixII{dimen}%
+    \fi%
+    \expandafter\edef\csname gre@space@\gre@prefix @#1\endcsname{\expandafter\unexpanded{\csname gre@space@\gre@prefixII @#2\endcsname}}%
+  }{%
+    \gre@rubberpermit{#2}%
+    \ifgre@rubber%
+      \def\gre@prefixII{skip}%
+    \else%
+      \def\gre@prefixII{dimen}%
+    \fi%
+    \ifcsname gre@space@\gre@prefixII @#2\endcsname%
+      \gre@error{'#1' cannot be '#3' and depend on '#2' at the same time\MessageBreak Either use 'inherited' in the third argument\MessageBreak or give an actual distance in the second}%
+    \fi%
+    \gre@checklengthfalse%
+    %check if #2 is a rubber length (contains plus and/or minus)
+    \IfSubStr{#2}{plus}{\gre@checklengthtrue}{\relax}%
+    \IfSubStr{#2}{minus}{\gre@checklengthtrue}{\relax}%
+    %if #1 is one of the distances which cannot be rubber.
+    \gre@rubberpermit{#1}%
+    % do we try to assign a rubber to one where it's not permitted?
+    \ifgre@rubber%
+      \def\gre@prefix{skip}%
+    \else%
+      \ifgre@checklength%
+        \gre@error{#1 cannot be a rubber length.}%
+      \else%
+        \def\gre@prefix{dimen}%
       \fi%
-    }{}%
-  \expandafter\edef\csname gre@space@\gre@prefix @#1\endcsname{#2}%
-  \relax %
+    \fi%
+    % special check for bar@rubber
+    \IfStrEq*{#1}{bar@rubber}%
+      {%
+        \gre@skip@temp@one = #2\relax%
+        \ifdim\gre@skip@temp@one=0pt\relax\else%
+          \gre@error{bar@rubber cannot have a non-zero base}%
+        \fi%
+      }{}%
+    \expandafter\edef\csname gre@space@\gre@prefix @#1\endcsname{#2}%
+    \relax %
+  }%
 }
 
 %a macro to use if all you want to do is turn on or off the scaling for a particular distance
 \def\grescaledim#1#2{%
-  \IfStrEqCase{#2}{%
-    {true}%
-      {\csname gre@scale@#1true\endcsname}%
-    {yes}%
-      {\grescaledim{true}}%
-    {on}%
-      {\grescaledim{true}}%
-    {scalable}%
-      {\grescaledim{true}}%
-    }[% all other cases
-      \csname gre@scale@#1false\endcsname%
-    ]%
+  \ifcsname ifgre@scale@#1\endcsname%
+    \IfStrEqCase{#2}{%
+      {true}%
+        {\csname gre@scale@#1true\endcsname}%
+      {yes}%
+        {\grescaledim{true}}%
+      {on}%
+        {\grescaledim{true}}%
+      {scalable}%
+        {\grescaledim{true}}%
+      }[% all other cases
+        \csname gre@scale@#1false\endcsname%
+      ]%
+  \else%
+    \gre@error{Unrecognized distance "#1" in \protect\grescaledim}%
+  \fi%
 }
 
-\def\grenoscaledim#1{%OBSOLETE
-  \gre@obsolete{\protect\grenoscaledim}{\protect\grescaledim{...}{no}}%
-}%
+\newcount\gre@space@count@newlinepenalty%
+\newcount\gre@space@count@nobreakpenalty%
+\newcount\gre@space@count@endofwordpenalty%
+\newcount\gre@space@count@endofsyllablepenalty%
+\newcount\gre@space@count@endafterbarpenalty%
+\newcount\gre@space@count@endafterbaraltpenalty%
+\newcount\gre@space@count@finalpenalty%
+\newcount\gre@space@count@endofelementpenalty%
+\newcount\gre@space@count@hyphenpenalty%
+\newcount\gre@space@count@brokenpenalty%
+\newcount\gre@space@count@looseness%
+\newcount\gre@space@count@tolerance%
+\newcount\gre@space@count@pretolerance%
+\newcount\gre@space@count@widowpenalty%
+\newcount\gre@space@count@clubpenalty%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % space configuration loading
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\def\GreLoadSpaceConf#1{%OBSOLETE
-  \gre@obsolete{\protect\GreLoadSpaceConf}{\protect\greloadspaceconf}%
-}%
 
 \newcount\greconffactor%
 \def\greloadspaceconf#1{%
@@ -1788,37 +1841,4 @@
     \xdef\gre@stafflinefactor{\the\gre@count@temp@two}%
   \fi%
   \relax %
-}%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  Some Macros for changing the spacing around the initial
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%Seeing as these are the distances that people will want to change the most often,
-%we give them their own set of macros to make that easier.
-
-% To change the spacing between annotations.
-%First argument is distance, second is whether it should scale when \gre@factor changes.
-\def\setaboveinitialseparation#1#2{%OBSOLETE
-  \gre@obsolete{\protect\setaboveinitialseparation}{\protect\grechangedim\{annotationseparation\}}%
-}%
-
-
-%To change the space after the initial
-%First argument is distance, second is whether it should scale when \gre@factor changes.
-\def\setspaceafterinitial#1#2{%OBSOLETE
-  \gre@obsolete{\protect\setspaceafterinitial}{\protect\grechangedim{afterinitialshift}}%
-}
-
-%To change the space before the initial
-%First argument is distance, second is whether it should scale when \gre@factor changes.
-\def\setspacebeforeinitial#1#2{%OBSOLETE
-  \gre@obsolete{\protect\setspacebeforeinitial}{\protect\grechangedim{beforeinitialshift}}%
-}%
-
-
-%To change all the distances associated with the initial.
-%First three arguments are distances, last is whether they should scale when \gre@factor changes.
-\def\setinitialspacing#1#2#3#4{%OBSOLETE
-  \gre@obsolete{\protect\setinitialspacing}{\protect\grechangedim{beforeinitialshift}, \protect\grechangedim{manualinitialwidth}, and \protect\grechangedim{afterinitialshift}}%
 }%

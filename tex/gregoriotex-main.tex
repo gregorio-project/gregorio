@@ -38,16 +38,31 @@
       %true
       {\gre@error{Debug error: ‘all’ is not a permitted keyword}}%
       %false
-      {\IfStrEq{\gre@debug}{all}%
+      {\IfStrEq{\gre@debug}{,all,}%
         %true
         {\gre@typeout{GregorioTeX debug: (#1) #2}}%
         %false
-        {\IfSubStr{\gre@debug}{#1}%
+        {\IfSubStr{\gre@debug}{,#1,}%
           %true
           {\gre@typeout{GregorioTeX debug: (#1) #2}}%
           %false
           {\relax}%
         }%
+      }%
+    }%
+}%
+
+\AtBeginDocument{%
+  \IfStrEq{\gre@debug}{}%
+    {}%
+    {%
+      \directlua{gregoriotex.set_debug_string([[\gre@debug]])}%
+      \typeout{GregorioTeX is in debug mode}%
+      \typeout{\gre@debug\space messages will be printed to the log.}%
+      {% we're starting a group in order to localize \exploregroups
+        \exploregroups%
+        \StrRemoveBraces{\gre@debug}[\gre@debug]%
+        \xdef\gre@debug{,\gre@debug,}%
       }%
     }%
 }%
@@ -73,8 +88,6 @@
 
 
 \def\gre@nothing{}%
-
-\AtBeginDocument{\IfStrEq{\gre@debug}{}{}{\directlua{gregoriotex.set_debug_string([[\gre@debug]])}\typeout{GregorioTeX is in debug mode}\typeout{\gre@debug\space messages will be printed to the log.}}}%
 
 %%%%%%%%%%%%%%%
 %% Backwards Compatibility
@@ -143,7 +156,7 @@
 
 % The version of gregorio. All gregoriotex*.tex files must have the same.
 % All gtex files must also have the same version.
-\xdef\gre@gregorioversion{4.1.2}% GREGORIO_VERSION - VersionManager.py
+\xdef\gre@gregorioversion{4.2.0-beta1}% GREGORIO_VERSION - VersionManager.py
 
 % first some macros to allow checks for version:
 % Tests that all gregoriotex files are of the same version.
@@ -232,6 +245,7 @@
 \let\gre@pitch@overbraceglyph\gre@pitch@g %
 \let\gre@pitch@bar\gre@pitch@g %
 \let\gre@pitch@dummy\gre@pitch@g %
+\let\gre@pitch@nominal\gre@pitch@e %
 
 % factor is the factor with which you open you font (the number after the at). It will decide almost everything (spaces, etc.), so it is particularly important.
 % it is set to the default value : 17 (the value that makes it look like a standard graduale)
@@ -416,10 +430,6 @@
       \gre@debugmsg{initial}{Fill initial box a}%
       \setbox\gre@box@initial=\hbox{\gre@style@initial\gre@fixedtextformat{#1}\endgre@style@initial}%
     \fi%
-    \ifx\gre@empty@initialformat\greinitialformat% OBSOLETE
-    \else%  OBSOLETE
-      \gre@obsolete{\protect\greinitialformat}{\protect\grechangestyle{initial}}%  OBSOLETE
-    \fi%  OBSOLETE
     \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
     \ifdim\gre@space@dimen@manualinitialwidth=0 pt\relax%
       \global\gre@dimen@initialwidth=\wd\gre@box@initial %
@@ -427,10 +437,6 @@
       \gre@style@initial%
       \global\gre@dimen@initialwidth=\gre@space@dimen@manualinitialwidth\relax%
       \endgre@style@initial%
-      \ifx\gre@empty@initialformat\greinitialformat% OBSOLETE
-      \else%  OBSOLETE
-        \gre@obsolete{\protect\greinitialformat}{\protect\grechangestyle{initial}}%  OBSOLETE
-      \fi%  OBSOLETE
     \fi%
     \gre@debugmsg{ifdim}{ wd(gre@box@annotation) > initialwidth}%
     \ifdim\wd\gre@box@annotation>\gre@dimen@initialwidth\relax%
@@ -442,13 +448,23 @@
     \gre@style@initial%
     \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax%
     \endgre@style@initial%
-    \ifx\gre@empty@initialformat\greinitialformat% OBSOLETE
-    \else%  OBSOLETE
-      \gre@obsolete{\protect\greinitialformat}{\protect\grechangestyle{initial}}%  OBSOLETE
-    \fi%  OBSOLETE
   \else %
     \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
-      \gre@warning{biginitial style is deprecated, but the old\MessageBreak behavior will be used since deprecated usage is\MessageBreak currently enabled. This behavior will disappear\MessageBreak in 5.0, so consider disabling deprecated usage\MessageBreak and switching to the initial style instead. (See\MessageBreak UPGRADE.md for more information)}%%% DEPRECATED for removal in 5.0
+      \gre@warning{%
+      biginitial style is deprecated, but since you are\MessageBreak %
+      allowing deprecated usage, Gregorio will continue\MessageBreak %
+      to use your biginitial style as it did before.\MessageBreak %
+      However, in upcoming version 5.0, Gregorio will\MessageBreak %
+      only support one initial style for both big and\MessageBreak %
+      small initials. Consider disabling deprecated\MessageBreak %
+      usage by passing the [allowdeprecated=false]\MessageBreak %
+      package option, which will then require you to\MessageBreak %
+      set the initial style before the appropriate\MessageBreak %
+      scores to style all initials: set the initial\MessageBreak %
+      style for a big initial before a score with a big\MessageBreak %
+      initial and back for a small initial afterwards.\MessageBreak %
+      (See UPGRADE.md for more information)\MessageBreak %
+      ...}%%% DEPRECATED for removal in 5.0
     \fi%%% DEPRECATED for removal in 5.0
     \advance\gre@dimen@temp@five by \dimexpr(-\gre@dimen@additionalbottomspace %
       - \gre@space@dimen@spacebeneathtext %
@@ -466,10 +482,6 @@
         \setbox\gre@box@initial=\hbox{\gre@style@initial\gre@fixedtextformat{#1}\endgre@style@initial}% keep this line
       \fi%%% DEPRECATED for removal in 5.0
     \fi%
-    \ifx\gre@empty@biginitialformat\grebiginitialformat% OBSOLETE
-    \else%  OBSOLETE
-      \gre@obsolete{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  OBSOLETE
-    \fi%  OBSOLETE
     \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
     \ifdim\gre@space@dimen@manualinitialwidth=0 pt\relax%
       \global\gre@dimen@initialwidth=\wd\gre@box@initial %
@@ -483,10 +495,6 @@
         \global\gre@dimen@initialwidth=\gre@space@dimen@manualinitialwidth\relax% keep this line
         \endgre@style@initial% keep this line
       \fi%%% DEPRECATED for removal in 5.0
-      \ifx\gre@empty@biginitialformat\grebiginitialformat% OBSOLETE
-      \else%  OBSOLETE
-        \gre@obsolete{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  OBSOLETE
-      \fi%  OBSOLETE
     \fi%
     \gre@debugmsg{ifdim}{ wd(GreAboveinitialfirstbox) > initialwidth}%
     \ifdim\wd\gre@box@annotation>\gre@dimen@initialwidth\relax%
@@ -502,23 +510,19 @@
       \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax% keep this line
       \endgre@style@initial% keep this line
     \fi%%% DEPRECATED for removal in 5.0
-    \ifx\gre@empty@biginitialformat\grebiginitialformat% OBSOLETE
-    \else%  OBSOLETE
-      \gre@obsolete{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  OBSOLETE
-    \fi%  OBSOLETE
   \fi %
   \hskip\gre@dimen@temp@four %
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four %
   \gre@debugmsg{annotation}{Ready to place initial.}%
-  \box\gre@box@initial%
+  \ifgre@showlyrics%
+    \box\gre@box@initial%
+  \else%
+    \kern\wd\gre@box@initial%
+  \fi%
   \ifnum\gre@biginitial=0\relax%
     \gre@style@initial%
     \global\gre@dimen@temp@four = \gre@space@dimen@afterinitialshift\relax%
     \endgre@style@initial%
-    \ifx\gre@empty@initialformat\greinitialformat% OBSOLETE
-    \else%  OBSOLETE
-      \gre@obsolete{\protect\greinitialformat}{\protect\grechangestyle{initial}}%  OBSOLETE
-    \fi%  OBSOLETE
   \else%
     \ifgre@allowdeprecated%%% DEPRECATED for removal in 5.0
       \gre@style@biginitial%%% DEPRECATED for removal in 5.0
@@ -529,10 +533,6 @@
       \global\gre@dimen@temp@four = \gre@space@dimen@afterinitialshift\relax% keep this line
       \endgre@style@initial% keep this line
     \fi%%% DEPRECATED for removal in 5.0
-    \ifx\gre@empty@biginitialformat\grebiginitialformat% OBSOLETE
-    \else%  OBSOLETE
-      \gre@obsolete{\protect\grebiginitialformat}{\protect\grechangestyle{biginitial}}%  OBSOLETE
-    \fi%  OBSOLETE
   \fi%
   \hskip\gre@dimen@temp@four %
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four%
@@ -663,42 +663,13 @@
 }%
 
 
-\def\gresetfirstlineaboveinitial#1#2{%OBSOLETE
-  \gre@obsolete{\protect\gresetfirstlineaboveinitial}{\protect\greannotation}%
-}%
-
-\def\gresetfirstannotation#1{%OBSOLETE
-  \gre@obsolete{\protect\gresetfirstannotation}{\protect\greannotation}%
-}%
-
-\let\setfirstannotation\gresetfirstannotation%OBSOLETE
-
-\def\gresetsecondannotation#1{%OBSOLETE
-  \gre@obsolete{\protect\gresetsecondannotation}{\protect\greannotation}%
-}%
-
-\let\setsecondannotation\gresetsecondannotation%OBSOLETE
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the score reference (unused)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\grescorereference#1{% DEPRECATED by 4.1
-  \ifgre@allowdeprecated%
-    \gre@warning{\protect\grescorereference\space is deprecated.\MessageBreak It does nothing; stop using it.}%
-  \else%
-    \gre@error{\protect\grescorereference\space is deprecated.\MessageBreak It does nothing; stop using it.}%
-  \fi%
+\def\grescorereference#1{% OBSOLETE
+  \gre@error{\protect\grescorereference\space is obsolete.\MessageBreak It does nothing; stop using it.}%
   \relax %
-}%
-
-\def\GreScoreReference#1{%OBSOLETE
-  \gre@error{\protect\GreScoreReference\space is obsolete.\MessageBreak It does nothing; stop using it.}%
-  \relax%
-}%
-
-\def\scorereference#1{%OBSOLETE
-  \gre@error{\protect\scorereference\space is obsolete.\MessageBreak It does nothing; stop using it.}%
 }%
 
 
@@ -780,19 +751,9 @@
   \fi%
 }
 
-\def\commentary#1{%OBSOLETE
-  \gre@obsolete{\protect\commentary}{\protect\grecommentary}%
-}%
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macro for putting text above lines for annotations and the like
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% format for text above the lines
-\def\greabovelinestextstyle#1{% OBSOLETE
-  \relax %
-}%
-\let\gre@empty@abovelinestextstyle\greabovelinestextstyle%
 
 % set space above the text lines - almost the same as for the translation
 \def\gre@addspaceabove{%
@@ -800,10 +761,6 @@
   \global\gre@dimen@currentabovelinestextheight=\gre@space@dimen@abovelinestextheight\relax%
   \gre@generatelines %
   \endgre@style@abovelinestext%
-  \ifx\gre@empty@abovelinestextstyle\greabovelinestextstyle% OBSOLETE
-  \else%  OBSOLETE
-    \gre@obsolete{\protect\greabovelinestextstyle}{\protect\grechangestyle{abovelinestext}}%  OBSOLETE
-  \fi%  OBSOLETE
   \relax %
 }%
 
@@ -833,10 +790,6 @@
   \gre@style@abovelinestext%
   \gre@debugmsg{spacing}{Raise alt text: \gre@space@dimen@abovelinestextraise}%
   \endgre@style@abovelinestext%
-  \ifx\gre@empty@abovelinestextstyle\greabovelinestextstyle% OBSOLETE
-  \else%  OBSOLETE
-    \gre@obsolete{\protect\greabovelinestextstyle}{\protect\grechangestyle{abovelinestext}}%  OBSOLETE
-  \fi%  OBSOLETE
   \gre@dimen@temp@five=\dimexpr(4\gre@dimen@stafflineheight %
     + 4\gre@dimen@interstafflinespace %
     + \gre@space@dimen@spacebeneathtext %
@@ -848,10 +801,6 @@
   \gre@mark@abovelinestext %
   \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
     \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\gre@style@abovelinestext#1\endgre@style@abovelinestext\hss}%
-  \ifx\gre@empty@abovelinestextstyle\greabovelinestextstyle% OBSOLETE
-  \else%  OBSOLETE
-    \gre@obsolete{\protect\greabovelinestextstyle}{\protect\grechangestyle{abovelinestext}}%  OBSOLETE
-  \fi%  OBSOLETE
   \relax %
 }%
 
@@ -874,14 +823,6 @@
     ]%
 }
 
-\def\greremovelines{%OBSOLETE
-  \gre@obsolete{\protect\greremovelines}{\protect\gresetlines{invisible}}%
-}%
-
-\def\gredonotremovelines{%OBSOLETE
-  \gre@obsolete{\protect\gredonotremovelines}{\protect\gresetlines{visible}}%
-}%
-
 %% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
 \def\gre@drawfirstlines{%
   \advance\gre@dimen@stafflinewidth by -\gre@dimen@initialwidth\relax%
@@ -890,10 +831,6 @@
   \hbox to 0pt{%
     \vbox{%
       \gre@style@normalstafflines%
-      \ifx\gre@empty@normalstafflinesformat\grenormalstafflinesformat% OBSOLETE
-      \else%  OBSOLETE
-        \gre@obsolete{\protect\grenormalstafflinesformat}{\protect\grechangestyle{normalstafflines}}%  OBSOLETE
-      \fi%  OBSOLETE
       \vskip\gre@dimen@currentabovelinestextheight\relax%
       \vskip\gre@dimen@additionaltopspace\relax%
       \ifgre@showlines %
@@ -955,10 +892,6 @@
   \setbox\gre@box@lines=\hbox to 0pt{%
     \vbox{%
       \gre@style@normalstafflines%
-      \ifx\gre@empty@normalstafflinesformat\grenormalstafflinesformat% OBSOLETE
-      \else%  OBSOLETE
-        \gre@obsolete{\protect\grenormalstafflinesformat}{\protect\grechangestyle{normalstafflines}}%  OBSOLETE
-      \fi%  OBSOLETE
       \vskip\glueexpr(\gre@dimen@additionaltopspace+\gre@space@skip@spaceabovelines+\gre@dimen@currentabovelinestextheight)\relax%
       \ifgre@showlines %
         \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
@@ -1060,10 +993,6 @@
     ]%
 }%
 
-\def\setgretranslationcenteringscheme#1{%OBSOLETE
-  \gre@obsolete{\protect\setgretranslationcenteringscheme}{\protect\gresettranslationcentering}%
-}%
-
 
 \newif\ifgre@breakintranslation%
 \gre@breakintranslationfalse%
@@ -1079,10 +1008,6 @@
     ]%
 }%
 
-\def\gresetnlbintranslation#1{%OBSOLETE
-  \gre@obsolete{\protect\gresetnlbintranslation}{\protect\gresetbreakintranslation}%
-}%
-
 \def\GreWriteTranslation#1{%
   \ifgre@translationcentering %
     \setbox\gre@box@temp@width=\hbox{#1}%
@@ -1090,18 +1015,10 @@
     \gre@mark@translation %
     \kern\gre@dimen@temp@five %
     \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}}%
-    \ifx\gre@empty@translationformat\gretranslationformat% OBSOLETE
-    \else%  OBSOLETE
-      \gre@obsolete{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  OBSOLETE
-    \fi%  OBSOLETE
     \kern-\gre@dimen@temp@five %
   \else %
     \gre@mark@translation %
     \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}}%
-    \ifx\gre@empty@translationformat\gretranslationformat% OBSOLETE
-    \else%  OBSOLETE
-      \gre@obsolete{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  OBSOLETE
-    \fi%  OBSOLETE
   \fi %
 }%
 
@@ -1112,10 +1029,6 @@
   \gre@attr@center=1\relax %
   \gre@mark@translation %
   \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\kern 0pt\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}\kern 0pt}%
-  \ifx\gre@empty@translationformat\gretranslationformat% OBSOLETE
-  \else%  OBSOLETE
-    \gre@obsolete{\protect\gretranslationformat}{\protect\grechangestyle{translation}}%  OBSOLETE
-  \fi%  OBSOLETE
   \unsetluatexattribute{\gre@attr@center}%
   \relax %
 }%
@@ -1250,8 +1163,7 @@
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \xdef\gre@gabcname{#6}%
   \gre@setstafflines{#7}%
-  \global\let\gre@save@englishcentering\gre@lyriccentering\relax % OBSOLETE
-  \global\let\gre@opening@initialstyle\gre@initiallines\relax % DEPRECATED by 4.1
+  \global\let\gre@opening@initialstyle\gre@initiallines\relax % DEPRECATED for removal in 5.0
   \ifgre@justifylastline%
     \xdef\gre@save@parfillskip{\the\parfillskip}%
     \parfillskip=0pt plus 0pt minus 0pt\relax%
@@ -1332,14 +1244,13 @@
   \ifgre@justifylastline%
     \parfillskip=\gre@save@parfillskip\relax%
   \fi %
-  \global\let\gre@lyriccentering\gre@save@englishcentering\relax % OBSOLETE
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \relax%
 }%
 
 % macro called at the end of a bar (old bar spacing algorithm only).
 \def\gre@endafterbar#1{%
-  \gre@penalty{\greendafterbarpenalty }\relax %
+  \gre@penalty{\the\gre@space@count@endafterbarpenalty }\relax %
   \ifnum#1=1\relax %
     \gre@debugmsg{ifdim}{ enddifference > 0pt}%
     \ifdim\gre@dimen@enddifference > 0 pt\relax%
@@ -1362,7 +1273,7 @@
       \fi %
     \fi %
   \fi %
-  %\gre@penalty{\greendafterbarpenalty }\relax
+  %\gre@penalty{\the\gre@space@count@endafterbarpenalty }\relax
   %\global\gre@dimen@enddifference=0pt
   \relax %
 }%
@@ -1427,13 +1338,6 @@
     ]%
 }%
 
-\def\gredisableeolshifts{%OBSOLETE
-  \gre@obsolete{\protect\gredisableeolshifts}{\protect\greseteolshifts{disable}}%
-}%
-
-\def\greenableeolshifts{%OBSOLETE
-  \gre@obsolete{\protect\greenableeolshifts}{\protect\greseteolshifts{enable}}%
-}%
 
 % Flag indicating if we block the custos. We just block custos at the end of a score, to prevent a bug.
 \newif\ifgre@blockeolcustos%
@@ -1482,17 +1386,13 @@
 }%
 \gresetbreakbeforeeuouae{justified}%
 
-% macro to suppress the custos
-\def\greblockcustos{%OBSOLETE
-  \gre@obsolete{\protect\greblockcustos}{\protect\greseteolcustos{manual}}%
-}%
-
-\def\GreAdHocSpaceEndOfElement#1#2{%
+\def\GreAdHocSpaceEndOfElement#1#2#3{%
   \gre@skip@temp@four = \gre@space@skip@interelementspace\relax %
   \directlua{gregoriotex.scale_space(#1)}%
-  \GreEndOfElement{4}{#2}%
+  \GreEndOfElement{4}{#2}{#3}%
 }%
 
+\newif\ifgre@unbreakableendofelement %
 % macro to end elements, #1 is the type of space, it can be :
 %% 0: default space
 %% 1: larger space
@@ -1500,11 +1400,30 @@
 %% 3: zero-width space
 %% 4: custom space
 % #2 is if the space is unbreakable (1) or not (0)
-\def\GreEndOfElement#1#2{%
-  \ifnum #2=0\relax %
-    \gre@penalty{\greendofelementpenalty}%
+% #3 is the number of notes emitted in this syllable before this macro
+\def\GreEndOfElement#1#2#3{%
+  \ifnum\gre@count@syllablenotes<\gre@count@unbreakabletotalnotes\relax %
+    \gre@unbreakableendofelementtrue %
   \else %
+    \ifnum#3<\gre@count@unbreakableinitialnotes\relax %
+      \gre@unbreakableendofelementtrue %
+    \else %
+      \ifnum\numexpr\gre@count@syllablenotes-#3\relax<%
+          \gre@count@unbreakablefinalnotes\relax %
+        \gre@unbreakableendofelementtrue %
+      \else %
+        \ifnum#2=1\relax %
+          \gre@unbreakableendofelementtrue %
+        \else %
+          \gre@unbreakableendofelementfalse %
+        \fi %
+      \fi %
+    \fi %
+  \fi %
+  \ifgre@unbreakableendofelement %
     \GreNoBreak %
+  \else %
+    \gre@penalty{\the\gre@space@count@endofelementpenalty}%
   \fi %
   \ifcase#1%
     \gre@skip@temp@four = \gre@space@skip@interelementspace\relax%
@@ -1521,7 +1440,7 @@
   \or% case 4
     \gre@hskip\gre@skip@temp@four %
   \fi%
-  \ifnum #2=1\relax %
+  \ifgre@unbreakableendofelement %
     \GreNoBreak %
   \fi %
 \relax%
@@ -1600,6 +1519,14 @@
     \gre@skip@temp@four = \gre@space@skip@ascendinginclinatumtonobarmaxshift\relax%
   \or% case 22
     \gre@skip@temp@four = \gre@space@skip@halfspace\relax%
+  \or% case 23
+    \gre@skip@temp@four = \gre@space@skip@punctuminclinatumunisonshift\relax%
+  \or% case 24
+    \gre@skip@temp@four = \gre@space@skip@descendingpunctuminclinatumascendingshift\relax%
+  \or% case 25
+    \gre@skip@temp@four = \gre@space@skip@ascendingpunctuminclinatumdescendingshift\relax%
+  \else%
+    \gre@error{Unrecognized spaceskip #1}%
   \fi%
 }%
 
@@ -1619,6 +1546,13 @@
 % 2: no line break area due to <nlba> tag
 \xdef\gre@nlbstate{0}%
 
+\newcount\gre@nobreakpenaltysave%
+\newcount\gre@endofwordpenaltysave%
+\newcount\gre@endofsyllablepenaltysave%
+\newcount\gre@endafterbarpenaltysave%
+\newcount\gre@endafterbaraltpenaltysave%
+\newcount\gre@endofelementpenaltysave%
+%\newcount\gre@hyphenpenaltysave% in gregoriotex-spaces.tex
 % first argument is if if the nlba is starting in neumes or not
 % second argument is if it is called from translation centering or not
 \def\GreBeginNLBArea#1#2{%
@@ -1635,20 +1569,21 @@
       \fi %
   \fi %
   \ifnum\gre@nlbinitialstate=0\relax %
-      \xdef\gre@nobreakpenaltysave{\grenobreakpenalty }%
-      \xdef\grenobreakpenalty{10001}%
-      \xdef\gre@endofwordpenaltysave{\greendofwordpenalty }%
-      \xdef\greendofwordpenalty{10001}%
-      \xdef\gre@endofsyllablepenaltysave{\greendofsyllablepenalty }%
-      \xdef\greendofsyllablepenalty{10001}%
-      \xdef\gre@endafterbarpenaltysave{\greendafterbarpenalty }%
-      \xdef\greendafterbarpenalty{10001}%
-      \xdef\gre@endafterbaraltpenaltysave{\greendafterbaraltpenalty }%
-      \xdef\greendafterbaraltpenalty{10001}%
-      \xdef\gre@endofelementpenaltysave{\greendofelementpenalty }%
-      \xdef\greendofelementpenalty{10001}%
-      \xdef\gre@hyphenpenaltysave{\grehyphenpenalty }%
-      \xdef\grehyphenpenalty{10001}%
+      \global\gre@nobreakpenaltysave=\gre@space@count@nobreakpenalty\relax %
+      \global\gre@endofwordpenaltysave=\gre@space@count@endofwordpenalty\relax %
+      \global\gre@endofsyllablepenaltysave=\gre@space@count@endofsyllablepenalty\relax %
+      \global\gre@endafterbarpenaltysave=\gre@space@count@endafterbarpenalty\relax %
+      \global\gre@endafterbaraltpenaltysave=\gre@space@count@endafterbaraltpenalty\relax %
+      \global\gre@endofelementpenaltysave=\gre@space@count@endofelementpenalty\relax %
+      \global\gre@hyphenpenaltysave=\gre@space@count@hyphenpenalty\relax %
+      %
+      \global\gre@space@count@nobreakpenalty=10001\relax %
+      \global\gre@space@count@endofwordpenalty=10001\relax %
+      \global\gre@space@count@endofsyllablepenalty=10001\relax %
+      \global\gre@space@count@endafterbarpenalty=10001\relax %
+      \global\gre@space@count@endafterbaraltpenalty=10001\relax %
+      \global\gre@space@count@endofelementpenalty=10001\relax %
+      \global\gre@space@count@hyphenpenalty=10001\relax %
   \fi %
 }%
 
@@ -1668,17 +1603,17 @@
   % if gre@nlbstate is not 0, then nothing should happend
   \ifnum\gre@nlbstate=0\relax %
     \ifnum\gre@nlbinitialstate=0\else %
-      \xdef\grenobreakpenalty{\gre@nobreakpenaltysave }%
-      \xdef\greendofwordpenalty{\gre@endofwordpenaltysave}%
-      \xdef\greendofsyllablepenalty{\gre@endofsyllablepenaltysave}%
-      \xdef\greendafterbarpenalty{\gre@endafterbarpenaltysave}%
-      \xdef\greendafterbaraltpenalty{\gre@endafterbaraltpenaltysave}%
-      \xdef\greendofelementpenalty{\gre@endofelementpenaltysave}%
-      \xdef\grehyphenpenalty{\gre@hyphenpenaltysave}%
+      \global\gre@space@count@nobreakpenalty=\gre@nobreakpenaltysave\relax %
+      \global\gre@space@count@endofwordpenalty=\gre@endofwordpenaltysave\relax %
+      \global\gre@space@count@endofsyllablepenalty=\gre@endofsyllablepenaltysave\relax %
+      \global\gre@space@count@endafterbarpenalty=\gre@endafterbarpenaltysave\relax %
+      \global\gre@space@count@endafterbaraltpenalty=\gre@endafterbaraltpenaltysave\relax %
+      \global\gre@space@count@endofelementpenalty=\gre@endofelementpenaltysave\relax %
+      \global\gre@space@count@hyphenpenalty=\gre@hyphenpenaltysave\relax %
       \ifcase #1\relax % 0
-        \gre@penalty{\greendofelementpenalty}%
+        \gre@penalty{\the\gre@space@count@endofelementpenalty}%
       \or % 1
-        \gre@penalty{\greendofsyllablepenalty}%
+        \gre@penalty{\the\gre@space@count@endofsyllablepenalty}%
       \or % 2
         % end of score, no penalty needs to be added
       \or % 3
@@ -1797,38 +1732,6 @@
   \relax%
 }%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% The following style functions are defined for backwards compatibility.  They will eventually be removed.
-\def\greinitialformat#1{% OBSOLETE
-  \relax %
-}
-\let\gre@empty@initialformat\greinitialformat
-
-\def\grebiginitialformat#1{% OBSOLETE
-  \relax %
-}
-\let\gre@empty@biginitialformat\grebiginitialformat
-
-\def\gretranslationformat#1{% OBSOLETE
-  \relax %
-}%
-\let\gre@empty@translationformat\gretranslationformat
-
-\def\grenormalstafflinesformat{% OBSOLETE
-  \relax %
-}%
-\let\gre@empty@normalstafflinesformat\grenormalstafflinesformat
-
-\def\greadditionalstafflinesformat{% OBSOLETE
-  \relax %
-}%
-\let\gre@empty@additionalstafflinesformat\greadditionalstafflinesformat
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\def\GreSetStaffLinesFormat#1{%OBSOLETE
-  \gre@obsolete{\protect\GreSetStaffLinesFormat}{\protect\grechangestyle{normalstafflines}}%
-}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Master function for changing element formats
@@ -1855,10 +1758,6 @@
   \fi%
   \gre@loadgregoriofont%
   \relax %
-}%
-
-\def\setgrefactor#1{%OBSOLETE
-  \gre@obsolete{\protect\setgrefactor}{\protect\grechangestaffsize}%
 }%
 
 %%%%%%%%%%%%%%%%%%%
@@ -1893,24 +1792,7 @@
     ]%
 }%
 
-
-% User macro to force gregriotex to recompile gabc files. Useful for when there
-% are changes to gregoriotex but the GREGORIOTEX API VERSION is not changed.
-\def\forcecompilegabc{%OBSOLETE
-  \gre@obsolete{\protect\forcecompilegabc}{\protect\gresetcompilegabc{force}}%
-}%
-
-% User macro to let gregoriotex auto recompile gabc files as necessary.
-% Intended to be used in the main tex file to revert the previous macro.
-\def\autocompilegabc{%OBSOLETE
-  \gre@obsolete{\protect\autocompilegabc}{\protect\gresetcompilegabc{auto}}%
-}%
-
-% User macro to force score inclusion without compilation.
-\def\nevercompilegabc{%OBSOLETE
-  \gre@obsolete{\protect\nevercompilegabc}{\protect\gresetcompilegabc{never}}%
-}
-
+\def\gre@allowdeprecated@asboolean{\ifgre@allowdeprecated true\else false\fi}%
 
 % Internal marco which includes a score when \gregorioscore is called without the optional argument.  Behavior is determined by the value of \gre@compilegabc flag.
 %
@@ -1931,10 +1813,10 @@
     \input #1%
   \or% case 1, auto compile
     \gre@debugmsg{compile}{Auto compile #1}%
-    \directlua{gregoriotex.include_score([[#1]], nil)}%
+    \directlua{gregoriotex.include_score([[#1]], nil, \gre@allowdeprecated@asboolean)}%
   \or% case 2, force compile
     \gre@debugmsg{compile}{Forced to compile #1}%
-    \directlua{gregoriotex.include_score([[#1]], true)}%
+    \directlua{gregoriotex.include_score([[#1]], true, \gre@allowdeprecated@asboolean)}%
   \fi%
   \relax%
 }%
@@ -1950,11 +1832,11 @@
   \else%
     \ifx #1f\relax%
       \gre@debugmsg{compile}{Override force compiling #2}%
-      \directlua{gregoriotex.include_score([[#2]], true)}%
+      \directlua{gregoriotex.include_score([[#2]], true, \gre@allowdeprecated@asboolean)}%
     \else%
       \ifx #1a\relax%
         \gre@debugmsg{compile}{Override auto compiling #2}%
-        \directlua{gregoriotex.include_score([[#2]], nil)}%
+        \directlua{gregoriotex.include_score([[#2]], nil, \gre@allowdeprecated@asboolean)}%
       \else%
         \gre@error{Unrecognized option "#1" for \protect\includescore\MessageBreak Possible options are: 'f', 'a', and 'n'}%
       \fi%
@@ -1964,10 +1846,6 @@
 }%
 
 % The main macro used by the user to input scores into the document.
-
-\def\includescore{%OBSOLETE
-  \gre@obsolete{\protect\includescore}{\protect\gregorioscore}%
-}%
 
 \def\gregorioscore{\@ifnextchar[{\gre@gregorioscore@option}%
     {\gre@gregorioscore}%
@@ -1990,16 +1868,16 @@
 
 % Macros for compiling short snippets of GABC directly expressed in TeX
 
-\long\def\gre@gabcsnippet@option[#1]#2{%%% DEPRECATED by 4.1
+\long\def\gre@gabcsnippet@option[#1]#2{%%% DEPRECATED for removal in 5.0
   \gre@deprecated{\protect\gabcsnippet  with initial-style argument}{\protect\gresetinitiallines}%
-  \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#2}}", "initial-style: #1;")}%
+  \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#2}}", "initial-style: #1;", \gre@allowdeprecated@asboolean)}%
 }%
 
 \long\def\gre@gabcsnippet#1{%
-  \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#1}}")}%
+  \directlua{gregoriotex.direct_gabc("\luatexluaescapestring{\unexpanded\expandafter{#1}}", nil, \gre@allowdeprecated@asboolean)}%
 }%
 
-%%% \gre@gabcsnipper@option is DEPRECATED by 4.1
+%%% \gre@gabcsnipper@option is DEPRECATED for removal in 5.0
 \def\gabcsnippet{\@ifnextchar[{\gre@gabcsnippet@option}{\gre@gabcsnippet}}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2033,14 +1911,6 @@
     }[% all other cases
       \gre@error{Unrecognized option "#1" for \protect\greseteolhyphen\MessageBreak Possible options are: 'normal' and 'zero'}%
     ]%
-}%
-
-\def\GreUseNormalHyphen{%OBSOLETE
-  \gre@obsolete{\protect\GreUseNormalHyphen}{\protect\greseteolhyphen{normal}}%
-}%
-
-\def\GreUseZeroHyphen{%OBSOLETE
-  \gre@obsolete{\protect\GreUseZeroHyphen}{\protect\greseteolhyphen{zero}}%
 }%
 
 % macro to force hyphenation of all syllables.
