@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Copyright (C) 2015 The Gregorio Project (see CONTRIBUTORS.md)
 #
@@ -163,9 +163,11 @@ function install_to {
 }
 
 function find_and_remove {
-    for files in $1; do
+    for files in "$@"; do
         target="${TEXMFROOT}/${files}"
+#        echo "Looking for $target"
         if [ -e "$target" ]; then
+#            echo "Removing $target"
             $RM -f "$target"
         fi
     done

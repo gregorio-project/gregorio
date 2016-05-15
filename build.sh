@@ -69,14 +69,10 @@ then
   MINGWSTR=mingw32
   if [ -d /usr/mingw32 ]; then
     MINGWSTR=mingw32
-  else
-    if [ -d /usr/i386-mingw32msvc ]; then
+  elif [ -d /usr/i386-mingw32msvc ]; then
       MINGWSTR=i386-mingw32msvc
-    else
-      if [ -d /usr/i586-mingw32msvc ]; then
+  elif [ -d /usr/i586-mingw32msvc ]; then
         MINGWSTR=i586-mingw32msvc
-      fi
-    fi
   fi
   OLDPATH=$PATH
   PATH=/usr/$MINGWSTR/bin:$PATH
@@ -87,8 +83,7 @@ then
     --host=$MINGWSTR \
     --build=$MINGWBUILD \
     --prefix=/usr/$MINGWSTR"
-else
-if [ "$MACCROSS" = "TRUE" ]
+elif [ "$MACCROSS" = "TRUE" ]
 then
   # make sure that architecture parameter is valid
   case $ARCH in
@@ -98,7 +93,6 @@ then
   ARCHFLAGS="$ARCHFLAGS"
   CFLAGS="-arch $ARCH -g -O2 $CFLAGS"
   LDFLAGS="-arch $ARCH $LDFLAGS" 
-fi  
 fi
 
 
