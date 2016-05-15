@@ -290,7 +290,7 @@
         \fi%
       \else% vowel or first-letter centering
         \ifcase#3%
-          \gre@widthof{\gre@endsyllablepart}%
+          \gre@widthof{\gre@emit@endsyllablepart}%
         \else%
           \gre@widthof{\gre@nextendsyllablepart}%
         \fi%
@@ -689,6 +689,49 @@
   \gre@count@syllablenotes=\number#1\relax %
 }%
 
+\def\gre@ignore#1{#1}%
+\let\gre@save@endsyllablepart\gre@nothing\relax %
+\let\gre@save@fixedtextformat\gre@ignore\relax %
+\let\gre@save@pointandclick\gre@nothing\relax %
+\def\gre@push@endsyllable#1{%
+  \ifnum\gre@insidediscretionary=0\relax%
+    \ifgre@possibleluahyphenafterthissyllable\relax %
+      \ifcase\directlua{gregoriotex.is_last_syllable_on_line()}\relax %
+        \let\gre@save@endsyllablepart\gre@nothing\relax %
+        \let\gre@save@fixedtextformat\gre@ignore\relax %
+        \let\gre@save@pointandclick\gre@nothing\relax %
+      \else %
+        \let\gre@save@endsyllablepart\gre@endsyllablepart\relax %
+        \let\gre@save@fixedtextformat\gre@fixedtextformat\relax %
+        \xdef\gre@save@pointandclick{#1}%
+      \fi %
+    \else %
+      \let\gre@save@endsyllablepart\gre@nothing\relax %
+      \let\gre@save@fixedtextformat\gre@ignore\relax %
+      \let\gre@save@pointandclick\gre@nothing\relax %
+    \fi %
+  \fi %
+  \relax %
+}%
+
+\def\gre@emit@savedendsyllablepart{%
+  \ifx\gre@save@endsyllablepart\gre@nothing\else %
+    \gre@save@fixedtextformat{\gre@pointandclick{\gre@save@endsyllablepart}{\gre@save@pointandclick}}%
+  \fi %
+  \relax %
+}%
+
+\def\gre@emit@endsyllablepart{%
+  \ifgre@possibleluahyphenafterthissyllable\relax %
+    \ifcase\directlua{gregoriotex.is_last_syllable_on_line()}\relax %
+      \gre@endsyllablepart %
+    \fi %
+  \else %
+    \gre@endsyllablepart %
+  \fi %
+  \relax %
+}%
+
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : macro setting the letters of this syllable
 % #2 : reserved (unused)
@@ -707,7 +750,12 @@
   \gre@debugmsg{general}{}%
   \gre@debugmsg{general}{New syllable: \expandafter\unexpanded{#1}}%
   \gre@debugmsg{general}{}%
-  \global\gre@possibleluahyphenafterthissyllablefalse %
+  \global\advance\gre@attr@syllable@id by 1\relax %
+  \ifcase#4 %
+    \global\gre@possibleluahyphenafterthissyllabletrue %
+  \else %
+    \global\gre@possibleluahyphenafterthissyllablefalse %
+  \fi %
   \gre@showhyphenafterthissyllablefalse%
   \ifcase#4\ifgre@forcehyphen%
     \gre@debugmsg{hyphen}{Forcing hyphen}%
@@ -716,7 +764,7 @@
   #1%
   \gre@firstglyphtrue%
   \gre@dimen@bolextra = 0pt\relax%
-  \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
+  \gre@calculate@textaligncenter{\gre@save@fixedtextformat{\gre@save@endsyllablepart}\gre@fixedtextformat{\gre@firstsyllablepart}}{\gre@fixedtextformat{\gre@middlesyllablepart}}{0}% we first get the width between the alignment point and the end of the syllable
   \gre@syllablenotes{#9}% we put the notes in a box, so that we have the width of it
   % now we calculate the begin difference, that is to say \gre@dimen@notesaligncenter - \gre@dimen@textaligncenter
   \gre@dimen@begindifference=\dimexpr(\gre@dimen@notesaligncenter - \gre@dimen@textaligncenter)\relax %
@@ -768,7 +816,7 @@
   \gre@calculate@nextbegindifference{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@nextendsyllablepart}{#7}%
   \gre@unsetfixednexttextformat %
   \ifgre@showlyrics%
-    \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
+    \setbox\gre@box@syllabletext=\hbox{\gre@emit@savedendsyllablepart\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart}{#6}}}%
   \else%
     \setbox\gre@box@syllabletext=\box\voidb@x%
   \fi%
@@ -808,13 +856,13 @@
     % if it's the last syllable of line, the hyphen will be \GreHyph
     \ifnum\gre@lastoflinecount=1\relax %
       \ifgre@showlyrics%
-        \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart#3{\GreHyph}\relax}{#6}}}%
+        \setbox\gre@box@syllabletext=\hbox{\gre@emit@savedendsyllablepart\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart#3{\GreHyph}\relax}{#6}}}%
       \else%
         \setbox\gre@box@syllabletext=\box\voidb@x%
       \fi%
     \else %
       \ifgre@showlyrics%
-        \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart#3{-}}{#6}}}%
+        \setbox\gre@box@syllabletext=\hbox{\gre@emit@savedendsyllablepart\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart#3{-}}{#6}}}%
       \else%
         \setbox\gre@box@syllabletext=\box\voidb@x%
       \fi%
@@ -828,11 +876,10 @@
       \gre@attr@dash=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
       % we rebuild this box, in order it to have the attribute
       \ifgre@showlyrics%
-        \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
+        \setbox\gre@box@syllabletext=\hbox{\gre@emit@savedendsyllablepart\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart}{#6}}}%
       \else%
         \setbox\gre@box@syllabletext=\box\voidb@x%
       \fi%
-      \global\gre@possibleluahyphenafterthissyllabletrue %
     \fi %
   \fi%
   % then we reuse temp, we assign to it the \gre@dimen@begindifference, but only if it is positive, else it is 0
@@ -868,6 +915,7 @@
   \fi%
   % we call end of syllable
   \gre@syllable@end{#7}{\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart}{#4}%
+  \gre@push@endsyllable{#6}\relax %
   \global\gre@dimen@notesaligncenter=0pt\relax% very important, see flat and natural
   \gre@unsetfixedtextformat %
   \ifgre@blockeolcustos\ifnum\gre@insidediscretionary=0\relax %
@@ -1016,6 +1064,7 @@
 %a macro to typeset a syllable with only a bar inside
 \def\GreBarSyllable#1#2#3#4#5#6#7#8#9{%
   \gre@debugmsg{general}{New bar syllable}%
+  \global\advance\gre@attr@syllable@id by 1\relax %
   \gre@possibleluahyphenafterthissyllablefalse %
   \gre@showhyphenafterthissyllablefalse %
   % the algorithm of this function is *extremely* complex, and has been much painful to write... good luck to understand.
@@ -1023,9 +1072,9 @@
   % there are two different cases that have almost nothing in common : the case where there is something written under the bar, and the case where there is nothing.
   % first of all we need to calculate previousenddifference, begindifference, enddifference and nextbegindifference.
   #1%
-  \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}%
+  \gre@calculate@textaligncenter{\gre@save@fixedtextformat{\gre@save@endsyllablepart}\gre@fixedtextformat{\gre@firstsyllablepart}}{\gre@fixedtextformat{\gre@middlesyllablepart}}{0}%
   \ifgre@showlyrics%
-    \setbox\gre@box@syllabletext=\hbox{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}%
+    \setbox\gre@box@syllabletext=\hbox{\gre@emit@savedendsyllablepart\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart}{#6}}}%
   \else%
     \setbox\gre@box@syllabletext=\box\voidb@x%
   \fi%
@@ -1272,6 +1321,7 @@
       %and that's it !!
     \fi %
   \fi%
+  \gre@push@endsyllable{#6}\relax %
   \global\gre@dimen@notesaligncenter= 0 pt\relax % very important, see flat and natural
   \gre@unsetfixedtextformat %
   \ifgre@blockeolcustos\ifnum\gre@insidediscretionary=0\relax %

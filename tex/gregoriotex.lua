@@ -49,7 +49,7 @@ local whatsit = node.id('whatsit')
 
 local hyphen = tex.defaulthyphenchar or 45
 
-local dash_attr         = luatexbase.attributes['gre@attr@dash']
+local dash_attr = luatexbase.attributes['gre@attr@dash']
 local potentialdashvalue   = 1
 local nopotentialdashvalue = 2
 
@@ -62,6 +62,8 @@ local glyph_top_attr = luatexbase.attributes['gre@attr@glyph@top']
 local glyph_bottom_attr = luatexbase.attributes['gre@attr@glyph@bottom']
 local prev_line_id = nil
 
+local syllable_id_attr = luatexbase.attributes['gre@attr@syllable@id']
+
 local cur_score_id = nil
 local score_inclusion = {}
 local line_heights = nil
@@ -73,6 +75,10 @@ local saved_lengths = nil
 local new_saved_lengths = nil
 local saved_newline_before_euouae = nil
 local new_saved_newline_before_euouae = nil
+local last_syllables = nil
+local new_last_syllables = nil
+local score_last_syllables = nil
+local new_score_last_syllables = nil
 local auxname = nil
 local snippet_filename = nil
 local snippet_logname = nil
@@ -101,7 +107,6 @@ local create_marker = luatexbase.new_user_whatsit('marker', 'gregoriotex')
 local marker_whatsit_id = luatexbase.get_user_whatsit_id('marker', 'gregoriotex')
 local translation_mark = 1
 local abovelinestext_mark = 2
-
 log("marker whatsit id is %d", marker_whatsit_id)
 
 local function mark(value)
@@ -173,6 +178,12 @@ local function is_greaux_write_needed()
   for id, tab in pairs(line_heights) do
     if keys_changed(tab, new_line_heights[id]) then return true end
   end
+  for id, tab in pairs(new_last_syllables) do
+    if keys_changed(tab, last_syllables[id]) then return true end
+  end
+  for id, tab in pairs(last_syllables) do
+    if keys_changed(tab, new_last_syllables[id]) then return true end
+  end
   if saved_computations_changed(saved_lengths, new_saved_lengths) then
     return true
   end
@@ -189,13 +200,21 @@ local function write_greaux()
     local aux = io.open(auxname, 'w')
     if aux then
       log("Writing %s", auxname)
-      aux:write('return {\n ["line_heights"]={\n')
       local id, tab, id2, line, value
+      aux:write('return {\n ["line_heights"]={\n')
       for id, tab in pairs(new_line_heights) do
         aux:write(string.format('  ["%s"]={\n', id))
         for id2, line in pairs(tab) do
           aux:write(string.format('   [%d]={%d,%d,%d,%d},\n', id2, line[1],
               line[2], line[3], line[4]))
+        end
+        aux:write('  },\n')
+      end
+      aux:write(' },\n ["last_syllables"]={\n')
+      for id, tab in pairs(new_last_syllables) do
+        aux:write(string.format('  ["%s"]={\n', id))
+        for id2, value in pairs(tab) do
+          aux:write(string.format('   [%d]=%d,\n', id2, value))
         end
         aux:write('  },\n')
       end
@@ -261,16 +280,19 @@ local function init(arg, enable_height_computation)
     log("Reading %s", auxname)
     local score_info = dofile(auxname)
     line_heights = score_info.line_heights or {}
+    last_syllables = score_info.last_syllables or {}
     saved_lengths = score_info.saved_lengths or {}
     saved_newline_before_euouae = score_info.saved_newline_before_euouae or {}
   else
     line_heights = {}
+    last_syllables = {}
     saved_lengths = {}
     saved_newline_before_euouae = {}
   end
 
   if enable_height_computation then
     new_line_heights = {}
+    new_last_syllables = {}
 
     local mcb_version = luatexbase.get_module_version and
         luatexbase.get_module_version('luatexbase-mcb') or 9999
@@ -378,7 +400,7 @@ end
 
 -- in each function we check if we really are inside a score,
 -- which we can see with the dash_attr being set or not
-local function process (h, groupcode, glyphes)
+local function post_linebreak(h, groupcode, glyphes)
   -- TODO: to be changed according to the font
   local lastseennode            = nil
   local adddash                 = false
@@ -391,6 +413,7 @@ local function process (h, groupcode, glyphes)
   local line_has_translation    = false
   local line_has_abovelinestext = false
   local linenum                 = 0
+  local syl_id                  = nil
   -- we explore the lines
   for line in traverse(h) do
     if line.id == glue then
@@ -415,6 +438,7 @@ local function process (h, groupcode, glyphes)
         line_has_translation = false
         line_has_abovelinestext = false
         for n in traverse_id(hlist, line.head) do
+          syl_id = has_attribute(n, syllable_id_attr) or syl_id
           if has_attribute(n, center_attr, startcenter) then
             centerstartnode = n
           elseif has_attribute(n, center_attr, endcenter) then
@@ -484,6 +508,9 @@ local function process (h, groupcode, glyphes)
               line_has_abovelinestext and 1 or 0 }
           prev_line_id = line_id
         end
+        if new_score_last_syllables and syl_id then
+          new_score_last_syllables[syl_id] = syl_id
+        end
       end
       -- we reinitialize the shift value, because it may change according to the line
       currentshift=0
@@ -501,7 +528,7 @@ local function disable_hyphenation()
   return false
 end
 
-local function atScoreBeginning (score_id, top_height, bottom_height,
+local function atScoreBeginning(score_id, top_height, bottom_height,
     has_translation, has_above_lines_text, top_height_adj, bottom_height_adj)
   local inclusion = score_inclusion[score_id] or 1
   score_inclusion[score_id] = inclusion + 1
@@ -520,13 +547,18 @@ local function atScoreBeginning (score_id, top_height, bottom_height,
     score_heights = nil
     new_score_heights = nil
   end
+  score_last_syllables = last_syllables[score_id]
+  if new_last_syllables then
+    new_score_last_syllables = {}
+    new_last_syllables[score_id] = new_score_last_syllables
+  end
 
-  luatexbase.add_to_callback('post_linebreak_filter', process, 'gregoriotex.callback', 1)
+  luatexbase.add_to_callback('post_linebreak_filter', post_linebreak, 'gregoriotex.post_linebreak', 1)
   luatexbase.add_to_callback("hyphenate", disable_hyphenation, "gregoriotex.disable_hyphenation", 1)
 end
 
-local function atScoreEnd ()
-  luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.callback')
+local function atScoreEnd()
+  luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.post_linebreak')
   luatexbase.remove_from_callback("hyphenate", "gregoriotex.disable_hyphenation")
 end
 
@@ -1144,38 +1176,46 @@ local function mode_part(part)
   end
 end
 
-gregoriotex.number_to_letter     = number_to_letter
-gregoriotex.init                 = init
-gregoriotex.include_score        = include_score
-gregoriotex.atScoreEnd           = atScoreEnd
-gregoriotex.atScoreBeginning     = atScoreBeginning
-gregoriotex.check_font_version   = check_font_version
-gregoriotex.get_gregorioversion  = get_gregorioversion
-gregoriotex.map_font             = map_font
-gregoriotex.init_variant_font    = init_variant_font
-gregoriotex.change_score_glyph   = change_score_glyph
-gregoriotex.reset_score_glyph    = reset_score_glyph
-gregoriotex.scale_score_fonts    = scale_score_fonts
-gregoriotex.set_font_factor      = set_font_factor
-gregoriotex.def_symbol           = def_symbol
-gregoriotex.font_size            = font_size
-gregoriotex.direct_gabc          = direct_gabc
-gregoriotex.adjust_line_height   = adjust_line_height
-gregoriotex.var_brace_len        = var_brace_len
-gregoriotex.save_length          = save_length
-gregoriotex.mark_translation     = mark_translation
-gregoriotex.mark_abovelinestext  = mark_abovelinestext
-gregoriotex.width_to_bp          = width_to_bp
-gregoriotex.hypotenuse           = hypotenuse
-gregoriotex.rotation             = rotation
-gregoriotex.scale_space          = scale_space
-gregoriotex.set_header_capture   = set_header_capture
-gregoriotex.capture_header       = capture_header
-gregoriotex.is_ypos_different    = is_ypos_different
-gregoriotex.save_euouae          = save_euouae
-gregoriotex.mode_part            = mode_part
-gregoriotex.set_debug_string     = set_debug_string
-gregoriotex.late_save_position   = late_save_position
+-- this function is meant to be used from \ifcase; prints 0 for true and 1 for false
+local function is_last_syllable_on_line()
+  -- if the last syllable is not computed, treat all syllables as the last on a line
+  tex.print((not score_last_syllables or
+      score_last_syllables[tex.getattribute(syllable_id_attr)]) and 0 or 1)
+end
+
+gregoriotex.number_to_letter         = number_to_letter
+gregoriotex.init                     = init
+gregoriotex.include_score            = include_score
+gregoriotex.atScoreEnd               = atScoreEnd
+gregoriotex.atScoreBeginning         = atScoreBeginning
+gregoriotex.check_font_version       = check_font_version
+gregoriotex.get_gregorioversion      = get_gregorioversion
+gregoriotex.map_font                 = map_font
+gregoriotex.init_variant_font        = init_variant_font
+gregoriotex.change_score_glyph       = change_score_glyph
+gregoriotex.reset_score_glyph        = reset_score_glyph
+gregoriotex.scale_score_fonts        = scale_score_fonts
+gregoriotex.set_font_factor          = set_font_factor
+gregoriotex.def_symbol               = def_symbol
+gregoriotex.font_size                = font_size
+gregoriotex.direct_gabc              = direct_gabc
+gregoriotex.adjust_line_height       = adjust_line_height
+gregoriotex.var_brace_len            = var_brace_len
+gregoriotex.save_length              = save_length
+gregoriotex.mark_translation         = mark_translation
+gregoriotex.mark_abovelinestext      = mark_abovelinestext
+gregoriotex.width_to_bp              = width_to_bp
+gregoriotex.hypotenuse               = hypotenuse
+gregoriotex.rotation                 = rotation
+gregoriotex.scale_space              = scale_space
+gregoriotex.set_header_capture       = set_header_capture
+gregoriotex.capture_header           = capture_header
+gregoriotex.is_ypos_different        = is_ypos_different
+gregoriotex.save_euouae              = save_euouae
+gregoriotex.mode_part                = mode_part
+gregoriotex.set_debug_string         = set_debug_string
+gregoriotex.late_save_position       = late_save_position
+gregoriotex.is_last_syllable_on_line = is_last_syllable_on_line
 
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))
