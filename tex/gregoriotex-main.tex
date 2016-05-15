@@ -149,6 +149,9 @@
 \newluatexattribute\gre@attr@glyph@top %
 \newluatexattribute\gre@attr@glyph@bottom %
 
+% attribure for syllable tracking
+\newluatexattribute\gre@attr@syllable@id %
+
 \newluatexcatcodetable\gre@atletter %
 \setluatexcatcodetable\gre@atletter{%
   \catcode`\@=11 %
@@ -1161,6 +1164,7 @@
   \gre@reseteolcustos%
   \gre@resetledgerlineheuristics%
   \global\setluatexattribute\gre@attr@glyph@id{0}%
+  \global\setluatexattribute\gre@attr@syllable@id{0}%
   \xdef\gre@gabcname{#6}%
   \gre@setstafflines{#7}%
   \global\let\gre@opening@initialstyle\gre@initiallines\relax % DEPRECATED for removal in 5.0
