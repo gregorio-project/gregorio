@@ -694,21 +694,18 @@
 \let\gre@save@fixedtextformat\gre@ignore\relax %
 \let\gre@save@pointandclick\gre@nothing\relax %
 \def\gre@push@endsyllable#1{%
-  \ifnum\gre@insidediscretionary=0\relax%
-    \ifgre@possibleluahyphenafterthissyllable\relax %
-      \ifcase\directlua{gregoriotex.is_last_syllable_on_line()}\relax %
-        \let\gre@save@endsyllablepart\gre@nothing\relax %
-        \let\gre@save@fixedtextformat\gre@ignore\relax %
-        \let\gre@save@pointandclick\gre@nothing\relax %
-      \else %
-        \let\gre@save@endsyllablepart\gre@endsyllablepart\relax %
-        \let\gre@save@fixedtextformat\gre@fixedtextformat\relax %
-        \xdef\gre@save@pointandclick{#1}%
+  \let\gre@save@endsyllablepart\gre@nothing\relax %
+  \let\gre@save@fixedtextformat\gre@ignore\relax %
+  \let\gre@save@pointandclick\gre@nothing\relax %
+  \ifnum\gre@insidediscretionary=0\relax %
+    \ifgre@showhyphenafterthissyllable\else %
+      \ifgre@possibleluahyphenafterthissyllable\relax %
+        \ifcase\directlua{gregoriotex.is_last_syllable_on_line()}\else %
+          \let\gre@save@endsyllablepart\gre@endsyllablepart\relax %
+          \let\gre@save@fixedtextformat\gre@fixedtextformat\relax %
+          \xdef\gre@save@pointandclick{#1}%
+        \fi %
       \fi %
-    \else %
-      \let\gre@save@endsyllablepart\gre@nothing\relax %
-      \let\gre@save@fixedtextformat\gre@ignore\relax %
-      \let\gre@save@pointandclick\gre@nothing\relax %
     \fi %
   \fi %
   \relax %
@@ -722,12 +719,16 @@
 }%
 
 \def\gre@emit@endsyllablepart{%
-  \ifgre@possibleluahyphenafterthissyllable\relax %
-    \ifcase\directlua{gregoriotex.is_last_syllable_on_line()}\relax %
+  \ifgre@showhyphenafterthissyllable\relax %
+    \gre@endsyllablepart %
+  \else %
+    \ifgre@possibleluahyphenafterthissyllable\relax %
+      \ifcase\directlua{gregoriotex.is_last_syllable_on_line()}\relax %
+        \gre@endsyllablepart %
+      \fi %
+    \else %
       \gre@endsyllablepart %
     \fi %
-  \else %
-    \gre@endsyllablepart %
   \fi %
   \relax %
 }%
