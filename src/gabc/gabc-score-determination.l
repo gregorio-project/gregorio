@@ -106,7 +106,7 @@ double semicolon, (b) multi-line values, which end at a double
 semicolon. */
 
 %%
-<INITIAL>^(\xBB|\xEF|\xBF)* {
+<INITIAL>^(\xBB|\xEF|\xBF)+ {
         /* BOM written by a lot of windows softwares when they write UTF-8 */
     }
 <INITIAL>^[\n\r]+ {
@@ -118,7 +118,7 @@ semicolon. */
 <inicomments>(\n|\r)+ {
         BEGIN(INITIAL);
     }
-<inicomments>[^\n\r]* {
+<inicomments>[^\n\r]+ {
         /* ignored */
     }
 <INITIAL>:(\ )? {
@@ -216,7 +216,11 @@ semicolon. */
                 _("unrecognized character: \"%c\" in definition part"),
                 gabc_score_determination_text[0]);
     }
-<score>[^-\{\}\(\[\]<%]+ {
+<score>[\n\r][\n\r \t]* {
+        gabc_score_determination_lval.text = gregorio_strdup(" ");
+        return CHARACTERS;
+    }
+<score>[^-\{\}\(\[\]<%\n\r]+ {
         gabc_score_determination_lval.text =
                 gregorio_strdup(gabc_score_determination_text);
         return CHARACTERS;
@@ -326,7 +330,11 @@ semicolon. */
         }
         return SP_END;
     }
-<style>[^<\{\}]* {
+<style>[\n\r][\n\r \t]* {
+        gabc_score_determination_lval.text = gregorio_strdup(" ");
+        return CHARACTERS;
+    }
+<style>[^<\{\}\n\r]+ {
         gabc_score_determination_lval.text =
                 gregorio_strdup(gabc_score_determination_text);
         return CHARACTERS;
@@ -337,7 +345,7 @@ semicolon. */
 <comments>(\n|\r)+ {
         BEGIN(score);
     }
-<comments>[^\n\r]* {
+<comments>[^\n\r]+ {
         /* ignored */
     }
 <style,score><v> {
@@ -352,7 +360,7 @@ semicolon. */
         }
         return VERB_END;
     }
-<verb>[^<]* {
+<verb>[^<]+ {
         gabc_score_determination_lval.text =
                 gregorio_strdup(gabc_score_determination_text);
         return CHARACTERS;
@@ -372,7 +380,7 @@ semicolon. */
         BEGIN(alt);
         return ALT_BEGIN;
     }
-<alt>[^<]* {
+<alt>[^<]+ {
         gabc_score_determination_lval.text =
                 gregorio_strdup(gabc_score_determination_text);
         return CHARACTERS;
@@ -400,7 +408,7 @@ semicolon. */
         BEGIN(notes);
         return OPENING_BRACKET;
     }
-<notes>[^|\)]* {
+<notes>[^|\)]+ {
         gabc_score_determination_lval.text =
                 gregorio_strdup(gabc_score_determination_text);
         return NOTES;
