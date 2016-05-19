@@ -1091,13 +1091,15 @@
       \GreNoBreak%
     \fi%
     \ifgre@eolshiftsenabled%
-      %this shift will shorten the line somewhat to allow the lyrics to extend under the custos should TeX decide to insert a line break after the syllable being ended
-      \gre@calculate@eolshift{\dimexpr(\gre@dimen@enddifference-\gre@skip@bar@lastskip)\relax }%
-      \gre@debugmsg{barspacing}{End of line shift: \the\gre@dimen@eolshift}%
-      \ifdim\gre@dimen@eolshift<\gre@skip@bar@lastskip %
-        \gre@dimen@eolshift=\gre@skip@bar@lastskip\relax %
-      \fi %
-      \kern\glueexpr(-\gre@dimen@eolshift)\relax%
+      \ifdim\wd\gre@box@syllablenotes>0pt\relax%
+        %this shift will shorten the line somewhat to allow the lyrics to extend under the custos should TeX decide to insert a line break after the syllable being ended
+        \gre@calculate@eolshift{\dimexpr(\gre@dimen@enddifference-\gre@skip@bar@lastskip)\relax }%
+        \gre@debugmsg{barspacing}{End of line shift: \the\gre@dimen@eolshift}%
+        \ifdim\gre@dimen@eolshift<\gre@skip@bar@lastskip %
+          \gre@dimen@eolshift=\gre@skip@bar@lastskip\relax %
+        \fi %
+        \kern\glueexpr(-\gre@dimen@eolshift)\relax%
+      \fi%
     \fi%
     % gre@count@temp@one is "forced end of line or last of score"
     \gre@count@temp@one=0\relax %
