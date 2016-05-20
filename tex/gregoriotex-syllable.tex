@@ -1202,6 +1202,7 @@
     % Old spacing algorithm
     %
     %This is the old algorithm.  I've kept it in case people still want to use it.
+    \gre@punctummoraadjustment%
     % then we check if there is something to write
     \global\let\gre@newlinecommon\gre@newlinecommonsaved %
     \gre@debugmsg{ifdim}{ wd(gre@box@syllabletext) = 0pt}%
@@ -1220,10 +1221,10 @@
       \else %
         \gre@skip@temp@two=0 pt\relax%
       \fi %
-      \gre@debugmsg{ifdim}{ previousenddifference < 0pt}%
-      \ifdim\gre@dimen@previousenddifference < 0 pt\relax%
+      \gre@debugmsg{ifdim}{ adjustedpreviousenddifference < 0pt}%
+      \ifdim\gre@dimen@adjustedpreviousenddifference < 0 pt\relax%
         \advance\gre@skip@temp@two by %
-          \glueexpr(-\gre@dimen@previousenddifference %
+          \glueexpr(-\gre@dimen@adjustedpreviousenddifference %
           + \gre@space@skip@interwordspacetext)\relax%
       \else %
         \advance\gre@skip@temp@two by \gre@space@skip@interwordspacenotes\relax%
@@ -1237,9 +1238,9 @@
       \advance\gre@skip@temp@three by \dimexpr(\wd\gre@box@syllablenotes / -2)\relax %
       % now we have our skipone
       \gre@skip@temp@two=\gre@skip@temp@three %
-      \gre@debugmsg{ifdim}{ previousenddifference < 0pt}%
-      \ifdim\gre@dimen@previousenddifference < 0 pt\relax%
-        \advance\gre@skip@temp@two by \gre@dimen@previousenddifference\relax%
+      \gre@debugmsg{ifdim}{ adjustedpreviousenddifference < 0pt}%
+      \ifdim\gre@dimen@adjustedpreviousenddifference < 0 pt\relax%
+        \advance\gre@skip@temp@two by \gre@dimen@adjustedpreviousenddifference\relax%
       \fi %
       \GreNoBreak %
       \gre@debugmsg{ifdim}{ temp@skip@two > -wd(gre@box@syllablenotes)}%
