@@ -1178,9 +1178,20 @@ end
 
 -- this function is meant to be used from \ifcase; prints 0 for true and 1 for false
 local function is_last_syllable_on_line()
-  -- if the last syllable is not computed, treat all syllables as the last on a line
-  tex.print((not score_last_syllables or
-      score_last_syllables[tex.getattribute(syllable_id_attr)]) and 0 or 1)
+  if score_last_syllables then
+    if score_last_syllables[tex.getattribute(syllable_id_attr)] then
+      log("%d->0", tex.getattribute(syllable_id_attr));
+      tex.print(0)
+    else
+      log("%d->1", tex.getattribute(syllable_id_attr));
+      tex.print(1)
+    end
+  else
+    -- if the last syllable is not computed, treat all syllables as the
+    -- last on a line
+    log("%d->X", tex.getattribute(syllable_id_attr));
+    tex.print(0)
+  end
 end
 
 gregoriotex.number_to_letter         = number_to_letter
