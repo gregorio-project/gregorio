@@ -689,13 +689,12 @@
   \gre@count@syllablenotes=\number#1\relax %
 }%
 
-\def\gre@passthrough#1{#1}%
 \let\gre@save@endsyllablepart\gre@nothing\relax %
-\let\gre@save@fixedtextformat\gre@passthrough\relax %
+\let\gre@save@fixedtextformat\gre@textnormal\relax %
 \let\gre@save@pointandclick\gre@nothing\relax %
 \def\gre@push@endsyllable#1{%
   \let\gre@save@endsyllablepart\gre@nothing\relax %
-  \let\gre@save@fixedtextformat\gre@passthrough\relax %
+  \let\gre@save@fixedtextformat\gre@textnormal\relax %
   \let\gre@save@pointandclick\gre@nothing\relax %
   \ifnum\gre@insidediscretionary=0\relax %
     \ifgre@showhyphenafterthissyllable\else %
@@ -711,9 +710,16 @@
   \relax %
 }%
 
-\def\gre@emit@savedendsyllablepart{%
-  \ifx\gre@save@endsyllablepart\gre@nothing\else %
-    \gre@save@fixedtextformat{\gre@pointandclick{\gre@save@endsyllablepart}{\gre@save@pointandclick}}%
+\def\gre@emit@syllabletext#1{%
+  \ifx\gre@save@endsyllablepart\gre@nothing %
+    \gre@fixedtextformat{#1}%
+  \else %
+    \ifx\gre@save@fixedtextformat\gre@fixedtextformat %
+      \gre@fixedtextformat{\gre@pointandclick{\gre@save@endsyllablepart}{\gre@save@pointandclick}#1}%
+    \else %
+      \gre@save@fixedtextformat{\gre@pointandclick{\gre@save@endsyllablepart}{\gre@save@pointandclick}}%
+      \gre@fixedtextformat{#1}%
+    \fi %
   \fi %
   \relax %
 }%
@@ -737,7 +743,6 @@
   \ifgre@showhyphenafterthissyllable\else %
     \ifgre@possibleluahyphenafterthissyllable\relax %
       \ifcase\directlua{gregoriotex.is_last_syllable_on_line()}\else %
-        % should this not be gre@fixedtextformat{\gre@endsyllablepart} ???
         \gre@endsyllablepart %
       \fi %
     \fi %
@@ -829,7 +834,7 @@
   \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@nextendsyllablepart}{#7}%
   \gre@unsetfixednexttextformat %
   \ifgre@showlyrics%
-    \setbox\gre@box@syllabletext=\hbox{\gre@emit@savedendsyllablepart\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart}{#6}}}%
+    \setbox\gre@box@syllabletext=\hbox{\gre@emit@syllabletext{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart}{#6}}}%
   \else%
     \setbox\gre@box@syllabletext=\box\voidb@x%
   \fi%
@@ -869,18 +874,19 @@
     % if it's the last syllable of line, the hyphen will be \GreHyph
     \ifnum\gre@lastoflinecount=1\relax %
       \ifgre@showlyrics%
-        \setbox\gre@box@syllabletext=\hbox{\gre@emit@savedendsyllablepart\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart#3{\GreHyph}\relax}{#6}}}%
+        \setbox\gre@box@syllabletext=\hbox{\gre@emit@syllabletext{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart#3{\GreHyph}\relax}{#6}}}%
       \else%
         \setbox\gre@box@syllabletext=\box\voidb@x%
       \fi%
     \else %
       \ifgre@showlyrics%
-        \setbox\gre@box@syllabletext=\hbox{\gre@emit@savedendsyllablepart\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart#3{-}}{#6}}}%
+        \setbox\gre@box@syllabletext=\hbox{\gre@emit@syllabletext{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart#3{-}}{#6}}}%
       \else%
         \setbox\gre@box@syllabletext=\box\voidb@x%
       \fi%
     \fi %
     % recomputing end difference and final skip with the final hyphen
+    \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@nextendsyllablepart}{#7}%
     \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{0}%
     \gre@calculate@syllablefinalskip{#4}{\gre@count@temp@one}%
   \else %
@@ -889,7 +895,7 @@
       \gre@attr@dash=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
       % we rebuild this box, in order it to have the attribute
       \ifgre@showlyrics%
-        \setbox\gre@box@syllabletext=\hbox{\gre@emit@savedendsyllablepart\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart}{#6}}}%
+        \setbox\gre@box@syllabletext=\hbox{\gre@emit@syllabletext{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart}{#6}}}%
       \else%
         \setbox\gre@box@syllabletext=\box\voidb@x%
       \fi%
@@ -1087,7 +1093,7 @@
   #1%
   \gre@calculate@textaligncenter{\gre@save@endsyllablepart}{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}%
   \ifgre@showlyrics%
-    \setbox\gre@box@syllabletext=\hbox{\gre@emit@savedendsyllablepart\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart}{#6}}}%
+    \setbox\gre@box@syllabletext=\hbox{\gre@emit@syllabletext{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart}{#6}}}%
   \else%
     \setbox\gre@box@syllabletext=\box\voidb@x%
   \fi%
