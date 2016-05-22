@@ -1730,33 +1730,12 @@
   % mora, we kern of the corresponding space. We do it only in the case
   % of a bar in the middle of other notes.
   \ifgre@lastendswithmora %
-    \ifgre@newbarspacing %
-      \ifnum\gre@count@shiftaftermora=0\else\ifnum\gre@count@shiftaftermora=4\else %
-        % new bar spacing takes care of punctum mora on its own, but only when
-        % bar has its own syllable
-        \ifcase #2\or %
-          \gre@unkern@bar@aftermora %
-        \fi %
-      \fi\fi %
-    \else %
-      \ifcase\gre@count@shiftaftermora\or %
-        % barsinsideonly
-        \ifcase #2\or %
-          \gre@unkern@bar@aftermora %
-        \fi %
-      \or %
-        % barsnotextonly
-        \ifcase #3\relax %
-          \gre@unkern@bar@aftermora %
-        \fi %
-      \or %
-        % barsonly
-        \gre@unkern@bar@aftermora %
-      \or\or %
-        % always
+    \ifnum\gre@count@shiftaftermora=0\else\ifnum\gre@count@shiftaftermora=4\else %
+      % if bar doesn’t has its own syllable, then we need to take care of the kern after a punctum mora here
+      \ifcase #2\or %
         \gre@unkern@bar@aftermora %
       \fi %
-    \fi %
+    \fi\fi %
   \fi %
   \gre@newglyphcommon %
   \gre@calculate@glyphraisevalue{\gre@pitch@bar}{0}{}% bar glyphs are made to be at this height

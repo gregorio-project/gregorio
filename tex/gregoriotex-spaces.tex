@@ -768,17 +768,17 @@
 
 \newdimen\gre@dimen@textaligncenter\relax%
 
-\def\gre@calculate@textaligncenter#1#2#3{%
-  \ifnum#3=0\relax%
-    \gre@widthof{\gre@fixedtextformat{#1#2}}%
+\def\gre@calculate@textaligncenter#1#2#3#4{%
+  \ifnum#4=0\relax%
+    \gre@widthof{\gre@save@fixedtextformat{#1}\gre@fixedtextformat{#2#3}}%
   \else %
-    \gre@widthof{\gre@fixednexttextformat{#1#2}}%
+    \gre@widthof{\gre@fixedtextformat{#1}\gre@fixednexttextformat{#2#3}}%
   \fi %
   \global\gre@dimen@textaligncenter=\the\gre@dimen@temp@three %
-  \ifnum#3=0\relax%
-    \gre@widthof{\gre@fixedtextformat{#2}}%
+  \ifnum#4=0\relax%
+    \gre@widthof{\gre@fixedtextformat{#3}}%
   \else %
-    \gre@widthof{\gre@fixednexttextformat{#2}}%
+    \gre@widthof{\gre@fixednexttextformat{#3}}%
   \fi %
   \divide\gre@dimen@temp@three by 2 %
   \global\advance\gre@dimen@textaligncenter by -\the\gre@dimen@temp@three%
@@ -834,21 +834,22 @@
 \newskip\gre@skip@nextbegindifference\relax%
 
 % macro to set nextbegindifference
-%% 1 : the first letters of the next syllable
-%% 2 : the middle letters of the next syllable
-%% 3 : the end letters of the next syllable
-%% 4 : the type of notes alignment
-\def\gre@calculate@nextbegindifference#1#2#3#4{%
+%% 1 : the carry-over letters for the next syllable
+%% 2 : the first letters of the next syllable
+%% 3 : the middle letters of the next syllable
+%% 4 : the end letters of the next syllable
+%% 5 : the type of notes alignment
+\def\gre@calculate@nextbegindifference#1#2#3#4#5{%
   \ifnum\gre@lastoflinecount=1\relax %
     \global\gre@skip@nextbegindifference=0pt\relax%
   \else %
     %to prevent the pollution of the normal values, we stock them into a temp value
     \gre@dimen@temp@two=\gre@dimen@textaligncenter\relax%
-    \gre@calculate@textaligncenter{#1}{#2}{1}%
+    \gre@calculate@textaligncenter{#1}{#2}{#3}{1}%
     \global\gre@skip@nextbegindifference=-\gre@dimen@textaligncenter\relax%
     \global\gre@dimen@textaligncenter=\gre@dimen@temp@two %
     \gre@dimen@temp@two=\gre@dimen@notesaligncenter\relax%
-    \gre@calculate@nextnotesaligncenter{#4}% idem
+    \gre@calculate@nextnotesaligncenter{#5}% idem
     \global\advance\gre@skip@nextbegindifference by \the\gre@dimen@notesaligncenter\relax%
     \global\gre@dimen@notesaligncenter=\gre@dimen@temp@two %
   \fi %
@@ -910,43 +911,7 @@
   % we start by finding the distance between the text and notes of the previous and the next syllable (as if this syllable didn't exist, for the moment)
   \gre@debugmsg{barspacing}{calculate available space}%
   % first, recomputing \gre@dimen@previousenddifference into \gre@dimen@adjustedpreviousenddifference
-  % taking into account the punctum mora shift
-  \gre@dimen@adjustedpreviousenddifference=\gre@dimen@previousenddifference %
-  % gre@skip@punctummorashift is 0 or the punctum mora shift
-  \gre@skip@punctummorashift=0pt\relax %
-  \ifgre@lastendswithmora %
-    \ifcase\gre@count@shiftaftermora\or\or %
-      \ifdim\wd\gre@box@syllabletext=0pt\relax %
-        % punctum mora adjustment should occur only for bars with no text
-        \gre@get@unkern@aftermora{2}%
-        \advance\gre@dimen@adjustedpreviousenddifference by \gre@skip@punctummorashift %
-      \fi %
-    \or %
-      % punctum mora adjustment only before bars
-      \gre@get@unkern@aftermora{2}%
-      \advance\gre@dimen@adjustedpreviousenddifference by \gre@skip@punctummorashift %
-    \or\or %
-      % punctum mora adjustment always occurs
-      \gre@get@unkern@aftermora{2}%
-      \advance\gre@dimen@adjustedpreviousenddifference by \gre@skip@punctummorashift %
-    \fi %
-  \fi %
-  % now something a bit tricky: as we changed previousenddifference,
-  % we must kern of the difference we created, but no more than
-  % the end of the text:
-  \ifdim\gre@skip@punctummorashift=0pt\else %
-    \gre@debugmsg{barspacing}{adjustment for punctum mora: \the\gre@skip@punctummorashift}%
-    \gre@debugmsg{barspacing}{adjusted previous enddifference (for punctum mora): \the\gre@dimen@adjustedpreviousenddifference}%
-    \ifdim -\gre@skip@punctummorashift < \gre@dimen@previousenddifference %
-      \gre@debugmsg{barspacing}{kern \the\gre@skip@punctummorashift for punctum mora adjustment}%
-      \kern\gre@skip@punctummorashift %
-    \else %
-      \ifdim\gre@dimen@previousenddifference > 0pt\relax %
-        \gre@debugmsg{barspacing}{kern \the\gre@dimen@previousenddifference for punctum mora adjustment}%
-        \kern-\gre@dimen@previousenddifference %
-      \fi %
-    \fi %
-  \fi %
+  \gre@punctummoraadjustment%
   \ifdim\gre@dimen@adjustedpreviousenddifference > 0pt\relax%
     % the notes ended after the text in the previous syllable
     \gre@skip@text@allocation = \gre@dimen@adjustedpreviousenddifference\relax%
@@ -1128,6 +1093,48 @@
   \gre@debugmsg{barspacing}{Correcting syllablefinalskip}%
   \gre@calculate@syllablefinalskip{#1}{\gre@count@temp@one}%
   \gre@debugmsg{barspacing}{syllablefinalskip: \the\gre@skip@syllablefinalskip}%
+}%
+
+
+%punctum mora adjustment calculations
+\def\gre@punctummoraadjustment{%
+  % taking into account the punctum mora shift
+  \gre@dimen@adjustedpreviousenddifference=\gre@dimen@previousenddifference %
+  % gre@skip@punctummorashift is 0 or the punctum mora shift
+  \gre@skip@punctummorashift=0pt\relax %
+  \ifgre@lastendswithmora %
+    \ifcase\gre@count@shiftaftermora\or\or %
+      \ifdim\wd\gre@box@syllabletext=0pt\relax %
+        % punctum mora adjustment should occur only for bars with no text
+        \gre@get@unkern@aftermora{2}%
+        \advance\gre@dimen@adjustedpreviousenddifference by \gre@skip@punctummorashift %
+      \fi %
+    \or %
+      % punctum mora adjustment only before bars
+      \gre@get@unkern@aftermora{2}%
+      \advance\gre@dimen@adjustedpreviousenddifference by \gre@skip@punctummorashift %
+    \or\or %
+      % punctum mora adjustment always occurs
+      \gre@get@unkern@aftermora{2}%
+      \advance\gre@dimen@adjustedpreviousenddifference by \gre@skip@punctummorashift %
+    \fi %
+  \fi %
+  % now something a bit tricky: as we changed previousenddifference,
+  % we must kern of the difference we created, but no more than
+  % the end of the text:
+  \ifdim\gre@skip@punctummorashift=0pt\else %
+    \gre@debugmsg{barspacing}{adjustment for punctum mora: \the\gre@skip@punctummorashift}%
+    \gre@debugmsg{barspacing}{adjusted previous enddifference (for punctum mora): \the\gre@dimen@adjustedpreviousenddifference}%
+    \ifdim -\gre@skip@punctummorashift < \gre@dimen@previousenddifference %
+      \gre@debugmsg{barspacing}{kern \the\gre@skip@punctummorashift for punctum mora adjustment}%
+      \kern\gre@skip@punctummorashift %
+    \else %
+      \ifdim\gre@dimen@previousenddifference > 0pt\relax %
+        \gre@debugmsg{barspacing}{kern \the\gre@dimen@previousenddifference for punctum mora adjustment}%
+        \kern-\gre@dimen@previousenddifference %
+      \fi %
+    \fi %
+  \fi %
 }%
 
 %%%%%%%%%%%%%%%%%%%
