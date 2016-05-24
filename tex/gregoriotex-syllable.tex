@@ -290,7 +290,9 @@
         \fi%
       \else% vowel or first-letter centering
         \ifcase#3%
-          \gre@widthof{\gre@emit@endsyllablepart}%
+          % *always* emit end syllable part for proper determination of
+          % clivis alignment
+          \gre@widthof{\gre@endsyllablepart}%
         \else%
           \gre@widthof{\gre@nextendsyllablepart}%
         \fi%
@@ -699,10 +701,12 @@
   \ifnum\gre@insidediscretionary=0\relax %
     \ifgre@showhyphenafterthissyllable\else %
       \ifgre@possibleluahyphenafterthissyllable\relax %
-        \ifcase\directlua{gregoriotex.is_last_syllable_on_line()}\else %
-          \let\gre@save@endsyllablepart\gre@endsyllablepart\relax %
-          \let\gre@save@fixedtextformat\gre@fixedtextformat\relax %
-          \xdef\gre@save@pointandclick{#1}%
+        \ifx\gre@syllable@next\GreSyllable %
+          \ifcase\directlua{gregoriotex.is_last_syllable_on_line()}\else %
+            \let\gre@save@endsyllablepart\gre@endsyllablepart\relax %
+            \let\gre@save@fixedtextformat\gre@fixedtextformat\relax %
+            \xdef\gre@save@pointandclick{#1}%
+          \fi %
         \fi %
       \fi %
     \fi %
@@ -729,9 +733,13 @@
     \gre@endsyllablepart %
   \else %
     \ifgre@possibleluahyphenafterthissyllable\relax %
-      \ifcase\directlua{gregoriotex.is_last_syllable_on_line()}\relax %
+      \ifx\gre@syllable@next\GreSyllable %
+        \ifcase\directlua{gregoriotex.is_last_syllable_on_line()}\relax %
+          \gre@endsyllablepart %
+        \fi %
+      \else %
         \gre@endsyllablepart %
-      \fi %
+      \fi
     \else %
       \gre@endsyllablepart %
     \fi %
@@ -765,6 +773,13 @@
 %% with a special option for #7 : if it is a bar, we don't put a space at the end
 %% at the end we wall \greendofword or \gre@endofsyllable with #7, to reduce the space in case of a flat or natural
 \def\GreSyllable#1#2#3#4#5#6#7#8#9{%
+  \def\gre@syllable@args{{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}{#9}}%
+  \futurelet\gre@syllable@next\gre@syllable@expand%
+}%
+\def\gre@syllable@expand{%
+  \expandafter\gre@syllable@act\gre@syllable@args%
+}%
+\def\gre@syllable@act#1#2#3#4#5#6#7#8#9{%
   \gre@debugmsg{general}{}%
   \gre@debugmsg{general}{New syllable: \expandafter\unexpanded{#1}}%
   \gre@debugmsg{general}{}%
