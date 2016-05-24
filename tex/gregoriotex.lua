@@ -549,8 +549,12 @@ local function atScoreBeginning(score_id, top_height, bottom_height,
   end
   score_last_syllables = last_syllables[score_id]
   if new_last_syllables then
-    new_score_last_syllables = {}
-    new_last_syllables[score_id] = new_score_last_syllables
+    if score_last_syllables then
+      new_last_syllables[score_id] = score_last_syllables
+    else
+      new_score_last_syllables = {}
+      new_last_syllables[score_id] = new_score_last_syllables
+    end
   end
 
   luatexbase.add_to_callback('post_linebreak_filter', post_linebreak, 'gregoriotex.post_linebreak', 1)
@@ -1180,16 +1184,13 @@ end
 local function is_last_syllable_on_line()
   if score_last_syllables then
     if score_last_syllables[tex.getattribute(syllable_id_attr)] then
-      log("%d->0", tex.getattribute(syllable_id_attr));
       tex.print(0)
     else
-      log("%d->1", tex.getattribute(syllable_id_attr));
       tex.print(1)
     end
   else
     -- if the last syllable is not computed, treat all syllables as the
     -- last on a line
-    log("%d->X", tex.getattribute(syllable_id_attr));
     tex.print(0)
   end
 end
