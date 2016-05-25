@@ -1296,6 +1296,7 @@
       \def\gre@prefixII{dimen}%
     \fi%
     \expandafter\edef\csname gre@space@\gre@prefix @#1\endcsname{\expandafter\unexpanded{\csname gre@space@\gre@prefixII @#2\endcsname}}%
+    \directlua{gregoriotex.hash_spaces("\luatexluaescapestring{#1}", "\luatexluaescapestring{inherited from #2}")}%
   }{%
     \gre@rubberpermit{#2}%
     \ifgre@rubber%
@@ -1331,6 +1332,7 @@
         \fi%
       }{}%
     \expandafter\edef\csname gre@space@\gre@prefix @#1\endcsname{#2}%
+    \directlua{gregoriotex.hash_spaces("\luatexluaescapestring{#1}", "\luatexluaescapestring{#2}")}%
     \relax %
   }%
 }
