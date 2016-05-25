@@ -653,6 +653,7 @@ local function atScoreBeginning(score_id, top_height, bottom_height,
     new_state_hashes[score_id] = state
   end
   if new_last_syllables then
+    new_score_last_syllables = {}
     new_last_syllables[score_id] = new_score_last_syllables
   end
 
