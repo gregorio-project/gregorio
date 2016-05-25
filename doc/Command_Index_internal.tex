@@ -1012,6 +1012,14 @@ A macro which applies formatting that needs to apply to the whole syllable (rath
   \#1 & string & The syllable (usually built as \verb=\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart=\\
 \end{argtable}
 
+\macroname{\textbackslash gre@if@rewritesyllable}{\#1\#2}{gregoriotex-syllable.tex}
+Performs \#1 if the syllable should be rewritten, else \#2.
+
+\begin{argtable}
+  \#1 & \TeX\ code & Code to perform when rewriting the syllable\\
+  \#2 & \TeX\ code & Code to perform when \emph{not} rewriting the syllable\\
+\end{argtable}
+
 \macroname{\textbackslash gre@save@endsyllablepart}{}{gregoriotex-syllable.tex}
 Control sequence aliased to the carry-over syllable part to be moved to the next syllable.
 
@@ -1533,6 +1541,9 @@ Boolean to mark the last syllable of the score.
 
 \macroname{\textbackslash ifgre@firstglyph}{}{gregoriotex-syllable.tex}
 Boolean that tells us if the current glyph is the first glyph or not.
+
+\macroname{\textbackslash ifgre@rewritesyllables}{}{gregoriotex-syllable.tex}
+Boolean that enables moving the last part of a syllable to the next if there is no hyphen.
 
 \macroname{\textbackslash gre@attr@dash}{}{gregoriotex-main.tex}
 A Lua\TeX\ attribute which indicates whether a syllable takes a dash if it ends a line.

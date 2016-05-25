@@ -660,7 +660,7 @@
     {force}%
       {\gre@forceemptyfirstsyllablehyphentrue}%
     }[% all other cases
-      \gre@error{Unrecognized option "#1" for \protect\gresetlyriccentering\MessageBreak Possible options are 'auto' and 'force'}%
+      \gre@error{Unrecognized option "#1" for \protect\gresetemptyfirstsyllablehyphen\MessageBreak Possible options are 'auto' and 'force'}%
     ]%
 }%
 
@@ -691,6 +691,50 @@
   \gre@count@syllablenotes=\number#1\relax %
 }%
 
+\newif\ifgre@rewritesyllables %
+\gre@rewritesyllablestrue %
+\def\gresetsyllablerewriting#1{%
+  \IfStrEqCase{#1}{%
+    {auto}%
+      {\gre@rewritesyllablestrue}%
+    {off}%
+      {\gre@rewritesyllablesfalse}%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetsyllablerewriting\MessageBreak Possible options are 'auto' and 'force'}%
+    ]%
+}%
+
+% Performs #1 if the syllable should be rewitten, else #2
+\newif\ifgre@rewritethissyllable %
+\def\gre@if@rewritesyllable#1#2{%
+  \gre@rewritethissyllablefalse %
+  \ifgre@rewritesyllables\relax %
+    \gre@debugmsg{syllablerewriting}{1}%
+    \ifnum\gre@insidediscretionary=0\relax %
+      \gre@debugmsg{syllablerewriting}{2}%
+      \ifgre@showhyphenafterthissyllable\else %
+        \gre@debugmsg{syllablerewriting}{3}%
+        \ifgre@possibleluahyphenafterthissyllable\relax %
+          \gre@debugmsg{syllablerewriting}{4}%
+          \ifx\gre@syllable@next\GreSyllable %
+            \gre@debugmsg{syllablerewriting}{5}%
+            \ifcase\directlua{gregoriotex.is_last_syllable_on_line()}\else %
+              \gre@debugmsg{syllablerewriting}{6}%
+              \gre@rewritethissyllabletrue %
+            \fi %
+          \fi %
+        \fi %
+      \fi %
+    \fi %
+  \fi %
+  \gre@debugmsg{syllablerewriting}{X}%
+  \ifgre@rewritethissyllable %
+    #1%
+  \else %
+    #2%
+  \fi %
+}%
+
 \let\gre@save@endsyllablepart\gre@nothing\relax %
 \let\gre@save@fixedtextformat\gre@textnormal\relax %
 \let\gre@save@pointandclick\gre@nothing\relax %
@@ -698,63 +742,44 @@
   \let\gre@save@endsyllablepart\gre@nothing\relax %
   \let\gre@save@fixedtextformat\gre@textnormal\relax %
   \let\gre@save@pointandclick\gre@nothing\relax %
-  \ifnum\gre@insidediscretionary=0\relax %
-    \ifgre@showhyphenafterthissyllable\else %
-      \ifgre@possibleluahyphenafterthissyllable\relax %
-        \ifx\gre@syllable@next\GreSyllable %
-          \ifcase\directlua{gregoriotex.is_last_syllable_on_line()}\else %
-            \let\gre@save@endsyllablepart\gre@endsyllablepart\relax %
-            \let\gre@save@fixedtextformat\gre@fixedtextformat\relax %
-            \xdef\gre@save@pointandclick{#1}%
-          \fi %
-        \fi %
-      \fi %
-    \fi %
-  \fi %
+  \gre@if@rewritesyllable{%
+    \let\gre@save@endsyllablepart\gre@endsyllablepart\relax %
+    \let\gre@save@fixedtextformat\gre@fixedtextformat\relax %
+    \xdef\gre@save@pointandclick{#1}%
+  }{}%
   \relax %
 }%
 
 \def\gre@emit@syllabletext#1{%
+  \gre@debugmsg{syllablerewriting}{start emit}%
   \ifx\gre@save@endsyllablepart\gre@nothing %
     \gre@fixedtextformat{#1}%
   \else %
     \ifx\gre@save@fixedtextformat\gre@fixedtextformat %
+      \gre@debugmsg{syllablerewriting}{merging format when prepending previous last syllable part}%
       \gre@fixedtextformat{\gre@pointandclick{\gre@save@endsyllablepart}{\gre@save@pointandclick}#1}%
     \else %
+      \gre@debugmsg{syllablerewriting}{prepending previous last syllable part}%
       \gre@save@fixedtextformat{\gre@pointandclick{\gre@save@endsyllablepart}{\gre@save@pointandclick}}%
       \gre@fixedtextformat{#1}%
     \fi %
   \fi %
+  \gre@debugmsg{syllablerewriting}{end emit}%
   \relax %
 }%
 
 \def\gre@emit@endsyllablepart{%
-  \ifgre@showhyphenafterthissyllable\relax %
+  \gre@if@rewritesyllable{}{%
+    \gre@debugmsg{syllablerewriting}{not rewriting syllable}%
     \gre@endsyllablepart %
-  \else %
-    \ifgre@possibleluahyphenafterthissyllable\relax %
-      \ifx\gre@syllable@next\GreSyllable %
-        \ifcase\directlua{gregoriotex.is_last_syllable_on_line()}\relax %
-          \gre@endsyllablepart %
-        \fi %
-      \else %
-        \gre@endsyllablepart %
-      \fi
-    \else %
-      \gre@endsyllablepart %
-    \fi %
-  \fi %
+  }%
   \relax %
 }%
 
 \def\gre@emit@endsyllablepartfornextsyllable{%
-  \ifgre@showhyphenafterthissyllable\else %
-    \ifgre@possibleluahyphenafterthissyllable\relax %
-      \ifcase\directlua{gregoriotex.is_last_syllable_on_line()}\else %
-        \gre@endsyllablepart %
-      \fi %
-    \fi %
-  \fi %
+  \gre@if@rewritesyllable{%
+    \gre@endsyllablepart %
+  }{}%
   \relax %
 }%
 
@@ -1039,16 +1064,9 @@
     \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@nobreakpenalty}%
   \else %
     \gre@count@temp@one=0\relax %
-    \ifgre@showhyphenafterthissyllable\else %
-      \ifgre@possibleluahyphenafterthissyllable\relax %
-        \ifx\gre@syllable@next\GreSyllable %
-          \ifcase\directlua{gregoriotex.is_last_syllable_on_line()}\else %
-            \gre@count@temp@one=1\relax %
-          \fi %
-        \fi %
-      \fi %
-    \fi %
-    \ifnum\gre@count@temp@one=0\relax %
+    \gre@if@rewritesyllable{%
+      \GreNoBreak%
+    }{%
       \ifnum#2=1\relax %
         \gre@penalty{\the\gre@space@count@endofwordpenalty}%
         \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@endofwordpenalty}%
@@ -1056,9 +1074,7 @@
         \gre@penalty{\the\gre@space@count@endofsyllablepenalty}%
         \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@endofsyllablepenalty}%
       \fi %
-    \else %
-      \GreNoBreak%
-    \fi %
+    }%
     \gre@count@temp@one=0\relax %
   \fi %
   \ifgre@eolshiftsenabled%
