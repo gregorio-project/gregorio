@@ -340,7 +340,7 @@
       \gre@additionaltopcustoslinemiddle %
     \fi\fi %
   \fi %
-  \raise \gre@dimen@glyphraisevalue\relax%
+  \raise \gre@dimen@glyphraisevalue%
   \copy\gre@box@temp@width %
   \ifdim\gre@skip@bar@lastskip=0pt\relax %
     % for now we consider we always have a bar after the custos
@@ -2109,7 +2109,7 @@
     \hbox to 0pt{%
       {%
       \color{grebackgroundcolor}%
-      \raise \gre@dimen@glyphraisevalue\relax%
+      \raise \gre@dimen@glyphraisevalue%
       \copy\gre@box@temp@sign %
       }%
       %\pdfliteral{}% this is a ugly hack for old versions of LuaTeX to work
@@ -2147,7 +2147,7 @@
   \ifgre@hidealtlines %
     \gre@fillhole{#3}%
   \fi %
-  \raise \gre@dimen@glyphraisevalue\relax%
+  \raise \gre@dimen@glyphraisevalue%
   \copy\gre@box@temp@width%
   #6\relax %
   \ifnum#4=0\relax %
