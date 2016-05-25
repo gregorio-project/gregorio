@@ -1038,13 +1038,28 @@
     \GreNoBreak %
     \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@nobreakpenalty}%
   \else %
-    \ifnum#2=1\relax %
-      \gre@penalty{\the\gre@space@count@endofwordpenalty}%
-      \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@endofwordpenalty}%
-    \else %
-      \gre@penalty{\the\gre@space@count@endofsyllablepenalty}%
-      \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@endofsyllablepenalty}%
+    \gre@count@temp@one=0\relax %
+    \ifgre@showhyphenafterthissyllable\else %
+      \ifgre@possibleluahyphenafterthissyllable\relax %
+        \ifx\gre@syllable@next\GreSyllable %
+          \ifcase\directlua{gregoriotex.is_last_syllable_on_line()}\else %
+            \gre@count@temp@one=1\relax %
+          \fi %
+        \fi %
+      \fi %
     \fi %
+    \ifnum\gre@count@temp@one=0\relax %
+      \ifnum#2=1\relax %
+        \gre@penalty{\the\gre@space@count@endofwordpenalty}%
+        \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@endofwordpenalty}%
+      \else %
+        \gre@penalty{\the\gre@space@count@endofsyllablepenalty}%
+        \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@endofsyllablepenalty}%
+      \fi %
+    \else %
+      \GreNoBreak%
+    \fi %
+    \gre@count@temp@one=0\relax %
   \fi %
   \ifgre@eolshiftsenabled%
     %If the above penalties don't result in a line break, then we need to undo the eolshift to prevent the next syllable from overlapping with this one.  If the line break did occur, then this shift will occur at the beginning of a line and thus will be ignored automatically by TeX.

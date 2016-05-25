@@ -149,7 +149,7 @@
 \newluatexattribute\gre@attr@glyph@top %
 \newluatexattribute\gre@attr@glyph@bottom %
 
-% attribure for syllable tracking
+% attribute for syllable tracking
 \newluatexattribute\gre@attr@syllable@id %
 
 \newluatexcatcodetable\gre@atletter %
@@ -1185,7 +1185,8 @@
   \gre@calculate@additionalspaces{#2}{#3}{#4}{#5}%
   \directlua{
     gregoriotex.atScoreBeginning([[#1]], #2, #3, #4, #5,
-        \gre@pitch@adjust@top, \gre@pitch@adjust@bottom)
+        \gre@pitch@adjust@top, \gre@pitch@adjust@bottom,
+        "\luatexluaescapestring{\gre@gregoriofontname}")
     gregoriotex.adjust_line_height(1)
   }%
   %TODO do something like LaTeX's AtBeginDocument
