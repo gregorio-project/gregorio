@@ -20,7 +20,7 @@
 -- this file contains lua functions used by GregorioTeX St. Gall ancient
 -- neume support when called with LuaTeX.
 
--- GREGORIO_VERSION 4.1.2
+-- GREGORIO_VERSION 4.1.3
 
 local catcode_at_letter = luatexbase.catcodetables['gre@atletter']
 

@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
-[Unreleased][unreleased]
+## [4.1.3] - 2016-05-26
 ### Fixed
 - Package conflict with luatex-ja has been resolved.  Notes and lyrics should now appear in documents which use the luatex-ja package.  See [#1107](https://github.com/gregorio-project/gregorio/issues/1107).
 
