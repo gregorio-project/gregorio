@@ -1181,43 +1181,6 @@ static bool is_last_of_line(gregorio_syllable *syllable)
     return false;
 }
 
-static __inline bool has_notes(const gregorio_element *const element)
-{
-    if (element->type == GRE_CUSTOS) {
-        return true;
-    }
-    if (element->type == GRE_ELEMENT) {
-        const gregorio_glyph *glyph;
-        for (glyph = element->u.first_glyph; glyph; glyph = glyph->next) {
-            if (glyph->type == GRE_GLYPH) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-/* determines if there are more GRE_GLYPHs */
-static __inline bool has_more_notes(const gregorio_element *element)
-{
-    for (element = element->next; element; element = element->next) {
-        if (has_notes(element)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-static __inline void handle_last_of_score(FILE *const f,
-        const gregorio_syllable *const syllable,
-        const gregorio_element *const element)
-{
-    if (!syllable->next_syllable && !has_more_notes(element)
-            && has_notes(element)) {
-        fprintf(f, "\\GreLastOfScore");
-    }
-}
-
 /*
  * ! @brief Prints the beginning of each text style
  */
@@ -3548,6 +3511,15 @@ static __inline unsigned int count_note_units(const gregorio_element *element)
     return count;
 }
 
+static __inline void handle_last_of_voice(FILE *const f,
+        const gregorio_element *const element,
+        const gregorio_element *const last_of_voice)
+{
+    if (element == last_of_voice) {
+        fprintf(f, "\\GreLastOfScore");
+    }
+}
+
 /*
  * Arguments are relatively obvious. The most obscure is certainly first_of_disc
  * which is 0 all the time, except in the case of a "clef change syllable". In
@@ -3564,6 +3536,7 @@ static __inline unsigned int count_note_units(const gregorio_element *element)
 static void write_syllable(FILE *f, gregorio_syllable *syllable,
         unsigned char first_of_disc, gregoriotex_status *const status,
         const gregorio_score *const score,
+        const gregorio_element *const *const last_of_voice,
         void (*const write_this_syllable_text)
         (FILE *, const char *, bool, const gregorio_character *, bool))
 {
@@ -3627,10 +3600,10 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                  */
                 gregoriotex_print_change_line_clef(f, clef_change_element);
                 fprintf(f, "\\GreDiscretionary{0}{%%\n");
-                write_syllable(f, syllable, 1, status, score,
+                write_syllable(f, syllable, 1, status, score, last_of_voice,
                         write_syllable_text);
                 fprintf(f, "}{%%\n");
-                write_syllable(f, syllable, 2, status, score,
+                write_syllable(f, syllable, 2, status, score, last_of_voice,
                         write_syllable_text);
                 fprintf(f, "}%%\n");
                 write_this_syllable_text(f, NULL, syllable->forced_center,
@@ -3844,7 +3817,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                      * We don't print custos before a bar at the end of a line
                      */
                     /* we also print an unbreakable larger space before the custo */
-                    handle_last_of_score(f, syllable, element);
+                    handle_last_of_voice(f, element, *last_of_voice);
                     next_note_pitch = gregorio_determine_next_pitch(syllable,
                             element, NULL, &next_note_alteration);
                     if (!element->u.misc.pitched.force_pitch) {
@@ -3883,7 +3856,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             default:
                 /* here current_element->type is GRE_ELEMENT */
                 assert(element->type == GRE_ELEMENT);
-                handle_last_of_score(f, syllable, element);
+                handle_last_of_voice(f, element, *last_of_voice);
                 note_unit_count += write_element(f, syllable, element, status,
                         score);
                 if (element->next && (element->next->type == GRE_ELEMENT
@@ -3932,7 +3905,8 @@ static char *digest_to_hex(const unsigned char digest[SHA1_DIGEST_SIZE])
 }
 
 static void initialize_score(gregoriotex_status *const status,
-        gregorio_score *score, const bool point_and_click)
+        gregorio_score *score, const bool point_and_click,
+        const gregorio_element **const last_of_voice)
 {
     gregorio_syllable *syllable;
 
@@ -3964,6 +3938,8 @@ static void initialize_score(gregoriotex_status *const status,
             status->abovelinestext = true;
         }
 
+        /* simultaneously compute height extrema and determine the last "real"
+         * element in each voice */
         for (voice = 0; voice < score->number_of_voices; ++voice) {
             gregorio_element *element;
 
@@ -3976,10 +3952,15 @@ static void initialize_score(gregoriotex_status *const status,
                     status->abovelinestext = true;
                     break;
 
+                case GRE_CUSTOS:
+                    last_of_voice[voice] = element;
+                    break;
+
                 case GRE_ELEMENT:
                     for (glyph = element->u.first_glyph; glyph;
                             glyph = glyph->next) {
                         if (glyph->type == GRE_GLYPH) {
+                            last_of_voice[voice] = element;
                             compute_height_extrema(glyph,
                                     glyph->u.notes.first_note,
                                     &(status->top_height),
@@ -4045,8 +4026,11 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
     gregorio_syllable *current_syllable;
     int annotation_num;
     gregoriotex_status status;
+    const gregorio_element *last_of_voice[MAX_NUMBER_OF_VOICES];
 
-    initialize_score(&status, score, point_and_click_filename != NULL);
+    memset(last_of_voice, 0, sizeof last_of_voice);
+    initialize_score(&status, score, point_and_click_filename != NULL,
+            last_of_voice);
 
     gregorio_assert(f, gregoriotex_write_score, "call with NULL file", return);
 
@@ -4134,7 +4118,7 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
     fprintf(f, "}{%%\n"); /* GreScoreOpening#3 */
     current_syllable = score->first_syllable;
     if (current_syllable) {
-        write_syllable(f, current_syllable, 0, &status, score,
+        write_syllable(f, current_syllable, 0, &status, score, last_of_voice,
                 write_first_syllable_text);
         current_syllable = current_syllable->next_syllable;
     } else {
@@ -4142,7 +4126,7 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
         fprintf(f, "}{}{\\GreSetNoFirstSyllableText}%%\n");
     }
     while (current_syllable) {
-        write_syllable(f, current_syllable, 0, &status, score,
+        write_syllable(f, current_syllable, 0, &status, score, last_of_voice,
                 write_syllable_text);
         current_syllable = current_syllable->next_syllable;
     }
