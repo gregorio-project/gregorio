@@ -867,6 +867,21 @@ Macro to specify which part of the control line in the annotation should be alig
 
 \textbf{Nota Bene:} These variable refer to the actual contents of the line and not to the ``hypothetical'' limits for the font.  As a result if the top of an annotation containing only short letters will be different from one which contains tall ones even if both use the same font.  Likewise, if the annotation contains no descenders, then baseline and bottom will be the same.  If this is a problem, then the use of struts within the annotation can be used to control the line height (distance from baseline to top) and depth (distance from baseline to bottom).
 
+\macroname{\textbackslash gresetsyllablerewriting}{\{\#1\}}{gregoriotex-syllable.tex}
+Sets whether the last part of a non-final syllable of a word is moved to the
+next syllable when there is no hyphen.  The ``last part'' of a syllable is
+the part that comes after the part that is centered under the first note of
+the syllable.  This feature may allow Lua\TeX{} to find better opportunities
+for ligaturing based on \TeX{} and font settings.
+
+\begin{argtable}
+  \#1 & \texttt{auto} & Gregorio\TeX{} will move the last part of a syllable
+                        to the next syllable in a word when there is no
+                        hyphen (default).\\
+      & \texttt{off}  & Gregorio\TeX{} will not attempt to rewrite any
+                        syllables.\\
+\end{argtable}
+
 \subsubsection{End of Line Behavior}
 While Gregorio\TeX\ will automatically wrap scores to fit your page, there are several ways to fine tune that line breaking behavior with the following commands.
 

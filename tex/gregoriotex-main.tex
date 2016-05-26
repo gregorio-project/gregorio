@@ -149,6 +149,9 @@
 \newluatexattribute\gre@attr@glyph@top %
 \newluatexattribute\gre@attr@glyph@bottom %
 
+% attribute for syllable tracking
+\newluatexattribute\gre@attr@syllable@id %
+
 \newluatexcatcodetable\gre@atletter %
 \setluatexcatcodetable\gre@atletter{%
   \catcode`\@=11 %
@@ -1161,6 +1164,7 @@
   \gre@reseteolcustos%
   \gre@resetledgerlineheuristics%
   \global\setluatexattribute\gre@attr@glyph@id{0}%
+  \global\setluatexattribute\gre@attr@syllable@id{0}%
   \xdef\gre@gabcname{#6}%
   \gre@setstafflines{#7}%
   \global\let\gre@opening@initialstyle\gre@initiallines\relax % DEPRECATED for removal in 5.0
@@ -1181,7 +1185,8 @@
   \gre@calculate@additionalspaces{#2}{#3}{#4}{#5}%
   \directlua{
     gregoriotex.atScoreBeginning([[#1]], #2, #3, #4, #5,
-        \gre@pitch@adjust@top, \gre@pitch@adjust@bottom)
+        \gre@pitch@adjust@top, \gre@pitch@adjust@bottom,
+        "\luatexluaescapestring{\gre@gregoriofontname}")
     gregoriotex.adjust_line_height(1)
   }%
   %TODO do something like LaTeX's AtBeginDocument
