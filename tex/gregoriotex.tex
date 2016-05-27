@@ -115,10 +115,14 @@
   %\relax 
 }%
 
-% Since small caps in PlainTeX requires loading another font, which we do here for the default Computer Modern font.  We assume that a user choosing another font will know to do that on their own.
-\font\sc=cccsc10 at \f@size pt
+% Since small caps in PlainTeX requires loading another font, it is not defined by default.  This command maintains compatibility by checking to see if \sc has been defined and raising a warning when it hasn’t
 \def\GreSmallCaps#1{%
-  {\sc #1}%
+  \ifdefined\sc%
+    {\sc #1}%
+  \else%
+    \gre@warning{Small caps (\protect\sc) is not defined}%
+    {#1}%
+  \fi%
   \relax %
 }%
 
