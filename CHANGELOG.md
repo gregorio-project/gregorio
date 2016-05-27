@@ -7,6 +7,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - The `900_gregorio.xml` file for Scribus now matches `main-lualatex.tex` again (see [#1087](https://github.com/gregorio-project/gregorio/issues/1087)).
 - Multiple subsequent lines in gabc no longer cause TeX to fail (see [#1111](https://github.com/gregorio-project/gregorio/issues/1111)).
 - Old bar spacing algorithm will no longer separate the text and bar when the bar is preceeded by a puncutm mora (see [#1078](https://github.com/gregorio-project/gregorio/issues/1078)).
+- Scores which end with a no-note syllable under the new bar spacing algorithm will no longer have their text pushed out into the right hand margin.  See [#1110](https://github.com/gregorio-project/gregorio/issues/1110).
 
 ### Added
 - Nabc now supports pitches `hn` and `hp` in addition to previously supported `ha` through `hm`.
@@ -15,6 +16,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Changed
 - Different glyphs are now used for puncta inclinata in an ascent versus in a descent.  A heuristic algorithm is used to ensure that the glyphs match when grouped together.  If the algorithm chooses the wrong shape, use `0` (for descending) or `1` (for ascending) to force an orientation.  See [UPGRADE.md](UPGRADE.md) and [#856](https://github.com/gregorio-project/gregorio/issues/856) for details.
 - The shape of the fused oriscus at ambitus one in the greciliae font has been tweaked to form a nicer connection (see [#1079](https://github.com/gregorio-project/gregorio/issues/1079)).
+- Syllables are now rewritten to improve ligature rendering.  This may be disabled by issuing `\gresetsyllablerewriting{off}`.  See GregorioRef for details (for the change request, see [#1098](https://github.com/gregorio-project/gregorio/issues/1098)).
 
 
 ## [4.2.0-beta1] - 2016-04-27
@@ -59,6 +61,11 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\gretolerance`
 - `\grepretolerance`
 - `\greemergencystretch`
+
+
+## [4.1.3] - 2016-05-26
+### Fixed
+- Package conflict with luatex-ja has been resolved.  Notes and lyrics should now appear in documents which use the luatex-ja package.  See [#1107](https://github.com/gregorio-project/gregorio/issues/1107).
 
 
 ## [4.1.2] - 2016-05-08
