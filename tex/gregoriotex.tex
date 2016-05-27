@@ -133,10 +133,8 @@
   }%
 }%
 
-% Note since underlining don’t exist in PlainTeX, we need the following command to maintain compatibility with LaTeX, but all it does is raise a warning.
 \def\GreUnderline#1{%
-  \gre@warning{Underlining cannot be done in PlainTeX}%
-  {#1}%
+  $\underline{\rm #1}$
   \relax %
 }%
 
