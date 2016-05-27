@@ -1205,7 +1205,9 @@
       \GreNoBreak%
     \fi%
     \ifgre@eolshiftsenabled%
-      \ifgre@endofscore\else%
+      \ifgre@endofscore%
+        \kern\glueexpr(-\gre@skip@bar@lastskip)\relax%
+      \else%
         %this shift will shorten the line somewhat to allow the lyrics to extend under the custos should TeX decide to insert a line break after the syllable being ended
         \gre@calculate@eolshift{\dimexpr(\gre@dimen@enddifference-\gre@skip@bar@lastskip)\relax }%
         \gre@debugmsg{barspacing}{End of line shift: \the\gre@dimen@eolshift}%
