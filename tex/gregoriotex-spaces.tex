@@ -48,9 +48,9 @@
 \newcount\gre@widowpenaltysave%
 \newcount\gre@clubpenaltysave%
 \newskip\gre@skip@parskip@save%
-\newdimen\gre@dimen@lineskip@save%
-\newdimen\gre@dimen@baselineskip@save%
-\newdimen\gre@dimen@lineskiplimit@save%
+\newskip\gre@skip@lineskip@save%
+\newskip\gre@skip@baselineskip@save%
+\newskip\gre@skip@lineskiplimit@save%
 %% The following macros cancel some useless penalties, and reinstates them
 %% at the end of a score
 
@@ -68,9 +68,9 @@
   \global\gre@clubpenaltysave=\clubpenalty\relax %
   %
   \global\gre@skip@parskip@save=\parskip%
-  \global\gre@dimen@lineskip@save=\lineskip%
-  \global\gre@dimen@baselineskip@save=\baselineskip%
-  \global\gre@dimen@lineskiplimit@save=\lineskiplimit%
+  \global\gre@skip@lineskip@save=\lineskip%
+  \global\gre@skip@baselineskip@save=\baselineskip%
+  \global\gre@skip@lineskiplimit@save=\lineskiplimit%
   \hyphenpenalty=\gre@space@count@hyphenpenalty %
   \exhyphenpenalty=\gre@space@count@hyphenpenalty %
   \doublehyphendemerits=0\relax %
@@ -83,9 +83,9 @@
   \widowpenalty=\gre@space@count@widowpenalty %
   \clubpenalty=\gre@space@count@clubpenalty %
   \parskip=\gre@space@skip@parskip%
-  \lineskip=\gre@space@dimen@lineskip%
-  \baselineskip=\gre@space@dimen@baselineskip%
-  \lineskiplimit=\gre@space@dimen@lineskiplimit%
+  \lineskip=\gre@space@skip@lineskip%
+  \baselineskip=\gre@space@skip@baselineskip%
+  \lineskiplimit=\gre@space@skip@lineskiplimit%
 }%
 
 \def\gre@restorepenalties{%
@@ -101,9 +101,9 @@
   \widowpenalty=\gre@widowpenaltysave %
   \clubpenalty=\gre@clubpenaltysave %
   \parskip=\gre@skip@parskip@save%
-  \lineskip=\gre@dimen@lineskip@save%
-  \baselineskip=\gre@dimen@baselineskip@save%
-  \lineskiplimit=\gre@dimen@lineskiplimit@save%
+  \lineskip=\gre@skip@lineskip@save%
+  \baselineskip=\gre@skip@baselineskip@save%
+  \lineskiplimit=\gre@skip@lineskiplimit@save%
 }%
 
 
@@ -1473,9 +1473,6 @@
     {spaceporrectuspunctummorashift}{\gre@rubberfalse}%
     {raresignshift}{\gre@rubberfalse}%
     {divisiofinalissep}{\gre@rubberfalse}%
-    {lineskip}{\gre@rubberfalse}%
-    {baselineskip}{\gre@rubberfalse}%
-    {lineskiplimit}{\gre@rubberfalse}%
   }[\gre@rubbertrue]%
 }%
 
