@@ -28,6 +28,17 @@
 #include "struct.h"
 #include "gabc.h"
 
+/* The bits in this enum are named to correspond with the _BEGIN/_END tokens */
+typedef enum {
+    SB_I = 0x01,
+    SB_B = 0x02,
+    SB_TT = 0x04,
+    SB_SC = 0x08,
+    SB_UL = 0x10,
+    SB_C = 0x20,
+    SB_ELISION = 0x40
+} gabc_style_bits;
+
 typedef union gabc_score_determination_lval_t {
     char *text;
     char character;
@@ -36,8 +47,9 @@ typedef union gabc_score_determination_lval_t {
 #define YYSTYPE gabc_score_determination_lval_t
 #define YYSTYPE_IS_DECLARED 1
 
-int gabc_score_determination_lex(void);
-#define YY_DECL int gabc_score_determination_lex(void)
+#define YY_DECL \
+    int gabc_score_determination_lex(gabc_style_bits *const styles)
+YY_DECL;
 
 #define YYLTYPE gregorio_scanner_location
 

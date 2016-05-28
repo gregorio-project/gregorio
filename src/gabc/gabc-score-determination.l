@@ -35,8 +35,34 @@
 #include "gabc-score-determination.h"
 #include "gabc-score-determination-y.h"
 
-static unsigned char style_stack = 0;
 static bool eof_found = false;
+
+#define START_STYLE(STYLE) \
+    if (*styles & SB_ ## STYLE) { \
+        gregorio_messagef("gabc_score_determination_lex", VERBOSITY_ERROR, 0, \
+                _("style already started: %s"), gabc_score_determination_text); \
+    } else { \
+        *styles ^= SB_ ## STYLE; \
+        return STYLE ## _BEGIN; \
+    }
+
+#define END_STYLE(STYLE) \
+    if (*styles & SB_ ## STYLE) { \
+        *styles ^= SB_ ## STYLE; \
+        return STYLE ## _END; \
+    } else { \
+        gregorio_messagef("gabc_score_determination_lex", VERBOSITY_ERROR, 0, \
+                _("style not started: %s"), gabc_score_determination_text); \
+    }
+
+#define RETURN_CHARACTERS \
+    gabc_score_determination_lval.text = \
+            gregorio_strdup(gabc_score_determination_text); \
+    return CHARACTERS
+
+#define RETURN_SPACE \
+    gabc_score_determination_lval.text = gregorio_strdup(" "); \
+    return CHARACTERS
 
 #define YY_NO_INPUT
 
@@ -78,7 +104,7 @@ static bool eof_found = false;
 %x attribute
 %x score
 %x notes
-%x style
+%x sp
 %x verb
 %x comments
 %x inicomments
@@ -217,127 +243,75 @@ semicolon. */
                 gabc_score_determination_text[0]);
     }
 <score>[\n\r][\n\r \t]* {
-        gabc_score_determination_lval.text = gregorio_strdup(" ");
-        return CHARACTERS;
+        RETURN_SPACE;
     }
-<score>[^-\{\}\(\[\]<%\n\r]+ {
-        gabc_score_determination_lval.text =
-                gregorio_strdup(gabc_score_determination_text);
-        return CHARACTERS;
+<score,sp>[^-\{\}\(\[\]<%\n\r]+ {
+        RETURN_CHARACTERS;
     }
 <score>- {
         return HYPHEN;
     }
-<score,style><nlba> {
+<score><nlba> {
         return NLBA_B;
     }
-<score,style><\/nlba> {
+<score><\/nlba> {
         return NLBA_E;
     }
-<score,style><i> {
-        BEGIN(style);
-        style_stack ++;
-        return I_BEGIN;
+<score><i> {
+        START_STYLE(I);
     }
-<style><\/i> {
-        style_stack --;
-        if (style_stack == 0) {
-            BEGIN(score);
-        }
-        return I_END;
+<score><\/i> {
+        END_STYLE(I);
     }
-<score,style><tt> {
-        BEGIN(style);
-        style_stack ++;
-        return TT_BEGIN;
+<score><tt> {
+        START_STYLE(TT);
     }
-<style><\/tt> {
-        style_stack --;
-        if (style_stack == 0) {
-            BEGIN(score);
-        }
-        return TT_END;
+<score><\/tt> {
+        END_STYLE(TT);
     }
-<score,style><ul> {
-        BEGIN(style);
-        style_stack ++;
-        return UL_BEGIN;
+<score><ul> {
+        START_STYLE(UL);
     }
-<style><\/ul> {
-        style_stack --;
-        if (style_stack == 0) {
-            BEGIN(score);
-        }
-        return UL_END;
+<score><\/ul> {
+        END_STYLE(UL);
     }
-<score,style><c> {
-        BEGIN(style);
-        style_stack ++;
-        return C_BEGIN;
+<score><c> {
+        START_STYLE(C);
     }
-<style><\/c> {
-        style_stack --;
-        if (style_stack == 0) {
-            BEGIN(score);
-        }
-        return C_END;
+<score><\/c> {
+        END_STYLE(C);
     }
-<score,style><b> {
-        BEGIN(style);
-        style_stack ++;
-        return B_BEGIN;
+<score><b> {
+        START_STYLE(B);
     }
-<style><\/b> {
-        style_stack --;
-        if (style_stack == 0) {
-            BEGIN(score);
-        }
-        return B_END;
+<score><\/b> {
+        END_STYLE(B);
     }
-<score,style><sc> {
-        BEGIN(style);
-        style_stack ++;
-        return SC_BEGIN;
+<score><sc> {
+        START_STYLE(SC);
     }
-<style><\/sc> {
-        style_stack --;
-        if (style_stack == 0) {
-            BEGIN(score);
-        }
-        return SC_END;
+<score><\/sc> {
+        END_STYLE(SC);
     }
-<score,style><e> {
-        BEGIN(style);
-        style_stack ++;
-        return ELISION_BEGIN;
+<score><e> {
+        START_STYLE(ELISION);
     }
-<style><\/e> {
-        style_stack --;
-        if (style_stack == 0) {
-            BEGIN(score);
-        }
-        return ELISION_END;
+<score><\/e> {
+        END_STYLE(ELISION);
     }
-<score,style><sp> {
-        BEGIN(style);
-        style_stack ++;
+<score><sp> {
+        BEGIN(sp);
         return SP_BEGIN;
     }
-<style><\/sp> {
-        style_stack --;
-        if (style_stack == 0) {
-            BEGIN(score);
-        }
+<sp><\/sp> {
+        BEGIN(score);
         return SP_END;
     }
-<style>[\n\r][\n\r \t]* {
-        gabc_score_determination_lval.text = gregorio_strdup(" ");
-        return CHARACTERS;
+<sp>[\n\r][\n\r \t]* {
+        RETURN_SPACE;
     }
-<style>[^<\{\}\n\r]+ {
-        gabc_score_determination_lval.text =
-                gregorio_strdup(gabc_score_determination_text);
-        return CHARACTERS;
+<sp>[^<\{\}\n\r]+ {
+        RETURN_CHARACTERS;
     }
 <score>\% {
         BEGIN(comments);
@@ -348,42 +322,29 @@ semicolon. */
 <comments>[^\n\r]+ {
         /* ignored */
     }
-<style,score><v> {
+<score><v> {
         BEGIN(verb);
         return VERB_BEGIN;
     }
 <verb><\/v> {
-        if (style_stack == 0) {
-            BEGIN(score);
-        } else {
-            BEGIN(style);
-        }
+        BEGIN(score);
         return VERB_END;
     }
-<verb>[^<]+ {
-        gabc_score_determination_lval.text =
-                gregorio_strdup(gabc_score_determination_text);
-        return CHARACTERS;
+<verb,alt>[^<]+ {
+        RETURN_CHARACTERS;
     }
-<verb,style,score,alt>< {
-        gabc_score_determination_lval.text =
-                gregorio_strdup(gabc_score_determination_text);
-        return CHARACTERS;
+<verb,sp,score,alt>< {
+        RETURN_CHARACTERS;
     }
-<score,style>\{ {
+<score>\{ {
         return CENTER_BEGIN;
     }
-<score,style>\} {
+<score>\} {
         return CENTER_END;
     }
 <score><alt> {
         BEGIN(alt);
         return ALT_BEGIN;
-    }
-<alt>[^<]+ {
-        gabc_score_determination_lval.text =
-                gregorio_strdup(gabc_score_determination_text);
-        return CHARACTERS;
     }
 <alt><\/alt> {
         BEGIN(score);
