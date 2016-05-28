@@ -18,6 +18,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Different glyphs are now used for puncta inclinata in an ascent versus in a descent.  A heuristic algorithm is used to ensure that the glyphs match when grouped together.  If the algorithm chooses the wrong shape, use `0` (for descending) or `1` (for ascending) to force an orientation.  See [UPGRADE.md](UPGRADE.md) and [#856](https://github.com/gregorio-project/gregorio/issues/856) for details.
 - The shape of the fused oriscus at ambitus one in the greciliae font has been tweaked to form a nicer connection (see [#1079](https://github.com/gregorio-project/gregorio/issues/1079)).
 - Syllables are now rewritten to improve ligature rendering.  This may be disabled by issuing `\gresetsyllablerewriting{off}`.  See GregorioRef for details (for the change request, see [#1098](https://github.com/gregorio-project/gregorio/issues/1098)).
+- Italic, bold, underlined, small capital, teletype, and colored styles now span multiple syllables.  Gregorio will also more consistently raise errors when styles are improperly started or ended.  See [UPGRADE.md](UPGRADE.md) and [#1121](https://github.com/gregorio-project/gregorio/issues/1121) for details.
 
 
 ## [4.2.0-beta1] - 2016-04-27

@@ -60,6 +60,12 @@
 #include "gabc-score-determination.h"
 #include "gabc-score-determination-l.h"
 
+/* workaround for bison issue passing pointer to a "local" variable */
+#define STYLE_BITS &styles
+
+/* forward declaration of the flex/bison process function */
+static int gabc_score_determination_parse(void);
+
 /* uncomment it if you want to have an interactive shell to understand the
  * details on how bison works for a certain input */
 /* int gabc_score_determination_debug=1; */
@@ -78,8 +84,6 @@ static gregorio_element **elements;
 gregorio_element *current_element;
 /* a table containing the macros to use in gabc file */
 static char *macros[10];
-/* forward declaration of the flex/bison process function */
-static int gabc_score_determination_parse(void);
 /* other variables that we will have to use */
 static gregorio_character *current_character;
 static gregorio_character *first_text_character;
@@ -95,10 +99,11 @@ static gregorio_center_determination center_is_determined;
 /* current_key is... the current key... updated by each notes determination
  * (for key changes) */
 static int current_key;
-static bool got_language = false;
-static bool got_staff_lines = false;
-static bool started_first_word = false;
+static bool got_language;
+static bool got_staff_lines;
+static bool started_first_word;
 static struct sha1_ctx digester;
+static gabc_style_bits styles;
 
 /* punctum_inclinatum_orientation maintains the running punctum inclinatum
  * orientation in order to decide if the glyph needs to be cut when a punctum
@@ -161,6 +166,7 @@ static void initialize_variables(void)
     got_language = false;
     got_staff_lines = false;
     started_first_word = false;
+    styles = 0;
     punctum_inclinatum_orientation = S_PUNCTUM_INCLINATUM_UNDETERMINED;
 }
 
@@ -408,13 +414,51 @@ static void end_translation(void)
 }
 
 /*
- * gregorio_gabc_add_text is the function called when lex returns a char *. In
+ * 
+ * The two functions called when lex returns a style, we simply add it. All the 
+ * complex things will be done by the function after...
+ * 
+ */
+
+static void add_style(unsigned char style)
+{
+    gregorio_begin_style(&current_character, style);
+}
+
+static void end_style(unsigned char style)
+{
+    gregorio_end_style(&current_character, style);
+}
+
+/*
+ * add_text is the function called when lex returns a char *. In
  * this function we convert it into grewchar, and then we add the corresponding 
  * gregorio_characters in the list of gregorio_characters. 
  */
 
-static void gregorio_gabc_add_text(char *mbcharacters)
+static void add_text(char *mbcharacters)
 {
+    if (!current_character) {
+        /* insert open styles, leaving out ELISION on purpose */
+        if (styles & SB_I) {
+            add_style(ST_ITALIC);
+        }
+        if (styles & SB_B) {
+            add_style(ST_BOLD);
+        }
+        if (styles & SB_TT) {
+            add_style(ST_TT);
+        }
+        if (styles & SB_SC) {
+            add_style(ST_SMALL_CAPS);
+        }
+        if (styles & SB_UL) {
+            add_style(ST_UNDERLINED);
+        }
+        if (styles & SB_C) {
+            add_style(ST_COLORED);
+        }
+    }
     if (current_character) {
         current_character->next_character = gregorio_build_char_list_from_buf(
                 mbcharacters);
@@ -427,23 +471,6 @@ static void gregorio_gabc_add_text(char *mbcharacters)
         current_character = current_character->next_character;
     }
     free(mbcharacters);
-}
-
-/*
- * 
- * The two functions called when lex returns a style, we simply add it. All the 
- * complex things will be done by the function after...
- * 
- */
-
-static void gregorio_gabc_add_style(unsigned char style)
-{
-    gregorio_begin_style(&current_character, style);
-}
-
-static void gregorio_gabc_end_style(unsigned char style)
-{
-    gregorio_end_style(&current_character, style);
 }
 
 void gabc_digest(const void *const buf, const size_t size)
@@ -537,6 +564,8 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
     @$.last_column = 0;
     @$.last_offset = 0;
 }
+
+%lex-param { gabc_style_bits *STYLE_BITS }
 
 %token NAME AUTHOR GABC_COPYRIGHT SCORE_COPYRIGHT
 %token LANGUAGE STAFF_LINES ORISCUS_ORIENTATION
@@ -729,35 +758,35 @@ closing_bracket_with_space:
 
 style_beginning:
     I_BEGIN {
-        gregorio_gabc_add_style(ST_ITALIC);
+        add_style(ST_ITALIC);
     }
     | TT_BEGIN {
-        gregorio_gabc_add_style(ST_TT);
+        add_style(ST_TT);
     }
     | UL_BEGIN {
-        gregorio_gabc_add_style(ST_UNDERLINED);
+        add_style(ST_UNDERLINED);
     }
     | C_BEGIN {
-        gregorio_gabc_add_style(ST_COLORED);
+        add_style(ST_COLORED);
     }
     | B_BEGIN {
-        gregorio_gabc_add_style(ST_BOLD);
+        add_style(ST_BOLD);
     }
     | SC_BEGIN {
-        gregorio_gabc_add_style(ST_SMALL_CAPS);
+        add_style(ST_SMALL_CAPS);
     }
     | VERB_BEGIN {
-        gregorio_gabc_add_style(ST_VERBATIM);
+        add_style(ST_VERBATIM);
     }
     | SP_BEGIN {
-        gregorio_gabc_add_style(ST_SPECIAL_CHAR);
+        add_style(ST_SPECIAL_CHAR);
     }
     | ELISION_BEGIN {
-        gregorio_gabc_add_style(ST_ELISION);
+        add_style(ST_ELISION);
     }
     | CENTER_BEGIN {
         if (!center_is_determined) {
-            gregorio_gabc_add_style(ST_FORCED_CENTER);
+            add_style(ST_FORCED_CENTER);
             center_is_determined=CENTER_HALF_DETERMINED;
         }
     }
@@ -765,35 +794,35 @@ style_beginning:
 
 style_end:
     I_END {
-        gregorio_gabc_end_style(ST_ITALIC);
+        end_style(ST_ITALIC);
     }
     | TT_END {
-        gregorio_gabc_end_style(ST_TT);
+        end_style(ST_TT);
     }
     | UL_END {
-        gregorio_gabc_end_style(ST_UNDERLINED);
+        end_style(ST_UNDERLINED);
     }
     | C_END {
-        gregorio_gabc_end_style(ST_COLORED);
+        end_style(ST_COLORED);
     }
     | B_END {
-        gregorio_gabc_end_style(ST_BOLD);
+        end_style(ST_BOLD);
     }
     | SC_END {
-        gregorio_gabc_end_style(ST_SMALL_CAPS);
+        end_style(ST_SMALL_CAPS);
     }
     | VERB_END {
-        gregorio_gabc_end_style(ST_VERBATIM);
+        end_style(ST_VERBATIM);
     }
     | SP_END {
-        gregorio_gabc_end_style(ST_SPECIAL_CHAR);
+        end_style(ST_SPECIAL_CHAR);
     }
     | ELISION_END {
-        gregorio_gabc_end_style(ST_ELISION);
+        end_style(ST_ELISION);
     }
     | CENTER_END {
         if (center_is_determined==CENTER_HALF_DETERMINED) {
-            gregorio_gabc_end_style(ST_FORCED_CENTER);
+            end_style(ST_FORCED_CENTER);
             center_is_determined=CENTER_FULLY_DETERMINED;
         }
     }
@@ -820,7 +849,7 @@ linebreak_area:
 character:
     above_line_text
     | CHARACTERS {
-        gregorio_gabc_add_text($1.text);
+        add_text($1.text);
     }
     | style_beginning
     | style_end
@@ -830,10 +859,10 @@ character:
 
 text_hyphen:
     HYPHEN {
-        gregorio_gabc_add_text(gregorio_strdup("-"));
+        add_text(gregorio_strdup("-"));
     }
     | text_hyphen HYPHEN {
-        gregorio_gabc_add_text(gregorio_strdup("-"));
+        add_text(gregorio_strdup("-"));
     }
     ;
 
@@ -870,9 +899,9 @@ syllable_with_notes:
         close_syllable(&@1);
     }
     | text HYPHEN OPENING_BRACKET notes {
-        gregorio_gabc_add_style(ST_VERBATIM);
-        gregorio_gabc_add_text(gregorio_strdup("\\GreForceHyphen"));
-        gregorio_gabc_end_style(ST_VERBATIM);
+        add_style(ST_VERBATIM);
+        add_text(gregorio_strdup("\\GreForceHyphen"));
+        end_style(ST_VERBATIM);
         ready_characters();
         first_text_character = current_character;
         close_syllable(&@1);
@@ -881,9 +910,9 @@ syllable_with_notes:
         close_syllable(&@1);
     }
     | text HYPHEN translation OPENING_BRACKET notes {
-        gregorio_gabc_add_style(ST_VERBATIM);
-        gregorio_gabc_add_text(gregorio_strdup("\\GreForceHyphen"));
-        gregorio_gabc_end_style(ST_VERBATIM);
+        add_style(ST_VERBATIM);
+        add_text(gregorio_strdup("\\GreForceHyphen"));
+        end_style(ST_VERBATIM);
         close_syllable(&@1);
     }
     ;
