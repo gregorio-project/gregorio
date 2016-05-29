@@ -47,6 +47,10 @@
 \newskip\gre@emergencystretchsave%
 \newcount\gre@widowpenaltysave%
 \newcount\gre@clubpenaltysave%
+\newskip\gre@skip@parskip@save%
+\newskip\gre@skip@lineskip@save%
+\newskip\gre@skip@baselineskip@save%
+\newskip\gre@skip@lineskiplimit@save%
 %% The following macros cancel some useless penalties, and reinstates them
 %% at the end of a score
 
@@ -63,6 +67,10 @@
   \global\gre@widowpenaltysave=\widowpenalty\relax %
   \global\gre@clubpenaltysave=\clubpenalty\relax %
   %
+  \global\gre@skip@parskip@save=\parskip%
+  \global\gre@skip@lineskip@save=\lineskip%
+  \global\gre@skip@baselineskip@save=\baselineskip%
+  \global\gre@skip@lineskiplimit@save=\lineskiplimit%
   \hyphenpenalty=\gre@space@count@hyphenpenalty %
   \exhyphenpenalty=\gre@space@count@hyphenpenalty %
   \doublehyphendemerits=0\relax %
@@ -74,6 +82,10 @@
   \emergencystretch=\gre@space@skip@emergencystretch\relax %
   \widowpenalty=\gre@space@count@widowpenalty %
   \clubpenalty=\gre@space@count@clubpenalty %
+  \parskip=\gre@space@skip@parskip%
+  \lineskip=\gre@space@skip@lineskip%
+  \baselineskip=\gre@space@skip@baselineskip%
+  \lineskiplimit=\gre@space@skip@lineskiplimit%
 }%
 
 \def\gre@restorepenalties{%
@@ -88,6 +100,10 @@
   \emergencystretch=\gre@emergencystretchsave %
   \widowpenalty=\gre@widowpenaltysave %
   \clubpenalty=\gre@clubpenaltysave %
+  \parskip=\gre@skip@parskip@save%
+  \lineskip=\gre@skip@lineskip@save%
+  \baselineskip=\gre@skip@baselineskip@save%
+  \lineskiplimit=\gre@skip@lineskiplimit@save%
 }%
 
 
