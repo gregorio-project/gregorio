@@ -1,14 +1,14 @@
 #! /usr/bin/env bash
 
-# Script to be executed by make ctan-dist
+# Script to be executed by make ctan
 
 VERSION=`head -1 .gregorio-version`
 FILEVERSION=`echo $VERSION | sed 's/\./_/g'`
 
 rm -rf ctan
 mkdir -p ctan/gregoriotex/
-cp gregoriotex.tds.zip ctan/gregoriotex.tds.zip
-cp gregorio-$VERSION.tar.bz2 ctan/gregoriotex/
+mv gregoriotex.tds.zip ctan/gregoriotex.tds.zip
+mv gregorio-$VERSION.tar.bz2 ctan/gregoriotex/
 cd ctan/gregoriotex
 tar xf gregorio-$VERSION.tar.bz2
 rm gregorio-$VERSION.tar.bz2
@@ -38,5 +38,6 @@ zip -r ../gregorio-$VERSION.zip * --exclude=*.DS_Store*
 cd ..
 rm -rf gregorio-$VERSION
 cd ..
-zip -r ../gregoriotex.zip gregoriotex gregoriotex.tds.zip
+zip -r ../gregoriotex.ctan.zip gregoriotex gregoriotex.tds.zip --exclude=*.DS_Store*
 cd ..
+rm -rf ctan

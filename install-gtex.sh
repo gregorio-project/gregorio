@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Copyright (C) 2015 The Gregorio Project (see CONTRIBUTORS.md)
 #
@@ -56,21 +56,37 @@
 #
 #   Creates a TDS-ready archive named gregoriotex.tds.zip
 #
+# In special situations, you may want to skip some parts of the installation.
+# To do this, set the SKIP environment variable to a comma-separated list of
+# the parts you want don't want installed: tex, latex, fonts, docs, examples,
+# and/or font-sources
 
 VERSION=`head -1 .gregorio-version`
 FILEVERSION=`echo $VERSION | sed 's/\./_/g'`
 
-TEXFILES=(tex/gregoriotex*.tex tex/gsp-default.tex tex/gregoriotex*.lua tex/*.dat)
+TEXFILES=(tex/gregoriotex*.tex tex/gsp-default.tex tex/gregoriotex*.lua
+          tex/*.dat)
 LATEXFILES=(tex/gregorio*.sty)
 TTFFILES=(gregorio.ttf greciliae.ttf granapadano.ttf gregorio-op.ttf
           greciliae-op.ttf granapadano-op.ttf greextra.ttf gregall.ttf
           gresgmodern.ttf)
 DOCFILES=(doc/Appendix*.tex doc/Command*.tex doc/Gabc.tex
-          doc/*Ref.tex doc/*Ref.lua doc/*.gabc doc/Gregorio*Ref-$FILEVERSION.pdf)
-EXAMPLEFILES=(examples/FactusEst.gabc examples/PopulusSion.gabc examples/main-lualatex.tex)
+          doc/*Ref.tex doc/*Ref.lua doc/*.gabc
+          doc/Gregorio*Ref.pdf)
+EXAMPLEFILES=(examples/FactusEst.gabc examples/PopulusSion.gabc
+              examples/main-lualatex.tex examples/debugging.tex)
 FONTSRCFILES=(gregorio-base.sfd granapadano-base.sfd greciliae-base.sfd
               greextra.sfd squarize.py convertsfdtottf.py gregall.sfd
               gresgmodern.sfd README.md)
+# Files which have been eliminated, or whose installation location have been
+# changed.  We will remove existing versions of these files in the target texmf
+# tree before installing.
+LEGACYFILES=(tex/luatex/gregoriotex/gregoriotex.sty
+             tex/luatex/gregoriotex/gregoriosyms.sty
+             tex/luatex/gregoriotex/gregoriotex-ictus.tex
+             fonts/truetype/public/gregoriotex/parmesan.ttf
+             fonts/truetype/public/gregoriotex/parmesan-op.ttf
+             fonts/source/gregoriotex/parmesan-base.sfd)
 
 NAME=${NAME:-gregoriotex}
 FORMAT=${FORMAT:-luatex}
@@ -78,6 +94,7 @@ LATEXFORMAT=${LATEXFORMAT:-lualatex}
 TEXHASH=${TEXHASH:-texhash}
 KPSEWHICH=${KPSEWHICH:-kpsewhich}
 CP=${CP:-cp}
+RM=${RM:-rm}
 
 TTFFILES=("${TTFFILES[@]/#/fonts/}")
 FONTSRCFILES=("${FONTSRCFILES[@]/#/fonts/}")
@@ -145,13 +162,50 @@ function install_to {
     $CP "$@" "$dir" || die
 }
 
+function find_and_remove {
+    for files in "$@"; do
+        target="${TEXMFROOT}/${files}"
+#        echo "Looking for $target"
+        if [ -e "$target" ]; then
+#            echo "Removing $target"
+            $RM -f "$target"
+        fi
+    done
+}
+
+function not_installing {
+    echo "install-gtex.sh: not installing $@"
+}
+
+echo "Removing old files"
+find_and_remove "${LEGACYFILES[@]}"
+
+declare -A skip_install
+if [ -n "$SKIP" ]
+then
+    IFS=, read -r -a skip <<< "$SKIP"
+    for skipped in "${skip[@]}"
+    do
+        # trim spaces
+        skipped="${skipped#"${skipped%%[![:space:]]*}"}"
+        skipped="${skipped%"${skipped##*[![:space:]]}"}"
+        skip_install[$skipped]=true
+    done
+fi
+
 echo "Installing in '${TEXMFROOT}'."
-install_to "${TEXMFROOT}/tex/${FORMAT}/${NAME}" "${TEXFILES[@]}"
-install_to "${TEXMFROOT}/tex/${LATEXFORMAT}/${NAME}" "${LATEXFILES[@]}"
-install_to "${TEXMFROOT}/fonts/truetype/public/${NAME}" "${TTFFILES[@]}"
-install_to "${TEXMFROOT}/doc/${FORMAT}/${NAME}" "${DOCFILES[@]}"
-install_to "${TEXMFROOT}/doc/${FORMAT}/${NAME}/examples" "${EXAMPLEFILES[@]}"
-install_to "${TEXMFROOT}/fonts/source/${NAME}" "${FONTSRCFILES[@]}"
+${skip_install[tex]:-false} && not_installing tex files ||
+    install_to "${TEXMFROOT}/tex/${FORMAT}/${NAME}" "${TEXFILES[@]}"
+${skip_install[latex]:-false} && not_installing latex files ||
+    install_to "${TEXMFROOT}/tex/${LATEXFORMAT}/${NAME}" "${LATEXFILES[@]}"
+${skip_install[fonts]:-false} && not_installing fonts ||
+    install_to "${TEXMFROOT}/fonts/truetype/public/${NAME}" "${TTFFILES[@]}"
+${skip_install[docs]:-false} && not_installing docs ||
+    install_to "${TEXMFROOT}/doc/${FORMAT}/${NAME}" "${DOCFILES[@]}"
+${skip_install[examples]:-false} && not_installing examples ||
+    install_to "${TEXMFROOT}/doc/${FORMAT}/${NAME}/examples" "${EXAMPLEFILES[@]}"
+${skip_install[font-sources]:-false} && not_installing font sources ||
+    install_to "${TEXMFROOT}/fonts/source/${NAME}" "${FONTSRCFILES[@]}"
 
 if [ "$arg" = 'tds' ]
 then

@@ -78,13 +78,14 @@ Macro which calculates \verb=\gre@additionalbottomspace= and\\
   & \texttt{1} & there is above lines text
  \end{argtable}
 
-\macroname{\textbackslash gre@calculate@textaligncenter}{\#1\#2\#3}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@textaligncenter}{\#1\#2\#3\#4}{gregoriotex-spaces.tex}
 Macro for calculating \verb=\gre@textaligncenter=.
 
 \begin{argtable}
-  \#1 & string & The first part of the syllable (any preceding consonants in Latin).\\
-  \#2 & string & The middle part of the syllable (the vowel in Latin, the whole syllable in English).\\
-  \#3 & \texttt{0} & Calculation is being performed for the current syllable.\\
+  \#1 & string & The carry-over letters from the previous syllable that should be moved to the current.\\
+  \#2 & string & The first part of the syllable (any preceding consonants in Latin).\\
+  \#3 & string & The middle part of the syllable (the vowel in Latin, the whole syllable in English).\\
+  \#4 & \texttt{0} & Calculation is being performed for the current syllable.\\
   & \texttt{1} & Calculation is being performed for the next syllable.\\
 \end{argtable}
 
@@ -194,14 +195,15 @@ Rescales all the distances (and \texttt{stafflinefactor}) which are supposed to 
   \#2 & integer & the factor the distances are to be put into\\
 \end{argtable}
 
-\macroname{\textbackslash gre@calculate@nextbegindifference}{\#1\#2\#3\#4}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@nextbegindifference}{\#1\#2\#3\#4\#5}{gregoriotex-spaces.tex}
 Macro to calculate \texttt{nextbegindifference}.
 
 \begin{argtable}
-  \#1 & string & the first letters of the next syllable\\
-  \#2 & string & the middle letters of the next syllable (the vowel in Latin, the whole syllable in English)\\
-  \#3 & string & the end letters of the next syllable\\
-  \#4 & $0 \le$ integer $\le 19$ & the type of notes alignment.  See \nameref{notesalign}.\\
+  \#1 & string & the carry-over letters for the next syllable\\
+  \#2 & string & the first letters of the next syllable\\
+  \#3 & string & the middle letters of the next syllable (the vowel in Latin, the whole syllable in English)\\
+  \#4 & string & the end letters of the next syllable\\
+  \#5 & $0 \le$ integer $\le 19$ & the type of notes alignment.  See \nameref{notesalign}.\\
   & $20 \le$ integer $\le 39$ & Same as below 20 except there is a flat before the notes.  Subtract 20 to get the type of notes alignment.\\
   & $40 \le$ integer $\le 59$ & Same as below 20 except there is a natural before the notes.  Subtract 40 to get the type of notes alignment.
 \end{argtable}
@@ -396,6 +398,13 @@ Evaluates to \verb=#1= if running under \LaTeX{}.
 
 \begin{argtable}
   \#1 & \TeX{} code & the \TeX{} code to use if running under \LaTeX{}.
+\end{argtable}
+
+\macroname{\textbackslash gre@ifnotlatex}{\#1}{gregoriotex.sty \textup{and} gregoriotex.tex}
+Evaluates to \verb=#1= if not running under \LaTeX{}.
+
+\begin{argtable}
+  \#1 & \TeX{} code & the \TeX{} code to use if not running under \LaTeX{}.
 \end{argtable}
 
 \macroname{\textbackslash gre@latex@barredsymbol}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
@@ -1003,6 +1012,56 @@ A macro which applies formatting that needs to apply to the whole syllable (rath
   \#1 & string & The syllable (usually built as \verb=\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart=\\
 \end{argtable}
 
+\macroname{\textbackslash gre@if@rewritesyllable}{\#1\#2}{gregoriotex-syllable.tex}
+Performs \#1 if the syllable should be rewritten, else \#2.
+
+\begin{argtable}
+  \#1 & \TeX\ code & Code to perform when rewriting the syllable\\
+  \#2 & \TeX\ code & Code to perform when \emph{not} rewriting the syllable\\
+\end{argtable}
+
+\macroname{\textbackslash gre@save@endsyllablepart}{}{gregoriotex-syllable.tex}
+Control sequence aliased to the carry-over syllable part to be moved to the next syllable.
+
+\macroname{\textbackslash gre@save@fixedtextformat}{\#1}{gregoriotex-syllable.tex}
+Control sequence aliased to the fixed text format for the carry-over syllable part to be moved to the next syllable.
+
+\begin{argtable}
+  \#1 & string & The carry-over syllable part, as with \verb=\gre@fixednexttextformat=\\
+\end{argtable}
+
+\macroname{\textbackslash gre@save@pointandclick}{}{gregoriotex-syllable.tex}
+Control sequence aliased to the line:char:column of the point-and-click link for the carry-over syllable part to be moved to the next syllable\\
+
+\macroname{\textbackslash gre@push@endsyllable}{\#1}{gregoriotex-syllable.tex}
+Sets the save aliases to push the end-syllable part of the current syllable to the next syllable if necessary.
+
+\begin{argtable}
+  \#1 & link target & line:char:column for the link to use for the pushed syllable part\\
+\end{argtable}
+
+\macroname{\textbackslash gre@emit@syllabletext}{\#1}{gregoriotex-syllable.tex}
+Emits the text for the syllable, prepending the carry-over syllable part if necessary and consolidating the fixed text styles if possible.
+
+\begin{argtable}
+  \#1 & \TeX\ code & Code that emits the syllable text\\
+\end{argtable}
+
+\macroname{\textbackslash gre@emit@endsyllablepart}{}{gregoriotex-syllable.tex}
+Emits the text for the end syllable part if it \emph{is not} to be moved to the next syllable.
+
+\macroname{\textbackslash gre@emit@endsyllablepartfornextsyllable}{}{gregoriotex-syllable.tex}
+Emits the text for the end syllable part if it \emph{is} to be moved to the next syllable.  This is used when projecting the next syllable text while processing some syllable.
+
+\macroname{\textbackslash gre@syllable@args}{}{gregoriotex-syllable.tex}
+Saves the arguments to \verb=\GreSyllable=.  Needed so that \verb=\GreSyllable= can look forward to see if the next token is \verb=\GreBarSyllable=.
+
+\macroname{\textbackslash gre@syllable@expand}{}{gregoriotex-syllable.tex}
+Calls \verb=\gre@syllable@act=, passing the arguments saved in \verb=gre@syllable@args=.  Needed so that \verb=\GreSyllable= can look forward to see if the next token is \verb=\GreBarSyllable=.
+
+\macroname{\textbackslash gre@syllable@act}{\#1\#2\#3\#4\#5\#6\#7\#8\#9}{gregoriotex-syllable.tex}
+Typesets the syllable.  Same arguments as \verb=\GreSyllable=.  See the description of that macro for more information.  Needed so that \verb=\GreSyllable= can look forward to see if the next token is \verb=\GreBarSyllable=.
+
 \macroname{\textbackslash gre@gabcname}{}{gregoriotex-main.tex}
 Macro which holds the point-and-click file name.
 
@@ -1483,6 +1542,9 @@ Boolean to mark the last syllable of the score.
 \macroname{\textbackslash ifgre@firstglyph}{}{gregoriotex-syllable.tex}
 Boolean that tells us if the current glyph is the first glyph or not.
 
+\macroname{\textbackslash ifgre@rewritesyllables}{}{gregoriotex-syllable.tex}
+Boolean that enables moving the last part of a syllable to the next if there is no hyphen.
+
 \macroname{\textbackslash gre@attr@dash}{}{gregoriotex-main.tex}
 A Lua\TeX\ attribute which indicates whether a syllable takes a dash if it ends a line.
 
@@ -1497,6 +1559,9 @@ A Lua\TeX\ attribute which identifies the high point of the glyph.  Used for dyn
 
 \macroname{\textbackslash gre@attr@glyph@bottom}{}{gregoriotex-main.tex}
 A Lua\TeX\ attribute which identifies the low point of the glyph.  Used for dynamic line spacing.
+
+\macroname{\textbackslash gre@attr@syllable@id}{}{gregoriotex-main.tex}
+A Lua\TeX\ attribute which identifies one syllable from the next.  Used to position the text after the center of a syllable on the next syllable if the text flows properly, in order to improve ligaturing.
 
 \macroname{\textbackslash gre@clivisalignment}{}{gregoriotex-syllable.tex}
 Count to indicate how the clivis is to be aligned with its respective syllable text.  Values: \texttt{0}) always align clivis on its center; \texttt{1}) align clivis on first punctum; \texttt{2}) align clivis on its center, except if notes would go left of text or consonants after vowels are larger than \verb=\gre@dimen@clivisalignmentmin=.

@@ -2,7 +2,7 @@
  * Gregorio is a program that translates gabc files to GregorioTeX
  * This file contains functions for writing GregorioTeX from Gregorio structures.
  *
- * Copyright (C) 2008-2015 The Gregorio Project (see CONTRIBUTORS.md)
+ * Copyright (C) 2008-2016 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
  *
@@ -72,6 +72,22 @@ static const char *tex_ambitus[] = {
 #define SHAPE(NAME) static const char *const SHAPE_##NAME = #NAME
 SHAPE(Ancus);
 SHAPE(AncusLongqueue);
+SHAPE(AscendensOriscus);
+SHAPE(AscendensOriscusCavum);
+SHAPE(AscendensOriscusLineBL);
+SHAPE(AscendensOriscusLineTL);
+SHAPE(AscendensOriscusScapus);
+SHAPE(AscendensOriscusScapusLongqueue);
+SHAPE(AscendensOriscusScapusOpenqueue);
+SHAPE(AscendensPunctumInclinatum);
+SHAPE(DescendensOriscus);
+SHAPE(DescendensOriscusCavum);
+SHAPE(DescendensOriscusLineBL);
+SHAPE(DescendensOriscusLineTL);
+SHAPE(DescendensOriscusScapus);
+SHAPE(DescendensOriscusScapusLongqueue);
+SHAPE(DescendensOriscusScapusOpenqueue);
+SHAPE(DescendensPunctumInclinatum);
 SHAPE(Flat);
 SHAPE(Flexus);
 SHAPE(FlexusLongqueue);
@@ -89,22 +105,8 @@ SHAPE(Linea);
 SHAPE(LineaPunctum);
 SHAPE(LineaPunctumCavum);
 SHAPE(Natural);
-SHAPE(AscendensOriscus);
-SHAPE(AscendensOriscusCavum);
-SHAPE(DescendensOriscusCavum);
 SHAPE(OriscusCavumDeminutus);
 SHAPE(OriscusDeminutus);
-SHAPE(AscendensOriscusLineBL);
-SHAPE(AscendensOriscusLineTL);
-SHAPE(DescendensOriscus);
-SHAPE(DescendensOriscusLineBL);
-SHAPE(DescendensOriscusLineTL);
-SHAPE(AscendensOriscusScapus);
-SHAPE(AscendensOriscusScapusLongqueue);
-SHAPE(AscendensOriscusScapusOpenqueue);
-SHAPE(DescendensOriscusScapus);
-SHAPE(DescendensOriscusScapusLongqueue);
-SHAPE(DescendensOriscusScapusOpenqueue);
 SHAPE(Pes);
 SHAPE(PesQuadratum);
 SHAPE(PesQuadratumLongqueue);
@@ -132,7 +134,6 @@ SHAPE(PunctumCavumInclinatum);
 SHAPE(PunctumCavumInclinatumAuctus);
 SHAPE(PunctumDeminutus);
 SHAPE(PunctumDescendens);
-SHAPE(PunctumInclinatum);
 SHAPE(PunctumInclinatumAuctus);
 SHAPE(PunctumInclinatumDeminutus);
 SHAPE(PunctumLineBL);
@@ -178,7 +179,9 @@ LIQ(Nothing);
 
 #define FUSE(NAME) static const char *const FUSE_##NAME = #NAME
 FUSE(Lower);
+FUSE(LowerOblatus);
 FUSE(Upper);
+FUSE(UpperOblatus);
 FUSE(Down);
 FUSE(Up);
 
@@ -342,13 +345,30 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
     case G_PUNCTUM:
     case G_FLEXA:
         /* directionally head-fusible */
-        if (fuse_from_previous_note < -1
-                && glyph->u.notes.first_note->u.note.shape != S_QUILISMA
+        if (fuse_from_previous_note < 0) {
+            if (glyph->u.notes.first_note->u.note.shape != S_QUILISMA
                 && glyph->u.notes.first_note->u.note.shape
                 != S_QUILISMA_QUADRATUM) {
-            fuse_head = FUSE_Lower;
-        } else if (fuse_from_previous_note > 1) {
-            fuse_head = FUSE_Upper;
+                if (fuse_from_previous_note < -1) {
+                    fuse_head = FUSE_Lower;
+                } else if (glyph->u.notes.first_note->u.note.shape
+                        == S_ORISCUS_DESCENDENS
+                        || glyph->u.notes.first_note->u.note.shape
+                        == S_ORISCUS_SCAPUS_DESCENDENS) {
+                    /* fuse_from_previous_note will be -1 here */
+                    fuse_head = FUSE_LowerOblatus;
+                }
+            }
+        } else if (fuse_from_previous_note > 0) {
+            if (fuse_from_previous_note > 1) {
+                fuse_head = FUSE_Upper;
+            } else if (glyph->u.notes.first_note->u.note.shape
+                    == S_ORISCUS_ASCENDENS
+                    || glyph->u.notes.first_note->u.note.shape
+                    == S_ORISCUS_SCAPUS_ASCENDENS) {
+                /* fuse_from_previous_note will be 1 here */
+                fuse_head = FUSE_UpperOblatus;
+            }
         }
         break;
 
@@ -410,7 +430,8 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
         if (liquescentia == LIQ_Nothing) {
             liquescentia = "";
         }
-        if (!(*fuse_tail)) {
+        if (!(*fuse_tail) && fuse_head != FUSE_UpperOblatus
+                && fuse_head != FUSE_LowerOblatus) {
             /* single note fused shapes have weird names */
             if (fuse_head == FUSE_Upper) {
                 if (shape == SHAPE_Punctum) {
@@ -568,9 +589,12 @@ static const char *determine_note_glyph_name(const gregorio_note *const note,
 
     *type = AT_ONE_NOTE;
     switch (note->u.note.shape) {
-    case S_PUNCTUM_INCLINATUM:
+    case S_PUNCTUM_INCLINATUM_ASCENDENS:
         *type = AT_PUNCTUM_INCLINATUM;
-        return SHAPE_PunctumInclinatum;
+        return SHAPE_AscendensPunctumInclinatum;
+    case S_PUNCTUM_INCLINATUM_DESCENDENS:
+        *type = AT_PUNCTUM_INCLINATUM;
+        return SHAPE_DescendensPunctumInclinatum;
     case S_PUNCTUM_INCLINATUM_DEMINUTUS:
         return SHAPE_PunctumInclinatumDeminutus;
     case S_PUNCTUM_INCLINATUM_AUCTUS:
@@ -1155,43 +1179,6 @@ static bool is_last_of_line(gregorio_syllable *syllable)
         }
     }
     return false;
-}
-
-static __inline bool has_notes(const gregorio_element *const element)
-{
-    if (element->type == GRE_CUSTOS) {
-        return true;
-    }
-    if (element->type == GRE_ELEMENT) {
-        const gregorio_glyph *glyph;
-        for (glyph = element->u.first_glyph; glyph; glyph = glyph->next) {
-            if (glyph->type == GRE_GLYPH) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-/* determines if there are more GRE_GLYPHs */
-static __inline bool has_more_notes(const gregorio_element *element)
-{
-    for (element = element->next; element; element = element->next) {
-        if (has_notes(element)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-static __inline void handle_last_of_score(FILE *const f,
-        const gregorio_syllable *const syllable,
-        const gregorio_element *const element)
-{
-    if (!syllable->next_syllable && !has_more_notes(element)
-            && has_notes(element)) {
-        fprintf(f, "\\GreLastOfScore");
-    }
 }
 
 /*
@@ -1858,7 +1845,8 @@ static void write_punctum_mora(FILE *f, const gregorio_glyph *glyph,
         break;
     }
     switch (current_note->u.note.shape) {
-    case S_PUNCTUM_INCLINATUM:
+    case S_PUNCTUM_INCLINATUM_ASCENDENS:
+    case S_PUNCTUM_INCLINATUM_DESCENDENS:
     case S_PUNCTUM_INCLINATUM_DEMINUTUS:
         punctum_inclinatum = 1;
         break;
@@ -1946,7 +1934,31 @@ static __inline int get_punctum_inclinatum_space_case(
     char temp;
 
     switch (note->u.note.shape) {
-    case S_PUNCTUM_INCLINATUM:
+    case S_PUNCTUM_INCLINATUM_ASCENDENS:
+        if (note->previous) {
+            /* means that it is the first note of the puncta inclinata
+             * sequence */
+            temp = note->previous->u.note.pitch - note->u.note.pitch;
+            /* negative values = ascending ambitus */
+            /* not sure we ever need to consider a larger ambitus here */
+            switch (temp) {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                return 25;
+            case -1:
+            default:
+                return 12;
+            case -2:
+                return 14;
+            case -3:
+            case -4:
+                return 15;
+            }
+        }
+        break;
+    case S_PUNCTUM_INCLINATUM_DESCENDENS:
     case S_PUNCTUM_CAVUM_INCLINATUM:
         if (note->previous) {
             /* means that it is the first note of the puncta inclinata
@@ -1964,12 +1976,10 @@ static __inline int get_punctum_inclinatum_space_case(
             case 4:
                 return 11;
             case -1:
-                return 12;
             case -2:
-                return 14;
             case -3:
             case -4:
-                return 15;
+                return 24;
             }
         }
         break;
@@ -2125,7 +2135,10 @@ static __inline void write_single_hepisema(FILE *const f, int hepisema_case,
                             suppose_low_ledger_line(note),
                             adj->nudge? adj->nudge : "", adj->vbasepos);
                 } else if (note->next
-                        && (note->next->u.note.shape == S_PUNCTUM_INCLINATUM
+                        && (note->next->u.note.shape
+                            == S_PUNCTUM_INCLINATUM_ASCENDENS
+                            || note->next->u.note.shape
+                            == S_PUNCTUM_INCLINATUM_DESCENDENS
                             || note->next->u.note.shape
                             == S_PUNCTUM_INCLINATUM_DEMINUTUS
                             || note->next->u.note.shape
@@ -3498,6 +3511,15 @@ static __inline unsigned int count_note_units(const gregorio_element *element)
     return count;
 }
 
+static __inline void handle_last_of_voice(FILE *const f,
+        const gregorio_element *const element,
+        const gregorio_element *const last_of_voice)
+{
+    if (element == last_of_voice) {
+        fprintf(f, "\\GreLastOfScore");
+    }
+}
+
 /*
  * Arguments are relatively obvious. The most obscure is certainly first_of_disc
  * which is 0 all the time, except in the case of a "clef change syllable". In
@@ -3514,6 +3536,7 @@ static __inline unsigned int count_note_units(const gregorio_element *element)
 static void write_syllable(FILE *f, gregorio_syllable *syllable,
         unsigned char first_of_disc, gregoriotex_status *const status,
         const gregorio_score *const score,
+        const gregorio_element *const *const last_of_voice,
         void (*const write_this_syllable_text)
         (FILE *, const char *, bool, const gregorio_character *, bool))
 {
@@ -3577,10 +3600,10 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                  */
                 gregoriotex_print_change_line_clef(f, clef_change_element);
                 fprintf(f, "\\GreDiscretionary{0}{%%\n");
-                write_syllable(f, syllable, 1, status, score,
+                write_syllable(f, syllable, 1, status, score, last_of_voice,
                         write_syllable_text);
                 fprintf(f, "}{%%\n");
-                write_syllable(f, syllable, 2, status, score,
+                write_syllable(f, syllable, 2, status, score, last_of_voice,
                         write_syllable_text);
                 fprintf(f, "}%%\n");
                 write_this_syllable_text(f, NULL, syllable->forced_center,
@@ -3794,7 +3817,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                      * We don't print custos before a bar at the end of a line
                      */
                     /* we also print an unbreakable larger space before the custo */
-                    handle_last_of_score(f, syllable, element);
+                    handle_last_of_voice(f, element, *last_of_voice);
                     next_note_pitch = gregorio_determine_next_pitch(syllable,
                             element, NULL, &next_note_alteration);
                     if (!element->u.misc.pitched.force_pitch) {
@@ -3833,7 +3856,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             default:
                 /* here current_element->type is GRE_ELEMENT */
                 assert(element->type == GRE_ELEMENT);
-                handle_last_of_score(f, syllable, element);
+                handle_last_of_voice(f, element, *last_of_voice);
                 note_unit_count += write_element(f, syllable, element, status,
                         score);
                 if (element->next && (element->next->type == GRE_ELEMENT
@@ -3882,7 +3905,8 @@ static char *digest_to_hex(const unsigned char digest[SHA1_DIGEST_SIZE])
 }
 
 static void initialize_score(gregoriotex_status *const status,
-        gregorio_score *score, const bool point_and_click)
+        gregorio_score *score, const bool point_and_click,
+        const gregorio_element **const last_of_voice)
 {
     gregorio_syllable *syllable;
 
@@ -3914,6 +3938,8 @@ static void initialize_score(gregoriotex_status *const status,
             status->abovelinestext = true;
         }
 
+        /* simultaneously compute height extrema and determine the last "real"
+         * element in each voice */
         for (voice = 0; voice < score->number_of_voices; ++voice) {
             gregorio_element *element;
 
@@ -3926,10 +3952,15 @@ static void initialize_score(gregoriotex_status *const status,
                     status->abovelinestext = true;
                     break;
 
+                case GRE_CUSTOS:
+                    last_of_voice[voice] = element;
+                    break;
+
                 case GRE_ELEMENT:
                     for (glyph = element->u.first_glyph; glyph;
                             glyph = glyph->next) {
                         if (glyph->type == GRE_GLYPH) {
+                            last_of_voice[voice] = element;
                             compute_height_extrema(glyph,
                                     glyph->u.notes.first_note,
                                     &(status->top_height),
@@ -3995,8 +4026,11 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
     gregorio_syllable *current_syllable;
     int annotation_num;
     gregoriotex_status status;
+    const gregorio_element *last_of_voice[MAX_NUMBER_OF_VOICES];
 
-    initialize_score(&status, score, point_and_click_filename != NULL);
+    memset(last_of_voice, 0, sizeof last_of_voice);
+    initialize_score(&status, score, point_and_click_filename != NULL,
+            last_of_voice);
 
     gregorio_assert(f, gregoriotex_write_score, "call with NULL file", return);
 
@@ -4084,7 +4118,7 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
     fprintf(f, "}{%%\n"); /* GreScoreOpening#3 */
     current_syllable = score->first_syllable;
     if (current_syllable) {
-        write_syllable(f, current_syllable, 0, &status, score,
+        write_syllable(f, current_syllable, 0, &status, score, last_of_voice,
                 write_first_syllable_text);
         current_syllable = current_syllable->next_syllable;
     } else {
@@ -4092,7 +4126,7 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
         fprintf(f, "}{}{\\GreSetNoFirstSyllableText}%%\n");
     }
     while (current_syllable) {
-        write_syllable(f, current_syllable, 0, &status, score,
+        write_syllable(f, current_syllable, 0, &status, score, last_of_voice,
                 write_syllable_text);
         current_syllable = current_syllable->next_syllable;
     }

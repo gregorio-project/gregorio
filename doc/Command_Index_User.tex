@@ -682,7 +682,7 @@ text directly.
 \textbf{Nota Bene:} The same rules apply for \#1 as in \verb=\gresetspecial=.
 
 \macroname{\textbackslash gretilde}{}{gregoriotex-main.tex}
-Macro to print $\sim$.  This macro is set using the above for \texttt{<sp>~</sp>}.
+Macro to print $\sim$.  This macro is set using the above for \texttt{<sp>$\sim$</sp>}.
 
 
 
@@ -709,7 +709,8 @@ Different elements of an include score have different styles applied.  These ele
   \stylename{initial} & Score initial (the first letter of the score, when offset from the rest of the text) & 40 pt font\\
   \stylename{lowchoralsign} & low choral signs & none\\
   \stylename{modedifferentia} & the rendered annotation from the \texttt{mode-differentia: ;} header in the gabc file & \parbox[t]{2.2cm}{\raggedleft\textbf{bold}}\\
-  \stylename{modeline} & the rendered annotation from the \texttt{mode: ;} header in the gabc file & \parbox[t]{2.2cm}{\raggedleft\textsc{\textbf{bold small capitals}}}\\
+  \stylename{modeline} & the rendered annotation from the \texttt{mode: ;} header in the gabc file & \parbox[t]{2.2cm}{\raggedleft\textsc{\textbf{bold small capitals}}} (\LaTeX)\\
+  & & \textbf{bold} (Plain\TeX)\\
   \stylename{modemodifier} & the rendered annotation from the \texttt{mode-modifier: ;} header in the gabc file & \parbox[t]{2.2cm}{\raggedleft\textit{\textbf{bold italics}}}\\
   \stylename{nabc} & ancient notation & {\color{gregoriocolor}gregoriocolor}\\
   \stylename{normalstafflines} & Full length staff lines & none\\
@@ -720,7 +721,7 @@ Different elements of an include score have different styles applied.  These ele
 \footnotemark[1]\textit{Special:} By default, \texttt{additionalstafflines} inherits its properties from \texttt{normalstafflines}.  To decouple these environments, you must manually change \texttt{additionalstafflines} using \texttt{\textbackslash grechangestyle}.
 \renewcommand{\thefootnote}{\arabic{footnote}}\breakabletrue
 
-\macroname{\textbackslash grechangestyle}{\{\#1\}\{\#2\}[\#3]}{gregoriotex.sty \textup{and} gregoriotex.tex}
+\macroname{\textbackslash grechangestyle}{\{\#1\}\{\#2\}[\optional{\#3}]}{gregoriotex.sty \textup{and} gregoriotex.tex}
 Command to change styling of a score element.
 
 \begin{argtable}
@@ -750,7 +751,7 @@ Each element will be typeset within an isolated group to prevent styling command
 \subsubsection{Text Elements}
 While the gabc headers provide support for some of the text elements commonly found on chant scores, Gregorio\TeX\ provides the following functions to allow you to enter and control those elements with a greater degree of precision than the gabc headers.
 
-\macroname{\textbackslash greannotation}{[\#1]\{\#2\}}{gregoriotex-main.tex}
+\macroname{\textbackslash greannotation}{[\optional{\#1}]\{\#2\}}{gregoriotex-main.tex}
 Macro to add annotations (the text which appears above the initial) to a score.  While a single call of the function does not support multiple lines, successive calls to the function will be added to the annotation as a new line below what is already there.
 
 \begin{argtable}
@@ -762,7 +763,7 @@ Macro to add annotations (the text which appears above the initial) to a score. 
 
 \textbf{Nota Bene:} The first argument does not affect the alignment of lines already in the annotation, only the way the new line aligns with the existing lines as a whole.
 
-\macroname{\textbackslash grecommentary}{[\optional{\#2}]\{\#1\}}{gregoriotex-main.tex}
+\macroname{\textbackslash grecommentary}{[\optional{\#1}]\{\#2\}}{gregoriotex-main.tex}
 Macro to add commentary (the text flush right at the top, usually a scripture reference) to a score.  While a single call of this function does not support multiple lines, successive calls to the function will add a new line to the commentary directly below the previous.
 
 \begin{argtable}
@@ -794,8 +795,8 @@ Sets the number of lines the score initial requires.
 Sets the number system used for the mode number.
 
 \begin{argtable}
-  \#1 & \texttt{roman-minuscule} & Use lower-case Roman numerals (the default, good for small capitals).\\
-      & \texttt{roman-majuscule} & Use upper-case Roman numerals.\\
+  \#1 & \texttt{roman-minuscule} & Use lower-case Roman numerals (the default in \LaTeX, good for small capitals).\\
+      & \texttt{roman-majuscule} & Use upper-case Roman numerals (the default in Plain\TeX).\\
       & \texttt{arabic} & Use Arabic numerals.\\
 \end{argtable}
 
@@ -866,6 +867,21 @@ Macro to specify which part of the control line in the annotation should be alig
 \end{argtable}
 
 \textbf{Nota Bene:} These variable refer to the actual contents of the line and not to the ``hypothetical'' limits for the font.  As a result if the top of an annotation containing only short letters will be different from one which contains tall ones even if both use the same font.  Likewise, if the annotation contains no descenders, then baseline and bottom will be the same.  If this is a problem, then the use of struts within the annotation can be used to control the line height (distance from baseline to top) and depth (distance from baseline to bottom).
+
+\macroname{\textbackslash gresetsyllablerewriting}{\{\#1\}}{gregoriotex-syllable.tex}
+Sets whether the last part of a non-final syllable of a word is moved to the
+next syllable when there is no hyphen.  The ``last part'' of a syllable is
+the part that comes after the part that is centered under the first note of
+the syllable.  This feature may allow Lua\TeX{} to find better opportunities
+for ligaturing based on \TeX{} and font settings.
+
+\begin{argtable}
+  \#1 & \texttt{auto} & Gregorio\TeX{} will move the last part of a syllable
+                        to the next syllable in a word when there is no
+                        hyphen (default).\\
+      & \texttt{off}  & Gregorio\TeX{} will not attempt to rewrite any
+                        syllables.\\
+\end{argtable}
 
 \subsubsection{End of Line Behavior}
 While Gregorio\TeX\ will automatically wrap scores to fit your page, there are several ways to fine tune that line breaking behavior with the following commands.
@@ -1358,6 +1374,10 @@ Space between descending puncta inclinata, larger ambitus (range=3rd).
 Space between descending puncta inclinata, larger ambitus (range=4th or 5th).
 \end{gdimension}
 
+\begin{gdimension}{descendingpunctuminclinatumascendingshift}
+Space between descending puncta inclinata shapes in an ascent of pitch.
+\end{gdimension}
+
 \begin{gdimension}{ascendingpunctuminclinatumshift}
 Space between two ascending puncta inclinata.
 \end{gdimension}
@@ -1373,6 +1393,10 @@ Space between ascending puncta inclinata, larger ambitus (range=3rd).
 
 \begin{gdimension}{ascendingpunctuminclinatummaxshift}
 Space between ascending puncta inclinata, larger ambitus (range=4th or 5th).
+\end{gdimension}
+
+\begin{gdimension}{ascendingpunctuminclinatumdescendingshift}
+Space between ascending puncta inclinata shapes in a descent of pitch.
 \end{gdimension}
 
 \begin{gdimension}{descendinginclinatumtonobarshift}
@@ -1596,6 +1620,23 @@ Vertical distance to place a punctum mora for the second note in a porrectus (or
 \begin{gdimension}{raresignshift}
 Distance to place a ``rare'' sign above the top space in a score.
 \end{gdimension}
+
+\begin{gdimension}{parskip}
+The effective \verb=\parskip= inside of a score.
+\end{gdimension}
+
+\begin{gdimension}{lineskip}
+The effective \verb=\lineskip= inside of a score.
+\end{gdimension}
+
+\begin{gdimension}{baselineskip}
+The effective \verb=\baselineskip= inside of a score.
+\end{gdimension}
+
+\begin{gdimension}{lineskiplimit}
+The effective \verb=\lineskiplimit= inside of a score.
+\end{gdimension}
+
 
 \subsubsection{Bar distances}
 

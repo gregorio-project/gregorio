@@ -34,5 +34,6 @@ chmod -R 777 examples/
 chmod -R 777 doc/
 chmod +x contrib/TeXShop/auto-configure.command
 chmod +x contrib/config-texworks-mac.command
+chmod +x contrib/system-setup.command
 
 writelog 6 "Installation Complete"

@@ -20,7 +20,7 @@
 -- this file contains lua functions used by GregorioTeX St. Gall ancient
 -- neume support when called with LuaTeX.
 
--- GREGORIO_VERSION 4.1.1
+-- GREGORIO_VERSION 4.2.0-rc1
 
 local catcode_at_letter = luatexbase.catcodetables['gre@atletter']
 
@@ -137,9 +137,9 @@ local gregallparse_base = function (str, idx, len)
   end
   -- Ambitus not handled yet, neither during parsing, nor when
   -- typesetting.
-  -- Optional height, h[a-m].
+  -- Optional height, h[a-np].
   if idx < len and str:sub(idx, idx) == "h" then
-    local p = string.find("abcdefghijklm", str:sub(idx + 1, idx + 1))
+    local p = string.find("abcdefghijklmnp", str:sub(idx + 1, idx + 1))
     if not p then return 1 end
     height = p - 1
     idx = idx + 2

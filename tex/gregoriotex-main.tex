@@ -87,11 +87,16 @@
 }%
 
 
-\def\gre@nothing{}
+\def\gre@nothing{}%
 
-% Depending on version of TeX / LaTeX, some primitives may or may not have a
-% luatex prefix, so we need to check and handle either
+%%%%%%%%%%%%%%%
+%% Backwards Compatibility
+%%%%%%%%%%%%%%%
 
+% Depending on version of LuaTeX / LaTeX, some primitives have different names
+% We define local aliases for this eventuality, using \ifdefined to determine which
+% version of the primative is available.  In all cases the 'true' branch should be the
+% more recent version.
 \ifdefined\localleftbox%
   \let\gre@localleftbox\localleftbox%
 \else%
@@ -102,6 +107,32 @@
 \else%
   \let\gre@localrightbox\luatexlocalrightbox%
 \fi%
+\ifdefined\pdfextension%
+  \def\gre@startlink{\pdfextension startlink }%
+  \def\gre@endlink{\pdfextension endlink\relax}%
+\else%
+  \let\gre@startlink\pdfstartlink%
+  \let\gre@endlink\pdfendlink%
+\fi%
+\ifdefined\savepos%
+  \let\gre@savepos\savepos%
+\else%
+  \let\gre@savepos\pdfsavepos%
+\fi%
+\ifdefined\lastxpos%
+  \let\gre@lastxpos\lastxpos%
+\else%
+  \let\gre@lastxpos\pdflastxpos%
+\fi%
+\ifdefined\lastypos%
+  \let\gre@lastypos\lastypos%
+\else%
+  \let\gre@lastypos\pdflastypos%
+\fi%
+
+%%%%%%%%%%%%%%%
+
+
 % an attribute we put on the text nodes.
 % if it is 1, it means that there may be a dash here if this syllable is at the end of a line
 % if it is 2, it means that it's never useful to typeset a dash
@@ -118,6 +149,9 @@
 \newluatexattribute\gre@attr@glyph@top %
 \newluatexattribute\gre@attr@glyph@bottom %
 
+% attribute for syllable tracking
+\newluatexattribute\gre@attr@syllable@id %
+
 \newluatexcatcodetable\gre@atletter %
 \setluatexcatcodetable\gre@atletter{%
   \catcode`\@=11 %
@@ -125,7 +159,7 @@
 
 % The version of gregorio. All gregoriotex*.tex files must have the same.
 % All gtex files must also have the same version.
-\xdef\gre@gregorioversion{4.1.1}% GREGORIO_VERSION - VersionManager.py
+\xdef\gre@gregorioversion{4.2.0-rc1}% GREGORIO_VERSION - VersionManager.py
 
 % first some macros to allow checks for version:
 % Tests that all gregoriotex files are of the same version.
@@ -677,7 +711,7 @@
       \gre@error{Unrecognized option "#1" in \protect\gresetmodenumbersystem\MessageBreak Possible options are: 'roman-majuscule', 'roman-minuscule', and 'arabic'}%
     ]%
 }%
-\gresetmodenumbersystem{roman-minuscule}%
+% defaults set differently for LaTeX and PlainTeX, so see gregoriotex.sty and gregoriotex.tex
 
 \def\GreAnnotationLines#1#2{%
   \ifvoid\gre@box@annotation%
@@ -700,7 +734,7 @@
 
 \newbox\gre@box@commentary
 
-\def\grecommentary{\@ifnextchar[{\gre@commentary}{\gre@commentary[0pt]}}
+\def\grecommentary{\@ifnextchar[{\gre@commentary}{\gre@commentary[0pt]}}%
 
 \def\gre@commentary[#1]#2{%
   % we initialize commentarytrueraise here, but will only calculate it's final value just before placing the commentary so that we make sure we have the correct values for the distances which go into it
@@ -1130,6 +1164,7 @@
   \gre@reseteolcustos%
   \gre@resetledgerlineheuristics%
   \global\setluatexattribute\gre@attr@glyph@id{0}%
+  \global\setluatexattribute\gre@attr@syllable@id{0}%
   \xdef\gre@gabcname{#6}%
   \gre@setstafflines{#7}%
   \global\let\gre@opening@initialstyle\gre@initiallines\relax % DEPRECATED for removal in 5.0
@@ -1150,7 +1185,8 @@
   \gre@calculate@additionalspaces{#2}{#3}{#4}{#5}%
   \directlua{
     gregoriotex.atScoreBeginning([[#1]], #2, #3, #4, #5,
-        \gre@pitch@adjust@top, \gre@pitch@adjust@bottom)
+        \gre@pitch@adjust@top, \gre@pitch@adjust@bottom,
+        "\luatexluaescapestring{\gre@gregoriofontname}")
     gregoriotex.adjust_line_height(1)
   }%
   %TODO do something like LaTeX's AtBeginDocument
@@ -1490,6 +1526,10 @@
     \gre@skip@temp@four = \gre@space@skip@halfspace\relax%
   \or% case 23
     \gre@skip@temp@four = \gre@space@skip@punctuminclinatumunisonshift\relax%
+  \or% case 24
+    \gre@skip@temp@four = \gre@space@skip@descendingpunctuminclinatumascendingshift\relax%
+  \or% case 25
+    \gre@skip@temp@four = \gre@space@skip@ascendingpunctuminclinatumdescendingshift\relax%
   \else%
     \gre@error{Unrecognized spaceskip #1}%
   \fi%
@@ -1744,7 +1784,7 @@
 % 0 = never compile (default)
 % 1 = auto compile (compile outdated scores and those lacking a compiled version)
 % 2 = compile all scores
-\def\gre@compilegabc{0}
+\def\gre@compilegabc{0}%
 
 % User macro to change compilation behavior
 \def\gresetcompilegabc#1{%

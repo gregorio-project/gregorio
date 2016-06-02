@@ -3,6 +3,32 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 [Unreleased][unreleased]
+
+
+## [4.2.0-rc1] - 2016-05-31
+### Fixed
+- The `900_gregorio.xml` file for Scribus now matches `main-lualatex.tex` again (see [#1087](https://github.com/gregorio-project/gregorio/issues/1087)).
+- Multiple subsequent lines in gabc no longer cause TeX to fail (see [#1111](https://github.com/gregorio-project/gregorio/issues/1111)).
+- Old bar spacing algorithm will no longer separate the text and bar when the bar is preceeded by a puncutm mora (see [#1078](https://github.com/gregorio-project/gregorio/issues/1078)).
+- Scores which end with a no-note syllable under the new bar spacing algorithm will no longer have their text pushed out into the right hand margin.  See [#1110](https://github.com/gregorio-project/gregorio/issues/1110).
+- PlainTeX will now respect underline requests in gabc.
+- PlainTeX will now raise a warning when small caps are requested but `\sc` has not been defined.
+
+### Added
+- Nabc now supports pitches `hn` and `hp` in addition to previously supported `ha` through `hm`.
+- 32 new St. Gall neume glyphs have been added to the `gregall` font and glyphs for nabc `po-1pp2su1sux1` and `po-1su1sux1` have been changed.
+- 31 new St. Gall neume glyphs have been added to the `gresgmodern` font and glyph for nabc `tr-1` has been changed.
+- It is now possible to set `\parskip`, `\lineskip`, `\baselineskip`, and `\lineskiplimit` to have different values within a score using `\grechangedim`.  See [#1038](https://github.com/gregorio-project/gregorio/issues/1038).
+
+### Changed
+- Different glyphs are now used for puncta inclinata in an ascent versus in a descent.  A heuristic algorithm is used to ensure that the glyphs match when grouped together.  If the algorithm chooses the wrong shape, use `0` (for descending) or `1` (for ascending) to force an orientation.  See [UPGRADE.md](UPGRADE.md) and [#856](https://github.com/gregorio-project/gregorio/issues/856) for details.
+- The shape of the fused oriscus at ambitus one in the greciliae font has been tweaked to form a nicer connection (see [#1079](https://github.com/gregorio-project/gregorio/issues/1079)).
+- Syllables are now rewritten to improve ligature rendering.  This may be disabled by issuing `\gresetsyllablerewriting{off}`.  See GregorioRef for details (for the change request, see [#1098](https://github.com/gregorio-project/gregorio/issues/1098)).
+- Default mode style for PlainTeX no longer trys to invoke small caps since they are not defined by default.
+- Italic, bold, underlined, small capital, teletype, and colored styles now span multiple syllables.  Gregorio will also more consistently raise errors when styles are improperly started or ended.  See [UPGRADE.md](UPGRADE.md) and [#1121](https://github.com/gregorio-project/gregorio/issues/1121) for details.
+
+
+## [4.2.0-beta1] - 2016-04-27
 ### Fixed
 - A manual custos at the end of the score will now be spaced like regular end of line custos [#1034](https://github.com/gregorio-project/gregorio/issues/1034).
 - Custos glyphs heights are now counted when adjusting line heights (see [#961](https://github.com/gregorio-project/gregorio/issues/961)).
@@ -25,8 +51,6 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - An isolated stropha will now be considered part of the previous neume group and line breaks will be prevented at that point.  In order to force a line break there, use a breaking space such as `/` before the stropha in gabc.  See [#1056](https://github.com/gregorio-project/gregorio/issues/1056).
 - `interwordspacetext` and it's related distances have been redefined to be smaller and dependent on a font based distance (`ex`).  They are also no longer scale with the staff size by default.  See [#1036](https://github.com/gregorio-project/gregorio/issues/1036) & [gregoriot-test#208](https://github.com/gregorio-project/gregorio-test/pull/208).
 - `\grecreatedim` and `\grechangedim` can now be used to link two distances.  To do this the second argument should be the name of the master distance and the third argument should be `inherited`.  See [#962](https://github.com/gregorio-project/gregorio/issues/962).
-- The parmesan font is now called granapadano.  If you were using `\gresetgregoriofont{parmesan}`, you should now use `\gresetgregoriofont{granapadano}`.  See [#1075](https://github.com/gregorio-project/gregorio/issues/1075).
-
 
 ### Removed
 - `\grescorereference`
@@ -46,6 +70,21 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\gretolerance`
 - `\grepretolerance`
 - `\greemergencystretch`
+
+
+## [4.1.4] - 2016-05-29
+### Fixed
+- Package conflict with luatex-ja also affected the custos.  Have now fixed that problem too.  See [this thread](http://www.mail-archive.com/gregorio-users@gna.org/msg03520.html).
+
+## [4.1.3] - 2016-05-26
+### Fixed
+- Package conflict with luatex-ja has been resolved.  Notes and lyrics should now appear in documents which use the luatex-ja package.  See [#1107](https://github.com/gregorio-project/gregorio/issues/1107).
+
+
+## [4.1.2] - 2016-05-08
+### Changed
+- The parmesan font is now called granapadano.  If you were using `\gresetgregoriofont{parmesan}`, you should now use `\gresetgregoriofont{granapadano}`.  See [#1075](https://github.com/gregorio-project/gregorio/issues/1075).
+- GregorioTeX is now compatible with TeXLive 2016
 
 
 ## [4.1.1] - 2016-03-10
@@ -146,13 +185,13 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\grescorereference`
 
 ### Removed
-- `\GreSetStaffLinesFormat`, supplanted by `\grechangeformat{normalstafflines}...`
-- `\greinitialformat`, if you were redefining this command, use `\grechangeformat{initial}...` instead
-- `\grebiginitialformat`, if you were redefining this command, use `\grechangeformat{biginitial}...` instead
-- `\gretranslationformat`, if you were redefining this command, use `\grechangeformat{translation}...` instead
-- `\greabovelinestextstyle`, if you were redefining this command, use `\grechangeformat{abovelinestext}...` instead
-- `\grelowchoralsignstyle`, if you were redefining this command, use `\grechangeformat{lowchoralsign}...` instead
-- `\grehighchoralsignstyle`, if you were redefining this command, use `\grechangeformat{highchoralsign}...` instead
+- `\GreSetStaffLinesFormat`, supplanted by `\grechangestyle{normalstafflines}...`
+- `\greinitialformat`, if you were redefining this command, use `\grechangestyle{initial}...` instead
+- `\grebiginitialformat`, if you were redefining this command, use `\grechangestyle{biginitial}...` instead
+- `\gretranslationformat`, if you were redefining this command, use `\grechangestyle{translation}...` instead
+- `\greabovelinestextstyle`, if you were redefining this command, use `\grechangestyle{abovelinestext}...` instead
+- `\grelowchoralsignstyle`, if you were redefining this command, use `\grechangestyle{lowchoralsign}...` instead
+- `\grehighchoralsignstyle`, if you were redefining this command, use `\grechangestyle{highchoralsign}...` instead
 - `\setaboveinitialseparation`, supplanted by `\grechangedim{annotationseparation}...`
 - `\scorereference`
 - `\GreScoreReference`

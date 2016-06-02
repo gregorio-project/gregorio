@@ -126,6 +126,7 @@ local old_base_dirs = {
   fixpath(texmflocal.."fonts/ovf/gregoriotex"),
   fixpath(texmflocal.."fonts/map/gregoriotex"),
   fixpath(texmflocal.."tex/luatex/gregoriotex"),
+  fixpath(texmflocal.."tex/lualatex/gregoriotex"),
   fixpath(texmflocal.."fonts/truetype/public/gregoriotex"),
   fixpath(texmflocal.."fonts/source/gregoriotex"),
   fixpath(texmflocal.."doc/luatex/gregoriotex"),

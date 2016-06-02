@@ -74,11 +74,11 @@ else
     make doc
     cd ..
     cp doc/*.tex $EXTRASDIR/doc/
-    cp doc/*-*.pdf $EXTRASDIR/doc/
+    cp doc/*.pdf $EXTRASDIR/doc/
     cp doc/*.md $EXTRASDIR/doc/
     cp doc/*.gabc $EXTRASDIR/doc/
     cp -r contrib/ $EXTRASDIR/contrib
-    rm $EXTRASDIR/contrib/Makefile*
+    find $EXTRASDIR/contrib -name 'Makefile*' -delete
     cp examples/*.tex $EXTRASDIR/examples/
     cp examples/*.gabc $EXTRASDIR/examples/
     cp *.md $EXTRASDIR
