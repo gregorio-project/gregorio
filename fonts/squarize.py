@@ -68,6 +68,8 @@ statement from your version."""
 # defines the maximal interval between two notes, the bigger this number is,
 # the more glyphs you'll have to generate
 MAX_INTERVAL = 5
+ALL_AMBITUS = range(1, MAX_INTERVAL + 1)
+AMBITUS_ONE_ONLY = [ 1 ]
 
 # this dictionary must have a value for 1 up to MAX_INTERVAL
 AMBITUS = {
@@ -651,7 +653,7 @@ def get_queue_glyph(height, rev = False):
     oldfont['tmpglyph'].simplify(0, ['mergelines'])
     return 'tmpglyph'
 
-def write_line(i, length, height):
+def draw_line(i, length, height):
     "Writes a line in currently selected glyph, with length and height offsets"
     if i > 1:
         linename = "line%d" % i
@@ -772,7 +774,7 @@ def get_queue_shift(qtype, shape, liq, i=0, side='left', j=0):
         #print(shift)
     return shift
 
-def write_left_queue(i, qtype, stemshape, liq = L_NOTHING, j=0, length=0, shift=0):
+def draw_left_queue(i, qtype, stemshape, liq = L_NOTHING, j=0, length=0, shift=0):
     """ Write the left queue of a glyph. Non-obvious args:
          - i: the ambitus between the first and second note
          - j: ambitus between the second and third note in case of an ancus
@@ -783,21 +785,21 @@ def write_left_queue(i, qtype, stemshape, liq = L_NOTHING, j=0, length=0, shift=
     queue_glyph = get_queue_glyph(qshift, False)
     paste_and_move(queue_glyph, length, shift)
 
-def write_right_queue(i, length, qtype, stemshape, liq = L_NOTHING, j=0, shift=0):
-    """ Write the right queue of a glyph. Same arguments as write_length_queue
+def draw_right_queue(i, length, qtype, stemshape, liq = L_NOTHING, j=0, shift=0):
+    """ Write the right queue of a glyph. Same arguments as draw_left_queue
     """
     qshift = get_queue_shift(qtype, stemshape, liq, i, 'right', j)
     queue_glyph = get_queue_glyph(qshift, True)
     paste_and_move(queue_glyph, length, shift)
 
-def write_virga_in(right_queue, firstglyph, qtype, liq, stemshape=S_VIRGA, i=0):
+def draw_virga_in(right_queue, firstglyph, qtype, liq, stemshape=S_VIRGA, i=0):
     "Draws a virga at height i."
     if not right_queue:
-        write_left_queue(i, qtype, stemshape, liq)
+        draw_left_queue(i, qtype, stemshape, liq)
     paste_and_move(firstglyph, 0, (i)*FONT_CONFIG['base height'])
     first_width = get_width(firstglyph)
     if right_queue:
-        write_right_queue(i, first_width-get_width('line2'), qtype, stemshape)
+        draw_right_queue(i, first_width-get_width('line2'), qtype, stemshape)
     return first_width
 
 def write_virga(shape, lique=L_NOTHING, right_queue=False, firstglyph='rvirgabase',
@@ -810,7 +812,7 @@ def write_virga(shape, lique=L_NOTHING, right_queue=False, firstglyph='rvirgabas
         glyph_name = '%s%s' % (shape, lique)
     if copy_existing_glyph(glyph_name):
         return
-    thislen = write_virga_in(right_queue, firstglyph, qtype, lique, stemshape)
+    thislen = draw_virga_in(right_queue, firstglyph, qtype, lique, stemshape)
     set_width(thislen)
     end_glyph(glyph_name)
 
@@ -854,7 +856,7 @@ def virga():
     write_virga(S_DESCENDENS_ORISCUS_SCAPUS_OPENQUEUE, L_NOTHING, False,
                 'DescendensOriscusLineBL', 'open', S_DESCENDENS_ORISCUS_SCAPUS)
 
-def write_deminutus(i, j, length=0, tosimplify=0, firstbar=1):
+def draw_deminutus(i, j, length=0, tosimplify=0, firstbar=1):
     """As the glyph before a deminutus is not the same as a normal glyph,
     and always the same, we can call this function each
     time. Sometimes we have to simplify before building the last glyph
@@ -874,7 +876,7 @@ def write_deminutus(i, j, length=0, tosimplify=0, firstbar=1):
             first_glyph = '%sam1flexus' % first_glyph
     paste_and_move(first_glyph, length, i*FONT_CONFIG['base height'])
     if not first_glyph_is_complete:
-        write_line(j, length+get_width(first_glyph)-get_width('line2'),
+        draw_line(j, length+get_width(first_glyph)-get_width('line2'),
                    (i-j+1)*FONT_CONFIG['base height'])
     if tosimplify:
         simplify()
@@ -891,7 +893,7 @@ def measures():
     first_glyph = 'PunctumLineBLBR'
     second_glyph = 'PunctumLineTL'
     simple_paste(first_glyph)
-    write_line(1, get_width(first_glyph) - get_width('line2'), -FONT_CONFIG['base height'])
+    draw_line(1, get_width(first_glyph) - get_width('line2'), -FONT_CONFIG['base height'])
     paste_and_move(second_glyph, get_width(first_glyph) - get_width('line2'),
                    -FONT_CONFIG['base height'])
     set_width(get_width(first_glyph)+get_width(second_glyph)-get_width('line2'))
@@ -937,10 +939,10 @@ def hepisema():
         write_hepisema(get_width(source), target)
         write_hepisema(get_width(source) * 2.0 / 3.0, target + "Reduced")
     reduction = get_width('PunctumSmall')
-    for i in range(1, MAX_INTERVAL+1):
+    for i in ALL_AMBITUS:
         write_hepisema(get_width("porrectus%d"%i),
                        'HEpisemaPorrectus%s' % AMBITUS[i], reduction)
-    for i in range(1, MAX_INTERVAL+1):
+    for i in ALL_AMBITUS:
         if glyph_exists("porrectusam1%d"%i):
             write_hepisema(get_width("porrectusam1%d"%i),
                            'HEpisemaPorrectusAmOne%s' % AMBITUS[i], reduction)
@@ -948,7 +950,7 @@ def hepisema():
             write_hepisema(get_width("porrectus%d"%i),
                            'HEpisemaPorrectusAmOne%s' % AMBITUS[i], reduction)
     # porrectus flexus does not get reduced because the note after is to the right
-    for i in range(1, MAX_INTERVAL+1):
+    for i in ALL_AMBITUS:
         write_hepisema(get_width("porrectusflexus%d"%i),
                        'HEpisemaPorrectusFlexus%s' % AMBITUS[i])
 
@@ -973,61 +975,47 @@ def pes():
     "Creates the pes."
     message("pes")
     precise_message("pes")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes(i, "p2base", S_PES)
+    write_all_pes("p2base", S_PES)
     precise_message("pes deminutus")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_deminutus(i, "pesdeminutus", S_PES, L_DEMINUTUS)
+    write_all_pes_deminutus("pesdeminutus", S_PES, L_DEMINUTUS)
     precise_message("pes quilisma")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes(i, "QuilismaLineTR", S_PES_QUILISMA)
+    write_all_pes("QuilismaLineTR", S_PES_QUILISMA)
     precise_message("pes quilisma deminutus")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_deminutus(i, "QuilismaLineTR", S_PES_QUILISMA, L_DEMINUTUS)
+    write_all_pes_deminutus("QuilismaLineTR", S_PES_QUILISMA, L_DEMINUTUS)
     precise_message("pes quassus deminutus")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_deminutus(i, "AscendensOriscusLineTR", S_PES_QUASSUS,
-                            L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_deminutus(i, "DescendensOriscusLineTR",
-                            S_PES_QUASSUS_INUSITATUS, L_DEMINUTUS)
+    write_all_pes_deminutus("AscendensOriscusLineTR", S_PES_QUASSUS, L_DEMINUTUS)
+    write_all_pes_deminutus("DescendensOriscusLineTR", S_PES_QUASSUS_INUSITATUS,
+            L_DEMINUTUS)
     precise_message("pes initio debilis")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_debilis(i, S_PES, L_INITIO_DEBILIS)
+    write_all_pes_debilis(S_PES, L_INITIO_DEBILIS)
     precise_message("pes initio debilis deminutus")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_debilis_deminutus(i, S_PES, L_INITIO_DEBILIS_DEMINUTUS)
+    write_all_pes_debilis_deminutus(S_PES, L_INITIO_DEBILIS_DEMINUTUS)
 
 def fusion_pes():
     "Creates the fusion pes."
     message("fusion pes")
     precise_message("fusion pes")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes(i, "msdeminutus", S_UPPER_PES)
+    write_all_pes("msdeminutus", S_UPPER_PES)
     precise_message("fusion pes deminutus")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_deminutus(i, "msdeminutus", S_UPPER_PES, L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_deminutus(i, "mpdeminutus", S_LOWER_PES, L_DEMINUTUS)
+    write_all_pes_deminutus("msdeminutus", S_UPPER_PES, L_DEMINUTUS)
+    write_all_pes_deminutus("mpdeminutus", S_LOWER_PES, L_DEMINUTUS)
     precise_message("fusion pes quassus deminutus")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_deminutus(i, "AscendensOriscusLineBLTR", S_UPPER_PES_QUASSUS,
-                L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_deminutus(i, FLATTENED_ORISCUS["AscendensOriscusLineTRFlatBottom"],
-                S_UPPER_OBLATUS_PES_QUASSUS, L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_deminutus(i, "DescendensOriscusLineBLTR",
-                            S_UPPER_PES_QUASSUS_INUSITATUS, L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_deminutus(i, "AscendensOriscusLineTLTR", S_LOWER_PES_QUASSUS,
-                            L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_deminutus(i, "DescendensOriscusLineTLTR",
-                            S_LOWER_PES_QUASSUS_INUSITATUS, L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_deminutus(i, FLATTENED_ORISCUS["DescendensOriscusLineTRFlatTop"],
-                            S_LOWER_OBLATUS_PES_QUASSUS_INUSITATUS, L_DEMINUTUS)
+    write_all_pes_deminutus("AscendensOriscusLineBLTR", S_UPPER_PES_QUASSUS,
+            L_DEMINUTUS)
+    write_all_pes_deminutus(FLATTENED_ORISCUS["AscendensOriscusLineTRFlatBottom"],
+            S_UPPER_OBLATUS_PES_QUASSUS, L_DEMINUTUS)
+    write_all_pes_deminutus("DescendensOriscusLineBLTR",
+            S_UPPER_PES_QUASSUS_INUSITATUS, L_DEMINUTUS)
+    write_all_pes_deminutus("AscendensOriscusLineTLTR", S_LOWER_PES_QUASSUS,
+            L_DEMINUTUS)
+    write_all_pes_deminutus("DescendensOriscusLineTLTR",
+            S_LOWER_PES_QUASSUS_INUSITATUS, L_DEMINUTUS)
+    write_all_pes_deminutus(FLATTENED_ORISCUS["DescendensOriscusLineTRFlatTop"],
+            S_LOWER_OBLATUS_PES_QUASSUS_INUSITATUS, L_DEMINUTUS)
+
+def write_all_pes(first_glyph, shape, lique=L_NOTHING, i_range=ALL_AMBITUS):
+    for i in i_range:
+        write_pes(i, first_glyph, shape, lique)
 
 def write_pes(i, first_glyph, shape, lique=L_NOTHING):
     "Writes the pes glyphs."
@@ -1045,7 +1033,7 @@ def write_pes(i, first_glyph, shape, lique=L_NOTHING):
     temp_width = get_width(first_glyph)-get_width('line2')
     if width_difference < 0:
         temp_width = temp_width-width_difference
-    write_line(i, temp_width, FONT_CONFIG['base height'])
+    draw_line(i, temp_width, FONT_CONFIG['base height'])
     if width_difference != 0:
         paste_and_move('PunctumSmall', width_difference, i*FONT_CONFIG['base height'])
     else:
@@ -1056,6 +1044,10 @@ def write_pes(i, first_glyph, shape, lique=L_NOTHING):
         set_width(get_width(first_glyph))
     end_glyph(glyph_name)
 
+def write_all_pes_debilis(shape, lique=L_NOTHING, i_range=ALL_AMBITUS):
+    for i in i_range:
+        write_pes_debilis(i, shape, lique)
+
 def write_pes_debilis(i, shape, lique=L_NOTHING):
     "Writes the pes debilis glyphs."
     new_glyph()
@@ -1064,12 +1056,17 @@ def write_pes_debilis(i, shape, lique=L_NOTHING):
         return
     # with a deminutus it is much more beautiful than with a idebilis
     simple_paste("deminutus")
-    write_line(i, get_width('deminutus')-get_width('line2'), FONT_CONFIG['base height'])
+    draw_line(i, get_width('deminutus')-get_width('line2'), FONT_CONFIG['base height'])
     simplify()
     paste_and_move("PunctumLineBL", get_width('deminutus')-get_width('line2'),
                    i*FONT_CONFIG['base height'])
     set_width(get_width('deminutus')+get_width('PunctumLineBL')-get_width('line2'))
     end_glyph(glyph_name)
+
+def write_all_pes_deminutus(first_glyph, shape, lique=L_NOTHING,
+        i_range=ALL_AMBITUS):
+    for i in i_range:
+        write_pes_deminutus(i, first_glyph, shape, lique)
 
 def write_pes_deminutus(i, first_glyph, shape, lique=L_NOTHING):
     "Writes the pes deminutus glyphs."
@@ -1079,12 +1076,16 @@ def write_pes_deminutus(i, first_glyph, shape, lique=L_NOTHING):
         return
     simple_paste(first_glyph)
     temp_width = get_width(first_glyph)-get_width('line2')
-    write_line(i, temp_width, FONT_CONFIG['base height'])
+    draw_line(i, temp_width, FONT_CONFIG['base height'])
     paste_and_move("rdeminutus",
                    get_width(first_glyph)-get_width('rdeminutus'),
                    i*FONT_CONFIG['base height'])
     set_width(get_width(first_glyph))
     end_glyph(glyph_name)
+
+def write_all_pes_debilis_deminutus(shape, lique=L_NOTHING, i_range=ALL_AMBITUS):
+    for i in i_range:
+        write_pes_debilis_deminutus(i, shape, lique)
 
 def write_pes_debilis_deminutus(i, shape, lique=L_NOTHING):
     "Writes the pes debilis deminutus glyphs."
@@ -1093,7 +1094,7 @@ def write_pes_debilis_deminutus(i, shape, lique=L_NOTHING):
     if copy_existing_glyph(glyph_name):
         return
     simple_paste("deminutus")
-    write_line(i, get_width('deminutus')-get_width('line2'), FONT_CONFIG['base height'])
+    draw_line(i, get_width('deminutus')-get_width('line2'), FONT_CONFIG['base height'])
     simplify()
     paste_and_move("rdeminutus", 0, i*FONT_CONFIG['base height'])
     set_width(get_width('deminutus'))
@@ -1103,246 +1104,186 @@ def pes_quadratum():
     "Makes the pes quadratum."
     message("pes quadratum")
     precise_message("pes quadratum")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "PunctumLineTR", "VirgaBaseLineBL",
-                            S_PES_QUADRATUM,
-                            stemshape=S_PES_QUADRATUM, qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "PunctumLineTR", "VirgaBaseLineBL",
-                            S_PES_QUADRATUM_LONGQUEUE,
-                            stemshape=S_PES_QUADRATUM, qtype='long')
+    write_all_pes_quadratum("PunctumLineTR", "VirgaBaseLineBL", S_PES_QUADRATUM,
+            stemshape=S_PES_QUADRATUM, qtype='short')
+    write_all_pes_quadratum("PunctumLineTR", "VirgaBaseLineBL",
+            S_PES_QUADRATUM_LONGQUEUE, stemshape=S_PES_QUADRATUM, qtype='long')
     write_pes_quadratum(1, "PunctumLineTR", "VirgaBaseLineBL",
-                        S_PES_QUADRATUM_OPENQUEUE,
-                        stemshape=S_PES_QUADRATUM, qtype='open')
+            S_PES_QUADRATUM_OPENQUEUE, stemshape=S_PES_QUADRATUM, qtype='open')
     precise_message("pes quassus")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "AscendensOriscusLineTR", "VirgaBaseLineBL",
-                            S_PES_QUASSUS,
-                            stemshape=S_PES_QUASSUS, qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "AscendensOriscusLineTR", "VirgaBaseLineBL",
-                            S_PES_QUASSUS_LONGQUEUE,
-                            stemshape=S_PES_QUASSUS, qtype='long')
+    write_all_pes_quadratum("AscendensOriscusLineTR", "VirgaBaseLineBL",
+            S_PES_QUASSUS, stemshape=S_PES_QUASSUS, qtype='short')
+    write_all_pes_quadratum("AscendensOriscusLineTR", "VirgaBaseLineBL",
+            S_PES_QUASSUS_LONGQUEUE, stemshape=S_PES_QUASSUS, qtype='long')
     write_pes_quadratum(1, "AscendensOriscusLineTR", "VirgaBaseLineBL",
-                        S_PES_QUASSUS_OPENQUEUE, stemshape=S_PES_QUASSUS,
-                        qtype='open')
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "DescendensOriscusLineTR", "VirgaBaseLineBL",
-                            S_PES_QUASSUS_INUSITATUS, stemshape=S_PES_QUASSUS,
-                            qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "DescendensOriscusLineTR", "VirgaBaseLineBL",
-                            S_PES_QUASSUS_INUSITATUS_LONGQUEUE,
-                            stemshape=S_PES_QUASSUS, qtype='long')
+            S_PES_QUASSUS_OPENQUEUE, stemshape=S_PES_QUASSUS, qtype='open')
+    write_all_pes_quadratum("DescendensOriscusLineTR", "VirgaBaseLineBL",
+            S_PES_QUASSUS_INUSITATUS, stemshape=S_PES_QUASSUS, qtype='short')
+    write_all_pes_quadratum("DescendensOriscusLineTR", "VirgaBaseLineBL",
+            S_PES_QUASSUS_INUSITATUS_LONGQUEUE, stemshape=S_PES_QUASSUS,
+            qtype='long')
     write_pes_quadratum(1, "DescendensOriscusLineTR", "VirgaBaseLineBL",
-                        S_PES_QUASSUS_INUSITATUS_OPENQUEUE,
-                        stemshape=S_PES_QUASSUS, qtype='open')
+            S_PES_QUASSUS_INUSITATUS_OPENQUEUE, stemshape=S_PES_QUASSUS,
+            qtype='open')
     precise_message("pes quilisma quadratum")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "QuilismaLineTR", "VirgaBaseLineBL",
-                            S_PES_QUILISMA_QUADRATUM,
-                            stemshape=S_PES_QUILISMA_QUADRATUM, qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "QuilismaLineTR", "VirgaBaseLineBL",
-                            S_PES_QUILISMA_QUADRATUM_LONGQUEUE,
-                            stemshape=S_PES_QUILISMA_QUADRATUM, qtype='long')
+    write_all_pes_quadratum("QuilismaLineTR", "VirgaBaseLineBL",
+            S_PES_QUILISMA_QUADRATUM, stemshape=S_PES_QUILISMA_QUADRATUM,
+            qtype='short')
+    write_all_pes_quadratum("QuilismaLineTR", "VirgaBaseLineBL",
+            S_PES_QUILISMA_QUADRATUM_LONGQUEUE, stemshape=S_PES_QUILISMA_QUADRATUM,
+            qtype='long')
     write_pes_quadratum(1, "QuilismaLineTR", "VirgaBaseLineBL",
-                        S_PES_QUILISMA_QUADRATUM_OPENQUEUE,
-                        stemshape=S_PES_QUILISMA_QUADRATUM, qtype='open')
+            S_PES_QUILISMA_QUADRATUM_OPENQUEUE,
+            stemshape=S_PES_QUILISMA_QUADRATUM, qtype='open')
     precise_message("pes auctus ascendens")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "PunctumLineTR", "auctusa2", S_PES_QUADRATUM,
-                            L_ASCENDENS)
+    write_all_pes_quadratum("PunctumLineTR", "auctusa2", S_PES_QUADRATUM,
+            L_ASCENDENS)
     precise_message("pes initio debilis auctus ascendens")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "idebilis", "auctusa2", S_PES_QUADRATUM,
-                            L_INITIO_DEBILIS_ASCENDENS)
+    write_all_pes_quadratum("idebilis", "auctusa2", S_PES_QUADRATUM,
+            L_INITIO_DEBILIS_ASCENDENS)
     precise_message("pes quassus auctus ascendens")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "AscendensOriscusLineTR",
-                            "auctusa2", S_PES_QUASSUS, L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "DescendensOriscusLineTR",
-                            "auctusa2", S_PES_QUASSUS_INUSITATUS, L_ASCENDENS)
+    write_all_pes_quadratum("AscendensOriscusLineTR", "auctusa2", S_PES_QUASSUS,
+            L_ASCENDENS)
+    write_all_pes_quadratum("DescendensOriscusLineTR", "auctusa2",
+            S_PES_QUASSUS_INUSITATUS, L_ASCENDENS)
     precise_message("pes quilisma auctus ascendens")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "QuilismaLineTR", "auctusa2",
-                            S_PES_QUILISMA_QUADRATUM, L_ASCENDENS)
+    write_all_pes_quadratum("QuilismaLineTR", "auctusa2",
+            S_PES_QUILISMA_QUADRATUM, L_ASCENDENS)
     precise_message("pes auctus descendens")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "PunctumLineTR", "PunctumAuctusLineBL",
-                            S_PES_QUADRATUM, L_DESCENDENS)
+    write_all_pes_quadratum("PunctumLineTR", "PunctumAuctusLineBL",
+            S_PES_QUADRATUM, L_DESCENDENS)
     precise_message("pes initio debilis auctus descendens")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "idebilis", "PunctumAuctusLineBL",
-                            S_PES_QUADRATUM, L_INITIO_DEBILIS_DESCENDENS)
+    write_all_pes_quadratum("idebilis", "PunctumAuctusLineBL", S_PES_QUADRATUM,
+            L_INITIO_DEBILIS_DESCENDENS)
     precise_message("pes quassus auctus descendens")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "AscendensOriscusLineTR", "PunctumAuctusLineBL",
-                            S_PES_QUASSUS, L_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "DescendensOriscusLineTR", "PunctumAuctusLineBL",
-                            S_PES_QUASSUS_INUSITATUS, L_DESCENDENS)
+    write_all_pes_quadratum("AscendensOriscusLineTR", "PunctumAuctusLineBL",
+            S_PES_QUASSUS, L_DESCENDENS)
+    write_all_pes_quadratum("DescendensOriscusLineTR", "PunctumAuctusLineBL",
+            S_PES_QUASSUS_INUSITATUS, L_DESCENDENS)
     precise_message("pes quilisma auctus descendens")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "QuilismaLineTR", "PunctumAuctusLineBL",
-                            S_PES_QUILISMA_QUADRATUM, L_DESCENDENS)
+    write_all_pes_quadratum("QuilismaLineTR", "PunctumAuctusLineBL",
+            S_PES_QUILISMA_QUADRATUM, L_DESCENDENS)
 
 def fusion_pes_quadratum():
     "Makes the fusion pes quadratum."
     message("fusion pes quadratum")
     precise_message("fusion pes quadratum")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "msdeminutus", "VirgaBaseLineBL",
-                            S_UPPER_PES_QUADRATUM,
-                            stemshape=S_UPPER_PES_QUADRATUM, qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "base6", "VirgaBaseLineBL",
-                            S_LOWER_PES_QUADRATUM,
-                            stemshape=S_LOWER_PES_QUADRATUM, qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "msdeminutus", "VirgaBaseLineBL",
-                            S_UPPER_PES_QUADRATUM_LONGQUEUE,
-                            stemshape=S_UPPER_PES_QUADRATUM, qtype='long')
+    write_all_pes_quadratum("msdeminutus", "VirgaBaseLineBL",
+            S_UPPER_PES_QUADRATUM, stemshape=S_UPPER_PES_QUADRATUM,
+            qtype='short')
+    write_all_pes_quadratum("base6", "VirgaBaseLineBL", S_LOWER_PES_QUADRATUM,
+            stemshape=S_LOWER_PES_QUADRATUM, qtype='short')
+    write_all_pes_quadratum("msdeminutus", "VirgaBaseLineBL",
+            S_UPPER_PES_QUADRATUM_LONGQUEUE, stemshape=S_UPPER_PES_QUADRATUM,
+            qtype='long')
     write_pes_quadratum(1, "msdeminutus", "VirgaBaseLineBL",
-                        S_UPPER_PES_QUADRATUM_OPENQUEUE,
-                        stemshape=S_UPPER_PES_QUADRATUM, qtype='open')
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "base6", "VirgaBaseLineBL",
-                            S_LOWER_PES_QUADRATUM_LONGQUEUE,
-                            stemshape=S_LOWER_PES_QUADRATUM, qtype='long')
+            S_UPPER_PES_QUADRATUM_OPENQUEUE, stemshape=S_UPPER_PES_QUADRATUM,
+            qtype='open')
+    write_all_pes_quadratum("base6", "VirgaBaseLineBL",
+            S_LOWER_PES_QUADRATUM_LONGQUEUE, stemshape=S_LOWER_PES_QUADRATUM,
+            qtype='long')
     write_pes_quadratum(1, "base6", "VirgaBaseLineBL",
-                        S_LOWER_PES_QUADRATUM_OPENQUEUE,
-                        stemshape=S_LOWER_PES_QUADRATUM, qtype='open')
+            S_LOWER_PES_QUADRATUM_OPENQUEUE, stemshape=S_LOWER_PES_QUADRATUM,
+            qtype='open')
     precise_message("fusion pes quassus")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "AscendensOriscusLineBLTR", "VirgaBaseLineBL",
-                            S_UPPER_PES_QUASSUS,
-                            stemshape=S_UPPER_PES_QUASSUS, qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "AscendensOriscusLineBLTR", "VirgaBaseLineBL",
-                            S_UPPER_PES_QUASSUS_LONGQUEUE,
-                            stemshape=S_UPPER_PES_QUASSUS, qtype='long')
+    write_all_pes_quadratum("AscendensOriscusLineBLTR", "VirgaBaseLineBL",
+            S_UPPER_PES_QUASSUS, stemshape=S_UPPER_PES_QUASSUS, qtype='short')
+    write_all_pes_quadratum("AscendensOriscusLineBLTR", "VirgaBaseLineBL",
+            S_UPPER_PES_QUASSUS_LONGQUEUE, stemshape=S_UPPER_PES_QUASSUS,
+            qtype='long')
     write_pes_quadratum(1, "AscendensOriscusLineBLTR", "VirgaBaseLineBL",
-                        S_UPPER_PES_QUASSUS_OPENQUEUE,
-                        stemshape=S_UPPER_PES_QUASSUS, qtype='open')
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, FLATTENED_ORISCUS["AscendensOriscusLineTRFlatBottom"],
-                            "VirgaBaseLineBL", S_UPPER_OBLATUS_PES_QUASSUS,
-                            stemshape=S_UPPER_OBLATUS_PES_QUASSUS,
-                            qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, FLATTENED_ORISCUS["AscendensOriscusLineTRFlatBottom"],
-                            "VirgaBaseLineBL", S_UPPER_OBLATUS_PES_QUASSUS_LONGQUEUE,
-                            stemshape=S_UPPER_OBLATUS_PES_QUASSUS, qtype='long')
+            S_UPPER_PES_QUASSUS_OPENQUEUE, stemshape=S_UPPER_PES_QUASSUS,
+            qtype='open')
+    write_all_pes_quadratum(FLATTENED_ORISCUS["AscendensOriscusLineTRFlatBottom"],
+            "VirgaBaseLineBL", S_UPPER_OBLATUS_PES_QUASSUS,
+            stemshape=S_UPPER_OBLATUS_PES_QUASSUS, qtype='short')
+    write_all_pes_quadratum(FLATTENED_ORISCUS["AscendensOriscusLineTRFlatBottom"],
+            "VirgaBaseLineBL", S_UPPER_OBLATUS_PES_QUASSUS_LONGQUEUE,
+            stemshape=S_UPPER_OBLATUS_PES_QUASSUS, qtype='long')
     write_pes_quadratum(1, FLATTENED_ORISCUS["AscendensOriscusLineTRFlatBottom"],
-                        "VirgaBaseLineBL", S_UPPER_OBLATUS_PES_QUASSUS_OPENQUEUE,
-                        stemshape=S_UPPER_OBLATUS_PES_QUASSUS, qtype='open')
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "DescendensOriscusLineBLTR", "VirgaBaseLineBL",
-                            S_UPPER_PES_QUASSUS_INUSITATUS,
-                            stemshape=S_UPPER_PES_QUASSUS, qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "DescendensOriscusLineBLTR", "VirgaBaseLineBL",
-                            S_UPPER_PES_QUASSUS_INUSITATUS_LONGQUEUE,
-                            stemshape=S_UPPER_PES_QUASSUS, qtype='long')
+            "VirgaBaseLineBL", S_UPPER_OBLATUS_PES_QUASSUS_OPENQUEUE,
+            stemshape=S_UPPER_OBLATUS_PES_QUASSUS, qtype='open')
+    write_all_pes_quadratum("DescendensOriscusLineBLTR", "VirgaBaseLineBL",
+            S_UPPER_PES_QUASSUS_INUSITATUS, stemshape=S_UPPER_PES_QUASSUS,
+            qtype='short')
+    write_all_pes_quadratum("DescendensOriscusLineBLTR", "VirgaBaseLineBL",
+            S_UPPER_PES_QUASSUS_INUSITATUS_LONGQUEUE,
+            stemshape=S_UPPER_PES_QUASSUS, qtype='long')
     write_pes_quadratum(1, "DescendensOriscusLineBLTR", "VirgaBaseLineBL",
-                        S_UPPER_PES_QUASSUS_INUSITATUS_OPENQUEUE,
-                        stemshape=S_UPPER_PES_QUASSUS, qtype='open')
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "AscendensOriscusLineTLTR", "VirgaBaseLineBL",
-                            S_LOWER_PES_QUASSUS,
-                            stemshape=S_LOWER_PES_QUASSUS, qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "AscendensOriscusLineTLTR", "VirgaBaseLineBL",
-                            S_LOWER_PES_QUASSUS_LONGQUEUE,
-                            stemshape=S_LOWER_PES_QUASSUS, qtype='long')
+            S_UPPER_PES_QUASSUS_INUSITATUS_OPENQUEUE,
+            stemshape=S_UPPER_PES_QUASSUS, qtype='open')
+    write_all_pes_quadratum("AscendensOriscusLineTLTR", "VirgaBaseLineBL",
+            S_LOWER_PES_QUASSUS, stemshape=S_LOWER_PES_QUASSUS, qtype='short')
+    write_all_pes_quadratum("AscendensOriscusLineTLTR", "VirgaBaseLineBL",
+            S_LOWER_PES_QUASSUS_LONGQUEUE, stemshape=S_LOWER_PES_QUASSUS,
+            qtype='long')
     write_pes_quadratum(1, "AscendensOriscusLineTLTR", "VirgaBaseLineBL",
-                        S_LOWER_PES_QUASSUS_OPENQUEUE,
-                        stemshape=S_LOWER_PES_QUASSUS, qtype='open')
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "DescendensOriscusLineTLTR", "VirgaBaseLineBL",
-                            S_LOWER_PES_QUASSUS_INUSITATUS,
-                            stemshape=S_LOWER_PES_QUASSUS, qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, FLATTENED_ORISCUS["DescendensOriscusLineTRFlatTop"],
-                            "VirgaBaseLineBL",
-                            S_LOWER_OBLATUS_PES_QUASSUS_INUSITATUS,
-                            stemshape=S_LOWER_PES_QUASSUS, qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "DescendensOriscusLineTLTR", "VirgaBaseLineBL",
-                            S_LOWER_PES_QUASSUS_INUSITATUS_LONGQUEUE,
-                            stemshape=S_LOWER_PES_QUASSUS, qtype='long')
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, FLATTENED_ORISCUS["DescendensOriscusLineTRFlatTop"],
-                            "VirgaBaseLineBL",
-                            S_LOWER_OBLATUS_PES_QUASSUS_INUSITATUS_LONGQUEUE,
-                            stemshape=S_LOWER_PES_QUASSUS, qtype='long')
+            S_LOWER_PES_QUASSUS_OPENQUEUE, stemshape=S_LOWER_PES_QUASSUS,
+            qtype='open')
+    write_all_pes_quadratum("DescendensOriscusLineTLTR", "VirgaBaseLineBL",
+            S_LOWER_PES_QUASSUS_INUSITATUS, stemshape=S_LOWER_PES_QUASSUS,
+            qtype='short')
+    write_all_pes_quadratum(FLATTENED_ORISCUS["DescendensOriscusLineTRFlatTop"],
+            "VirgaBaseLineBL", S_LOWER_OBLATUS_PES_QUASSUS_INUSITATUS,
+            stemshape=S_LOWER_PES_QUASSUS, qtype='short')
+    write_all_pes_quadratum("DescendensOriscusLineTLTR", "VirgaBaseLineBL",
+            S_LOWER_PES_QUASSUS_INUSITATUS_LONGQUEUE,
+            stemshape=S_LOWER_PES_QUASSUS, qtype='long')
+    write_all_pes_quadratum(FLATTENED_ORISCUS["DescendensOriscusLineTRFlatTop"],
+            "VirgaBaseLineBL", S_LOWER_OBLATUS_PES_QUASSUS_INUSITATUS_LONGQUEUE,
+            stemshape=S_LOWER_PES_QUASSUS, qtype='long')
     write_pes_quadratum(1, "DescendensOriscusLineTLTR", "VirgaBaseLineBL",
-                        S_LOWER_PES_QUASSUS_INUSITATUS_OPENQUEUE,
-                        stemshape=S_LOWER_PES_QUASSUS, qtype='open')
+            S_LOWER_PES_QUASSUS_INUSITATUS_OPENQUEUE,
+            stemshape=S_LOWER_PES_QUASSUS, qtype='open')
     write_pes_quadratum(1, FLATTENED_ORISCUS["DescendensOriscusLineTRFlatTop"],
-                        "VirgaBaseLineBL",
-                        S_LOWER_OBLATUS_PES_QUASSUS_INUSITATUS_OPENQUEUE,
-                        stemshape=S_LOWER_PES_QUASSUS, qtype='open')
+            "VirgaBaseLineBL", S_LOWER_OBLATUS_PES_QUASSUS_INUSITATUS_OPENQUEUE,
+            stemshape=S_LOWER_PES_QUASSUS, qtype='open')
     precise_message("fusion pes auctus ascendens")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "msdeminutus", "auctusa2",
-                            S_UPPER_PES_QUADRATUM, L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "base6", "auctusa2",
-                            S_LOWER_PES_QUADRATUM, L_ASCENDENS)
+    write_all_pes_quadratum("msdeminutus", "auctusa2", S_UPPER_PES_QUADRATUM,
+            L_ASCENDENS)
+    write_all_pes_quadratum("base6", "auctusa2", S_LOWER_PES_QUADRATUM,
+            L_ASCENDENS)
     precise_message("fusion pes quassus auctus ascendens")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "AscendensOriscusLineBLTR", "auctusa2",
-                            S_UPPER_PES_QUASSUS, L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "DescendensOriscusLineBLTR", "auctusa2",
-                            S_UPPER_PES_QUASSUS_INUSITATUS, L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, FLATTENED_ORISCUS["AscendensOriscusLineTRFlatBottom"],
-                            "auctusa2", S_UPPER_OBLATUS_PES_QUASSUS, L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "AscendensOriscusLineTLTR", "auctusa2",
-                            S_LOWER_PES_QUASSUS, L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "DescendensOriscusLineTLTR", "auctusa2",
-                            S_LOWER_PES_QUASSUS_INUSITATUS, L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, FLATTENED_ORISCUS["DescendensOriscusLineTRFlatTop"],
-                            "auctusa2", S_LOWER_OBLATUS_PES_QUASSUS_INUSITATUS,
-                            L_ASCENDENS)
+    write_all_pes_quadratum("AscendensOriscusLineBLTR", "auctusa2",
+            S_UPPER_PES_QUASSUS, L_ASCENDENS)
+    write_all_pes_quadratum("DescendensOriscusLineBLTR", "auctusa2",
+            S_UPPER_PES_QUASSUS_INUSITATUS, L_ASCENDENS)
+    write_all_pes_quadratum(FLATTENED_ORISCUS["AscendensOriscusLineTRFlatBottom"],
+            "auctusa2", S_UPPER_OBLATUS_PES_QUASSUS, L_ASCENDENS)
+    write_all_pes_quadratum("AscendensOriscusLineTLTR", "auctusa2",
+            S_LOWER_PES_QUASSUS, L_ASCENDENS)
+    write_all_pes_quadratum("DescendensOriscusLineTLTR", "auctusa2",
+            S_LOWER_PES_QUASSUS_INUSITATUS, L_ASCENDENS)
+    write_all_pes_quadratum(FLATTENED_ORISCUS["DescendensOriscusLineTRFlatTop"],
+            "auctusa2", S_LOWER_OBLATUS_PES_QUASSUS_INUSITATUS, L_ASCENDENS)
     precise_message("fusion pes auctus descendens")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "msdeminutus", "PunctumAuctusLineBL",
-                            S_UPPER_PES_QUADRATUM, L_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "base6", "PunctumAuctusLineBL",
-                            S_LOWER_PES_QUADRATUM, L_DESCENDENS)
+    write_all_pes_quadratum("msdeminutus", "PunctumAuctusLineBL",
+            S_UPPER_PES_QUADRATUM, L_DESCENDENS)
+    write_all_pes_quadratum("base6", "PunctumAuctusLineBL",
+            S_LOWER_PES_QUADRATUM, L_DESCENDENS)
     precise_message("fusion pes quassus auctus descendens")
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "AscendensOriscusLineBLTR", "PunctumAuctusLineBL",
-                            S_UPPER_PES_QUASSUS, L_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, FLATTENED_ORISCUS["AscendensOriscusLineTRFlatBottom"],
-                            "PunctumAuctusLineBL", S_UPPER_OBLATUS_PES_QUASSUS,
-                            L_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "DescendensOriscusLineBLTR", "PunctumAuctusLineBL",
-                            S_UPPER_PES_QUASSUS_INUSITATUS, L_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "AscendensOriscusLineTLTR", "PunctumAuctusLineBL",
-                            S_LOWER_PES_QUASSUS, L_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, "DescendensOriscusLineTLTR", "PunctumAuctusLineBL",
-                            S_LOWER_PES_QUASSUS_INUSITATUS, L_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_pes_quadratum(i, FLATTENED_ORISCUS["DescendensOriscusLineTRFlatTop"],
-                            "PunctumAuctusLineBL",
-                            S_LOWER_OBLATUS_PES_QUASSUS_INUSITATUS, L_DESCENDENS)
+    write_all_pes_quadratum("AscendensOriscusLineBLTR", "PunctumAuctusLineBL",
+            S_UPPER_PES_QUASSUS, L_DESCENDENS)
+    write_all_pes_quadratum(FLATTENED_ORISCUS["AscendensOriscusLineTRFlatBottom"],
+            "PunctumAuctusLineBL", S_UPPER_OBLATUS_PES_QUASSUS, L_DESCENDENS)
+    write_all_pes_quadratum("DescendensOriscusLineBLTR", "PunctumAuctusLineBL",
+            S_UPPER_PES_QUASSUS_INUSITATUS, L_DESCENDENS)
+    write_all_pes_quadratum("AscendensOriscusLineTLTR", "PunctumAuctusLineBL",
+            S_LOWER_PES_QUASSUS, L_DESCENDENS)
+    write_all_pes_quadratum("DescendensOriscusLineTLTR", "PunctumAuctusLineBL",
+            S_LOWER_PES_QUASSUS_INUSITATUS, L_DESCENDENS)
+    write_all_pes_quadratum(FLATTENED_ORISCUS["DescendensOriscusLineTRFlatTop"],
+            "PunctumAuctusLineBL", S_LOWER_OBLATUS_PES_QUASSUS_INUSITATUS,
+            L_DESCENDENS)
+
+def write_all_pes_quadratum(first_glyph, last_glyph, shape, lique=L_NOTHING,
+        stemshape=None, qtype=None, i_range=ALL_AMBITUS):
+    for i in i_range:
+        write_pes_quadratum(i, first_glyph, last_glyph, shape, lique, stemshape,
+                qtype)
 
 def write_pes_quadratum(i, first_glyph, last_glyph, shape, lique=L_NOTHING,
-                        stemshape=None, qtype=None):
+        stemshape=None, qtype=None):
     "Writes the pes quadratum glyphs."
     new_glyph()
     glyph_name = '%s%s%s' % (shape, AMBITUS[i], lique)
@@ -1382,7 +1323,7 @@ def write_pes_quadratum(i, first_glyph, last_glyph, shape, lique=L_NOTHING,
     paste_and_move(last_glyph, first_width, i*FONT_CONFIG['base height'])
     width = first_width+get_width(last_glyph)
     if qtype:
-        write_right_queue(i, width-get_width('line2'), qtype, stemshape, lique,
+        draw_right_queue(i, width-get_width('line2'), qtype, stemshape, lique,
                           shift=i*FONT_CONFIG['base height'])
     set_width(width)
     end_glyph(glyph_name)
@@ -1390,9 +1331,13 @@ def write_pes_quadratum(i, first_glyph, last_glyph, shape, lique=L_NOTHING,
 def virga_strata():
     "Creates the virga strata."
     precise_message("virga strata")
-    for i in range(1, MAX_INTERVAL+1):
-        write_virga_strata(i, "PunctumLineTR", "AscendensOriscusLineBL",
-                           S_VIRGA_STRATA)
+    write_all_virga_strata("PunctumLineTR", "AscendensOriscusLineBL",
+            S_VIRGA_STRATA)
+
+def write_all_virga_strata(first_glyph, last_glyph, shape, lique=L_NOTHING,
+        i_range=ALL_AMBITUS):
+    for i in i_range:
+        write_virga_strata(i, first_glyph, last_glyph, shape, lique)
 
 def write_virga_strata(i, first_glyph, last_glyph, shape, lique=L_NOTHING):
     "Writes the virga strata glyphs."
@@ -1417,22 +1362,17 @@ def write_virga_strata(i, first_glyph, last_glyph, shape, lique=L_NOTHING):
 def salicus():
     "Creates the salicus."
     message("salicus")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_salicus(i, j, "VirgaBaseLineBL", S_SALICUS, qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_salicus(i, j, "VirgaBaseLineBL", S_SALICUS_LONGQUEUE, qtype='long')
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_salicus(i, j, "rdeminutus", S_SALICUS, L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_salicus(i, j, "auctusa2", S_SALICUS, L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_salicus(i, j, "PunctumAuctusLineBL", S_SALICUS,
-                          L_DESCENDENS)
+    write_all_salicus("VirgaBaseLineBL", S_SALICUS, qtype='short')
+    write_all_salicus("VirgaBaseLineBL", S_SALICUS_LONGQUEUE, qtype='long')
+    write_all_salicus("rdeminutus", S_SALICUS, L_DEMINUTUS)
+    write_all_salicus("auctusa2", S_SALICUS, L_ASCENDENS)
+    write_all_salicus("PunctumAuctusLineBL", S_SALICUS, L_DESCENDENS)
+
+def write_all_salicus(last_glyph, shape, lique=L_NOTHING, qtype=None,
+        i_range=ALL_AMBITUS, j_range=ALL_AMBITUS):
+    for i in i_range:
+        for j in j_range:
+            write_salicus(i, j, last_glyph, shape, lique, qtype)
 
 def write_salicus(i, j, last_glyph, shape, lique=L_NOTHING, qtype=None):
     "Writes the salicus glyphs."
@@ -1445,8 +1385,7 @@ def write_salicus(i, j, last_glyph, shape, lique=L_NOTHING, qtype=None):
     end_glyph(glyph_name)
 
 def draw_salicus(i, j, last_glyph, lique=L_NOTHING, qtype=None):
-    """ Draw a salicus in current glyph.
-    """
+    "Draw a salicus in current glyph."
     deminutus = last_glyph == 'rdeminutus'
     no_third_glyph = False
     if j == 1 and not deminutus and last_glyph == 'VirgaBaseLineBL':
@@ -1512,7 +1451,7 @@ def draw_salicus(i, j, last_glyph, lique=L_NOTHING, qtype=None):
             paste_and_move(last_glyph, length, (i+j)*FONT_CONFIG['base height'])
             length = length + get_width(last_glyph)
             if qtype:
-                write_right_queue(j, length-get_width('line2'), qtype, S_SALICUS,
+                draw_right_queue(j, length-get_width('line2'), qtype, S_SALICUS,
                                   lique, i, (i+j)*FONT_CONFIG['base height'])
         else:
             length = length+get_width('line2')
@@ -1523,22 +1462,17 @@ def draw_salicus(i, j, last_glyph, lique=L_NOTHING, qtype=None):
 def salicus_flexus():
     "Creates the salicus flexus."
     message("salicus flexus")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_salicus_flexus(i, j, k, "PunctumLineTL")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_salicus_flexus(i, j, k, "deminutus", L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_salicus_flexus(i, j, k, "auctusa1", L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_salicus_flexus(i, j, k, "auctusd1", L_DESCENDENS)
+    write_all_salicus_flexus("PunctumLineTL")
+    write_all_salicus_flexus("deminutus", L_DEMINUTUS)
+    write_all_salicus_flexus("auctusa1", L_ASCENDENS)
+    write_all_salicus_flexus("auctusd1", L_DESCENDENS)
+
+def write_all_salicus_flexus(last_glyph, lique=L_NOTHING, i_range=ALL_AMBITUS,
+        j_range=ALL_AMBITUS, k_range=ALL_AMBITUS):
+    for i in i_range:
+        for j in j_range:
+            for k in k_range:
+                write_salicus_flexus(i, j, k, last_glyph, lique)
 
 def write_salicus_flexus(i, j, k, last_glyph, lique=L_NOTHING):
     "Writes the salicus glyphs."
@@ -1556,7 +1490,7 @@ def write_salicus_flexus(i, j, k, last_glyph, lique=L_NOTHING):
         penult_glyph = 'PunctumLineBLBR'
     length = draw_salicus(i, j, penult_glyph)
     if is_deminutus:
-        width_dem = write_deminutus(j+i, k, length,
+        width_dem = draw_deminutus(j+i, k, length,
                                     firstbar = 0 if j == 1 else 1)
         length = length + width_dem
     else:
@@ -1570,7 +1504,7 @@ def write_salicus_flexus(i, j, k, last_glyph, lique=L_NOTHING):
                 last_glyph = 'PunctumDescendens'
         if k != 1:
             length = length - get_width('line2')
-            write_line(k, length, (1+i+j-k)*FONT_CONFIG['base height'])
+            draw_line(k, length, (1+i+j-k)*FONT_CONFIG['base height'])
         paste_and_move(last_glyph, length, (i+j-k)*FONT_CONFIG['base height'])
         length = length + get_width(last_glyph)
     set_width(length)
@@ -1580,256 +1514,182 @@ def flexus():
     "Creates the flexus."
     message("flexus")
     precise_message("flexus")
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "PunctumLineBR", 'PunctumLineTL', S_FLEXUS_NOBAR)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineBR", 'PunctumLineTL',
-                     S_FLEXUS_ORISCUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineBR", 'PunctumLineTL',
-                     S_FLEXUS_ORISCUS_INUSITATUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "rvbase", 'PunctumLineTL', S_FLEXUS, qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "rvbase", 'PunctumLineTL', S_FLEXUS_LONGQUEUE, qtype='long')
+    write_all_flexus("PunctumLineBR", 'PunctumLineTL', S_FLEXUS_NOBAR)
+    write_all_flexus("DescendensOriscusLineBR", 'PunctumLineTL',
+            S_FLEXUS_ORISCUS)
+    write_all_flexus("AscendensOriscusLineBR", 'PunctumLineTL',
+            S_FLEXUS_ORISCUS_INUSITATUS)
+    write_all_flexus("rvbase", 'PunctumLineTL', S_FLEXUS, qtype='short')
+    write_all_flexus("rvbase", 'PunctumLineTL', S_FLEXUS_LONGQUEUE, qtype='long')
     write_flexus(1, "rvbase", 'PunctumLineTL', S_FLEXUS_OPENQUEUE, qtype='open')
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineBLBR", 'PunctumLineTL',
-                     S_FLEXUS_ORISCUS_SCAPUS, stemshape=S_FLEXUS_ORISCUS_SCAPUS,
-                     qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineBLBR", 'PunctumLineTL',
-                     S_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE,
-                     stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='long')
+    write_all_flexus("DescendensOriscusLineBLBR", 'PunctumLineTL',
+            S_FLEXUS_ORISCUS_SCAPUS, stemshape=S_FLEXUS_ORISCUS_SCAPUS,
+            qtype='short')
+    write_all_flexus("DescendensOriscusLineBLBR", 'PunctumLineTL',
+            S_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE,
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='long')
     write_flexus(1, "DescendensOriscusLineBLBR", 'PunctumLineTL',
-                 S_FLEXUS_ORISCUS_SCAPUS_OPENQUEUE,
-                 stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='open')
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineBLBR", 'PunctumLineTL',
-                     S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS,
-                     stemshape=S_FLEXUS_ORISCUS_SCAPUS,
-                     qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineBLBR", 'PunctumLineTL',
-                     S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS_LONGQUEUE,
-                     stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='long')
+            S_FLEXUS_ORISCUS_SCAPUS_OPENQUEUE, stemshape=S_FLEXUS_ORISCUS_SCAPUS,
+            qtype='open')
+    write_all_flexus("AscendensOriscusLineBLBR", 'PunctumLineTL',
+            S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS,
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='short')
+    write_all_flexus("AscendensOriscusLineBLBR", 'PunctumLineTL',
+            S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS_LONGQUEUE,
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='long')
     write_flexus(1, "AscendensOriscusLineBLBR", 'PunctumLineTL',
-                 S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS_OPENQUEUE,
-                 stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='open')
+            S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS_OPENQUEUE,
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='open')
     precise_message("flexus deminutus")
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "mdeminutus", 'PunctumLineTL',
-                     S_FLEXUS_NOBAR, L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineBR", 'deminutus',
-                     S_FLEXUS_ORISCUS, L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineBR", 'deminutus',
-                     S_FLEXUS_ORISCUS_INUSITATUS, L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "mdeminutus", 'PunctumLineTL',
-                     S_FLEXUS, L_DEMINUTUS, qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "mdeminutus", 'PunctumLineTL',
-                     S_FLEXUS_LONGQUEUE, L_DEMINUTUS, qtype='long')
-    write_flexus(1, "mdeminutus", 'PunctumLineTL',
-                 S_FLEXUS_OPENQUEUE, L_DEMINUTUS, qtype='open')
+    write_all_flexus("mdeminutus", 'PunctumLineTL', S_FLEXUS_NOBAR, L_DEMINUTUS)
+    write_all_flexus("DescendensOriscusLineBR", 'deminutus', S_FLEXUS_ORISCUS,
+            L_DEMINUTUS)
+    write_all_flexus("AscendensOriscusLineBR", 'deminutus',
+            S_FLEXUS_ORISCUS_INUSITATUS, L_DEMINUTUS)
+    write_all_flexus("mdeminutus", 'PunctumLineTL', S_FLEXUS, L_DEMINUTUS,
+            qtype='short')
+    write_all_flexus("mdeminutus", 'PunctumLineTL', S_FLEXUS_LONGQUEUE,
+            L_DEMINUTUS, qtype='long')
+    write_flexus(1, "mdeminutus", 'PunctumLineTL', S_FLEXUS_OPENQUEUE,
+            L_DEMINUTUS, qtype='open')
     precise_message("flexus auctus ascendens")
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "PunctumLineBR", 'auctusa1',
-                     S_FLEXUS_NOBAR, L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineBR", 'auctusa1',
-                     S_FLEXUS_ORISCUS, L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineBR", 'auctusa1',
-                     S_FLEXUS_ORISCUS_INUSITATUS, L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "rvbase",
-                     'auctusa1', S_FLEXUS, L_ASCENDENS, qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "rvbase",
-                     'auctusa1', S_FLEXUS_LONGQUEUE, L_ASCENDENS, qtype='long')
-    write_flexus(1, "rvbase",
-                 'auctusa1', S_FLEXUS_OPENQUEUE, L_ASCENDENS, qtype='open')
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineBLBR",
-                     'auctusa1', S_FLEXUS_ORISCUS_SCAPUS,
-                     L_ASCENDENS, stemshape = S_FLEXUS_ORISCUS_SCAPUS, qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineBLBR",
-                     'auctusa1', S_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE,
-                     L_ASCENDENS, stemshape = S_FLEXUS_ORISCUS_SCAPUS, qtype='long')
-    write_flexus(1, "DescendensOriscusLineBLBR",
-                 'auctusa1', S_FLEXUS_ORISCUS_SCAPUS_OPENQUEUE, L_ASCENDENS,
-                 stemshape = S_FLEXUS_ORISCUS_SCAPUS, qtype='open')
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineBLBR",
-                     'auctusa1', S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS,
-                     L_ASCENDENS, stemshape = S_FLEXUS_ORISCUS_SCAPUS,
-                     qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineBLBR",
-                     'auctusa1', S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS_LONGQUEUE,
-                     L_ASCENDENS, stemshape = S_FLEXUS_ORISCUS_SCAPUS,
-                     qtype='long')
-    write_flexus(1, "AscendensOriscusLineBLBR",
-                 'auctusa1', S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS_OPENQUEUE,
-                 L_ASCENDENS, stemshape = S_FLEXUS_ORISCUS_SCAPUS, qtype='open')
+    write_all_flexus("PunctumLineBR", 'auctusa1', S_FLEXUS_NOBAR, L_ASCENDENS)
+    write_all_flexus("DescendensOriscusLineBR", 'auctusa1', S_FLEXUS_ORISCUS,
+            L_ASCENDENS)
+    write_all_flexus("AscendensOriscusLineBR", 'auctusa1',
+            S_FLEXUS_ORISCUS_INUSITATUS, L_ASCENDENS)
+    write_all_flexus("rvbase", 'auctusa1', S_FLEXUS, L_ASCENDENS, qtype='short')
+    write_all_flexus("rvbase", 'auctusa1', S_FLEXUS_LONGQUEUE, L_ASCENDENS,
+            qtype='long')
+    write_flexus(1, "rvbase", 'auctusa1', S_FLEXUS_OPENQUEUE, L_ASCENDENS,
+            qtype='open')
+    write_all_flexus("DescendensOriscusLineBLBR", 'auctusa1',
+            S_FLEXUS_ORISCUS_SCAPUS, L_ASCENDENS,
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='short')
+    write_all_flexus("DescendensOriscusLineBLBR", 'auctusa1',
+            S_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE, L_ASCENDENS,
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='long')
+    write_flexus(1, "DescendensOriscusLineBLBR", 'auctusa1',
+            S_FLEXUS_ORISCUS_SCAPUS_OPENQUEUE, L_ASCENDENS,
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='open')
+    write_all_flexus("AscendensOriscusLineBLBR", 'auctusa1',
+            S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS, L_ASCENDENS,
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='short')
+    write_all_flexus("AscendensOriscusLineBLBR", 'auctusa1',
+            S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS_LONGQUEUE, L_ASCENDENS,
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='long')
+    write_flexus(1, "AscendensOriscusLineBLBR", 'auctusa1',
+            S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS_OPENQUEUE, L_ASCENDENS,
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='open')
     precise_message("flexus auctus descendens")
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "PunctumLineBR", 'auctusd1', S_FLEXUS_NOBAR,
-                     L_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineBR", 'auctusd1', S_FLEXUS_ORISCUS,
-                     L_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineBR", 'auctusd1',
-                     S_FLEXUS_ORISCUS_INUSITATUS, L_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "rvbase", 'auctusd1', S_FLEXUS,
-                     L_DESCENDENS, qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "rvbase",
-                     'auctusd1', S_FLEXUS_LONGQUEUE, L_DESCENDENS, qtype='long')
-    write_flexus(1, "rvbase",
-                 'auctusd1', S_FLEXUS_OPENQUEUE, L_DESCENDENS, qtype='open')
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineBLBR",
-                     'auctusd1', S_FLEXUS_ORISCUS_SCAPUS,
-                     L_DESCENDENS, S_FLEXUS_ORISCUS_SCAPUS,
-                     stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineBLBR",
-                     'auctusd1', S_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE,
-                     L_DESCENDENS, S_FLEXUS_ORISCUS_SCAPUS,
-                     stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='long')
-    write_flexus(1, "DescendensOriscusLineBLBR",
-                 'auctusd1', S_FLEXUS_ORISCUS_SCAPUS_OPENQUEUE, L_DESCENDENS,
-                 S_FLEXUS_ORISCUS_SCAPUS, stemshape=S_FLEXUS_ORISCUS_SCAPUS,
-                 qtype='open')
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineBLBR",
-                     'auctusd1', S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS,
-                     L_DESCENDENS, S_FLEXUS_ORISCUS_SCAPUS,
-                     stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineBLBR",
-                     'auctusd1', S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS_LONGQUEUE,
-                     L_DESCENDENS, S_FLEXUS_ORISCUS_SCAPUS,
-                     stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='long')
-    write_flexus(1, "AscendensOriscusLineBLBR",
-                 'auctusd1', S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS_OPENQUEUE,
-                 L_DESCENDENS, S_FLEXUS_ORISCUS_SCAPUS,
-                 stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='open')
+    write_all_flexus("PunctumLineBR", 'auctusd1', S_FLEXUS_NOBAR, L_DESCENDENS)
+    write_all_flexus("DescendensOriscusLineBR", 'auctusd1', S_FLEXUS_ORISCUS,
+            L_DESCENDENS)
+    write_all_flexus("AscendensOriscusLineBR", 'auctusd1',
+            S_FLEXUS_ORISCUS_INUSITATUS, L_DESCENDENS)
+    write_all_flexus("rvbase", 'auctusd1', S_FLEXUS, L_DESCENDENS, qtype='short')
+    write_all_flexus("rvbase", 'auctusd1', S_FLEXUS_LONGQUEUE, L_DESCENDENS,
+            qtype='long')
+    write_flexus(1, "rvbase", 'auctusd1', S_FLEXUS_OPENQUEUE, L_DESCENDENS,
+            qtype='open')
+    write_all_flexus("DescendensOriscusLineBLBR", 'auctusd1',
+            S_FLEXUS_ORISCUS_SCAPUS, L_DESCENDENS, S_FLEXUS_ORISCUS_SCAPUS,
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS, qtype='short')
+    write_all_flexus("DescendensOriscusLineBLBR", 'auctusd1',
+            S_FLEXUS_ORISCUS_SCAPUS_LONGQUEUE, L_DESCENDENS,
+            S_FLEXUS_ORISCUS_SCAPUS, stemshape=S_FLEXUS_ORISCUS_SCAPUS,
+            qtype='long')
+    write_flexus(1, "DescendensOriscusLineBLBR", 'auctusd1',
+            S_FLEXUS_ORISCUS_SCAPUS_OPENQUEUE, L_DESCENDENS,
+            S_FLEXUS_ORISCUS_SCAPUS, stemshape=S_FLEXUS_ORISCUS_SCAPUS,
+            qtype='open')
+    write_all_flexus("AscendensOriscusLineBLBR", 'auctusd1',
+            S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS, L_DESCENDENS,
+            S_FLEXUS_ORISCUS_SCAPUS, stemshape=S_FLEXUS_ORISCUS_SCAPUS,
+            qtype='short')
+    write_all_flexus("AscendensOriscusLineBLBR", 'auctusd1',
+            S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS_LONGQUEUE, L_DESCENDENS,
+            S_FLEXUS_ORISCUS_SCAPUS, stemshape=S_FLEXUS_ORISCUS_SCAPUS,
+            qtype='long')
+    write_flexus(1, "AscendensOriscusLineBLBR", 'auctusd1',
+            S_FLEXUS_ORISCUS_SCAPUS_INUSITATUS_OPENQUEUE, L_DESCENDENS,
+            S_FLEXUS_ORISCUS_SCAPUS, stemshape=S_FLEXUS_ORISCUS_SCAPUS,
+            qtype='open')
 
 def fusion_flexus():
     "Creates the fusion flexus."
     message("fusion flexus")
     precise_message("fusion flexus")
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "mademinutus", 'PunctumLineTL', S_LOWER_FLEXUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "rvbase", 'PunctumLineTL', S_UPPER_FLEXUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineBLBR", 'PunctumLineTL',
-                     S_UPPER_FLEXUS_ORISCUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineTLBR", 'PunctumLineTL',
-                     S_LOWER_FLEXUS_ORISCUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, FLATTENED_ORISCUS["DescendensOriscusLineBRFlatTop"],
-                     'PunctumLineTL', S_LOWER_OBLATUS_FLEXUS_ORISCUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineBLBR", 'PunctumLineTL',
-                     S_UPPER_FLEXUS_ORISCUS_INUSITATUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, FLATTENED_ORISCUS["AscendensOriscusLineBRFlatBottom"],
-                     'PunctumLineTL', S_UPPER_OBLATUS_FLEXUS_ORISCUS_INUSITATUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineTLBR", 'PunctumLineTL',
-                     S_LOWER_FLEXUS_ORISCUS_INUSITATUS)
+    write_all_flexus("mademinutus", 'PunctumLineTL', S_LOWER_FLEXUS)
+    write_all_flexus("rvbase", 'PunctumLineTL', S_UPPER_FLEXUS)
+    write_all_flexus("DescendensOriscusLineBLBR", 'PunctumLineTL',
+            S_UPPER_FLEXUS_ORISCUS)
+    write_all_flexus("DescendensOriscusLineTLBR", 'PunctumLineTL',
+            S_LOWER_FLEXUS_ORISCUS)
+    write_all_flexus(FLATTENED_ORISCUS["DescendensOriscusLineBRFlatTop"],
+            'PunctumLineTL', S_LOWER_OBLATUS_FLEXUS_ORISCUS)
+    write_all_flexus("AscendensOriscusLineBLBR", 'PunctumLineTL',
+            S_UPPER_FLEXUS_ORISCUS_INUSITATUS)
+    write_all_flexus(FLATTENED_ORISCUS["AscendensOriscusLineBRFlatBottom"],
+            'PunctumLineTL', S_UPPER_OBLATUS_FLEXUS_ORISCUS_INUSITATUS)
+    write_all_flexus("AscendensOriscusLineTLBR", 'PunctumLineTL',
+            S_LOWER_FLEXUS_ORISCUS_INUSITATUS)
     precise_message("fusion flexus deminutus")
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "mademinutus", 'deminutus', S_LOWER_FLEXUS,
-                     L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "mdeminutus", 'deminutus', S_UPPER_FLEXUS,
-                     L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineBLBR", 'deminutus',
-                     S_UPPER_FLEXUS_ORISCUS, L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineTLBR", 'deminutus',
-                     S_LOWER_FLEXUS_ORISCUS, L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, FLATTENED_ORISCUS["DescendensOriscusLineBRFlatTop"],
-                     'deminutus', S_LOWER_OBLATUS_FLEXUS_ORISCUS, L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineBLBR", 'deminutus',
-                     S_UPPER_FLEXUS_ORISCUS_INUSITATUS, L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, FLATTENED_ORISCUS["AscendensOriscusLineBRFlatBottom"],
-                     'deminutus', S_UPPER_OBLATUS_FLEXUS_ORISCUS_INUSITATUS,
-                     L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineTLBR", 'deminutus',
-                     S_LOWER_FLEXUS_ORISCUS_INUSITATUS, L_DEMINUTUS)
+    write_all_flexus("mademinutus", 'deminutus', S_LOWER_FLEXUS, L_DEMINUTUS)
+    write_all_flexus("mdeminutus", 'deminutus', S_UPPER_FLEXUS, L_DEMINUTUS)
+    write_all_flexus("DescendensOriscusLineBLBR", 'deminutus',
+            S_UPPER_FLEXUS_ORISCUS, L_DEMINUTUS)
+    write_all_flexus("DescendensOriscusLineTLBR", 'deminutus',
+            S_LOWER_FLEXUS_ORISCUS, L_DEMINUTUS)
+    write_all_flexus(FLATTENED_ORISCUS["DescendensOriscusLineBRFlatTop"],
+            'deminutus', S_LOWER_OBLATUS_FLEXUS_ORISCUS, L_DEMINUTUS)
+    write_all_flexus("AscendensOriscusLineBLBR", 'deminutus',
+            S_UPPER_FLEXUS_ORISCUS_INUSITATUS, L_DEMINUTUS)
+    write_all_flexus(FLATTENED_ORISCUS["AscendensOriscusLineBRFlatBottom"],
+            'deminutus', S_UPPER_OBLATUS_FLEXUS_ORISCUS_INUSITATUS, L_DEMINUTUS)
+    write_all_flexus("AscendensOriscusLineTLBR", 'deminutus',
+            S_LOWER_FLEXUS_ORISCUS_INUSITATUS, L_DEMINUTUS)
     precise_message("fusion flexus auctus ascendens")
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "mademinutus", 'auctusa1', S_LOWER_FLEXUS,
-                     L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "rvbase", 'auctusa1', S_UPPER_FLEXUS,
-                     L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineBLBR", 'auctusa1',
-                     S_UPPER_FLEXUS_ORISCUS, L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineTLBR", 'auctusa1',
-                     S_LOWER_FLEXUS_ORISCUS, L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, FLATTENED_ORISCUS["DescendensOriscusLineBRFlatTop"],
-                     'auctusa1', S_LOWER_OBLATUS_FLEXUS_ORISCUS, L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineBLBR", 'auctusa1',
-                     S_UPPER_FLEXUS_ORISCUS_INUSITATUS, L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, FLATTENED_ORISCUS["AscendensOriscusLineBRFlatBottom"],
-                     'auctusa1', S_UPPER_OBLATUS_FLEXUS_ORISCUS_INUSITATUS,
-                     L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineTLBR", 'auctusa1',
-                     S_LOWER_FLEXUS_ORISCUS_INUSITATUS, L_ASCENDENS)
+    write_all_flexus("mademinutus", 'auctusa1', S_LOWER_FLEXUS, L_ASCENDENS)
+    write_all_flexus("rvbase", 'auctusa1', S_UPPER_FLEXUS, L_ASCENDENS)
+    write_all_flexus("DescendensOriscusLineBLBR", 'auctusa1',
+            S_UPPER_FLEXUS_ORISCUS, L_ASCENDENS)
+    write_all_flexus("DescendensOriscusLineTLBR", 'auctusa1',
+            S_LOWER_FLEXUS_ORISCUS, L_ASCENDENS)
+    write_all_flexus(FLATTENED_ORISCUS["DescendensOriscusLineBRFlatTop"],
+            'auctusa1', S_LOWER_OBLATUS_FLEXUS_ORISCUS, L_ASCENDENS)
+    write_all_flexus("AscendensOriscusLineBLBR", 'auctusa1',
+            S_UPPER_FLEXUS_ORISCUS_INUSITATUS, L_ASCENDENS)
+    write_all_flexus(FLATTENED_ORISCUS["AscendensOriscusLineBRFlatBottom"],
+            'auctusa1', S_UPPER_OBLATUS_FLEXUS_ORISCUS_INUSITATUS, L_ASCENDENS)
+    write_all_flexus("AscendensOriscusLineTLBR", 'auctusa1',
+            S_LOWER_FLEXUS_ORISCUS_INUSITATUS, L_ASCENDENS)
     precise_message("fusion flexus auctus descendens")
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "mademinutus", 'auctusd1', S_LOWER_FLEXUS,
-                     L_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "rvbase", 'auctusd1', S_UPPER_FLEXUS,
-                     L_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineBLBR", 'auctusd1',
-                     S_UPPER_FLEXUS_ORISCUS, L_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "DescendensOriscusLineTLBR", 'auctusd1',
-                     S_LOWER_FLEXUS_ORISCUS, L_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, FLATTENED_ORISCUS["DescendensOriscusLineBRFlatTop"],
-                     'auctusd1', S_LOWER_OBLATUS_FLEXUS_ORISCUS, L_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineBLBR", 'auctusd1',
-                     S_UPPER_FLEXUS_ORISCUS_INUSITATUS, L_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, FLATTENED_ORISCUS["AscendensOriscusLineBRFlatBottom"],
-                     'auctusd1', S_UPPER_OBLATUS_FLEXUS_ORISCUS_INUSITATUS,
-                     L_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_flexus(i, "AscendensOriscusLineTLBR", 'auctusd1',
-                     S_LOWER_FLEXUS_ORISCUS_INUSITATUS, L_DESCENDENS)
+    write_all_flexus("mademinutus", 'auctusd1', S_LOWER_FLEXUS, L_DESCENDENS)
+    write_all_flexus("rvbase", 'auctusd1', S_UPPER_FLEXUS, L_DESCENDENS)
+    write_all_flexus("DescendensOriscusLineBLBR", 'auctusd1',
+            S_UPPER_FLEXUS_ORISCUS, L_DESCENDENS)
+    write_all_flexus("DescendensOriscusLineTLBR", 'auctusd1',
+            S_LOWER_FLEXUS_ORISCUS, L_DESCENDENS)
+    write_all_flexus(FLATTENED_ORISCUS["DescendensOriscusLineBRFlatTop"],
+            'auctusd1', S_LOWER_OBLATUS_FLEXUS_ORISCUS, L_DESCENDENS)
+    write_all_flexus("AscendensOriscusLineBLBR", 'auctusd1',
+            S_UPPER_FLEXUS_ORISCUS_INUSITATUS, L_DESCENDENS)
+    write_all_flexus(FLATTENED_ORISCUS["AscendensOriscusLineBRFlatBottom"],
+            'auctusd1', S_UPPER_OBLATUS_FLEXUS_ORISCUS_INUSITATUS, L_DESCENDENS)
+    write_all_flexus("AscendensOriscusLineTLBR", 'auctusd1',
+            S_LOWER_FLEXUS_ORISCUS_INUSITATUS, L_DESCENDENS)
+
+def write_all_flexus(first_glyph, last_glyph, shape, lique=L_NOTHING,
+        firstglyph_amone=None, lastglyph_amone=None, stemshape=S_FLEXUS,
+        qtype=None, i_range=ALL_AMBITUS):
+    for i in i_range:
+        write_flexus(i, first_glyph, last_glyph, shape, lique, firstglyph_amone,
+                lastglyph_amone, stemshape, qtype)
 
 def write_flexus(i, first_glyph, last_glyph, shape, lique=L_NOTHING,
-                 firstglyph_amone=None, lastglyph_amone=None, stemshape=S_FLEXUS, qtype=None):
+        firstglyph_amone=None, lastglyph_amone=None, stemshape=S_FLEXUS,
+        qtype=None):
     # pylint: disable=too-many-statements
     "Writes the flexus glyphs."
     new_glyph()
@@ -1839,16 +1699,16 @@ def write_flexus(i, first_glyph, last_glyph, shape, lique=L_NOTHING,
     # we add a queue if it is a deminutus
     if first_glyph == "mdeminutus" and shape != S_UPPER_FLEXUS:
         if shape == S_FLEXUS_NOBAR:
-            length = write_deminutus(0, i, length=0, tosimplify=1, firstbar=0)
+            length = draw_deminutus(0, i, length=0, tosimplify=1, firstbar=0)
         else:
-            write_left_queue(i, qtype, stemshape, lique)
-            length = write_deminutus(0, i, length=0, tosimplify=1, firstbar=1)
+            draw_left_queue(i, qtype, stemshape, lique)
+            length = draw_deminutus(0, i, length=0, tosimplify=1, firstbar=1)
     elif last_glyph == 'deminutus' and (shape == S_UPPER_FLEXUS or shape == S_LOWER_FLEXUS):
         firstbar = 1 if first_glyph == 'mdeminutus' else 2
-        length = write_deminutus(0, i, length=0, tosimplify=1, firstbar=firstbar)
+        length = draw_deminutus(0, i, length=0, tosimplify=1, firstbar=firstbar)
     elif last_glyph == 'deminutus':
         simple_paste(first_glyph)
-        write_line(i, get_width(first_glyph) - get_width('line2'),
+        draw_line(i, get_width(first_glyph) - get_width('line2'),
                    (1-i)*FONT_CONFIG['base height'])
         simplify()
         paste_and_move("deminutus",
@@ -1857,7 +1717,7 @@ def write_flexus(i, first_glyph, last_glyph, shape, lique=L_NOTHING,
         length = get_width(first_glyph)
     else:
         if qtype:
-            write_left_queue(i, qtype, stemshape, lique)
+            draw_left_queue(i, qtype, stemshape, lique)
         if i == 1 and first_glyph != 'DescendensOriscusLineTLBR':
             if last_glyph == 'PunctumLineTL':
                 last_glyph = 'Punctum'
@@ -1889,7 +1749,7 @@ def write_flexus(i, first_glyph, last_glyph, shape, lique=L_NOTHING,
             length = get_width(first_glyph)-get_width('line2')
         simple_paste(first_glyph)
         if i != 1:
-            write_line(i, length, (1-i)*FONT_CONFIG['base height'])
+            draw_line(i, length, (1-i)*FONT_CONFIG['base height'])
         paste_and_move(last_glyph, length, (-i)*FONT_CONFIG['base height'])
         length = length + get_width(last_glyph)
     set_width(length)
@@ -1899,62 +1759,43 @@ def porrectus():
     "Creates the porrectus."
     message("porrectus")
     precise_message("porrectus")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(i, j, 'PunctumSmall', S_PORRECTUS, qtype='short')
-    for j in range(1, MAX_INTERVAL+1):
-        write_porrectus(1, j, 'PunctumSmall', S_PORRECTUS_LONGQUEUE, qtype='long')
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(i, j, 'PunctumSmall', S_PORRECTUS_NOBAR)
+    write_all_porrectus('PunctumSmall', S_PORRECTUS, qtype='short')
+    write_all_porrectus('PunctumSmall', S_PORRECTUS_LONGQUEUE, qtype='long',
+            i_range=AMBITUS_ONE_ONLY)
+    write_all_porrectus('PunctumSmall', S_PORRECTUS_NOBAR)
     precise_message("porrectus auctus ascendens")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(i, j, "auctusa2", S_PORRECTUS, L_ASCENDENS, qtype='short')
-    for j in range(1, MAX_INTERVAL+1):
-        write_porrectus(1, j, "auctusa2", S_PORRECTUS_LONGQUEUE, L_ASCENDENS, qtype='long')
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(i, j, "auctusa2", S_PORRECTUS_NOBAR, L_ASCENDENS)
+    write_all_porrectus("auctusa2", S_PORRECTUS, L_ASCENDENS, qtype='short')
+    write_all_porrectus("auctusa2", S_PORRECTUS_LONGQUEUE, L_ASCENDENS,
+            qtype='long', i_range=AMBITUS_ONE_ONLY)
+    write_all_porrectus("auctusa2", S_PORRECTUS_NOBAR, L_ASCENDENS)
     precise_message("porrectus auctus descendens")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(i, j, "PunctumAuctusLineBL", S_PORRECTUS, L_DESCENDENS, qtype='short')
-    for j in range(1, MAX_INTERVAL+1):
-        write_porrectus(1, j, "PunctumAuctusLineBL", S_PORRECTUS_LONGQUEUE,
-                        L_DESCENDENS, qtype='long')
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(i, j, "PunctumAuctusLineBL", S_PORRECTUS_NOBAR, L_DESCENDENS)
+    write_all_porrectus("PunctumAuctusLineBL", S_PORRECTUS, L_DESCENDENS,
+            qtype='short')
+    write_all_porrectus("PunctumAuctusLineBL", S_PORRECTUS_LONGQUEUE,
+            L_DESCENDENS, qtype='long', i_range=AMBITUS_ONE_ONLY)
+    write_all_porrectus("PunctumAuctusLineBL", S_PORRECTUS_NOBAR, L_DESCENDENS)
     precise_message("porrectus deminutus")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(i, j, "rdeminutus", S_PORRECTUS, L_DEMINUTUS, qtype='short')
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(i, j, "rdeminutus", S_PORRECTUS_LONGQUEUE, L_DEMINUTUS, qtype='long')
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(i, j, "rdeminutus", S_PORRECTUS_NOBAR, L_DEMINUTUS)
+    write_all_porrectus("rdeminutus", S_PORRECTUS, L_DEMINUTUS, qtype='short')
+    write_all_porrectus("rdeminutus", S_PORRECTUS_LONGQUEUE, L_DEMINUTUS,
+            qtype='long')
+    write_all_porrectus("rdeminutus", S_PORRECTUS_NOBAR, L_DEMINUTUS)
     precise_message("porrectus deminutus alt")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_alt_porrectus_deminutus(i, j)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_alt_porrectus_deminutus(i, j, qtype='long')
+    write_all_alt_porrectus_deminutus()
+    write_all_alt_porrectus_deminutus(qtype='long')
 
 def fusion_porrectus():
     "Write fusion porrectus."
     precise_message("porrectus-like fusion")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(i, j, '', S_FLEXUS, L_UP, qtype='short')
-    for j in range(1, MAX_INTERVAL+1):
-        write_porrectus(1, j, '', S_FLEXUS_LONGQUEUE, L_UP, qtype='long')
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_porrectus(i, j, '', S_FLEXUS_NOBAR, L_UP)
+    write_all_porrectus('', S_FLEXUS, L_UP, qtype='short')
+    write_all_porrectus('', S_FLEXUS_LONGQUEUE, L_UP, qtype='long',
+            i_range=AMBITUS_ONE_ONLY)
+    write_all_porrectus('', S_FLEXUS_NOBAR, L_UP)
+
+def write_all_porrectus(last_glyph, shape, lique=L_NOTHING, qtype=None,
+        i_range=ALL_AMBITUS, j_range=ALL_AMBITUS):
+    for i in i_range:
+        for j in j_range:
+            write_porrectus(i, j, last_glyph, shape, lique, qtype)
 
 def write_porrectus(i, j, last_glyph, shape, lique=L_NOTHING, qtype=None):
     "Writes the porrectus glyphs."
@@ -1973,10 +1814,10 @@ def write_porrectus(i, j, last_glyph, shape, lique=L_NOTHING, qtype=None):
     if not glyph_exists(first_glyph):
         return
     if qtype:
-        write_left_queue(i, qtype, S_PORRECTUS, L_NOTHING)
+        draw_left_queue(i, qtype, S_PORRECTUS, L_NOTHING)
     length = get_width(first_glyph)
     simple_paste(first_glyph)
-    write_line(j, length-get_width('line2'), (-i+1)*FONT_CONFIG['base height'])
+    draw_line(j, length-get_width('line2'), (-i+1)*FONT_CONFIG['base height'])
     length = length-get_width('line2')
     if qtype:
         simplify()
@@ -1997,6 +1838,12 @@ def write_porrectus(i, j, last_glyph, shape, lique=L_NOTHING, qtype=None):
     set_width(length)
     end_glyph(glyph_name)
 
+def write_all_alt_porrectus_deminutus(qtype='short', i_range=ALL_AMBITUS,
+        j_range=ALL_AMBITUS):
+    for i in i_range:
+        for j in j_range:
+            write_alt_porrectus_deminutus(i, j, qtype)
+
 def write_alt_porrectus_deminutus(i, j, qtype='short'):
     "Writes the alternate porrectur deminutus glyphs."
     new_glyph()
@@ -2006,17 +1853,17 @@ def write_alt_porrectus_deminutus(i, j, qtype='short'):
         glyph_name = 'Porrectus%s%sDeminutus.alt' % (AMBITUS[i], AMBITUS[j])
     if copy_existing_glyph(glyph_name):
         return
-    write_left_queue(i, qtype, S_PORRECTUS_DEMINUTUS_ALT, L_NOTHING)
+    draw_left_queue(i, qtype, S_PORRECTUS_DEMINUTUS_ALT, L_NOTHING)
     if i == 1:
         first_glyph = 'PunctumLineBR'
     else:
         first_glyph = 'PunctumLineBLBR'
     simple_paste(first_glyph)
-    write_line(i, get_width(first_glyph)-get_width('line2'), (-i+1)*FONT_CONFIG['base height'])
+    draw_line(i, get_width(first_glyph)-get_width('line2'), (-i+1)*FONT_CONFIG['base height'])
     simplify()
     paste_and_move('mpdeminutus', (get_width(first_glyph)-get_width('line2')),
                    (-i)*FONT_CONFIG['base height'])
-    write_line(j,
+    draw_line(j,
                get_width(first_glyph)+get_width('mpdeminutus')-
                2*get_width('line2'), (-i+1)*FONT_CONFIG['base height'])
     paste_and_move('rdeminutus', (get_width(first_glyph)
@@ -2033,86 +1880,38 @@ def porrectusflexus():
     "Creates the porrectusflexus."
     message("porrectus flexus")
     precise_message("porrectus flexus")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_porrectusflexus(i, j, k, "PunctumLineTL",
-                                      S_PORRECTUS_FLEXUS_NOBAR)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_porrectusflexus(i, j, k, "PunctumLineTL",
-                                      S_PORRECTUS_FLEXUS, qtype='short')
-    for j in range(1, MAX_INTERVAL+1):
-        for k in range(1, MAX_INTERVAL+1):
-            write_porrectusflexus(1, j, k, "PunctumLineTL",
-                                  S_PORRECTUS_FLEXUS_LONGQUEUE, qtype='long')
+    write_all_porrectusflexus("PunctumLineTL", S_PORRECTUS_FLEXUS_NOBAR)
+    write_all_porrectusflexus("PunctumLineTL", S_PORRECTUS_FLEXUS, qtype='short')
+    write_all_porrectusflexus("PunctumLineTL", S_PORRECTUS_FLEXUS_LONGQUEUE,
+            qtype='long', i_range=AMBITUS_ONE_ONLY)
     precise_message("porrectus flexus auctus descendens")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_porrectusflexus(i, j, k,
-                                      "auctusd1",
-                                      S_PORRECTUS_FLEXUS_NOBAR,
-                                      L_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_porrectusflexus(i, j, k,
-                                      "auctusd1",
-                                      S_PORRECTUS_FLEXUS,
-                                      L_DESCENDENS, qtype='short')
-    for j in range(1, MAX_INTERVAL+1):
-        for k in range(1, MAX_INTERVAL+1):
-            write_porrectusflexus(1, j, k,
-                                  "auctusd1",
-                                  S_PORRECTUS_FLEXUS_LONGQUEUE,
-                                  L_DESCENDENS, qtype='long')
+    write_all_porrectusflexus("auctusd1", S_PORRECTUS_FLEXUS_NOBAR, L_DESCENDENS)
+    write_all_porrectusflexus("auctusd1", S_PORRECTUS_FLEXUS, L_DESCENDENS,
+            qtype='short')
+    write_all_porrectusflexus("auctusd1", S_PORRECTUS_FLEXUS_LONGQUEUE,
+            L_DESCENDENS, qtype='long', i_range=AMBITUS_ONE_ONLY)
     precise_message("porrectus flexus auctus ascendens")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_porrectusflexus(i, j, k,
-                                      "auctusa1",
-                                      S_PORRECTUS_FLEXUS_NOBAR,
-                                      L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_porrectusflexus(i, j, k,
-                                      "auctusa1",
-                                      S_PORRECTUS_FLEXUS,
-                                      L_ASCENDENS, qtype='short')
-    for j in range(1, MAX_INTERVAL+1):
-        for k in range(1, MAX_INTERVAL+1):
-            write_porrectusflexus(1, j, k,
-                                  "auctusa1",
-                                  S_PORRECTUS_FLEXUS_LONGQUEUE,
-                                  L_ASCENDENS, qtype='long')
+    write_all_porrectusflexus("auctusa1", S_PORRECTUS_FLEXUS_NOBAR, L_ASCENDENS)
+    write_all_porrectusflexus("auctusa1", S_PORRECTUS_FLEXUS, L_ASCENDENS,
+            qtype='short')
+    write_all_porrectusflexus("auctusa1", S_PORRECTUS_FLEXUS_LONGQUEUE,
+            L_ASCENDENS, qtype='long', i_range=AMBITUS_ONE_ONLY)
     precise_message("porrectus flexus deminutus")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_porrectusflexus(i, j, k,
-                                      "deminutus",
-                                      S_PORRECTUS_FLEXUS_NOBAR,
-                                      L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_porrectusflexus(i, j, k,
-                                      "deminutus",
-                                      S_PORRECTUS_FLEXUS, L_DEMINUTUS,
-                                      qtype='short')
-    for j in range(1, MAX_INTERVAL+1):
-        for k in range(1, MAX_INTERVAL+1):
-            write_porrectusflexus(1, j, k,
-                                  "deminutus",
-                                  S_PORRECTUS_FLEXUS_LONGQUEUE,
-                                  L_DEMINUTUS, qtype='long')
+    write_all_porrectusflexus("deminutus", S_PORRECTUS_FLEXUS_NOBAR, L_DEMINUTUS)
+    write_all_porrectusflexus("deminutus", S_PORRECTUS_FLEXUS, L_DEMINUTUS,
+            qtype='short')
+    write_all_porrectusflexus("deminutus", S_PORRECTUS_FLEXUS_LONGQUEUE,
+            L_DEMINUTUS, qtype='long', i_range=AMBITUS_ONE_ONLY)
 
-def write_porrectusflexus(i, j, k, last_glyph,
-                          shape, lique=L_NOTHING, qtype=None):
+def write_all_porrectusflexus(last_glyph, shape, lique=L_NOTHING, qtype=None,
+        i_range=ALL_AMBITUS, j_range=ALL_AMBITUS, k_range=ALL_AMBITUS):
+    for i in i_range:
+        for j in j_range:
+            for k in k_range:
+                write_porrectusflexus(i, j, k, last_glyph, shape, lique, qtype)
+
+def write_porrectusflexus(i, j, k, last_glyph, shape, lique=L_NOTHING,
+        qtype=None):
     "Writes the porrectusflexus glyphs."
     new_glyph()
     glyph_name = '%s%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], AMBITUS[k], lique)
@@ -2125,12 +1924,12 @@ def write_porrectusflexus(i, j, k, last_glyph,
     if not glyph_exists(first_glyph):
         return
     if qtype:
-        write_left_queue(i, qtype, S_PORRECTUS_FLEXUS, L_NOTHING)
+        draw_left_queue(i, qtype, S_PORRECTUS_FLEXUS, L_NOTHING)
     length = get_width(first_glyph)
     simple_paste(first_glyph)
-    write_line(j, length-get_width('line2'), (-i+1)*FONT_CONFIG['base height'])
+    draw_line(j, length-get_width('line2'), (-i+1)*FONT_CONFIG['base height'])
     if last_glyph == "deminutus":
-        width_dem = write_deminutus(j-i, k, length-get_width('line2'),
+        width_dem = draw_deminutus(j-i, k, length-get_width('line2'),
                                     qtype != None, firstbar=1)
         length = length+width_dem-get_width('line2')
     else:
@@ -2155,7 +1954,7 @@ def write_porrectusflexus(i, j, k, last_glyph,
                 last_glyph = 'PunctumDescendens'
             length = length+get_width(middle_glyph)
         else:
-            write_line(k, length + get_width(middle_glyph) - get_width('line2'),
+            draw_line(k, length + get_width(middle_glyph) - get_width('line2'),
                        (j-i-k+1)*FONT_CONFIG['base height'])
             length = length + get_width(middle_glyph) - get_width('line2')
         paste_and_move(last_glyph, length, (j-i-k)*FONT_CONFIG['base height'])
@@ -2167,59 +1966,37 @@ def torculus():
     "Creates the torculus."
     message("torculus")
     precise_message("torculus")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_torculus(i, j, "PunctumLineTR", "PunctumLineTL", S_TORCULUS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_torculus(i, j, "QuilismaLineTR", "PunctumLineTL", S_TORCULUS_QUILISMA)
+    write_all_torculus("PunctumLineTR", "PunctumLineTL", S_TORCULUS)
+    write_all_torculus("QuilismaLineTR", "PunctumLineTL", S_TORCULUS_QUILISMA)
     precise_message("torculus initio debilis")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_torculus(i, j, "idebilis", "PunctumLineTL", S_TORCULUS,
-                           L_INITIO_DEBILIS)
+    write_all_torculus("idebilis", "PunctumLineTL", S_TORCULUS, L_INITIO_DEBILIS)
     precise_message("torculus auctus descendens")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_torculus(i, j, "PunctumLineTR", "auctusd1", S_TORCULUS,
-                           L_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_torculus(i, j, "QuilismaLineTR", "auctusd1", S_TORCULUS_QUILISMA,
-                           L_DESCENDENS)
+    write_all_torculus("PunctumLineTR", "auctusd1", S_TORCULUS, L_DESCENDENS)
+    write_all_torculus("QuilismaLineTR", "auctusd1", S_TORCULUS_QUILISMA,
+            L_DESCENDENS)
     precise_message("torculus initio debilis auctus descendens")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_torculus(i, j, "idebilis", "auctusd1", S_TORCULUS,
-                           L_INITIO_DEBILIS_DESCENDENS)
+    write_all_torculus("idebilis", "auctusd1", S_TORCULUS,
+            L_INITIO_DEBILIS_DESCENDENS)
     precise_message("torculus auctus ascendens")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_torculus(i, j, "PunctumLineTR", "auctusa1",
-                           S_TORCULUS, L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_torculus(i, j, "QuilismaLineTR", "auctusa1", S_TORCULUS_QUILISMA,
-                           L_ASCENDENS)
+    write_all_torculus("PunctumLineTR", "auctusa1", S_TORCULUS, L_ASCENDENS)
+    write_all_torculus("QuilismaLineTR", "auctusa1", S_TORCULUS_QUILISMA,
+            L_ASCENDENS)
     precise_message("torculus initio debilis auctus ascendens")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_torculus(i, j, "idebilis", "auctusa1", S_TORCULUS,
-                           L_INITIO_DEBILIS_ASCENDENS)
+    write_all_torculus("idebilis", "auctusa1", S_TORCULUS,
+            L_INITIO_DEBILIS_ASCENDENS)
     precise_message("torculus deminutus")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_torculus(i, j, "PunctumLineTR", "deminutus", S_TORCULUS,
-                           L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_torculus(i, j, "QuilismaLineTR", "deminutus", S_TORCULUS_QUILISMA,
-                           L_DEMINUTUS)
+    write_all_torculus("PunctumLineTR", "deminutus", S_TORCULUS, L_DEMINUTUS)
+    write_all_torculus("QuilismaLineTR", "deminutus", S_TORCULUS_QUILISMA,
+            L_DEMINUTUS)
     precise_message("torculus initio debilis deminutus")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_torculus(i, j, "idebilis", "deminutus", S_TORCULUS,
-                           L_INITIO_DEBILIS_DEMINUTUS)
+    write_all_torculus("idebilis", "deminutus", S_TORCULUS,
+            L_INITIO_DEBILIS_DEMINUTUS)
+
+def write_all_torculus(first_glyph, last_glyph, shape, lique=L_NOTHING,
+        i_range=ALL_AMBITUS, j_range=ALL_AMBITUS):
+    for i in i_range:
+        for j in j_range:
+            write_torculus(i, j, first_glyph, last_glyph, shape, lique)
 
 def write_torculus(i, j, first_glyph, last_glyph, shape, lique=L_NOTHING):
     "Writes the torculus glyphs."
@@ -2237,12 +2014,12 @@ def write_torculus(i, j, first_glyph, last_glyph, shape, lique=L_NOTHING):
         length = length = get_width(first_glyph)+0.1
     simple_paste(first_glyph)
     if i != 1:
-        write_line(i, length, FONT_CONFIG['base height'])
+        draw_line(i, length, FONT_CONFIG['base height'])
     if last_glyph == "deminutus":
         if i == 1:
-            width_dem = write_deminutus(i, j, length, firstbar=0)
+            width_dem = draw_deminutus(i, j, length, firstbar=0)
         else:
-            width_dem = write_deminutus(i, j, length, firstbar=1)
+            width_dem = draw_deminutus(i, j, length, firstbar=1)
         length = length+ width_dem
     else:
         if j == 1:
@@ -2265,7 +2042,7 @@ def write_torculus(i, j, first_glyph, last_glyph, shape, lique=L_NOTHING):
                 second_glyph = 'PunctumLineBLBR'
             paste_and_move(second_glyph, length, i*FONT_CONFIG['base height'])
             length = length+get_width(second_glyph)-get_width('line2')
-            write_line(j, length, (i-j+1)*FONT_CONFIG['base height'])
+            draw_line(j, length, (i-j+1)*FONT_CONFIG['base height'])
         paste_and_move(last_glyph, length, (i-j)*FONT_CONFIG['base height'])
         length = length+get_width(last_glyph)
     set_width(length)
@@ -2274,20 +2051,20 @@ def write_torculus(i, j, first_glyph, last_glyph, shape, lique=L_NOTHING):
 def torculus_liquescens():
     "Creates the torculus liquescens."
     precise_message("torculus liquescens")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_torculus_liquescens(i, j, k, 'PunctumLineTR',
-                                          S_TORCULUS_LIQUESCENS, L_DEMINUTUS)
+    write_all_torculus_liquescens('PunctumLineTR', S_TORCULUS_LIQUESCENS,
+            L_DEMINUTUS)
     precise_message("torculus liquescens quilisma")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_torculus_liquescens(i, j, k, 'QuilismaLineTR',
-                                          S_TORCULUS_LIQUESCENS_QUILISMA, L_DEMINUTUS)
+    write_all_torculus_liquescens('QuilismaLineTR',
+            S_TORCULUS_LIQUESCENS_QUILISMA, L_DEMINUTUS)
 
-def write_torculus_liquescens(i, j, k, first_glyph, shape,
-                              lique='deminutus'):
+def write_all_torculus_liquescens(first_glyph, shape, lique='deminutus',
+        i_range=ALL_AMBITUS, j_range=ALL_AMBITUS, k_range=ALL_AMBITUS):
+    for i in i_range:
+        for j in j_range:
+            for k in k_range:
+                write_torculus_liquescens(i, j, k, first_glyph, shape, lique)
+
+def write_torculus_liquescens(i, j, k, first_glyph, shape, lique='deminutus'):
     "Writes the torculus liquescens glyphs."
     new_glyph()
     glyph_name = '%s%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], AMBITUS[k], lique)
@@ -2303,7 +2080,7 @@ def write_torculus_liquescens(i, j, k, first_glyph, shape,
         length = get_width(first_glyph)+0.1
     simple_paste(first_glyph)
     if i != 1:
-        write_line(i, length, FONT_CONFIG['base height'])
+        draw_line(i, length, FONT_CONFIG['base height'])
     flexus_firstbar = 2
     if j == 1:
         flexus_firstbar = 0
@@ -2320,8 +2097,8 @@ def write_torculus_liquescens(i, j, k, first_glyph, shape,
             second_glyph = 'PunctumLineBLBR'
         paste_and_move(second_glyph, length, i*FONT_CONFIG['base height'])
         length = length+get_width(second_glyph)-get_width('line2')
-        write_line(j, length, (i-j+1)*FONT_CONFIG['base height'])
-    width_dem = write_deminutus(i-j, k, length, firstbar=flexus_firstbar)
+        draw_line(j, length, (i-j+1)*FONT_CONFIG['base height'])
+    width_dem = draw_deminutus(i-j, k, length, firstbar=flexus_firstbar)
     length = length+width_dem
     set_width(length)
     end_glyph(glyph_name)
@@ -2330,98 +2107,51 @@ def torculusresupinus():
     "Creates the torculusresupinus."
     message("torculus resupinus")
     precise_message("torculus resupinus")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(i, j, k, 'PunctumLineTR', 'PunctumSmall',
-                                        S_TORCULUS_RESUPINUS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(i, j, k, 'idebilis', 'PunctumSmall',
-                                        S_TORCULUS_RESUPINUS, L_INITIO_DEBILIS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(i, j, k, 'QuilismaLineTR', 'PunctumSmall',
-                                        S_TORCULUS_RESUPINUS_QUILISMA)
+    write_all_torculusresupinus('PunctumLineTR', 'PunctumSmall',
+            S_TORCULUS_RESUPINUS)
+    write_all_torculusresupinus('idebilis', 'PunctumSmall', S_TORCULUS_RESUPINUS,
+            L_INITIO_DEBILIS)
+    write_all_torculusresupinus('QuilismaLineTR', 'PunctumSmall',
+            S_TORCULUS_RESUPINUS_QUILISMA)
     precise_message("torculus resupinus deminutus")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(i, j, k, 'PunctumLineTR', 'rdeminutus',
-                                        S_TORCULUS_RESUPINUS, L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(i, j, k, 'idebilis', 'rdeminutus',
-                                        S_TORCULUS_RESUPINUS,
-                                        L_INITIO_DEBILIS_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(i, j, k, 'QuilismaLineTR', 'rdeminutus',
-                                        S_TORCULUS_RESUPINUS_QUILISMA,
-                                        L_DEMINUTUS)
+    write_all_torculusresupinus('PunctumLineTR', 'rdeminutus',
+            S_TORCULUS_RESUPINUS, L_DEMINUTUS)
+    write_all_torculusresupinus('idebilis', 'rdeminutus', S_TORCULUS_RESUPINUS,
+            L_INITIO_DEBILIS_DEMINUTUS)
+    write_all_torculusresupinus('QuilismaLineTR', 'rdeminutus',
+            S_TORCULUS_RESUPINUS_QUILISMA, L_DEMINUTUS)
     precise_message("torculus resupinus deminutus alt")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_alt_torculusresupinusdeminutus(i, j, k, 'PunctumLineTR',
-                                                     S_TORCULUS_RESUPINUS,
-                                                     L_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_alt_torculusresupinusdeminutus(i, j, k, 'idebilis',
-                                                     S_TORCULUS_RESUPINUS,
-                                                     L_INITIO_DEBILIS_DEMINUTUS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_alt_torculusresupinusdeminutus(i, j, k, 'QuilismaLineTR',
-                                                     S_TORCULUS_RESUPINUS_QUILISMA,
-                                                     L_DEMINUTUS)
+    write_all_alt_torculusresupinusdeminutus('PunctumLineTR',
+            S_TORCULUS_RESUPINUS, L_DEMINUTUS)
+    write_all_alt_torculusresupinusdeminutus('idebilis', S_TORCULUS_RESUPINUS,
+            L_INITIO_DEBILIS_DEMINUTUS)
+    write_all_alt_torculusresupinusdeminutus('QuilismaLineTR',
+            S_TORCULUS_RESUPINUS_QUILISMA, L_DEMINUTUS)
     precise_message("torculus resupinus auctus ascendens")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(i, j, k, 'PunctumLineTR', "auctusa2",
-                                        S_TORCULUS_RESUPINUS, L_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(i, j, k, 'idebilis', "auctusa2",
-                                        S_TORCULUS_RESUPINUS,
-                                        L_INITIO_DEBILIS_ASCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(i, j, k, 'QuilismaLineTR', "auctusa2",
-                                        S_TORCULUS_RESUPINUS_QUILISMA,
-                                        L_ASCENDENS)
+    write_all_torculusresupinus('PunctumLineTR', "auctusa2",
+            S_TORCULUS_RESUPINUS, L_ASCENDENS)
+    write_all_torculusresupinus('idebilis', "auctusa2", S_TORCULUS_RESUPINUS,
+            L_INITIO_DEBILIS_ASCENDENS)
+    write_all_torculusresupinus('QuilismaLineTR', "auctusa2",
+            S_TORCULUS_RESUPINUS_QUILISMA, L_ASCENDENS)
     precise_message("torculus resupinus auctus descendens")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(i, j, k, 'PunctumLineTR', "PunctumAuctusLineBL",
-                                        S_TORCULUS_RESUPINUS,
-                                        L_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(i, j, k, 'idebilis', "PunctumAuctusLineBL",
-                                        S_TORCULUS_RESUPINUS,
-                                        L_INITIO_DEBILIS_DESCENDENS)
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            for k in range(1, MAX_INTERVAL+1):
-                write_torculusresupinus(i, j, k, 'QuilismaLineTR', "PunctumAuctusLineBL",
-                                        S_TORCULUS_RESUPINUS_QUILISMA,
-                                        L_DESCENDENS)
+    write_all_torculusresupinus('PunctumLineTR', "PunctumAuctusLineBL",
+            S_TORCULUS_RESUPINUS, L_DESCENDENS)
+    write_all_torculusresupinus('idebilis', "PunctumAuctusLineBL",
+            S_TORCULUS_RESUPINUS, L_INITIO_DEBILIS_DESCENDENS)
+    write_all_torculusresupinus('QuilismaLineTR', "PunctumAuctusLineBL",
+            S_TORCULUS_RESUPINUS_QUILISMA, L_DESCENDENS)
+
+def write_all_torculusresupinus(first_glyph, last_glyph, shape, lique=L_NOTHING,
+        i_range=ALL_AMBITUS, j_range=ALL_AMBITUS, k_range=ALL_AMBITUS):
+    for i in i_range:
+        for j in j_range:
+            for k in k_range:
+                write_torculusresupinus(i, j, k, first_glyph, last_glyph, shape,
+                        lique)
 
 def write_torculusresupinus(i, j, k, first_glyph, last_glyph, shape,
-                            lique=L_NOTHING):
+        lique=L_NOTHING):
     "Writes the torculusresupinus glyphs."
     new_glyph()
     glyph_name = '%s%s%s%s%s' % (shape, AMBITUS[i], AMBITUS[j], AMBITUS[k], lique)
@@ -2444,11 +2174,11 @@ def write_torculusresupinus(i, j, k, first_glyph, last_glyph, shape,
         length = get_width(first_glyph)-get_width('line2')
     simple_paste(first_glyph)
     if i != 1:
-        write_line(i, length, FONT_CONFIG['base height'])
+        draw_line(i, length, FONT_CONFIG['base height'])
     paste_and_move(middle_glyph, length, i*FONT_CONFIG['base height'])
     length = length + get_width(middle_glyph)
     if k != 1:
-        write_line(k, length-get_width('line2'), (i-j+1)*FONT_CONFIG['base height'])
+        draw_line(k, length-get_width('line2'), (i-j+1)*FONT_CONFIG['base height'])
     simplify()
     if last_glyph == "rdeminutus":
         paste_and_move(last_glyph,
@@ -2463,8 +2193,16 @@ def write_torculusresupinus(i, j, k, first_glyph, last_glyph, shape,
     set_width(length)
     end_glyph(glyph_name)
 
-def write_alt_torculusresupinusdeminutus(i, j, k, first_glyph,
-                                         shape, lique=L_NOTHING):
+def write_all_alt_torculusresupinusdeminutus(first_glyph, shape, lique=L_NOTHING,
+        i_range=ALL_AMBITUS, j_range=ALL_AMBITUS, k_range=ALL_AMBITUS):
+    for i in i_range:
+        for j in j_range:
+            for k in k_range:
+                write_alt_torculusresupinusdeminutus(i, j, k, first_glyph,
+                        shape, lique)
+
+def write_alt_torculusresupinusdeminutus(i, j, k, first_glyph, shape,
+        lique=L_NOTHING):
     # pylint: disable=invalid-name
     "Writes the torculusresupinusdeminutus glyphs."
     new_glyph()
@@ -2481,7 +2219,7 @@ def write_alt_torculusresupinusdeminutus(i, j, k, first_glyph,
             length = get_width(first_glyph)+0.1
     simple_paste(first_glyph)
     if i != 1:
-        write_line(i, length, FONT_CONFIG['base height'])
+        draw_line(i, length, FONT_CONFIG['base height'])
     if j == 1 and i == 1:
         if first_glyph == "idebilis":
             second_glyph = 'PunctumLineBL'
@@ -2500,17 +2238,17 @@ def write_alt_torculusresupinusdeminutus(i, j, k, first_glyph,
         second_glyph = 'PunctumLineBR'
         paste_and_move(second_glyph, length, i*FONT_CONFIG['base height'])
         length = length + get_width(second_glyph)-get_width('line2')
-        write_line(j, length, (i-j+1)*FONT_CONFIG['base height'])
+        draw_line(j, length, (i-j+1)*FONT_CONFIG['base height'])
         last_glyph = 'mpdeminutus'
     else:
         second_glyph = 'PunctumLineBLBR'
         paste_and_move(second_glyph, length, i*FONT_CONFIG['base height'])
         length = length + get_width(second_glyph)-get_width('line2')
-        write_line(j, length, (i-j+1)*FONT_CONFIG['base height'])
+        draw_line(j, length, (i-j+1)*FONT_CONFIG['base height'])
         last_glyph = 'mpdeminutus'
     paste_and_move(last_glyph, length, (i-j)*FONT_CONFIG['base height'])
     length = length+get_width(last_glyph)
-    write_line(k, length-get_width('line2'), (i-j+1)*FONT_CONFIG['base height'])
+    draw_line(k, length-get_width('line2'), (i-j+1)*FONT_CONFIG['base height'])
     paste_and_move('rdeminutus',
                    length-get_width('rdeminutus'), (i-j+k)*FONT_CONFIG['base height'])
     set_width(length)
@@ -2519,12 +2257,14 @@ def write_alt_torculusresupinusdeminutus(i, j, k, first_glyph,
 def scandicus():
     "Creates the scandicus."
     message("scandicus")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_scandicus(i, j, 'PunctumSmall')
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_scandicus(i, j, 'rdeminutus', L_DEMINUTUS)
+    write_all_scandicus('PunctumSmall')
+    write_all_scandicus('rdeminutus', L_DEMINUTUS)
+
+def write_all_scandicus(last_glyph, lique=L_NOTHING, i_range=ALL_AMBITUS,
+        j_range=ALL_AMBITUS):
+    for i in i_range:
+        for j in j_range:
+                write_scandicus(i, j, last_glyph, lique)
 
 def write_scandicus(i, j, last_glyph, lique=L_NOTHING):
     "Writes the scandicus glyphs."
@@ -2552,7 +2292,7 @@ def write_scandicus(i, j, last_glyph, lique=L_NOTHING):
     else:
         simple_paste('PunctumLineTR')
         length = get_width('PunctumLineTR') - get_width('line2')
-        write_line(i, length, FONT_CONFIG['base height'])
+        draw_line(i, length, FONT_CONFIG['base height'])
         second_glyph = 'msdeminutus'
         if j == 1 and glyph_exists('msdeminutusam1'):
             second_glyph = 'msdeminutusam1'
@@ -2569,7 +2309,7 @@ def write_scandicus(i, j, last_glyph, lique=L_NOTHING):
     else:
         length = length + get_width(second_glyph)
     if j != 1:
-        write_line(j, length - get_width('line2'), (i+1) * FONT_CONFIG['base height'])
+        draw_line(j, length - get_width('line2'), (i+1) * FONT_CONFIG['base height'])
     if last_glyph == 'rdeminutus':
         paste_and_move('rdeminutus', length -
                        get_width('rdeminutus'), (i+j)*FONT_CONFIG['base height']+
@@ -2583,12 +2323,14 @@ def write_scandicus(i, j, last_glyph, lique=L_NOTHING):
 def ancus():
     "Creates the ancus."
     message("ancus")
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_ancus(i, j, 'rvbase', S_ANCUS, 'short')
-    for i in range(1, MAX_INTERVAL+1):
-        for j in range(1, MAX_INTERVAL+1):
-            write_ancus(i, j, 'rvbase', S_ANCUS_LONGQUEUE, 'long')
+    write_all_ancus('rvbase', S_ANCUS, 'short')
+    write_all_ancus('rvbase', S_ANCUS_LONGQUEUE, 'long')
+
+def write_all_ancus(first_glyph, glyph_type, qtype, i_range=ALL_AMBITUS,
+        j_range=ALL_AMBITUS):
+    for i in i_range:
+        for j in j_range:
+            write_ancus(i, j, first_glyph, glyph_type, qtype)
 
 def write_ancus(i, j, first_glyph, glyph_type, qtype):
     "Writes the ancus glyphs."
@@ -2596,7 +2338,7 @@ def write_ancus(i, j, first_glyph, glyph_type, qtype):
     glyph_name = '%s%s%s%s' % (glyph_type, AMBITUS[i], AMBITUS[j], L_DEMINUTUS)
     if copy_existing_glyph(glyph_name):
         return
-    write_left_queue(i, qtype, S_ANCUS, L_NOTHING, j)
+    draw_left_queue(i, qtype, S_ANCUS, L_NOTHING, j)
     if i == 1:
         first_glyph = 'rvirgabase'
         length = get_width(first_glyph)
@@ -2604,8 +2346,8 @@ def write_ancus(i, j, first_glyph, glyph_type, qtype):
         length = get_width(first_glyph) - get_width('line2')
     simple_paste(first_glyph)
     if i != 1:
-        write_line(i, length, (-i+1)*FONT_CONFIG['base height'])
-    width_dem = write_deminutus(-i, j, length,
+        draw_line(i, length, (-i+1)*FONT_CONFIG['base height'])
+    width_dem = draw_deminutus(-i, j, length,
                                 firstbar = 0 if i == 1 else 2)
     set_width(length+width_dem)
     end_glyph(glyph_name)
@@ -2613,16 +2355,16 @@ def write_ancus(i, j, first_glyph, glyph_type, qtype):
 def leading():
     "Creates the leading fusion glyphs."
     message("leading fusion glyphs")
-    for i in range(1, MAX_INTERVAL+1):
-        write_leading(i, 'PunctumLineTR', S_LEADING_PUNCTUM)
-    for i in range(1, MAX_INTERVAL+1):
-        write_leading(i, 'idebilis', S_LEADING_PUNCTUM, L_INITIO_DEBILIS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_leading(i, 'QuilismaLineTR', S_LEADING_QUILISMA)
-    for i in range(1, MAX_INTERVAL+1):
-        write_leading(i, 'AscendensOriscusLineTR', S_LEADING_ORISCUS)
+    write_all_leading('PunctumLineTR', S_LEADING_PUNCTUM)
+    write_all_leading('idebilis', S_LEADING_PUNCTUM, L_INITIO_DEBILIS)
+    write_all_leading('QuilismaLineTR', S_LEADING_QUILISMA)
+    write_all_leading('AscendensOriscusLineTR', S_LEADING_ORISCUS)
 
 # lique has a slightly different meaning here
+def write_all_leading(first_glyph, glyph_type, lique='', i_range=ALL_AMBITUS):
+    for i in i_range:
+        write_leading(i, first_glyph, glyph_type, lique)
+
 def write_leading(i, first_glyph, glyph_type, lique=''):
     "Writes the leading fusion glyphs."
     new_glyph()
@@ -2641,7 +2383,7 @@ def write_leading(i, first_glyph, glyph_type, lique=''):
     length = get_width(first_glyph) + length
     paste_and_move(first_glyph, 0, -i * FONT_CONFIG['base height'])
     if i != 1:
-        write_line(i, length, -(i-1) * FONT_CONFIG['base height'])
+        draw_line(i, length, -(i-1) * FONT_CONFIG['base height'])
     simplify()
     set_width(length)
     end_glyph(glyph_name)
@@ -2649,127 +2391,97 @@ def write_leading(i, first_glyph, glyph_type, lique=''):
 def fusion():
     "Creates the fusion glyphs."
     message("simple fusion glyphs")
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'PunctumLineTR', S_PUNCTUM, L_UP)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'msdeminutus', S_UPPER_PUNCTUM, L_UP)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'base6', S_LOWER_PUNCTUM, L_UP)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'idebilis', S_PUNCTUM,
-                             L_INITIO_DEBILIS_UP)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'QuilismaLineTR', S_QUILISMA, L_UP)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'AscendensOriscusLineTR', S_ASCENDENS_ORISCUS,
-                             L_UP)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'DescendensOriscusLineTR', S_DESCENDENS_ORISCUS,
-                             L_UP)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'AscendensOriscusLineBLTR',
-                             S_UPPER_ASCENDENS_ORISCUS, L_UP)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, FLATTENED_ORISCUS['AscendensOriscusLineTRFlatBottom'],
-                             S_UPPER_OBLATUS_ASCENDENS_ORISCUS, L_UP)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'DescendensOriscusLineBLTR',
-                             S_UPPER_DESCENDENS_ORISCUS, L_UP)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'AscendensOriscusLineTLTR',
-                             S_LOWER_ASCENDENS_ORISCUS, L_UP)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'DescendensOriscusLineTLTR',
-                             S_LOWER_DESCENDENS_ORISCUS, L_UP)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, FLATTENED_ORISCUS['DescendensOriscusLineTRFlatTop'],
-                             S_LOWER_OBLATUS_DESCENDENS_ORISCUS, L_UP)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'AscendensOriscusLineBLTR',
-                             S_ASCENDENS_ORISCUS_SCAPUS, L_UP, qtype='short',
-                             stemshape=S_FLEXUS_ORISCUS_SCAPUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'AscendensOriscusLineBLTR',
-                             S_ASCENDENS_ORISCUS_SCAPUS_LONGQUEUE, L_UP,
-                             qtype='long', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
+    write_all_fusion_leading('PunctumLineTR', S_PUNCTUM, L_UP)
+    write_all_fusion_leading('msdeminutus', S_UPPER_PUNCTUM, L_UP)
+    write_all_fusion_leading('base6', S_LOWER_PUNCTUM, L_UP)
+    write_all_fusion_leading('idebilis', S_PUNCTUM, L_INITIO_DEBILIS_UP)
+    write_all_fusion_leading('QuilismaLineTR', S_QUILISMA, L_UP)
+    write_all_fusion_leading('AscendensOriscusLineTR', S_ASCENDENS_ORISCUS, L_UP)
+    write_all_fusion_leading('DescendensOriscusLineTR', S_DESCENDENS_ORISCUS,
+            L_UP)
+    write_all_fusion_leading('AscendensOriscusLineBLTR',
+            S_UPPER_ASCENDENS_ORISCUS, L_UP)
+    write_all_fusion_leading(FLATTENED_ORISCUS['AscendensOriscusLineTRFlatBottom'],
+            S_UPPER_OBLATUS_ASCENDENS_ORISCUS, L_UP)
+    write_all_fusion_leading('DescendensOriscusLineBLTR',
+            S_UPPER_DESCENDENS_ORISCUS, L_UP)
+    write_all_fusion_leading('AscendensOriscusLineTLTR',
+            S_LOWER_ASCENDENS_ORISCUS, L_UP)
+    write_all_fusion_leading('DescendensOriscusLineTLTR',
+            S_LOWER_DESCENDENS_ORISCUS, L_UP)
+    write_all_fusion_leading(FLATTENED_ORISCUS['DescendensOriscusLineTRFlatTop'],
+            S_LOWER_OBLATUS_DESCENDENS_ORISCUS, L_UP)
+    write_all_fusion_leading('AscendensOriscusLineBLTR',
+            S_ASCENDENS_ORISCUS_SCAPUS, L_UP, qtype='short',
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS)
+    write_all_fusion_leading('AscendensOriscusLineBLTR',
+            S_ASCENDENS_ORISCUS_SCAPUS_LONGQUEUE, L_UP, qtype='long',
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS)
     write_fusion_leading(1, 'AscendensOriscusLineBLTR',
-                         S_ASCENDENS_ORISCUS_SCAPUS_OPENQUEUE, L_UP,
-                         qtype='open', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'DescendensOriscusLineBLTR',
-                             S_DESCENDENS_ORISCUS_SCAPUS, L_UP, qtype='short',
-                             stemshape=S_FLEXUS_ORISCUS_SCAPUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'DescendensOriscusLineBLTR',
-                             S_DESCENDENS_ORISCUS_SCAPUS_LONGQUEUE, L_UP,
-                             qtype='long', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
+            S_ASCENDENS_ORISCUS_SCAPUS_OPENQUEUE, L_UP, qtype='open',
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS)
+    write_all_fusion_leading('DescendensOriscusLineBLTR',
+            S_DESCENDENS_ORISCUS_SCAPUS, L_UP, qtype='short',
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS)
+    write_all_fusion_leading('DescendensOriscusLineBLTR',
+            S_DESCENDENS_ORISCUS_SCAPUS_LONGQUEUE, L_UP, qtype='long',
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS)
     write_fusion_leading(1, 'DescendensOriscusLineBLTR',
-                         S_DESCENDENS_ORISCUS_SCAPUS_OPENQUEUE, L_UP,
-                         qtype='open', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'AscendensOriscusLineBR', S_ASCENDENS_ORISCUS,
-                             L_DOWN)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'DescendensOriscusLineBR', S_DESCENDENS_ORISCUS,
-                             L_DOWN)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'AscendensOriscusLineBLBR',
-                             S_UPPER_ASCENDENS_ORISCUS, L_DOWN)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, FLATTENED_ORISCUS['AscendensOriscusLineBRFlatBottom'],
-                             S_UPPER_OBLATUS_ASCENDENS_ORISCUS, L_DOWN)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'DescendensOriscusLineBLBR',
-                             S_UPPER_DESCENDENS_ORISCUS, L_DOWN)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'AscendensOriscusLineTLBR',
-                             S_LOWER_ASCENDENS_ORISCUS, L_DOWN)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'DescendensOriscusLineTLBR',
-                             S_LOWER_DESCENDENS_ORISCUS, L_DOWN)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, FLATTENED_ORISCUS['DescendensOriscusLineBRFlatTop'],
-                             S_LOWER_OBLATUS_DESCENDENS_ORISCUS, L_DOWN)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, "AscendensOriscusLineBLBR",
-                             S_ASCENDENS_ORISCUS_SCAPUS, L_DOWN, qtype='short',
-                             stemshape=S_FLEXUS_ORISCUS_SCAPUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, "AscendensOriscusLineBLBR",
-                             S_ASCENDENS_ORISCUS_SCAPUS_LONGQUEUE, L_DOWN,
-                             qtype='long', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
+            S_DESCENDENS_ORISCUS_SCAPUS_OPENQUEUE, L_UP, qtype='open',
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS)
+    write_all_fusion_leading('AscendensOriscusLineBR', S_ASCENDENS_ORISCUS,
+            L_DOWN)
+    write_all_fusion_leading('DescendensOriscusLineBR', S_DESCENDENS_ORISCUS,
+            L_DOWN)
+    write_all_fusion_leading('AscendensOriscusLineBLBR',
+            S_UPPER_ASCENDENS_ORISCUS, L_DOWN)
+    write_all_fusion_leading(FLATTENED_ORISCUS['AscendensOriscusLineBRFlatBottom'],
+            S_UPPER_OBLATUS_ASCENDENS_ORISCUS, L_DOWN)
+    write_all_fusion_leading('DescendensOriscusLineBLBR',
+            S_UPPER_DESCENDENS_ORISCUS, L_DOWN)
+    write_all_fusion_leading('AscendensOriscusLineTLBR',
+            S_LOWER_ASCENDENS_ORISCUS, L_DOWN)
+    write_all_fusion_leading('DescendensOriscusLineTLBR',
+            S_LOWER_DESCENDENS_ORISCUS, L_DOWN)
+    write_all_fusion_leading(FLATTENED_ORISCUS['DescendensOriscusLineBRFlatTop'],
+            S_LOWER_OBLATUS_DESCENDENS_ORISCUS, L_DOWN)
+    write_all_fusion_leading("AscendensOriscusLineBLBR",
+            S_ASCENDENS_ORISCUS_SCAPUS, L_DOWN, qtype='short',
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS)
+    write_all_fusion_leading("AscendensOriscusLineBLBR",
+            S_ASCENDENS_ORISCUS_SCAPUS_LONGQUEUE, L_DOWN, qtype='long',
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS)
     write_fusion_leading(1, "AscendensOriscusLineBLBR",
-                         S_ASCENDENS_ORISCUS_SCAPUS_OPENQUEUE, L_DOWN,
-                         qtype='open', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, "DescendensOriscusLineBLBR",
-                             S_DESCENDENS_ORISCUS_SCAPUS, L_DOWN, qtype='short',
-                             stemshape=S_FLEXUS_ORISCUS_SCAPUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, "DescendensOriscusLineBLBR",
-                             S_DESCENDENS_ORISCUS_SCAPUS_LONGQUEUE, L_DOWN,
-                             qtype='long', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
+            S_ASCENDENS_ORISCUS_SCAPUS_OPENQUEUE, L_DOWN, qtype='open',
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS)
+    write_all_fusion_leading("DescendensOriscusLineBLBR",
+            S_DESCENDENS_ORISCUS_SCAPUS, L_DOWN, qtype='short',
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS)
+    write_all_fusion_leading("DescendensOriscusLineBLBR",
+            S_DESCENDENS_ORISCUS_SCAPUS_LONGQUEUE, L_DOWN, qtype='long',
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS)
     write_fusion_leading(1, "DescendensOriscusLineBLBR",
-                         S_DESCENDENS_ORISCUS_SCAPUS_OPENQUEUE, L_DOWN,
-                         qtype='open', stemshape=S_FLEXUS_ORISCUS_SCAPUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'PunctumLineBR', S_PUNCTUM, L_DOWN)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'PunctumLineBLBR', S_UPPER_PUNCTUM,
-                             L_DOWN)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'mademinutus', S_LOWER_PUNCTUM, L_DOWN)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'VirgaBaseLineBL', S_VIRGA_REVERSA, L_DOWN,
-                             qtype='short', stemshape=S_FLEXUS)
-    for i in range(1, MAX_INTERVAL+1):
-        write_fusion_leading(i, 'VirgaBaseLineBL', S_VIRGA_REVERSA_LONGQUEUE,
-                             L_DOWN, qtype='long', stemshape=S_FLEXUS)
+            S_DESCENDENS_ORISCUS_SCAPUS_OPENQUEUE, L_DOWN, qtype='open',
+            stemshape=S_FLEXUS_ORISCUS_SCAPUS)
+    write_all_fusion_leading('PunctumLineBR', S_PUNCTUM, L_DOWN)
+    write_all_fusion_leading('PunctumLineBLBR', S_UPPER_PUNCTUM, L_DOWN)
+    write_all_fusion_leading('mademinutus', S_LOWER_PUNCTUM, L_DOWN)
+    write_all_fusion_leading('VirgaBaseLineBL', S_VIRGA_REVERSA, L_DOWN,
+            qtype='short', stemshape=S_FLEXUS)
+    write_all_fusion_leading('VirgaBaseLineBL', S_VIRGA_REVERSA_LONGQUEUE,
+            L_DOWN, qtype='long', stemshape=S_FLEXUS)
     write_fusion_leading(1, 'VirgaBaseLineBL', S_VIRGA_REVERSA_OPENQUEUE,
-                         L_DOWN, qtype='open', stemshape=S_FLEXUS)
+            L_DOWN, qtype='open', stemshape=S_FLEXUS)
 
 # lique is only for initio debilis here
-def write_fusion_leading(i, first_glyph, glyph_type, lique, qtype = None, stemshape = None):
+def write_all_fusion_leading(first_glyph, glyph_type, lique, qtype=None,
+        stemshape=None, i_range=ALL_AMBITUS):
+    for i in i_range:
+        write_fusion_leading(i, first_glyph, glyph_type, lique, qtype,
+                stemshape)
+
+def write_fusion_leading(i, first_glyph, glyph_type, lique, qtype=None,
+        stemshape=None):
     "Writes the fusion glyphs."
     new_glyph()
     glyph_name = '%s%s%s' % (glyph_type, AMBITUS[i], lique)
@@ -2811,13 +2523,13 @@ def write_fusion_leading(i, first_glyph, glyph_type, lique, qtype = None, stemsh
             first_glyph = 'rvirgabase'
     length = get_width(first_glyph) + length
     if qtype:
-        write_left_queue(i, qtype, stemshape, lique)
+        draw_left_queue(i, qtype, stemshape, lique)
     simple_paste(first_glyph)
     if i != 1:
         if lique == L_UP or lique == L_INITIO_DEBILIS_UP:
-            write_line(i, length, FONT_CONFIG['base height'])
+            draw_line(i, length, FONT_CONFIG['base height'])
         elif lique == L_DOWN:
-            write_line(i, length, -(i - 1) * FONT_CONFIG['base height'])
+            draw_line(i, length, -(i - 1) * FONT_CONFIG['base height'])
     simplify()
     set_width(length)
     end_glyph(glyph_name)
