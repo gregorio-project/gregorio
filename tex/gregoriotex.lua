@@ -861,8 +861,8 @@ local function get_gregorioversion()
   return internalversion
 end
 
-local function check_font_version()
-  local gregoriofont = get_font_by_name('gre@font@music')
+local function check_one_font_version(name)
+  local gregoriofont = get_font_by_name(name)
   if gregoriofont then
     local fontversion = gregoriofont.shared.rawdata.metadata.version
     if fontversion and string.match(fontversion, "%d+%.%d+%.%d+") ~= string.match(internalversion, "%d+%.%d+%.%d+") then
@@ -870,6 +870,12 @@ local function check_font_version()
       err("\nUncoherent file versions!\ngregoriotex.tex is version %s\nwhile %s.ttf is version %s\nplease reinstall one so that the\nversions match", string.match(internalversion, "%d+%.%d+%.%d+"), fontname, string.match(fontversion, "%d+%.%d+%.%d+"))
     end
   end
+end
+
+local function check_font_version()
+  check_one_font_version('gre@font@music')
+  check_one_font_version('gre@font@music@hollow')
+  check_one_font_version('gre@font@music@hole')
 end
 
 local function map_font(name, prefix)
@@ -955,32 +961,46 @@ local function def_glyph(csname, font_name, glyph, font_table, setter)
   setter(csname, font_csname, char)
 end
 
-local function change_single_score_glyph(glyph_name, font_name, replacement)
-  if font_name == '*' then def_glyph('GreCP'..glyph_name, 'greciliae', replacement, score_fonts, set_common_score_glyph)
+local function general_font_for(cavum)
+  if cavum == 'Hollow' then
+    return 'greciliae-hollow'
+  elseif cavum == 'Hole' then
+    return 'greciliae-hole'
   else
-    def_glyph('GreCP'..glyph_name, font_name, replacement, score_fonts,
-        set_score_glyph)
+    return 'greciliae'
   end
 end
 
-local function change_score_glyph(glyph_name, font_name, replacement)
+local function change_single_score_glyph(glyph_name, cavum, font_name, replacement)
+  if font_name == '*' then
+    def_glyph('Gre'..cavum..'CP'..glyph_name, general_font_for(cavum),
+        replacement, score_fonts, set_common_score_glyph)
+  else
+    def_glyph('Gre'..cavum..'CP'..glyph_name, font_name, replacement,
+        score_fonts, set_score_glyph)
+  end
+end
+
+local function change_score_glyph(glyph_name, font_name, replacement, cavum)
+  cavum = cavum or ''
   if string.match(glyph_name, '%*') then
     glyph_name = '^'..glyph_name:gsub('%*', '.*')..'$'
     if not string.match(replacement, '^%.') then
       err('If a wildcard is supplied for glyph name, replacement must start with a dot.')
     end
+    local general_font = general_font_for(cavum)
     local other_font
     if font_name == '*' then
-      other_font = get_score_font_resources('greciliae').unicodes
+      other_font = get_score_font_resources(general_font).unicodes
     else
       other_font = get_score_font_resources(font_name).unicodes
     end
     local name, char
-    for name, char in get_score_font_unicode_pairs('greciliae') do
+    for name, char in get_score_font_unicode_pairs(general_font) do
       if not string.match(name, '%.') and char >= 0 and string.match(name, glyph_name) then
         local matched_replacement = name..replacement
         if other_font[matched_replacement] ~= nil and other_font[matched_replacement] >= 0 then
-          change_single_score_glyph(name, font_name, matched_replacement)
+          change_single_score_glyph(name, cavum, font_name, matched_replacement)
         end
       end
     end
@@ -988,25 +1008,27 @@ local function change_score_glyph(glyph_name, font_name, replacement)
     if string.match(replacement, '^%.') then
       replacement = glyph_name..replacement
     end
-    change_single_score_glyph(glyph_name, font_name, replacement)
+    change_single_score_glyph(glyph_name, cavum, font_name, replacement)
   end
 end
 
-local function reset_score_glyph(glyph_name)
+local function reset_score_glyph(glyph_name, cavum)
+  cavum = cavum or ''
+  local general_font = general_font_for(cavum)
   if string.match(glyph_name, '%*') then
     glyph_name = '^'..glyph_name:gsub('%*', '.*')..'$'
     local name, char
-    for name, char in get_score_font_unicode_pairs('greciliae') do
+    for name, char in get_score_font_unicode_pairs(general_font) do
       if not string.match(name, '%.') and char >= 0 and string.match(name, glyph_name) then
-        set_common_score_glyph('GreCP'..name, nil, char)
+        set_common_score_glyph('Gre'..cavum..'CP'..name, nil, char)
       end
     end
   else
-    local char = get_score_font_resources("greciliae").unicodes[glyph_name]
+    local char = get_score_font_resources(general_font).unicodes[glyph_name]
     if char == nil then
       err('\nGlyph %s was not found.', glyph_name)
     end
-    set_common_score_glyph('GreCP'..glyph_name, nil, char)
+    set_common_score_glyph('Gre'..cavum..'CP'..glyph_name, nil, char)
   end
 end
 

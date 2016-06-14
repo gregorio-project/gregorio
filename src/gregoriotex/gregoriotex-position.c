@@ -911,8 +911,6 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         case S_PUNCTUM_INCLINATUM_AUCTUS:
         case S_PUNCTUM_INCLINATUM_ASCENDENS:
         case S_PUNCTUM_INCLINATUM_DESCENDENS:
-        case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
-        case S_PUNCTUM_CAVUM_INCLINATUM:
             note->gtex_offset_case = FinalInclinatum;
             break;
         case S_STROPHA:
@@ -928,11 +926,6 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             note->gtex_offset_case = fused_single_note_case(glyph, FinalOriscus,
                     LeadingOriscus);
             break;
-        case S_ORISCUS_CAVUM_ASCENDENS:
-        case S_ORISCUS_CAVUM_DESCENDENS:
-        case S_ORISCUS_CAVUM_DEMINUTUS:
-            note->gtex_offset_case = FinalOriscus;
-            break;
         case S_VIRGA:
             note->gtex_offset_case = InitialVirga;
             break;
@@ -944,7 +937,6 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             }
             break;
         case S_LINEA_PUNCTUM:
-        case S_LINEA_PUNCTUM_CAVUM:
             note->gtex_offset_case = FinalLineaPunctum;
             break;
         case S_LINEA:
@@ -1555,10 +1547,6 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
     switch (first_note->u.note.shape) {
     case S_QUILISMA:
     case S_QUILISMA_QUADRATUM:
-    case S_PUNCTUM_CAVUM:
-    case S_ORISCUS_CAVUM_ASCENDENS:
-    case S_ORISCUS_CAVUM_DESCENDENS:
-    case S_ORISCUS_CAVUM_DEMINUTUS:
     case S_FLAT:
     case S_SHARP:
     case S_NATURAL:
@@ -1588,10 +1576,6 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
             "previous note wasn't a note", return 0);
 
     switch (prev_note->u.note.shape) {
-    case S_PUNCTUM_CAVUM:
-    case S_ORISCUS_CAVUM_ASCENDENS:
-    case S_ORISCUS_CAVUM_DESCENDENS:
-    case S_ORISCUS_CAVUM_DEMINUTUS:
     case S_FLAT:
     case S_SHARP:
     case S_NATURAL:

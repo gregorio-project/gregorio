@@ -496,12 +496,6 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     case S_PUNCTUM_INCLINATUM_AUCTUS:
         fprintf(f, "%c", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
         break;
-    case S_PUNCTUM_CAVUM_INCLINATUM:
-        fprintf(f, "%cr", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
-        break;
-    case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
-        fprintf(f, "%cr<", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
-        break;
     case S_FLAT:
         fprintf(f, "%cx", pitch_letter(note->u.note.pitch));
         break;
@@ -527,16 +521,6 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         fprintf(f, "%co", pitch_letter(note->u.note.pitch));
         /* Note: the DEMINUTUS is also in the liquescentia */
         break;
-    case S_ORISCUS_CAVUM_ASCENDENS:
-        fprintf(f, "%co1r", pitch_letter(note->u.note.pitch));
-        break;
-    case S_ORISCUS_CAVUM_DESCENDENS:
-        fprintf(f, "%co0r", pitch_letter(note->u.note.pitch));
-        break;
-    case S_ORISCUS_CAVUM_DEMINUTUS:
-        fprintf(f, "%cor", pitch_letter(note->u.note.pitch));
-        /* Note: the DEMINUTUS is also in the liquescentia */
-        break;
     case S_QUILISMA:
         if (is_quadratum) {
             fprintf(f, "%cW", pitch_letter(note->u.note.pitch));
@@ -547,14 +531,8 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     case S_LINEA:
         fprintf(f, "%c=", pitch_letter(note->u.note.pitch));
         break;
-    case S_PUNCTUM_CAVUM:
-        fprintf(f, "%cr", pitch_letter(note->u.note.pitch));
-        break;
     case S_LINEA_PUNCTUM:
         fprintf(f, "%cR", pitch_letter(note->u.note.pitch));
-        break;
-    case S_LINEA_PUNCTUM_CAVUM:
-        fprintf(f, "%cr0", pitch_letter(note->u.note.pitch));
         break;
     case S_ORISCUS_SCAPUS_ASCENDENS:
         fprintf(f, "%cO1", pitch_letter(note->u.note.pitch));
@@ -575,6 +553,9 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         fprintf(f, "%c", pitch_letter(note->u.note.pitch));
         break;
         /* LCOV_EXCL_STOP */
+    }
+    if (note->u.note.is_cavum) {
+        fprintf(f, "r");
     }
     switch (note->signs) {
     case _PUNCTUM_MORA:

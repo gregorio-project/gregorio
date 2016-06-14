@@ -961,15 +961,46 @@
   \directlua{gregoriotex.change_score_glyph([[#1]],[[#2]],[[#3]])}%
 }%
 
+% Changes a gregorio cavum code point to a variant glyph
+% #1 = the name of the gregorio code point
+% #2 = font name for the hollow shape
+% #3 = glyph name, glyph variant name (preceded by .), or code point for the hollow shape
+% optional #4 = font name for the hollow shape
+% optional #5 = glyph name, glyph variant name (preceded by .), or code point for the hollow shape
+\def\grechangecavumglyph#1#2#3{%
+  \directlua{gregoriotex.init_variant_font([[#2]], true, [[\the\gre@factor]])}%
+  \directlua{gregoriotex.change_score_glyph([[#1]],[[#2]],[[#3]], [[Hollow]])}%
+  \@ifnextchar[{\gre@changecavumhole{#1}}{}%
+}%
+\def\gre@changecavumhole#1[#2][#3]{%
+  \directlua{gregoriotex.init_variant_font([[#2]], true, [[\the\gre@factor]])}%
+  \directlua{gregoriotex.change_score_glyph([[#1]],[[#2]],[[#3]], [[Hole]])}%
+}%
+
 % Resets a gregorio code point to its default setting
 % #1 = the name of the gregorio code point
 \def\greresetglyph#1{%
   \directlua{gregoriotex.reset_score_glyph([[#1]])}%
 }%
 
+\def\greresetcavumglyph#1{%
+  \directlua{
+    gregoriotex.reset_score_glyph([[#1]], [[Hollow]])
+    gregoriotex.reset_score_glyph([[#1]], [[Hole]])
+  }%
+}%
+
 {%
-  \directlua{gregoriotex.init_variant_font('greciliae', true, [[\the\gre@factor]])}%
-  \directlua{gregoriotex.map_font('greciliae', 'CP')}%
+  \directlua{
+    gregoriotex.init_variant_font('greciliae', true, [[\the\gre@factor]])
+    gregoriotex.init_variant_font('greciliae-hollow', true, [[\the\gre@factor]])
+    gregoriotex.init_variant_font('greciliae-hole', true, [[\the\gre@factor]])
+  }%
+  \directlua{
+    gregoriotex.map_font('greciliae', 'CP')
+    gregoriotex.map_font('greciliae-hollow', 'HollowCP')
+    gregoriotex.map_font('greciliae-hole', 'HoleCP')
+  }%
 }%
 
 \input gregoriotex-chars.tex%
@@ -1719,7 +1750,9 @@
   \directlua{gregoriotex.set_font_factor([[\gre@gregoriofontname]], [[\the\gre@count@temp@two]])}%
   \multiply\gre@count@temp@three by \gre@count@temp@two %
   \global\font\gre@font@music={name:\gre@gregoriofontname} at \the\gre@count@temp@three sp\relax %
-  {\gre@font@music\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]], [[\the\gre@factor]])}}%
+  \global\font\gre@font@music@hollow={name:\gre@gregoriofontname-hollow} at \the\gre@count@temp@three sp\relax %
+  \global\font\gre@font@music@hole={name:\gre@gregoriofontname-hole} at \the\gre@count@temp@three sp\relax %
+  \directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]], [[\the\gre@factor]])}%
   \relax%
 }%
 

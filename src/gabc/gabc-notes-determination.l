@@ -1101,16 +1101,16 @@ Z-  {
         add_bar_as_note(B_DIVISIO_FINALIS);
     }
 r   {
-        gregorio_change_shape(current_note, S_PUNCTUM_CAVUM,
-                legacy_oriscus_orientation);
+        gregorio_add_cavum(current_note);
     }
 R   {
         gregorio_change_shape(current_note, S_LINEA_PUNCTUM,
                 legacy_oriscus_orientation);
     }
 r0  {
-        gregorio_change_shape(current_note, S_LINEA_PUNCTUM_CAVUM,
+        gregorio_change_shape(current_note, S_LINEA_PUNCTUM,
                 legacy_oriscus_orientation);
+        gregorio_add_cavum(current_note);
     }
 r1  {
         gregorio_add_special_sign(current_note, _ACCENTUS);

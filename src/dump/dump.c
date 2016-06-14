@@ -353,6 +353,9 @@ void dump_write_score(FILE *f, gregorio_score *score)
                                 glyph->u.notes.glyph_type,
                                 gregorio_glyph_type_to_string(glyph->u.notes.
                                                               glyph_type));
+                        if (glyph->u.notes.is_cavum) {
+                            fprintf(f, "       is_cavum              true\n");
+                        }
                         if (glyph->u.notes.liquescentia) {
                             fprintf(f, "       liquescentia          %d (%s)\n",
                                     glyph->u.notes.liquescentia,
@@ -390,6 +393,9 @@ void dump_write_score(FILE *f, gregorio_score *score)
                                             note->u.note.shape,
                                             gregorio_shape_to_string(
                                                     note->u.note.shape));
+                                }
+                                if (note->u.note.is_cavum) {
+                                    fprintf(f, "         is_cavum               true\n");
                                 }
                                 if (note->u.note.liquescentia) {
                                     fprintf(f, "         liquescentia           %d (%s)\n",
