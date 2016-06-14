@@ -466,6 +466,36 @@ form, use the following:\par\medskip
   \greresetglyph{TorculusResupinus*}
 \end{latexcode}
 
+\macroname{\textbackslash grechangecavumglyph}{\{\#1\}\{\#2\}\{\#3\}[\optional{\#4}][\optional{\#5}]}{gregoriotex-main.tex}
+Substitutes the given Gregorio\TeX\ score cavum glyphs with the specified glyphs
+from the specified font.
+
+\begin{argtable}
+  \#1 & string & The name of the Gregorio\TeX\ glyph to replace.\\
+  \#2 & string & The name of the font to use for the cavum glyph.\\
+  \#3 & number & The code point of the cavum glyph to use.\\
+  & \texttt{.}string & The name of the variant (appended to \#1) to use for the cavum glyph.\\
+  & string & (any other string) The name of the cavum glyph to use.\\
+  \#4 & string & The name of the font to use for the glyph to fill in the cavum hole.\\
+  \#5 & number & The code point of the glyph to use to fill in the cavum hole.\\
+  & \texttt{.}string & The name of the variant (appended to \#1) to use to fill in the the cavum hole.\\
+  & string & (any other string) The name of the glyph to use to fill in the cavum hole.\\
+\end{argtable}
+
+\textbf{Nota Bene:} The usage of wildcards (\texttt{*}s) for \texttt{\#1},
+\texttt{\#2}, and \texttt{\#4} is similar to \verb=\grechangeglyph=.
+
+\macroname{\textbackslash greresetcavumglyph}{\{\#1\}}{gregoriotex-main.tex}
+Removes a pair of Gregorio\TeX\ score cavum glyph substitution, restoring them
+back to their original form.
+
+\begin{argtable}
+  \#1 & string & The name of the Gregorio\TeX\ cavum glyph to restore.\\
+\end{argtable}
+
+\textbf{Nota Bene:} The usage of wildcards (\texttt{*}s) for \texttt{\#1} is
+similar to \verb=\greresetcavumglyph=.
+
 \macroname{\textbackslash gredefsymbol}{\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-symbols.tex}
 Defines (or redefines) a \TeX\ control sequence to be a non-score symbol.
 If defined this way, the symbol will scale with the text font.

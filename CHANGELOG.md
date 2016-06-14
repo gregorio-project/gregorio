@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 [Unreleased][unreleased]
+### Added
+- More cavum shapes are now available.  To use them, simply add `r` in gabc to any note in a glyph.  See [#844](https://github.com/gregorio-project/gregorio/issues/844).
+
+### Removed
+- The gregorio and granapadano fonts are no longer distributed with the Gregorio distribution archive.  They will now be available for download separately (along with optional Dominican "-op" variants).  ***If there are other logistics, put them here or delete this statement before release.***  See [UPGRADE.md](UPGRADE.md) and [#844](https://github.com/gregorio-project/gregorio/issues/844) for details.
 
 
 ## [4.2.0-rc1] - 2016-05-31

@@ -171,6 +171,19 @@ defined and re-defined by the \verb=\gresetgregoriofont= macro.
 \macroname{\textbackslash GreCP...}{}{gregoriotex-main.tex}
 A class of macros which point to the individual characters in a Gregoiro\TeX\ compatible font.  This class of macros is dynamically mapped from the glyph names embedded in the \texttt{ttf} file via a Lua script to ensure that the code points match up with the installed font.
 
+\macroname{\textbackslash GreHollowCP...}{}{gregoriotex-main.tex}
+A class of macros which point to the individual characters in a Gregoiro\TeX\ compatible cavum neume font.  This class of macros is dynamically mapped from the glyph names embedded in the \texttt{ttf} file via a Lua script to ensure that the code points match up with the installed font.
+
+\macroname{\textbackslash GreHoleCP...}{}{gregoriotex-main.tex}
+A class of macros which point to the individual characters in a Gregoiro\TeX\ compatible cavum neume hole font.  This class of macros is dynamically mapped from the glyph names embedded in the \texttt{ttf} file via a Lua script to ensure that the code points match up with the installed font.
+
+\macroname{\textbackslash GreCavum}{\#1}{gregoriotex-signs.tex}
+Typesets a cavum glyph.
+
+\begin{argtable}
+  \#1 & string & The name of the cavum glyph.\\
+\end{argtable}
+
 \macroname{\textbackslash GreCustos}{\#1\#2}{gregoriotex-signs.tex}
 Typesets a custos.
 
@@ -577,27 +590,6 @@ Indicates that this syllable is the last syllable before a EUOUAE block.
       & \texttt{1} & There is a line break between this syllable and the beginning of the EUOUAE block.\\
 \end{argtable}
 
-\macroname{\textbackslash GreLinea}{\#1\#2\#3}{gregoriotex-signs.tex}
-Macro for typesetting a linea.
-
-\begin{argtable}
-  \#1 & length  & Argument \#2 from \verb=\GreGlyph=. Height to raise the glyph.\\
-  \#2 & length  & Argument \#3 from \verb=\GreGlyph=. Height of the next note.\\
-  \#3 & integer & Argument \#4 from \verb=\GreGlyph=. The type of glyph.\\
-\end{argtable}
-
-\macroname{\textbackslash GreLineaPunctumCavum}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
-Macro to typeset a linea punctum cavum.
-
-\begin{argtable}
-  \#1 & length  & Argument \#2 from \verb=\GreGlyph=. Height to raise the glyph.\\
-  \#2 & length  & Argument \#3 from \verb=\GreGlyph=. Height of the next note.\\
-  \#3 & integer & Argument \#4 from \verb=\GreGlyph=. The type of glyph.\\
-  \#4 & \TeX\ code    & Macros executed before the punctum cavum is written.\\
-  \#5 & character & Argument \#5 from \verb=\GreGlyph=. The signs to typeset before the glyph.\\
-  \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled.
-\end{argtable}
-
 \macroname{\textbackslash GreLowChoralSign}{\#1\#2\#3}{gregoriotex-signs.tex}
 Macro for typesetting low choral signs.
 
@@ -660,42 +652,6 @@ Indicates that the syllable which follows begins a EUOUAE block.
       & \texttt{1} & There is a line break between this syllable and the beginning of the EUOUAE block.\\
 \end{argtable}
 
-\macroname{\textbackslash GreAscendensOriscus}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
-Macro to typeset an ascending oriscus cavum (the oriscus points at a higher note).
-
-\begin{argtable}
-  \#1 & length  & Argument \#2 from \verb=\GreGlyph=. Height to raise the glyph.\\
-  \#2 & length  & Argument \#3 from \verb=\GreGlyph=. Height of the next note.\\
-  \#3 & integer & Argument \#4 from \verb=\GreGlyph=. The type of glyph.\\
-  \#4 & \TeX\ code & Macros executed before the oriscus cavum is written.\\
-  \#5 & character & Argument \#5 from \verb=\GreGlyph=. The signs to typeset before the glyph.\\
-  \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled.
-\end{argtable}
-
-\macroname{\textbackslash GreDescendensOriscusCavum}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
-Macro to typeset a descending oriscus cavum (the oriscus points at a lower note).
-
-\begin{argtable}
-  \#1 & length  & Argument \#2 from \verb=\GreGlyph=. Height to raise the glyph.\\
-  \#2 & length  & Argument \#3 from \verb=\GreGlyph=. Height of the next note.\\
-  \#3 & integer & Argument \#4 from \verb=\GreGlyph=. The type of glyph.\\
-  \#4 & \TeX\ code & Macros executed before the oriscus cavum is written.\\
-  \#5 & character & Argument \#5 from \verb=\GreGlyph=. The signs to typeset before the glyph.\\
-  \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled.
-\end{argtable}
-
-\macroname{\textbackslash GreOriscusCavumDeminutus}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
-Macro to typeset a reverse oriscus cavum with a deminutus tail.
-
-\begin{argtable}
-  \#1 & length  & Argument \#2 from \verb=\GreGlyph=. Height to raise the glyph.\\
-  \#2 & length  & Argument \#3 from \verb=\GreGlyph=. Height of the next note.\\
-  \#3 & integer & Argument \#4 from \verb=\GreGlyph=. The type of glyph.\\
-  \#4 & \TeX\ code & Macros executed before the oriscus cavum is written.\\
-  \#5 & character & Argument \#5 from \verb=\GreGlyph=. The signs to typeset before the glyph.\\
-  \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled.
-\end{argtable}
-
 \macroname{\textbackslash GreOverBrace}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
 Macro to typeset a round brace above the lines.
 
@@ -718,42 +674,6 @@ Macro to typeset a curly brace above the lines.
   & \texttt{1} & Shift back a punctum's width before starting the brace.\\
   \#5 & \texttt{0} & No accentus above the brace.\\
   & \texttt{1} & Typeset an accentus above the brace.
-\end{argtable}
-
-\macroname{\textbackslash GrePunctumCavum}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
-Macro to typeset a punctum cavum.
-
-\begin{argtable}
-  \#1 & length  & Argument \#2 from \verb=\GreGlyph=. Height to raise the glyph.\\
-  \#2 & length  & Argument \#3 from \verb=\GreGlyph=. Height of the next note.\\
-  \#3 & integer & Argument \#4 from \verb=\GreGlyph=. The type of glyph.\\
-  \#4 & \TeX\ code & Macros executed before the punctum cavum is written.\\
-  \#5 & character & Argument \#5 from \verb=\GreGlyph=. The signs to typeset before the glyph.\\
-  \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled.
-\end{argtable}
-
-\macroname{\textbackslash GrePunctumCavumInclinatum}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
-Macro to typeset a punctum cavum inclinatus.
-
-\begin{argtable}
-  \#1 & length  & Argument \#2 from \verb=\GreGlyph=. Height to raise the glyph.\\
-  \#2 & length  & Argument \#3 from \verb=\GreGlyph=. Height of the next note.\\
-  \#3 & integer & Argument \#4 from \verb=\GreGlyph=. The type of glyph.\\
-  \#4 & \TeX\ code & Macros executed before the punctum cavum is written.\\
-  \#5 & character & Argument \#5 from \verb=\GreGlyph=. The signs to typeset before the glyph.\\
-  \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled.
-\end{argtable}
-
-\macroname{\textbackslash GrePunctumCavumInclinatumAuctus}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
-Macro to typeset a punctum cavum inclinatus auctus.
-
-\begin{argtable}
-  \#1 & length  & Argument \#2 from \verb=\GreGlyph=. Height to raise the glyph.\\
-  \#2 & length  & Argument \#3 from \verb=\GreGlyph=. Height of the next note.\\
-  \#3 & integer & Argument \#4 from \verb=\GreGlyph=. The type of glyph.\\
-  \#4 & \TeX\ code & Macros executed before the punctum cavum is written.\\
-  \#5 & character & Argument \#5 from \verb=\GreGlyph=. The signs to typeset before the glyph.\\
-  \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled.
 \end{argtable}
 
 \macroname{\textbackslash GrePunctumMora}{\#1\#2\#3\#4}{gregoriotex-signs.tex}

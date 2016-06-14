@@ -930,20 +930,6 @@ Macro for defining the various types of horizontal episema porrectus.
   \#2 & string & Camel case name of horizontal episema porrectus to be defined\\
 \end{argtable}
 
-\macroname{\textbackslash gre@char@cavum}{\#1\#2\#3\#4\#5\#6\#7\#8}{gregoriotex-signs.tex}
-Macro to typeset a “cavum” character.
-
-\begin{argtable}
-  \#1 & length  & Argument \#2 from \verb=\GreGlyph=. Height to raise the glyph.\\
-  \#2 & length  & Argument \#3 from \verb=\GreGlyph=. Height of the next note.\\
-  \#3 & integer & Argument \#4 from \verb=\GreGlyph=. The type of glyph.\\
-  \#4 & \TeX\ code    & Macros executed before the punctum cavum is written.\\
-  \#5 & character & Argument \#5 from \verb=\GreGlyph=. The signs to typeset before the glyph.\\
-  \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled.\\
-  \#7 & control sequence & The control sequence for the glyph.\\
-  \#8 & control sequence & The control sequence for the hole glyph.
-\end{argtable}
-
 \macroname{\textbackslash gre@get@spaceskip}{\#1}{gregoriotex-signs.tex}
 Loads \verb=\gre@skip@temp@four= with the appropriate rubber length given the
 desired case.
@@ -1300,6 +1286,9 @@ Macro to typeset a punctum mora.
   & 0 & other cases\\
 \end{argtable}
 
+\macroname{\textbackslash gre@changecavumhole}{\#1[\#2][\#3]}{gregoriotex-main.tex}
+Macro used by \verb=\grechangecavumglyph= to handle the optional arguments.
+
 
 \subsection{Auxiliary File}
 Gregorio\TeX\ creates its own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.
@@ -1326,6 +1315,12 @@ Gregorio\TeX\ loads a number of fonts which are referred to by the following mac
 
 \macroname{\textbackslash gre@font@music}{}{gregoriotex-main.tex}
 The font for the neumes and other principle score elements.
+
+\macroname{\textbackslash gre@font@music@hollow}{}{gregoriotex-main.tex}
+The font for cavum neumes.
+
+\macroname{\textbackslash gre@font@music@hole}{}{gregoriotex-main.tex}
+The font for cavum neume holes.
 
 \macroname{\textbackslash gre@font@style}{}{gregoriotex-main.tex}
 The font for some of the extra characters, such as the bar for barred letters.
@@ -1363,18 +1358,6 @@ The sharp character.
 
 \macroname{\textbackslash gre@fontchar@sharphole}{}{gregoriotex-chars.tex}
 The sharp hole character (\ie, the character needed to prevent lines from showing through the center of the sharp).
-
-\macroname{\textbackslash gre@fontchar@punctumcavum}{}{gregoriotex-signs.tex}
-The punctum cavum character.
-
-\macroname{\textbackslash gre@fontchar@punctumcavumhole}{}{gregoriotex-signs.tex}
-The punctum cavum hole character (\ie, the character needed to prevent lines from showing through the center of the punctum cavum).
-
-\macroname{\textbackslash gre@fontchar@lineapunctumcavum}{}{gregoriotex-signs.tex}
-The linea punctum cavum character.
-
-\macroname{\textbackslash gre@fontchar@lineapunctumcavumhole}{}{gregoriotex-signs.tex}
-The linea punctum cavum hole character (\ie, the character needed to prevent lines from showing through the center of the linea punctum cavum).
 
 \macroname{\textbackslash gre@fontchar@incclef}{}{gregoriotex-chars.tex}
 The \texttt{c}-clef which appears in the middle of a line.
