@@ -67,9 +67,7 @@ FILEVERSION=`echo $VERSION | sed 's/\./_/g'`
 TEXFILES=(tex/gregoriotex*.tex tex/gsp-default.tex tex/gregoriotex*.lua
           tex/*.dat)
 LATEXFILES=(tex/gregorio*.sty)
-TTFFILES=(gregorio.ttf greciliae.ttf granapadano.ttf gregorio-op.ttf
-          greciliae-op.ttf granapadano-op.ttf greextra.ttf gregall.ttf
-          gresgmodern.ttf)
+TTFFILES=(fonts/*.ttf)
 DOCFILES=(doc/Appendix*.tex doc/Command*.tex doc/Gabc.tex
           doc/*Ref.tex doc/*Ref.lua doc/*.gabc
           doc/Gregorio*Ref.pdf)
@@ -96,7 +94,6 @@ KPSEWHICH=${KPSEWHICH:-kpsewhich}
 CP=${CP:-cp}
 RM=${RM:-rm}
 
-TTFFILES=("${TTFFILES[@]/#/fonts/}")
 FONTSRCFILES=("${FONTSRCFILES[@]/#/fonts/}")
 
 arg="$1"
