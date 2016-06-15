@@ -327,6 +327,7 @@
     \gre@penalty{-10001}%
   \fi %
   \gre@adjustlineifnecessary\relax %
+  %%
   \gre@reseteolcustos\relax %
 }%
 
@@ -405,6 +406,7 @@
 \def\gre@updatelinewidth{%
   \gre@debugmsg{ifdim}{ additionalleftspace = 0pt}%
   \ifdim\gre@dimen@additionalleftspace=0pt\relax%
+    \gre@generatelines %
   \else %
     \gre@dimen@temp@five=\gre@dimen@stafflinewidth\relax%
     \global\advance\gre@dimen@stafflinewidth by -\gre@dimen@additionalleftspace\relax%
