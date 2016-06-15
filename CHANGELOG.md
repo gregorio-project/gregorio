@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 [Unreleased][unreleased]
+### Fixed
+- A two-line initial on a two-line score no longer generates an error (see [#1139](https://github.com/gregorio-project/gregorio/issues/1139)).
+- Staff lines after a two-line initial should now be sized correctly in a more consistent way (see [#1141](https://github.com/gregorio-project/gregorio/issues/1141)).
 
 
 ## [4.2.0-rc1] - 2016-05-31

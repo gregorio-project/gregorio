@@ -639,6 +639,9 @@ Macro to call if you want to go to the next line.
 \macroname{\textbackslash GreNewParLine}{}{gregoriotex-main.tex}
 Same as \verb=\GreNewLine= except line is not justified.
 
+\macroname{\textbackslash GreFinalNewLine}{}{gregoriotex-main.tex}
+Handles a new line after the final bar.  This currently just advances \verb=\gre@knownline= in order to prevent a potential error message with a two-line initial on a two-line score.
+
 \macroname{\textbackslash GreNextCustos}{\#1\#2}{gregoriotex-signs.tex}
 Sets the pitch to use for the next custos if it were to happen at the point
 where this macro is called.
