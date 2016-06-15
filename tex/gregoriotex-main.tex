@@ -279,6 +279,12 @@
   \relax%
 }%
 
+
+% Eliminates the error for big initials where the second new line is at the end of the score
+\def\GreFinalNewLine{%
+  \global\advance\gre@knownline by 1\relax %
+}%
+
 % the macro we call each time we force a changing of line, it automatically sets \gre@knownline, and adjusts left spaces
 % #1 is 0 in case of gabc z, 1 for Z
 % #2 is 0 in the normal case, 1 after a bar in the new spacing algorithm

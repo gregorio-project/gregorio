@@ -3319,6 +3319,10 @@ static void handle_final_bar(FILE *f, const char *type, gregorio_syllable *sylla
                     pitch_value(element->u.misc.pitched.pitch));
             break;
 
+        case GRE_END_OF_LINE:
+            fprintf(f, "\\GreFinalNewLine%%\n");
+            break;
+
         default:
             /* do nothing */
             break;
