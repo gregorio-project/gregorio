@@ -1128,7 +1128,9 @@
 
 %a macro to typeset a syllable with only a bar inside
 \def\GreBarSyllable#1#2#3#4#5#6#7#8#9{%
+  \gre@debugmsg{general}{}%
   \gre@debugmsg{general}{New bar syllable}%
+  \gre@debugmsg{general}{}%
   \global\advance\gre@attr@syllable@id by 1\relax %
   \gre@possibleluahyphenafterthissyllablefalse %
   \gre@showhyphenafterthissyllablefalse %
