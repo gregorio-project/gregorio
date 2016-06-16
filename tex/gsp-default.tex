@@ -22,51 +22,50 @@
 %% First, the penalties
 
 % penalty to force a break on a new line
-\xdef\grenewlinepenalty{-10001}%
+\grechangecount{newlinepenalty}{-10001}%
 % penalty to prevent a line break
-\xdef\grenobreakpenalty{10001}%
+\grechangecount{nobreakpenalty}{10001}%
 % penalty at the end of a syllable which is the end of a word
-\xdef\greendofwordpenalty{-100}%
+\grechangecount{endofwordpenalty}{-100}%
 % penalty at the end of a syllable which is not the end of a word
-\xdef\greendofsyllablepenalty{-50}%
+\grechangecount{endofsyllablepenalty}{-50}%
 % penalty at the end of a syllable which is just a bar, with something printed
 % under it
-\xdef\greendafterbarpenalty{-200}%
+\grechangecount{endafterbarpenalty}{-200}%
 % penalty right after a bar with nothing printed
-\xdef\greendafterbaraltpenalty{-200}%
+\grechangecount{endafterbaraltpenalty}{-200}%
 % penalty at the end of the score
-\xdef\grefinalpenalty{0}%
+\grechangecount{finalpenalty}{0}%
 % penalty at the end of a breakable neumatic element (typically at a space
 % between elements)
-\xdef\greendofelementpenalty{-50}%
+\grechangecount{endofelementpenalty}{-50}%
 % hyphenpenalty will be used in discretionaries, in Gregorio this is used for
 % a bar with clef change for example. It also set \exhyphenpenalty. It should
-% be close to \greendafterbarpenalty
-\xdef\grehyphenpenalty{-200}%
+% be close to endafterbarpenalty
+\grechangecount{hyphenpenalty}{-200}%
 % broken penalty is the vertical penalty inserted after a break on a clef change
 % I'm not sure it should be set, but it might be useful...
-\xdef\grebrokenpenalty{0}%
+\grechangecount{brokenpenalty}{0}%
 
 %% These macro enable the tuning of linepenalty, tolerance, pretolerance
 %% and emergencystretch
-\def\grelooseness{-1}%
-\def\gretolerance{9000}%
+\grechangecount{looseness}{-1}%
+\grechangecount{tolerance}{9000}%
 % Workaround for bug 842 (http://tracker.luatex.org/view.php?id=842)
 % see http://tug.org/pipermail/luatex/2013-July/004516.html
 % The idea is that we use discretionaries (explicit hyphens, though more than hyphens in our case) for clef changes, and we need to give them a special penalty, which is not taken into account if pretolerance is > -1 on LuaTeX < 0.80. For a more detailed explanation see http://tug.org/pipermail/luatex/2013-July/004516.html.
 \ifnum\the\luatexversion < 78\relax %
-  \global\def\grepretolerance{-1}%
+  \grechangecount{pretolerance}{-1}%
 \else %
-  \global\def\grepretolerance{\pretolerance}%
+  \grechangecount{pretolerance}{\the\pretolerance}%
 \fi %
-\def\greemergencystretch{\emergencystretch}%
+\grecreatedim{emergencystretch}{\the\emergencystretch}{scalable}%
 % By default, we don't care if a line of score is alone on the page,
 % if you think it is bad, you can modify the two following values. Assigning
 % 10000 to them will prevent all orphaned lines (this will certainly improve
 % some spacings a lot).
-\def\grewidowpenalty{0}%
-\def\greclubpenalty{0}%
-
+\grechangecount{widowpenalty}{0}%
+\grechangecount{clubpenalty}{0}%
 
 
 %%%%%%%%%%%%%%%%%%%
@@ -109,7 +108,7 @@
 % space between elements which has the size of a note
 \grecreatedim{glyphspace}{0.21877 cm plus 0.01822 cm minus 0.01822 cm}{scalable}%
 % space before in-line custos
-\grecreatedim{spacebeforeinlinecustos}{0 cm plus 0 cm minus 0 cm}{scalable}%
+\grecreatedim{spacebeforeinlinecustos}{0.10938 cm plus 0.01822 cm minus 0.00911 cm}{scalable}%
 % space before end-of-line custos
 \grecreatedim{spacebeforeeolcustos}{0.3 cm plus 0 cm minus 0 cm}{scalable}%
 % space before punctum mora and augmentum duplex
@@ -131,12 +130,11 @@
 % stretching added in the case where the text of two syllables of the same word are
 % separated with an automatic hyphen
 \grecreatedim{intersyllablespacestretchhyphen}{0cm plus 0.05cm}{scalable}%
-% minimal space between letters of different words. Makes sense to have
-% the same plus and minus as interwordspacenotes.
-\grecreatedim{interwordspacetext}{0.38 cm plus 0.15 cm minus 0.05 cm}{scalable}%
+% minimal space between letters of different words.
+\grecreatedim{interwordspacetext}{1ex plus 0.15cm minus 0.05cm}{fixed}%
 % Versions of interword spaces for euouae blocks
 \grecreatedim{interwordspacenotes@euouae}{0.19 cm plus 0.1 cm minus 0.05 cm}{scalable}%
-\grecreatedim{interwordspacetext@euouae}{0.27 cm plus 0.1 cm minus 0.05 cm}{scalable}%
+\grecreatedim{interwordspacetext@euouae}{0.8ex plus 01.cm minus 0.05cm}{fixed}%
 % versions of note spaces when the first note of the second syllable is an alteration
 % those are used in euouae blocks
 \grecreatedim{interwordspacenotes@alteration}{0.1 cm plus 0.07 cm minus 0.01 cm}{scalable}%
@@ -152,6 +150,8 @@
 %
 % space between two punctum inclinatum
 \grecreatedim{punctuminclinatumshift}{-0.03918 cm plus 0.0009 cm minus 0.0009 cm}{scalable}%
+% space between two unison punctum inclinatum
+\grecreatedim{punctuminclinatumunisonshift}{0.05286 cm plus 0.00728 cm minus 0.00455 cm}{scalable}%
 % space before puncta inclinata
 \grecreatedim{beforepunctainclinatashift}{0.05286 cm plus 0.00728 cm minus 0.00455 cm}{scalable}%
 % space between a punctum inclinatum and a punctum inclinatum deminutus
@@ -163,13 +163,13 @@
 % space between puncta inclinata, larger ambitus (range=4th or 5th)
 \grecreatedim{punctuminclinatummaxshift}{0.17865 cm plus 0.0009 cm minus 0.0009 cm}{scalable}%
 % space between two ascending punctum inclinatum
-\grecreatedim{ascendingpunctuminclinatumshift}{-0.07918 cm plus 0.0009 cm minus 0.0009 cm}{scalable}%
+\grecreatedim{ascendingpunctuminclinatumshift}{-0.03918 cm plus 0.0009 cm minus 0.0009 cm}{scalable}%
 % space between a punctum inclinatum and a punctum inclinatum deminutus, ascending
-\grecreatedim{ascendingpunctuminclinatumanddebilisshift}{-0.06278 cm plus 0.0009 cm minus 0.0009 cm}{scalable}%
+\grecreatedim{ascendingpunctuminclinatumanddebilisshift}{-0.02278 cm plus 0.0009 cm minus 0.0009 cm}{scalable}%
 % space between ascending puncta inclinata, larger ambitus (range=3rd)
-\grecreatedim{ascendingpunctuminclinatumbigshift}{-0.00435 cm plus 0.0009 cm minus 0.0009 cm}{scalable}%
+\grecreatedim{ascendingpunctuminclinatumbigshift}{0.07565 cm plus 0.0009 cm minus 0.0009 cm}{scalable}%
 % space between ascending puncta inclinata, larger ambitus (range=4th or 5th)
-\grecreatedim{ascendingpunctuminclinatummaxshift}{0.09865 cm plus 0.0009 cm minus 0.0009 cm}{scalable}%
+\grecreatedim{ascendingpunctuminclinatummaxshift}{0.17865 cm plus 0.0009 cm minus 0.0009 cm}{scalable}%
 % space between a punctum inclinatum and a no-bar glyph one pitch below
 \grecreatedim{descendinginclinatumtonobarshift}{-0.00073 cm plus 0.00363 cm minus 0.00363 cm}{scalable}%
 % space between a punctum inclinatum and a no-bar glyph two pitches below
@@ -182,6 +182,11 @@
 \grecreatedim{ascendinginclinatumtonobarbigshift}{0.04427 cm plus 0.00363 cm minus 0.00363 cm}{scalable}%
 % space between a punctum inclinatum and a no-bar glyph three or four pitches above
 \grecreatedim{ascendinginclinatumtonobarmaxshift}{0.12927 cm plus 0.00363 cm minus 0.00363 cm}{scalable}%
+% space between two descending punctum inclinatum glyphs in an ascent
+\grecreatedim{descendingpunctuminclinatumascendingshift}{-0.07918 cm plus 0.0009 cm minus 0.0009 cm}{scalable}%
+% space between two ascending punctum inclinatum glyphs in an descent
+\grecreatedim{ascendingpunctuminclinatumdescendingshift}{-0.07918 cm plus 0.0009 cm minus 0.0009 cm}{scalable}%
+
 %
 %%%%%%%%
 % bars %
@@ -223,14 +228,14 @@
 %
 % minimal space between letters of different syllable texts for text around bars
 % (new bar spacing algorithm only)
-\grecreatedim{interwordspacetext@bars}{0.15 cm}{scalable}%
+\grecreatedim{interwordspacetext@bars}{0.7ex}{fixed}%
 % minimal space between letters of different syllable texts for text around bars,
 % euouae context
-\grecreatedim{interwordspacetext@bars@euouae}{0.15 cm}{scalable}%
-\grecreatedim{interwordspacetext@bars@notext}{0.4 cm}{scalable}%
+\grecreatedim{interwordspacetext@bars@euouae}{0.7ex}{fixed}%
+\grecreatedim{interwordspacetext@bars@notext}{1ex}{fixed}%
 % minimal space between letters of different syllable texts for text around bars,
 % euouae context
-\grecreatedim{interwordspacetext@bars@notext@euouae}{0.3 cm}{scalable}%
+\grecreatedim{interwordspacetext@bars@notext@euouae}{0.7ex}{fixed}%
 % rubber length that will be added around bars in new bar spacing algorithm
 \grecreatedim{bar@rubber}{0 cm plus 0.22787 cm minus 0.02 cm}{scalable}%
 % additional space that will appear around bars that are preceded by a custos and followed by a key.
@@ -280,7 +285,7 @@
 % space at the beginning of the lines if there is no clef
 \grecreatedim{noclefspace}{0.1 cm}{scalable}%
 % space around a clef change
-\grecreatedim{clefchangespace}{0.01768 cm plus 0.00175 cm minus 0.01768 cm}{scalable}%
+\grecreatedim{clefchangespace}{0.27345 cm plus 0.14584 cm minus 0.01367 cm}{scalable}%
 % When \gre@clivisalignment is 2, this distance is the maximum length of the consonants after vowels for which the clivis will be aligned on its center.
 \grecreatedim{clivisalignmentmin}{0.3 cm}{scalable}%
 
@@ -352,3 +357,11 @@
 % shift for a rare sign
 \grecreatedim{raresignshift}{0.18302 cm}{scalable}%
 %
+
+%%%%%%%%%%
+%% Line spacings
+%%%%%%%%%%
+\grecreatedim{parskip}{0pt plus 1pt}{scalable}%
+\grecreatedim{lineskip}{1pt}{scalable}%
+\grecreatedim{baselineskip}{14.5pt}{scalable}%
+\grecreatedim{lineskiplimit}{0pt}{scalable}%

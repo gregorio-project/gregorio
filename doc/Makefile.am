@@ -31,30 +31,36 @@ GregorioRef.pdf: $(SRCFILES)
 	../src/gregorio -o factus.gtex $(<D)/factus.gabc
 	TEXINPUTS=$(<D):$(<D)/../tex: LUAINPUTS=$(<D):$(<D)/../tex: \
 		 TTFONTS=$(<D)/../fonts: PATH=../src:${PATH} latexmk -recorder -pdf \
+		 -interaction=nonstopmode -halt-on-error \
 		 -pdflatex='lualatex --shell-escape %O %S' \
-		 -jobname=GregorioRef $<
+		 -jobname=GregorioRef $< || rm $@
 
 GregorioNabcRef.pdf: $(NABCSRCFILES)
 	$(MAKE) $(AM_MAKEFLAGS) -C ../src gregorio
 	../src/gregorio -o veni.gtex $(<D)/veni.gabc
 	TEXINPUTS=$(<D):$(<D)/../tex: LUAINPUTS=$(<D):$(<D)/../tex: \
 		 TTFONTS=$(<D)/../fonts: PATH=../src:${PATH} latexmk -recorder -pdf \
+		 -interaction=nonstopmode -halt-on-error \
 		 -pdflatex='lualatex --shell-escape %O %S' \
-		 -jobname=GregorioNabcRef $<
+		 -jobname=GregorioNabcRef $< || rm $@
 
 doc: GregorioRef.pdf GregorioNabcRef.pdf
 
 pdf-local: doc
 
-distclean-local:
+clean-doc-intermediate:
 	latexmk -quiet -c -f -jobname=GregorioRef GregorioRef.tex
 	latexmk -quiet -c -f -jobname=GregorioNabcRef GregorioNabcRef.tex
-	rm -rf _minted* *.gtex *.aux *.gaux
+	rm -rf _minted* *.gtex *.aux *.gaux *.glog
+
+clean-doc: clean-doc-intermediate
+	rm -rf GregorioRef.pdf
+	rm -rf GregorioNabcRef.pdf
+
+distclean-local: clean-doc-intermediate
+
+maintainer-clean-local: clean-doc
 
 EXTRA_DIST = $(SRCFILES) $(NABCSRCFILES) \
 	     GregorioRef.pdf \
 	     GregorioNabcRef.pdf
-
-maintainer-clean-local:
-	rm -rf GregorioRef*.pdf
-	rm -rf GregorioRef-* GregorioNabcRef-*

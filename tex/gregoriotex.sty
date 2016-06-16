@@ -19,7 +19,7 @@
 
 \NeedsTeXFormat{LaTeX2e}%
 \ProvidesPackage{gregoriotex}%
-    [2016/05/29 v4.1.4 GregorioTeX system.]% PARSE_VERSION_DATE_LTX
+    [2016/05/31 v4.2.0-rc1 GregorioTeX system.]% PARSE_VERSION_DATE_LTX
 
 % If gregoriosyms has been loaded then there are going to be some conflicts in the definitions made in that package and this one.  In order to provide for a more informative error message, we check for that conflict right away
 \ifcsname gregoriotex@symbols@loaded\endcsname\gre@error{Loading gregoriotex after\MessageBreak gregoriosyms is not supported.  Please remove the\MessageBreak loading of gregoriosyms (its contents are loaded\MessageBreak by gregoriotex)}\fi%
@@ -51,6 +51,7 @@
 \let\gre@strip@pt\strip@pt
 
 \long\def\gre@iflatex#1{#1}
+\long\def\gre@ifnotlatex#1{}
 \input gregoriotex-main.tex
 
 %% We declare and process some additional options after loading the package (instead of at the beginning) because the options manipulate flags which are declared in the package.
@@ -74,10 +75,12 @@
 \gresetlinesbehindalteration{invisible}
 \gresetlinesbehindpunctumcavum{invisible}
 
-%% We now redefine some things in a more LaTeX friendly way.
+%%%%%%%%%
+%% Color definitions
+%%%%%%%%%
 
 \definecolor{grebackgroundcolor}{RGB}{255,255,255}%
-\definecolor{gregoriocolor}{RGB}{229,53,44}
+\definecolor{gregoriocolor}{RGB}{229,53,44}%
 
 %%%%%%%%%
 %% LaTeX specific definitions for fonts
@@ -119,23 +122,6 @@
   \gre@changestyle{normalstafflines}{\color[named]{#1}}[\relax]%
 }
 
-\def\grecoloredlines#1#2#3{%OBSOLETE
-  \gre@obsolete{\protect\grecoloredlines}{\protect\gresetlinecolor}%
-}
-
-\def\greredlines{%OBSOLETE
-  \gre@obsolete{\protect\greredlines}{\protect\gresetlinecolor{gregoriocolor}}%
-  \relax %
-}
-
-\let\redlines\greredlines%OBSOLETE
-
-\def\grenormallines{%OBSOLETE
-  \gre@obsolete{\protect\grenormallines}{\protect\gresetlinecolor{black}}%
-  \relax %
-}
-
-\let\normallines\grenormallines%OBSOLETE
 
 %%%%%%%%%%%%%%%%%%%%
 %% Formatting environments
@@ -210,9 +196,15 @@
   {\@@italiccorr\endgroup}%
 
 \newenvironment{gre@style@nabc}%
-  {\begingroup\color{red}}%
+  {\begingroup\color{gregoriocolor}}%
   {\endgroup}%
 
 \def\gre@changestyle#1#2[#3]{%
   \renewenvironment{gre@style@#1}{\begingroup#2}{#3\endgroup}%
 }%
+
+%%%%%%%%%%%%%%%
+%% Default Mode Numbering style
+%%%%%%%%%%%%%%%
+
+\gresetmodenumbersystem{roman-minuscule}%

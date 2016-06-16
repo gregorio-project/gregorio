@@ -7,8 +7,8 @@ FILEVERSION=`echo $VERSION | sed 's/\./_/g'`
 
 rm -rf ctan
 mkdir -p ctan/gregoriotex/
-cp gregoriotex.tds.zip ctan/gregoriotex.tds.zip
-cp gregorio-$VERSION.tar.bz2 ctan/gregoriotex/
+mv gregoriotex.tds.zip ctan/gregoriotex.tds.zip
+mv gregorio-$VERSION.tar.bz2 ctan/gregoriotex/
 cd ctan/gregoriotex
 tar xf gregorio-$VERSION.tar.bz2
 rm gregorio-$VERSION.tar.bz2
@@ -41,5 +41,3 @@ cd ..
 zip -r ../gregoriotex.ctan.zip gregoriotex gregoriotex.tds.zip --exclude=*.DS_Store*
 cd ..
 rm -rf ctan
-rm gregorio-$VERSION.tar.bz2
-rm gregoriotex.tds.zip

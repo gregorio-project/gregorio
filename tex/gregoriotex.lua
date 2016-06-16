@@ -24,13 +24,13 @@ local hpack, traverse, traverse_id, has_attribute, count, remove, insert_after, 
 gregoriotex = gregoriotex or {}
 local gregoriotex = gregoriotex
 
-local internalversion = '4.1.4' -- GREGORIO_VERSION (comment used by VersionManager.py)
+local internalversion = '4.2.0-rc1' -- GREGORIO_VERSION (comment used by VersionManager.py)
 
 local err, warn, info, log = luatexbase.provides_module({
     name               = "gregoriotex",
-    version            = '4.1.4', -- GREGORIO_VERSION
+    version            = '4.2.0-rc1', -- GREGORIO_VERSION
     greinternalversion = internalversion,
-    date               = "2016/05/29", -- GREGORIO_DATE_LTX
+    date               = "2016/05/31", -- GREGORIO_DATE_LTX
     description        = "GregorioTeX module.",
     author             = "The Gregorio Project (see CONTRIBUTORS.md)",
     copyright          = "2008-2015 - The Gregorio Project",
@@ -49,7 +49,7 @@ local whatsit = node.id('whatsit')
 
 local hyphen = tex.defaulthyphenchar or 45
 
-local dash_attr         = luatexbase.attributes['gre@attr@dash']
+local dash_attr = luatexbase.attributes['gre@attr@dash']
 local potentialdashvalue   = 1
 local nopotentialdashvalue = 2
 
@@ -62,17 +62,28 @@ local glyph_top_attr = luatexbase.attributes['gre@attr@glyph@top']
 local glyph_bottom_attr = luatexbase.attributes['gre@attr@glyph@bottom']
 local prev_line_id = nil
 
+local syllable_id_attr = luatexbase.attributes['gre@attr@syllable@id']
+
 local cur_score_id = nil
 local score_inclusion = {}
 local line_heights = nil
 local new_line_heights = nil
 local score_heights = nil
 local new_score_heights = nil
-local var_brace_positions = nil
-local new_var_brace_positions = nil
-local pos_saves = nil
-local new_pos_saves = nil
+local saved_positions = nil
+local saved_lengths = nil
+local new_saved_lengths = nil
+local saved_newline_before_euouae = nil
+local new_saved_newline_before_euouae = nil
+local last_syllables = nil
+local new_last_syllables = nil
+local score_last_syllables = nil
+local new_score_last_syllables = nil
+local state_hashes = nil
+local new_state_hashes = nil
 local auxname = nil
+local snippet_filename = nil
+local snippet_logname = nil
 
 local space_below_staff = 5
 local space_above_staff = 13
@@ -90,6 +101,8 @@ local number_to_letter = {
 }
 
 local capture_header_macro = {}
+local hashed_spaces = {}
+local space_hash = ''
 
 local catcode_at_letter = luatexbase.catcodetables['gre@atletter']
 
@@ -98,7 +111,6 @@ local create_marker = luatexbase.new_user_whatsit('marker', 'gregoriotex')
 local marker_whatsit_id = luatexbase.get_user_whatsit_id('marker', 'gregoriotex')
 local translation_mark = 1
 local abovelinestext_mark = 2
-
 log("marker whatsit id is %d", marker_whatsit_id)
 
 local function mark(value)
@@ -134,38 +146,78 @@ local function keys_changed(tab1, tab2)
   return false
 end
 
-local function heights_changed()
+local function saved_computations_changed(tab1, tab2)
+  local score_ids = {}
+  local id,_
+  for id,_ in pairs(tab1) do
+    score_ids[id] = true
+  end
+  for id,_ in pairs(tab2) do
+    score_ids[id] = true
+  end
+  for id,_ in pairs(score_ids) do
+    local inner1 = tab1[id]
+    local inner2 = tab2[id]
+    if inner1 == nil or inner2 == nil then return true end
+    local keys = {}
+    local index
+    for index,_ in pairs(inner1) do
+      keys[index] = true
+    end
+    for index,_ in pairs(inner2) do
+      keys[index] = true
+    end
+    for index,_ in pairs(keys) do
+      if inner1[index] ~= inner2[index] then return true end
+    end
+  end
+  return false
+end
+
+local function entries_changed(tab1, tab2)
+  local k, v
+  for k, v in pairs(tab1) do
+    if tab2[k] ~= v then return true end
+  end
+  return false
+end
+
+local function is_greaux_write_needed()
   local id, tab
+  if entries_changed(state_hashes, new_state_hashes) or
+      entries_changed(new_state_hashes, state_hashes) then
+    return true
+  end
   for id, tab in pairs(new_line_heights) do
     if keys_changed(tab, line_heights[id]) then return true end
   end
   for id, tab in pairs(line_heights) do
     if keys_changed(tab, new_line_heights[id]) then return true end
   end
-  for id, tab in pairs(new_var_brace_positions) do
-    if keys_changed(tab, var_brace_positions[id]) then return true end
+  for id, tab in pairs(new_last_syllables) do
+    if keys_changed(tab, last_syllables[id]) then return true end
   end
-  for id, tab in pairs(var_brace_positions) do
-    if keys_changed(tab, new_var_brace_positions[id]) then return true end
+  for id, tab in pairs(last_syllables) do
+    if keys_changed(tab, new_last_syllables[id]) then return true end
   end
-  for id, tab in pairs(new_pos_saves) do
-    if keys_changed(tab, pos_saves[id]) then return true end
+  if saved_computations_changed(saved_lengths, new_saved_lengths) then
+    return true
   end
-  for id, tab in pairs(pos_saves) do
-    if keys_changed(tab, new_pos_saves[id]) then return true end
+  if saved_computations_changed(saved_newline_before_euouae, new_saved_newline_before_euouae) then
+    return true
   end
   return false
 end
 
 local function write_greaux()
-  if heights_changed() then
+  if is_greaux_write_needed() then
     -- only write this if heights change; since table ordering is not
     -- predictable, this ensures a steady state if the heights are unchanged.
     local aux = io.open(auxname, 'w')
     if aux then
       log("Writing %s", auxname)
+      local id, tab, id2, line, value
       aux:write('return {\n ["line_heights"]={\n')
-      local id, tab, id2, line
       for id, tab in pairs(new_line_heights) do
         aux:write(string.format('  ["%s"]={\n', id))
         for id2, line in pairs(tab) do
@@ -174,28 +226,45 @@ local function write_greaux()
         end
         aux:write('  },\n')
       end
-      aux:write(' },\n ["var_brace_positions"]={\n')
-      for id, tab in pairs(new_var_brace_positions) do
+      aux:write(' },\n ["last_syllables"]={\n')
+      for id, tab in pairs(new_last_syllables) do
         aux:write(string.format('  ["%s"]={\n', id))
-        for id2, line in pairs(tab) do
-          if line[1] ~= nil and line[2] ~= nil then
-            aux:write(string.format('   [%d]={%d,%d},\n', id2, line[1],
-                line[2]))
+        for id2, value in pairs(tab) do
+          if id2 == 'state' then
+            aux:write(string.format('   state="%s",\n', value))
+          else
+            aux:write(string.format('   [%d]=%d,\n', id2, value))
           end
         end
         aux:write('  },\n')
       end
-      aux:write(' },\n ["pos_saves"]={\n')
-      for id, tab in pairs(new_pos_saves) do
+      aux:write(' },\n ["saved_lengths"]={\n')
+      for id, tab in pairs(new_saved_lengths) do
         aux:write(string.format('  ["%s"]={\n', id))
-        for id2, line in pairs(tab) do
-          if line[1] ~= nil and line[2] ~= nil and line[3] ~= nil and
-              line[4] ~= nil then
-            aux:write(string.format('   [%d]={%d,%d,%d,%d},\n', id2, line[1],
-                line[2], line[3], line[4]))
+        for id2, value in pairs(tab) do
+          if value ~= nil then
+            aux:write(string.format('   [%d]=%d,\n', id2, value))
           end
         end
         aux:write('  },\n')
+      end
+      aux:write(' },\n ["saved_newline_before_euouae"]={\n')
+      for id, tab in pairs(new_saved_newline_before_euouae) do
+        aux:write(string.format('  ["%s"]={\n', id))
+        for id2, value in pairs(tab) do
+          if value ~= nil then
+            if value then
+              aux:write(string.format('   [%d]=true,\n', id2))
+            else
+              aux:write(string.format('   [%d]=false,\n', id2))
+            end
+          end
+        end
+        aux:write('  },\n')
+      end
+      aux:write(' },\n ["state_hashes"]={\n')
+      for id, value in pairs(new_state_hashes) do
+        aux:write(string.format('  ["%s"]="%s",\n', id, value))
       end
       aux:write(' },\n}\n')
       aux:close()
@@ -221,8 +290,12 @@ local function init(arg, enable_height_computation)
   end
   if outputdir and lfs.isdir(outputdir) then
     auxname = outputdir..'/'..tex.jobname..'.gaux'
+    snippet_filename = outputdir..'/'..tex.jobname..'.gsnippet'
+    snippet_logname = outputdir..'/'..tex.jobname..'.gsniplog'
   else
     auxname = tex.jobname..'.gaux'
+    snippet_filename = tex.jobname..'.gsnippet'
+    snippet_logname = tex.jobname..'.gsniplog'
   end
 
   -- to get latexmk to realize the aux file is a dependency
@@ -231,16 +304,22 @@ local function init(arg, enable_height_computation)
     log("Reading %s", auxname)
     local score_info = dofile(auxname)
     line_heights = score_info.line_heights or {}
-    var_brace_positions = score_info.var_brace_positions or {}
-    pos_saves = score_info.pos_saves or {}
+    last_syllables = score_info.last_syllables or {}
+    state_hashes = score_info.state_hashes or {}
+    saved_lengths = score_info.saved_lengths or {}
+    saved_newline_before_euouae = score_info.saved_newline_before_euouae or {}
   else
     line_heights = {}
-    var_brace_positions = {}
-    pos_saves = {}
+    last_syllables = {}
+    state_hashes = {}
+    saved_lengths = {}
+    saved_newline_before_euouae = {}
   end
 
   if enable_height_computation then
     new_line_heights = {}
+    new_last_syllables = {}
+    new_state_hashes = {}
 
     local mcb_version = luatexbase.get_module_version and
         luatexbase.get_module_version('luatexbase-mcb') or 9999
@@ -262,8 +341,9 @@ local function init(arg, enable_height_computation)
         'line heights.  Remove or undefine \\greskipheightcomputation to '..
         'resume height computation.')
   end
-  new_var_brace_positions = {}
-  new_pos_saves = {}
+  saved_positions = {}
+  new_saved_lengths = {}
+  new_saved_newline_before_euouae = {}
 end
 
 -- node factory
@@ -347,7 +427,7 @@ end
 
 -- in each function we check if we really are inside a score,
 -- which we can see with the dash_attr being set or not
-local function process (h, groupcode, glyphes)
+local function post_linebreak(h, groupcode, glyphes)
   -- TODO: to be changed according to the font
   local lastseennode            = nil
   local adddash                 = false
@@ -360,6 +440,7 @@ local function process (h, groupcode, glyphes)
   local line_has_translation    = false
   local line_has_abovelinestext = false
   local linenum                 = 0
+  local syl_id                  = nil
   -- we explore the lines
   for line in traverse(h) do
     if line.id == glue then
@@ -384,6 +465,7 @@ local function process (h, groupcode, glyphes)
         line_has_translation = false
         line_has_abovelinestext = false
         for n in traverse_id(hlist, line.head) do
+          syl_id = has_attribute(n, syllable_id_attr) or syl_id
           if has_attribute(n, center_attr, startcenter) then
             centerstartnode = n
           elseif has_attribute(n, center_attr, endcenter) then
@@ -453,6 +535,9 @@ local function process (h, groupcode, glyphes)
               line_has_abovelinestext and 1 or 0 }
           prev_line_id = line_id
         end
+        if new_score_last_syllables and syl_id then
+          new_score_last_syllables[syl_id] = syl_id
+        end
       end
       -- we reinitialize the shift value, because it may change according to the line
       currentshift=0
@@ -468,162 +553,6 @@ end
 -- callback to skip this step and thus gain a little time.
 local function disable_hyphenation()
   return false
-end
-
-local function atScoreBeginning (score_id, top_height, bottom_height,
-    has_translation, has_above_lines_text, top_height_adj, bottom_height_adj)
-  local inclusion = score_inclusion[score_id] or 1
-  score_inclusion[score_id] = inclusion + 1
-  score_id = score_id..'.'..inclusion
-  cur_score_id = score_id
-  if (top_height > top_height_adj or bottom_height < bottom_height_adj
-      or has_translation ~= 0 or has_above_lines_text ~= 0)
-      and tex.count['gre@variableheightexpansion'] == 1 then
-    score_heights = line_heights[score_id] or {}
-    if new_line_heights then
-      new_score_heights = {}
-      new_line_heights[score_id] = new_score_heights
-    end
-    prev_line_id = tex.getattribute(glyph_id_attr)
-  else
-    score_heights = nil
-    new_score_heights = nil
-  end
-
-  luatexbase.add_to_callback('post_linebreak_filter', process, 'gregoriotex.callback', 1)
-  luatexbase.add_to_callback("hyphenate", disable_hyphenation, "gregoriotex.disable_hyphenation", 1)
-end
-
-local function atScoreEnd ()
-  luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.callback')
-  luatexbase.remove_from_callback("hyphenate", "gregoriotex.disable_hyphenation")
-end
-
-local function clean_old_gtex_files(file_withdir)
-  local filename = ""
-  local dirpath = ""
-  local sep = ""
-  local onwindows = os.type == "windows" or
-    string.find(os.getenv("PATH"),";",1,true)
-  if onwindows then
-    sep = "\\"
-    dirpath = string.match(file_withdir, "(.*)"..sep)
-  else
-    sep = "/"
-    dirpath = string.match(file_withdir, "(.*)"..sep)
-  end
-  if dirpath then -- dirpath is nil if current directory
-    filename = "^"..file_withdir:match(".*/".."(.*)").."%-%d+_%d+_%d+[-%a%d]*%.gtex$"
-    for a in lfs.dir(dirpath) do
-      if a:match(filename) then
-        os.remove(dirpath..sep..a)
-      end
-    end
-  else
-    filename = "^"..file_withdir.."%-%d+_%d+_%d+[-%a%d]*%.gtex$"
-    for a in lfs.dir(lfs.currentdir()) do
-      if a:match(filename) then os.remove(a) end
-    end
-  end
-end
-
-local function compile_gabc(gabc_file, gtex_file)
-  info("compiling the score %s...", gabc_file)
-  local extra_args = ''
-  if tex.count['gre@generate@pointandclick'] == 1 then
-    extra_args = ' -p'
-  end
-
-  res = os.execute(string.format("gregorio %s -o %s %s", extra_args, gtex_file, gabc_file))
-  if res == nil then
-    err("\nSomething went wrong when executing\n    'gregorio -o %s %s'.\n"
-    .."shell-escape mode may not be activated. Try\n\n%s --shell-escape %s.tex\n\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", gtex_file, gabc_file, tex.formatname, tex.jobname)
-  elseif res ~= 0 then
-    err("\nAn error occured when compiling the score file\n'%s' with gregorio.\nPlease check your score file.", gabc_file)
-  else
-    -- open the gtex file for writing so that LuaTeX records output to it
-    -- when the -recorder option is used
-    local gtex = io.open(gtex_file, 'a')
-    if gtex == nil then
-      err("\n Unable to open %s", gtex_file)
-    else
-      gtex:close()
-    end
-  end
-end
-
-local function include_score(input_file, force_gabccompile)
-  local file_root
-  if string.match(input_file:sub(-5), '%.gtex') then
-    file_root = input_file:sub(1,-6)
-  elseif string.match(input_file:sub(-4), '%.tex') then
-    file_root = input_file:sub(1,-5)
-  elseif string.match(input_file:sub(-5), '%.gabc') then
-    file_root = input_file:sub(1,-6)
-  elseif not file_root then
-    file_root = input_file
-  end
-  local gtex_file = file_root.."-"..internalversion:gsub("%.", "_")..".gtex"
-  local gabc_file = file_root..".gabc"
-  if not lfs.isfile(gtex_file) then
-    clean_old_gtex_files(file_root)
-    log("The file %s does not exist. Searching for a gabc file", gtex_file)
-    if lfs.isfile(gabc_file) then
-      local gabc = io.open(gabc_file, 'r')
-      if gabc == nil then
-        err("\n Unable to open %s", gabc_file)
-        return
-      else
-        gabc:close()
-      end
-      compile_gabc(gabc_file, gtex_file)
-      tex.print(string.format([[\input %s\relax]], gtex_file))
-      return
-    else
-      err("The file %s does not exist.", gabc_file)
-      return
-    end
-  end
-  local gtex_timestamp = lfs.attributes(gtex_file).modification
-  local gabc_timestamp = lfs.attributes(gabc_file).modification
-  -- open the gabc file for reading so that LuaTeX records input from it
-  -- when the -recorder option is used; do this here so that this happens
-  -- on every run
-  local gabc = io.open(gabc_file, 'r')
-  if gabc == nil then
-    err("\n Unable to open %s", gabc_file)
-  else
-    gabc:close()
-  end
-  if gtex_timestamp < gabc_timestamp then
-    log("%s has been modified and %s needs to be updated. Recompiling the gabc file.", gabc_file, gtex_file)
-    compile_gabc(gabc_file, gtex_file)
-  elseif force_gabccompile then
-    compile_gabc(gabc_file, gtex_file)
-  end
-  tex.print(string.format([[\input %s\relax]], gtex_file))
-  return
-end
-
-local function direct_gabc(gabc, header)
-  tmpname = os.tmpname()
-  local f = io.open(tmpname, 'w')
-  -- trims spaces on both ends (trim6 from http://lua-users.org/wiki/StringTrim)
-  gabc = gabc:match('^()%s*$') and '' or gabc:match('^%s*(.*%S)')
-  f:write('name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par ', '\n'))
-  f:close()
-  local p = io.popen('gregorio -S '..tmpname, 'r')
-  if p == nil then
-    err("\nSomething went wrong when executing\n    gregorio -S "..tmpname..".\n"
-    .."shell-escape mode may not be activated. Try\n\n%s --shell-escape %s.tex\n\nSee the documentation of gregorio or your TeX\ndistribution to automatize it.", tex.formatname, tex.jobname)
-  end
-  tex.print(p:read("*a"):explode('\n'))
-  p:close()
-  os.remove(tmpname)
-end
-
-local function get_gregorioversion()
-  return internalversion
 end
 
 local get_font_by_id = font.getfont --- cached, indexes fonts.hashes.identifiers
@@ -690,6 +619,246 @@ local function get_score_font_unicode_pairs(name)
     font_indexed[name] = true
   end
   return pairs(unicodes)
+end
+
+local function atScoreBeginning(score_id, top_height, bottom_height,
+    has_translation, has_above_lines_text, top_height_adj, bottom_height_adj,
+    score_font_name)
+  local inclusion = score_inclusion[score_id] or 1
+  score_inclusion[score_id] = inclusion + 1
+  score_id = score_id..'.'..inclusion
+  cur_score_id = score_id
+  if (top_height > top_height_adj or bottom_height < bottom_height_adj
+      or has_translation ~= 0 or has_above_lines_text ~= 0)
+      and tex.count['gre@variableheightexpansion'] == 1 then
+    score_heights = line_heights[score_id] or {}
+    if new_line_heights then
+      new_score_heights = {}
+      new_line_heights[score_id] = new_score_heights
+    end
+    prev_line_id = tex.getattribute(glyph_id_attr)
+  else
+    score_heights = nil
+    new_score_heights = nil
+  end
+  local text_font = unsafe_get_font_by_id(font.current())
+  local score_font = unsafe_get_font_by_id(font.id('gre@font@music'))
+  local state = md5.sumhexa(string.format('%s|%d|%s|%d|%s', text_font.name,
+      text_font.size, score_font.name, score_font.size, space_hash))
+  score_last_syllables = last_syllables[score_id]
+  if score_last_syllables and state_hashes[score_id] ~= state then
+    score_last_syllables = nil
+  end
+  if new_state_hashes then
+    new_state_hashes[score_id] = state
+  end
+  if new_last_syllables then
+    new_score_last_syllables = {}
+    new_last_syllables[score_id] = new_score_last_syllables
+  end
+
+  luatexbase.add_to_callback('post_linebreak_filter', post_linebreak, 'gregoriotex.post_linebreak', 1)
+  luatexbase.add_to_callback("hyphenate", disable_hyphenation, "gregoriotex.disable_hyphenation", 1)
+end
+
+local function atScoreEnd()
+  luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.post_linebreak')
+  luatexbase.remove_from_callback("hyphenate", "gregoriotex.disable_hyphenation")
+end
+
+local function clean_old_gtex_files(file_withdir)
+  local filename = ""
+  local dirpath = ""
+  local sep = ""
+  local onwindows = os.type == "windows" or
+    string.find(os.getenv("PATH"),";",1,true)
+  if onwindows then
+    sep = "\\"
+    dirpath = string.match(file_withdir, "(.*)"..sep)
+  else
+    sep = "/"
+    dirpath = string.match(file_withdir, "(.*)"..sep)
+  end
+  if dirpath then -- dirpath is nil if current directory
+    filename = "^"..file_withdir:match(".*/".."(.*)").."%-%d+_%d+_%d+[-%a%d]*%.gtex$"
+    for a in lfs.dir(dirpath) do
+      if a:match(filename) then
+        os.remove(dirpath..sep..a)
+      end
+    end
+  else
+    filename = "^"..file_withdir.."%-%d+_%d+_%d+[-%a%d]*%.gtex$"
+    for a in lfs.dir(lfs.currentdir()) do
+      if a:match(filename) then os.remove(a) end
+    end
+  end
+end
+
+local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
+  info("compiling the score %s...", gabc_file)
+  local extra_args = ''
+  if tex.count['gre@generate@pointandclick'] == 1 then
+    extra_args = extra_args..' -p'
+  end
+  if not allow_deprecated then
+    extra_args = extra_args..' -D'
+  end
+
+  local cmd = string.format("gregorio %s -W -o %s -l %s %s",
+      extra_args, gtex_file, glog_file, gabc_file)
+  res = os.execute(cmd)
+  if res == nil then
+    err("\nSomething went wrong when executing\n    '%s'.\n"
+        .."shell-escape mode may not be activated. Try\n\n"
+        .."%s --shell-escape %s.tex\n\n"
+        .."See the documentation of gregorio or your TeX\n"
+        .."distribution to automatize it.",
+        cmd, tex.formatname, tex.jobname)
+  elseif res ~= 0 then
+    local glog = io.open(glog_file, 'a+')
+    if glog == nil then
+      err("\n Unable to open %s", glog_file)
+    else
+      local size = glog:seek('end')
+      if size > 0 then
+        glog:seek('set')
+        local line
+        for line in glog:lines() do
+          warn(line)
+        end
+      end
+      glog:close()
+    end
+    err("\nAn error occured when compiling the score file\n"
+        .."'%s' with gregorio.\nPlease check your score file.", gabc_file)
+  else
+    -- open the gtex file for writing so that LuaTeX records output to it
+    -- when the -recorder option is used
+    local gtex = io.open(gtex_file, 'a')
+    if gtex == nil then
+      err("\n Unable to open %s", gtex_file)
+    else
+      gtex:close()
+    end
+    local glog = io.open(glog_file, 'a+')
+    if glog == nil then
+      err("\n Unable to open %s", glog_file)
+    else
+      local size = glog:seek('end')
+      if size > 0 then
+        glog:seek('set')
+        local line
+        for line in glog:lines() do
+          warn(line)
+        end
+        warn("*** end of warnings for %s ***", gabc_file)
+      end
+      glog:close()
+    end
+  end
+end
+
+local function include_score(input_file, force_gabccompile, allow_deprecated)
+  local file_root
+  if string.match(input_file:sub(-5), '%.gtex') then
+    file_root = input_file:sub(1,-6)
+  elseif string.match(input_file:sub(-4), '%.tex') then
+    file_root = input_file:sub(1,-5)
+  elseif string.match(input_file:sub(-5), '%.gabc') then
+    file_root = input_file:sub(1,-6)
+  elseif not file_root then
+    file_root = input_file
+  end
+  local gtex_file = file_root.."-"..internalversion:gsub("%.", "_")..".gtex"
+  local glog_file = file_root.."-"..internalversion:gsub("%.", "_")..".glog"
+  local gabc_file = file_root..".gabc"
+  if not lfs.isfile(gtex_file) then
+    clean_old_gtex_files(file_root)
+    log("The file %s does not exist. Searching for a gabc file", gtex_file)
+    if lfs.isfile(gabc_file) then
+      local gabc = io.open(gabc_file, 'r')
+      if gabc == nil then
+        err("\n Unable to open %s", gabc_file)
+        return
+      else
+        gabc:close()
+      end
+      compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
+      tex.print(string.format([[\input %s\relax]], gtex_file))
+      return
+    else
+      err("The file %s does not exist.", gabc_file)
+      return
+    end
+  end
+  local gtex_timestamp = lfs.attributes(gtex_file).modification
+  local gabc_timestamp = lfs.attributes(gabc_file).modification
+  -- open the gabc file for reading so that LuaTeX records input from it
+  -- when the -recorder option is used; do this here so that this happens
+  -- on every run
+  local gabc = io.open(gabc_file, 'r')
+  if gabc == nil then
+    err("\n Unable to open %s", gabc_file)
+  else
+    gabc:close()
+  end
+  if gtex_timestamp < gabc_timestamp then
+    log("%s has been modified and %s needs to be updated. Recompiling the gabc file.", gabc_file, gtex_file)
+    compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
+  elseif force_gabccompile then
+    compile_gabc(gabc_file, gtex_file, glog_file)
+  end
+  tex.print(string.format([[\input %s\relax]], gtex_file))
+  return
+end
+
+local function direct_gabc(gabc, header, allow_deprecated)
+  info('Processing gabc snippet...')
+  local deprecated
+  if allow_deprecated then
+    deprecated = ''
+  else
+    deprecated = '-D '
+  end
+  local f = io.open(snippet_filename, 'w')
+  -- trims spaces on both ends (trim6 from http://lua-users.org/wiki/StringTrim)
+  gabc = gabc:match('^()%s*$') and '' or gabc:match('^%s*(.*%S)')
+  f:write('name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par ', '\n'))
+  f:close()
+  local cmd = string.format('gregorio -W %s-S -l %s %s', deprecated, snippet_logname,
+      snippet_filename)
+  local p = io.popen(cmd, 'r')
+  if p == nil then
+    err("\nSomething went wrong when executing\n    %s\n"
+        .."shell-escape mode may not be activated. Try\n\n"
+        .."%s --shell-escape %s.tex\n\n"
+        .."See the documentation of gregorio or your TeX\n"
+        .."distribution to automatize it.", cmd, tex.formatname, tex.jobname)
+  else
+    tex.print(p:read("*a"):explode('\n'))
+    p:close()
+  end
+  local glog = io.open(snippet_logname, 'a+')
+  if glog == nil then
+    err("\n Unable to open %s", snippet_logname)
+  else
+    local size = glog:seek('end')
+    if size > 0 then
+      glog:seek('set')
+      local line
+      for line in glog:lines() do
+        warn(line)
+      end
+      warn("*** end of warnings/errors processing snippet ***")
+    end
+    glog:close()
+  end
+  os.remove(snippet_filename)
+  os.remove(snippet_logname)
+end
+
+local function get_gregorioversion()
+  return internalversion
 end
 
 local function check_font_version()
@@ -879,64 +1048,97 @@ local function adjust_line_height(inside_discretionary)
   end
 end
 
-local function var_brace_note_pos(brace, start_end)
-  tex.print(catcode_at_letter, string.format([[\luatexlatelua{gregoriotex.late_brace_note_pos('%s', %d, %d, \number\gre@lastxpos)}]], cur_score_id, brace, start_end))
+local function prep_save_position(index, fn)
+  if saved_positions[cur_score_id] == nil then
+    saved_positions[cur_score_id] = {}
+  end
+  saved_positions[cur_score_id][index] = { fn = fn }
 end
 
-local function late_brace_note_pos(score_id, brace, start_end, pos)
-  if new_var_brace_positions[score_id] == nil then
-    new_var_brace_positions[score_id] = {}
+local function save_position(index, which)
+  tex.print(catcode_at_letter, string.format([[\luatexlatelua{gregoriotex.late_save_position('%s', %d, %d, \number\gre@lastxpos, \number\gre@lastypos)}]], cur_score_id, index, which))
+end
+
+local function late_save_position(score_id, index, which, xpos, ypos)
+  info('saving %s, %d [%d] (%d,%d)', score_id, index, which, xpos, ypos)
+  local pos = saved_positions[score_id][index]
+  if pos == nil then
+    err('Attempting to use unprepared position save slot %d', index)
+    return
   end
-  if new_var_brace_positions[score_id][brace] == nil then
-    new_var_brace_positions[score_id][brace] = {}
+  --[[
+  if pos.fn == nil then
+    err('Attempting to reuse position save slot %d', index)
+    return
   end
-  new_var_brace_positions[score_id][brace][start_end] = pos
+  --]]
+  pos['x'..which] = xpos
+  pos['y'..which] = ypos
+  if pos.x1 ~= nil and pos.y1 ~= nil and pos.x2 ~= nil and pos.y2 ~= nil then
+    pos.fn(score_id, index, pos)
+    --pos.fn = nil
+  end
+end
+
+local function compute_saved_length(score_id, index, pos)
+  if new_saved_lengths[score_id] == nil then
+    new_saved_lengths[score_id] = {}
+  end
+  new_saved_lengths[score_id][index] = pos.x2 - pos.x1
+  info('computed length for %s, %d: %d', score_id, index,
+      new_saved_lengths[score_id][index])
+end
+
+local function save_length(index, which)
+  if which == 1 then
+    prep_save_position(index, compute_saved_length)
+  end
+  save_position(index, which)
+end
+
+local function compute_saved_newline_before_euouae(score_id, index, pos)
+  if new_saved_newline_before_euouae[score_id] == nil then
+    new_saved_newline_before_euouae[score_id] = {}
+  end
+  new_saved_newline_before_euouae[score_id][index] = pos.y2 ~= pos.y1
+  info('computed euouae for %s, %d: %s', score_id, index,
+      new_saved_newline_before_euouae[score_id][index])
+end
+
+local function save_euouae(index, which)
+  if which == 1 then
+    prep_save_position(index, compute_saved_newline_before_euouae)
+  end
+  tex.sprint(catcode_at_letter, [[\gre@savepos]])
+  save_position(index, which)
 end
 
 local function var_brace_len(brace)
-  if var_brace_positions[cur_score_id] ~= nil then
-    if var_brace_positions[cur_score_id][brace] ~= nil then
-      local posend = var_brace_positions[cur_score_id][brace][2]
-      local posstart = var_brace_positions[cur_score_id][brace][1]
-      if posend > posstart then
-        tex.print(string.format('%dsp', posend - posstart))
+  if saved_lengths[cur_score_id] ~= nil then
+    local length = saved_lengths[cur_score_id][brace]
+    if saved_lengths[cur_score_id][brace] ~= nil then
+      if length > 0 then
+        tex.print(string.format('%dsp', length))
+        return
       else
-        warn('Dynamically sized braces spanning multiple lines unsupported, using length 2mm.')
-        tex.print('2mm')
+        warn('Dynamically sized signs spanning multiple lines unsupported, using length 2mm.')
       end
-      return
     end
   end
   tex.print('2mm')
 end
 
-local function save_pos(index, which)
-  tex.print(catcode_at_letter, string.format([[\gre@savepos\luatexlatelua{gregoriotex.late_save_pos('%s', %d, %d, \number\gre@lastxpos, \number\gre@lastypos)}]], cur_score_id, index, which))
-end
-
-local function late_save_pos(score_id, index, which, xpos, ypos)
-  if new_pos_saves[score_id] == nil then
-    new_pos_saves[score_id] = {}
-  end
-  if new_pos_saves[score_id][index] == nil then
-    new_pos_saves[score_id][index] = {}
-  end
-  new_pos_saves[score_id][index][(2 * which) - 1] = xpos
-  new_pos_saves[score_id][index][2 * which] = ypos
-end
-
 -- this function is meant to be used from \ifcase; prints 0 for true and 1 for false
 local function is_ypos_different(index)
-  if pos_saves[cur_score_id] ~= nil then
-    local saved_pos = pos_saves[cur_score_id][index]
-    if saved_pos == nil or saved_pos[2] == saved_pos[4] then
-      tex.sprint([[\number1\relax ]])
-    else
+  if saved_newline_before_euouae[cur_score_id] ~= nil then
+    local newline_before_euouae =
+        saved_newline_before_euouae[cur_score_id][index]
+    if newline_before_euouae then
       tex.sprint([[\number0\relax ]])
+      return
     end
-  else
-    tex.sprint([[\number1\relax ]])
   end
+  tex.sprint([[\number1\relax ]])
 end
 
 local function width_to_bp(width, value_if_star)
@@ -1012,39 +1214,70 @@ local function mode_part(part)
   end
 end
 
-gregoriotex.number_to_letter     = number_to_letter
-gregoriotex.init                 = init
-gregoriotex.include_score        = include_score
-gregoriotex.atScoreEnd           = atScoreEnd
-gregoriotex.atScoreBeginning     = atScoreBeginning
-gregoriotex.check_font_version   = check_font_version
-gregoriotex.get_gregorioversion  = get_gregorioversion
-gregoriotex.map_font             = map_font
-gregoriotex.init_variant_font    = init_variant_font
-gregoriotex.change_score_glyph   = change_score_glyph
-gregoriotex.reset_score_glyph    = reset_score_glyph
-gregoriotex.scale_score_fonts    = scale_score_fonts
-gregoriotex.set_font_factor      = set_font_factor
-gregoriotex.def_symbol           = def_symbol
-gregoriotex.font_size            = font_size
-gregoriotex.direct_gabc          = direct_gabc
-gregoriotex.adjust_line_height   = adjust_line_height
-gregoriotex.var_brace_len        = var_brace_len
-gregoriotex.var_brace_note_pos   = var_brace_note_pos
-gregoriotex.late_brace_note_pos  = late_brace_note_pos
-gregoriotex.mark_translation     = mark_translation
-gregoriotex.mark_abovelinestext  = mark_abovelinestext
-gregoriotex.width_to_bp          = width_to_bp
-gregoriotex.hypotenuse           = hypotenuse
-gregoriotex.rotation             = rotation
-gregoriotex.scale_space          = scale_space
-gregoriotex.set_header_capture   = set_header_capture
-gregoriotex.capture_header       = capture_header
-gregoriotex.save_pos             = save_pos
-gregoriotex.late_save_pos        = late_save_pos
-gregoriotex.is_ypos_different    = is_ypos_different
-gregoriotex.mode_part            = mode_part
-gregoriotex.set_debug_string     = set_debug_string
+-- this function is meant to be used from \ifcase; prints 0 for true and 1 for false
+local function is_last_syllable_on_line()
+  if score_last_syllables then
+    if score_last_syllables[tex.getattribute(syllable_id_attr)] then
+      tex.print(0)
+    else
+      tex.print(1)
+    end
+  else
+    -- if the last syllable is not computed, treat all syllables as the
+    -- last on a line
+    tex.print(0)
+  end
+end
+
+local function hash_spaces(name, value)
+  hashed_spaces[name] = value
+  local k, _
+  local keys = {}
+  for k,_ in pairs(hashed_spaces) do
+    table.insert(keys, k)
+  end
+  table.sort(keys)
+  local mash = ''
+  for _,k in ipairs(keys) do
+    mash = string.format('%s%s:%s|', mash, k, hashed_spaces[k])
+  end
+  space_hash = md5.sumhexa(mash)
+end
+
+gregoriotex.number_to_letter         = number_to_letter
+gregoriotex.init                     = init
+gregoriotex.include_score            = include_score
+gregoriotex.atScoreEnd               = atScoreEnd
+gregoriotex.atScoreBeginning         = atScoreBeginning
+gregoriotex.check_font_version       = check_font_version
+gregoriotex.get_gregorioversion      = get_gregorioversion
+gregoriotex.map_font                 = map_font
+gregoriotex.init_variant_font        = init_variant_font
+gregoriotex.change_score_glyph       = change_score_glyph
+gregoriotex.reset_score_glyph        = reset_score_glyph
+gregoriotex.scale_score_fonts        = scale_score_fonts
+gregoriotex.set_font_factor          = set_font_factor
+gregoriotex.def_symbol               = def_symbol
+gregoriotex.font_size                = font_size
+gregoriotex.direct_gabc              = direct_gabc
+gregoriotex.adjust_line_height       = adjust_line_height
+gregoriotex.var_brace_len            = var_brace_len
+gregoriotex.save_length              = save_length
+gregoriotex.mark_translation         = mark_translation
+gregoriotex.mark_abovelinestext      = mark_abovelinestext
+gregoriotex.width_to_bp              = width_to_bp
+gregoriotex.hypotenuse               = hypotenuse
+gregoriotex.rotation                 = rotation
+gregoriotex.scale_space              = scale_space
+gregoriotex.set_header_capture       = set_header_capture
+gregoriotex.capture_header           = capture_header
+gregoriotex.is_ypos_different        = is_ypos_different
+gregoriotex.save_euouae              = save_euouae
+gregoriotex.mode_part                = mode_part
+gregoriotex.set_debug_string         = set_debug_string
+gregoriotex.late_save_position       = late_save_position
+gregoriotex.is_last_syllable_on_line = is_last_syllable_on_line
+gregoriotex.hash_spaces              = hash_spaces
 
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))

@@ -141,6 +141,8 @@ greextra.ttf
 gregorio.ttf
 gregorio-op.ttf
 gresym.ttf
+parmesan.ttf
+parmesan-op.ttf
 granapadano.ttf
 granapadano-op.ttf
 gregall.ttf

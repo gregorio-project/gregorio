@@ -2,6 +2,57 @@
 
 This file contains instructions to upgrade to a new release of Gregorio.
 
+## 4.2
+
+### Stemmed oriscus flexus orientation
+
+As of version 4.2, the orientation of the stemmed oriscus flexus `(gOe)` is consistent with the unstemmed oriscus flexus `(goe)` in that the oriscus points downward (since the note which follows is of lower pitch).  If you prefer the oriscus to point upward, you will need to use the `1` modifier (as in `(gO1e)`), which will force an upward orientation of the oriscus.
+
+### Podatus followed by a virga
+
+As of version 4.2, a podatus followed by a virga of the same or higher pitch as the second note in the podatus (e.g., `(eghv)`) will be kept together, disallowing a line break between the two shapes.  If you would like to allow a line break between the two shapes, use a `/` or some other breakable space between them (e.g., `(eg/hv)`).
+
+### Penalties
+
+As of version 4.2, the penalties should be changed by using `\grechangecount` rather than the old way of redefining macros.  The following tunable values are available (they have the same name as their old macro counterparts, minus the `gre`):
+
+- `brokenpenalty`
+- `clubpenalty`
+- `endafterbaraltpenalty`
+- `endafterbarpenalty`
+- `endofelementpenalty`
+- `endofsyllablepenalty`
+- `endofwordpenalty`
+- `finalpenalty`
+- `hyphenpenalty`
+- `looseness`
+- `newlinepenalty`
+- `nobreakpenalty`
+- `pretolerance`
+- `tolerance`
+- `widowpenalty`
+
+See GregorioRef for descriptions.
+
+Additionally, if you were redefining `\greemergencystretch`, you should now be changing the `emergencystretch` dimension using the `\grechangedim` command.
+
+### Custos with alteration
+
+If the note following a custos has an alteration (flat, natural, or sharp), the custos will now also have that alteration typeset before it.  If you prefer the old behavior, use `\gresetcustosalteration{invisible}`.  This setting may be switched to `visible` and `invisible` between scores.
+
+### Punctum inclinatum orientation
+
+As of version 4.2, a different glyph is used for puncta inclinata in an ascent versus puncta inclinata in a descent.  However, because the two shapes clash with each other, Gregorio will attempt to use the same shape for all notes within a string of puncta inclinata.  This is accomplished by a heuristic algorithm that determines the glyph to use, but tastes differ, so you may override the shape by appending `0` (to force descending) or `1` (to force ascending) after the letter used for the punctum inclinatum.
+
+Two additional distances have been added to handle strings of puncta inclinata which both ascend and descend.  `descendingpunctuminclinatumascendingshift` will be used between two descending punctum inclinatum glyphs which ascend in pitch, and `ascendingpunctuminclinatumdescendingshift` will be used between two ascending punctum inclinatum glyphs which descend in pitch.
+
+### Styles spanning syllables
+
+From version 4.2, gabc styles persist through syllables so you can now, for instance, style an entire verse differently from the rest of the piece by starting the style at the beginning of the verse and ending it at the end of the verse.  This covers italics (`<i>`), bold (`<b>`), small capitals (`<sc>`), underlined text (`<ul>`), colored text (`<c>`), and "teletype" text (`<tt>`).
+
+Prior to version 4.2, Gregorio inconsistenly indicated style errors.  Now, errors like ending a style that is not started and starting a style that is already started will be caught more consistently.  If you are getting errors to this effect, double-check the styles in your score to make sure that styles are started and ended properly.
+
+
 ## 4.1.2
 
 ### Changes to texmf tree
@@ -16,10 +67,10 @@ To better comply with the TeXLive directory structure, the location of `gregorio
 
 As always, please file a bug report if you have any problems with the update process.
 
-
 ### Parmesan font renamed to Grana Padano
 
 To avoid conflicts with the LilyPond Parmesan font, the Gregorio Parmesan font is now called Grana Padano.  If you were using `\gresetgregoriofont{parmesan}`, you should now use `\gresetgregoriofont{granapadano}`.
+
 
 ## 4.1.1
 

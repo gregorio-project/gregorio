@@ -21,7 +21,7 @@
 
 
 % This file needs to be marked with the version number.  For now I've done this with the following comment, but we should check to see if PlainTeX has something similar to the version declaration of LaTeX and use that if it does.
-% 		[2016/05/29 v4.1.4 GregorioTeX system.]% PARSE_VERSION_DATE_LTX
+% 		[2016/05/31 v4.2.0-rc1 GregorioTeX system.]% PARSE_VERSION_DATE_LTX
 
 
 \edef\greoldcatcode{\the\catcode`@}
@@ -33,6 +33,7 @@
 \input luaotfload.sty%
 \input graphicx.tex % for \resizebox
 \input xstring.sty%
+\input color.sty%
 
 \def\gre@error#1{\begingroup%
 \def\MessageBreak{^^J}%
@@ -89,7 +90,16 @@
 \def\gre@strip@pt{\expandafter\gre@rem@pt\the}%
 
 \long\def\gre@iflatex#1{}%
+\long\def\gre@ifnotlatex#1{#1}%
 \input gregoriotex-main.tex
+
+
+%%%%%%%%%
+%% Color definitions
+%%%%%%%%%
+
+\definecolor{grebackgroundcolor}{RGB}{255,255,255}%
+\definecolor{gregoriocolor}{RGB}{229,53,44}%
 
 %%%%%%%%%
 %% PlainTeX specific definitions for fonts
@@ -105,8 +115,14 @@
   %\relax 
 }%
 
+% Since small caps in PlainTeX requires loading another font, it is not defined by default.  This command maintains compatibility by checking to see if \sc has been defined and raising a warning when it hasn’t
 \def\GreSmallCaps#1{%
-  {\sc #1}%
+  \ifdefined\sc%
+    {\sc #1}%
+  \else%
+    \gre@warning{Small caps (\protect\sc) is not defined}%
+    {#1}%
+  \fi%
   \relax %
 }%
 
@@ -115,16 +131,14 @@
   \relax %
 }%
 
-% Note since underlining and coloring don’t exist in PlainTeX, but we need the following commands to maintain compatibility with LaTeX.
-\def\GreUnderline#1{%
-  \gre@warning{Underlining cannot be done in PlainTeX}%
-  {#1}%
-  \relax %
+\def\GreColored#1{%
+  {%
+    \color{gregoriocolor}#1%
+  }%
 }%
 
-\def\GreColored#1{%
-  \gre@warning{Text color cannot be changed in PlainTeX}%
-  {#1}%
+\def\GreUnderline#1{%
+  $\underline{\rm #1}$
   \relax %
 }%
 
@@ -135,26 +149,9 @@
 % Colors don't work in PlainTeX, but we need these functions for interoperability with LaTeX.
 
 \def\gresetlinecolor#1{%
-  \gre@warning{Line color cannot be changed in PlainTeX}%
-  \relax%
+  \gre@changestyle{normalstafflines}{\color{#1}}[\relax]%
 }
 
-
-\def\grecoloredlines#1#2#3{%OBSOLETE
-  \gre@obsolete{\protect\grecoloredlines}{\protect\gresetlinecolor}%
-}
-
-\def\greredlines{%OBSOLETE
-  \gre@obsolete{\protect\greredlines}{\protect\gresetlinecolor{gregoriocolor}}%
-}
-
-\let\redlines\greredlines%OBSOLETE
-
-\def\grenormallines{%OBSOLETE
-  \gre@obsolete{\protect\grenormallines}{\protect\gresetlinecolor{black}}%
-}
-
-\let\normallines\grenormallines%OBSOLETE
 
 %%%%%%%%%%%%%%%%%%%%
 %% Formatting environments
@@ -237,7 +234,6 @@
 \def\gre@style@modeline{%
   \begingroup%
   \bf%
-  \sc%
   \relax%
 }%
 \def\endgre@style@modeline{\endgroup}%
@@ -260,7 +256,7 @@
 \def\gre@style@commentary{%
   \begingroup%
   \it%
-  % footnotesize is LaTeX, but nothing here since changing font size is so hard
+  % footnotesize in LaTeX, but nothing here since changing font size is so hard
   \relax%
 }%
 \def\endgre@style@commentary{\endgroup}%
@@ -268,7 +264,7 @@
 \def\gre@style@elision{%
   \begingroup%
   \it%
-  % small is LaTeX, but nothing here since changing font size is so hard
+  % small in LaTeX, but nothing here since changing font size is so hard
   \relax%
 }%
 \def\endgre@style@elision{\endgroup}%
@@ -281,13 +277,19 @@
 
 \def\gre@style@nabc{%
   \begingroup%
-  \relax% we do nothing since colors are not implemented in PlainTeX
+  \color{gregoriocolor}%
 }
 \def\endgre@style@nabc{\endgroup}%
 
 \def\gre@changestyle#1#2[#3]{%
-  \gdef\csname gre@style@#1\endcsname{\begingroup#2}%
-  \gdef\csname endgre@style@#1\endcsname{#3\endgroup}%
+  \expandafter\gdef\csname gre@style@#1\endcsname{\begingroup#2}%
+  \expandafter\gdef\csname endgre@style@#1\endcsname{#3\endgroup}%
 }%
+
+%%%%%%%%%%%%%%%
+%% Default Mode Numbering style
+%%%%%%%%%%%%%%%
+
+\gresetmodenumbersystem{roman-majuscule}%
 
 \catcode`\@=\greoldcatcode

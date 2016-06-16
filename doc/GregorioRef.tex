@@ -87,7 +87,7 @@
   \ifbreakable%
     \filbreak%
   \else%
-    \breakabletrue%
+    \global\breakabletrue%
   \fi%
   \makebox[\linewidth]{\ttfamily\bfseries #1#2%
   \hspace{\fill}\normalfont\itshape #3}%
@@ -132,10 +132,19 @@
   \fi%
 }
 
+\NewDocumentEnvironment{gcount}{m}{\macroname{#1}{}{gsp-default.tex}}{%
+
+  Default: \expandafter$\expandafter\the\csname gre@space@count@#1\endcsname$
+}
+
 \newcommand{\writemode}[3]{%
   \gre@style@modeline #1\endgre@style@modeline %
   \gre@style@modemodifier #2\endgre@style@modemodifier %
   \gre@style@modedifferentia #3\endgre@style@modedifferentia %
+}
+
+\newcommand{\getgrecount}[1]{%
+  \the\csname gre@count@#1\endcsname%
 }
 \makeatother
 
@@ -152,7 +161,7 @@
 
     \vspace{1cm}
 
-    \large Version \textbf{4.1.4}, 29 May 2016 %% PARSE_VERSION_DATE
+    \large Version \textbf{4.2.0-rc1}, 31 May 2016 %% PARSE_VERSION_DATE
 
     \vspace{1.5cm}
   \end{center}
