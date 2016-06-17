@@ -862,12 +862,14 @@
     %to prevent the pollution of the normal values, we stock them into a temp value
     \gre@dimen@temp@two=\gre@dimen@textaligncenter\relax%
     \gre@calculate@textaligncenter{#1}{#2}{#3}{1}%
+    \gre@dimen@temp@four=\gre@dimen@notesaligncenter\relax%
     \global\gre@skip@nextbegindifference=-\gre@dimen@textaligncenter\relax%
-    \global\gre@dimen@textaligncenter=\gre@dimen@temp@two %
-    \gre@dimen@temp@two=\gre@dimen@notesaligncenter\relax%
+    % caution: calculate@nextnotesaligncenter needs a properly set \gre@dimen@textaligncenter
+    % (corresponding to the text align center of the next syllable)
     \gre@calculate@nextnotesaligncenter{#5}% idem
     \global\advance\gre@skip@nextbegindifference by \the\gre@dimen@notesaligncenter\relax%
-    \global\gre@dimen@notesaligncenter=\gre@dimen@temp@two %
+    \global\gre@dimen@textaligncenter=\gre@dimen@temp@two %
+    \global\gre@dimen@notesaligncenter=\gre@dimen@temp@four %
   \fi %
   \relax %
 }%
