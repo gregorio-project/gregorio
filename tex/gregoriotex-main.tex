@@ -815,6 +815,35 @@
   \relax %
 }%
 
+% similarly, but for typesetting Nabc neumes above lines
+
+\def\GreSetNabcAboveLines#1{%
+  \gdef\gre@currenttextabovelines{%
+    \gre@typesetnabcabovelines{#1}%
+    \gdef\gre@currenttextabovelines{}%
+    \relax %
+  }%
+}%
+
+% typesets the nabc above the line
+\def\gre@typesetnabcabovelines#1{%
+  \gre@style@abovelinestext%
+  \gre@debugmsg{spacing}{Raise nabc: \gre@space@dimen@abovelinestextraise}%
+  \endgre@style@abovelinestext%
+  \gre@dimen@temp@five=\dimexpr(4\gre@dimen@stafflineheight %
+    + 4\gre@dimen@interstafflinespace %
+    + \gre@space@dimen@spacebeneathtext %
+    + \gre@dimen@currenttranslationheight %
+    + \gre@space@dimen@spacelinestext %
+    + \gre@dimen@additionalbottomspace %
+    + \gre@dimen@additionaltopspacenabc %
+    + \gre@space@dimen@abovelinestextraise)\relax%
+  \gre@mark@abovelinestext %
+  \gre@debugmsg{spacing}{Raise nabc: \the\gre@dimen@temp@five}%
+    \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\gre@style@abovelinestext#1\endgre@style@abovelinestext\hss}%
+  \relax %
+}%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of the lines
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
