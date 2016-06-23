@@ -6,6 +6,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Fixed
 - A two-line initial on a two-line score no longer generates an error (see [#1139](https://github.com/gregorio-project/gregorio/issues/1139)).
 - Staff lines after a two-line initial should now be sized correctly in a more consistent way (see [#1141](https://github.com/gregorio-project/gregorio/issues/1141)).
+- Space at the end of line was not always correct when a line is cut in the middle of a word (see [#1155](https://github.com/gregorio-project/gregorio/issues/1155)).
 - In rare cases, the very last bar or glyph of a score could appear alone at the beginning of the final line (see [#1152](https://github.com/gregorio-project/gregorio/issues/1152)).
 
 ## [4.2.0-rc1] - 2016-05-31
