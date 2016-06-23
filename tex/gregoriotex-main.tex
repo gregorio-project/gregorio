@@ -790,29 +790,44 @@
 
 \def\GreSetTextAboveLines#1{%
   \gdef\gre@currenttextabovelines{%
-    \gre@typesettextabovelines{#1}%
+    \gre@typesettextabovelines{#1}{0}%
     \gdef\gre@currenttextabovelines{}%
     \relax %
   }%
 }%
 
-% typesets the text above the line
-\def\gre@typesettextabovelines#1{%
+% typesets the text or nabc neumes above the line
+\def\gre@typesettextabovelines#1#2{%
   \gre@style@abovelinestext%
   \gre@debugmsg{spacing}{Raise alt text: \gre@space@dimen@abovelinestextraise}%
   \endgre@style@abovelinestext%
+  \ifnum#2=0\relax%
+    \gre@dimen@temp@five=\gre@dimen@additionaltopspacealt\relax%
+  \else%
+    \gre@dimen@temp@five=\gre@dimen@additionaltopspacenabc\relax%
+  \fi%
   \gre@dimen@temp@five=\dimexpr(4\gre@dimen@stafflineheight %
     + 4\gre@dimen@interstafflinespace %
     + \gre@space@dimen@spacebeneathtext %
     + \gre@dimen@currenttranslationheight %
     + \gre@space@dimen@spacelinestext %
     + \gre@dimen@additionalbottomspace %
-    + \gre@dimen@additionaltopspacealt %
+    + \gre@dimen@temp@five %
     + \gre@space@dimen@abovelinestextraise)\relax%
   \gre@mark@abovelinestext %
   \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
     \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\gre@style@abovelinestext#1\endgre@style@abovelinestext\hss}%
   \relax %
+}%
+
+% similarly, but for typesetting Nabc neumes above lines
+
+\def\GreSetNabcAboveLines#1{%
+  \gdef\gre@currenttextabovelines{%
+    \gre@typesettextabovelines{#1}{1}%
+    \gdef\gre@currenttextabovelines{}%
+    \relax %
+  }%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -737,12 +737,17 @@
 \newdimen\gre@dimen@additionaltopspace\relax%
 % the one taken into account for above lines text height
 \newdimen\gre@dimen@additionaltopspacealt\relax%
+% the one taken into account for above lines nabc height
+\newdimen\gre@dimen@additionaltopspacenabc\relax%
 
 \newcount\gre@space@count@additionaltopspacethreshold\relax%
 \gre@space@count@additionaltopspacethreshold=2
 
 \newcount\gre@space@count@additionaltopspacealtthreshold\relax%
-\gre@space@count@additionaltopspacethreshold=0
+\gre@space@count@additionaltopspacealtthreshold=0
+
+\newcount\gre@space@count@additionaltopspacenabcthreshold\relax%
+\gre@space@count@additionaltopspacenabcthreshold=4
 
 % #1 is the high height
 % #2 is the low height
@@ -761,6 +766,12 @@
     \global\gre@dimen@additionaltopspacealt=\dimexpr(15750 sp * \gre@count@temp@one * \gre@factor)\relax %
   \else %
     \global\gre@dimen@additionaltopspacealt=0 sp%
+  \fi %
+  \gre@count@temp@one=\numexpr(#1 - \gre@pitch@adjust@top - \gre@space@count@additionaltopspacenabcthreshold)\relax %
+  \ifnum\gre@count@temp@one>0\relax %
+    \global\gre@dimen@additionaltopspacenabc=\dimexpr(15750 sp * \gre@count@temp@one * \gre@factor)\relax %
+  \else %
+    \global\gre@dimen@additionaltopspacenabc=0 sp%
   \fi %
   \gre@count@temp@one=\numexpr((#2 - \gre@pitch@adjust@bottom) * -1)\relax %
   \ifnum\gre@count@temp@one>0\relax %
