@@ -173,9 +173,6 @@ static void oriscus_orientation_visit(
             case S_ORISCUS_SCAPUS_UNDETERMINED:
                 oriscus->u.note.shape = S_ORISCUS_SCAPUS_DESCENDENS;
                 break;
-            case S_ORISCUS_CAVUM_UNDETERMINED:
-                oriscus->u.note.shape = S_ORISCUS_CAVUM_DESCENDENS;
-                break;
             default:
                 /* not reachable unless there's a
                  * programming error */
@@ -192,9 +189,6 @@ static void oriscus_orientation_visit(
             case S_ORISCUS_SCAPUS_UNDETERMINED:
                 oriscus->u.note.shape = S_ORISCUS_SCAPUS_ASCENDENS;
                 break;
-            case S_ORISCUS_CAVUM_UNDETERMINED:
-                oriscus->u.note.shape = S_ORISCUS_CAVUM_ASCENDENS;
-                break;
             default:
                 /* not reachable unless there's a
                  * programming error */
@@ -210,7 +204,6 @@ static void oriscus_orientation_visit(
     switch (note->u.note.shape) {
     case S_ORISCUS_UNDETERMINED:
     case S_ORISCUS_SCAPUS_UNDETERMINED:
-    case S_ORISCUS_CAVUM_UNDETERMINED:
         *oriscus_ptr = note;
         break;
 
@@ -233,9 +226,6 @@ void determine_oriscus_orientation(const gregorio_score *const score)
             break;
         case S_ORISCUS_SCAPUS_UNDETERMINED:
             oriscus->u.note.shape = S_ORISCUS_SCAPUS_DESCENDENS;
-            break;
-        case S_ORISCUS_CAVUM_UNDETERMINED:
-            oriscus->u.note.shape = S_ORISCUS_CAVUM_DESCENDENS;
             break;
         default:
             /* not reachable unless there's a programming error */
@@ -297,8 +287,6 @@ static void punctum_inclinatum_orientation_visit(
         case S_PUNCTUM_INCLINATUM_DESCENDENS:
         case S_PUNCTUM_INCLINATUM_DEMINUTUS:
         case S_PUNCTUM_INCLINATUM_AUCTUS:
-        case S_PUNCTUM_CAVUM_INCLINATUM:
-        case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
             v->orientation = S_PUNCTUM_INCLINATUM_DESCENDENS;
             is_punctum_inclinatum = true;
             break;

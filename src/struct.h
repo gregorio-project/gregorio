@@ -116,14 +116,7 @@ ENUM(gregorio_clef, GREGORIO_CLEF);
     E(S_STROPHA_AUCTA) \
     E(S_DISTROPHA) \
     E(S_TRISTROPHA) \
-    E(S_PUNCTUM_CAVUM) \
     E(S_LINEA_PUNCTUM) \
-    E(S_LINEA_PUNCTUM_CAVUM) \
-    E(S_PUNCTUM_CAVUM_INCLINATUM) \
-    E(S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS) \
-    E(S_ORISCUS_CAVUM_ASCENDENS) \
-    E(S_ORISCUS_CAVUM_DESCENDENS) \
-    E(S_ORISCUS_CAVUM_DEMINUTUS) \
     E(S_FLAT) \
     E(S_SHARP) \
     E(S_NATURAL) \
@@ -133,7 +126,6 @@ ENUM(gregorio_clef, GREGORIO_CLEF);
      * quislisma quadratum */ \
     E(S_ORISCUS_UNDETERMINED) \
     E(S_ORISCUS_SCAPUS_UNDETERMINED) \
-    E(S_ORISCUS_CAVUM_UNDETERMINED) \
     E(S_QUADRATUM) \
     E(S_PUNCTUM_INCLINATUM_UNDETERMINED) \
     /* those shapes are for now used only in gregoriotex */ \
@@ -446,7 +438,8 @@ typedef struct gregorio_note {
             /* liquescentia is the liquescence on the note, it is not really
              * used in the final score, but it is, like type, used in the
              * determination of glyphs. */
-            ENUM_BITFIELD(gregorio_liquescentia) liquescentia:8;
+            ENUM_BITFIELD(gregorio_liquescentia) liquescentia:7;
+            bool is_cavum:1;
         } note;
         /* clef is used for GRE_CLEF */
         struct gregorio_clef_info clef;
@@ -520,7 +513,8 @@ typedef struct gregorio_glyph {
             ENUM_BITFIELD(gregorio_glyph_type) glyph_type:8;
             /* liquescentia is really used, because that will determine the
              * shape we will have to use. */
-            ENUM_BITFIELD(gregorio_liquescentia) liquescentia:8;
+            ENUM_BITFIELD(gregorio_liquescentia) liquescentia:7;
+            bool is_cavum:1;
         } notes;
         union gregorio_misc_element_info misc;
     } u;
@@ -797,7 +791,7 @@ void gregorio_add_note(gregorio_note **current_note, signed char pitch,
         const gregorio_scanner_location *loc);
 void gregorio_add_glyph(gregorio_glyph **current_glyph,
         gregorio_glyph_type type, gregorio_note *first_note,
-        gregorio_liquescentia liquescentia);
+        gregorio_liquescentia liquescentia, bool is_cavum);
 void gregorio_add_element(gregorio_element **current_element,
         gregorio_glyph *first_glyph);
 void gregorio_add_syllable(gregorio_syllable **current_syllable,
@@ -811,6 +805,7 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
 void gregorio_add_special_sign(gregorio_note *current_note, gregorio_sign sign);
 void gregorio_change_shape(gregorio_note *note, gregorio_shape shape,
         bool legacy_oriscus_orientation);
+void gregorio_add_cavum(gregorio_note *note);
 void gregorio_position_h_episema_above(gregorio_note *note, signed char height,
         bool connect);
 void gregorio_position_h_episema_below(gregorio_note *note, signed char height,

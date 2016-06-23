@@ -2,6 +2,14 @@
 
 This file contains instructions to upgrade to a new release of Gregorio.
 
+## Next version
+
+### Gregorio and Grana Padano fonts
+
+The gregorio and granapadano fonts, as well as their "-op" Dominican variants, will now be available as separate downloads.  If you were using these fonts, either download and install them or switch to greciliae, which continues to be distributed along with Gregorio by default.
+
+*** NOTE: put the logistics of these downloads here once they've been determined ***
+
 ## 4.2
 
 ### Stemmed oriscus flexus orientation

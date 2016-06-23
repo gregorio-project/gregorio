@@ -106,9 +106,7 @@ static char add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
     }
 
     switch (shape) {
-    case S_PUNCTUM_CAVUM:
     case S_LINEA_PUNCTUM:
-    case S_LINEA_PUNCTUM_CAVUM:
     case S_LINEA:
         next_glyph_type = G_PUNCTUM;
         *end_of_glyph = DET_END_OF_BOTH;
@@ -237,10 +235,6 @@ static char add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
     case S_ORISCUS_ASCENDENS:
     case S_ORISCUS_DESCENDENS:
     case S_ORISCUS_DEMINUTUS:
-    case S_ORISCUS_CAVUM_UNDETERMINED:
-    case S_ORISCUS_CAVUM_ASCENDENS:
-    case S_ORISCUS_CAVUM_DESCENDENS:
-    case S_ORISCUS_CAVUM_DEMINUTUS:
     case S_QUILISMA:
         *end_of_glyph = DET_END_OF_PREVIOUS;
         next_glyph_type = G_PUNCTUM;
@@ -295,7 +289,6 @@ static char add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
     case S_PUNCTUM_INCLINATUM_UNDETERMINED:
     case S_PUNCTUM_INCLINATUM_ASCENDENS:
     case S_PUNCTUM_INCLINATUM_DESCENDENS:
-    case S_PUNCTUM_CAVUM_INCLINATUM:
         /*
          * Warning : this part of the code is specific to the
          * declarations of the header file
@@ -467,10 +460,6 @@ static char add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
     }
 
     switch (shape) {
-    case S_PUNCTUM_CAVUM_INCLINATUM:
-        /* treat this as descendens */
-        *punctum_inclinatum_orientation = S_PUNCTUM_INCLINATUM_DESCENDENS;
-        break;
     case S_PUNCTUM_INCLINATUM_ASCENDENS:
     case S_PUNCTUM_INCLINATUM_DESCENDENS:
         *punctum_inclinatum_orientation = shape;
@@ -483,6 +472,21 @@ static char add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
     }
 
     return next_glyph_type;
+}
+
+static bool is_cavum(gregorio_note *note, gregorio_note *last_note)
+{
+    bool is_cavum = false;
+    for (; note; note = note->next) {
+        if (note->type == GRE_NOTE) {
+            is_cavum = is_cavum || note->u.note.is_cavum;
+        }
+        /* don't look past the last note */
+        if (note == last_note) {
+            break;
+        }
+    }
+    return is_cavum;
 }
 
 /****************************
@@ -513,7 +517,9 @@ static gregorio_note *close_normal_glyph(gregorio_glyph **last_glyph,
         glyph_type = G_PUNCTUM;
     }
 
-    gregorio_add_glyph(last_glyph, glyph_type, *first_note, liquescentia);
+    gregorio_add_glyph(last_glyph, glyph_type, *first_note, liquescentia,
+            is_cavum(*first_note, current_note));
+
     if (current_note->next) {
         current_note->next->previous = NULL;
         *first_note = current_note->next;
@@ -1128,18 +1134,13 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                     /* special cases of oriscus descendens, treated like normal
                      * oriscus in some cases. */
                     if (score->legacy_oriscus_orientation) {
-                        if ((current_note->u.note.shape == S_ORISCUS_DESCENDENS
-                                    || current_note->u.note.shape
-                                    == S_ORISCUS_CAVUM_DESCENDENS)
+                        if (current_note->u.note.shape == S_ORISCUS_DESCENDENS
                                 && current_note->next
                                 && current_note->next->type == GRE_NOTE
                                 && current_note->next->u.note.pitch <
                                 current_note->u.note.pitch) {
                             last_pitch = current_note->u.note.pitch;
-                            current_note->u.note.shape =
-                                    current_note->u.note.shape
-                                    == S_ORISCUS_DESCENDENS? S_ORISCUS_ASCENDENS
-                                    : S_ORISCUS_CAVUM_ASCENDENS;
+                            current_note->u.note.shape = S_ORISCUS_ASCENDENS;
                             current_note->u.note.liquescentia =
                                     L_NO_LIQUESCENTIA;
                             current_note = next_note;
@@ -1176,31 +1177,6 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                                     == S_PUNCTUM_INCLINATUM_UNDETERMINED)
                                 && current_note->next->u.note.liquescentia
                                 == L_DEMINUTUS) {
-                            last_pitch = current_note->u.note.pitch;
-                            current_note = next_note;
-                            continue;
-                        }
-                    }
-                    if (current_note->u.note.shape == S_PUNCTUM_CAVUM_INCLINATUM) {
-                        switch (current_note->u.note.liquescentia
-                                & TAIL_LIQUESCENTIA_MASK) {
-                        case L_AUCTUS_DESCENDENS:
-                        case L_AUCTUS_ASCENDENS:
-                            current_note->u.note.shape =
-                                    S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS;
-                            break;
-                        }
-
-                        if (current_note->next
-                                && current_note->next->type == GRE_NOTE
-                                && (current_note->next->u.note.shape
-                                    == S_PUNCTUM_INCLINATUM_ASCENDENS
-                                    || current_note->next->u.note.shape
-                                    == S_PUNCTUM_INCLINATUM_DESCENDENS
-                                    || current_note->next->u.note.shape
-                                    == S_PUNCTUM_INCLINATUM_UNDETERMINED)
-                                && current_note->next->u.note.liquescentia ==
-                                L_DEMINUTUS) {
                             last_pitch = current_note->u.note.pitch;
                             current_note = next_note;
                             continue;
@@ -1252,30 +1228,6 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                             current_note->u.note.shape =
                                     S_PUNCTUM_INCLINATUM_AUCTUS;
                         }
-                        if (current_note->next
-                                && current_note->next->type == GRE_NOTE
-                                && (current_note->next->u.note.shape
-                                    == S_PUNCTUM_INCLINATUM_ASCENDENS
-                                    || current_note->next->u.note.shape
-                                    == S_PUNCTUM_INCLINATUM_DESCENDENS
-                                    || current_note->next->u.note.shape
-                                    == S_PUNCTUM_INCLINATUM_UNDETERMINED)
-                                && current_note->next->u.note.liquescentia ==
-                                L_DEMINUTUS) {
-                            current_note = next_note;
-                            continue;
-                        }
-                    }
-                    if (current_note->u.note.shape == S_PUNCTUM_CAVUM_INCLINATUM) {
-                        switch (current_note->u.note.liquescentia
-                                & TAIL_LIQUESCENTIA_MASK) {
-                        case L_AUCTUS_DESCENDENS:
-                        case L_AUCTUS_ASCENDENS:
-                            current_note->u.note.shape =
-                                    S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS;
-                            break;
-                        }
-
                         if (current_note->next
                                 && current_note->next->type == GRE_NOTE
                                 && (current_note->next->u.note.shape

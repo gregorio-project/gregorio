@@ -73,7 +73,6 @@ static const char *tex_ambitus[] = {
 SHAPE(Ancus);
 SHAPE(AncusLongqueue);
 SHAPE(AscendensOriscus);
-SHAPE(AscendensOriscusCavum);
 SHAPE(AscendensOriscusLineBL);
 SHAPE(AscendensOriscusLineTL);
 SHAPE(AscendensOriscusScapus);
@@ -81,7 +80,6 @@ SHAPE(AscendensOriscusScapusLongqueue);
 SHAPE(AscendensOriscusScapusOpenqueue);
 SHAPE(AscendensPunctumInclinatum);
 SHAPE(DescendensOriscus);
-SHAPE(DescendensOriscusCavum);
 SHAPE(DescendensOriscusLineBL);
 SHAPE(DescendensOriscusLineTL);
 SHAPE(DescendensOriscusScapus);
@@ -103,9 +101,7 @@ SHAPE(FlexusOriscusScapusLongqueue);
 SHAPE(FlexusOriscusScapusOpenqueue);
 SHAPE(Linea);
 SHAPE(LineaPunctum);
-SHAPE(LineaPunctumCavum);
 SHAPE(Natural);
-SHAPE(OriscusCavumDeminutus);
 SHAPE(OriscusDeminutus);
 SHAPE(Pes);
 SHAPE(PesQuadratum);
@@ -129,9 +125,6 @@ SHAPE(PorrectusLongqueue);
 SHAPE(PorrectusNobar);
 SHAPE(Punctum);
 SHAPE(PunctumAscendens);
-SHAPE(PunctumCavum);
-SHAPE(PunctumCavumInclinatum);
-SHAPE(PunctumCavumInclinatumAuctus);
 SHAPE(PunctumDeminutus);
 SHAPE(PunctumDescendens);
 SHAPE(PunctumInclinatumAuctus);
@@ -578,10 +571,21 @@ static const char *fusible_queued_shape(const gregorio_note *const note,
     return compute_glyph_name(glyph, name, LG_NONE, true);
 }
 
+static __inline char *code_point(const char *const shape, const bool is_cavum,
+        char *const buf, const size_t bufsize)
+{
+    if (is_cavum) {
+        gregorio_snprintf(buf, bufsize, "\\GreCavum{%s}", shape);
+    } else {
+        gregorio_snprintf(buf, bufsize, "\\GreCP%s", shape);
+    }
+    return buf;
+}
+
 static const char *determine_note_glyph_name(const gregorio_note *const note,
         const gregorio_glyph *glyph, gtex_alignment *type)
 {
-    static char buf[128];
+    static char buf[128], cpbuf[96];
     const char *name = "";
 
     gregorio_assert(note, determine_note_glyph_name, "called with NULL pointer",
@@ -607,14 +611,10 @@ static const char *determine_note_glyph_name(const gregorio_note *const note,
         return SHAPE_PunctumDescendens;
     case S_PUNCTUM_DEMINUTUS:
         return SHAPE_PunctumDeminutus;
-    case S_PUNCTUM_CAVUM:
-        return SHAPE_PunctumCavum;
     case S_LINEA:
         return SHAPE_Linea;
     case S_LINEA_PUNCTUM:
         return SHAPE_LineaPunctum;
-    case S_LINEA_PUNCTUM_CAVUM:
-        return SHAPE_LineaPunctumCavum;
     case S_VIRGA:
         switch (queuetype_of(note)) {
         case Q_ON_SPACE_ABOVE_BOTTOM_LINE:
@@ -643,7 +643,8 @@ static const char *determine_note_glyph_name(const gregorio_note *const note,
             if (note->u.note.pitch - LOWEST_PITCH == 3) {
                 /* if we're on the 'd' line, the queue could be long or short */
                 gregorio_snprintf(buf, sizeof buf,
-                        "VirgaReversaAscendensOnDLine{\\GreCP%s}", name);
+                        "VirgaReversaAscendensOnDLine{%s}", code_point(name,
+                            glyph->u.notes.is_cavum, cpbuf, sizeof cpbuf));
                 return buf;
             }
             return name;
@@ -698,21 +699,6 @@ static const char *determine_note_glyph_name(const gregorio_note *const note,
         case Q_ON_LINE_ABOVE_BOTTOM_LINE:
             return SHAPE_StrophaAuctaLongtail;
         } /* all cases return, so this line is not hit; LCOV_EXCL_LINE */
-    case S_PUNCTUM_CAVUM_INCLINATUM:
-        *type = AT_PUNCTUM_INCLINATUM;
-        return SHAPE_PunctumCavumInclinatum;
-    case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
-        *type = AT_PUNCTUM_INCLINATUM;
-        return SHAPE_PunctumCavumInclinatumAuctus;
-    case S_ORISCUS_CAVUM_ASCENDENS:
-        *type = AT_ORISCUS;
-        return SHAPE_AscendensOriscusCavum;
-    case S_ORISCUS_CAVUM_DESCENDENS:
-        *type = AT_ORISCUS;
-        return SHAPE_DescendensOriscusCavum;
-    case S_ORISCUS_CAVUM_DEMINUTUS:
-        *type = AT_ORISCUS;
-        return SHAPE_OriscusCavumDeminutus;
     case S_FLAT:
         return SHAPE_Flat;
     case S_SHARP:
@@ -1959,7 +1945,6 @@ static __inline int get_punctum_inclinatum_space_case(
         }
         break;
     case S_PUNCTUM_INCLINATUM_DESCENDENS:
-    case S_PUNCTUM_CAVUM_INCLINATUM:
         if (note->previous) {
             /* means that it is the first note of the puncta inclinata
              * sequence */
@@ -2021,7 +2006,6 @@ static __inline int get_punctum_inclinatum_space_case(
         } /* LCOV_EXCL_LINE */
         break;
     case S_PUNCTUM_INCLINATUM_AUCTUS:
-    case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
         if (note->previous) {
             /* means that it is not the first note of the puncta inclinata
              * sequence */
@@ -2372,6 +2356,7 @@ static void write_note(FILE *f, gregorio_note *note,
     unsigned int initial_shape = note->u.note.shape;
     const char *shape;
     int space_case;
+    static char cpbuf[96];
     /* type in the sense of GregorioTeX alignment type */
     gtex_alignment type = AT_ONE_NOTE;
     gregorio_assert(note, write_note, "called with NULL pointer",
@@ -2408,45 +2393,6 @@ static void write_note(FILE *f, gregorio_note *note,
     }
 
     switch (note->u.note.shape) {
-    case S_PUNCTUM_CAVUM:
-        fprintf(f, "\\GrePunctumCavum{%d}{%s}{%d}",
-                pitch_value(note->u.note.pitch),
-                next_custos(next_note_pitch, next_note_alteration), type);
-        break;
-    case S_PUNCTUM_CAVUM_INCLINATUM:
-        fprintf(f, "\\GrePunctumCavumInclinatum{%d}{%s}{%d}",
-                pitch_value(note->u.note.pitch),
-                next_custos(next_note_pitch, next_note_alteration), type);
-        break;
-    case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
-        fprintf(f, "\\GrePunctumCavumInclinatumAuctus{%d}{%s}{%d}",
-                pitch_value(note->u.note.pitch),
-                next_custos(next_note_pitch, next_note_alteration), type);
-        break;
-    case S_ORISCUS_CAVUM_ASCENDENS:
-        fprintf(f, "\\GreAscendensOriscusCavum{%d}{%s}{%d}",
-                pitch_value(note->u.note.pitch),
-                next_custos(next_note_pitch, next_note_alteration), type);
-        break;
-    case S_ORISCUS_CAVUM_DESCENDENS:
-        fprintf(f, "\\GreDescendensOriscusCavum{%d}{%s}{%d}",
-                pitch_value(note->u.note.pitch),
-                next_custos(next_note_pitch, next_note_alteration), type);
-        break;
-    case S_ORISCUS_CAVUM_DEMINUTUS:
-        fprintf(f, "\\GreOriscusCavumDeminutus{%d}{%s}{%d}",
-                pitch_value(note->u.note.pitch),
-                next_custos(next_note_pitch, next_note_alteration), type);
-        break;
-    case S_LINEA_PUNCTUM_CAVUM:
-        fprintf(f, "\\GreLineaPunctumCavum{%d}{%s}{%d}",
-                pitch_value(note->u.note.pitch),
-                next_custos(next_note_pitch, next_note_alteration), type);
-        break;
-    case S_LINEA:
-        fprintf(f, "\\GreLinea{%d}{%s}{%d}", pitch_value(note->u.note.pitch),
-                next_custos(next_note_pitch, next_note_alteration), type);
-        break;
     case S_FLAT:
         fprintf(f, "\\GreFlat{%d}{0}", pitch_value(note->u.note.pitch));
         break;
@@ -2457,7 +2403,8 @@ static void write_note(FILE *f, gregorio_note *note,
         fprintf(f, "\\GreSharp{%d}{0}", pitch_value(note->u.note.pitch));
         break;
     default:
-        fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%s}{%d}", shape,
+        fprintf(f, "\\GreGlyph{%s}{%d}{%s}{%d}",
+                code_point(shape, glyph->u.notes.is_cavum, cpbuf, sizeof cpbuf),
                 pitch_value(note->u.note.pitch),
                 next_custos(next_note_pitch, next_note_alteration), type);
         break;
@@ -2894,9 +2841,8 @@ static void write_glyph(FILE *f, gregorio_syllable *syllable,
         gregorio_element *element, gregorio_glyph *glyph,
         gregoriotex_status *const status, const gregorio_score *const score)
 {
-    /* glyph number is the number of the glyph in the fonte, it is discussed in
-     * later comments
-     * type is the type of the glyph. Understand the type of the glyph for
+    static char cpbuf[96], cpbuf2[96];
+    /* type is the type of the glyph. Understand the type of the glyph for
      * gregoriotex, for the alignement between text and notes. (AT_ONE_NOTE,
      * etc.) */
     gtex_alignment type = 0;
@@ -2944,7 +2890,8 @@ static void write_glyph(FILE *f, gregorio_syllable *syllable,
                 || glyph->u.notes.liquescentia == L_NO_LIQUESCENTIA
                 || glyph->u.notes.liquescentia == L_FUSED) {
             shape = gregoriotex_determine_glyph_name(glyph, &type, &gtype);
-            fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%s}{%d}", shape,
+            fprintf(f, "\\GreGlyph{%s}{%d}{%s}{%d}", code_point(shape,
+                        glyph->u.notes.is_cavum, cpbuf, sizeof cpbuf),
                     pitch_value(glyph->u.notes.first_note->u.note.pitch),
                     next_custos(next_note_pitch, next_note_alteration), type);
             write_signs(f, gtype, glyph, glyph->u.notes.first_note,
@@ -2959,7 +2906,8 @@ static void write_glyph(FILE *f, gregorio_syllable *syllable,
         gregorio_assert(glyph->u.notes.liquescentia & L_DEMINUTUS,
                 write_glyph, "encountered a non-deminutus ancus", break);
         shape = gregoriotex_determine_glyph_name(glyph, &type, &gtype);
-        fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%s}{%d}", shape,
+        fprintf(f, "\\GreGlyph{%s}{%d}{%s}{%d}", code_point(shape,
+                        glyph->u.notes.is_cavum, cpbuf, sizeof cpbuf),
                 pitch_value(glyph->u.notes.first_note->u.note.pitch),
                 next_custos(next_note_pitch, next_note_alteration), type);
         write_signs(f, gtype, glyph, glyph->u.notes.first_note,
@@ -2973,8 +2921,11 @@ static void write_glyph(FILE *f, gregorio_syllable *syllable,
         glyph->u.notes.glyph_type = G_PORRECTUS_FLEXUS_NO_BAR;
         glyph->u.notes.first_note = current_note->next;
         shape = gregoriotex_determine_glyph_name(glyph, &type, &gtype);
-        fprintf(f, "\\GreGlyph{\\GreFuseTwo{\\GreCP%s}{\\GreCP%s}}{%d}"
-                "{%s}{%d}", leading_shape, shape,
+        fprintf(f, "\\GreGlyph{\\GreFuseTwo{%s}{%s}}{%d}{%s}{%d}",
+                code_point(leading_shape, glyph->u.notes.is_cavum, cpbuf,
+                    sizeof cpbuf),
+                code_point(shape, glyph->u.notes.is_cavum, cpbuf2,
+                    sizeof cpbuf2),
                 pitch_value(glyph->u.notes.first_note->u.note.pitch),
                 next_custos(next_note_pitch, next_note_alteration), type);
         glyph->u.notes.first_note = current_note;
@@ -3002,9 +2953,6 @@ static void write_glyph(FILE *f, gregorio_syllable *syllable,
         case S_ORISCUS_ASCENDENS:
         case S_ORISCUS_DESCENDENS:
         case S_ORISCUS_DEMINUTUS:
-        case S_ORISCUS_CAVUM_ASCENDENS:
-        case S_ORISCUS_CAVUM_DESCENDENS:
-        case S_ORISCUS_CAVUM_DEMINUTUS:
         case S_ORISCUS_SCAPUS_ASCENDENS:
         case S_ORISCUS_SCAPUS_DESCENDENS:
             /* don't change the oriscus */
@@ -3058,8 +3006,11 @@ static void write_glyph(FILE *f, gregorio_syllable *syllable,
             glyph->u.notes.glyph_type = G_PORRECTUS_NO_BAR;
             glyph->u.notes.first_note = current_note->next;
             shape = gregoriotex_determine_glyph_name(glyph, &type, &gtype);
-            fprintf(f, "\\GreGlyph{\\GreFuseTwo{\\GreCP%s}{\\GreCP%s}}"
-                    "{%d}{%s}{%d}", leading_shape, shape,
+            fprintf(f, "\\GreGlyph{\\GreFuseTwo{%s}{%s}}{%d}{%s}{%d}",
+                    code_point(leading_shape, glyph->u.notes.is_cavum, cpbuf,
+                        sizeof cpbuf),
+                    code_point(shape, glyph->u.notes.is_cavum, cpbuf2,
+                        sizeof cpbuf2),
                     pitch_value(glyph->u.notes.first_note->u.note.pitch),
                     next_custos(next_note_pitch, next_note_alteration), type);
             glyph->u.notes.first_note = current_note;
@@ -3069,8 +3020,9 @@ static void write_glyph(FILE *f, gregorio_syllable *syllable,
             break;
         } else {
             shape = gregoriotex_determine_glyph_name(glyph, &type, &gtype);
-            fprintf(f, "\\GreGlyph{\\GreCP%s}{%d}{%s}{%d}",
-                    shape, pitch_value(glyph->u.notes.first_note->u.note.pitch),
+            fprintf(f, "\\GreGlyph{%s}{%d}{%s}{%d}", code_point(shape,
+                        glyph->u.notes.is_cavum, cpbuf, sizeof cpbuf),
+                    pitch_value(glyph->u.notes.first_note->u.note.pitch),
                     next_custos(next_note_pitch, next_note_alteration), type);
             write_signs(f, gtype, glyph, glyph->u.notes.first_note,
                     fuse_to_next_note, status, score);

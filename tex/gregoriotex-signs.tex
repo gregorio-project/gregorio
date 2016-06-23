@@ -1097,15 +1097,6 @@
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% macros for the typesetting of linea
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\def\GreLinea#1#2#3#4#5#6{%
-  \GreGlyph{\GreCPLinea}{#1}{#2}{#3}{#4}{#5}{#6}%
-  \relax %
-}%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of vertical episema
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -2078,7 +2069,6 @@
     \hbox to 0pt{%
       {%
       \color{grebackgroundcolor}%
-      \raise \gre@dimen@glyphraisevalue%
       \copy\gre@box@temp@sign %
       }%
       %\pdfliteral{}% this is a ugly hack for old versions of LuaTeX to work
@@ -2165,79 +2155,26 @@
 %% macros for typesetting punctum cavum
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\gre@fontchar@punctumcavum{\gre@font@music\GreCPPunctumCavum}%
-\def\gre@fontchar@lineapunctumcavum{\gre@font@music\GreCPLineaPunctumCavum}%
-\def\gre@fontchar@punctumcavumhole{\gre@font@music\GreCPPunctumCavumHole}%
-\def\gre@fontchar@lineapunctumcavumhole{\gre@font@music\GreCPLineaPunctumCavumHole}%
-
 \def\gresetpunctumcavum#1{%
   \IfStrEqCase{#1}{%
     {alternate}%
       {%
-        \grechangeglyph{PunctumCavum}{greciliae}{.caeciliae}%
-        \grechangeglyph{LineaPunctumCavum}{greciliae}{.caeciliae}%
-        \grechangeglyph{PunctumCavumHole}{greciliae}{.caeciliae}%
-        \grechangeglyph{LineaPunctumCavumHole}{greciliae}{.caeciliae}%
+        \grechangecavumglyph{Punctum}{greciliae-hollow}{.caeciliae}[greciliae-hole][.caeciliae]%
+        \grechangecavumglyph{LineaPunctum}{greciliae-hollow}{.caeciliae}[greciliae-hole][.caeciliae]%
       }%
     {normal}%
       {%
-        \greresetglyph{PunctumCavum}%
-        \greresetglyph{LineaPunctumCavum}%
-        \greresetglyph{PunctumCavumHole}%
-        \greresetglyph{LineaPunctumCavumHole}%
+        \greresetcavumglyph{Punctum}%
+        \greresetcavumglyph{LineaPunctum}%
       }%
     }[% all other cases
       \gre@error{Unrecognized option "#1" for \protect\gresetpunctumcavum\MessageBreak Possible options are: 'alternate' and 'normal'}%
     ]%
 }%
 
-
-\def\gre@char@cavum#1#2#3#4#5#6#7#8{%
-  \setbox\gre@box@temp@width=\hbox{#7}%
-  \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
-  \gre@skip@temp@four = \gre@dimen@lastglyphwidth\relax%
-  \kern\gre@skip@temp@four %
-  #4\relax %
-  \kern-\gre@skip@temp@four %
-  \gre@calculate@glyphraisevalue{#1}{0}{}%
+\def\GreCavum#1{%
   \ifgre@hidepclines%
-    \gre@fillhole{#8}%
+    \gre@fillhole{{\gre@font@music@hole\csname GreHoleCP#1\endcsname}}%
   \fi %
-  \GreGlyph{#7}{#1}{#2}{#3}{}{#5}{#6}%
-  %\relax %
-}%
-
-\def\GrePunctumCavum#1#2#3#4#5#6{%
-  \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
-  {\gre@fontchar@punctumcavum}{\gre@fontchar@punctumcavumhole}%
-}%
-
-\def\GreLineaPunctumCavum#1#2#3#4#5#6{%
-  \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
-  {\gre@fontchar@lineapunctumcavum}{\gre@fontchar@lineapunctumcavumhole}%
-}%
-
-\def\GrePunctumCavumInclinatum#1#2#3#4#5#6{%
-  \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
-  {\gre@font@music\GreCPPunctumCavumInclinatum}{\gre@font@music\GreCPPunctumCavumInclinatumHole}%
-}%
-
-\def\GrePunctumCavumInclinatumAuctus#1#2#3#4#5#6{%
-  \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
-  {\gre@font@music\GreCPPunctumCavumInclinatumAuctus}{\gre@font@music\GreCPPunctumCavumInclinatumAuctusHole}%
-}%
-
-\def\GreAscendensOriscusCavum#1#2#3#4#5#6{%
-  \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
-  {\gre@font@music\GreCPAscendensOriscusCavum}{\gre@font@music\GreCPAscendensOriscusCavumHole}%
-}%
-
-\def\GreDescendensOriscusCavum#1#2#3#4#5#6{%
-  \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
-  {\gre@font@music\GreCPDescendensOriscusCavum}{\gre@font@music\GreCPDescendensOriscusCavumHole}%
-}%
-
-\def\GreOriscusCavumDeminutus#1#2#3#4#5#6{%
-  \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
-  {\gre@font@music\GreCPOriscusCavumDeminutus}{\gre@font@music\GreCPOriscusCavumDeminutusHole}%
+  {\gre@font@music@hollow\csname GreHollowCP#1\endcsname}%
 }%

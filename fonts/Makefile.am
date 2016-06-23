@@ -18,13 +18,21 @@
 # You should have received a copy of the GNU General Public License
 # along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
-TTFFILES = gregorio.ttf greciliae.ttf granapadano.ttf \
-		   gregorio-op.ttf greciliae-op.ttf granapadano-op.ttf \
-		   greextra.ttf gregall.ttf gresgmodern.ttf
+TTF_GRECILIAE = greciliae.ttf greciliae-hollow.ttf greciliae-hole.ttf
+TTF_GRECILIAE_OP = greciliae-op.ttf greciliae-op-hollow.ttf greciliae-op-hole.ttf
+TTF_GREGORIO = gregorio.ttf gregorio-hollow.ttf gregorio-hole.ttf
+TTF_GREGORIO_OP = gregorio-op.ttf gregorio-op-hollow.ttf gregorio-op-hole.ttf
+TTF_GRANAPADANO = granapadano.ttf granapadano-hollow.ttf granapadano-hole.ttf
+TTF_GRANAPADANO_OP = granapadano-op.ttf granapadano-op-hollow.ttf granapadano-op-hole.ttf
+TTF_EXTRA = greextra.ttf gregall.ttf gresgmodern.ttf
+TTF_ALL = $(TTF_GRECILIAE) $(TTF_GRECILIAE_OP) $(TTF_GREGORIO) \
+		  $(TTF_GREGORIO_OP) $(TTF_GRANAPADANO) $(TTF_GRANAPADANO_OP) \
+		  $(TTF_ALL)
 SOURCEFILES = gregorio-base.sfd granapadano-base.sfd greciliae-base.sfd \
 			  greextra.sfd gregall.sfd gresgmodern.sfd
 
-EXTRA_DIST = $(TTFFILES) $(SOURCEFILES) squarize.py stemsschemas.py convertsfdtottf.py README.md simplify.py
+EXTRA_DIST = $(TTF_GRECILIAE) $(TTF_GRECILIAE_OP) $(TTF_EXTRA) $(SOURCEFILES) \
+			 squarize.py stemsschemas.py convertsfdtottf.py README.md simplify.py
 
 FONTFORGE = fontforge
 RM = rm
@@ -33,21 +41,54 @@ RM = rm
 	$(FONTFORGE) -script squarize.py $< -o $@ -c $*.json
 	$(FONTFORGE) -script simplify.py $@
 
+%-hollow.ttf: %-base.sfd squarize.py stemsschemas.py simplify.py %.json
+	$(FONTFORGE) -script squarize.py $< -o $@ -v hollow -c $*.json
+	$(FONTFORGE) -script simplify.py $@
+
+%-hole.ttf: %-base.sfd squarize.py stemsschemas.py simplify.py %.json
+	$(FONTFORGE) -script squarize.py $< -o $@ -v hole -c $*.json
+	$(FONTFORGE) -script simplify.py $@
+
 %-op.ttf: %-base.sfd squarize.py stemsschemas.py simplify.py %.json
 	$(FONTFORGE) -script squarize.py $< -o $@ -s op -c $*.json
+	$(FONTFORGE) -script simplify.py $@
+
+%-op-hollow.ttf: %-base.sfd squarize.py stemsschemas.py simplify.py %.json
+	$(FONTFORGE) -script squarize.py $< -o $@ -s op -v hollow -c $*.json
+	$(FONTFORGE) -script simplify.py $@
+
+%-op-hole.ttf: %-base.sfd squarize.py stemsschemas.py simplify.py %.json
+	$(FONTFORGE) -script squarize.py $< -o $@ -s op -v hole -c $*.json
 	$(FONTFORGE) -script simplify.py $@
 
 %.ttf: convertsfdtottf.py %.sfd
 	$(FONTFORGE) -script $< $*.sfd
 
-fonts: $(TTFFILES)
-
 clean-fonts:
-	$(RM) -f $(TTFFILES)
+	$(RM) -f $(TTF_GRECILIAE) $(TTF_GRECILIAE_OP) $(TTF_GREGORIO) \
+		$(TTF_GREGORIO_OP) $(TTF_GRANAPADANO) $(TTF_GRANAPADANO_OP)
 
-%: %.ttf
+greciliae: $(TTF_GRECILIAE)
 
-MAINTAINERCLEANFILES = $(TTFFILES)
+greciliae-op: $(TTF_GRECILIAE_OP)
+
+greciliae-all: greciliae greciliae-op
+
+gregorio: $(TTF_GREGORIO)
+
+gregorio-op: $(TTF_GREGORIO_OP)
+
+gregorio-all: gregorio gregorio-op
+
+granapadano: $(TTF_GRANAPADANO)
+
+granapadano-op: $(TTF_GRANAPADANO_OP)
+
+granapadano-all: granapadano granapadano-op
+
+extra: $(TTF_EXTRA)
+
+MAINTAINERCLEANFILES = $(TTF_ALL)
 
 install-data-local:
 	@$(TOP_LEVEL_MAKE) echo 'The Makefile in the fonts directory is no longer used for installing'
@@ -59,5 +100,9 @@ install-data-local:
 	@$(TOP_LEVEL_MAKE) echo
 	@$(TOP_LEVEL_MAKE) echo 'If you were using "make localinstall" before, now use'
 	@$(TOP_LEVEL_MAKE) echo '    ./install-gtex.sh user'
+
+really-all-fonts: greciliae-all gregorio-all granapadano-all
+
+fonts: greciliae-all extra
 
 all: fonts
