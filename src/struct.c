@@ -377,14 +377,12 @@ static void fix_oriscus_scapus_liquescentia(gregorio_note *const note,
 void gregorio_change_shape(gregorio_note *const note,
         const gregorio_shape shape, const bool legacy_oriscus_orientation)
 {
-    gregorio_shape old_shape;
     if (!note || note->type != GRE_NOTE) {
         gregorio_message(_("trying to change the shape of something that is "
                     "not a note"), "change_shape", VERBOSITY_ERROR, 0);
         return;
     }
 
-    old_shape = note->u.note.shape;
     note->u.note.shape = shape;
     switch (shape) {
     case S_STROPHA:
