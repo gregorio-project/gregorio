@@ -441,33 +441,39 @@
   \gre@skip@temp@two=0pt\relax%
   % we only need a shift if the lyrics are longer than the notes
   \gre@debugmsg{eolshift}{eolshift called with enddifference: \the #1}%
-  \ifdim#1 <0pt\relax%
-    % we only need to shift if there is a custos being printed
-    \ifgre@blockeolcustos%
-      \gre@dimen@eolshift=0pt\relax%
-    \else%
-      % The basic value for the eol shift is -enddifference
-      \gre@skip@temp@two=-#1\relax%
-      % if there is a possible hyphen (added afterwards in lua), we keep some room for it
-      \ifgre@possibleluahyphenafterthissyllable %
-        \setbox\gre@box@temp@width=\hbox{\GreHyph}%
-        \advance\gre@skip@temp@two by -\dimexpr(\wd\gre@box@temp@width * ((100 - \gre@count@protrusion@hyphen@eol) / 100))\relax%
-        \gre@debugmsg{eolshift}{adjusted enddifference for protrusion: \the\gre@skip@temp@two}%
-      \fi %
+  % dimen@temp@three is the length of the hyphen at the end of the syllable
+  \gre@dimen@temp@three=0pt\relax %
+  % if there is a possible hyphen (added afterwards in lua), we keep some room for it
+  \ifgre@possibleluahyphenafterthissyllable %
+    \setbox\gre@box@temp@width=\hbox{\GreHyph}%
+    \gre@dimen@temp@three=\dimexpr(\wd\gre@box@temp@width * ((100 - \gre@count@protrusion@hyphen@eol) / 100))\relax%
+    \gre@debugmsg{eolshift}{widthof the potential hyphen: \the\gre@dimen@temp@three}%
+  \fi %
+  % The basic value for the eol shift is -enddifference + width of the hyphen
+  \gre@skip@temp@two=\glueexpr(\gre@dimen@temp@three-\the #1)\relax%
+  \gre@debugmsg{eolshift}{adjusted enddifference: \the\gre@skip@temp@two}%
+  % if tex+hyphen goes further than the notes:
+  \ifdim\gre@skip@temp@two>0pt\relax%
+    \gre@skip@temp@three = 0pt%
+    \ifgre@blockeolcustos\else%
       % The maximum value is wd(custos) + spacebeforeeolcustos
       % Were the eolshift larger than this the lyrics would stick out
       % into the margin
       \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{\gre@pitch@g}{0}}%
       \gre@skip@temp@three = \glueexpr(\wd\gre@box@temp@width+\gre@space@skip@spacebeforeeolcustos)\relax%
-      \gre@debugmsg{eolshift}{custos + space before custos = \the\gre@skip@temp@three}%
-      % pick the smaller of the two values calculated above
-      \ifdim\gre@skip@temp@two>\gre@skip@temp@three%
-        \gre@debugmsg{eolshift}{imposing limit}%
-        \global\gre@dimen@eolshift = \gre@skip@temp@three%
-      \else%
-        \global\gre@dimen@eolshift = \gre@skip@temp@two%
-      \fi%
     \fi %
+    \gre@debugmsg{eolshift}{custos + space before custos = \the\gre@skip@temp@three}%
+    % pick the smaller of the two values calculated above
+    \ifdim\gre@skip@temp@two>\gre@skip@temp@three%
+      \gre@debugmsg{eolshift}{imposing limit}%
+      \global\gre@dimen@eolshift = \glueexpr(\gre@skip@temp@three-\gre@dimen@temp@three)\relax %
+    \else%
+      \ifdim\gre@skip@temp@two<\gre@dimen@temp@three %
+        \global\gre@dimen@eolshift = \gre@skip@temp@two\relax %
+      \else %
+        \global\gre@dimen@eolshift = \glueexpr(\gre@skip@temp@two-\gre@dimen@temp@three)\relax %
+      \fi %
+    \fi%
   \else%
     \global\gre@dimen@eolshift=0pt\relax%
   \fi %
