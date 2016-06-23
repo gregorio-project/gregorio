@@ -808,6 +808,13 @@
   \gre@debugmsg{general}{}%
   \gre@debugmsg{general}{New syllable: \expandafter\unexpanded{#1}}%
   \gre@debugmsg{general}{}%
+  % This needs to be calculated early for syllable rewriting, the value
+  % will be refined later on
+  \ifcase#4 %
+     \global\gre@possibleluahyphenafterthissyllabletrue %
+   \else %
+     \global\gre@possibleluahyphenafterthissyllablefalse %
+   \fi %
   \global\advance\gre@attr@syllable@id by 1\relax %
   \gre@showhyphenafterthissyllablefalse%
   \ifcase#4\ifgre@forcehyphen%
