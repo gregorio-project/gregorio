@@ -1,5 +1,5 @@
 dnl Gregorio
-dnl Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
+dnl Copyright (C) 2006-2016 The Gregorio Project (see CONTRIBUTORS.md)
 dnl
 dnl This file is part of Gregorio.
 dnl
