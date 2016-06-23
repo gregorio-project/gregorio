@@ -2354,7 +2354,7 @@ static const char *next_custos(const signed char next_note_pitch,
 {
     static char buf[30];
 
-    gregorio_snprintf(buf, sizeof buf, "\\GreNextCustos{%d}{%s}", 
+    gregorio_snprintf(buf, sizeof buf, "\\GreNextCustos{%d}{%s}",
             pitch_value(next_note_pitch),
             alteration_name(next_note_alteration));
 
@@ -3835,6 +3835,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                 break;
 
             case GRE_BAR:
+                handle_last_of_voice(f, element, *last_of_voice);
                 write_bar(f, element->u.misc.unpitched.info.bar,
                         element->u.misc.unpitched.special_sign,
                         element->next && !is_manual_custos(element->next)
@@ -3971,6 +3972,10 @@ static void initialize_score(gregoriotex_status *const status,
                                     &(status->bottom_height));
                         }
                     }
+                    break;
+
+                case GRE_BAR:
+                    last_of_voice[voice] = element;
                     break;
 
                 default:
