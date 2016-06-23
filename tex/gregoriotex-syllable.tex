@@ -700,7 +700,7 @@
     {off}%
       {\gre@rewritesyllablesfalse}%
     }[% all other cases
-      \gre@error{Unrecognized option "#1" for \protect\gresetsyllablerewriting\MessageBreak Possible options are 'auto' and 'force'}%
+      \gre@error{Unrecognized option "#1" for \protect\gresetsyllablerewriting\MessageBreak Possible options are 'auto' and 'off'}%
     ]%
 }%
 
@@ -808,12 +808,14 @@
   \gre@debugmsg{general}{}%
   \gre@debugmsg{general}{New syllable: \expandafter\unexpanded{#1}}%
   \gre@debugmsg{general}{}%
-  \global\advance\gre@attr@syllable@id by 1\relax %
+  % This needs to be calculated early for syllable rewriting, the value
+  % will be refined later on
   \ifcase#4 %
-    \global\gre@possibleluahyphenafterthissyllabletrue %
-  \else %
-    \global\gre@possibleluahyphenafterthissyllablefalse %
-  \fi %
+     \global\gre@possibleluahyphenafterthissyllabletrue %
+   \else %
+     \global\gre@possibleluahyphenafterthissyllablefalse %
+   \fi %
+  \global\advance\gre@attr@syllable@id by 1\relax %
   \gre@showhyphenafterthissyllablefalse%
   \ifcase#4\ifgre@forcehyphen%
     \gre@debugmsg{hyphen}{Forcing hyphen}%
@@ -910,6 +912,7 @@
     \fi %
   \fi% ficase#4
   \ifgre@showhyphenafterthissyllable\relax%
+    \global\gre@possibleluahyphenafterthissyllablefalse %
     \gre@debugmsg{hyphen}{Showing the hyphen}%
     % if it's the last syllable of line, the hyphen will be \GreHyph
     \ifnum\gre@lastoflinecount=1\relax %
@@ -931,6 +934,7 @@
     \gre@calculate@syllablefinalskip{#4}{\gre@count@temp@one}%
   \else %
     \ifcase#4 %
+      \global\gre@possibleluahyphenafterthissyllabletrue %
       \gre@debugmsg{hyphen}{No hyphen}%
       \gre@attr@dash=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
       % we rebuild this box, in order it to have the attribute
@@ -939,6 +943,8 @@
       \else%
         \setbox\gre@box@syllabletext=\box\voidb@x%
       \fi%
+    \else %
+      \global\gre@possibleluahyphenafterthissyllablefalse %
     \fi %
   \fi%
   % then we reuse temp, we assign to it the \gre@dimen@begindifference, but only if it is positive, else it is 0
@@ -1056,7 +1062,6 @@
     %this shift will shorten the line somewhat to allow the lyrics to extend under the custos should TeX decide to insert a line break after the syllable being ended
     \GreNoBreak%
     \gre@calculate@eolshift{\gre@dimen@enddifference}%
-    \gre@debugmsg{eolshift}{End of line shift: \the\gre@dimen@eolshift}%
     \kern -\gre@dimen@eolshift\relax%
   \fi%
   \ifnum#3=1\relax %
