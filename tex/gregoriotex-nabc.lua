@@ -293,11 +293,11 @@ local gregallparse_neumes = function(str, kind, scale)
       local h = heights[i] - heights[0]
       if h ~= 0 then
         h = h + 5
-        if h < 0 or h > 12 then
+        if h < 0 or h > 14 then
           base = "ERR"
           break
         end
-        base = base .. string.sub("abcdefghijklm", h + 1, h + 1)
+        base = base .. string.sub("abcdefghijklmnp", h + 1, h + 1)
       end
       i = i + 1
     end
