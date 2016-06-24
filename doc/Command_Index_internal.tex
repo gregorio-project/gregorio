@@ -521,8 +521,14 @@ Macro redrawing a key from \verb=\gre@clefnum=, useful for vertical space change
 \macroname{\textbackslash gre@currenttextabovelines}{}{gregoriotex-main.tex}
 Macro for storing the text which needs to be placed above the lines.
 
-\macroname{\textbackslash gre@typesettextabovelines}{\#1}{gregoriotex-main.tex}
-Macro for typesetting the text above the lines.
+\macroname{\textbackslash gre@typesettextabovelines}{\#1\#2}{gregoriotex-main.tex}
+Macro for typesetting the text or nabc neumes above the lines.
+
+\begin{argtable}
+  \#1 & string & Text to be typeset\\
+  \#2 & \texttt{0} & Use alt text above the lines vertical spacing\\
+  & \texttt{1} & Use nabc neumes above the lines vertical spacing\\
+\end{argtable}
 
 \macroname{\textbackslash gre@dotranslationcenterend}{}{gregoriotex-main.tex}
 Macro to typeset a centered translation.
