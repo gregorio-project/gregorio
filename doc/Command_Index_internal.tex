@@ -590,6 +590,20 @@ Internal macro to set the first syllable text after all parts are known.
 \macroname{\textbackslash gre@opening@syllabletext}{}{gregoriotex-syllable.tex}
 Macro that stores the computed \TeX\ code for rendering the text of the first syllable.
 
+\macroname{\textbackslash gre@hyphen}{\#1\#2}{gregoriotex-syllable.tex}
+Macro that typesets a hyphen.
+
+\begin{argtable}
+  \#1 & \texttt{0} & Typeset a hyphen at the end of a syllable, but not at the end of a line\\
+      & \texttt{1} & Typeset a hyphen at the end of a line\\
+      & \texttt{2} & Typeset a hyphen not at the end of a syllable\\
+  \#2 & skip & The amount of space between the syllable text on either side; only meaningful when \#1 is \texttt{0}\\
+\end{argtable}
+
+\macroname{\textbackslash gre@eolhyphen}{}{gregoriotex-syllable.tex}
+Control sequence aliased to the appropriate end-of-line hyphen macro.
+Manipulated by \verb=\greseteolhyphen=.
+
 \macroname{\textbackslash gre@exhyphencharsave}{}{gregoriotex-main.tex}
 Macro for saving the ex hyphen character so that it can be restored at the end of the score.
 
@@ -1430,13 +1444,13 @@ The divisio finalis.
 \macroname{\textbackslash gre@fontchar@divisiomaior}{}{gregoriotex-signs.tex}
 The divisio maior.
 
-\macroname{\textbackslash gre@char@normalhyphen}{}{gregoriotex-main.tex}
+\macroname{\textbackslash gre@char@normalhyphen}{}{gregoriotex-syllable.tex}
 A normal hyphen in the text font.
 
-\macroname{\textbackslash gre@char@zerohyph}{}{gregoriotex-main.tex}
+\macroname{\textbackslash gre@char@zerohyph}{}{gregoriotex-syllable.tex}
 Macro to typeset a zero-width hyphen (the hyphen is visible, it is only
-treated as if it had 0 width when calculating spaces).  Used for fine tuning spacing
-(especially at line endings).
+treated as if it had 0 width when calculating spaces).  Used for fine tuning
+spacing at line endings.
 
 \macroname{\textbackslash gre@char@fuse@debilis}{}{gregoriotex-chars.tex}
 A fused character consisting of a leading punctum initio debilis (of ambitus one) and a regular punctum.
@@ -1478,7 +1492,7 @@ Boolean used to indicate if the bottom line of the annotation should be used as 
 \macroname{\textbackslash gre@count@annotationvalign}{}{gregoriotex-main.tex}
 Count used to indicate which part of the annotation control line should be initially aligned with the top line of the staff.  Values: \texttt{0}, top; \texttt{1}, baseline; or \texttt{2}, bottom.
 
-\macroname{\textbackslash ifgre@forcehyphen}{}{gregoriotex-main.tex}
+\macroname{\textbackslash ifgre@forcehyphen}{}{gregoriotex-syllable.tex}
 Boolean used to indicate if hyphens should be forced between all syllables in a polysyllabic word.
 
 \macroname{\textbackslash ifgre@checklength}{}{gregoriotex-spaces.tex}
@@ -1896,6 +1910,9 @@ Temporary dimensions used in calculations.  There are currently five of these.
 
 \macroname{\textbackslash gre@skip@temp@...}{}{gregoriotex-spaces.tex}
 Temporary skips used in calculations.  There are currently four of these.
+
+\macroname{\textbackslash gre@skip@intersyllablespace}{}{gregoriotex-syllable.tex}
+Holds the amount of space between syllable texts in the middle of a line.
 
 \macroname{\textbackslash gre@dimen@savedglyphraise}{}{gregoriotex-signs.tex}
 Macro to hold the value of the glyph raise so that it can be restored after some calculations which may change it are performed.
