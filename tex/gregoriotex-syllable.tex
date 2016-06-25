@@ -651,6 +651,52 @@
 }%
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% some hyphen definitions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% a zero-width hyphen, useful for fine tuning line endings. To input in gabc verb for example.
+\def\gre@char@zerohyph{%
+  \hbox to 0pt{%
+  \char\the\hyphenchar\font %
+  \hss %
+  }%
+}%
+
+% a normal hyphen
+\def\gre@char@normalhyphen{%
+  %-
+  \char\the\hyphenchar\font %
+}%
+
+% the definition that will be always used for end of lines hyphens in gregorio, except if one of the two before is explicitely used
+\let\gre@eolhyphen\gre@char@normalhyphen %
+
+% macro to change the definition of the hyphen:
+\def\greseteolhyphen#1{%
+  \IfStrEqCase{#1}{%
+    {normal}%
+      {\global\let\gre@eolhyphen\gre@char@normalhyphen}%
+    {zero}%
+      {\global\let\gre@eolhyphen\gre@char@zerohyph}%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\greseteolhyphen\MessageBreak Possible options are: 'normal' and 'zero'}%
+    ]%
+}%
+
+% macro to force hyphenation of all syllables.
+\newif\ifgre@forcehyphen\gre@forcehyphenfalse%
+\def\gresethyphen#1{%
+  \IfStrEqCase{#1}{%
+    {force}%
+      {\gre@forcehyphentrue}%
+    {auto}%
+      {\gre@forcehyphenfalse}%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" in \protect\gresethyphen\MessageBreak Possible options are: 'force' and 'auto'}%
+    ]%
+}%
+
 \newif\ifgre@forceemptyfirstsyllablehyphen%
 \gre@forceemptyfirstsyllablehyphentrue%
 \def\gresetemptyfirstsyllablehyphen#1{%
@@ -663,6 +709,25 @@
       \gre@error{Unrecognized option "#1" for \protect\gresetemptyfirstsyllablehyphen\MessageBreak Possible options are 'auto' and 'force'}%
     ]%
 }%
+
+% #1 is the type of hyphen:
+%  0 for a hyphen at the end of a syllable, but not at the end of a line
+%  1 for a hyphen at the end of a line (implying it's at the end of a syllable)
+%  2 for a hyphen not at the end of a syllable
+% #2 is the available space between the syllable text on either side (only
+%  applicable when #1 is 0)
+\def\gre@hyphen#1#2{%
+  \ifcase#1\relax % 0
+    \char\the\hyphenchar\font %
+  \or % 1
+    \gre@eolhyphen %
+  \or % 2
+    \char\the\hyphenchar\font %
+  \fi %
+}%
+
+% forced hyphen within a syllable (from gabc)
+\def\GreHyph{\gre@hyphen{2}{}}%
 
 \newif\ifgre@showhyphenafterthissyllable%
 \def\GreForceHyphen{\global\gre@showhyphenafterthissyllabletrue\gre@debugmsg{hyphen}{Forcing hyphen in gabc}}
@@ -783,6 +848,8 @@
   \relax %
 }%
 
+\newskip\gre@skip@intersyllablespace
+
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : macro setting the letters of this syllable
 % #2 : reserved (unused)
@@ -893,20 +960,20 @@
   \gre@calculate@syllablefinalskip{#4}{\gre@count@temp@one}%
   \ifcase#4 %
     % we enter here if the end of word is 0, so we must determine if we need to type a dash here
-    \gre@skip@temp@one = \gre@skip@syllablefinalskip\relax%
+    \gre@skip@intersyllablespace = \gre@skip@syllablefinalskip\relax%
     \gre@debugmsg{ifdim}{ enddifference > 0pt}%
     \ifdim\gre@dimen@enddifference >0pt\relax%
-      \advance\gre@skip@temp@one by \gre@dimen@enddifference\relax%
+      \advance\gre@skip@intersyllablespace by \gre@dimen@enddifference\relax%
     \fi %
     \gre@debugmsg{ifdim}{ nextbegindifference > 0pt}%
     \ifdim\gre@skip@nextbegindifference >0pt\relax%
-      \advance\gre@skip@temp@one by \gre@skip@nextbegindifference\relax%
+      \advance\gre@skip@intersyllablespace by \gre@skip@nextbegindifference\relax%
     \fi %
     %
     % then we compare it with \gre@space@dimen@maximumspacewithoutdash, if it is larger, we add a dash
     %
     \gre@debugmsg{ifdim}{ temp@skip@one > maximumspacewithoutdash}%
-    \ifdim\gre@skip@temp@one > \gre@space@dimen@maximumspacewithoutdash\relax%
+    \ifdim\gre@skip@intersyllablespace > \gre@space@dimen@maximumspacewithoutdash\relax%
       \gre@debugmsg{hyphen}{spacing requires hyphen}%
       \gre@showhyphenafterthissyllabletrue%
     \fi %
@@ -914,16 +981,16 @@
   \ifgre@showhyphenafterthissyllable\relax%
     \global\gre@possibleluahyphenafterthissyllablefalse %
     \gre@debugmsg{hyphen}{Showing the hyphen}%
-    % if it's the last syllable of line, the hyphen will be \GreHyph
+    % if it's the last syllable of line, the hyphen will be type 2
     \ifnum\gre@lastoflinecount=1\relax %
       \ifgre@showlyrics%
-        \setbox\gre@box@syllabletext=\hbox{\gre@emit@syllabletext{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart#3{\GreHyph}\relax}{#6}}}%
+        \setbox\gre@box@syllabletext=\hbox{\gre@emit@syllabletext{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart#3{\gre@hyphen{1}{}}\relax}{#6}}}%
       \else%
         \setbox\gre@box@syllabletext=\box\voidb@x%
       \fi%
     \else %
       \ifgre@showlyrics%
-        \setbox\gre@box@syllabletext=\hbox{\gre@emit@syllabletext{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart#3{-}}{#6}}}%
+        \setbox\gre@box@syllabletext=\hbox{\gre@emit@syllabletext{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart#3{\gre@hyphen{0}{\gre@skip@intersyllablespace}}}{#6}}}%
       \else%
         \setbox\gre@box@syllabletext=\box\voidb@x%
       \fi%
