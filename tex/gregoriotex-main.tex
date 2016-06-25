@@ -1908,52 +1908,6 @@
 %%% \gre@gabcsnipper@option is DEPRECATED for removal in 5.0
 \def\gabcsnippet{\@ifnextchar[{\gre@gabcsnippet@option}{\gre@gabcsnippet}}%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% some hyphen definitions
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% a zero-width hyphen, useful for fine tuning line endings. To input in gabc verb for example.
-\def\gre@char@zerohyph{%
-  \hbox to 0pt{%
-  \char\the\hyphenchar\font %
-  \hss %
-  }%
-}%
-
-% a normal hyphen
-\def\gre@char@normalhyphen{%
-  %-
-  \char\the\hyphenchar\font %
-}%
-
-% the definition that will be always used for end of lines hyphens in gregorio, except if one of the two before is explicitely used
-\let\GreHyph\gre@char@normalhyphen %
-
-% macro to change the definition of the hyphen:
-\def\greseteolhyphen#1{%
-  \IfStrEqCase{#1}{%
-    {normal}%
-      {\global\let\GreHyph\gre@char@normalhyphen}%
-    {zero}%
-      {\global\let\GreHyph\gre@char@zerohyph}%
-    }[% all other cases
-      \gre@error{Unrecognized option "#1" for \protect\greseteolhyphen\MessageBreak Possible options are: 'normal' and 'zero'}%
-    ]%
-}%
-
-% macro to force hyphenation of all syllables.
-\newif\ifgre@forcehyphen\gre@forcehyphenfalse%
-\def\gresethyphen#1{%
-  \IfStrEqCase{#1}{%
-    {force}%
-      {\gre@forcehyphentrue}%
-    {auto}%
-      {\gre@forcehyphenfalse}%
-    }[% all other cases
-      \gre@error{Unrecognized option "#1" in \protect\gresethyphen\MessageBreak Possible options are: 'force' and 'auto'}%
-    ]%
-}%
-
 % macro called before the headers of a given inclusion
 \def\GreBeginHeaders{}%
 \long\def\grebeforeheaders#1{\def\GreBeginHeaders{#1}}%

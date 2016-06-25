@@ -445,7 +445,7 @@
   \gre@dimen@temp@three=0pt\relax %
   % if there is a possible hyphen (added afterwards in lua), we keep some room for it
   \ifgre@possibleluahyphenafterthissyllable %
-    \setbox\gre@box@temp@width=\hbox{\GreHyph}%
+    \setbox\gre@box@temp@width=\hbox{\gre@eolhyphen}%
     \gre@dimen@temp@three=\dimexpr(\wd\gre@box@temp@width * ((100 - \gre@count@protrusion@hyphen@eol) / 100))\relax%
     \gre@debugmsg{eolshift}{widthof the potential hyphen: \the\gre@dimen@temp@three}%
   \fi %
