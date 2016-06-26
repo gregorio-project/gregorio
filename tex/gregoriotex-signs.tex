@@ -269,7 +269,7 @@
 % macro that writes the initial key, and sets the next keys to the same value
 % if #3 is 3, it means that we must not put a flat after the key, otherwise it's the height
 % of the flat
-\def\GreSetInitialClef#1#2#3#4#5#6{%
+\def\GreSetInitialClef#1#2#3#4#5#6#7{%
   \gre@save@clef{#1}{#2}{#3}{#4}{#5}{#6}%
   \ifgre@showclef%
     \gre@typeclef{#1}{#2}{0}{1}{#3}{#4}{#5}{#6}%
