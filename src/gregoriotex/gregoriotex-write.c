@@ -4044,15 +4044,15 @@ static int first_note_near_clef(const gregorio_score *const score) {
                     if (glyph->u.notes.glyph_type == G_PODATUS && note->next) {
                         note = note->next;
                     }
-                    if (note->u.note.pitch > clef_pitch - 4
-                            && note->u.note.pitch < clef_pitch + 4) {
-                        return 1;
+                    if (!(note->u.note.pitch > clef_pitch - 4
+                            && note->u.note.pitch < clef_pitch + 4)) {
+                        return 0;
                     }
                 }
             }
         }
     }
-    return 0;
+    return 1;
 }
 
 void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
