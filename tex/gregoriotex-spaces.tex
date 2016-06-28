@@ -1143,12 +1143,12 @@
   \global\gre@skip@adjustednextbegindifference=\gre@skip@nextbegindifference %
   % gre@skip@alterationshift is 0 or the punctum mora shift
   \global\gre@skip@alterationshift=0pt\relax %
-  \ifnum#1>19\relax %
+  \ifnum#1>19\ifnum\gre@insidediscretionary=0\relax % next is a flat, we're not in a clef change
     \advance\gre@skip@adjustednextbegindifference by -\gre@space@dimen@alterationadjustmentbar %
     \global\gre@skip@alterationshift=\gre@space@dimen@alterationadjustmentbar\relax %
     \gre@debugmsg{barspacing}{adjustment for alteration: \gre@space@dimen@alterationadjustmentbar}%
     \gre@debugmsg{barspacing}{adjusted next begindifference (for alteration): \the\gre@skip@adjustednextbegindifference}%
-  \fi %
+  \fi\fi %
 }
 
 %punctum mora adjustment calculations
