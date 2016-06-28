@@ -770,7 +770,7 @@ Saves clef information for use in \verb=gre@updatelinesclef=.
   \#6 & integer & if \texttt{3}, it means that we must not put a flat after the secondary clef, otherwise it’s the height of the flat\\
 \end{argtable}
 
-\macroname{\textbackslash gre@typeclef}{\#1\#2\#3\#4\#5\#6\#7\#8}{gregoriotex-signs.tex}
+\macroname{\textbackslash gre@typeclef}{\#1\#2\#3\#4\#5\#6\#7\#8\#9}{gregoriotex-signs.tex}
 Macro which typesets the clef.
 
 \begin{argtable}
@@ -779,7 +779,8 @@ Macro which typesets the clef.
   \#3 & \texttt{0} & no need to use small clef characters (inside a line)\\
   & \texttt{1} & we must use small clef characters (inside a line)\\
   \#4 & \texttt{0} & no extra space is needed after the clef\\
-  & \texttt{}1 & we must type a space after the clef\\
+  & \texttt{1} & we must type a normal space after the clef\\
+  & \texttt{2} & we must type a short space after the clef\\
   \#5 & integer & if \texttt{3}, it means that we must not put a flat after the clef, otherwise it’s the height of the flat\\
   \#6 & character & the type of the secondary clef: c or f\\
   \#7 & integer & the line of the secondary clef (1 is the lowest, 0 for no secondary clef)\\

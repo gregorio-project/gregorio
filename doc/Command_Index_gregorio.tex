@@ -855,7 +855,7 @@ ligatures. In this example we should call \verb=\grefixedtext{\textit{ffj}}=.
   \#1 & character & The initial letter of the score.\\
 \end{argtable}
 
-\macroname{\textbackslash GreSetInitialClef}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreSetInitialClef}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-signs.tex}
 Macro for writing initial clef.
 
 \begin{argtable}
@@ -865,6 +865,7 @@ Macro for writing initial clef.
   \#4 & \texttt{c} or \texttt{f} & Type of secondary clef.\\
   \#5 & \texttt{0}--\texttt{5} & Line of secondary clef (\texttt{0} for no secondary clef).\\
   \#6 & integer & Height of flat in secondary clef (\texttt{3} for no flat).\\
+  \#7 & integer & \texttt{0} if clef and first note are far enough to use a shorter space, 1 otherwise.\\
 \end{argtable}
 
 \macroname{\textbackslash GreSetLinesClef}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-main.tex}
