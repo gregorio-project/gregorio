@@ -9,9 +9,11 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Space at the end of line was not always correct when a line is cut in the middle of a word (see [#1155](https://github.com/gregorio-project/gregorio/issues/1155)).
 - In rare cases, the very last bar or glyph of a score could appear alone at the beginning of the final line (see [#1152](https://github.com/gregorio-project/gregorio/issues/1152)).
 - In cases of a syllable without note, the space between notes of the previous and next syllables was sometimes not enough (see [#1137](https://github.com/gregorio-project/gregorio/issues/1137)).
+- `moraadjustment` and `moraadjustmentbar` did not scale when changing factor, they do now.
 
 ### Changed
 - When the clef and the first note are at a reasonable vertical distance, `shortspaceafterlineclef` is used instead of `spaceafterlineclef` (make them equal if you don't want this feature). This is used only on the first line, when there is an initial on one line. See [#1138](https://github.com/gregorio-project/gregorio/issues/1138).
+- When an alteration follows a bar, it is not completely taken into consideration in the new bar spacing algorithm (similarly to the punctum mora), this behavior can be tuned with the newly introduced space `alterationadjustmentbar`. See [#1146](https://github.com/gregorio-project/gregorio/issues/1146).
 
 ## [4.2.0-rc1] - 2016-05-31
 ### Fixed
