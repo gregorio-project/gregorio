@@ -1966,8 +1966,12 @@ def write_porrectus(i, j, last_glyph, shape, lique=L_NOTHING, qtype=None):
     if j == 1 and glyph_exists("porrectusam1%d" % i):
         first_glyph = "porrectusam1%d" % i
     if last_glyph == 'auctusa2' or last_glyph == 'PunctumAuctusLineBL' or last_glyph == '':
-        if j == 1 and last_glyph == '':
+        if j == 1:
             first_glyph = "porrectusflexusnb%d" % i
+            if last_glyph == 'auctusa2':
+                last_glyph = 'PunctumAscendens'
+            elif last_glyph == 'PunctumAuctusLineBL':
+                last_glyph = 'PunctumDescendens'
         else:
             first_glyph = "porrectusflexus%d" % i
     if not glyph_exists(first_glyph):
@@ -1984,8 +1988,10 @@ def write_porrectus(i, j, last_glyph, shape, lique=L_NOTHING, qtype=None):
         length = length+get_width('line2')
         paste_and_move(last_glyph, (length-get_width(last_glyph)),
                        (j-i)*FONT_CONFIG['base height'])
-    elif last_glyph == 'auctusa2' or last_glyph == 'PunctumAuctusLineBL':
-        paste_and_move(last_glyph, (length), (j-i)*FONT_CONFIG['base height'])
+    elif last_glyph == 'auctusa2' or last_glyph == 'PunctumAuctusLineBL' or last_glyph == 'PunctumAscendens' or last_glyph == 'PunctumDescendens':
+        if j==1:
+            length = length+get_width('line2')
+        paste_and_move(last_glyph, length, (j-i)*FONT_CONFIG['base height'])
         length = length + get_width(last_glyph)
     elif last_glyph != '':
         paste_and_move(last_glyph,
@@ -2432,6 +2438,12 @@ def write_torculusresupinus(i, j, k, first_glyph, last_glyph, shape,
         middle_glyph = "porrectusam1%d" % j
     if last_glyph == 'auctusa2' or last_glyph == 'PunctumAuctusLineBL':
         middle_glyph = "porrectusflexus%d" % j
+        if k == 1:
+            middle_glyph = "porrectusflexusnb%d" % j
+            if last_glyph == 'auctusa2':
+                last_glyph = 'PunctumAscendens'
+            elif last_glyph == 'PunctumAuctusLineBL':
+                last_glyph = 'PunctumDescendens'
     if not glyph_exists(middle_glyph):
         return
     if i == 1 and first_glyph != 'idebilis':
@@ -2454,9 +2466,11 @@ def write_torculusresupinus(i, j, k, first_glyph, last_glyph, shape,
         paste_and_move(last_glyph,
                        (length-get_width('rdeminutus')),
                        (i-j+k)*FONT_CONFIG['base height'])
-    elif last_glyph == 'auctusa2' or last_glyph == 'PunctumAuctusLineBL':
-        paste_and_move(last_glyph, (length-get_width('line2')), (i-j+k)*FONT_CONFIG['base height'])
-        length = length - get_width('line2') + get_width(last_glyph)
+    elif last_glyph == 'auctusa2' or last_glyph == 'PunctumAuctusLineBL' or last_glyph == 'PunctumAscendens' or last_glyph == 'PunctumDescendens':
+        if k>1:
+            length = length-get_width('line2')
+        paste_and_move(last_glyph, length, (i-j+k)*FONT_CONFIG['base height'])
+        length = length + get_width(last_glyph)
     else:
         paste_and_move(last_glyph, (length-get_width(last_glyph)),
                        (i-j+k)*FONT_CONFIG['base height'])
