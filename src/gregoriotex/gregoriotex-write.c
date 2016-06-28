@@ -4034,18 +4034,35 @@ static int first_note_near_clef(const gregorio_score *const score) {
         clef = score->first_voice_info->initial_clef;
         if (!clef.secondary_line && !clef.flatted && score->first_syllable
                 && score->first_syllable->elements) {
-            gregorio_element *element = score->first_syllable->elements[0];
+            const gregorio_element *element = score->first_syllable->elements[0];
             if (element && element->type == GRE_ELEMENT) {
-                gregorio_glyph *glyph = element->u.first_glyph;
+                const gregorio_glyph *glyph = element->u.first_glyph;
                 if (glyph && glyph->type == GRE_GLYPH) {
-                    signed char clef_pitch = LOW_LINE_PITCH
+                    const signed char clef_pitch = LOW_LINE_PITCH
                         + ((clef.line - 1) * 2);
-                    gregorio_note *note = glyph->u.notes.first_note;
-                    if (glyph->u.notes.glyph_type == G_PODATUS && note->next) {
-                        note = note->next;
+                    const gregorio_note *low_note = glyph->u.notes.first_note;
+                    const gregorio_note *high_note = low_note;
+                    switch (glyph->u.notes.glyph_type) {
+                    case G_PODATUS:
+                        /* next note is above the previous */
+                        if (low_note->next) {
+                            high_note = low_note->next;
+                        }
+                        break;
+                    case G_FLEXA:
+                    case G_PORRECTUS:
+                    case G_PORRECTUS_FLEXUS:
+                        /* there is a stem the size of the ambitus */
+                        if (high_note->next) {
+                            low_note = high_note->next;
+                        }
+                        break;
+                    default:
+                        /* to prevent the enum warning */
+                        break;
                     }
-                    if (!(note->u.note.pitch > clef_pitch - 4
-                            && note->u.note.pitch < clef_pitch + 4)) {
+                    if (high_note->u.note.pitch < clef_pitch - 3
+                            || low_note->u.note.pitch > clef_pitch + 3) {
                         return 0;
                     }
                 }
