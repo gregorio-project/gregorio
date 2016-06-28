@@ -1664,19 +1664,24 @@ static void write_bar(FILE *f, gregorio_bar type,
     fprintf(f, "{%c}", has_text? '1' : '0');
     switch (signs) {
     case _V_EPISEMA:
-        fprintf(f, "{\\GreBarVEpisema{\\GreOCase%s}}%%\n", offset_case);
+        fprintf(f, "{\\GreBarVEpisema{\\GreOCase%s}}", offset_case);
         break;
     case _BAR_H_EPISEMA:
-        fprintf(f, "{\\GreBarBrace{\\GreOCase%s}}%%\n", offset_case);
+        fprintf(f, "{\\GreBarBrace{\\GreOCase%s}}", offset_case);
         break;
     case _V_EPISEMA_BAR_H_EPISEMA:
         fprintf(f, "{\\GreBarBrace{\\GreOCase%s}"
-                "\\GreBarVEpisema{\\GreOCase%s}}%%\n",
+                "\\GreBarVEpisema{\\GreOCase%s}}",
                 offset_case, offset_case);
         break;
     default:
-        fprintf(f, "{}%%\n");
+        fprintf(f, "{}");
         break;
+    }
+    if (type == B_VIRGULA || type == B_DIVISIO_MINIMA) {
+        fprintf(f, "{0}%%\n");
+    } else {
+        fprintf(f, "%%\n");
     }
 }
 

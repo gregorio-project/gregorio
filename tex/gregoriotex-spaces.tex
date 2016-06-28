@@ -1736,8 +1736,14 @@
   \ifgre@scale@bar@virgula%
     \gre@changeonedimenfactor{bar@virgula}{#1}{#2}%
   \fi%
+  \ifgre@scale@bar@virgula@short%
+    \gre@changeonedimenfactor{bar@virgula@short}{#1}{#2}%
+  \fi%
   \ifgre@scale@bar@minima%
     \gre@changeonedimenfactor{bar@minima}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minima@short%
+    \gre@changeonedimenfactor{bar@minima@short}{#1}{#2}%
   \fi%
   \ifgre@scale@bar@minor%
     \gre@changeonedimenfactor{bar@minor}{#1}{#2}%
@@ -1757,8 +1763,14 @@
   \ifgre@scale@bar@virgula@standalone@text%
     \gre@changeonedimenfactor{bar@virgula@standalone@text}{#1}{#2}%
   \fi%
+  \ifgre@scale@bar@virgula@standalone@text@short%
+    \gre@changeonedimenfactor{bar@virgula@standalone@text@short}{#1}{#2}%
+  \fi%
   \ifgre@scale@bar@minima@standalone@text%
     \gre@changeonedimenfactor{bar@minima@standalone@text}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minima@standalone@text@short%
+    \gre@changeonedimenfactor{bar@minima@standalone@text@short}{#1}{#2}%
   \fi%
   \ifgre@scale@bar@minor@standalone@text%
     \gre@changeonedimenfactor{bar@minor@standalone@text}{#1}{#2}%
@@ -1775,8 +1787,14 @@
   \ifgre@scale@bar@virgula@standalone@notext%
     \gre@changeonedimenfactor{bar@virgula@standalone@notext}{#1}{#2}%
   \fi%
+  \ifgre@scale@bar@virgula@standalone@notext@short%
+    \gre@changeonedimenfactor{bar@virgula@standalone@notext@short}{#1}{#2}%
+  \fi%
   \ifgre@scale@bar@minima@standalone@notext%
     \gre@changeonedimenfactor{bar@minima@standalone@notext}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minima@standalone@notext@short%
+    \gre@changeonedimenfactor{bar@minima@standalone@notext@short}{#1}{#2}%
   \fi%
   \ifgre@scale@bar@minor@standalone@notext%
     \gre@changeonedimenfactor{bar@minor@standalone@notext}{#1}{#2}%
