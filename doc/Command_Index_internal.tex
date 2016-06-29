@@ -1887,6 +1887,9 @@ Stored value of enddifference prior to the current one after adjusting for the p
 \macroname{\textbackslash gre@skip@nextbegindifference}{}{gregoriotex-spaces.tex}
 The difference between the start of the notes and the start of the text for the next syllable.  Positive when when text begins first, negative in other case.
 
+\macroname{\textbackslash gre@dimen@adjustednextbegindifference}{}{gregoriotex-spaces.tex}
+Only used in new bar spacing algorithm. It is \verb=grebegindifference= adjusted with \verb=alterationadjustmentbar= if relevant.
+
 \macroname{\textbackslash gre@dimen@begindifference}{}{gregoriotex-spaces.tex}
 The difference between the start of the notes and the start of the text for the current syllable.  Positive when when text begins first, negative in other case.  This means that \verb=\kern\gre@dimen@begindifference= will take you from the start of the notes to the start of the text.
 
