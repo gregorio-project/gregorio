@@ -1,6 +1,6 @@
 %GregorioTeX file.
 %
-% Copyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)
+% Copyright (C) 2007-2016 The Gregorio Project (see CONTRIBUTORS.md)
 %
 % This file is part of Gregorio.
 %
@@ -425,7 +425,7 @@
 \newcount\gre@count@protrusion@hyphen@eol %
 
 % protrusion for hyphens inerted by Lua
-\gre@count@protrusion@hyphen@eol = 50\relax
+\gre@count@protrusion@hyphen@eol = 0\relax
 
 \def\gresethyphenprotrusion#1{%
   \gre@count@protrusion@hyphen@eol = #1\relax %
@@ -441,33 +441,39 @@
   \gre@skip@temp@two=0pt\relax%
   % we only need a shift if the lyrics are longer than the notes
   \gre@debugmsg{eolshift}{eolshift called with enddifference: \the #1}%
-  \ifdim#1 <0pt\relax%
-    % we only need to shift if there is a custos being printed
-    \ifgre@blockeolcustos%
-      \gre@dimen@eolshift=0pt\relax%
-    \else%
-      % The basic value for the eol shift is -enddifference
-      \gre@skip@temp@two=-#1\relax%
-      % if there is a possible hyphen (added afterwards in lua), we keep some room for it
-      \ifgre@possibleluahyphenafterthissyllable %
-        \setbox\gre@box@temp@width=\hbox{\GreHyph}%
-        \advance\gre@skip@temp@two by -\dimexpr(\wd\gre@box@temp@width * ((100 - \gre@count@protrusion@hyphen@eol) / 100))\relax%
-        \gre@debugmsg{eolshift}{adjusted enddifference for protrusion: \the\gre@skip@temp@two}%
-      \fi %
+  % dimen@temp@three is the length of the hyphen at the end of the syllable
+  \gre@dimen@temp@three=0pt\relax %
+  % if there is a possible hyphen (added afterwards in lua), we keep some room for it
+  \ifgre@possibleluahyphenafterthissyllable %
+    \setbox\gre@box@temp@width=\hbox{\GreHyph}%
+    \gre@dimen@temp@three=\dimexpr(\wd\gre@box@temp@width * ((100 - \gre@count@protrusion@hyphen@eol) / 100))\relax%
+    \gre@debugmsg{eolshift}{widthof the potential hyphen: \the\gre@dimen@temp@three}%
+  \fi %
+  % The basic value for the eol shift is -enddifference + width of the hyphen
+  \gre@skip@temp@two=\glueexpr(\gre@dimen@temp@three-\the #1)\relax%
+  \gre@debugmsg{eolshift}{adjusted enddifference: \the\gre@skip@temp@two}%
+  % if tex+hyphen goes further than the notes:
+  \ifdim\gre@skip@temp@two>0pt\relax%
+    \gre@skip@temp@three = 0pt%
+    \ifgre@blockeolcustos\else%
       % The maximum value is wd(custos) + spacebeforeeolcustos
       % Were the eolshift larger than this the lyrics would stick out
       % into the margin
       \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{\gre@pitch@g}{0}}%
       \gre@skip@temp@three = \glueexpr(\wd\gre@box@temp@width+\gre@space@skip@spacebeforeeolcustos)\relax%
-      \gre@debugmsg{eolshift}{custos + space before custos = \the\gre@skip@temp@three}%
-      % pick the smaller of the two values calculated above
-      \ifdim\gre@skip@temp@two>\gre@skip@temp@three%
-        \gre@debugmsg{eolshift}{imposing limit}%
-        \global\gre@dimen@eolshift = \gre@skip@temp@three%
-      \else%
-        \global\gre@dimen@eolshift = \gre@skip@temp@two%
-      \fi%
     \fi %
+    \gre@debugmsg{eolshift}{custos + space before custos = \the\gre@skip@temp@three}%
+    % pick the smaller of the two values calculated above
+    \ifdim\gre@skip@temp@two>\gre@skip@temp@three%
+      \gre@debugmsg{eolshift}{imposing limit}%
+      \global\gre@dimen@eolshift = \glueexpr(\gre@skip@temp@three-\gre@dimen@temp@three)\relax %
+    \else%
+      \ifdim\gre@skip@temp@two<\gre@dimen@temp@three %
+        \global\gre@dimen@eolshift = \gre@skip@temp@two\relax %
+      \else %
+        \global\gre@dimen@eolshift = \glueexpr(\gre@skip@temp@two-\gre@dimen@temp@three)\relax %
+      \fi %
+    \fi%
   \else%
     \global\gre@dimen@eolshift=0pt\relax%
   \fi %
@@ -731,12 +737,17 @@
 \newdimen\gre@dimen@additionaltopspace\relax%
 % the one taken into account for above lines text height
 \newdimen\gre@dimen@additionaltopspacealt\relax%
+% the one taken into account for above lines nabc height
+\newdimen\gre@dimen@additionaltopspacenabc\relax%
 
 \newcount\gre@space@count@additionaltopspacethreshold\relax%
 \gre@space@count@additionaltopspacethreshold=2
 
 \newcount\gre@space@count@additionaltopspacealtthreshold\relax%
-\gre@space@count@additionaltopspacethreshold=0
+\gre@space@count@additionaltopspacealtthreshold=0
+
+\newcount\gre@space@count@additionaltopspacenabcthreshold\relax%
+\gre@space@count@additionaltopspacenabcthreshold=4
 
 % #1 is the high height
 % #2 is the low height
@@ -755,6 +766,12 @@
     \global\gre@dimen@additionaltopspacealt=\dimexpr(15750 sp * \gre@count@temp@one * \gre@factor)\relax %
   \else %
     \global\gre@dimen@additionaltopspacealt=0 sp%
+  \fi %
+  \gre@count@temp@one=\numexpr(#1 - \gre@pitch@adjust@top - \gre@space@count@additionaltopspacenabcthreshold)\relax %
+  \ifnum\gre@count@temp@one>0\relax %
+    \global\gre@dimen@additionaltopspacenabc=\dimexpr(15750 sp * \gre@count@temp@one * \gre@factor)\relax %
+  \else %
+    \global\gre@dimen@additionaltopspacenabc=0 sp%
   \fi %
   \gre@count@temp@one=\numexpr((#2 - \gre@pitch@adjust@bottom) * -1)\relax %
   \ifnum\gre@count@temp@one>0\relax %
@@ -862,12 +879,14 @@
     %to prevent the pollution of the normal values, we stock them into a temp value
     \gre@dimen@temp@two=\gre@dimen@textaligncenter\relax%
     \gre@calculate@textaligncenter{#1}{#2}{#3}{1}%
+    \gre@dimen@temp@four=\gre@dimen@notesaligncenter\relax%
     \global\gre@skip@nextbegindifference=-\gre@dimen@textaligncenter\relax%
-    \global\gre@dimen@textaligncenter=\gre@dimen@temp@two %
-    \gre@dimen@temp@two=\gre@dimen@notesaligncenter\relax%
+    % caution: calculate@nextnotesaligncenter needs a properly set \gre@dimen@textaligncenter
+    % (corresponding to the text align center of the next syllable)
     \gre@calculate@nextnotesaligncenter{#5}% idem
     \global\advance\gre@skip@nextbegindifference by \the\gre@dimen@notesaligncenter\relax%
-    \global\gre@dimen@notesaligncenter=\gre@dimen@temp@two %
+    \global\gre@dimen@textaligncenter=\gre@dimen@temp@two %
+    \global\gre@dimen@notesaligncenter=\gre@dimen@temp@four %
   \fi %
   \relax %
 }%
@@ -990,8 +1009,11 @@
   \gre@debugmsg{barspacing}{allocated text space: \the\gre@skip@text@allocation}%
   \gre@debugmsg{barspacing}{allocated notes space: \the\gre@skip@bar@allocation}%
   % now we check the bar width
-  \gre@debugmsg{barspacing}{bar width: \the\wd\gre@box@syllablenotes}%
   \gre@skip@bar@requirement = \wd\gre@box@syllablenotes\relax%
+  \ifdim\gre@skip@bar@requirement=0pt\relax % no notes
+    \gre@skip@bar@requirement=\gre@space@skip@interwordspacenotes %
+  \fi %
+  \gre@debugmsg{barspacing}{bar width: \the\gre@skip@bar@requirement}%
   \ifdim\gre@skip@bar@allocation < \gre@skip@bar@requirement\relax%
     \advance\gre@skip@text@allocation by \glueexpr(\gre@skip@bar@requirement - \gre@skip@bar@allocation)\relax%
     \gre@skip@bar@allocation = \gre@skip@bar@requirement\relax%
@@ -1617,6 +1639,9 @@
   \fi%
   \ifgre@scale@spaceafterlineclef%
     \gre@changeonedimenfactor{spaceafterlineclef}{#1}{#2}%
+  \fi%
+  \ifgre@scale@shortspaceafterlineclef%
+    \gre@changeonedimenfactor{shortspaceafterlineclef}{#1}{#2}%
   \fi%
   \ifgre@scale@interwordspacenotes%
     \gre@changeonedimenfactor{interwordspacenotes}{#1}{#2}%
