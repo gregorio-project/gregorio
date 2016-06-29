@@ -1665,14 +1665,14 @@
     \ifcase#1 %
       \ifcase#3 %
         \ifcase#2 @standalone@notext\or @standalone@text\fi %
-      \or
+      \or %
         \ifcase#2 @standalone@notext@short\or @standalone@text@short\fi %
       \fi %
     \else %
-      \ifcase#3\or @short\fi %
+      \ifcase#3 \or @short\fi %
     \fi %
   \else %
-    \ifcase#3\or @short\fi %
+    \ifcase#3 \or @short\fi %
   \fi %
 }%
 
