@@ -934,7 +934,9 @@
 \newskip\gre@skip@text@allocation% amount of space allocated to the text
 \newdimen\gre@dimen@text@shift% displacement from center of the text’s position
 \newdimen\gre@dimen@adjustedpreviousenddifference% previousenddifference adjusted to account for the presence of a punctum mora at the end of the pervious syllable
+\newdimen\gre@skip@adjustednextbegindifference% idem, nextbegindifference taking into account the presence of an alteration at the beginning of next syllable
 \newskip\gre@skip@punctummorashift% displacement of whole syllable to account for the presence of a punctum mora at the end of the previous syllable
+\newskip\gre@skip@alterationshift % idem for alteration at the beginning of next syllable
 
 %
 % New bar spacing algorithm
@@ -947,6 +949,8 @@
   \gre@debugmsg{barspacing}{calculate available space}%
   % first, recomputing \gre@dimen@previousenddifference into \gre@dimen@adjustedpreviousenddifference
   \gre@punctummoraadjustment%
+  % recomputing \gre@dimen@nextbegindifference into \gre@dimen@adjustednextdifference
+  \gre@alterationadjustment{#2}%
   \ifdim\gre@dimen@adjustedpreviousenddifference > 0pt\relax%
     % the notes ended after the text in the previous syllable
     \gre@skip@text@allocation = \gre@dimen@adjustedpreviousenddifference\relax%
@@ -956,14 +960,14 @@
     \gre@skip@text@allocation = 0pt\relax%
     \gre@skip@bar@allocation = -\gre@dimen@adjustedpreviousenddifference\relax%
   \fi%
-  \ifdim\gre@skip@nextbegindifference > 0pt\relax%
+  \ifdim\gre@skip@adjustednextbegindifference > 0pt\relax%
     % the text began after the notes in the next syllable
-    \advance\gre@skip@text@allocation by \gre@skip@nextbegindifference\relax%
+    \advance\gre@skip@text@allocation by \gre@skip@adjustednextbegindifference\relax%
     \advance\gre@skip@bar@allocation by 0pt\relax%
   \else%
     % the notes begin after the text in the next syllable
     \advance\gre@skip@text@allocation by 0pt\relax%
-    \advance\gre@skip@bar@allocation by -\gre@skip@nextbegindifference\relax%
+    \advance\gre@skip@bar@allocation by -\gre@skip@adjustednextbegindifference\relax%
   \fi%
   \gre@debugmsg{barspacing}{space available to text: \the\gre@skip@text@allocation}%
   \gre@debugmsg{barspacing}{spacing available to notes: \the\gre@skip@bar@allocation}%
@@ -1133,11 +1137,24 @@
   \gre@debugmsg{barspacing}{syllablefinalskip: \the\gre@skip@syllablefinalskip}%
 }%
 
+% alteration adjustment calculations
+\def\gre@alterationadjustment#1{%
+  % taking into account the punctum mora shift
+  \global\gre@skip@adjustednextbegindifference=\gre@skip@nextbegindifference %
+  % gre@skip@alterationshift is 0 or the punctum mora shift
+  \global\gre@skip@alterationshift=0pt\relax %
+  \ifnum#1>19\ifnum\gre@insidediscretionary=0\relax % next is a flat, we're not in a clef change
+    \advance\gre@skip@adjustednextbegindifference by -\gre@space@dimen@alterationadjustmentbar %
+    \global\gre@skip@alterationshift=\gre@space@dimen@alterationadjustmentbar\relax %
+    \gre@debugmsg{barspacing}{adjustment for alteration: \gre@space@dimen@alterationadjustmentbar}%
+    \gre@debugmsg{barspacing}{adjusted next begindifference (for alteration): \the\gre@skip@adjustednextbegindifference}%
+  \fi\fi %
+}
 
 %punctum mora adjustment calculations
 \def\gre@punctummoraadjustment{%
   % taking into account the punctum mora shift
-  \gre@dimen@adjustedpreviousenddifference=\gre@dimen@previousenddifference %
+  \global\gre@dimen@adjustedpreviousenddifference=\gre@dimen@previousenddifference %
   % gre@skip@punctummorashift is 0 or the punctum mora shift
   \gre@skip@punctummorashift=0pt\relax %
   \ifgre@lastendswithmora %
@@ -1495,6 +1512,7 @@
     {spaceporrectuspunctummorashift}{\gre@rubberfalse}%
     {raresignshift}{\gre@rubberfalse}%
     {divisiofinalissep}{\gre@rubberfalse}%
+    {alterationadjustmentbar}{\gre@rubberfalse}%
   }[\gre@rubbertrue]%
 }%
 
@@ -1900,6 +1918,15 @@
   \fi%
   \ifgre@scale@bar@rubber%
     \gre@changeonedimenfactor{bar@rubber}{#1}{#2}%
+  \fi%
+  \ifgre@scale@moraadjustment%
+    \gre@changeonedimenfactor{moraadjustment}{#1}{#2}%
+  \fi%
+  \ifgre@scale@moraadjustmentbar%
+    \gre@changeonedimenfactor{moraadjustment}{#1}{#2}%
+  \fi%
+  \ifgre@scale@alterationadjustmentbar%
+    \gre@changeonedimenfactor{alterationadjustmentbar}{#1}{#2}%
   \fi%
   \ifgre@scale@divisiofinalissep%
     \gre@changeonedimenfactor{divisiofinalissep}{#1}{#2}%

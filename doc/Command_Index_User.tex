@@ -1794,6 +1794,9 @@ Maximum distance by which the center of a bar and the center of its associated t
 Same as \texttt{maxbaroffsettextleft@eol} but when the center of the text goes right of the center of the bar.
 \end{gdimension}
 
+\begin{gdimension}{alterationadjustmentbar}
+In the case of an alteration after a bar, the alteration will go a bit left of this value. This can be compared to \texttt{moraadjustmentbar}.
+\end{gdimension}
 
 \subsection{Penalties}\label{penalties}
 Penalties are used by \TeX\ to determine where line and page breaks should occur.  Gregorio\TeX\ modifies or defines a few of its own to help with that process in scores.  With the exception of \texttt{emergencystretch} (which should be changed using \verb=\grechangedim=) these should be changed using \verb=\grechangecount=, described above.
