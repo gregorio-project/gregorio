@@ -12,6 +12,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 
 ### Changed
 - When the clef and the first note are at a reasonable vertical distance, `shortspaceafterlineclef` is used instead of `spaceafterlineclef` (make them equal if you don't want this feature). This is used only on the first line, when there is an initial on one line. See [#1138](https://github.com/gregorio-project/gregorio/issues/1138).
+- Very small improvement in the design of the porrectus auctus and torculus resupinus auctus (see [#1169](https://github.com/gregorio-project/gregorio/issues/1169)).
 - When the notes around a virgular or divisio minima are very low, the spaces used are new shorter spaces with a `@short` prefix. To cancel this feature, make them the same as their normal version. See [#1144](https://github.com/gregorio-project/gregorio/issues/1144).
 
 ## [4.2.0-rc1] - 2016-05-31
