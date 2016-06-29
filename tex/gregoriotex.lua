@@ -1,6 +1,6 @@
 --GregorioTeX Lua file.
 --
---Copyright (C) 2008-2015 The Gregorio Project (see CONTRIBUTORS.md)
+--Copyright (C) 2008-2016 The Gregorio Project (see CONTRIBUTORS.md)
 --
 --This file is part of Gregorio.
 --
@@ -33,7 +33,7 @@ local err, warn, info, log = luatexbase.provides_module({
     date               = "2016/05/31", -- GREGORIO_DATE_LTX
     description        = "GregorioTeX module.",
     author             = "The Gregorio Project (see CONTRIBUTORS.md)",
-    copyright          = "2008-2015 - The Gregorio Project",
+    copyright          = "2008-2016 - The Gregorio Project",
     license            = "GPLv3+",
 })
 

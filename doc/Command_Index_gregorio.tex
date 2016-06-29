@@ -631,6 +631,9 @@ Macro to call if you want to go to the next line.
 \macroname{\textbackslash GreNewParLine}{}{gregoriotex-main.tex}
 Same as \verb=\GreNewLine= except line is not justified.
 
+\macroname{\textbackslash GreFinalNewLine}{}{gregoriotex-main.tex}
+Handles a new line after the final bar.  This currently just advances \verb=\gre@knownline= in order to prevent a potential error message with a two-line initial on a two-line score.
+
 \macroname{\textbackslash GreNextCustos}{\#1\#2}{gregoriotex-signs.tex}
 Sets the pitch to use for the next custos if it were to happen at the point
 where this macro is called.
@@ -772,7 +775,7 @@ ligatures. In this example we should call \verb=\grefixedtext{\textit{ffj}}=.
   \#1 & character & The initial letter of the score.\\
 \end{argtable}
 
-\macroname{\textbackslash GreSetInitialClef}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreSetInitialClef}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-signs.tex}
 Macro for writing initial clef.
 
 \begin{argtable}
@@ -782,6 +785,7 @@ Macro for writing initial clef.
   \#4 & \texttt{c} or \texttt{f} & Type of secondary clef.\\
   \#5 & \texttt{0}--\texttt{5} & Line of secondary clef (\texttt{0} for no secondary clef).\\
   \#6 & integer & Height of flat in secondary clef (\texttt{3} for no flat).\\
+  \#7 & integer & \texttt{0} if clef and first note are far enough to use a shorter space, 1 otherwise.\\
 \end{argtable}
 
 \macroname{\textbackslash GreSetLinesClef}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-main.tex}
@@ -796,6 +800,14 @@ Macro to define the clef that will appear at the beginning of the lines.
   \#5 & \texttt{c} or \texttt{f} & Type of secondary clef.\\
   \#6 & \texttt{0}--\texttt{5} & Line of secondary clef (\texttt{0} for no secondary clef).\\
   \#7 & integer & Height of flat in secondary clef (\texttt{3} for no flat).\\
+\end{argtable}
+
+\macroname{\textbackslash GreSetNabcAboveLines}{\#1}{gregoriotex-main.tex}
+Macro to place argument containing Nabc neumes above the lines and empty
+\verb=\gre@currenttextabovelines= when done.
+
+\begin{argtable}
+  \#1 & string & Nabc neumes to be placed above the lines.\\
 \end{argtable}
 
 \macroname{\textbackslash GreSetNextSyllable}{\#1\#2\#3}{gregoriotex-syllable.tex}

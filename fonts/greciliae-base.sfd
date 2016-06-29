@@ -2106,74 +2106,70 @@ StartChar: line2
 Encoding: 90 -1 90
 Width: 18
 VWidth: 2048
-Flags: W
+Flags: HW
 HStem: -12 158<0 18>
 VStem: 0 18<-12 146>
 LayerCount: 2
 Fore
 SplineSet
-0 -12 m 29
- 0 146 l 29
- 18 146 l 29
- 18 -12 l 29
- 0 -12 l 29
+0 -12 m 25
+ 0 176 l 29
+ 18 176 l 29
+ 18 -12 l 25
+ 0 -12 l 25
 EndSplineSet
-Validated: 1
 EndChar
 
 StartChar: line3
 Encoding: 91 -1 91
 Width: 18
 VWidth: 2048
-Flags: W
+Flags: HW
 HStem: -12 312<0 18>
 VStem: 0 18<-12 300>
 LayerCount: 2
 Fore
 SplineSet
 0 -12 m 25
- 0 300 l 25
- 18 300 l 25
+ 0 330 l 29
+ 18 330 l 29
  18 -12 l 25
  0 -12 l 25
 EndSplineSet
-Validated: 1
 EndChar
 
 StartChar: line4
 Encoding: 92 -1 92
 Width: 18
 VWidth: 2048
-Flags: W
+Flags: HW
 VStem: 0 18<-12 443>
 LayerCount: 2
 Fore
 SplineSet
 0 -12 m 25
- 0 443 l 29
- 18 443 l 29
+ 0 473 l 29
+ 18 473 l 29
  18 -12 l 25
  0 -12 l 25
 EndSplineSet
-Validated: 1
 EndChar
 
 StartChar: line5
 Encoding: 93 -1 93
 Width: 18
 VWidth: 2048
-Flags: W
+Flags: HW
 VStem: 0 18<-12 605>
 LayerCount: 2
 Fore
 SplineSet
 0 -12 m 25
- 0 605 l 29
- 18 605 l 29
+ 0 635 l 29
+ 18 635 l 29
  18 -12 l 25
  0 -12 l 25
 EndSplineSet
-Validated: 1
 EndChar
 
 StartChar: Linea

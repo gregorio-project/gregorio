@@ -1,6 +1,6 @@
 %GregorioTeX file.
 %
-% Copyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)
+% Copyright (C) 2007-2016 The Gregorio Project (see CONTRIBUTORS.md)
 %
 % This file is part of Gregorio.
 %
@@ -188,7 +188,7 @@
 %% #1: the type of the clef : c or f
 %% #2: the line of the clef (1 is the lowest)
 %% #3: if we must use small clef characters (inside a line) or not 0: if not inside, 1 if inside
-%% #4: if we must type a space after or not
+%% #4: 0: no space after, 1: normal space after, 2: short space after
 %% #5: if 3, it means that we must not put a flat after the clef, otherwise it's the height of the flat
 %% #6: the type of the secondary clef : c or f
 %% #7: the line of the secondary clef (1 is the lowest)
@@ -218,9 +218,12 @@
     \global\gre@dimen@clefwidth=\wd\gre@box@temp@width %
   \fi %
   \copy\gre@box@temp@width %
-  \gre@skip@temp@two=\gre@space@skip@spaceafterlineclef\relax%
-  \ifnum#4=0\relax %
+  \ifcase#4 %
     \gre@skip@temp@two=\gre@space@skip@afterclefnospace\relax%
+  \or %
+    \gre@skip@temp@two=\gre@space@skip@spaceafterlineclef\relax%
+  \else %
+    \gre@skip@temp@two=\gre@space@skip@shortspaceafterlineclef\relax%
   \fi %
   \gre@hskip\gre@skip@temp@two %
 }%
@@ -269,10 +272,18 @@
 % macro that writes the initial key, and sets the next keys to the same value
 % if #3 is 3, it means that we must not put a flat after the key, otherwise it's the height
 % of the flat
-\def\GreSetInitialClef#1#2#3#4#5#6{%
+\def\GreSetInitialClef#1#2#3#4#5#6#7{%
   \gre@save@clef{#1}{#2}{#3}{#4}{#5}{#6}%
   \ifgre@showclef%
-    \gre@typeclef{#1}{#2}{0}{1}{#3}{#4}{#5}{#6}%
+    \ifnum\gre@initiallines=1\relax %
+      \ifnum#7=1\relax %
+        \gre@typeclef{#1}{#2}{0}{1}{#3}{#4}{#5}{#6}%
+      \else %
+        \gre@typeclef{#1}{#2}{0}{2}{#3}{#4}{#5}{#6}%
+      \fi %
+    \else %
+      \gre@typeclef{#1}{#2}{0}{1}{#3}{#4}{#5}{#6}%
+    \fi %
   \else%
     \gre@skip@temp@four = \gre@space@dimen@noclefspace\relax%
     \hbox{\kern\gre@skip@temp@four}%
