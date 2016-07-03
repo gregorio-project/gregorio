@@ -249,6 +249,18 @@ Macro to change one of Gregorio\TeX’s distances.  This function will check to 
   & \texttt{inherited} & Distance will inherit its value from another distance.  When this argument is used, then \#2 should be the name of another Gregorio\TeX\ distance.
 \end{argtable}
 
+\macroname{\textbackslash grechangenextscorelinedim}{\{\#1\}\{\#2\}\{\#3\}\{\#4\}}{gregoriotex-spaces.tex}
+Changes one of Gregorio\TeX’s distances for a given line in the next included score.
+
+\begin{argtable}
+  \#1 & integer & The number of the line in the next score to be adjusted.\\
+  \#2 & string & The name of the distance to be changed.  See \nameref{distances} below.\\
+  \#3 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that Gregorio\TeX\ handles spaces.\\
+  \#4 & \texttt{fixed} & Distance will not scale when staff size is changed.\\
+  & \texttt{scalable} & Distance will scale when staff size is changed.\\
+  & \texttt{inherited} & Distance will inherit its value from another distance.  When this argument is used, then \#3 should be the name of another Gregorio\TeX\ distance.
+\end{argtable}
+
 \macroname{\textbackslash grescaledim}{\{\#1\}\{\#2\}}{gregoriotex-spaces.tex}
 Macro to turn on or off scaling with the staff size for a particular distance.
 
