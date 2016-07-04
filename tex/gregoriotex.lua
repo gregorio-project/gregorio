@@ -104,6 +104,9 @@ local capture_header_macro = {}
 local hashed_spaces = {}
 local space_hash = ''
 
+local per_line_dims = {}
+local saved_dims = {}
+
 local catcode_at_letter = luatexbase.catcodetables['gre@atletter']
 
 local user_defined_subtype = node.subtype('user_defined')
@@ -221,8 +224,8 @@ local function write_greaux()
       for id, tab in pairs(new_line_heights) do
         aux:write(string.format('  ["%s"]={\n', id))
         for id2, line in pairs(tab) do
-          aux:write(string.format('   [%d]={%d,%d,%d,%d},\n', id2, line[1],
-              line[2], line[3], line[4]))
+          aux:write(string.format('   [%d]={%d,%d,%d,%d,%d},\n', id2, line[1],
+              line[2], line[3], line[4], line[5]))
         end
         aux:write('  },\n')
       end
@@ -530,7 +533,7 @@ local function post_linebreak(h, groupcode, glyphes)
           addash=false
         end
         if line_id then
-          new_score_heights[prev_line_id] = { line_top, line_bottom,
+          new_score_heights[prev_line_id] = { linenum, line_top, line_bottom,
               line_has_translation and 1 or 0,
               line_has_abovelinestext and 1 or 0 }
           prev_line_id = line_id
@@ -664,6 +667,8 @@ end
 local function atScoreEnd()
   luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.post_linebreak')
   luatexbase.remove_from_callback("hyphenate", "gregoriotex.disable_hyphenation")
+  per_line_dims = {}
+  saved_dims = {}
 end
 
 local function clean_old_gtex_files(file_withdir)
@@ -1038,14 +1043,44 @@ local function adjust_line_height(inside_discretionary)
   if score_heights then
     local heights = score_heights[tex.getattribute(glyph_id_attr)]
     if heights then
+      -- restore saved dims
+      local name, value
+      for name, value in pairs(saved_dims) do
+        tex.sprint(catcode_at_letter, string.format(
+            [[\def\gre@space@%s{%s}]], name, value))
+      end
+      -- clear saved dims
+      saved_dims = {}
+      -- apply per-line dims
+      local line_dims = per_line_dims[heights[1]]
+      if line_dims ~= nil then
+        for name, value in pairs(line_dims) do
+          tex.sprint(catcode_at_letter, string.format(
+              [[\gre@changedimforline{%s}{%s}{%s}]], name, value[1], value[2]))
+        end
+      end
+      -- recalculate spaces
       tex.sprint(catcode_at_letter, string.format(
           [[\gre@calculate@additionalspaces{%d}{%d}{%d}{%d}]],
-          heights[1], heights[2], heights[3], heights[4]))
+          heights[2], heights[3], heights[4], heights[5]))
       if inside_discretionary == 0 then
         tex.sprint(catcode_at_letter, [[\gre@updateleftbox ]])
       end
     end
   end
+end
+
+local function save_dim(name, value)
+  saved_dims[name] = value
+end
+
+local function change_next_score_line_dim(linenum, name, value, modifier)
+  local line_dims = per_line_dims[linenum]
+  if line_dims == nil then
+    line_dims = {}
+    per_line_dims[linenum] = line_dims
+  end
+  line_dims[name] = { value, modifier }
 end
 
 local function prep_save_position(index, fn)
@@ -1244,40 +1279,42 @@ local function hash_spaces(name, value)
   space_hash = md5.sumhexa(mash)
 end
 
-gregoriotex.number_to_letter         = number_to_letter
-gregoriotex.init                     = init
-gregoriotex.include_score            = include_score
-gregoriotex.atScoreEnd               = atScoreEnd
-gregoriotex.atScoreBeginning         = atScoreBeginning
-gregoriotex.check_font_version       = check_font_version
-gregoriotex.get_gregorioversion      = get_gregorioversion
-gregoriotex.map_font                 = map_font
-gregoriotex.init_variant_font        = init_variant_font
-gregoriotex.change_score_glyph       = change_score_glyph
-gregoriotex.reset_score_glyph        = reset_score_glyph
-gregoriotex.scale_score_fonts        = scale_score_fonts
-gregoriotex.set_font_factor          = set_font_factor
-gregoriotex.def_symbol               = def_symbol
-gregoriotex.font_size                = font_size
-gregoriotex.direct_gabc              = direct_gabc
-gregoriotex.adjust_line_height       = adjust_line_height
-gregoriotex.var_brace_len            = var_brace_len
-gregoriotex.save_length              = save_length
-gregoriotex.mark_translation         = mark_translation
-gregoriotex.mark_abovelinestext      = mark_abovelinestext
-gregoriotex.width_to_bp              = width_to_bp
-gregoriotex.hypotenuse               = hypotenuse
-gregoriotex.rotation                 = rotation
-gregoriotex.scale_space              = scale_space
-gregoriotex.set_header_capture       = set_header_capture
-gregoriotex.capture_header           = capture_header
-gregoriotex.is_ypos_different        = is_ypos_different
-gregoriotex.save_euouae              = save_euouae
-gregoriotex.mode_part                = mode_part
-gregoriotex.set_debug_string         = set_debug_string
-gregoriotex.late_save_position       = late_save_position
-gregoriotex.is_last_syllable_on_line = is_last_syllable_on_line
-gregoriotex.hash_spaces              = hash_spaces
+gregoriotex.number_to_letter           = number_to_letter
+gregoriotex.init                       = init
+gregoriotex.include_score              = include_score
+gregoriotex.atScoreEnd                 = atScoreEnd
+gregoriotex.atScoreBeginning           = atScoreBeginning
+gregoriotex.check_font_version         = check_font_version
+gregoriotex.get_gregorioversion        = get_gregorioversion
+gregoriotex.map_font                   = map_font
+gregoriotex.init_variant_font          = init_variant_font
+gregoriotex.change_score_glyph         = change_score_glyph
+gregoriotex.reset_score_glyph          = reset_score_glyph
+gregoriotex.scale_score_fonts          = scale_score_fonts
+gregoriotex.set_font_factor            = set_font_factor
+gregoriotex.def_symbol                 = def_symbol
+gregoriotex.font_size                  = font_size
+gregoriotex.direct_gabc                = direct_gabc
+gregoriotex.adjust_line_height         = adjust_line_height
+gregoriotex.var_brace_len              = var_brace_len
+gregoriotex.save_length                = save_length
+gregoriotex.mark_translation           = mark_translation
+gregoriotex.mark_abovelinestext        = mark_abovelinestext
+gregoriotex.width_to_bp                = width_to_bp
+gregoriotex.hypotenuse                 = hypotenuse
+gregoriotex.rotation                   = rotation
+gregoriotex.scale_space                = scale_space
+gregoriotex.set_header_capture         = set_header_capture
+gregoriotex.capture_header             = capture_header
+gregoriotex.is_ypos_different          = is_ypos_different
+gregoriotex.save_euouae                = save_euouae
+gregoriotex.mode_part                  = mode_part
+gregoriotex.set_debug_string           = set_debug_string
+gregoriotex.late_save_position         = late_save_position
+gregoriotex.is_last_syllable_on_line   = is_last_syllable_on_line
+gregoriotex.hash_spaces                = hash_spaces
+gregoriotex.save_dim                   = save_dim
+gregoriotex.change_next_score_line_dim = change_next_score_line_dim
 
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))

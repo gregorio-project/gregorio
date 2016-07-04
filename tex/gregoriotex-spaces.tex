@@ -1412,6 +1412,40 @@
   \fi%
 }
 
+% same arguments as \grechangedim, but used for setting the dimension for a
+% single line
+\def\gre@changedimforline#1#2#3{%
+  \gre@rubberpermit{#1}%
+  \ifgre@rubber%
+    \def\gre@prefix{skip}%
+  \else%
+    \def\gre@prefix{dimen}%
+  \fi%
+  \directlua{%
+    gregoriotex.save_dim(%
+      "\luatexluaescapestring{\gre@prefix @#1}",%
+      "\luatexluaescapestring{\expandafter\unexpanded%
+        \expandafter\expandafter\expandafter{%
+          \csname gre@space@\gre@prefix @#1\endcsname%
+        }%
+      }"%
+    )%
+  }%
+  \grechangedim{#1}{#2}{#3}%
+}%
+
+% #1 : line number
+% #2-#4 : same as #1-#3 of \grechangedim
+\def\grechangenextscorelinedim#1#2#3#4{%
+  \directlua{%
+    gregoriotex.change_next_score_line_dim(#1,%
+      "\luatexluaescapestring{#2}",%
+      "\luatexluaescapestring{#3}",%
+      "\luatexluaescapestring{#4}"%
+    )%
+  }%
+}%
+
 \newcount\gre@space@count@newlinepenalty%
 \newcount\gre@space@count@nobreakpenalty%
 \newcount\gre@space@count@endofwordpenalty%
