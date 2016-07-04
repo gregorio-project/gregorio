@@ -814,7 +814,7 @@ Macro which specifies the alternate glyphs which are common to all of the styles
 \macroname{\textbackslash gre@widthof}{\#1}{gregoriotex-main.tex}
 Macro for calculating the width of its argument and storing it in \verb=\gre@dimen@temp@three=.
 
-\macroname{\textbackslash gre@writebar}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
+\macroname{\textbackslash gre@writebar}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
 Macro to write a bar.
 
 \begin{argtable}
@@ -829,6 +829,8 @@ Macro to write a bar.
   \#3 & \texttt{0} & if there is no text underneath the bar\\
   & \texttt{1} & if there is text underneath the bar\\
   \#4 & \TeX\ code & macros that may happen before the skip after the bar (typically GreVEpisema)\\
+  \#5 & \texttt{0} & The notes around the bar are vertically close to the bar.\\
+  & \texttt{1} & The notes around the bar are far, \verb=@short= versions of spaces will be used.\\
 \end{argtable}
 
 \macroname{\textbackslash gre@@arg}{}{gregoriotex-syllable.tex}
@@ -1194,6 +1196,11 @@ Alias for \verb=\resizebox=.
 \macroname{\textbackslash gre@dimension}{}{gregoriotex-spaces.tex}
 Workhorse function for setting distances in \verb=\grecreatedim= and \verb=\grechangedim=.
 
+\macroname{\textbackslash gre@changedimforline}{\#1\#2\#3}{gregoriotex-spaces.tex}
+Saves the current value of the dimension and then changes it.  The arguments
+are the same as \verb=\grechangedim=.  Used to temporarily change the dimension
+for a given line, which is restored at the next beginning of the next line.
+
 \macroname{\textbackslash gre@setstafflines}{\#1}{gregoriotex-main.tex}
 Sets the number of staff lines.
 
@@ -1218,12 +1225,16 @@ Typesets its numeric argument as a lower-case Roman numeral.
   \#1 & integer & The number to typeset\\
 \end{argtable}
 
-\macroname{\textbackslash gre@bar@space@suffix}{\#1\#2}{gregoriotex-symbols.tex}
+\macroname{\textbackslash gre@bar@space@suffix}{\#1\#2\#3}{gregoriotex-symbols.tex}
 Macro used to select the corresct suffix of the \verb=bar@x= spaces.
 
 \begin{argtable}
   \#1 & \texttt{0} & emits nothing\\
-  & \texttt{1} emits \texttt{text}\\
+  & \texttt{1} emits \verb=@standalone=\\
+  \#2 & \texttt{0} & emits \verb=@notext= (only if standalone)\\
+  & \texttt{1} emits \verb=@text= (only if standalone)\\
+  \#3 & \texttt{0} & emits nothing\\
+  & \texttt{1} emits \verb=@short=\\
 \end{argtable}
 
 \macroname{\textbackslash gre@drawadditionalline}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
@@ -1870,6 +1881,9 @@ Stored value of enddifference prior to the current one after adjusting for the p
 
 \macroname{\textbackslash gre@skip@nextbegindifference}{}{gregoriotex-spaces.tex}
 The difference between the start of the notes and the start of the text for the next syllable.  Positive when when text begins first, negative in other case.
+
+\macroname{\textbackslash gre@dimen@adjustednextbegindifference}{}{gregoriotex-spaces.tex}
+Only used in new bar spacing algorithm. It is \verb=grebegindifference= adjusted with \verb=alterationadjustmentbar= if relevant.
 
 \macroname{\textbackslash gre@dimen@begindifference}{}{gregoriotex-spaces.tex}
 The difference between the start of the notes and the start of the text for the current syllable.  Positive when when text begins first, negative in other case.  This means that \verb=\kern\gre@dimen@begindifference= will take you from the start of the notes to the start of the text.

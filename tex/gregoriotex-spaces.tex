@@ -945,7 +945,9 @@
 \newskip\gre@skip@text@allocation% amount of space allocated to the text
 \newdimen\gre@dimen@text@shift% displacement from center of the text’s position
 \newdimen\gre@dimen@adjustedpreviousenddifference% previousenddifference adjusted to account for the presence of a punctum mora at the end of the pervious syllable
+\newdimen\gre@skip@adjustednextbegindifference% idem, nextbegindifference taking into account the presence of an alteration at the beginning of next syllable
 \newskip\gre@skip@punctummorashift% displacement of whole syllable to account for the presence of a punctum mora at the end of the previous syllable
+\newskip\gre@skip@alterationshift % idem for alteration at the beginning of next syllable
 
 %
 % New bar spacing algorithm
@@ -958,6 +960,8 @@
   \gre@debugmsg{barspacing}{calculate available space}%
   % first, recomputing \gre@dimen@previousenddifference into \gre@dimen@adjustedpreviousenddifference
   \gre@punctummoraadjustment%
+  % recomputing \gre@dimen@nextbegindifference into \gre@dimen@adjustednextdifference
+  \gre@alterationadjustment{#2}%
   \ifdim\gre@dimen@adjustedpreviousenddifference > 0pt\relax%
     % the notes ended after the text in the previous syllable
     \gre@skip@text@allocation = \gre@dimen@adjustedpreviousenddifference\relax%
@@ -967,14 +971,14 @@
     \gre@skip@text@allocation = 0pt\relax%
     \gre@skip@bar@allocation = -\gre@dimen@adjustedpreviousenddifference\relax%
   \fi%
-  \ifdim\gre@skip@nextbegindifference > 0pt\relax%
+  \ifdim\gre@skip@adjustednextbegindifference > 0pt\relax%
     % the text began after the notes in the next syllable
-    \advance\gre@skip@text@allocation by \gre@skip@nextbegindifference\relax%
+    \advance\gre@skip@text@allocation by \gre@skip@adjustednextbegindifference\relax%
     \advance\gre@skip@bar@allocation by 0pt\relax%
   \else%
     % the notes begin after the text in the next syllable
     \advance\gre@skip@text@allocation by 0pt\relax%
-    \advance\gre@skip@bar@allocation by -\gre@skip@nextbegindifference\relax%
+    \advance\gre@skip@bar@allocation by -\gre@skip@adjustednextbegindifference\relax%
   \fi%
   \gre@debugmsg{barspacing}{space available to text: \the\gre@skip@text@allocation}%
   \gre@debugmsg{barspacing}{spacing available to notes: \the\gre@skip@bar@allocation}%
@@ -1144,11 +1148,24 @@
   \gre@debugmsg{barspacing}{syllablefinalskip: \the\gre@skip@syllablefinalskip}%
 }%
 
+% alteration adjustment calculations
+\def\gre@alterationadjustment#1{%
+  % taking into account the punctum mora shift
+  \global\gre@skip@adjustednextbegindifference=\gre@skip@nextbegindifference %
+  % gre@skip@alterationshift is 0 or the punctum mora shift
+  \global\gre@skip@alterationshift=0pt\relax %
+  \ifnum#1>19\ifnum\gre@insidediscretionary=0\relax % next is a flat, we're not in a clef change
+    \advance\gre@skip@adjustednextbegindifference by -\gre@space@dimen@alterationadjustmentbar %
+    \global\gre@skip@alterationshift=\gre@space@dimen@alterationadjustmentbar\relax %
+    \gre@debugmsg{barspacing}{adjustment for alteration: \gre@space@dimen@alterationadjustmentbar}%
+    \gre@debugmsg{barspacing}{adjusted next begindifference (for alteration): \the\gre@skip@adjustednextbegindifference}%
+  \fi\fi %
+}
 
 %punctum mora adjustment calculations
 \def\gre@punctummoraadjustment{%
   % taking into account the punctum mora shift
-  \gre@dimen@adjustedpreviousenddifference=\gre@dimen@previousenddifference %
+  \global\gre@dimen@adjustedpreviousenddifference=\gre@dimen@previousenddifference %
   % gre@skip@punctummorashift is 0 or the punctum mora shift
   \gre@skip@punctummorashift=0pt\relax %
   \ifgre@lastendswithmora %
@@ -1406,6 +1423,40 @@
   \fi%
 }
 
+% same arguments as \grechangedim, but used for setting the dimension for a
+% single line
+\def\gre@changedimforline#1#2#3{%
+  \gre@rubberpermit{#1}%
+  \ifgre@rubber%
+    \def\gre@prefix{skip}%
+  \else%
+    \def\gre@prefix{dimen}%
+  \fi%
+  \directlua{%
+    gregoriotex.save_dim(%
+      "\luatexluaescapestring{\gre@prefix @#1}",%
+      "\luatexluaescapestring{\expandafter\unexpanded%
+        \expandafter\expandafter\expandafter{%
+          \csname gre@space@\gre@prefix @#1\endcsname%
+        }%
+      }"%
+    )%
+  }%
+  \grechangedim{#1}{#2}{#3}%
+}%
+
+% #1 : line number
+% #2-#4 : same as #1-#3 of \grechangedim
+\def\grechangenextscorelinedim#1#2#3#4{%
+  \directlua{%
+    gregoriotex.change_next_score_line_dim(#1,%
+      "\luatexluaescapestring{#2}",%
+      "\luatexluaescapestring{#3}",%
+      "\luatexluaescapestring{#4}"%
+    )%
+  }%
+}%
+
 \newcount\gre@space@count@newlinepenalty%
 \newcount\gre@space@count@nobreakpenalty%
 \newcount\gre@space@count@endofwordpenalty%
@@ -1506,6 +1557,7 @@
     {spaceporrectuspunctummorashift}{\gre@rubberfalse}%
     {raresignshift}{\gre@rubberfalse}%
     {divisiofinalissep}{\gre@rubberfalse}%
+    {alterationadjustmentbar}{\gre@rubberfalse}%
     {bracketupshift}{\gre@rubberfalse}%
     {bracketdownshift}{\gre@rubberfalse}%
   }[\gre@rubbertrue]%
@@ -1749,8 +1801,14 @@
   \ifgre@scale@bar@virgula%
     \gre@changeonedimenfactor{bar@virgula}{#1}{#2}%
   \fi%
+  \ifgre@scale@bar@virgula@short%
+    \gre@changeonedimenfactor{bar@virgula@short}{#1}{#2}%
+  \fi%
   \ifgre@scale@bar@minima%
     \gre@changeonedimenfactor{bar@minima}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minima@short%
+    \gre@changeonedimenfactor{bar@minima@short}{#1}{#2}%
   \fi%
   \ifgre@scale@bar@minor%
     \gre@changeonedimenfactor{bar@minor}{#1}{#2}%
@@ -1770,8 +1828,14 @@
   \ifgre@scale@bar@virgula@standalone@text%
     \gre@changeonedimenfactor{bar@virgula@standalone@text}{#1}{#2}%
   \fi%
+  \ifgre@scale@bar@virgula@standalone@text@short%
+    \gre@changeonedimenfactor{bar@virgula@standalone@text@short}{#1}{#2}%
+  \fi%
   \ifgre@scale@bar@minima@standalone@text%
     \gre@changeonedimenfactor{bar@minima@standalone@text}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minima@standalone@text@short%
+    \gre@changeonedimenfactor{bar@minima@standalone@text@short}{#1}{#2}%
   \fi%
   \ifgre@scale@bar@minor@standalone@text%
     \gre@changeonedimenfactor{bar@minor@standalone@text}{#1}{#2}%
@@ -1788,8 +1852,14 @@
   \ifgre@scale@bar@virgula@standalone@notext%
     \gre@changeonedimenfactor{bar@virgula@standalone@notext}{#1}{#2}%
   \fi%
+  \ifgre@scale@bar@virgula@standalone@notext@short%
+    \gre@changeonedimenfactor{bar@virgula@standalone@notext@short}{#1}{#2}%
+  \fi%
   \ifgre@scale@bar@minima@standalone@notext%
     \gre@changeonedimenfactor{bar@minima@standalone@notext}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minima@standalone@notext@short%
+    \gre@changeonedimenfactor{bar@minima@standalone@notext@short}{#1}{#2}%
   \fi%
   \ifgre@scale@bar@minor@standalone@notext%
     \gre@changeonedimenfactor{bar@minor@standalone@notext}{#1}{#2}%
@@ -1895,6 +1965,15 @@
   \fi%
   \ifgre@scale@bar@rubber%
     \gre@changeonedimenfactor{bar@rubber}{#1}{#2}%
+  \fi%
+  \ifgre@scale@moraadjustment%
+    \gre@changeonedimenfactor{moraadjustment}{#1}{#2}%
+  \fi%
+  \ifgre@scale@moraadjustmentbar%
+    \gre@changeonedimenfactor{moraadjustment}{#1}{#2}%
+  \fi%
+  \ifgre@scale@alterationadjustmentbar%
+    \gre@changeonedimenfactor{alterationadjustmentbar}{#1}{#2}%
   \fi%
   \ifgre@scale@divisiofinalissep%
     \gre@changeonedimenfactor{divisiofinalissep}{#1}{#2}%

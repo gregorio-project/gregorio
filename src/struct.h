@@ -700,6 +700,7 @@ typedef struct gregorio_score {
     unsigned char staff_lines;
     signed char highest_pitch;
     signed char high_ledger_line_pitch;
+    signed char virgula_far_pitch;
     bool legacy_oriscus_orientation;
 } gregorio_score;
 

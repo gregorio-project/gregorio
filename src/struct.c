@@ -1192,6 +1192,7 @@ void gregorio_set_score_staff_lines(gregorio_score *const score,
     score->staff_lines = staff_lines;
     score->highest_pitch = LOWEST_PITCH + 4 + (2 * staff_lines);
     score->high_ledger_line_pitch = score->highest_pitch - 1;
+    score->virgula_far_pitch = score->highest_pitch - 6;
 
     gregorio_assert(score->highest_pitch <= MAX_PITCH,
             gregorio_set_score_staff_lines, "highest pitch exceeds MAX_PITCH",
