@@ -12,7 +12,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `moraadjustment` and `moraadjustmentbar` did not scale when changing factor, they do now.
 
 ### Added
-- Spaces can now be adjusted for a particular line in a score.  Use `\grechangenextscorelinedim` prior to including the score to set the desired values.  See GregorioRef and [#1156](https://github.com/gregorio-project/gregorio/issues/1156) for details.
+- Some vertical spaces can now be adjusted for a particular line in a score.  Use `\grechangenextscorelinedim` prior to including the score to set the desired values.  `spaceabovelines`, `spacebeneathtext`, and `spacelinestext` may be changed with this command.  See GregorioRef and [#1156](https://github.com/gregorio-project/gregorio/issues/1156) for details.
 
 ### Changed
 - When the clef and the first note are at a reasonable vertical distance, `shortspaceafterlineclef` is used instead of `spaceafterlineclef` (make them equal if you don't want this feature). This is used only on the first line, when there is an initial on one line. See [#1138](https://github.com/gregorio-project/gregorio/issues/1138).
