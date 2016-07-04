@@ -665,7 +665,7 @@ static void add_intervening_texverbs(gregorio_glyph **last_glyph,
 
         gregorio_add_unpitched_element_as_glyph(last_glyph, first_note->type,
                 &(first_note->u.other), _NO_SIGN, first_note->texverb);
-        first_note->texverb = NULL;
+        first_note->texverb = 0;
         gregorio_free_one_note(&first_note);
 
         if (on_last_note) {
@@ -704,7 +704,7 @@ static gregorio_note *close_fusion_glyph(gregorio_glyph **last_glyph,
             gregorio_add_unpitched_element_as_glyph(last_glyph,
                     (*first_note)->type, &((*first_note)->u.other), _NO_SIGN,
                     (*first_note)->texverb);
-            (*first_note)->texverb = NULL;
+            (*first_note)->texverb = 0;
             gregorio_assert(*first_note != last_note,
                     close_fusion_glyph, "Unexpected texverb at end of fusion",
                     return last_note);
@@ -933,7 +933,8 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
             bool force = false;
             gregorio_sign sign = _NO_SIGN;
 
-            if (current_glyph_type == G_FUSED && type == GRE_TEXVERB_GLYPH) {
+            if (current_glyph_type == G_FUSED
+                    && (type == GRE_TEXVERB_GLYPH || type == GRE_TEXVERB_ELEMENT)) {
                 current_note = next_note;
                 continue;
             }
@@ -1009,7 +1010,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                 }
             }
             current_glyph_first_note = current_note->next;
-            current_note->texverb = NULL;
+            current_note->texverb = 0;
             gregorio_free_one_note(&current_note);
             last_pitch = USELESS_VALUE;
             continue;

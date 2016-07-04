@@ -2702,7 +2702,8 @@ static void write_signs(FILE *f, gtex_type type,
         }
         if (current_note->texverb) {
             fprintf(f, "%% verbatim text at note level:\n%s%%\n"
-                    "%% end of verbatim text\n", current_note->texverb);
+                    "%% end of verbatim text\n",
+                    gregorio_texverb(current_note->texverb));
         }
         if (type == T_ONE_NOTE) {
             break;
@@ -3079,7 +3080,8 @@ static unsigned int write_element(FILE *f, gregorio_syllable *syllable,
             case GRE_TEXVERB_GLYPH:
                 if (glyph->texverb) {
                     fprintf(f, "%% verbatim text at glyph level:\n%s%%\n"
-                            "%% end of verbatim text\n", glyph->texverb);
+                            "%% end of verbatim text\n",
+                            gregorio_texverb(glyph->texverb));
                 }
                 break;
 
@@ -3261,7 +3263,8 @@ static void handle_final_bar(FILE *f, const char *type, gregorio_syllable *sylla
         case GRE_TEXVERB_ELEMENT:
             if (element->texverb) {
                 fprintf(f, "%% verbatim text at element level:\n%s%%\n"
-                        "%% end of verbatim text\n", element->texverb);
+                        "%% end of verbatim text\n",
+                        gregorio_texverb(element->texverb));
             }
             break;
 
@@ -3723,7 +3726,8 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             case GRE_TEXVERB_ELEMENT:
                 if (element->texverb) {
                     fprintf(f, "%% verbatim text at element level:\n%s%%\n"
-                            "%% end of verbatim text\n", element->texverb);
+                            "%% end of verbatim text\n",
+                            gregorio_texverb(element->texverb));
                 }
                 break;
 
@@ -3738,7 +3742,8 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
 
             case GRE_ALT:
                 if (element->texverb) {
-                    fprintf(f, "\\GreSetTextAboveLines{%s}%%\n", element->texverb);
+                    fprintf(f, "\\GreSetTextAboveLines{%s}%%\n",
+                            gregorio_texverb(element->texverb));
                 }
                 break;
 

@@ -2189,3 +2189,51 @@
   \fi %
   {\gre@font@music@hollow\csname GreHollowCP#1\endcsname}%
 }%
+
+% #1 is 0 for left or 1 for right bracket
+% #2 is the height of the lowest note within the brackets
+% #3 is the ambitus of the notes within the brackets
+% #4 is the point-and-click string
+\def\GreBracket#1#2#3#4{%
+  \gre@newglyphcommon %
+  \ifcase\numexpr#1\relax\else\GreNoBreak\fi% no break before right bracket
+  \setbox\gre@box@temp@width=\hbox{\gre@pointandclick{\gre@font@music %
+    \csname GreCPBracket%
+      \ifcase\numexpr#1\relax Left\else Right\fi%
+      \ifcase\numexpr#3\relax %
+          Zero%
+      \or One%
+      \or Two%
+      \or Three%
+      \or Four%
+      \or Five%
+      \or Six%
+      \or Seven%
+      \or Eight%
+      \or Nine%
+      \or Ten%
+      \or Eleven%
+      \or Twelve%
+      \or Thirteen%
+      \or Fourteen%
+      \fi%
+    \endcsname %
+  }{#4}}%
+  \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
+  \gre@calculate@glyphraisevalue{#2}{0}{}%
+  \raise\gre@dimen@glyphraisevalue%
+  \copy\gre@box@temp@width%
+  \ifcase\numexpr#1\relax
+    \GreNoBreak% no break after left bracket
+    \ifgre@firstglyph%
+      \gre@debugmsg{bolshift}{making adjustments for leading bracket}%
+      \global\advance\gre@dimen@notesaligncenter by \wd\gre@box@temp@width\relax %
+      \global\gre@dimen@bolextra = \wd\gre@box@temp@width\relax%
+      \gre@debugmsg{bolshift}{bolextra: \the\gre@dimen@bolextra}%
+    \fi %
+    \GreNoBreak% no break after left bracket
+  \fi %
+  \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
+  \gre@endofglyphcommon %
+  \relax%
+}%

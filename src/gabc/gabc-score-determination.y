@@ -51,10 +51,13 @@
         (Current).last_line    = YYRHSLOC (Rhs, N).last_line; \
         (Current).last_column  = YYRHSLOC (Rhs, N).last_column; \
         (Current).last_offset  = YYRHSLOC (Rhs, N).last_offset; \
+        (Current).generate_point_and_click = YYRHSLOC (Rhs, 1).generate_point_and_click; \
     } else { \
         (Current).first_line   = (Current).last_line   = YYRHSLOC (Rhs, 0).last_line; \
         (Current).first_column = (Current).last_column = YYRHSLOC (Rhs, 0).last_column; \
         (Current).first_offset = (Current).last_offset = YYRHSLOC (Rhs, 0).last_offset; \
+        (Current).first_offset = (Current).last_offset = YYRHSLOC (Rhs, 0).last_offset; \
+        (Current).generate_point_and_click = YYRHSLOC (Rhs, 0).generate_point_and_click; \
     }
 
 #include "gabc-score-determination.h"
@@ -104,6 +107,7 @@ static bool got_staff_lines;
 static bool started_first_word;
 static struct sha1_ctx digester;
 static gabc_style_bits styles;
+static bool generate_point_and_click;
 
 /* punctum_inclinatum_orientation maintains the running punctum inclinatum
  * orientation in order to decide if the glyph needs to be cut when a punctum
@@ -140,7 +144,7 @@ static void gabc_score_determination_error(const char *error_str)
  * The function that will initialize the variables. 
  */
 
-static void initialize_variables(void)
+static void initialize_variables(bool point_and_click)
 {
     int i;
     /* build a brand new empty score */
@@ -168,6 +172,7 @@ static void initialize_variables(void)
     started_first_word = false;
     styles = 0;
     punctum_inclinatum_orientation = S_PUNCTUM_INCLINATUM_UNDETERMINED;
+    generate_point_and_click = point_and_click;
 }
 
 /*
@@ -484,7 +489,7 @@ void gabc_digest(const void *const buf, const size_t size)
  * aleady open. It returns a valid gregorio_score 
  */
 
-gregorio_score *gabc_read_score(FILE *f_in)
+gregorio_score *gabc_read_score(FILE *f_in, bool point_and_click)
 {
     /* compute the SHA-1 digest while parsing, for I/O efficiency */
     sha1_init_ctx(&digester);
@@ -495,7 +500,7 @@ gregorio_score *gabc_read_score(FILE *f_in)
     gabc_score_determination_in = f_in;
     gregorio_assert(f_in, gabc_read_score, "can't read stream from NULL",
             return NULL);
-    initialize_variables();
+    initialize_variables(point_and_click);
     /* the flex/bison main call, it will build the score (that we have
      * initialized) */
     gabc_score_determination_parse();
@@ -563,6 +568,7 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
     @$.last_line = 1;
     @$.last_column = 0;
     @$.last_offset = 0;
+    @$.generate_point_and_click = generate_point_and_click;
 }
 
 %lex-param { gabc_style_bits *STYLE_BITS }

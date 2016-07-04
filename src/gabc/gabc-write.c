@@ -627,7 +627,7 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     }
     write_note_heuristics(f, note);
     if (note->texverb) {
-        fprintf(f, "[nv:%s]", note->texverb);
+        fprintf(f, "[nv:%s]", gregorio_texverb(note->texverb));
     }
 }
 
@@ -785,7 +785,7 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph,
     switch (glyph->type) {
     case GRE_TEXVERB_GLYPH:
         if (glyph->texverb) {
-            fprintf(f, "[gv:%s]", glyph->texverb);
+            fprintf(f, "[gv:%s]", gregorio_texverb(glyph->texverb));
         }
         break;
     case GRE_SPACE:
@@ -891,12 +891,12 @@ static void gabc_write_gregorio_element(FILE *f, gregorio_element *element,
         break;
     case GRE_TEXVERB_ELEMENT:
         if (element->texverb) {
-            fprintf(f, "[ev:%s]", element->texverb);
+            fprintf(f, "[ev:%s]", gregorio_texverb(element->texverb));
         }
         break;
     case GRE_ALT:
         if (element->texverb) {
-            fprintf(f, "[alt:%s]", element->texverb);
+            fprintf(f, "[alt:%s]", gregorio_texverb(element->texverb));
         }
         break;
     case GRE_SPACE:

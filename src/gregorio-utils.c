@@ -661,7 +661,7 @@ int main(int argc, char **argv)
 
     switch (input_format) {
     case GABC:
-        score = gabc_read_score(input_file);
+        score = gabc_read_score(input_file, point_and_click);
         break;
     default:
         /* not reachable unless there's a programming error */
