@@ -18,6 +18,8 @@
 # You should have received a copy of the GNU General Public License
 # along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
+GREGORIO_FONTS = fonts
+
 TTF_GRECILIAE = greciliae.ttf greciliae-hollow.ttf greciliae-hole.ttf
 TTF_GRECILIAE_OP = greciliae-op.ttf greciliae-op-hollow.ttf greciliae-op-hole.ttf
 TTF_GREGORIO = gregorio.ttf gregorio-hollow.ttf gregorio-hole.ttf
@@ -101,8 +103,8 @@ install-data-local:
 	@$(TOP_LEVEL_MAKE) echo 'If you were using "make localinstall" before, now use'
 	@$(TOP_LEVEL_MAKE) echo '    ./install-gtex.sh user'
 
-really-all-fonts: greciliae-all gregorio-all granapadano-all
+really-all-fonts: greciliae-all gregorio-all granapadano-all extra
 
 fonts: greciliae-all extra
 
-all: fonts
+all: $(GREGORIO_FONTS)

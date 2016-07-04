@@ -20,7 +20,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1467576552
+ModificationTime: 1467641110
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -43,7 +43,7 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 0
-WinInfo: 232 8 2
+WinInfo: 0 32 8
 BeginPrivate: 0
 EndPrivate
 Grid
@@ -871,13 +871,13 @@ Flags: HW
 LayerCount: 2
 Fore
 SplineSet
-0 85 m 25
- 18 85 l 25
+0 125 m 9
+ 18 125 l 29
  18 -139.5 l 25
  83 -139.5 l 25
  83 -157.5 l 25
- 0 -157.5 l 29
- 0 85 l 25
+ 0 -157.5 l 17
+ -0 -76.6666 0 44.1662 0 125 c 9
 EndSplineSet
 EndChar
 
@@ -890,9 +890,9 @@ LayerCount: 2
 Fore
 SplineSet
 0 -85 m 25
- 0 85 l 25
- 18 85 l 25
- 18 -85 l 29
+ 0 125 l 25
+ 18 125 l 29
+ 18 -85 l 25
  0 -85 l 25
 EndSplineSet
 EndChar
@@ -905,13 +905,13 @@ Flags: HW
 LayerCount: 2
 Fore
 SplineSet
-0 72.5 m 25
+0 32.5 m 29
  0 315 l 25
  83 315 l 25
  83 297 l 25
  18 297 l 25
- 18 72.5 l 29
- 0 72.5 l 25
+ 18 32.5 l 25
+ 0 32.5 l 29
 EndSplineSet
 EndChar
 
@@ -923,13 +923,13 @@ Flags: HW
 LayerCount: 2
 Fore
 SplineSet
-83 85 m 25
+83 125 m 29
  83 -157.5 l 25
- 0 -157.5 l 29
+ 0 -157.5 l 25
  0 -139.5 l 25
  65 -139.5 l 25
- 65 85 l 25
- 83 85 l 25
+ 65 125 l 25
+ 83 125 l 29
 EndSplineSet
 EndChar
 
@@ -943,8 +943,8 @@ Fore
 SplineSet
 83 -85 m 29
  65 -85 l 25
- 65 -85 65 85 65 85 c 25
- 83 85 l 25
+ 65 125 l 25
+ 83 125 l 25
  83 -85 l 29
 EndSplineSet
 EndChar
@@ -957,13 +957,13 @@ Flags: HW
 LayerCount: 2
 Fore
 SplineSet
-83 72.5 m 25
- 65 72.5 l 29
+83 32.5 m 25
+ 65 32.5 l 25
  65 297 l 25
  0 297 l 25
  0 315 l 25
  83 315 l 25
- 83 72.5 l 25
+ 83 32.5 l 25
 EndSplineSet
 EndChar
 

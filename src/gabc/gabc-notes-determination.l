@@ -527,8 +527,6 @@ static void left_bracket(void)
 
 static void right_bracket(void)
 {
-    int ambitus;
-
     if (!left_bracket_texverb) {
         gregorio_message(
                 _("cannot add a right bracket without a matching left bracket"),
@@ -536,9 +534,7 @@ static void right_bracket(void)
         return;
     }
 
-    ambitus = bracket_high_pitch - bracket_low_pitch;
-
-    if (ambitus < 0) {
+    if (bracket_high_pitch < bracket_low_pitch) {
         gregorio_message(
                 _("cannot add brackets without notes between them"),
                 "right_bracket", VERBOSITY_ERROR, 0);
@@ -546,17 +542,19 @@ static void right_bracket(void)
     }
 
     gregorio_snprintf(tempstr, sizeof tempstr, "\\GreBracket{0}{%d}{%d}{%s}",
-            bracket_low_pitch, ambitus, gregorio_texverb(left_bracket_texverb));
+            bracket_low_pitch, bracket_high_pitch,
+            gregorio_texverb(left_bracket_texverb));
     gregorio_change_texverb(left_bracket_texverb, gregorio_strdup(tempstr));
 
     if (notes_lloc.generate_point_and_click) {
         gregorio_snprintf(tempstr, sizeof tempstr,
-                "\\GreBracket{1}{%d}{%d}{%u:%u:%u}", bracket_low_pitch, ambitus,
-                notes_lloc.first_line, notes_lloc.first_offset,
-                notes_lloc.first_column + 1);
+                "\\GreBracket{1}{%d}{%d}{%u:%u:%u}", bracket_low_pitch,
+                bracket_high_pitch, notes_lloc.first_line,
+                notes_lloc.first_offset, notes_lloc.first_column + 1);
     } else {
         gregorio_snprintf(tempstr, sizeof tempstr,
-                "\\GreBracket{1}{%d}{%d}{}", bracket_low_pitch, ambitus);
+                "\\GreBracket{1}{%d}{%d}{}", bracket_low_pitch,
+                bracket_high_pitch);
     }
     gregorio_add_texverb_as_note(&current_note, gregorio_strdup(tempstr),
             GRE_TEXVERB_GLYPH, &notes_lloc);

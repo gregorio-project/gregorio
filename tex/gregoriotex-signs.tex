@@ -2192,7 +2192,7 @@
 
 % #1 is 0 for left or 1 for right bracket
 % #2 is the height of the lowest note within the brackets
-% #3 is the ambitus of the notes within the brackets
+% #3 is the height of the highest note within the brackets
 % #4 is the point-and-click string
 \def\GreBracket#1#2#3#4{%
   \gre@newglyphcommon %
@@ -2200,7 +2200,45 @@
   \setbox\gre@box@temp@width=\hbox{\gre@pointandclick{\gre@font@music %
     \csname GreCPBracket%
       \ifcase\numexpr#1\relax Left\else Right\fi%
-      \ifcase\numexpr#3\relax %
+      % Logic:
+      % if low pitch is on a line or below the staff:
+      %   if high pitch is on a line or above the staff:
+      %     use short bracket
+      %   else:
+      %     use normal bracket
+      % else:
+      %   if high pitch is on a line or above the staff:
+      %     use normal bracket
+      %   else:
+      %     use long bracket
+      \ifnum\numexpr#2\relax>\numexpr\gre@pitch@belowstaff\relax % low pitch not below staff
+        % numexpr+/ rounds rather than truncates
+        \ifnum\numexpr#2/2\relax=\numexpr(#2+1)/2\relax % =odd, low pitch not on a line
+          \ifnum\numexpr#3\relax<\numexpr\gre@pitch@abovestaff\relax % high pitch not above staff
+            \ifnum\numexpr#3/2\relax=\numexpr(#3+1)/2\relax % =odd, high pitch not on a line
+              Long%
+            \fi %
+          \fi %
+        \else % =even, low pitch on a line
+          \ifnum\numexpr#3\relax<\numexpr\gre@pitch@abovestaff\relax % high pitch not above staff
+            \ifnum\numexpr#3/2\relax=\numexpr(#3+1)/2\relax\else % =even, high pitch on a line
+              Short%
+            \fi %
+          \else % high pitch above staff
+            Short%
+          \fi %
+        \fi %
+      \else % low pitch below staff
+        % same as above!
+        \ifnum\numexpr#3\relax<\numexpr\gre@pitch@abovestaff\relax % high pitch not above staff
+          \ifnum\numexpr#3/2\relax=\numexpr(#3+1)/2\relax\else % =even, high pitch on a line
+            Short%
+          \fi %
+        \else % high pitch above staff
+          Short%
+        \fi %
+      \fi %
+      \ifcase\numexpr#3-#2\relax %
           Zero%
       \or One%
       \or Two%
@@ -2220,7 +2258,7 @@
     \endcsname %
   }{#4}}%
   \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
-  \gre@calculate@glyphraisevalue{#2}{0}{}%
+  \gre@calculate@glyphraisevalue{#2}{17}{}%
   \raise\gre@dimen@glyphraisevalue%
   \copy\gre@box@temp@width%
   \ifcase\numexpr#1\relax
