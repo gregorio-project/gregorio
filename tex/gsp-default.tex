@@ -1,6 +1,6 @@
 %GregorioTeX file.
 %
-% Copyright (C) 2010-2015 The Gregorio Project (see CONTRIBUTORS.md)
+% Copyright (C) 2010-2016 The Gregorio Project (see CONTRIBUTORS.md)
 %
 % This file is part of Gregorio.
 %
@@ -123,6 +123,8 @@
 \grecreatedim{spaceaftersigns}{0.08203 cm plus 0.0082 cm minus 0.0082 cm}{scalable}%
 % space after a clef at the beginning of a line
 \grecreatedim{spaceafterlineclef}{0.27345 cm plus 0.14584 cm minus 0.01367 cm}{scalable}%
+% space after a clef at the beginning of a line, when the clef and first note are vertically distant
+\grecreatedim{shortspaceafterlineclef}{0.2 cm plus 0.2 cm minus 0.01367 cm}{scalable}%
 % minimal space between notes of different words
 \grecreatedim{interwordspacenotes}{0.27 cm plus 0.15 cm minus 0.05 cm}{scalable}%
 % minimal space between notes of the same syllable.
@@ -195,7 +197,10 @@
 % bars inside syllables
 %
 \grecreatedim{bar@virgula}{0.1823 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
+% short versions are when the notes are very low (virgula and minima only)
+\grecreatedim{bar@virgula@short}{0.16 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
 \grecreatedim{bar@minima}{0.1823 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
+\grecreatedim{bar@minima@short}{0.16 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
 \grecreatedim{bar@minor}{0.1823 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
 % dominican bars
 \grecreatedim{bar@dominican}{0.1823 cm plus 0.22787 cm minus 0.00469 cm}{scalable}%
@@ -208,7 +213,9 @@
 % plus or minus here will trigger some problems
 %
 \grecreatedim{bar@virgula@standalone@text}{0.2323 cm}{scalable}%
+\grecreatedim{bar@virgula@standalone@text@short}{0.19 cm}{scalable}%
 \grecreatedim{bar@minima@standalone@text}{0.2323 cm}{scalable}%
+\grecreatedim{bar@minima@standalone@text@short}{0.19 cm}{scalable}%
 \grecreatedim{bar@minor@standalone@text}{0.2323 cm}{scalable}%
 \grecreatedim{bar@dominican@standalone@text}{0.2323 cm}{scalable}%
 \grecreatedim{bar@maior@standalone@text}{0.2323 cm}{scalable}%
@@ -219,7 +226,9 @@
 % bars having their own syllable, with no text associated (new bar spacing algorithm only)
 %
 \grecreatedim{bar@virgula@standalone@notext}{0.2323 cm}{scalable}%
+\grecreatedim{bar@virgula@standalone@notext@short}{0.19 cm}{scalable}%
 \grecreatedim{bar@minima@standalone@notext}{0.2323 cm}{scalable}%
+\grecreatedim{bar@minima@standalone@notext@short}{0.19 cm}{scalable}%
 \grecreatedim{bar@minor@standalone@notext}{0.2323 cm}{scalable}%
 \grecreatedim{bar@dominican@standalone@notext}{0.2323 cm}{scalable}%
 \grecreatedim{bar@maior@standalone@notext}{0.2323 cm}{scalable}%
@@ -238,6 +247,9 @@
 \grecreatedim{interwordspacetext@bars@notext@euouae}{0.7ex}{fixed}%
 % rubber length that will be added around bars in new bar spacing algorithm
 \grecreatedim{bar@rubber}{0 cm plus 0.22787 cm minus 0.02 cm}{scalable}%
+% in the case of an alteration after a bar, the alteration will "protrude" left of this value
+% think of it as some kind of moraadjustmentbar
+\grecreatedim{alterationadjustmentbar}{0.07 cm}{scalable}%
 % additional space that will appear around bars that are preceded by a custos and followed by a key.
 \grecreatedim{spacearoundclefbars}{0.03645 cm plus 0.00455 cm minus 0.0009 cm}{scalable}%
 % space between the text of previous syllable and text associated with a bar (old bar spacing algorithm only)
@@ -314,6 +326,8 @@
 \grechangecount{additionaltopspacethreshold}{2}%
 % same, for notes taken into account for alt text vertical position
 \grechangecount{additionaltopspacealtthreshold}{0}%
+% same, for notes taken into account for nabc vertical position
+\grechangecount{additionaltopspacenabcthreshold}{4}%
 %the space between the lines and the bottom of the text
 \grecreatedim{spacelinestext}{0.60617 cm}{scalable}%
 %the space beneath the text

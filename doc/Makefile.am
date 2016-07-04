@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
+# Copyright (C) 2006-2016 The Gregorio Project (see CONTRIBUTORS.md)
 #
 # This file is part of Gregorio.
 #
@@ -30,7 +30,7 @@ GregorioRef.pdf: $(SRCFILES)
 	$(MAKE) $(AM_MAKEFLAGS) -C ../src gregorio
 	../src/gregorio -o factus.gtex $(<D)/factus.gabc
 	TEXINPUTS=$(<D):$(<D)/../tex: LUAINPUTS=$(<D):$(<D)/../tex: \
-		 TTFONTS=$(<D)/../fonts: PATH=../src:${PATH} latexmk -recorder -pdf \
+		 TTFONTS=$(<D)/../fonts: PATH=../src:${PATH} latexmk -f -recorder -pdf \
 		 -interaction=nonstopmode -halt-on-error \
 		 -pdflatex='lualatex --shell-escape %O %S' \
 		 -jobname=GregorioRef $< || rm $@

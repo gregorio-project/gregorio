@@ -706,6 +706,7 @@ typedef struct gregorio_score {
     unsigned char staff_lines;
     signed char highest_pitch;
     signed char high_ledger_line_pitch;
+    signed char virgula_far_pitch;
     bool legacy_oriscus_orientation;
 } gregorio_score;
 
@@ -781,6 +782,7 @@ static __inline bool is_fused(char liquescentia)
 #define LOWEST_PITCH 3
 #define DUMMY_PITCH (LOWEST_PITCH + 6)
 #define LOW_LEDGER_LINE_PITCH (LOWEST_PITCH + 1)
+#define LOW_LINE_PITCH (LOWEST_PITCH + 3)
 #define MAX_PITCH (LOWEST_PITCH + 4 + (2 * 5))
 
 #define NO_PITCH -128

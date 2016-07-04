@@ -212,13 +212,15 @@ Macro to typeset a divisio maior.
   \#2 & \TeX\ code & Macros which may happen before the skip but after the divisio maior (typically \verb=\grevepisema=).\\
 \end{argtable}
 
-\macroname{\textbackslash GreDivisioMinima}{\#1\#2}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreDivisioMinima}{\#1\#2\#3}{gregoriotex-signs.tex}
 Macro to typeset a divisio minima.
 
 \begin{argtable}
   \#1 & \texttt{0} & There is no text under the bar.\\
   & \texttt{1} & There is text under the bar.\\
   \#2 & \TeX\ code & Macros which may happen before the skip but after the divisio minima (typically \verb=\grevepisema=).\\
+  \#3 & \texttt{0} & The notes around the bar are vertically close to the bar.\\
+  & \texttt{1} & The notes around the bar are far, \verb=@short= versions of spaces will be used.\\
 \end{argtable}
 
 \macroname{\textbackslash GreDivisioMinor}{\#1\#2}{gregoriotex-signs.tex}
@@ -541,7 +543,7 @@ Same as \verb=\GreDivisioFinalis= except inside a syllable.
 \macroname{\textbackslash GreInDivisioMaior}{\#1\#2}{gregoriotex-signs.tex}
 Same as \verb=\GreDivisioMaior= except inside a syllable.
 
-\macroname{\textbackslash GreInDivisioMinima}{\#1\#2}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreInDivisioMinima}{\#1\#2\#3}{gregoriotex-signs.tex}
 Same as \verb=\GreDivisioMinima= except inside a syllable.
 
 \macroname{\textbackslash GreInDivisioMinor}{\#1\#2}{gregoriotex-signs.tex}
@@ -550,7 +552,7 @@ Same as \verb=\GreDivisioMinor= except inside a syllable.
 \macroname{\textbackslash GreInDominica}{\#1\#2\#3}{gregoriotex-signs.tex}
 Same as \verb=\GreDominica= except inside a syllable.
 
-\macroname{\textbackslash GreInVirgula}{\#1\#2}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreInVirgula}{\#1\#2\#3}{gregoriotex-signs.tex}
 Same as \verb=\GreVirgula= except inside a syllable.
 
 \macroname{\textbackslash GreItalic}{\#1}{gregoriotex.sty or gregoriotex.tex}
@@ -638,6 +640,9 @@ Macro to call if you want to go to the next line.
 
 \macroname{\textbackslash GreNewParLine}{}{gregoriotex-main.tex}
 Same as \verb=\GreNewLine= except line is not justified.
+
+\macroname{\textbackslash GreFinalNewLine}{}{gregoriotex-main.tex}
+Handles a new line after the final bar.  This currently just advances \verb=\gre@knownline= in order to prevent a potential error message with a two-line initial on a two-line score.
 
 \macroname{\textbackslash GreNextCustos}{\#1\#2}{gregoriotex-signs.tex}
 Sets the pitch to use for the next custos if it were to happen at the point
@@ -852,7 +857,7 @@ ligatures. In this example we should call \verb=\grefixedtext{\textit{ffj}}=.
   \#1 & character & The initial letter of the score.\\
 \end{argtable}
 
-\macroname{\textbackslash GreSetInitialClef}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreSetInitialClef}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-signs.tex}
 Macro for writing initial clef.
 
 \begin{argtable}
@@ -862,6 +867,7 @@ Macro for writing initial clef.
   \#4 & \texttt{c} or \texttt{f} & Type of secondary clef.\\
   \#5 & \texttt{0}--\texttt{5} & Line of secondary clef (\texttt{0} for no secondary clef).\\
   \#6 & integer & Height of flat in secondary clef (\texttt{3} for no flat).\\
+  \#7 & integer & \texttt{0} if clef and first note are far enough to use a shorter space, 1 otherwise.\\
 \end{argtable}
 
 \macroname{\textbackslash GreSetLinesClef}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-main.tex}
@@ -876,6 +882,14 @@ Macro to define the clef that will appear at the beginning of the lines.
   \#5 & \texttt{c} or \texttt{f} & Type of secondary clef.\\
   \#6 & \texttt{0}--\texttt{5} & Line of secondary clef (\texttt{0} for no secondary clef).\\
   \#7 & integer & Height of flat in secondary clef (\texttt{3} for no flat).\\
+\end{argtable}
+
+\macroname{\textbackslash GreSetNabcAboveLines}{\#1}{gregoriotex-main.tex}
+Macro to place argument containing Nabc neumes above the lines and empty
+\verb=\gre@currenttextabovelines= when done.
+
+\begin{argtable}
+  \#1 & string & Nabc neumes to be placed above the lines.\\
 \end{argtable}
 
 \macroname{\textbackslash GreSetNextSyllable}{\#1\#2\#3}{gregoriotex-syllable.tex}
@@ -1055,13 +1069,15 @@ Macro for typesetting the vertical episema.
   \#2 & string  & Type of glyph the episema is attached to. See \nameref{EpisemaSpecial} argument for description of options.\\
 \end{argtable}
 
-\macroname{\textbackslash GreVirgula}{\#1\#2}{gregoriotex-signs.tex}
+\macroname{\textbackslash GreVirgula}{\#1\#2\#3}{gregoriotex-signs.tex}
 Macro to typeset a virgula.
 
 \begin{argtable}
   \#1 & \texttt{0} & There is no text under the bar.\\
   & \texttt{1} & There is text under the bar.\\
   \#2 & code & Macros which may happen before the skip but after the virgula (typically \verb=\grevepisema=).\\
+  \#3 & \texttt{0} & The notes around the bar are vertically close to the bar.\\
+  & \texttt{1} & The notes around the bar are far, \verb=@short= versions of spaces will be used.\\
 \end{argtable}
 
 \macroname{\textbackslash GreWriteTranslation}{\#1}{gregoriotex-main.tex}
