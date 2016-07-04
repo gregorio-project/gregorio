@@ -269,7 +269,7 @@ void dump_write_score(FILE *f, gregorio_score *score)
                 break;
             case GRE_TEXVERB_ELEMENT:
                 fprintf(f, "     TeX string              \"%s\"\n",
-                        element->texverb);
+                        gregorio_texverb(element->texverb));
                 break;
             case GRE_NLBA:
                 fprintf(f, "     nlba                    %d (%s)\n",
@@ -279,7 +279,7 @@ void dump_write_score(FILE *f, gregorio_score *score)
                 break;
             case GRE_ALT:
                 fprintf(f, "     Above lines text        \"%s\"\n",
-                        element->texverb);
+                        gregorio_texverb(element->texverb));
                 break;
             case GRE_BAR:
                 if (element->u.misc.unpitched.info.bar) {
@@ -338,7 +338,7 @@ void dump_write_score(FILE *f, gregorio_score *score)
                     switch (glyph->type) {
                     case GRE_TEXVERB_GLYPH:
                         fprintf(f, "       TeX string            \"%s\"\n",
-                                glyph->texverb);
+                                gregorio_texverb(glyph->texverb));
                         break;
 
                     case GRE_SPACE:
@@ -415,7 +415,7 @@ void dump_write_score(FILE *f, gregorio_score *score)
                             }
                             if (note->texverb) {
                                 fprintf(f, "         TeX string             \"%s\"\n",
-                                        note->texverb);
+                                        gregorio_texverb(note->texverb));
                             }
                             if (note->choral_sign) {
                                 fprintf(f, "         Choral Sign            \"%s\"\n",

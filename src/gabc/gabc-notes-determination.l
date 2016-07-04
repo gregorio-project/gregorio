@@ -51,6 +51,8 @@ static unsigned char staff_lines;
 static signed char highest_pitch;
 static bool legacy_oriscus_orientation;
 static unsigned short he_adjustment_index[2] = { 0, 0 };
+static signed char bracket_low_pitch, bracket_high_pitch;
+static unsigned short left_bracket_texverb = 0;
 
 typedef struct slur_info {
     unsigned short var;
@@ -91,7 +93,7 @@ static __inline int letter_to_pitch_adjustment(const char letter) {
     /* LCOV_EXCL_STOP */
 }
 
-static __inline char pitch_letter_to_height(const char pitch) {
+static __inline signed char pitch_letter_to_height(const char pitch) {
     char result = pitch - 'a' + LOWEST_PITCH;
     if (pitch == 'p') {
         --result;
@@ -100,6 +102,14 @@ static __inline char pitch_letter_to_height(const char pitch) {
         gregorio_messagef("pitch_letter_to_height", VERBOSITY_ERROR, 0,
                 _("invalid pitch for %u lines: %c"), (unsigned int)staff_lines,
                 pitch);
+    }
+    if (left_bracket_texverb) {
+        if (result < bracket_low_pitch) {
+            bracket_low_pitch = result;
+        }
+        if (result > bracket_high_pitch) {
+            bracket_high_pitch = result;
+        }
     }
     return result;
 }
@@ -491,7 +501,68 @@ static void end_var_slur(void)
     slur[index].start = NULL;
 }
 
-void parse_hepisema_adjustment(void)
+static void left_bracket(void)
+{
+    if (left_bracket_texverb) {
+        gregorio_message(
+                _("cannot add a left bracket before closing the previous one"),
+                "left_bracket", VERBOSITY_ERROR, 0);
+        return;
+    }
+
+    /* when setting the left bracket, temporarily store the point-and-click
+     * information in the texverb */
+    if (notes_lloc.generate_point_and_click) {
+        gregorio_snprintf(tempstr, sizeof tempstr, "%u:%u:%u",
+                notes_lloc.first_line, notes_lloc.first_offset,
+                notes_lloc.first_column + 1);
+    } else {
+        tempstr[0] = '\0';
+    }
+    left_bracket_texverb = gregorio_add_texverb_as_note(&current_note,
+            gregorio_strdup(tempstr), GRE_TEXVERB_GLYPH, &notes_lloc);
+    bracket_low_pitch = MAX_PITCH;
+    bracket_high_pitch = LOWEST_PITCH;
+}
+
+static void right_bracket(void)
+{
+    if (!left_bracket_texverb) {
+        gregorio_message(
+                _("cannot add a right bracket without a matching left bracket"),
+                "right_bracket", VERBOSITY_ERROR, 0);
+        return;
+    }
+
+    if (bracket_high_pitch < bracket_low_pitch) {
+        gregorio_message(
+                _("cannot add brackets without notes between them"),
+                "right_bracket", VERBOSITY_ERROR, 0);
+        return;
+    }
+
+    gregorio_snprintf(tempstr, sizeof tempstr, "\\GreBracket{0}{%d}{%d}{%s}",
+            bracket_low_pitch, bracket_high_pitch,
+            gregorio_texverb(left_bracket_texverb));
+    gregorio_change_texverb(left_bracket_texverb, gregorio_strdup(tempstr));
+
+    if (notes_lloc.generate_point_and_click) {
+        gregorio_snprintf(tempstr, sizeof tempstr,
+                "\\GreBracket{1}{%d}{%d}{%u:%u:%u}", bracket_low_pitch,
+                bracket_high_pitch, notes_lloc.first_line,
+                notes_lloc.first_offset, notes_lloc.first_column + 1);
+    } else {
+        gregorio_snprintf(tempstr, sizeof tempstr,
+                "\\GreBracket{1}{%d}{%d}{}", bracket_low_pitch,
+                bracket_high_pitch);
+    }
+    gregorio_add_texverb_as_note(&current_note, gregorio_strdup(tempstr),
+            GRE_TEXVERB_GLYPH, &notes_lloc);
+
+    left_bracket_texverb = 0;
+}
+
+static void parse_hepisema_adjustment(void)
 {
     /* [xh:yz{]
      * - x indicates l(ow) or h(igh) episema
@@ -587,7 +658,7 @@ void parse_hepisema_adjustment(void)
     }
 }
 
-void end_hepisema_adjustment(void)
+static void end_hepisema_adjustment(void)
 {
     /* [xh:}]
      * - x indicates l(ow) or h(igh) episema
@@ -640,6 +711,11 @@ void gabc_det_notes_finish(void)
                     over_or_under(orientation));
             ledger_var[orientation] = 0;
         }
+    }
+    if (left_bracket_texverb) {
+        gregorio_message(_("unclosed left bracket"),
+                "gabc_det_notes_finish", VERBOSITY_ERROR, 0);
+        left_bracket_texverb = 0;
     }
 }
 
@@ -845,29 +921,29 @@ void gabc_det_notes_finish(void)
     }
 <INITIAL>\[nm[1-9]\] {
         if (notesmacros[gabc_notes_determination_text[3]-'0']) {
-            gregorio_add_texverb_to_note(current_note,
-            gregorio_strdup(notesmacros[gabc_notes_determination_text[3]-'0']));
+            gregorio_add_texverb_to_note(current_note, gregorio_strdup(
+                    notesmacros[gabc_notes_determination_text[3]-'0']));
         } else error();
     }
 <INITIAL>\[gm[1-9]\] {
         if (notesmacros[gabc_notes_determination_text[3]-'0']) {
-            gregorio_add_texverb_as_note(&current_note,
-            gregorio_strdup(notesmacros[gabc_notes_determination_text[3]-'0']),
-            GRE_TEXVERB_GLYPH, &notes_lloc);
+            gregorio_add_texverb_as_note(&current_note, gregorio_strdup(
+                    notesmacros[gabc_notes_determination_text[3]-'0']),
+                    GRE_TEXVERB_GLYPH, &notes_lloc);
         } else error();
     }
 <INITIAL>\[em[1-9]\] {
         if (notesmacros[gabc_notes_determination_text[3]-'0']) {
-            gregorio_add_texverb_as_note(&current_note,
-            gregorio_strdup(notesmacros[gabc_notes_determination_text[3]-'0']),
-            GRE_TEXVERB_ELEMENT, &notes_lloc);
+            gregorio_add_texverb_as_note(&current_note, gregorio_strdup(
+                    notesmacros[gabc_notes_determination_text[3]-'0']),
+                    GRE_TEXVERB_ELEMENT, &notes_lloc);
         } else error();
     }
 <INITIAL>\[altm[1-9]\] {
         if (notesmacros[gabc_notes_determination_text[5]-'0']) {
-            gregorio_add_texverb_as_note(&current_note,
-            gregorio_strdup(notesmacros[gabc_notes_determination_text[5]-'0']),
-            GRE_TEXVERB_ELEMENT, &notes_lloc);
+            gregorio_add_texverb_as_note(&current_note, gregorio_strdup(
+                    notesmacros[gabc_notes_determination_text[5]-'0']),
+                    GRE_TEXVERB_ELEMENT, &notes_lloc);
         } else error();
     }
 <INITIAL>\[nv: {
@@ -1016,6 +1092,12 @@ void gabc_det_notes_finish(void)
     }
 <INITIAL>\[[ou]h:?\}\] {
         end_hepisema_adjustment();
+    }
+<INITIAL>\[\[ {
+        left_bracket();
+    }
+<INITIAL>\]\] {
+        right_bracket();
     }
 \{  {
         gregorio_add_texverb_as_note(&current_note,
@@ -1337,6 +1419,7 @@ gregorio_note *gabc_det_notes_from_string(char *str, char *newmacros[10],
     notes_lloc.last_line = loc->first_line;
     notes_lloc.last_column = loc->first_column;
     notes_lloc.last_offset = loc->first_offset;
+    notes_lloc.generate_point_and_click = loc->generate_point_and_click;
 
     staff_lines = score->staff_lines;
     highest_pitch = score->highest_pitch;

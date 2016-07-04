@@ -544,6 +544,7 @@
 %% 14: punctum mora in a space with a note on the line below it
 %% 15: over slur
 %% 16: under slur
+%% 17: bracket
 % #3, for horizontal episemata, is the interline position:
 %% 0: auto
 %% 1: middle
@@ -727,6 +728,16 @@
     \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@overslurshift\relax%
   \or% 16: under slur
     \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@underslurshift\relax%
+  \or% 17: bracket
+    \ifgre@isonaline %
+      \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@bracketupshift\relax%
+    \else %
+      \ifnum#1>\gre@pitch@belowstaff\relax % #1 is not below staff
+        \global\advance\gre@dimen@glyphraisevalue by -\gre@space@dimen@bracketdownshift\relax%
+      \else % #1 is below staff
+        \global\advance\gre@dimen@glyphraisevalue by \gre@space@dimen@bracketupshift\relax%
+      \fi %
+    \fi %
   \fi%
   \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@constantglyphraise\relax%
 }%
@@ -1495,6 +1506,8 @@
     {spaceporrectuspunctummorashift}{\gre@rubberfalse}%
     {raresignshift}{\gre@rubberfalse}%
     {divisiofinalissep}{\gre@rubberfalse}%
+    {bracketupshift}{\gre@rubberfalse}%
+    {bracketdownshift}{\gre@rubberfalse}%
   }[\gre@rubbertrue]%
 }%
 

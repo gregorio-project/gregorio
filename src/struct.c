@@ -64,9 +64,13 @@ gregorio_clef_info gregorio_default_clef = {
     /*.secondary_flatted =*/ false,
 };
 
-static size_t hepisema_adjustments_capacity;
-static unsigned short hepisema_adjustments_last;
-static gregorio_hepisema_adjustment *hepisema_adjustments;
+static size_t hepisema_adjustments_capacity = 0;
+static unsigned short hepisema_adjustments_last = 0;
+static gregorio_hepisema_adjustment *hepisema_adjustments = NULL;
+
+static size_t texverbs_capacity = 0;
+static unsigned short texverbs_last = 0;
+static char **texverbs = NULL;
 
 void gregorio_struct_init(void)
 {
@@ -75,12 +79,18 @@ void gregorio_struct_init(void)
             &hepisema_adjustments_capacity, gregorio_hepisema_adjustment);
     hepisema_adjustments[0].vbasepos = HVB_AUTO;
     hepisema_adjustments[0].nudge = NULL;
+
+    texverbs_capacity = 32;
+    texverbs = gregorio_grow_buffer(NULL, &texverbs_capacity, char *);
+    texverbs[0] = NULL;
 }
 
 void gregorio_struct_destroy(void)
 {
     size_t i;
     gregorio_hepisema_adjustment *adj;
+    char **texverb;
+
     for (i = 0, adj = hepisema_adjustments; i <= hepisema_adjustments_last;
             ++i, ++adj) {
         if (adj->nudge) {
@@ -88,6 +98,41 @@ void gregorio_struct_destroy(void)
         }
     }
     free(hepisema_adjustments);
+
+    for (i = 0, texverb = texverbs; i <= texverbs_last; ++i, ++texverb) {
+        if (*texverb) {
+            free(*texverb);
+        }
+    }
+    free(texverbs);
+}
+
+static unsigned short register_texverb(char *const texverb)
+{
+    if (texverbs_last == USHRT_MAX) {
+        /* It's not reasonable to trigger this condition while testing */
+        /* LCOV_EXCL_START */
+        gregorio_message(_("too many texverbs"),
+                "gregorio_register_texverb", VERBOSITY_ERROR, 0);
+        return 0;
+        /* LCOV_EXCL_STOP */
+    }
+    ++texverbs_last;
+    if (texverbs_last >= texverbs_capacity) {
+        texverbs = gregorio_grow_buffer(texverbs, &texverbs_capacity, char *);
+    }
+    texverbs[texverbs_last] = texverb;
+    return texverbs_last;
+}
+
+static void free_one_texverb(unsigned short index)
+{
+    if (index) {
+        gregorio_assert(index <= texverbs_last, gregorio_texverb,
+                "array index out of bounds", return);
+        free(texverbs[index]);
+        texverbs[index] = NULL;
+    }
 }
 
 static gregorio_note *create_and_link_note(gregorio_note **current_note,
@@ -161,7 +206,7 @@ void gregorio_add_note(gregorio_note **current_note, signed char pitch,
         element->he_adjustment_index[SO_UNDER] =
                 prototype->he_adjustment_index[SO_UNDER];
     }
-    element->texverb = NULL;
+    element->texverb = 0;
     element->choral_sign = NULL;
 }
 
@@ -250,16 +295,18 @@ void gregorio_add_space_as_note(gregorio_note **current_note,
     element->u.other.ad_hoc_space_factor = factor;
 }
 
-void gregorio_add_texverb_as_note(gregorio_note **current_note, char *str,
-        gregorio_type type, const gregorio_scanner_location *const loc)
+unsigned short gregorio_add_texverb_as_note(gregorio_note **current_note,
+        char *str, gregorio_type type,
+        const gregorio_scanner_location *const loc)
 {
     gregorio_note *element;
-    gregorio_not_null(str, gregorio_add_texverb_as_note, return);
+    /* gregorio_not_null(str, gregorio_add_texverb_as_note, return NULL); */
     element = create_and_link_note(current_note, loc);
     assert(type == GRE_TEXVERB_GLYPH || type == GRE_TEXVERB_ELEMENT
            || type == GRE_ALT);
     element->type = type;
-    element->texverb = str;
+    element->texverb = register_texverb(str);
+    return element->texverb;
 }
 
 void gregorio_add_nlba_as_note(gregorio_note **current_note, gregorio_nlba type,
@@ -284,22 +331,31 @@ void gregorio_end_autofuse(gregorio_note **current_note,
     element->type = GRE_AUTOFUSE_END;
 }
 
+static __inline void change_note_texverb(gregorio_note *note, char *str)
+{
+    if (note->texverb) {
+        gregorio_change_texverb(note->texverb, str);
+    } else {
+        note->texverb = register_texverb(str);
+    }
+}
+
 void gregorio_add_texverb_to_note(gregorio_note *current_note, char *str)
 {
     size_t len;
     char *res;
     gregorio_not_null(str, gregorio_add_texverb_as_note, return);
     if (current_note) {
-        if (current_note->texverb) {
-            len = strlen(current_note->texverb) + strlen(str) + 1;
+        const char *texverb = gregorio_texverb(current_note->texverb);
+        if (texverb) {
+            len = strlen(texverb) + strlen(str) + 1;
             res = gregorio_malloc(len);
-            strcpy(res, current_note->texverb);
+            strcpy(res, texverb);
             strcat(res, str);
-            free(current_note->texverb);
             free(str);
-            current_note->texverb = res;
+            change_note_texverb(current_note, res);
         } else {
-            current_note->texverb = str;
+            change_note_texverb(current_note, str);
         }
     }
 }
@@ -634,7 +690,7 @@ static __inline void free_one_note(gregorio_note *note)
     if (note->type == GRE_SPACE) {
         free(note->u.other.ad_hoc_space_factor);
     }
-    free(note->texverb);
+    free_one_texverb(note->texverb);
     free(note->choral_sign);
     free(note);
 }
@@ -690,7 +746,7 @@ void gregorio_add_glyph(gregorio_glyph **current_glyph,
 }
 
 void gregorio_add_clef_as_glyph(gregorio_glyph **current_glyph,
-        gregorio_clef_info clef, char *texverb)
+        gregorio_clef_info clef, unsigned short texverb)
 {
     gregorio_glyph *next_glyph = create_and_link_glyph(current_glyph);
     next_glyph->type = GRE_CLEF;
@@ -699,7 +755,8 @@ void gregorio_add_clef_as_glyph(gregorio_glyph **current_glyph,
 }
 
 void gregorio_add_pitched_element_as_glyph(gregorio_glyph **current_glyph,
-        gregorio_type type, signed char pitch, bool force_pitch, char *texverb)
+        gregorio_type type, signed char pitch, bool force_pitch,
+        unsigned short texverb)
 {
     gregorio_glyph *next_glyph = create_and_link_glyph(current_glyph);
     assert(type == GRE_CUSTOS);
@@ -711,7 +768,7 @@ void gregorio_add_pitched_element_as_glyph(gregorio_glyph **current_glyph,
 
 void gregorio_add_unpitched_element_as_glyph(gregorio_glyph **current_glyph,
         gregorio_type type, gregorio_extra_info *info, gregorio_sign sign,
-        char *texverb)
+        unsigned short texverb)
 {
     gregorio_glyph *next_glyph = create_and_link_glyph(current_glyph);
     assert(type != GRE_NOTE && type != GRE_GLYPH && type != GRE_ELEMENT
@@ -739,7 +796,7 @@ void gregorio_go_to_first_glyph(gregorio_glyph **glyph)
 
 static __inline void free_one_glyph(gregorio_glyph *glyph)
 {
-    free(glyph->texverb);
+    free_one_texverb(glyph->texverb);
     switch (glyph->type) {
     case GRE_GLYPH:
         gregorio_free_notes(&glyph->u.notes.first_note);
@@ -803,7 +860,8 @@ void gregorio_add_element(gregorio_element **current_element,
 }
 
 void gregorio_add_misc_element(gregorio_element **current_element,
-        gregorio_type type, gregorio_misc_element_info *info, char *texverb)
+        gregorio_type type, gregorio_misc_element_info *info,
+        unsigned short texverb)
 {
     gregorio_element *special = create_and_link_element(current_element);
     special->type = type;
@@ -820,7 +878,7 @@ void gregorio_add_misc_element(gregorio_element **current_element,
 static __inline void free_one_element(gregorio_element *element)
 {
     size_t i;
-    free(element->texverb);
+    free_one_texverb(element->texverb);
     for (i = 0; i < element->nabc_lines; i++) {
         free(element->nabc[i]);
     }
@@ -1482,6 +1540,26 @@ gregorio_hepisema_adjustment *gregorio_get_hepisema_adjustment(
             gregorio_get_hepisema_adjustment, "array index out of bounds",
             return &hepisema_adjustments[0]);
     return &hepisema_adjustments[index];
+}
+
+const char *gregorio_texverb(unsigned short index)
+{
+    gregorio_assert(index <= texverbs_last, gregorio_texverb,
+            "array index out of bounds", return NULL);
+    return texverbs[index];
+}
+
+void gregorio_change_texverb(unsigned short index, char *texverb)
+{
+    /* not allowed to change index 0 (== NULL) */
+    gregorio_assert(index != 0, gregorio_texverb,
+            "array index 0 may not be changed", return);
+    gregorio_assert(index <= texverbs_last, gregorio_texverb,
+            "array index out of bounds", return);
+    if (texverbs[index]) {
+        free(texverbs[index]);
+    }
+    texverbs[index] = texverb;
 }
 
 ENUM_TO_STRING(gregorio_type, GREGORIO_TYPE)

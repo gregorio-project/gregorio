@@ -20,7 +20,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1465844800
+ModificationTime: 1467641110
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -73,7 +73,7 @@ Grid
  17.75 -700 l 0
 EndSplineSet
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 241 241
+BeginChars: 247 247
 
 StartChar: Accentus
 Encoding: 0 -1 0
@@ -863,8 +863,112 @@ EndSplineSet
 Validated: 1
 EndChar
 
-StartChar: CClef
+StartChar: BracketLeftBottom
 Encoding: 34 -1 34
+Width: 83
+VWidth: 0
+Flags: HW
+LayerCount: 2
+Fore
+SplineSet
+0 125 m 9
+ 18 125 l 29
+ 18 -139.5 l 25
+ 83 -139.5 l 25
+ 83 -157.5 l 25
+ 0 -157.5 l 17
+ -0 -76.6666 0 44.1662 0 125 c 9
+EndSplineSet
+EndChar
+
+StartChar: BracketLeftLine
+Encoding: 35 -1 35
+Width: 83
+VWidth: 0
+Flags: HW
+LayerCount: 2
+Fore
+SplineSet
+0 -85 m 25
+ 0 125 l 25
+ 18 125 l 29
+ 18 -85 l 25
+ 0 -85 l 25
+EndSplineSet
+EndChar
+
+StartChar: BracketLeftTop
+Encoding: 36 -1 36
+Width: 83
+VWidth: 0
+Flags: HW
+LayerCount: 2
+Fore
+SplineSet
+0 32.5 m 29
+ 0 315 l 25
+ 83 315 l 25
+ 83 297 l 25
+ 18 297 l 25
+ 18 32.5 l 25
+ 0 32.5 l 29
+EndSplineSet
+EndChar
+
+StartChar: BracketRightBottom
+Encoding: 37 -1 37
+Width: 83
+VWidth: 0
+Flags: HW
+LayerCount: 2
+Fore
+SplineSet
+83 125 m 29
+ 83 -157.5 l 25
+ 0 -157.5 l 25
+ 0 -139.5 l 25
+ 65 -139.5 l 25
+ 65 125 l 25
+ 83 125 l 29
+EndSplineSet
+EndChar
+
+StartChar: BracketRightLine
+Encoding: 38 -1 38
+Width: 83
+VWidth: 0
+Flags: HW
+LayerCount: 2
+Fore
+SplineSet
+83 -85 m 29
+ 65 -85 l 25
+ 65 125 l 25
+ 83 125 l 25
+ 83 -85 l 29
+EndSplineSet
+EndChar
+
+StartChar: BracketRightTop
+Encoding: 39 -1 39
+Width: 83
+VWidth: 0
+Flags: HW
+LayerCount: 2
+Fore
+SplineSet
+83 32.5 m 25
+ 65 32.5 l 25
+ 65 297 l 25
+ 0 297 l 25
+ 0 315 l 25
+ 83 315 l 25
+ 83 32.5 l 25
+EndSplineSet
+EndChar
+
+StartChar: CClef
+Encoding: 40 -1 40
 Width: 166
 VWidth: 2575
 Flags: W
@@ -892,7 +996,7 @@ Validated: 33
 EndChar
 
 StartChar: CClefChange
-Encoding: 35 -1 35
+Encoding: 41 -1 41
 Width: 166
 VWidth: 2575
 Flags: W
@@ -920,7 +1024,7 @@ Validated: 33
 EndChar
 
 StartChar: Circulus
-Encoding: 36 -1 36
+Encoding: 42 -1 42
 Width: 124
 VWidth: 1594
 Flags: W
@@ -943,7 +1047,7 @@ Validated: 1
 EndChar
 
 StartChar: CurlyBrace
-Encoding: 37 -1 37
+Encoding: 43 -1 43
 Width: 1006
 VWidth: 2048
 Flags: W
@@ -971,7 +1075,7 @@ Validated: 1
 EndChar
 
 StartChar: CustosDownLong
-Encoding: 38 -1 38
+Encoding: 44 -1 44
 Width: 73
 VWidth: 2463
 Flags: W
@@ -992,7 +1096,7 @@ Validated: 1
 EndChar
 
 StartChar: CustosDownMedium
-Encoding: 39 -1 39
+Encoding: 45 -1 45
 Width: 73
 VWidth: 2412
 Flags: W
@@ -1014,7 +1118,7 @@ Validated: 1
 EndChar
 
 StartChar: CustosDownShort
-Encoding: 40 -1 40
+Encoding: 46 -1 46
 Width: 73
 VWidth: 2412
 Flags: W
@@ -1036,7 +1140,7 @@ Validated: 1
 EndChar
 
 StartChar: CustosUpLong
-Encoding: 41 -1 41
+Encoding: 47 -1 47
 Width: 73
 VWidth: 2609
 Flags: W
@@ -1059,7 +1163,7 @@ Validated: 1
 EndChar
 
 StartChar: CustosUpMedium
-Encoding: 42 -1 42
+Encoding: 48 -1 48
 Width: 74
 VWidth: 2660
 Flags: W
@@ -1081,7 +1185,7 @@ Validated: 1
 EndChar
 
 StartChar: CustosUpShort
-Encoding: 43 -1 43
+Encoding: 49 -1 49
 Width: 74
 VWidth: 2660
 Flags: W
@@ -1103,7 +1207,7 @@ Validated: 1
 EndChar
 
 StartChar: deminutus
-Encoding: 44 -1 44
+Encoding: 50 -1 50
 Width: 83
 VWidth: 2605
 Flags: W
@@ -1126,7 +1230,7 @@ Validated: 33
 EndChar
 
 StartChar: deminutus#Cavum
-Encoding: 45 -1 45
+Encoding: 51 -1 51
 Width: 83
 VWidth: 2605
 Flags: HW
@@ -1146,7 +1250,7 @@ EndSplineSet
 EndChar
 
 StartChar: DescendensOriscus
-Encoding: 46 -1 46
+Encoding: 52 -1 52
 Width: 166
 VWidth: 2537
 Flags: W
@@ -1168,7 +1272,7 @@ EndSplineSet
 EndChar
 
 StartChar: DescendensOriscus#Cavum
-Encoding: 47 -1 47
+Encoding: 53 -1 53
 Width: 166
 VWidth: 2537
 Flags: W
@@ -1190,7 +1294,7 @@ EndSplineSet
 EndChar
 
 StartChar: DescendensOriscusFlatBottom
-Encoding: 48 -1 48
+Encoding: 54 -1 54
 Width: 166
 VWidth: 2537
 Flags: HW
@@ -1212,7 +1316,7 @@ EndSplineSet
 EndChar
 
 StartChar: DescendensOriscusFlattened
-Encoding: 49 -1 49
+Encoding: 55 -1 55
 Width: 166
 VWidth: 2537
 Flags: HW
@@ -1234,7 +1338,7 @@ EndSplineSet
 EndChar
 
 StartChar: DescendensOriscusFlattened#Cavum
-Encoding: 50 -1 50
+Encoding: 56 -1 56
 Width: 166
 VWidth: 2537
 Flags: HW
@@ -1256,7 +1360,7 @@ EndSplineSet
 EndChar
 
 StartChar: DescendensOriscusFlatTop
-Encoding: 51 -1 51
+Encoding: 57 -1 57
 Width: 166
 VWidth: 2537
 Flags: HW
@@ -1278,7 +1382,7 @@ EndSplineSet
 EndChar
 
 StartChar: DescendensOriscusFlatTop#Cavum
-Encoding: 52 -1 52
+Encoding: 58 -1 58
 Width: 166
 VWidth: 2537
 Flags: W
@@ -1300,7 +1404,7 @@ EndSplineSet
 EndChar
 
 StartChar: DescendensOriscusLineBL
-Encoding: 53 -1 53
+Encoding: 59 -1 59
 Width: 166
 VWidth: 2537
 Flags: HW
@@ -1324,7 +1428,7 @@ EndSplineSet
 EndChar
 
 StartChar: DescendensOriscusLineBLBR
-Encoding: 54 -1 54
+Encoding: 60 -1 60
 Width: 166
 VWidth: 2537
 Flags: W
@@ -1350,7 +1454,7 @@ EndSplineSet
 EndChar
 
 StartChar: DescendensOriscusLineBLFlatBottom
-Encoding: 55 -1 55
+Encoding: 61 -1 61
 Width: 166
 VWidth: 2537
 Flags: HW
@@ -1374,7 +1478,7 @@ EndSplineSet
 EndChar
 
 StartChar: DescendensOriscusLineBLTR
-Encoding: 56 -1 56
+Encoding: 62 -1 62
 Width: 166
 VWidth: 2537
 Flags: W
@@ -1399,7 +1503,7 @@ EndSplineSet
 EndChar
 
 StartChar: DescendensOriscusLineBR
-Encoding: 57 -1 57
+Encoding: 63 -1 63
 Width: 168
 VWidth: 2612
 Flags: W
@@ -1424,7 +1528,7 @@ Validated: 1
 EndChar
 
 StartChar: DescendensOriscusLineBRFlatTop
-Encoding: 58 -1 58
+Encoding: 64 -1 64
 Width: 166
 VWidth: 2537
 Flags: HW
@@ -1448,7 +1552,7 @@ EndSplineSet
 EndChar
 
 StartChar: DescendensOriscusLineTL
-Encoding: 59 -1 59
+Encoding: 65 -1 65
 Width: 166
 VWidth: 2537
 Flags: HW
@@ -1472,7 +1576,7 @@ EndSplineSet
 EndChar
 
 StartChar: DescendensOriscusLineTLBR
-Encoding: 60 -1 60
+Encoding: 66 -1 66
 Width: 166
 VWidth: 2537
 Flags: W
@@ -1498,7 +1602,7 @@ EndSplineSet
 EndChar
 
 StartChar: DescendensOriscusLineTLFlatBottom
-Encoding: 61 -1 61
+Encoding: 67 -1 67
 Width: 166
 VWidth: 2537
 Flags: HW
@@ -1522,7 +1626,7 @@ EndSplineSet
 EndChar
 
 StartChar: DescendensOriscusLineTLTR
-Encoding: 62 -1 62
+Encoding: 68 -1 68
 Width: 166
 VWidth: 2537
 Flags: W
@@ -1547,7 +1651,7 @@ EndSplineSet
 EndChar
 
 StartChar: DescendensOriscusLineTR
-Encoding: 63 -1 63
+Encoding: 69 -1 69
 Width: 166
 VWidth: 2537
 Flags: HW
@@ -1570,7 +1674,7 @@ EndSplineSet
 EndChar
 
 StartChar: DescendensOriscusLineTRFlatTop
-Encoding: 64 -1 64
+Encoding: 70 -1 70
 Width: 166
 VWidth: 2537
 Flags: HW
@@ -1593,7 +1697,7 @@ EndSplineSet
 EndChar
 
 StartChar: DescendensPunctumInclinatum
-Encoding: 65 -1 65
+Encoding: 71 -1 71
 Width: 185
 VWidth: 2612
 Flags: W
@@ -1612,7 +1716,7 @@ Validated: 1
 EndChar
 
 StartChar: DescendensPunctumInclinatum#Cavum
-Encoding: 66 -1 66
+Encoding: 72 -1 72
 Width: 185
 VWidth: 2612
 Flags: W
@@ -1630,7 +1734,7 @@ EndSplineSet
 EndChar
 
 StartChar: DivisioDominican
-Encoding: 67 -1 67
+Encoding: 73 -1 73
 Width: 18
 VWidth: 2048
 Flags: W
@@ -1648,7 +1752,7 @@ Validated: 1
 EndChar
 
 StartChar: DivisioDominicanAlt
-Encoding: 68 -1 68
+Encoding: 74 -1 74
 Width: 18
 VWidth: 2048
 Flags: W
@@ -1666,7 +1770,7 @@ Validated: 1
 EndChar
 
 StartChar: DivisioMaior
-Encoding: 69 -1 69
+Encoding: 75 -1 75
 Width: 19
 VWidth: 2048
 Flags: W
@@ -1684,7 +1788,7 @@ Validated: 1
 EndChar
 
 StartChar: DivisioMaior.2
-Encoding: 70 -1 70
+Encoding: 76 -1 76
 Width: 19
 VWidth: 2048
 Flags: W
@@ -1702,7 +1806,7 @@ EndSplineSet
 EndChar
 
 StartChar: DivisioMaior.3
-Encoding: 71 -1 71
+Encoding: 77 -1 77
 Width: 19
 VWidth: 2048
 Flags: W
@@ -1719,7 +1823,7 @@ EndSplineSet
 EndChar
 
 StartChar: DivisioMaior.5
-Encoding: 72 -1 72
+Encoding: 78 -1 78
 Width: 19
 VWidth: 2048
 Flags: W
@@ -1736,7 +1840,7 @@ EndSplineSet
 EndChar
 
 StartChar: DivisioMinima
-Encoding: 73 -1 73
+Encoding: 79 -1 79
 AltUni2: 000050.ffffffff.0
 Width: 19
 VWidth: 2048
@@ -1756,7 +1860,7 @@ Validated: 1
 EndChar
 
 StartChar: DivisioMinima.2
-Encoding: 74 -1 74
+Encoding: 80 -1 80
 Width: 19
 VWidth: 1418
 Flags: HW
@@ -1774,7 +1878,7 @@ EndSplineSet
 EndChar
 
 StartChar: DivisioMinima.3
-Encoding: 75 -1 75
+Encoding: 81 -1 81
 Width: 19
 VWidth: 1733
 Flags: HW
@@ -1792,7 +1896,7 @@ EndSplineSet
 EndChar
 
 StartChar: DivisioMinima.5
-Encoding: 76 -1 76
+Encoding: 82 -1 82
 Width: 19
 VWidth: 2363
 Flags: HW
@@ -1810,7 +1914,7 @@ EndSplineSet
 EndChar
 
 StartChar: DivisioMinor
-Encoding: 77 -1 77
+Encoding: 83 -1 83
 Width: 19
 VWidth: 2048
 Flags: W
@@ -1828,7 +1932,7 @@ Validated: 1
 EndChar
 
 StartChar: DivisioMinor.2
-Encoding: 78 -1 78
+Encoding: 84 -1 84
 Width: 19
 VWidth: 2048
 Flags: W
@@ -1846,7 +1950,7 @@ EndSplineSet
 EndChar
 
 StartChar: DivisioMinor.3
-Encoding: 79 -1 79
+Encoding: 85 -1 85
 Width: 19
 VWidth: 2048
 Flags: W
@@ -1864,7 +1968,7 @@ EndSplineSet
 EndChar
 
 StartChar: DivisioMinor.5
-Encoding: 80 -1 80
+Encoding: 86 -1 86
 Width: 19
 VWidth: 2048
 Flags: W
@@ -1881,7 +1985,7 @@ EndSplineSet
 EndChar
 
 StartChar: FClef
-Encoding: 81 -1 81
+Encoding: 87 -1 87
 Width: 322
 VWidth: 2503
 Flags: W
@@ -1919,7 +2023,7 @@ Validated: 33
 EndChar
 
 StartChar: FClefChange
-Encoding: 82 -1 82
+Encoding: 88 -1 88
 Width: 322
 VWidth: 2503
 Flags: W
@@ -1957,7 +2061,7 @@ Validated: 33
 EndChar
 
 StartChar: Flat
-Encoding: 83 -1 83
+Encoding: 89 -1 89
 Width: 162
 VWidth: 2587
 Flags: W
@@ -1985,7 +2089,7 @@ Validated: 1
 EndChar
 
 StartChar: FlatHole
-Encoding: 84 -1 84
+Encoding: 90 -1 90
 Width: 162
 VWidth: 2587
 Flags: W
@@ -2006,7 +2110,7 @@ Validated: 1
 EndChar
 
 StartChar: hepisemaleft
-Encoding: 85 -1 85
+Encoding: 91 -1 91
 Width: 1
 VWidth: 2044
 Flags: HW
@@ -2024,7 +2128,7 @@ EndSplineSet
 EndChar
 
 StartChar: hepisemaright
-Encoding: 86 -1 86
+Encoding: 92 -1 92
 Width: 2
 VWidth: 2044
 Flags: HW
@@ -2042,7 +2146,7 @@ EndSplineSet
 EndChar
 
 StartChar: hepisema_base
-Encoding: 87 -1 87
+Encoding: 93 -1 93
 Width: 1
 VWidth: 2044
 Flags: HW
@@ -2060,7 +2164,7 @@ EndSplineSet
 EndChar
 
 StartChar: idebilis
-Encoding: 88 -1 88
+Encoding: 94 -1 94
 Width: 83
 VWidth: 2605
 Flags: W
@@ -2083,7 +2187,7 @@ Validated: 33
 EndChar
 
 StartChar: idebilis#Cavum
-Encoding: 89 -1 89
+Encoding: 95 -1 95
 Width: 83
 VWidth: 2605
 Flags: HW
@@ -2103,7 +2207,7 @@ EndSplineSet
 EndChar
 
 StartChar: line2
-Encoding: 90 -1 90
+Encoding: 96 -1 96
 Width: 18
 VWidth: 2048
 Flags: HW
@@ -2121,7 +2225,7 @@ EndSplineSet
 EndChar
 
 StartChar: line3
-Encoding: 91 -1 91
+Encoding: 97 -1 97
 Width: 18
 VWidth: 2048
 Flags: HW
@@ -2139,7 +2243,7 @@ EndSplineSet
 EndChar
 
 StartChar: line4
-Encoding: 92 -1 92
+Encoding: 98 -1 98
 Width: 18
 VWidth: 2048
 Flags: HW
@@ -2156,7 +2260,7 @@ EndSplineSet
 EndChar
 
 StartChar: line5
-Encoding: 93 -1 93
+Encoding: 99 -1 99
 Width: 18
 VWidth: 2048
 Flags: HW
@@ -2173,7 +2277,7 @@ EndSplineSet
 EndChar
 
 StartChar: Linea
-Encoding: 94 -1 94
+Encoding: 100 -1 100
 Width: 431
 VWidth: 2612
 Flags: W
@@ -2202,7 +2306,7 @@ Validated: 1
 EndChar
 
 StartChar: Linea#Cavum
-Encoding: 95 -1 95
+Encoding: 101 -1 101
 Width: 431
 VWidth: 2612
 Flags: HW
@@ -2222,7 +2326,7 @@ EndSplineSet
 EndChar
 
 StartChar: LineaPunctum
-Encoding: 96 -1 96
+Encoding: 102 -1 102
 Width: 266
 VWidth: 2048
 Flags: W
@@ -2257,7 +2361,7 @@ Validated: 1
 EndChar
 
 StartChar: LineaPunctum#Cavum
-Encoding: 97 -1 97
+Encoding: 103 -1 103
 Width: 266
 VWidth: 2048
 Flags: W
@@ -2278,7 +2382,7 @@ Validated: 33
 EndChar
 
 StartChar: LineaPunctum#Cavum.caeciliae
-Encoding: 98 -1 98
+Encoding: 104 -1 104
 Width: 266
 VWidth: 2048
 Flags: W
@@ -2296,7 +2400,7 @@ Validated: 1
 EndChar
 
 StartChar: mademinutus
-Encoding: 99 -1 99
+Encoding: 105 -1 105
 Width: 168
 VWidth: 2048
 Flags: W
@@ -2322,7 +2426,7 @@ EndSplineSet
 EndChar
 
 StartChar: mademinutus#Cavum
-Encoding: 100 -1 100
+Encoding: 106 -1 106
 Width: 168
 VWidth: 2048
 Flags: W
@@ -2344,7 +2448,7 @@ EndSplineSet
 EndChar
 
 StartChar: mdeminutus
-Encoding: 101 -1 101
+Encoding: 107 -1 107
 Width: 168
 VWidth: 2048
 Flags: HW
@@ -2369,7 +2473,7 @@ EndSplineSet
 EndChar
 
 StartChar: mdeminutus#Cavum
-Encoding: 102 -1 102
+Encoding: 108 -1 108
 Width: 168
 VWidth: 2048
 Flags: HW
@@ -2390,7 +2494,7 @@ EndSplineSet
 EndChar
 
 StartChar: mnbdeminutus
-Encoding: 103 -1 103
+Encoding: 109 -1 109
 Width: 168
 VWidth: 2048
 Flags: HW
@@ -2414,7 +2518,7 @@ EndSplineSet
 EndChar
 
 StartChar: mnbdeminutus#Cavum
-Encoding: 104 -1 104
+Encoding: 110 -1 110
 Width: 168
 VWidth: 2048
 Flags: HW
@@ -2436,7 +2540,7 @@ EndSplineSet
 EndChar
 
 StartChar: mnbpdeminutus
-Encoding: 105 -1 105
+Encoding: 111 -1 111
 Width: 168
 VWidth: 2048
 Flags: W
@@ -2460,7 +2564,7 @@ Validated: 33
 EndChar
 
 StartChar: mnbpdeminutus#Cavum
-Encoding: 106 -1 106
+Encoding: 112 -1 112
 Width: 168
 VWidth: 2048
 Flags: HW
@@ -2481,7 +2585,7 @@ EndSplineSet
 EndChar
 
 StartChar: mpdeminutus
-Encoding: 107 -1 107
+Encoding: 113 -1 113
 Width: 168
 VWidth: 2048
 Flags: HW
@@ -2506,7 +2610,7 @@ EndSplineSet
 EndChar
 
 StartChar: mpdeminutus#Cavum
-Encoding: 108 -1 108
+Encoding: 114 -1 114
 Width: 168
 VWidth: 2048
 Flags: HW
@@ -2527,7 +2631,7 @@ EndSplineSet
 EndChar
 
 StartChar: msdeminutus
-Encoding: 109 -1 109
+Encoding: 115 -1 115
 Width: 168
 VWidth: 2048
 Flags: W
@@ -2553,7 +2657,7 @@ Validated: 1
 EndChar
 
 StartChar: msdeminutus#Cavum
-Encoding: 110 -1 110
+Encoding: 116 -1 116
 Width: 168
 VWidth: 2048
 Flags: HW
@@ -2574,7 +2678,7 @@ EndSplineSet
 EndChar
 
 StartChar: Natural
-Encoding: 111 -1 111
+Encoding: 117 -1 117
 Width: 108
 Flags: W
 VStem: 0 25.2002<7.7002 121.4 173.3 323.299> 84 24<-184.013 -35.5 18.5 128.9>
@@ -2610,7 +2714,7 @@ Validated: 1
 EndChar
 
 StartChar: NaturalHole
-Encoding: 112 -1 112
+Encoding: 118 -1 118
 Width: 108
 Flags: W
 HStem: 1.64062 133.319
@@ -2628,7 +2732,7 @@ Validated: 1
 EndChar
 
 StartChar: OriscusDeminutus
-Encoding: 113 -1 113
+Encoding: 119 -1 119
 Width: 168
 VWidth: 0
 Flags: W
@@ -2654,7 +2758,7 @@ Validated: 33
 EndChar
 
 StartChar: OriscusDeminutus#Cavum
-Encoding: 114 -1 114
+Encoding: 120 -1 120
 Width: 168
 VWidth: 0
 Flags: HW
@@ -2678,7 +2782,7 @@ EndSplineSet
 EndChar
 
 StartChar: OriscusDeminutus#Cavum.caeciliae
-Encoding: 115 -1 115
+Encoding: 121 -1 121
 Width: 168
 VWidth: 2612
 Flags: W
@@ -2701,7 +2805,7 @@ EndSplineSet
 EndChar
 
 StartChar: OriscusDeminutus.caeciliae
-Encoding: 116 -1 116
+Encoding: 122 -1 122
 Width: 168
 VWidth: 2612
 Flags: W
@@ -2725,7 +2829,7 @@ Validated: 33
 EndChar
 
 StartChar: p2base
-Encoding: 117 -1 117
+Encoding: 123 -1 123
 Width: 166
 VWidth: 2613
 Flags: HW
@@ -2752,7 +2856,7 @@ EndSplineSet
 EndChar
 
 StartChar: p2base#Cavum
-Encoding: 118 -1 118
+Encoding: 124 -1 124
 Width: 166
 VWidth: 2613
 Flags: HW
@@ -2777,7 +2881,7 @@ EndSplineSet
 EndChar
 
 StartChar: pesdeminutus
-Encoding: 119 -1 119
+Encoding: 125 -1 125
 Width: 166
 VWidth: 2684
 Flags: HW
@@ -2800,7 +2904,7 @@ EndSplineSet
 EndChar
 
 StartChar: pesdeminutus#Cavum
-Encoding: 120 -1 120
+Encoding: 126 -1 126
 Width: 166
 VWidth: 2684
 Flags: HW
@@ -2821,7 +2925,7 @@ EndSplineSet
 EndChar
 
 StartChar: pesdeminutus_op
-Encoding: 121 -1 121
+Encoding: 127 -1 127
 Width: 166
 VWidth: 2684
 Flags: W
@@ -2848,7 +2952,7 @@ Validated: 1
 EndChar
 
 StartChar: PesOneNothing
-Encoding: 122 -1 122
+Encoding: 128 -1 128
 Width: 166
 VWidth: 2613
 Flags: W
@@ -2879,7 +2983,7 @@ EndSplineSet
 EndChar
 
 StartChar: PesOneNothing#Cavum
-Encoding: 123 -1 123
+Encoding: 129 -1 129
 Width: 166
 VWidth: 2613
 Flags: HW
@@ -2911,7 +3015,7 @@ EndSplineSet
 EndChar
 
 StartChar: PesQuilismaOneNothing
-Encoding: 124 -1 124
+Encoding: 130 -1 130
 Width: 166
 VWidth: 2496
 Flags: HW
@@ -2944,7 +3048,7 @@ EndSplineSet
 EndChar
 
 StartChar: PesQuilismaOneNothing#Cavum
-Encoding: 125 -1 125
+Encoding: 131 -1 131
 Width: 166
 VWidth: 2496
 Flags: HW
@@ -2979,7 +3083,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectus1
-Encoding: 126 -1 126
+Encoding: 132 -1 132
 Width: 447
 VWidth: 2553
 Flags: HW
@@ -3001,7 +3105,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectus1#Cavum
-Encoding: 127 -1 127
+Encoding: 133 -1 133
 Width: 447
 VWidth: 2553
 Flags: HW
@@ -3021,7 +3125,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectus2
-Encoding: 128 -1 128
+Encoding: 134 -1 134
 Width: 547
 VWidth: 2575
 Flags: HW
@@ -3045,7 +3149,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectus2#Cavum
-Encoding: 129 -1 129
+Encoding: 135 -1 135
 Width: 547
 VWidth: 2575
 Flags: HW
@@ -3067,7 +3171,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectus3
-Encoding: 130 -1 130
+Encoding: 136 -1 136
 Width: 628
 VWidth: 2556
 Flags: HW
@@ -3092,7 +3196,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectus3#Cavum
-Encoding: 131 -1 131
+Encoding: 137 -1 137
 Width: 628
 VWidth: 2556
 Flags: HW
@@ -3115,7 +3219,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectus4
-Encoding: 132 -1 132
+Encoding: 138 -1 138
 Width: 704
 VWidth: 2500
 Flags: HW
@@ -3139,7 +3243,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectus4#Cavum
-Encoding: 133 -1 133
+Encoding: 139 -1 139
 Width: 704
 VWidth: 2500
 Flags: HW
@@ -3161,7 +3265,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectus5
-Encoding: 134 -1 134
+Encoding: 140 -1 140
 Width: 849
 VWidth: 2048
 Flags: HW
@@ -3185,7 +3289,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectus5#Cavum
-Encoding: 135 -1 135
+Encoding: 141 -1 141
 Width: 849
 VWidth: 2048
 Flags: HW
@@ -3207,7 +3311,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusam11
-Encoding: 136 -1 136
+Encoding: 142 -1 142
 Width: 503
 VWidth: 2553
 Flags: HW
@@ -3229,7 +3333,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusam11#Cavum
-Encoding: 137 -1 137
+Encoding: 143 -1 143
 Width: 503
 VWidth: 2553
 Flags: HW
@@ -3249,7 +3353,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusam12
-Encoding: 138 -1 138
+Encoding: 144 -1 144
 Width: 628
 VWidth: 2575
 Flags: HW
@@ -3273,7 +3377,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusam12#Cavum
-Encoding: 139 -1 139
+Encoding: 145 -1 145
 Width: 628
 VWidth: 2575
 Flags: HW
@@ -3295,7 +3399,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusam13
-Encoding: 140 -1 140
+Encoding: 146 -1 146
 Width: 678
 VWidth: 2556
 Flags: HW
@@ -3319,7 +3423,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusam13#Cavum
-Encoding: 141 -1 141
+Encoding: 147 -1 147
 Width: 678
 VWidth: 2556
 Flags: HW
@@ -3342,7 +3446,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusam14
-Encoding: 142 -1 142
+Encoding: 148 -1 148
 Width: 721
 VWidth: 2500
 Flags: HW
@@ -3367,7 +3471,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusam14#Cavum
-Encoding: 143 -1 143
+Encoding: 149 -1 149
 Width: 721
 VWidth: 2500
 Flags: HW
@@ -3389,7 +3493,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusam15
-Encoding: 144 -1 144
+Encoding: 150 -1 150
 Width: 933
 VWidth: 2048
 Flags: HW
@@ -3414,7 +3518,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusam15#Cavum
-Encoding: 145 -1 145
+Encoding: 151 -1 151
 Width: 933
 VWidth: 2048
 Flags: HW
@@ -3436,7 +3540,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexus1
-Encoding: 146 -1 146
+Encoding: 152 -1 152
 Width: 503
 VWidth: 2553
 Flags: HW
@@ -3459,7 +3563,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexus1#Cavum
-Encoding: 147 -1 147
+Encoding: 153 -1 153
 Width: 503
 VWidth: 2553
 Flags: HW
@@ -3479,7 +3583,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexus2
-Encoding: 148 -1 148
+Encoding: 154 -1 154
 Width: 628
 VWidth: 2575
 Flags: HW
@@ -3501,7 +3605,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexus2#Cavum
-Encoding: 149 -1 149
+Encoding: 155 -1 155
 Width: 628
 VWidth: 2575
 Flags: HW
@@ -3523,7 +3627,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexus3
-Encoding: 150 -1 150
+Encoding: 156 -1 156
 Width: 628
 VWidth: 2556
 Flags: HW
@@ -3547,7 +3651,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexus3#Cavum
-Encoding: 151 -1 151
+Encoding: 157 -1 157
 Width: 628
 VWidth: 2556
 Flags: HW
@@ -3570,7 +3674,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexus4
-Encoding: 152 -1 152
+Encoding: 158 -1 158
 Width: 628
 VWidth: 2500
 Flags: HW
@@ -3593,7 +3697,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexus4#Cavum
-Encoding: 153 -1 153
+Encoding: 159 -1 159
 Width: 628
 VWidth: 2500
 Flags: HW
@@ -3615,7 +3719,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexus5
-Encoding: 154 -1 154
+Encoding: 160 -1 160
 Width: 931
 VWidth: 2048
 Flags: HW
@@ -3636,7 +3740,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexus5#Cavum
-Encoding: 155 -1 155
+Encoding: 161 -1 161
 Width: 931
 VWidth: 2048
 Flags: HW
@@ -3653,7 +3757,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb1
-Encoding: 156 -1 156
+Encoding: 162 -1 162
 Width: 503
 VWidth: 2553
 Flags: HW
@@ -3673,7 +3777,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb1#Cavum
-Encoding: 157 -1 157
+Encoding: 163 -1 163
 Width: 503
 VWidth: 2553
 Flags: HW
@@ -3693,7 +3797,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb2
-Encoding: 158 -1 158
+Encoding: 164 -1 164
 Width: 628
 VWidth: 2575
 Flags: HW
@@ -3713,7 +3817,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb2#Cavum
-Encoding: 159 -1 159
+Encoding: 165 -1 165
 Width: 628
 VWidth: 2575
 Flags: HW
@@ -3735,7 +3839,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb3
-Encoding: 160 -1 160
+Encoding: 166 -1 166
 Width: 628
 VWidth: 2556
 Flags: HW
@@ -3756,7 +3860,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb3#Cavum
-Encoding: 161 -1 161
+Encoding: 167 -1 167
 Width: 628
 VWidth: 2556
 Flags: HW
@@ -3779,7 +3883,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb4
-Encoding: 162 -1 162
+Encoding: 168 -1 168
 Width: 628
 VWidth: 2500
 Flags: HW
@@ -3799,7 +3903,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb4#Cavum
-Encoding: 163 -1 163
+Encoding: 169 -1 169
 Width: 628
 VWidth: 2500
 Flags: HW
@@ -3821,7 +3925,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb5
-Encoding: 164 -1 164
+Encoding: 170 -1 170
 Width: 931
 VWidth: 2048
 Flags: HW
@@ -3840,7 +3944,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb5#Cavum
-Encoding: 165 -1 165
+Encoding: 171 -1 171
 Width: 931
 VWidth: 2048
 Flags: HW
@@ -3857,7 +3961,7 @@ EndSplineSet
 EndChar
 
 StartChar: Punctum
-Encoding: 166 -1 166
+Encoding: 172 -1 172
 Width: 166
 VWidth: 2612
 Flags: HW
@@ -3877,7 +3981,7 @@ EndSplineSet
 EndChar
 
 StartChar: Punctum#Cavum
-Encoding: 167 -1 167
+Encoding: 173 -1 173
 Width: 166
 VWidth: 2612
 Flags: W
@@ -3898,7 +4002,7 @@ Validated: 33
 EndChar
 
 StartChar: Punctum#Cavum.caeciliae
-Encoding: 168 -1 168
+Encoding: 174 -1 174
 Width: 166
 VWidth: 2612
 Flags: W
@@ -3917,7 +4021,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumAscendens
-Encoding: 169 -1 169
+Encoding: 175 -1 175
 Width: 166
 VWidth: 1149
 Flags: W
@@ -3939,7 +4043,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumAscendens#Cavum
-Encoding: 170 -1 170
+Encoding: 176 -1 176
 Width: 166
 VWidth: 1149
 Flags: HW
@@ -3960,7 +4064,7 @@ EndSplineSet
 EndChar
 
 StartChar: PunctumAscendens_op
-Encoding: 171 -1 171
+Encoding: 177 -1 177
 Width: 166
 VWidth: 1149
 Flags: HW
@@ -3984,7 +4088,7 @@ EndSplineSet
 EndChar
 
 StartChar: PunctumAuctusLineBL
-Encoding: 172 -1 172
+Encoding: 178 -1 178
 Width: 166
 VWidth: 2689
 Flags: W
@@ -4008,7 +4112,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumAuctusLineBL#Cavum
-Encoding: 173 -1 173
+Encoding: 179 -1 179
 Width: 166
 VWidth: 2689
 Flags: HW
@@ -4029,7 +4133,7 @@ EndSplineSet
 EndChar
 
 StartChar: PunctumAuctusLineBL_op
-Encoding: 174 -1 174
+Encoding: 180 -1 180
 Width: 166
 VWidth: 2689
 Flags: W
@@ -4056,7 +4160,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumDeminutus
-Encoding: 175 -1 175
+Encoding: 181 -1 181
 Width: 83
 VWidth: 2612
 Flags: W
@@ -4077,7 +4181,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumDeminutus#Cavum
-Encoding: 176 -1 176
+Encoding: 182 -1 182
 Width: 83
 VWidth: 2612
 Flags: HW
@@ -4097,7 +4201,7 @@ EndSplineSet
 EndChar
 
 StartChar: PunctumDescendens
-Encoding: 177 -1 177
+Encoding: 183 -1 183
 Width: 166
 VWidth: 1342
 Flags: W
@@ -4118,7 +4222,7 @@ Validated: 33
 EndChar
 
 StartChar: PunctumDescendens#Cavum
-Encoding: 178 -1 178
+Encoding: 184 -1 184
 Width: 166
 VWidth: 1342
 Flags: HW
@@ -4139,7 +4243,7 @@ EndSplineSet
 EndChar
 
 StartChar: PunctumDescendens_op
-Encoding: 179 -1 179
+Encoding: 185 -1 185
 Width: 166
 VWidth: 1342
 Flags: W
@@ -4163,7 +4267,7 @@ Validated: 33
 EndChar
 
 StartChar: PunctumInclinatumAuctus
-Encoding: 180 -1 180
+Encoding: 186 -1 186
 Width: 185
 VWidth: 0
 Flags: HW
@@ -4185,7 +4289,7 @@ EndSplineSet
 EndChar
 
 StartChar: PunctumInclinatumAuctus#Cavum
-Encoding: 181 -1 181
+Encoding: 187 -1 187
 Width: 185
 VWidth: 0
 Flags: W
@@ -4205,7 +4309,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumInclinatumAuctus#Cavum.caeciliae
-Encoding: 182 -1 182
+Encoding: 188 -1 188
 Width: 185
 VWidth: 2048
 Flags: HW
@@ -4223,7 +4327,7 @@ EndSplineSet
 EndChar
 
 StartChar: PunctumInclinatumAuctus.caeciliae
-Encoding: 183 -1 183
+Encoding: 189 -1 189
 Width: 185
 VWidth: 2048
 Flags: W
@@ -4247,7 +4351,7 @@ Validated: 33
 EndChar
 
 StartChar: PunctumInclinatumDeminutus
-Encoding: 184 -1 184
+Encoding: 190 -1 190
 Width: 139
 VWidth: 2649
 Flags: W
@@ -4266,7 +4370,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumInclinatumDeminutus#Cavum
-Encoding: 185 -1 185
+Encoding: 191 -1 191
 Width: 139
 VWidth: 2649
 Flags: HW
@@ -4284,7 +4388,7 @@ EndSplineSet
 EndChar
 
 StartChar: PunctumLineBL
-Encoding: 186 -1 186
+Encoding: 192 -1 192
 Width: 166
 VWidth: 2612
 Flags: W
@@ -4307,7 +4411,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumLineBLBR
-Encoding: 187 -1 187
+Encoding: 193 -1 193
 Width: 166
 VWidth: 2612
 Flags: HW
@@ -4331,7 +4435,7 @@ EndSplineSet
 EndChar
 
 StartChar: PunctumLineBR
-Encoding: 188 -1 188
+Encoding: 194 -1 194
 Width: 166
 VWidth: 2612
 Flags: W
@@ -4354,7 +4458,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumLineTL
-Encoding: 189 -1 189
+Encoding: 195 -1 195
 Width: 166
 VWidth: 2612
 Flags: W
@@ -4377,7 +4481,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumLineTLTR
-Encoding: 190 -1 190
+Encoding: 196 -1 196
 Width: 166
 VWidth: 2612
 Flags: W
@@ -4402,7 +4506,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumLineTR
-Encoding: 191 -1 191
+Encoding: 197 -1 197
 Width: 166
 VWidth: 2612
 Flags: W
@@ -4425,7 +4529,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumSmall
-Encoding: 192 -1 192
+Encoding: 198 -1 198
 Width: 155
 VWidth: 2537
 Flags: HW
@@ -4447,7 +4551,7 @@ EndSplineSet
 EndChar
 
 StartChar: PunctumSmall#Cavum
-Encoding: 193 -1 193
+Encoding: 199 -1 199
 Width: 155
 VWidth: 2537
 Flags: HW
@@ -4467,7 +4571,7 @@ EndSplineSet
 EndChar
 
 StartChar: queue
-Encoding: 194 -1 194
+Encoding: 200 -1 200
 Width: 18
 VWidth: 2048
 Flags: HW
@@ -4486,7 +4590,7 @@ EndSplineSet
 EndChar
 
 StartChar: queuebase
-Encoding: 195 -1 195
+Encoding: 201 -1 201
 Width: 18
 VWidth: 2048
 Flags: HW
@@ -4504,7 +4608,7 @@ EndSplineSet
 EndChar
 
 StartChar: Quilisma
-Encoding: 196 -1 196
+Encoding: 202 -1 202
 Width: 166
 VWidth: 2496
 Flags: HW
@@ -4532,7 +4636,7 @@ EndSplineSet
 EndChar
 
 StartChar: Quilisma#Cavum
-Encoding: 197 -1 197
+Encoding: 203 -1 203
 Width: 166
 VWidth: 2496
 Flags: HW
@@ -4560,7 +4664,7 @@ EndSplineSet
 EndChar
 
 StartChar: QuilismaLineTR
-Encoding: 198 -1 198
+Encoding: 204 -1 204
 Width: 166
 VWidth: 2496
 Flags: W
@@ -4590,7 +4694,7 @@ Validated: 33
 EndChar
 
 StartChar: rdeminutus
-Encoding: 199 -1 199
+Encoding: 205 -1 205
 Width: 83
 VWidth: 2605
 Flags: W
@@ -4613,7 +4717,7 @@ Validated: 33
 EndChar
 
 StartChar: rdeminutus#Cavum
-Encoding: 200 -1 200
+Encoding: 206 -1 206
 Width: 83
 VWidth: 2605
 Flags: HW
@@ -4633,7 +4737,7 @@ EndSplineSet
 EndChar
 
 StartChar: RoundBrace
-Encoding: 201 -1 201
+Encoding: 207 -1 207
 Width: 937
 VWidth: 2048
 Flags: W
@@ -4659,7 +4763,7 @@ Validated: 1
 EndChar
 
 StartChar: RoundBraceDown
-Encoding: 202 -1 202
+Encoding: 208 -1 208
 Width: 937
 VWidth: 2048
 Flags: W
@@ -4685,7 +4789,7 @@ Validated: 1
 EndChar
 
 StartChar: rqueue
-Encoding: 203 -1 203
+Encoding: 209 -1 209
 Width: 18
 VWidth: 2048
 Flags: HW
@@ -4704,7 +4808,7 @@ EndSplineSet
 EndChar
 
 StartChar: rvbase
-Encoding: 204 -1 204
+Encoding: 210 -1 210
 Width: 166
 VWidth: 2637
 Flags: HW
@@ -4728,7 +4832,7 @@ EndSplineSet
 EndChar
 
 StartChar: rvirgabase
-Encoding: 205 -1 205
+Encoding: 211 -1 211
 Width: 166
 VWidth: 2637
 Flags: HW
@@ -4748,7 +4852,7 @@ EndSplineSet
 EndChar
 
 StartChar: Semicirculus
-Encoding: 206 -1 206
+Encoding: 212 -1 212
 Width: 124
 VWidth: 1606
 Flags: W
@@ -4768,7 +4872,7 @@ Validated: 1
 EndChar
 
 StartChar: SemicirculusReversus
-Encoding: 207 -1 207
+Encoding: 213 -1 213
 Width: 125
 VWidth: 1583
 Flags: W
@@ -4788,7 +4892,7 @@ Validated: 1
 EndChar
 
 StartChar: Sharp
-Encoding: 208 -1 208
+Encoding: 214 -1 214
 Width: 258
 VWidth: 2048
 Flags: W
@@ -4852,7 +4956,7 @@ Validated: 1
 EndChar
 
 StartChar: SharpHole
-Encoding: 209 -1 209
+Encoding: 215 -1 215
 Width: 258
 VWidth: 2048
 Flags: W
@@ -4871,7 +4975,7 @@ Validated: 1
 EndChar
 
 StartChar: Stropha
-Encoding: 210 -1 210
+Encoding: 216 -1 216
 Width: 172
 VWidth: 2048
 Flags: HW
@@ -4895,7 +4999,7 @@ EndSplineSet
 EndChar
 
 StartChar: Stropha#Cavum
-Encoding: 211 -1 211
+Encoding: 217 -1 217
 Width: 172
 VWidth: 2048
 Flags: HW
@@ -4916,7 +5020,7 @@ EndSplineSet
 EndChar
 
 StartChar: Stropha#Cavum.caeciliae
-Encoding: 212 -1 212
+Encoding: 218 -1 218
 Width: 151
 VWidth: 2686
 Flags: HW
@@ -4937,7 +5041,7 @@ EndSplineSet
 EndChar
 
 StartChar: Stropha.caeciliae
-Encoding: 213 -1 213
+Encoding: 219 -1 219
 Width: 151
 VWidth: 2686
 Flags: W
@@ -4960,7 +5064,7 @@ Validated: 1
 EndChar
 
 StartChar: StrophaAucta
-Encoding: 214 -1 214
+Encoding: 220 -1 220
 Width: 172
 VWidth: 2048
 Flags: HW
@@ -4982,7 +5086,7 @@ EndSplineSet
 EndChar
 
 StartChar: StrophaAucta#Cavum
-Encoding: 215 -1 215
+Encoding: 221 -1 221
 Width: 172
 VWidth: 2048
 Flags: HW
@@ -5003,7 +5107,7 @@ EndSplineSet
 EndChar
 
 StartChar: StrophaAucta#Cavum.caeciliae
-Encoding: 216 -1 216
+Encoding: 222 -1 222
 Width: 151
 VWidth: 2686
 Flags: HW
@@ -5025,7 +5129,7 @@ EndSplineSet
 EndChar
 
 StartChar: StrophaAucta.caeciliae
-Encoding: 217 -1 217
+Encoding: 223 -1 223
 Width: 151
 VWidth: 2686
 Flags: W
@@ -5048,7 +5152,7 @@ Validated: 33
 EndChar
 
 StartChar: StrophaAuctaLongtail
-Encoding: 218 -1 218
+Encoding: 224 -1 224
 Width: 172
 VWidth: 2048
 Flags: HW
@@ -5070,7 +5174,7 @@ EndSplineSet
 EndChar
 
 StartChar: StrophaAuctaLongtail#Cavum
-Encoding: 219 -1 219
+Encoding: 225 -1 225
 Width: 172
 VWidth: 2048
 Flags: HW
@@ -5091,7 +5195,7 @@ EndSplineSet
 EndChar
 
 StartChar: tmpglyph
-Encoding: 220 -1 220
+Encoding: 226 -1 226
 Width: 18
 VWidth: 2048
 Flags: HW
@@ -5101,7 +5205,7 @@ LayerCount: 2
 EndChar
 
 StartChar: UpperPesOneNothing
-Encoding: 221 -1 221
+Encoding: 227 -1 227
 Width: 166
 VWidth: 2613
 Flags: W
@@ -5133,7 +5237,7 @@ EndSplineSet
 EndChar
 
 StartChar: UpperPesOneNothing#Cavum
-Encoding: 222 -1 222
+Encoding: 228 -1 228
 Width: 166
 VWidth: 2613
 Flags: W
@@ -5165,7 +5269,7 @@ EndSplineSet
 EndChar
 
 StartChar: VEpisema
-Encoding: 223 -1 223
+Encoding: 229 -1 229
 Width: 34
 VWidth: 2048
 Flags: W
@@ -5186,7 +5290,7 @@ Validated: 1
 EndChar
 
 StartChar: VEpisema.circumflexus
-Encoding: 224 -1 224
+Encoding: 230 -1 230
 Width: 108
 VWidth: 2048
 Flags: W
@@ -5210,7 +5314,7 @@ Validated: 33
 EndChar
 
 StartChar: virgabase
-Encoding: 225 -1 225
+Encoding: 231 -1 231
 Width: 166
 VWidth: 2637
 Flags: HW
@@ -5232,7 +5336,7 @@ EndSplineSet
 EndChar
 
 StartChar: virgabase#Cavum
-Encoding: 226 -1 226
+Encoding: 232 -1 232
 Width: 166
 VWidth: 2637
 Flags: HW
@@ -5252,7 +5356,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaBaseLineBL
-Encoding: 227 -1 227
+Encoding: 233 -1 233
 Width: 166
 VWidth: 2637
 Flags: HW
@@ -5276,7 +5380,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaBaseLineBL#Cavum
-Encoding: 228 -1 228
+Encoding: 234 -1 234
 Width: 166
 VWidth: 2637
 Flags: HW
@@ -5296,7 +5400,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaAscendens_op
-Encoding: 229 -1 229
+Encoding: 235 -1 235
 Width: 166
 VWidth: 2684
 Flags: W
@@ -5324,7 +5428,7 @@ Validated: 1
 EndChar
 
 StartChar: VirgaReversaAscendens_op#Cavum
-Encoding: 230 -1 230
+Encoding: 236 -1 236
 Width: 166
 VWidth: 2684
 Flags: W
@@ -5345,7 +5449,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaDescendens_op
-Encoding: 231 -1 231
+Encoding: 237 -1 237
 Width: 168
 VWidth: 2048
 Flags: HW
@@ -5373,7 +5477,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaDescendens_op#Cavum
-Encoding: 232 -1 232
+Encoding: 238 -1 238
 Width: 168
 VWidth: 2048
 Flags: HW
@@ -5394,7 +5498,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaLongqueueAscendens_op
-Encoding: 233 -1 233
+Encoding: 239 -1 239
 Width: 166
 VWidth: 2684
 Flags: W
@@ -5422,7 +5526,7 @@ Validated: 33
 EndChar
 
 StartChar: VirgaReversaLongqueueDescendens_op
-Encoding: 234 -1 234
+Encoding: 240 -1 240
 Width: 168
 VWidth: 2048
 Flags: W
@@ -5452,7 +5556,7 @@ Validated: 1
 EndChar
 
 StartChar: VirgaReversaOpenqueueAscendens_op
-Encoding: 235 -1 235
+Encoding: 241 -1 241
 Width: 166
 VWidth: 2684
 Flags: W
@@ -5479,7 +5583,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaOpenqueueDescendens_op
-Encoding: 236 -1 236
+Encoding: 242 -1 242
 Width: 168
 VWidth: 2048
 Flags: HW
@@ -5508,7 +5612,7 @@ EndSplineSet
 EndChar
 
 StartChar: Virgula
-Encoding: 237 -1 237
+Encoding: 243 -1 243
 Width: 143
 VWidth: 2418
 Flags: W
@@ -5531,7 +5635,7 @@ Validated: 1
 EndChar
 
 StartChar: Virgula.2
-Encoding: 238 -1 238
+Encoding: 244 -1 244
 Width: 143
 VWidth: 1788
 Flags: HW
@@ -5553,7 +5657,7 @@ EndSplineSet
 EndChar
 
 StartChar: Virgula.3
-Encoding: 239 -1 239
+Encoding: 245 -1 245
 Width: 143
 VWidth: 2103
 Flags: HW
@@ -5575,7 +5679,7 @@ EndSplineSet
 EndChar
 
 StartChar: Virgula.5
-Encoding: 240 -1 240
+Encoding: 246 -1 246
 Width: 143
 VWidth: 2733
 Flags: HW

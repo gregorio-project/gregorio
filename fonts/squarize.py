@@ -71,13 +71,23 @@ MAX_INTERVAL = 5
 ALL_AMBITUS = range(1, MAX_INTERVAL + 1)
 AMBITUS_ONE_ONLY = [ 1 ]
 
-# this dictionary must have a value for 1 up to MAX_INTERVAL
+# this dictionary must have a value for 0 to 14 (the maximum overall ambitus)
 AMBITUS = {
-    1: 'One',
-    2: 'Two',
-    3: 'Three',
-    4: 'Four',
-    5: 'Five',
+    0  : 'Zero',
+    1  : 'One',
+    2  : 'Two',
+    3  : 'Three',
+    4  : 'Four',
+    5  : 'Five',
+    6  : 'Six',
+    7  : 'Seven',
+    8  : 'Eight',
+    9  : 'Nine',
+    10 : 'Ten',
+    11 : 'Eleven',
+    12 : 'Twelve',
+    13 : 'Thirteen',
+    14 : 'Fourteen',
 }
 
 GREGORIO_VERSION = '4.2.0-rc1'
@@ -138,6 +148,8 @@ def main():
     cavum = args.cavum
     if 'base height' not in font_config:
         font_config['base height'] = 157.5
+    if 'bracket shift' not in font_config:
+        font_config['bracket shift'] = font_config['base height'] / 2.0
     if 'hepisema additional width' not in font_config:
         font_config['hepisema additional width'] = 5
     if 'deminutus vertical shift' not in font_config:
@@ -172,6 +184,7 @@ def main():
     initialize_glyphs()
     flattened_oriscus()
     hepisema()
+    brackets()
     measures()
     virga()
     pes()
@@ -2662,6 +2675,44 @@ def write_fusion_leading(i, first_glyph, glyph_type, lique, qtype=None,
     simplify()
     set_width(length)
     end_glyph(glyph_name)
+
+def brackets():
+    for i in range(0, 15):
+        write_bracket(i, 'Left')
+    for i in range(0, 15):
+        write_bracket(i, 'Left', 'Short')
+    for i in range(0, 15, 2):
+        write_bracket(i, 'Left', 'Long')
+    for i in range(0, 15):
+        write_bracket(i, 'Right')
+    for i in range(0, 15):
+        write_bracket(i, 'Right', 'Short')
+    for i in range(0, 15, 2):
+        write_bracket(i, 'Right', 'Long')
+
+def write_bracket(i, direction, size = ''):
+    "Writes a bracket glyph"
+    new_glyph()
+    if not cavum:
+        glyph_name = 'Bracket%s%s%s' % (direction, size, AMBITUS[i])
+        line = 'Bracket%sLine' % direction
+        base_height = FONT_CONFIG['base height']
+        if copy_existing_glyph(glyph_name):
+            return
+        paste_glyph('Bracket' + direction + 'Bottom')
+        for j in range(0, i+1):
+            paste_glyph(line, 0, j*base_height)
+        if size == 'Short':
+            paste_glyph('Bracket' + direction + 'Top', 0,
+                    i*base_height-FONT_CONFIG['bracket shift'])
+        elif size == 'Long':
+            paste_glyph('Bracket' + direction + 'Top', 0,
+                    i*base_height+FONT_CONFIG['bracket shift'])
+        else:
+            paste_glyph('Bracket' + direction + 'Top', 0, i*base_height)
+        simplify()
+        set_width(get_width(line))
+        end_glyph(glyph_name)
 
 if __name__ == "__main__":
     main()
