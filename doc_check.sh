@@ -99,6 +99,7 @@ cd $HERE/doc
 grep -h '\\macroname.*' *.tex > $DOCFILE
 grep -h '\\stylename{.*' *.tex >> $DOCFILE
 grep -h '\\begin{gdimension}{.*' *.tex >> $DOCFILE
+grep -h '\\begin{gcount}{.*' *.tex >> $DOCFILE
 
 #remove all but name
 sed -i.temp 's:\\macroname{\([^}]*\)}.*:\1:' $DOCFILE
@@ -111,6 +112,9 @@ sed -i.temp 's:.*\stylename{\([a-z]*\)}.*:\1:' $DOCFILE
 
 #distances
 sed -i.temp 's:\\begin{gdimension}{\([a-z@]*\)}.*:\1:' $DOCFILE
+
+#counts
+sed -i.temp 's:\\begin{gcount}{\([a-z@]*\)}.*:\1:' $DOCFILE
 
 #block documentation items
 sed -i.temp 's:.*\.\.\..*::' $DOCFILE
