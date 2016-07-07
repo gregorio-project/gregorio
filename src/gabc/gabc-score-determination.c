@@ -165,7 +165,8 @@ static void oriscus_orientation_visit(
      * via oriscus */
 
     if (oriscus) {
-        if (note->u.note.pitch < oriscus->u.note.pitch) {
+        if (note->u.note.pitch <= oriscus->u.note.pitch) {
+            /* descending or unison */
             switch(oriscus->u.note.shape) {
             case S_ORISCUS_UNDETERMINED:
                 oriscus->u.note.shape = S_ORISCUS_DESCENDENS;
@@ -184,7 +185,7 @@ static void oriscus_orientation_visit(
                 break;
                 /* LCOV_EXCL_STOP */
             }
-        } else { /* ascending or the same */
+        } else { /* ascending */
             switch(oriscus->u.note.shape) {
             case S_ORISCUS_UNDETERMINED:
                 oriscus->u.note.shape = S_ORISCUS_ASCENDENS;
