@@ -90,7 +90,7 @@ AMBITUS = {
     14 : 'Fourteen',
 }
 
-GREGORIO_VERSION = '4.2.0-rc1'
+GREGORIO_VERSION = '4.2.0-rc2'
 
 # The unicode character at which we start our numbering:
 # U+E000 is the start of the BMP Private Use Area

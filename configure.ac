@@ -16,8 +16,8 @@ dnl
 dnl You should have received a copy of the GNU General Public License
 dnl along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
-AC_INIT([gregorio],[4.2.0-rc1],[https://github.com/gregorio-project/gregorio/issues],[gregorio],[http://gregorio-project.github.io/])
-FILENAME_VERSION="4_2_0-rc1"
+AC_INIT([gregorio],[4.2.0-rc2],[https://github.com/gregorio-project/gregorio/issues],[gregorio],[http://gregorio-project.github.io/])
+FILENAME_VERSION="4_2_0-rc2"
 AC_SUBST(FILENAME_VERSION)
 AC_DEFINE_UNQUOTED(FILENAME_VERSION, "$FILENAME_VERSION", [version suitable for file names])
 MK=""
@@ -37,6 +37,8 @@ AM_PROG_LEX
 AC_PROG_YACC
 AC_CHECK_TOOL([RC], [windres], [no])
 AM_CONDITIONAL([HAVE_RC], [test x$RC != xno])
+
+AC_CHECK_ALIGNOF(uint32_t)
 
 AX_CHECK_COMPILE_FLAG([-std=gnu89], [CFLAGS+=" -std=gnu89"])
 dnl until flex gets their act together, use pedantic instead of pedantic-errors
