@@ -38,6 +38,8 @@ AC_PROG_YACC
 AC_CHECK_TOOL([RC], [windres], [no])
 AM_CONDITIONAL([HAVE_RC], [test x$RC != xno])
 
+AC_CHECK_ALIGNOF(uint32_t)
+
 AX_CHECK_COMPILE_FLAG([-std=gnu89], [CFLAGS+=" -std=gnu89"])
 dnl until flex gets their act together, use pedantic instead of pedantic-errors
 AX_CHECK_COMPILE_FLAG([-pedantic], [CFLAGS+=" -pedantic"])
