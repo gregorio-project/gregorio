@@ -6,7 +6,11 @@ This file contains instructions to upgrade to a new release of Gregorio.
 
 ### Stemmed oriscus flexus orientation
 
-As of version 4.2, the orientation of the stemmed oriscus flexus `(gOe)` is consistent with the unstemmed oriscus flexus `(goe)` in that the oriscus points downward (since the note which follows is of lower pitch).  If you prefer the oriscus to point upward, you will need to use the `1` modifier (as in `(gO1e)`), which will force an upward orientation of the oriscus.
+As of version 4.2, the orientation of the stemmed oriscus flexus `(gOe)` is consistent with the unstemmed oriscus flexus `(goe)` in that the oriscus points downwards (since the note which follows is of lower pitch).  If you prefer the oriscus to point upwards, you will need to use the `1` modifier (as in `(gO1e)`), which will force an upward orientation of the oriscus.
+
+### Oriscus orientation at the unision
+
+As of version 4.2, when the note after the oriscus is at the same pitch as the oriscus, the oriscus will point downwards by default.  If you prefer it to point upwards, append the `1` modifier to force the upward orientation.
 
 ### Podatus followed by a virga
 
