@@ -605,11 +605,13 @@ Count which stores the current staff size.
 
 Default: 17 (approximately the size found in graduals)
 
-\macroname{\textbackslash gre@fillhole}{\#1}{gregoriotex-signs.tex}
+\macroname{\textbackslash gre@fillhole}{\#1\#2}{gregoriotex-signs.tex}
 Macro to fill the hole in a glyph so that staff lines do not show through a hole in it.
 
 \begin{argtable}
   \#1 & Gregorio\TeX\ char & character to use to fill the hole\\
+  \#1 & \texttt{0} & the hole is being filled for an alteration\\
+  \#1 & \texttt{1} & the hole is being filled for a cavum glyph\\
 \end{argtable}
 
 \macroname{\textbackslash gre@calculate@notesaligncenter}{\#1}{gregoriotex-syllable.tex}

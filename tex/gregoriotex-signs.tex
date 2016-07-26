@@ -2083,12 +2083,14 @@
 % 2 if previous glyph is a cavum (which is the most interesting information)
 \gre@count@lastglyphiscavum=0
 
-% the argument is the character with which we fill the hole, and we suppose that
+% #1 is the character with which we fill the hole, and we suppose that
 % isonaline and glyphraisevalue are correctly set.
-\def\gre@fillhole#1{%
+% #2 is 0 for alteration or 1 for normal cavum
+\def\gre@fillhole#1#2{%
   \ifgre@boxing\else %
     \global\gre@count@lastglyphiscavum=1\relax %
     \setbox\gre@box@temp@sign=\hbox{#1}%
+    \ifcase#2\raise \gre@dimen@glyphraisevalue\fi%
     \hbox to 0pt{%
       {%
       \color{grebackgroundcolor}%
@@ -2127,7 +2129,7 @@
   \kern-\gre@skip@temp@one %
   \gre@calculate@glyphraisevalue{#1}{0}{}%
   \ifgre@hidealtlines %
-    \gre@fillhole{#3}%
+    \gre@fillhole{#3}{0}%
   \fi %
   \raise \gre@dimen@glyphraisevalue%
   \copy\gre@box@temp@width%
@@ -2197,7 +2199,7 @@
 
 \def\GreCavum#1{%
   \ifgre@hidepclines%
-    \gre@fillhole{{\gre@font@music@hole\csname GreHoleCP#1\endcsname}}%
+    \gre@fillhole{{\gre@font@music@hole\csname GreHoleCP#1\endcsname}}{1}%
   \fi %
   {\gre@font@music@hollow\csname GreHollowCP#1\endcsname}%
 }%
