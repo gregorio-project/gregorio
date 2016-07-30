@@ -142,7 +142,6 @@
     ]%
 }%
 
-
 %% marcro to define the clef that will appear at the beginning of the lines
 % the first argument is the type : f or c, and the second is the height
 % the third argument is whether we must type a space after or not (0 if not, 1 if yes)
@@ -166,6 +165,12 @@
   \relax%
 }%
 
+\def\GreSetLargestClef#1#2#3#4#5#6#7{%
+  \gre@boxclef{#1}{#2}{0}{#3}{#4}{#5}{#6}{#7}%
+  \gre@update@clefwidth@max{\wd\gre@box@temp@width}%
+  \relax%
+}%
+
 \def\gre@save@clef#1#2#3#4#5#6{%
   \global\let\gre@clef=#1\relax%
   \xdef\gre@clefheight{#2}%
@@ -183,18 +188,9 @@
 
 \newbox\gre@box@temp@clef%
 \newbox\gre@box@temp@cleftwo%
-% macro that typesets the clef
-% arguments are :
-%% #1: the type of the clef : c or f
-%% #2: the line of the clef (1 is the lowest)
-%% #3: if we must use small clef characters (inside a line) or not 0: if not inside, 1 if inside
-%% #4: 0: no space after, 1: normal space after, 2: short space after
-%% #5: if 3, it means that we must not put a flat after the clef, otherwise it's the height of the flat
-%% #6: the type of the secondary clef : c or f
-%% #7: the line of the secondary clef (1 is the lowest)
-%% #8: if 3, it means that we must not put a flat after the secondary clef, otherwise it's the height of the flat
-\def\gre@typeclef#1#2#3#4#5#6#7#8{%
-  \setbox\gre@box@temp@width=\hbox{%
+
+\def\gre@boxclef#1#2#3#4#5#6#7#8{%
+  \global\setbox\gre@box@temp@width=\hbox{%
     \ifcase#7%
       \gre@typesingleclef{#1}{#2}{#3}{#5}%
     \else %
@@ -214,8 +210,22 @@
       \fi %
     \fi %
   }%
+}
+
+% macro that typesets the clef
+% arguments are :
+%% #1: the type of the clef : c or f
+%% #2: the line of the clef (1 is the lowest)
+%% #3: if we must use small clef characters (inside a line) or not 0: if not inside, 1 if inside
+%% #4: 0: no space after, 1: normal space after, 2: short space after
+%% #5: if 3, it means that we must not put a flat after the clef, otherwise it's the height of the flat
+%% #6: the type of the secondary clef : c or f
+%% #7: the line of the secondary clef (1 is the lowest)
+%% #8: if 3, it means that we must not put a flat after the secondary clef, otherwise it's the height of the flat
+\def\gre@typeclef#1#2#3#4#5#6#7#8{%
+  \gre@boxclef{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}%
   \ifcase#3%
-    \global\gre@dimen@clefwidth=\wd\gre@box@temp@width %
+    \gre@update@clefwidth@current{\wd\gre@box@temp@width}%
   \fi %
   \copy\gre@box@temp@width %
   \ifcase#4 %

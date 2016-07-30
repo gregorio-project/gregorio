@@ -396,6 +396,9 @@
   \else%
     \global\advance\gre@skip@temp@three by \gre@dimen@bolextra\relax%
   \fi%
+  \gre@debugmsg{bolshift}{ clefwidthcurrent = \the\gre@dimen@clefwidth@current}%
+  \gre@debugmsg{bolshift}{ clefwidthbol = \the\gre@dimen@clefwidth@bol}%
+  \global\advance\gre@skip@temp@three by \dimexpr(\gre@dimen@clefwidth@current-\gre@dimen@clefwidth@bol)\relax %
   \ifdim#1>0pt\relax%
     % no additional shift is needed if the notes start before the text
     \global\gre@dimen@bolshift = \gre@skip@temp@three\relax%
@@ -407,7 +410,7 @@
     % we don't want to kern more than clefwidth + spaceafterlineclef - minimalspaceatlinebeginning
     % violating this would mean that either the notes are closer than (clefwidth + spaceafterlineclef)
     % or that the lyrics are closer than minimalspaceatlinebeginning
-    \gre@skip@temp@one = \glueexpr(\gre@dimen@clefwidth %
+    \gre@skip@temp@one = \glueexpr(\gre@dimen@clefwidth@bol %
       + \gre@space@skip@spaceafterlineclef %
       - \gre@space@dimen@minimalspaceatlinebeginning)\relax %
     \ifdim\gre@skip@temp@three < \gre@skip@temp@one %
@@ -418,6 +421,73 @@
   \fi%
   \gre@debugmsg{bolshift}{ bolshift = \the\gre@dimen@bolshift}%
   \relax %
+}
+
+% the width of the current
+\newdimen\gre@dimen@clefwidth@current\relax%
+% the width of the max clef
+\newdimen\gre@dimen@clefwidth@max\relax%
+% the width to compute bolshift with
+\newdimen\gre@dimen@clefwidth@bol\relax%
+
+\def\gre@update@clefwidth@current#1{%
+  \gre@debugmsg{bolshift}{ updating clefwidthcurrent to \the\gre@dimen@clefwidth@current}%
+  \global\gre@dimen@clefwidth@current=#1\relax %
+  \ifnum\gre@bolshiftcleftypelocal=2\relax %
+    \global\gre@dimen@clefwidth@bol=#1\relax %
+  \fi %
+  \relax %
+}
+
+\def\gre@update@clefwidth@max#1{%
+  \global\gre@dimen@clefwidth@max=#1\relax %
+  \ifnum\gre@bolshiftcleftypelocal=1\relax %
+    \global\gre@dimen@clefwidth@bol=#1\relax %
+  \fi %
+}
+
+\def\gre@update@clefwidth@forced#1{%
+  \global\gre@dimen@clefwidth@bol=#1\relax %
+}
+
+% 1 for max, 2 for current and 3 for forced
+\xdef\gre@bolshiftcleftypeglobal{1}
+\xdef\gre@bolshiftcleftypelocal{1}
+
+\def\grebolshiftcleftype#1{
+    \IfStrEqCase{#1}{%
+    {max}%
+      {\xdef\gre@bolshiftcleftypeglobal{1}\xdef\gre@bolshiftcleftypelocal{1}}%
+    {current}%
+      {\xdef\gre@bolshiftcleftypeglobal{2}\xdef\gre@bolshiftcleftypelocal{2}}%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\grebolshiftcleftype\MessageBreak Possible options are: 'max' and 'current'.}%
+    ]%
+}
+
+\def\grelocalbolshiftcleftype#1{
+    \IfStrEqCase{#1}{%
+    {max}%
+      {\xdef\gre@bolshiftcleftypelocal{1}%
+      \global\gre@dimen@clefwidth@bol=\gre@dimen@clefwidth@max\relax }%
+    {current}%
+      {\xdef\gre@bolshiftcleftypelocal{2}%
+      \global\gre@dimen@clefwidth@bol=\gre@dimen@clefwidth@current\relax }%
+    {c}%
+      {\gre@boxclef{c}{4}{0}{3}{c}{0}{3}{1}%
+       \xdef\gre@bolshiftcleftypelocal{3}%
+       \gre@update@clefwidth@forced{\wd\gre@box@temp@width}}%
+    {f}%
+      {\gre@boxclef{f}{3}{0}{1}{3}{c}{0}{3}%
+       \xdef\gre@bolshiftcleftypelocal{3}%
+       \gre@update@clefwidth@forced{\wd\gre@box@temp@width}}%
+    {cb}%
+      {\global\let\GreHyph\gre@char@zerohyph}%
+    {fb}%
+      {\global\let\GreHyph\gre@char@zerohyph}%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\grelocalbolshiftcleftype\MessageBreak Possible options are: 'max', 'current', 'c', 'f', 'cb' and 'fb'.}%
+    ]%
 }
 
 % dimen keeping the shift computed with next function
@@ -1211,9 +1281,6 @@
 
 % begindifference is the difference between the beginning of the text and the beginning of the notes. Warning : it can be negative.
 \newdimen\gre@dimen@begindifference\relax%
-
-% the width of the clef
-\newdimen\gre@dimen@clefwidth\relax%
 
 % the width of the last glyph
 \newdimen\gre@dimen@lastglyphwidth\relax%
