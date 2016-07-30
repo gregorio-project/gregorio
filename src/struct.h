@@ -384,8 +384,8 @@ typedef struct gregorio_extra_info {
 } gregorio_extra_info;
 
 typedef struct gregorio_clef_info {
-    unsigned char line;
-    unsigned char secondary_line;
+    signed char line;
+    signed char secondary_line;
     ENUM_BITFIELD(gregorio_clef) clef:1;
     bool flatted:1;
     ENUM_BITFIELD(gregorio_clef) secondary_clef:1;

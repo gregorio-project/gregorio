@@ -4110,6 +4110,90 @@ static int first_note_near_clef(const gregorio_score *const score) {
     return 1;
 }
 
+static int clef_size(const gregorio_clef_info *const clef)
+{
+    /* this is a heuristic clef size approximation:
+     * C-clef = 1
+     * F-clef = 2
+     * flatted = +2
+     * unstacked double-clef = +1 (plus the clef size)
+     */
+    /* purposely making line signed */
+    int line_diff = clef->line - clef->secondary_line;
+    int size;
+    if (clef->clef == CLEF_F) {
+        size = 2;
+    } else {
+        size = 1;
+    }
+    if (clef->flatted) {
+        size += 2;
+    }
+    if (clef->secondary_line) {
+        if (line_diff < -1 || line_diff > 1) { /* stacked */
+            int secondary_size;
+            if (clef->secondary_clef == CLEF_F) {
+                secondary_size = 2;
+            } else {
+                secondary_size = 1;
+            }
+            if (clef->secondary_flatted) {
+                secondary_size += 2;
+            }
+            if (secondary_size > size) {
+                size = secondary_size;
+            }
+        } else { /* unstacked */
+            size += 1;
+            if (clef->secondary_clef == CLEF_F) {
+                size += 2;
+            } else {
+                size += 1;
+            }
+            if (clef->secondary_flatted) {
+                size += 2;
+            }
+        }
+    }
+    return size;
+}
+
+static void write_largest_clef(FILE *const f, gregorio_score *const score)
+{
+    const gregorio_syllable *syllable;
+    const gregorio_element *element;
+    gregorio_clef_info clef = gregorio_default_clef;
+    int size;
+
+    if (score->first_voice_info) {
+        clef = score->first_voice_info->initial_clef;
+    }
+    size = clef_size(&clef);
+
+    for (syllable = score->first_syllable; syllable;
+            syllable = syllable->next_syllable) {
+        if (syllable->elements) {
+            for (element = *syllable->elements; element;
+                    element = element->next) {
+                if (element->type == GRE_CLEF) {
+                    const int this_size = clef_size(&element->u.misc.clef);
+                    if (this_size > size) {
+                        clef = element->u.misc.clef;
+                        size = this_size;
+                    }
+                }
+            }
+        }
+    }
+
+    fprintf(f, "\\GreSetLargestClef{%c}{%d}{%d}{%c}{%d}{%d}%%\n",
+            gregorio_clef_to_char(clef.clef), clef.line,
+            clef_flat_height(clef.clef, clef.line, clef.flatted),
+            gregorio_clef_to_char(clef.secondary_clef), clef.secondary_line,
+            clef_flat_height(clef.secondary_clef, clef.secondary_line,
+                    clef.secondary_flatted));
+}
+
 void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
         const char *const point_and_click_filename)
 {
@@ -4192,6 +4276,7 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
     }
     /* LCOV_EXCL_STOP */
 
+    write_largest_clef(f, score);
     fprintf(f, "\\GreScoreOpening{%%\n"); /* GreScoreOpening#1 */
     if (score->first_voice_info) {
         gregoriotex_write_voice_info(f, score->first_voice_info);
