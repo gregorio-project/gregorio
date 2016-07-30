@@ -143,9 +143,11 @@
 }%
 
 %% marcro to define the clef that will appear at the beginning of the lines
-% the first argument is the type : f or c, and the second is the height
-% the third argument is whether we must type a space after or not (0 if not, 1 if yes)
-% if the fourth argument is 3, it means that we must not put a flat after the key, otherwise it's the height of the flat
+%% #1 c or f: type of first clef
+%% #2 int: line of first clef
+%% #3 int: 0 if not space, 1 if normal space, 2 for short space
+%% #4 int: height of the flat of first clef, 3 for no flat
+%% #5, #6, #7 = #1, #2, #3 for second clef
 \def\GreSetLinesClef#1#2#3#4#5#6#7{%
   \gre@localleftbox{%
     \gre@skip@temp@four = \gre@dimen@additionalleftspace\relax%
@@ -165,9 +167,12 @@
   \relax%
 }%
 
-\def\GreSetLargestClef#1#2#3#4#5#6#7{%
-  \gre@boxclef{#1}{#2}{0}{#3}{#4}{#5}{#6}{#7}%
-  \gre@update@clefwidth@max{\wd\gre@box@temp@width}%
+% defines the largest clef of the score
+% arguments are the same as \GreSetLinesClef except that the #3 of
+% \GreSetLineClef is removed (always 1)
+\def\GreSetLargestClef#1#2#3#4#5#6{%
+  \gre@boxclef{#1}{#2}{0}{1}{#3}{#4}{#5}{#6}%
+  \gre@update@clefwidth@largest{\wd\gre@box@temp@width}%
   \relax%
 }%
 
@@ -189,6 +194,7 @@
 \newbox\gre@box@temp@clef%
 \newbox\gre@box@temp@cleftwo%
 
+% sets \gre@box@temp@width with the clef, the arguments are the same as \gre@typeclef
 \def\gre@boxclef#1#2#3#4#5#6#7#8{%
   \global\setbox\gre@box@temp@width=\hbox{%
     \ifcase#7%
