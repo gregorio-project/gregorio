@@ -790,6 +790,10 @@ Macro which typesets the clef.
   \#8 & integer & if \texttt{3}, it means that we must not put a flat after the secondary clef, otherwise it’s the height of the flat\\
 \end{argtable}
 
+\macroname{\textbackslash gre@boxclef}{\#1\#2\#3\#4\#5\#6\#7\#8\#9}{gregoriotex-signs.tex}
+Macro filling \verb=\gre@box@temp@width= with a clef. The arguments are the same as \verb=gre@typeclef=.
+
+
 \macroname{\textbackslash gre@typesingleclef}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
 Macro which typesets a single clef.
 
@@ -1810,8 +1814,14 @@ These additional distances are calculated by Gregorio based on the values for th
 \macroname{\textbackslash gre@dimen@morawidth}{}{gregoriotex-spaces.tex}
 Width of a punctum mora (reinitialized at each score, lazily recomputed).
 
-\macroname{\textbackslash gre@dimen@clefwidth}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@dimen@clefwidth@current}{}{gregoriotex-spaces.tex}
 Width of the current clef.
+
+\macroname{\textbackslash gre@dimen@clefwidth@largest}{}{gregoriotex-spaces.tex}
+Width of the largest clef in the score.
+
+\macroname{\textbackslash gre@dimen@clefwidth@bol}{}{gregoriotex-spaces.tex}
+Width of the clef used to compute bolshift.
 
 \macroname{\textbackslash gre@dimen@constantglyphraise}{}{gregoriotex-spaces.tex}
 Dimension representing the space between the 0 of the gregorian fonts and the effective 0 of the TeX score.

@@ -1008,6 +1008,26 @@ Macro to determine whether Gregorio\TeX\ should apply a small shift at the begin
   & \texttt{disable} & The shifts are not applied.
 \end{argtable}
 
+\macroname{\textbackslash grebolshiftcleftype}{\{\#1\}}{gregoriotex-spaces.tex}
+Macro to determine how notes should be left aligned in the case where clefs of different widths appear in the same score.
+
+\begin{argtable}
+  \#1 & \texttt{largest} & The notes are aligned as if all clefs had the width of the largest clef (default)\\
+  & \texttt{current} & The notes are aligned on the current clef, which leads to unaligned notes. This was the default of Gregorio < \texttt{5.0}.
+\end{argtable}
+
+\macroname{\textbackslash grelocalbolshiftcleftype}{\{\#1\}}{gregoriotex-spaces.tex}
+Equivalent of \verb=\grebolshiftcleftype= but valid only until the next end of a score, and with more options. This can be used before a score or even inside a \verb=<v>verbatim</v>= in gabc for corner cases like different alignment on a score taking two pages.
+
+\begin{argtable}
+  \#1 & \texttt{largest} & The notes are aligned as if all clefs had the width of the largest clef (default)\\
+  & \texttt{current} & The notes are aligned on the current clef, which leads to unaligned notes\\
+  & \texttt{f} & Force left alignment of notes as if all clef were f clef\\
+  & \texttt{c} & Idem with c clef\\
+  & \texttt{fb} & Idem with flatted f clef\\
+  & \texttt{cb} & Idem with flatted c clef\\
+\end{argtable}
+
 \macroname{\textbackslash gresetlastline}{\{\#1\}}{gregoriotex-main.tex}
 Macro to determine whether the last line of the score should be justified or not.
 

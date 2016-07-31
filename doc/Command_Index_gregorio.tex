@@ -802,7 +802,7 @@ Macro for writing initial clef.
   \#7 & integer & \texttt{0} if clef and first note are far enough to use a shorter space, 1 otherwise.\\
 \end{argtable}
 
-\macroname{\textbackslash GreSetLinesClef}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-main.tex}
+\macroname{\textbackslash GreSetLinesClef}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-signs.tex}
 Macro to define the clef that will appear at the beginning of the lines.
 
 \begin{argtable}
@@ -815,6 +815,11 @@ Macro to define the clef that will appear at the beginning of the lines.
   \#6 & \texttt{0}--\texttt{5} & Line of secondary clef (\texttt{0} for no secondary clef).\\
   \#7 & integer & Height of flat in secondary clef (\texttt{3} for no flat).\\
 \end{argtable}
+
+\macroname{\textbackslash GreSetLargestClef}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
+Macro defining the largest clef of the score (for notes left alignment).
+The arguments are the same as \verb=\GreSetInitialClef= without the \#7th one, which is always considered
+to be \texttt{1}.
 
 \macroname{\textbackslash GreSetNabcAboveLines}{\#1}{gregoriotex-main.tex}
 Macro to place argument containing Nabc neumes above the lines and empty
