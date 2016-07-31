@@ -398,7 +398,12 @@
   \fi%
   \gre@debugmsg{bolshift}{ clefwidthcurrent = \the\gre@dimen@clefwidth@current}%
   \gre@debugmsg{bolshift}{ clefwidthbol = \the\gre@dimen@clefwidth@bol}%
-  \global\advance\gre@skip@temp@three by \dimexpr(\gre@dimen@clefwidth@current-\gre@dimen@clefwidth@bol)\relax %
+  % we ignore the current-bol adjustment if the clef is the first of the score and there is an initial on one line:
+  \ifnum\gre@initiallines=1\ifgre@beginningofscore\else %
+      \global\advance\gre@skip@temp@three by \dimexpr(\gre@dimen@clefwidth@current-\gre@dimen@clefwidth@bol)\relax %
+    \fi\else %
+      \global\advance\gre@skip@temp@three by \dimexpr(\gre@dimen@clefwidth@current-\gre@dimen@clefwidth@bol)\relax %
+  \fi %
   \ifdim#1>0pt\relax%
     % no additional shift is needed if the notes start before the text
     \global\gre@dimen@bolshift = \gre@skip@temp@three\relax%
