@@ -32,11 +32,50 @@
 #include "gabc-score-determination.h"
 #include "messages.h"
 
-void fix_custos(gregorio_score *score_to_check)
+void gabc_suppress_extra_custos_at_linebreak(gregorio_score *score)
+{
+    gregorio_syllable *syllable;
+    gregorio_element **custos = NULL;
+
+    for (syllable = score->first_syllable; syllable;
+            syllable = syllable->next_syllable) {
+        gregorio_element **element;
+        for (element = syllable->elements; element && *element;
+                element = &((*element)->next)) {
+            switch ((*element)->type) {
+            case GRE_CUSTOS:
+                if (!((*element)->u.misc.pitched.force_pitch)) {
+                    /* save the encountered non-forced custos */
+                    custos = element;
+                } else {
+                    /* forget the (previous) custos */
+                    custos = NULL;
+                }
+                break;
+            case GRE_CLEF:
+            case GRE_BAR:
+                /* remember the custos if only these appear before linebreak */
+                break;
+            case GRE_END_OF_LINE:
+                if (custos) {
+                    /* suppress the custos when linebreak follows */
+                    gregorio_free_one_element(custos);
+                }
+                /* fall through */
+            default:
+                /* forget the custos */
+                custos = NULL;
+                break;
+            }
+        }
+    }
+}
+
+void gabc_fix_custos_pitches(gregorio_score *score_to_check)
 {
     gregorio_syllable *current_syllable;
     gregorio_element *current_element;
-    gregorio_element *custo_element;
+    gregorio_element *custos_element;
     char pitch = 0;
     char pitch_difference = 0;
     int newkey;
@@ -52,8 +91,8 @@ void fix_custos(gregorio_score *score_to_check)
         current_element = (current_syllable->elements)[0];
         while (current_element) {
             if (current_element->type == GRE_CUSTOS) {
-                custo_element = current_element;
-                pitch = custo_element->u.misc.pitched.pitch;
+                custos_element = current_element;
+                pitch = custos_element->u.misc.pitched.pitch;
                 /* we look for the key */
                 while (current_element) {
                     if (current_element->type == GRE_CLEF) {
@@ -65,17 +104,17 @@ void fix_custos(gregorio_score *score_to_check)
                         pitch -= pitch_difference;
                         current_key = newkey;
                     }
-                    if (!custo_element->u.misc.pitched.force_pitch) {
+                    if (!custos_element->u.misc.pitched.force_pitch) {
                         while (pitch < LOWEST_PITCH) {
                             pitch += 7;
                         }
                         while (pitch > score_to_check->highest_pitch) {
                             pitch -= 7;
                         }
-                        custo_element->u.misc.pitched.pitch = pitch;
+                        custos_element->u.misc.pitched.pitch = pitch;
                     }
-                    assert(custo_element->u.misc.pitched.pitch >= LOWEST_PITCH 
-                            && custo_element->u.misc.pitched.pitch
+                    assert(custos_element->u.misc.pitched.pitch >= LOWEST_PITCH 
+                            && custos_element->u.misc.pitched.pitch
                             <= score_to_check->highest_pitch);
                     current_element = current_element->next;
                 }
@@ -96,7 +135,7 @@ void fix_custos(gregorio_score *score_to_check)
  * A function that checks the score integrity.
  */
 
-bool check_score_integrity(gregorio_score *score_to_check)
+bool gabc_check_score_integrity(gregorio_score *score_to_check)
 {
     bool good = true;
 
@@ -144,7 +183,7 @@ bool check_score_integrity(gregorio_score *score_to_check)
  * Another function to be improved: this one checks the validity of the voice_infos.
  */
 
-bool check_infos_integrity(gregorio_score *score_to_check)
+bool gabc_check_infos_integrity(gregorio_score *score_to_check)
 {
     if (!score_to_check->name) {
         gregorio_message(_("no name specified, put `name:...;' at the "
@@ -213,7 +252,7 @@ static void oriscus_orientation_visit(
     }
 }
 
-void determine_oriscus_orientation(const gregorio_score *const score)
+void gabc_determine_oriscus_orientation(const gregorio_score *const score)
 {
     gregorio_note *oriscus = NULL;
 
@@ -329,7 +368,7 @@ static void punctum_inclinatum_orientation_visit(
     v->previous = *p;
 }
 
-void determine_punctum_inclinatum_orientation(
+void gabc_determine_punctum_inclinatum_orientation(
         const gregorio_score *const score)
 {
     punctum_inclinatum_vars v = {

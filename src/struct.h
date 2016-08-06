@@ -548,9 +548,8 @@ typedef struct gregorio_element {
     /* index to a string containing a possible TeX verbatim; necessary during
      * structure generation. */
     unsigned short texverb;
-    /* type can have the values GRE_ELEMENT, GRE_BAR, GRE_C_KEY_CHANGE,
-     * GRE_F_KEY_CHANGE, GRE_END_OF_LINE, GRE_SPACE, GRE_TEXVERB_ELEMENT
-     * or GRE_NLBA */
+    /* type can have the values GRE_ELEMENT, GRE_BAR, GRE_CLEF, GRE_CUSTOS,
+     * GRE_END_OF_LINE, GRE_SPACE, GRE_TEXVERB_ELEMENT or GRE_NLBA */
     ENUM_BITFIELD(gregorio_type) type:8;
 } gregorio_element;
 
@@ -823,6 +822,7 @@ void gregorio_add_voice_info(gregorio_voice_info **current_voice_info);
 void gregorio_free_voice_infos(gregorio_voice_info *voice_info);
 void gregorio_free_one_note(gregorio_note **note);
 void gregorio_free_one_glyph(gregorio_glyph **glyph);
+void gregorio_free_one_element(gregorio_element **element);
 void gregorio_free_score(gregorio_score *score);
 void gregorio_free_characters(gregorio_character *current_character);
 void gregorio_go_to_first_character(const gregorio_character **character);
@@ -837,7 +837,7 @@ void gregorio_add_unpitched_element_as_glyph(gregorio_glyph **current_glyph,
 void gregorio_add_end_of_line_as_note(gregorio_note **current_note,
         bool eol_ragged, bool eol_forces_custos, bool eol_forces_custos_on,
         const gregorio_scanner_location *loc);
-void gregorio_add_custo_as_note(gregorio_note **current_note,
+void gregorio_add_custos_as_note(gregorio_note **current_note,
         const gregorio_scanner_location *loc);
 void gregorio_add_manual_custos_as_note(gregorio_note **current_note,
         signed char pitch, const gregorio_scanner_location *loc);
