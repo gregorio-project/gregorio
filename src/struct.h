@@ -32,6 +32,7 @@
 #ifndef STRUCT_H
 #define STRUCT_H
 
+#include <assert.h>
 #include "enum_generator.h"
 #include "bool.h"
 #include "sha1.h"
@@ -386,6 +387,7 @@ typedef struct gregorio_extra_info {
 typedef struct gregorio_clef_info {
     signed char line;
     signed char secondary_line;
+    signed char pitch_difference;
     ENUM_BITFIELD(gregorio_clef) clef:1;
     bool flatted:1;
     ENUM_BITFIELD(gregorio_clef) secondary_clef:1;
@@ -941,6 +943,19 @@ static __inline const gregorio_glyph *gregorio_previous_non_texverb_glyph(
 static __inline char gregorio_clef_to_char(gregorio_clef clef)
 {
     return (clef == CLEF_C)? 'c' : 'f';
+}
+
+static __inline signed char gregorio_adjust_pitch_into_staff(
+        const gregorio_score *score, signed char pitch)
+{
+    while (pitch < LOWEST_PITCH) {
+        pitch += 7;
+    }
+    while (pitch > score->highest_pitch) {
+        pitch -= 7;
+    }
+    assert(pitch >= LOWEST_PITCH && pitch <= score->highest_pitch);
+    return pitch;
 }
 
 #endif

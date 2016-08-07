@@ -58,6 +58,7 @@ unsigned short tex_position_id = 0;
 gregorio_clef_info gregorio_default_clef = {
     /*.line =*/ 3,
     /*.secondary_line =*/ 0,
+    /*.pitch_difference =*/ 0,
     /*.clef =*/ CLEF_C,
     /*.flatted =*/ false,
     /*.secondary_clef =*/ CLEF_C, /* not used since secondary_line is 0 */
