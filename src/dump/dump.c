@@ -2,7 +2,7 @@
  * Gregorio is a program that translates gabc files to GregorioTeX.
  * This file provides functions to dump out Gregorio structures.
  *
- * Copyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)
+ * Copyright (C) 2007-2016 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
  * 
@@ -269,7 +269,7 @@ void dump_write_score(FILE *f, gregorio_score *score)
                 break;
             case GRE_TEXVERB_ELEMENT:
                 fprintf(f, "     TeX string              \"%s\"\n",
-                        element->texverb);
+                        gregorio_texverb(element->texverb));
                 break;
             case GRE_NLBA:
                 fprintf(f, "     nlba                    %d (%s)\n",
@@ -279,7 +279,7 @@ void dump_write_score(FILE *f, gregorio_score *score)
                 break;
             case GRE_ALT:
                 fprintf(f, "     Above lines text        \"%s\"\n",
-                        element->texverb);
+                        gregorio_texverb(element->texverb));
                 break;
             case GRE_BAR:
                 if (element->u.misc.unpitched.info.bar) {
@@ -338,7 +338,7 @@ void dump_write_score(FILE *f, gregorio_score *score)
                     switch (glyph->type) {
                     case GRE_TEXVERB_GLYPH:
                         fprintf(f, "       TeX string            \"%s\"\n",
-                                glyph->texverb);
+                                gregorio_texverb(glyph->texverb));
                         break;
 
                     case GRE_SPACE:
@@ -353,6 +353,9 @@ void dump_write_score(FILE *f, gregorio_score *score)
                                 glyph->u.notes.glyph_type,
                                 gregorio_glyph_type_to_string(glyph->u.notes.
                                                               glyph_type));
+                        if (glyph->u.notes.is_cavum) {
+                            fprintf(f, "       is_cavum              true\n");
+                        }
                         if (glyph->u.notes.liquescentia) {
                             fprintf(f, "       liquescentia          %d (%s)\n",
                                     glyph->u.notes.liquescentia,
@@ -391,6 +394,9 @@ void dump_write_score(FILE *f, gregorio_score *score)
                                             gregorio_shape_to_string(
                                                     note->u.note.shape));
                                 }
+                                if (note->u.note.is_cavum) {
+                                    fprintf(f, "         is_cavum               true\n");
+                                }
                                 if (note->u.note.liquescentia) {
                                     fprintf(f, "         liquescentia           %d (%s)\n",
                                             note->u.note.liquescentia,
@@ -409,7 +415,7 @@ void dump_write_score(FILE *f, gregorio_score *score)
                             }
                             if (note->texverb) {
                                 fprintf(f, "         TeX string             \"%s\"\n",
-                                        note->texverb);
+                                        gregorio_texverb(note->texverb));
                             }
                             if (note->choral_sign) {
                                 fprintf(f, "         Choral Sign            \"%s\"\n",

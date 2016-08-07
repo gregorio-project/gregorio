@@ -1,6 +1,6 @@
 %GregorioTeX main file.
 %
-% Copyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)
+% Copyright (C) 2007-2016 The Gregorio Project (see CONTRIBUTORS.md)
 %
 % This file is part of Gregorio.
 %
@@ -87,11 +87,16 @@
 }%
 
 
-\def\gre@nothing{}
+\def\gre@nothing{}%
 
-% Depending on version of TeX / LaTeX, some primitives may or may not have a
-% luatex prefix, so we need to check and handle either
+%%%%%%%%%%%%%%%
+%% Backwards Compatibility
+%%%%%%%%%%%%%%%
 
+% Depending on version of LuaTeX / LaTeX, some primitives have different names
+% We define local aliases for this eventuality, using \ifdefined to determine which
+% version of the primative is available.  In all cases the 'true' branch should be the
+% more recent version.
 \ifdefined\localleftbox%
   \let\gre@localleftbox\localleftbox%
 \else%
@@ -102,6 +107,32 @@
 \else%
   \let\gre@localrightbox\luatexlocalrightbox%
 \fi%
+\ifdefined\pdfextension%
+  \def\gre@startlink{\pdfextension startlink }%
+  \def\gre@endlink{\pdfextension endlink\relax}%
+\else%
+  \let\gre@startlink\pdfstartlink%
+  \let\gre@endlink\pdfendlink%
+\fi%
+\ifdefined\savepos%
+  \let\gre@savepos\savepos%
+\else%
+  \let\gre@savepos\pdfsavepos%
+\fi%
+\ifdefined\lastxpos%
+  \let\gre@lastxpos\lastxpos%
+\else%
+  \let\gre@lastxpos\pdflastxpos%
+\fi%
+\ifdefined\lastypos%
+  \let\gre@lastypos\lastypos%
+\else%
+  \let\gre@lastypos\pdflastypos%
+\fi%
+
+%%%%%%%%%%%%%%%
+
+
 % an attribute we put on the text nodes.
 % if it is 1, it means that there may be a dash here if this syllable is at the end of a line
 % if it is 2, it means that it's never useful to typeset a dash
@@ -118,6 +149,9 @@
 \newluatexattribute\gre@attr@glyph@top %
 \newluatexattribute\gre@attr@glyph@bottom %
 
+% attribute for syllable tracking
+\newluatexattribute\gre@attr@syllable@id %
+
 \newluatexcatcodetable\gre@atletter %
 \setluatexcatcodetable\gre@atletter{%
   \catcode`\@=11 %
@@ -125,7 +159,7 @@
 
 % The version of gregorio. All gregoriotex*.tex files must have the same.
 % All gtex files must also have the same version.
-\xdef\gre@gregorioversion{4.1.1}% GREGORIO_VERSION - VersionManager.py
+\xdef\gre@gregorioversion{4.2.0-rc2}% GREGORIO_VERSION - VersionManager.py
 
 % first some macros to allow checks for version:
 % Tests that all gregoriotex files are of the same version.
@@ -245,6 +279,12 @@
   \relax%
 }%
 
+
+% Eliminates the error for big initials where the second new line is at the end of the score
+\def\GreFinalNewLine{%
+  \global\advance\gre@knownline by 1\relax %
+}%
+
 % the macro we call each time we force a changing of line, it automatically sets \gre@knownline, and adjusts left spaces
 % #1 is 0 in case of gabc z, 1 for Z
 % #2 is 0 in the normal case, 1 after a bar in the new spacing algorithm
@@ -287,6 +327,7 @@
     \gre@penalty{-10001}%
   \fi %
   \gre@adjustlineifnecessary\relax %
+  %%
   \gre@reseteolcustos\relax %
 }%
 
@@ -365,6 +406,7 @@
 \def\gre@updatelinewidth{%
   \gre@debugmsg{ifdim}{ additionalleftspace = 0pt}%
   \ifdim\gre@dimen@additionalleftspace=0pt\relax%
+    \gre@generatelines %
   \else %
     \gre@dimen@temp@five=\gre@dimen@stafflinewidth\relax%
     \global\advance\gre@dimen@stafflinewidth by -\gre@dimen@additionalleftspace\relax%
@@ -677,7 +719,7 @@
       \gre@error{Unrecognized option "#1" in \protect\gresetmodenumbersystem\MessageBreak Possible options are: 'roman-majuscule', 'roman-minuscule', and 'arabic'}%
     ]%
 }%
-\gresetmodenumbersystem{roman-minuscule}%
+% defaults set differently for LaTeX and PlainTeX, so see gregoriotex.sty and gregoriotex.tex
 
 \def\GreAnnotationLines#1#2{%
   \ifvoid\gre@box@annotation%
@@ -700,7 +742,7 @@
 
 \newbox\gre@box@commentary
 
-\def\grecommentary{\@ifnextchar[{\gre@commentary}{\gre@commentary[0pt]}}
+\def\grecommentary{\@ifnextchar[{\gre@commentary}{\gre@commentary[0pt]}}%
 
 \def\gre@commentary[#1]#2{%
   % we initialize commentarytrueraise here, but will only calculate it's final value just before placing the commentary so that we make sure we have the correct values for the distances which go into it
@@ -748,29 +790,44 @@
 
 \def\GreSetTextAboveLines#1{%
   \gdef\gre@currenttextabovelines{%
-    \gre@typesettextabovelines{#1}%
+    \gre@typesettextabovelines{#1}{0}%
     \gdef\gre@currenttextabovelines{}%
     \relax %
   }%
 }%
 
-% typesets the text above the line
-\def\gre@typesettextabovelines#1{%
+% typesets the text or nabc neumes above the line
+\def\gre@typesettextabovelines#1#2{%
   \gre@style@abovelinestext%
   \gre@debugmsg{spacing}{Raise alt text: \gre@space@dimen@abovelinestextraise}%
   \endgre@style@abovelinestext%
+  \ifnum#2=0\relax%
+    \gre@dimen@temp@five=\gre@dimen@additionaltopspacealt\relax%
+  \else%
+    \gre@dimen@temp@five=\gre@dimen@additionaltopspacenabc\relax%
+  \fi%
   \gre@dimen@temp@five=\dimexpr(4\gre@dimen@stafflineheight %
     + 4\gre@dimen@interstafflinespace %
     + \gre@space@dimen@spacebeneathtext %
     + \gre@dimen@currenttranslationheight %
     + \gre@space@dimen@spacelinestext %
     + \gre@dimen@additionalbottomspace %
-    + \gre@dimen@additionaltopspacealt %
+    + \gre@dimen@temp@five %
     + \gre@space@dimen@abovelinestextraise)\relax%
   \gre@mark@abovelinestext %
   \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
     \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\gre@style@abovelinestext#1\endgre@style@abovelinestext\hss}%
   \relax %
+}%
+
+% similarly, but for typesetting Nabc neumes above lines
+
+\def\GreSetNabcAboveLines#1{%
+  \gdef\gre@currenttextabovelines{%
+    \gre@typesettextabovelines{#1}{1}%
+    \gdef\gre@currenttextabovelines{}%
+    \relax %
+  }%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -927,15 +984,46 @@
   \directlua{gregoriotex.change_score_glyph([[#1]],[[#2]],[[#3]])}%
 }%
 
+% Changes a gregorio cavum code point to a variant glyph
+% #1 = the name of the gregorio code point
+% #2 = font name for the hollow shape
+% #3 = glyph name, glyph variant name (preceded by .), or code point for the hollow shape
+% optional #4 = font name for the hollow shape
+% optional #5 = glyph name, glyph variant name (preceded by .), or code point for the hollow shape
+\def\grechangecavumglyph#1#2#3{%
+  \directlua{gregoriotex.init_variant_font([[#2]], true, [[\the\gre@factor]])}%
+  \directlua{gregoriotex.change_score_glyph([[#1]],[[#2]],[[#3]], [[Hollow]])}%
+  \@ifnextchar[{\gre@changecavumhole{#1}}{}%
+}%
+\def\gre@changecavumhole#1[#2][#3]{%
+  \directlua{gregoriotex.init_variant_font([[#2]], true, [[\the\gre@factor]])}%
+  \directlua{gregoriotex.change_score_glyph([[#1]],[[#2]],[[#3]], [[Hole]])}%
+}%
+
 % Resets a gregorio code point to its default setting
 % #1 = the name of the gregorio code point
 \def\greresetglyph#1{%
   \directlua{gregoriotex.reset_score_glyph([[#1]])}%
 }%
 
+\def\greresetcavumglyph#1{%
+  \directlua{
+    gregoriotex.reset_score_glyph([[#1]], [[Hollow]])
+    gregoriotex.reset_score_glyph([[#1]], [[Hole]])
+  }%
+}%
+
 {%
-  \directlua{gregoriotex.init_variant_font('greciliae', true, [[\the\gre@factor]])}%
-  \directlua{gregoriotex.map_font('greciliae', 'CP')}%
+  \directlua{
+    gregoriotex.init_variant_font('greciliae', true, [[\the\gre@factor]])
+    gregoriotex.init_variant_font('greciliae-hollow', true, [[\the\gre@factor]])
+    gregoriotex.init_variant_font('greciliae-hole', true, [[\the\gre@factor]])
+  }%
+  \directlua{
+    gregoriotex.map_font('greciliae', 'CP')
+    gregoriotex.map_font('greciliae-hollow', 'HollowCP')
+    gregoriotex.map_font('greciliae-hole', 'HoleCP')
+  }%
 }%
 
 \input gregoriotex-chars.tex%
@@ -1130,6 +1218,7 @@
   \gre@reseteolcustos%
   \gre@resetledgerlineheuristics%
   \global\setluatexattribute\gre@attr@glyph@id{0}%
+  \global\setluatexattribute\gre@attr@syllable@id{0}%
   \xdef\gre@gabcname{#6}%
   \gre@setstafflines{#7}%
   \global\let\gre@opening@initialstyle\gre@initiallines\relax % DEPRECATED for removal in 5.0
@@ -1150,7 +1239,8 @@
   \gre@calculate@additionalspaces{#2}{#3}{#4}{#5}%
   \directlua{
     gregoriotex.atScoreBeginning([[#1]], #2, #3, #4, #5,
-        \gre@pitch@adjust@top, \gre@pitch@adjust@bottom)
+        \gre@pitch@adjust@top, \gre@pitch@adjust@bottom,
+        "\luatexluaescapestring{\gre@gregoriofontname}")
     gregoriotex.adjust_line_height(1)
   }%
   %TODO do something like LaTeX's AtBeginDocument
@@ -1210,6 +1300,7 @@
   \unsetluatexattribute{\gre@attr@glyph@top}%
   \unsetluatexattribute{\gre@attr@glyph@bottom}%
   \unsetluatexattribute{\gre@attr@dash}%
+  \xdef\gre@bolshiftcleftypelocal{\gre@bolshiftcleftypeglobal}%
   \ifgre@justifylastline%
     \parfillskip=\gre@save@parfillskip\relax%
   \fi %
@@ -1303,7 +1394,7 @@
     {disable}%
       {\gre@eolshiftsenabledfalse}%
     }[% all other cases
-      \gre@error{Unrecognized option "#1" in \protect\greseteolshifts\MessageBreak Possible options are: 'enable' and 'diable'}%
+      \gre@error{Unrecognized option "#1" in \protect\greseteolshifts\MessageBreak Possible options are: 'enable' and 'disable'}%
     ]%
 }%
 
@@ -1490,6 +1581,10 @@
     \gre@skip@temp@four = \gre@space@skip@halfspace\relax%
   \or% case 23
     \gre@skip@temp@four = \gre@space@skip@punctuminclinatumunisonshift\relax%
+  \or% case 24
+    \gre@skip@temp@four = \gre@space@skip@descendingpunctuminclinatumascendingshift\relax%
+  \or% case 25
+    \gre@skip@temp@four = \gre@space@skip@ascendingpunctuminclinatumdescendingshift\relax%
   \else%
     \gre@error{Unrecognized spaceskip #1}%
   \fi%
@@ -1679,7 +1774,9 @@
   \directlua{gregoriotex.set_font_factor([[\gre@gregoriofontname]], [[\the\gre@count@temp@two]])}%
   \multiply\gre@count@temp@three by \gre@count@temp@two %
   \global\font\gre@font@music={name:\gre@gregoriofontname} at \the\gre@count@temp@three sp\relax %
-  {\gre@font@music\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]], [[\the\gre@factor]])}}%
+  \global\font\gre@font@music@hollow={name:\gre@gregoriofontname-hollow} at \the\gre@count@temp@three sp\relax %
+  \global\font\gre@font@music@hole={name:\gre@gregoriofontname-hole} at \the\gre@count@temp@three sp\relax %
+  \directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]], [[\the\gre@factor]])}%
   \relax%
 }%
 
@@ -1744,7 +1841,7 @@
 % 0 = never compile (default)
 % 1 = auto compile (compile outdated scores and those lacking a compiled version)
 % 2 = compile all scores
-\def\gre@compilegabc{0}
+\def\gre@compilegabc{0}%
 
 % User macro to change compilation behavior
 \def\gresetcompilegabc#1{%

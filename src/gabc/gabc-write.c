@@ -2,7 +2,7 @@
  * Gregorio is a program that translates gabc files to GregorioTeX
  * This file provides functions for writing gabc from Gregorio structures.
  *
- * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
+ * Copyright (C) 2006-2016 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
  * 
@@ -480,8 +480,11 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
             fprintf(f, "%c", pitch_letter(note->u.note.pitch));
         }
         break;
-    case S_PUNCTUM_INCLINATUM:
-        fprintf(f, "%c", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
+    case S_PUNCTUM_INCLINATUM_ASCENDENS:
+        fprintf(f, "%c1", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
+        break;
+    case S_PUNCTUM_INCLINATUM_DESCENDENS:
+        fprintf(f, "%c0", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
         break;
     case S_PUNCTUM_INCLINATUM_DEMINUTUS:
         if (note->next) {
@@ -492,12 +495,6 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         break;
     case S_PUNCTUM_INCLINATUM_AUCTUS:
         fprintf(f, "%c", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
-        break;
-    case S_PUNCTUM_CAVUM_INCLINATUM:
-        fprintf(f, "%cr", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
-        break;
-    case S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS:
-        fprintf(f, "%cr<", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
         break;
     case S_FLAT:
         fprintf(f, "%cx", pitch_letter(note->u.note.pitch));
@@ -524,16 +521,6 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         fprintf(f, "%co", pitch_letter(note->u.note.pitch));
         /* Note: the DEMINUTUS is also in the liquescentia */
         break;
-    case S_ORISCUS_CAVUM_ASCENDENS:
-        fprintf(f, "%co1r", pitch_letter(note->u.note.pitch));
-        break;
-    case S_ORISCUS_CAVUM_DESCENDENS:
-        fprintf(f, "%co0r", pitch_letter(note->u.note.pitch));
-        break;
-    case S_ORISCUS_CAVUM_DEMINUTUS:
-        fprintf(f, "%cor", pitch_letter(note->u.note.pitch));
-        /* Note: the DEMINUTUS is also in the liquescentia */
-        break;
     case S_QUILISMA:
         if (is_quadratum) {
             fprintf(f, "%cW", pitch_letter(note->u.note.pitch));
@@ -544,14 +531,8 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     case S_LINEA:
         fprintf(f, "%c=", pitch_letter(note->u.note.pitch));
         break;
-    case S_PUNCTUM_CAVUM:
-        fprintf(f, "%cr", pitch_letter(note->u.note.pitch));
-        break;
     case S_LINEA_PUNCTUM:
         fprintf(f, "%cR", pitch_letter(note->u.note.pitch));
-        break;
-    case S_LINEA_PUNCTUM_CAVUM:
-        fprintf(f, "%cr0", pitch_letter(note->u.note.pitch));
         break;
     case S_ORISCUS_SCAPUS_ASCENDENS:
         fprintf(f, "%cO1", pitch_letter(note->u.note.pitch));
@@ -572,6 +553,9 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
         fprintf(f, "%c", pitch_letter(note->u.note.pitch));
         break;
         /* LCOV_EXCL_STOP */
+    }
+    if (note->u.note.is_cavum) {
+        fprintf(f, "r");
     }
     switch (note->signs) {
     case _PUNCTUM_MORA:
@@ -643,7 +627,7 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     }
     write_note_heuristics(f, note);
     if (note->texverb) {
-        fprintf(f, "[nv:%s]", note->texverb);
+        fprintf(f, "[nv:%s]", gregorio_texverb(note->texverb));
     }
 }
 
@@ -801,7 +785,7 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph,
     switch (glyph->type) {
     case GRE_TEXVERB_GLYPH:
         if (glyph->texverb) {
-            fprintf(f, "[gv:%s]", glyph->texverb);
+            fprintf(f, "[gv:%s]", gregorio_texverb(glyph->texverb));
         }
         break;
     case GRE_SPACE:
@@ -907,12 +891,12 @@ static void gabc_write_gregorio_element(FILE *f, gregorio_element *element,
         break;
     case GRE_TEXVERB_ELEMENT:
         if (element->texverb) {
-            fprintf(f, "[ev:%s]", element->texverb);
+            fprintf(f, "[ev:%s]", gregorio_texverb(element->texverb));
         }
         break;
     case GRE_ALT:
         if (element->texverb) {
-            fprintf(f, "[alt:%s]", element->texverb);
+            fprintf(f, "[alt:%s]", gregorio_texverb(element->texverb));
         }
         break;
     case GRE_SPACE:

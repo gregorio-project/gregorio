@@ -21,7 +21,7 @@
 
 
 % This file needs to be marked with the version number.  For now I've done this with the following comment, but we should check to see if PlainTeX has something similar to the version declaration of LaTeX and use that if it does.
-% 		[2016/03/10 v4.1.1 GregorioTeX system.]% PARSE_VERSION_DATE_LTX
+% 		[2016/07/05 v4.2.0-rc2 GregorioTeX system.]% PARSE_VERSION_DATE_LTX
 
 
 \edef\greoldcatcode{\the\catcode`@}
@@ -90,6 +90,7 @@
 \def\gre@strip@pt{\expandafter\gre@rem@pt\the}%
 
 \long\def\gre@iflatex#1{}%
+\long\def\gre@ifnotlatex#1{#1}%
 \input gregoriotex-main.tex
 
 
@@ -114,8 +115,14 @@
   %\relax 
 }%
 
+% Since small caps in PlainTeX requires loading another font, it is not defined by default.  This command maintains compatibility by checking to see if \sc has been defined and raising a warning when it hasn’t
 \def\GreSmallCaps#1{%
-  {\sc #1}%
+  \ifdefined\sc%
+    {\sc #1}%
+  \else%
+    \gre@warning{Small caps (\protect\sc) is not defined}%
+    {#1}%
+  \fi%
   \relax %
 }%
 
@@ -130,10 +137,8 @@
   }%
 }%
 
-% Note since underlining don’t exist in PlainTeX, we need the following command to maintain compatibility with LaTeX, but all it does is raise a warning.
 \def\GreUnderline#1{%
-  \gre@warning{Underlining cannot be done in PlainTeX}%
-  {#1}%
+  $\underline{\rm #1}$
   \relax %
 }%
 
@@ -229,7 +234,6 @@
 \def\gre@style@modeline{%
   \begingroup%
   \bf%
-  \sc%
   \relax%
 }%
 \def\endgre@style@modeline{\endgroup}%
@@ -252,7 +256,7 @@
 \def\gre@style@commentary{%
   \begingroup%
   \it%
-  % footnotesize is LaTeX, but nothing here since changing font size is so hard
+  % footnotesize in LaTeX, but nothing here since changing font size is so hard
   \relax%
 }%
 \def\endgre@style@commentary{\endgroup}%
@@ -260,7 +264,7 @@
 \def\gre@style@elision{%
   \begingroup%
   \it%
-  % small is LaTeX, but nothing here since changing font size is so hard
+  % small in LaTeX, but nothing here since changing font size is so hard
   \relax%
 }%
 \def\endgre@style@elision{\endgroup}%
@@ -281,5 +285,11 @@
   \expandafter\gdef\csname gre@style@#1\endcsname{\begingroup#2}%
   \expandafter\gdef\csname endgre@style@#1\endcsname{#3\endgroup}%
 }%
+
+%%%%%%%%%%%%%%%
+%% Default Mode Numbering style
+%%%%%%%%%%%%%%%
+
+\gresetmodenumbersystem{roman-majuscule}%
 
 \catcode`\@=\greoldcatcode

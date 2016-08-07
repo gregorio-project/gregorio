@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
+# Copyright (C) 2006-2016 The Gregorio Project (see CONTRIBUTORS.md)
 #
 # This file is part of Gregorio.
 #
@@ -23,9 +23,10 @@ gregorio_LDADD = $(KPSE_LIBS)
 
 bin_PROGRAMS = gregorio
 gregorio_SOURCES = gregorio-utils.c characters.c characters.h \
-					messages.c messages.h struct.c struct.h enum_generator.h \
-					unicode.c unicode.h sha1.c sha1.h support.c support.h \
-					config.h bool.h plugins.h utf8strings.h dump/dump.c \
+					messages.c messages.h struct.c struct.h struct_iter.h \
+					enum_generator.h unicode.c unicode.h sha1.c sha1.h \
+					support.c support.h config.h bool.h plugins.h \
+					utf8strings.h dump/dump.c \
 					gregoriotex/gregoriotex-write.c \
 					gregoriotex/gregoriotex-position.c \
 					gregoriotex/gregoriotex.h
@@ -49,6 +50,7 @@ gregorio_SOURCES = gregorio-utils.c characters.c characters.h \
 gregorio_SOURCES += gabc/gabc-elements-determination.c gabc/gabc-write.c \
 					gabc/gabc-glyphs-determination.c gabc/gabc.h \
 					gabc/gabc-score-determination.h \
+					gabc/gabc-score-determination.c \
 					gabc/gabc-score-determination-y.h \
 					gabc/gabc-score-determination-y.c \
 					gabc/gabc-score-determination-l.h \

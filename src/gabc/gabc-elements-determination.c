@@ -2,7 +2,7 @@
  * Gregorio is a program that translates gabc files to GregorioTeX.
  * This file provides functions for determining elements from notes.
  *
- * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
+ * Copyright (C) 2006-2016 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
  * 
@@ -175,7 +175,7 @@ static gregorio_element *gabc_det_elements_from_glyphs(
             }
             first_glyph = current_glyph->next;
             previous_glyph = NULL;
-            current_glyph->texverb = NULL;
+            current_glyph->texverb = 0;
             gregorio_free_one_glyph(&current_glyph);
             continue;
         }
@@ -311,23 +311,27 @@ static gregorio_element *gabc_det_elements_from_glyphs(
 
 static gregorio_element *gabc_det_elements_from_notes(
         gregorio_note *current_note, int *current_key,
+        gregorio_shape *const punctum_inclinatum_orientation,
         const gregorio_score *const score)
 {
     gregorio_element *final = NULL;
     gregorio_glyph *tmp = gabc_det_glyphs_from_notes(current_note, current_key,
-            score);
+            punctum_inclinatum_orientation, score);
     final = gabc_det_elements_from_glyphs(tmp);
     return final;
 }
 
 gregorio_element *gabc_det_elements_from_string(char *const str,
         int *const current_key, char *macros[10],
-        gregorio_scanner_location *const loc, const gregorio_score *const score)
+        gregorio_scanner_location *const loc,
+        gregorio_shape *const punctum_inclinatum_orientation,
+        const gregorio_score *const score)
 {
     gregorio_element *final;
     gregorio_note *tmp;
     tmp = gabc_det_notes_from_string(str, macros, loc, score);
-    final = gabc_det_elements_from_notes(tmp, current_key, score);
+    final = gabc_det_elements_from_notes(tmp, current_key,
+            punctum_inclinatum_orientation, score);
     return final;
 }
 

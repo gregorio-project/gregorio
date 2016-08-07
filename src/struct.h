@@ -2,7 +2,7 @@
  * Gregorio is a program that translates gabc files to GregorioTeX
  * This header defines the Gregorio data structures and functions.
  *
- * Copyright (C) 2006-2015 The Gregorio Project (see CONTRIBUTORS.md)
+ * Copyright (C) 2006-2016 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
  *
@@ -60,6 +60,7 @@ typedef struct gregorio_scanner_location {
     unsigned short last_line;
     unsigned short last_column;
     unsigned short last_offset;
+    bool generate_point_and_click:1;
 } gregorio_scanner_location;
 
 /* all the different types of things a gregorio_* can be */
@@ -98,7 +99,8 @@ ENUM(gregorio_clef, GREGORIO_CLEF);
     A(S_UNDETERMINED, 0) \
     E(S_PUNCTUM) \
     E(S_PUNCTUM_END_OF_GLYPH) \
-    E(S_PUNCTUM_INCLINATUM) \
+    E(S_PUNCTUM_INCLINATUM_ASCENDENS) \
+    E(S_PUNCTUM_INCLINATUM_DESCENDENS) \
     E(S_PUNCTUM_INCLINATUM_DEMINUTUS) \
     E(S_PUNCTUM_INCLINATUM_AUCTUS) \
     E(S_VIRGA) \
@@ -115,14 +117,7 @@ ENUM(gregorio_clef, GREGORIO_CLEF);
     E(S_STROPHA_AUCTA) \
     E(S_DISTROPHA) \
     E(S_TRISTROPHA) \
-    E(S_PUNCTUM_CAVUM) \
     E(S_LINEA_PUNCTUM) \
-    E(S_LINEA_PUNCTUM_CAVUM) \
-    E(S_PUNCTUM_CAVUM_INCLINATUM) \
-    E(S_PUNCTUM_CAVUM_INCLINATUM_AUCTUS) \
-    E(S_ORISCUS_CAVUM_ASCENDENS) \
-    E(S_ORISCUS_CAVUM_DESCENDENS) \
-    E(S_ORISCUS_CAVUM_DEMINUTUS) \
     E(S_FLAT) \
     E(S_SHARP) \
     E(S_NATURAL) \
@@ -132,8 +127,8 @@ ENUM(gregorio_clef, GREGORIO_CLEF);
      * quislisma quadratum */ \
     E(S_ORISCUS_UNDETERMINED) \
     E(S_ORISCUS_SCAPUS_UNDETERMINED) \
-    E(S_ORISCUS_CAVUM_UNDETERMINED) \
     E(S_QUADRATUM) \
+    E(S_PUNCTUM_INCLINATUM_UNDETERMINED) \
     /* those shapes are for now used only in gregoriotex */ \
     E(S_QUILISMA_QUADRATUM) \
     E(S_PUNCTUM_AUCTUS_ASCENDENS) \
@@ -389,8 +384,8 @@ typedef struct gregorio_extra_info {
 } gregorio_extra_info;
 
 typedef struct gregorio_clef_info {
-    unsigned char line;
-    unsigned char secondary_line;
+    signed char line;
+    signed char secondary_line;
     ENUM_BITFIELD(gregorio_clef) clef:1;
     bool flatted:1;
     ENUM_BITFIELD(gregorio_clef) secondary_clef:1;
@@ -427,9 +422,6 @@ typedef struct gregorio_note {
     /* choral sign is a letter that appears next to a note in some choral
      * scores we put it as char* because sometimes two letters appear */
     char *choral_sign;
-    /* a string containing a possible TeX verbatim; necessary during
-     * structure generation. */
-    char *texverb;
     union {
         /* note is used for GRE_NOTE */
         struct {
@@ -444,7 +436,8 @@ typedef struct gregorio_note {
             /* liquescentia is the liquescence on the note, it is not really
              * used in the final score, but it is, like type, used in the
              * determination of glyphs. */
-            ENUM_BITFIELD(gregorio_liquescentia) liquescentia:8;
+            ENUM_BITFIELD(gregorio_liquescentia) liquescentia:7;
+            bool is_cavum:1;
         } note;
         /* clef is used for GRE_CLEF */
         struct gregorio_clef_info clef;
@@ -453,6 +446,9 @@ typedef struct gregorio_note {
     } u;
 
     /* these go to the end for structure alignment */
+    /* index to a string containing a possible TeX verbatim; necessary during
+     * structure generation. */
+    unsigned short texverb;
     unsigned short src_line, src_column, src_offset;
     unsigned short he_adjustment_index[2];
 
@@ -503,9 +499,6 @@ typedef struct gregorio_glyph {
     /* two pointer to make a chained list */
     struct gregorio_glyph *previous;
     struct gregorio_glyph *next;
-    /* a string containing a possible TeX verbatim; necessary during structure
-     * generation. */
-    char *texverb;
     union {
         /* glyph is used for GRE_GLYPH */
         struct {
@@ -518,12 +511,15 @@ typedef struct gregorio_glyph {
             ENUM_BITFIELD(gregorio_glyph_type) glyph_type:8;
             /* liquescentia is really used, because that will determine the
              * shape we will have to use. */
-            ENUM_BITFIELD(gregorio_liquescentia) liquescentia:8;
+            ENUM_BITFIELD(gregorio_liquescentia) liquescentia:7;
+            bool is_cavum:1;
         } notes;
         union gregorio_misc_element_info misc;
     } u;
 
-    /* characters go to the end for structure alignment */
+    /* index to a string containing a possible TeX verbatim; necessary during
+     * structure generation. */
+    unsigned short texverb;
 
     /* type can have the values explained in the comment just above. */
     ENUM_BITFIELD(gregorio_type) type:8;
@@ -538,9 +534,6 @@ typedef struct gregorio_element {
     /* pointers to the next and previous elements. */
     struct gregorio_element *previous;
     struct gregorio_element *next;
-    /* a string containing a possible TeX verbatim; necessary during structure
-     * generation. */
-    char *texverb;
     /* The nabc string */
     char **nabc;
     /* we put it here to get the length of the array here too */
@@ -552,6 +545,9 @@ typedef struct gregorio_element {
         union gregorio_misc_element_info misc;
     } u;
 
+    /* index to a string containing a possible TeX verbatim; necessary during
+     * structure generation. */
+    unsigned short texverb;
     /* type can have the values GRE_ELEMENT, GRE_BAR, GRE_C_KEY_CHANGE,
      * GRE_F_KEY_CHANGE, GRE_END_OF_LINE, GRE_SPACE, GRE_TEXVERB_ELEMENT
      * or GRE_NLBA */
@@ -704,6 +700,7 @@ typedef struct gregorio_score {
     unsigned char staff_lines;
     signed char highest_pitch;
     signed char high_ledger_line_pitch;
+    signed char virgula_far_pitch;
     bool legacy_oriscus_orientation;
 } gregorio_score;
 
@@ -779,6 +776,7 @@ static __inline bool is_fused(char liquescentia)
 #define LOWEST_PITCH 3
 #define DUMMY_PITCH (LOWEST_PITCH + 6)
 #define LOW_LEDGER_LINE_PITCH (LOWEST_PITCH + 1)
+#define LOW_LINE_PITCH (LOWEST_PITCH + 3)
 #define MAX_PITCH (LOWEST_PITCH + 4 + (2 * 5))
 
 #define NO_PITCH -128
@@ -795,7 +793,7 @@ void gregorio_add_note(gregorio_note **current_note, signed char pitch,
         const gregorio_scanner_location *loc);
 void gregorio_add_glyph(gregorio_glyph **current_glyph,
         gregorio_glyph_type type, gregorio_note *first_note,
-        gregorio_liquescentia liquescentia);
+        gregorio_liquescentia liquescentia, bool is_cavum);
 void gregorio_add_element(gregorio_element **current_element,
         gregorio_glyph *first_glyph);
 void gregorio_add_syllable(gregorio_syllable **current_syllable,
@@ -809,6 +807,7 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
 void gregorio_add_special_sign(gregorio_note *current_note, gregorio_sign sign);
 void gregorio_change_shape(gregorio_note *note, gregorio_shape shape,
         bool legacy_oriscus_orientation);
+void gregorio_add_cavum(gregorio_note *note);
 void gregorio_position_h_episema_above(gregorio_note *note, signed char height,
         bool connect);
 void gregorio_position_h_episema_below(gregorio_note *note, signed char height,
@@ -828,12 +827,13 @@ void gregorio_free_score(gregorio_score *score);
 void gregorio_free_characters(gregorio_character *current_character);
 void gregorio_go_to_first_character(const gregorio_character **character);
 void gregorio_add_clef_as_glyph(gregorio_glyph **current_glyph,
-        gregorio_clef_info clef, char *texverb);
+        gregorio_clef_info clef, unsigned short texverb);
 void gregorio_add_pitched_element_as_glyph(gregorio_glyph **current_glyph,
-        gregorio_type type, signed char pitch, bool force_pitch, char *texverb);
+        gregorio_type type, signed char pitch, bool force_pitch,
+        unsigned short texverb);
 void gregorio_add_unpitched_element_as_glyph(gregorio_glyph **current_glyph,
         gregorio_type type, gregorio_extra_info *info, gregorio_sign sign,
-        char *texverb);
+        unsigned short texverb);
 void gregorio_add_end_of_line_as_note(gregorio_note **current_note,
         bool eol_ragged, bool eol_forces_custos, bool eol_forces_custos_on,
         const gregorio_scanner_location *loc);
@@ -851,8 +851,8 @@ void gregorio_add_bar_as_note(gregorio_note **current_note, gregorio_bar bar,
 void gregorio_add_space_as_note(gregorio_note **current_note,
         gregorio_space space, char *factor,
         const gregorio_scanner_location *loc);
-void gregorio_add_texverb_as_note(gregorio_note **current_note, char *str,
-        gregorio_type type, const gregorio_scanner_location *loc);
+unsigned short gregorio_add_texverb_as_note(gregorio_note **current_note,
+        char *str, gregorio_type type, const gregorio_scanner_location *loc);
 void gregorio_add_nlba_as_note(gregorio_note **current_note,
         gregorio_nlba type, const gregorio_scanner_location *loc);
 void gregorio_start_autofuse(gregorio_note **current_note,
@@ -863,7 +863,8 @@ void gregorio_add_texverb_to_note(gregorio_note *current_note, char *str);
 void gregorio_add_cs_to_note(gregorio_note *const*current_note, char *str,
         bool nabc);
 void gregorio_add_misc_element(gregorio_element **current_element,
-        gregorio_type type, gregorio_misc_element_info *info, char *texverb);
+        gregorio_type type, gregorio_misc_element_info *info,
+        unsigned short texverb);
 void gregorio_set_score_annotation(gregorio_score *score, char *annotation);
 void gregorio_set_score_staff_lines(gregorio_score *score, char staff_lines);
 void gregorio_add_score_header(gregorio_score *score, char *name,
@@ -890,6 +891,8 @@ unsigned short gregorio_add_hepisema_adjustment(
         gregorio_hepisema_vbasepos vbasepos, char *nudge);
 gregorio_hepisema_adjustment *gregorio_get_hepisema_adjustment(
         unsigned short index);
+const char *gregorio_texverb(unsigned short index);
+void gregorio_change_texverb(unsigned short index, char *texverb);
 
 static __inline void gregorio_go_to_first_character_c(gregorio_character **character)
 {

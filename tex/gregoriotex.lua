@@ -1,6 +1,6 @@
 --GregorioTeX Lua file.
 --
---Copyright (C) 2008-2015 The Gregorio Project (see CONTRIBUTORS.md)
+--Copyright (C) 2008-2016 The Gregorio Project (see CONTRIBUTORS.md)
 --
 --This file is part of Gregorio.
 --
@@ -24,16 +24,16 @@ local hpack, traverse, traverse_id, has_attribute, count, remove, insert_after, 
 gregoriotex = gregoriotex or {}
 local gregoriotex = gregoriotex
 
-local internalversion = '4.1.1' -- GREGORIO_VERSION (comment used by VersionManager.py)
+local internalversion = '4.2.0-rc2' -- GREGORIO_VERSION (comment used by VersionManager.py)
 
 local err, warn, info, log = luatexbase.provides_module({
     name               = "gregoriotex",
-    version            = '4.1.1', -- GREGORIO_VERSION
+    version            = '4.2.0-rc2', -- GREGORIO_VERSION
     greinternalversion = internalversion,
-    date               = "2016/03/10", -- GREGORIO_DATE_LTX
+    date               = "2016/07/05", -- GREGORIO_DATE_LTX
     description        = "GregorioTeX module.",
     author             = "The Gregorio Project (see CONTRIBUTORS.md)",
-    copyright          = "2008-2015 - The Gregorio Project",
+    copyright          = "2008-2016 - The Gregorio Project",
     license            = "GPLv3+",
 })
 
@@ -49,7 +49,7 @@ local whatsit = node.id('whatsit')
 
 local hyphen = tex.defaulthyphenchar or 45
 
-local dash_attr         = luatexbase.attributes['gre@attr@dash']
+local dash_attr = luatexbase.attributes['gre@attr@dash']
 local potentialdashvalue   = 1
 local nopotentialdashvalue = 2
 
@@ -62,6 +62,8 @@ local glyph_top_attr = luatexbase.attributes['gre@attr@glyph@top']
 local glyph_bottom_attr = luatexbase.attributes['gre@attr@glyph@bottom']
 local prev_line_id = nil
 
+local syllable_id_attr = luatexbase.attributes['gre@attr@syllable@id']
+
 local cur_score_id = nil
 local score_inclusion = {}
 local line_heights = nil
@@ -73,6 +75,12 @@ local saved_lengths = nil
 local new_saved_lengths = nil
 local saved_newline_before_euouae = nil
 local new_saved_newline_before_euouae = nil
+local last_syllables = nil
+local new_last_syllables = nil
+local score_last_syllables = nil
+local new_score_last_syllables = nil
+local state_hashes = nil
+local new_state_hashes = nil
 local auxname = nil
 local snippet_filename = nil
 local snippet_logname = nil
@@ -93,6 +101,11 @@ local number_to_letter = {
 }
 
 local capture_header_macro = {}
+local hashed_spaces = {}
+local space_hash = ''
+
+local per_line_dims = {}
+local saved_dims = {}
 
 local catcode_at_letter = luatexbase.catcodetables['gre@atletter']
 
@@ -101,7 +114,6 @@ local create_marker = luatexbase.new_user_whatsit('marker', 'gregoriotex')
 local marker_whatsit_id = luatexbase.get_user_whatsit_id('marker', 'gregoriotex')
 local translation_mark = 1
 local abovelinestext_mark = 2
-
 log("marker whatsit id is %d", marker_whatsit_id)
 
 local function mark(value)
@@ -165,13 +177,31 @@ local function saved_computations_changed(tab1, tab2)
   return false
 end
 
+local function entries_changed(tab1, tab2)
+  local k, v
+  for k, v in pairs(tab1) do
+    if tab2[k] ~= v then return true end
+  end
+  return false
+end
+
 local function is_greaux_write_needed()
   local id, tab
+  if entries_changed(state_hashes, new_state_hashes) or
+      entries_changed(new_state_hashes, state_hashes) then
+    return true
+  end
   for id, tab in pairs(new_line_heights) do
     if keys_changed(tab, line_heights[id]) then return true end
   end
   for id, tab in pairs(line_heights) do
     if keys_changed(tab, new_line_heights[id]) then return true end
+  end
+  for id, tab in pairs(new_last_syllables) do
+    if keys_changed(tab, last_syllables[id]) then return true end
+  end
+  for id, tab in pairs(last_syllables) do
+    if keys_changed(tab, new_last_syllables[id]) then return true end
   end
   if saved_computations_changed(saved_lengths, new_saved_lengths) then
     return true
@@ -189,13 +219,25 @@ local function write_greaux()
     local aux = io.open(auxname, 'w')
     if aux then
       log("Writing %s", auxname)
-      aux:write('return {\n ["line_heights"]={\n')
       local id, tab, id2, line, value
+      aux:write('return {\n ["line_heights"]={\n')
       for id, tab in pairs(new_line_heights) do
         aux:write(string.format('  ["%s"]={\n', id))
         for id2, line in pairs(tab) do
-          aux:write(string.format('   [%d]={%d,%d,%d,%d},\n', id2, line[1],
-              line[2], line[3], line[4]))
+          aux:write(string.format('   [%d]={%d,%d,%d,%d,%d},\n', id2, line[1],
+              line[2], line[3], line[4], line[5]))
+        end
+        aux:write('  },\n')
+      end
+      aux:write(' },\n ["last_syllables"]={\n')
+      for id, tab in pairs(new_last_syllables) do
+        aux:write(string.format('  ["%s"]={\n', id))
+        for id2, value in pairs(tab) do
+          if id2 == 'state' then
+            aux:write(string.format('   state="%s",\n', value))
+          else
+            aux:write(string.format('   [%d]=%d,\n', id2, value))
+          end
         end
         aux:write('  },\n')
       end
@@ -222,6 +264,10 @@ local function write_greaux()
           end
         end
         aux:write('  },\n')
+      end
+      aux:write(' },\n ["state_hashes"]={\n')
+      for id, value in pairs(new_state_hashes) do
+        aux:write(string.format('  ["%s"]="%s",\n', id, value))
       end
       aux:write(' },\n}\n')
       aux:close()
@@ -261,16 +307,22 @@ local function init(arg, enable_height_computation)
     log("Reading %s", auxname)
     local score_info = dofile(auxname)
     line_heights = score_info.line_heights or {}
+    last_syllables = score_info.last_syllables or {}
+    state_hashes = score_info.state_hashes or {}
     saved_lengths = score_info.saved_lengths or {}
     saved_newline_before_euouae = score_info.saved_newline_before_euouae or {}
   else
     line_heights = {}
+    last_syllables = {}
+    state_hashes = {}
     saved_lengths = {}
     saved_newline_before_euouae = {}
   end
 
   if enable_height_computation then
     new_line_heights = {}
+    new_last_syllables = {}
+    new_state_hashes = {}
 
     local mcb_version = luatexbase.get_module_version and
         luatexbase.get_module_version('luatexbase-mcb') or 9999
@@ -378,7 +430,7 @@ end
 
 -- in each function we check if we really are inside a score,
 -- which we can see with the dash_attr being set or not
-local function process (h, groupcode, glyphes)
+local function post_linebreak(h, groupcode, glyphes)
   -- TODO: to be changed according to the font
   local lastseennode            = nil
   local adddash                 = false
@@ -391,6 +443,7 @@ local function process (h, groupcode, glyphes)
   local line_has_translation    = false
   local line_has_abovelinestext = false
   local linenum                 = 0
+  local syl_id                  = nil
   -- we explore the lines
   for line in traverse(h) do
     if line.id == glue then
@@ -415,6 +468,7 @@ local function process (h, groupcode, glyphes)
         line_has_translation = false
         line_has_abovelinestext = false
         for n in traverse_id(hlist, line.head) do
+          syl_id = has_attribute(n, syllable_id_attr) or syl_id
           if has_attribute(n, center_attr, startcenter) then
             centerstartnode = n
           elseif has_attribute(n, center_attr, endcenter) then
@@ -479,10 +533,13 @@ local function process (h, groupcode, glyphes)
           addash=false
         end
         if line_id then
-          new_score_heights[prev_line_id] = { line_top, line_bottom,
+          new_score_heights[prev_line_id] = { linenum, line_top, line_bottom,
               line_has_translation and 1 or 0,
               line_has_abovelinestext and 1 or 0 }
           prev_line_id = line_id
+        end
+        if new_score_last_syllables and syl_id then
+          new_score_last_syllables[syl_id] = syl_id
         end
       end
       -- we reinitialize the shift value, because it may change according to the line
@@ -501,8 +558,75 @@ local function disable_hyphenation()
   return false
 end
 
-local function atScoreBeginning (score_id, top_height, bottom_height,
-    has_translation, has_above_lines_text, top_height_adj, bottom_height_adj)
+local get_font_by_id = font.getfont --- cached, indexes fonts.hashes.identifiers
+local font_id = font.id
+
+-- an "unsafe" version of get_font_by_id that can see all fonts
+-- LuaTeX can see, which is needed when we need the font size of
+-- the user-selected current font
+local function unsafe_get_font_by_id(id)
+  return get_font_by_id(id) or font.fonts[id]
+end
+
+-- get_font_by_name(name) -- Look up a font identifier in the
+-- ``score_fonts`` table. Returns the id of the font if found, -1
+-- otherwise.
+local function get_font_by_name(name)
+  local id = font_id(name)
+  return id >= 0 and get_font_by_id(id)
+end
+
+-- get_score_font_id(name) -- Look up a font identifier in the
+-- ``score_fonts`` table. Returns the id of the font if found, -1
+-- otherwise.
+local function get_score_font_id(name)
+  local sfnt = score_fonts[name]
+  if sfnt then
+    return font_id(sfnt)
+  end
+  return -1
+end
+
+local resource_dummy = { unicodes = { } }
+
+-- get_font_resources(number) -- Retrieve the resource table
+-- associated with a font id. Always returns a Lua table value whose
+-- ``unicodes`` field is indexable.
+local function get_font_resources(id)
+  local fnt = get_font_by_id(id)
+  if fnt then
+    return fnt.resources or resource_dummy
+  end
+  return resource_dummy
+end
+
+-- get_score_font_resources(string) -- Retrieve the resource table
+-- belonging to a font in the ``score_font`` table. Always returns
+-- a table whose ``unicodes`` field is indexable.
+local function get_score_font_resources(name)
+  return get_font_resources(get_score_font_id(name))
+end
+
+local function get_score_font_unicode_pairs(name)
+  local unicodes = get_score_font_resources(name).unicodes
+  if not font_indexed[name] then
+    -- The unicodes table may be lazy-loaded, so iterating it may not
+    -- return everything.  Attempting to retrieve the code point of a
+    -- glyph that has not already been loaded will trigger the __index
+    -- method in the metatable (implemented by the fontloader) to load
+    -- the table until the glyph is found.  When iterating the
+    -- unicodes, we want the whole table to be filled, so we try to
+    -- access a non-existing glyph in order to force load the entire
+    -- table.
+    local ignored = unicodes['_this_is_hopefully_a_nonexistent_glyph_']
+    font_indexed[name] = true
+  end
+  return pairs(unicodes)
+end
+
+local function atScoreBeginning(score_id, top_height, bottom_height,
+    has_translation, has_above_lines_text, top_height_adj, bottom_height_adj,
+    score_font_name)
   local inclusion = score_inclusion[score_id] or 1
   score_inclusion[score_id] = inclusion + 1
   score_id = score_id..'.'..inclusion
@@ -520,14 +644,31 @@ local function atScoreBeginning (score_id, top_height, bottom_height,
     score_heights = nil
     new_score_heights = nil
   end
+  local text_font = unsafe_get_font_by_id(font.current())
+  local score_font = unsafe_get_font_by_id(font.id('gre@font@music'))
+  local state = md5.sumhexa(string.format('%s|%d|%s|%d|%s', text_font.name,
+      text_font.size, score_font.name, score_font.size, space_hash))
+  score_last_syllables = last_syllables[score_id]
+  if score_last_syllables and state_hashes[score_id] ~= state then
+    score_last_syllables = nil
+  end
+  if new_state_hashes then
+    new_state_hashes[score_id] = state
+  end
+  if new_last_syllables then
+    new_score_last_syllables = {}
+    new_last_syllables[score_id] = new_score_last_syllables
+  end
 
-  luatexbase.add_to_callback('post_linebreak_filter', process, 'gregoriotex.callback', 1)
+  luatexbase.add_to_callback('post_linebreak_filter', post_linebreak, 'gregoriotex.post_linebreak', 1)
   luatexbase.add_to_callback("hyphenate", disable_hyphenation, "gregoriotex.disable_hyphenation", 1)
 end
 
-local function atScoreEnd ()
-  luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.callback')
+local function atScoreEnd()
+  luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.post_linebreak')
   luatexbase.remove_from_callback("hyphenate", "gregoriotex.disable_hyphenation")
+  per_line_dims = {}
+  saved_dims = {}
 end
 
 local function clean_old_gtex_files(file_withdir)
@@ -725,82 +866,21 @@ local function get_gregorioversion()
   return internalversion
 end
 
-local get_font_by_id = font.getfont --- cached, indexes fonts.hashes.identifiers
-local font_id = font.id
-
--- an "unsafe" version of get_font_by_id that can see all fonts
--- LuaTeX can see, which is needed when we need the font size of
--- the user-selected current font
-local function unsafe_get_font_by_id(id)
-  return get_font_by_id(id) or font.fonts[id]
-end
-
--- get_font_by_name(name) -- Look up a font identifier in the
--- ``score_fonts`` table. Returns the id of the font if found, -1
--- otherwise.
-local function get_font_by_name(name)
-  local id = font_id(name)
-  return id >= 0 and get_font_by_id(id)
-end
-
--- get_score_font_id(name) -- Look up a font identifier in the
--- ``score_fonts`` table. Returns the id of the font if found, -1
--- otherwise.
-local function get_score_font_id(name)
-  local sfnt = score_fonts[name]
-  if sfnt then
-    return font_id(sfnt)
+local function check_one_font_version(name)
+  local gregoriofont = get_font_by_name(name)
+  if gregoriofont then
+    local fontversion = gregoriofont.shared.rawdata.metadata.version
+    if fontversion and string.match(fontversion, "%d+%.%d+%.%d+") ~= string.match(internalversion, "%d+%.%d+%.%d+") then
+      local fontname = gregoriofont.shared.rawdata.metadata.fontname
+      err("\nUncoherent file versions!\ngregoriotex.tex is version %s\nwhile %s.ttf is version %s\nplease reinstall one so that the\nversions match", string.match(internalversion, "%d+%.%d+%.%d+"), fontname, string.match(fontversion, "%d+%.%d+%.%d+"))
+    end
   end
-  return -1
-end
-
-local resource_dummy = { unicodes = { } }
-
--- get_font_resources(number) -- Retrieve the resource table
--- associated with a font id. Always returns a Lua table value whose
--- ``unicodes`` field is indexable.
-local function get_font_resources(id)
-  local fnt = get_font_by_id(id)
-  if fnt then
-    return fnt.resources or resource_dummy
-  end
-  return resource_dummy
-end
-
--- get_score_font_resources(string) -- Retrieve the resource table
--- belonging to a font in the ``score_font`` table. Always returns
--- a table whose ``unicodes`` field is indexable.
-local function get_score_font_resources(name)
-  return get_font_resources(get_score_font_id(name))
-end
-
-local function get_score_font_unicode_pairs(name)
-  local unicodes = get_score_font_resources(name).unicodes
-  if not font_indexed[name] then
-    -- The unicodes table may be lazy-loaded, so iterating it may not
-    -- return everything.  Attempting to retrieve the code point of a
-    -- glyph that has not already been loaded will trigger the __index
-    -- method in the metatable (implemented by the fontloader) to load
-    -- the table until the glyph is found.  When iterating the
-    -- unicodes, we want the whole table to be filled, so we try to
-    -- access a non-existing glyph in order to force load the entire
-    -- table.
-    local ignored = unicodes['_this_is_hopefully_a_nonexistent_glyph_']
-    font_indexed[name] = true
-  end
-  return pairs(unicodes)
 end
 
 local function check_font_version()
-  local gregoriofont = get_font_by_name('gre@font@music')
-  if gregoriofont then
-    local fontversion = gregoriofont.shared.rawdata.metadata.version
-    if fontversion ~= internalversion then
-      local fontname = gregoriofont.shared.rawdata.metadata.fontname
-      local fontfile = gregoriofont.shared.rawdata.metadata.origname
-      err("\nUncoherent file versions!\ngregoriotex.tex is version %s\nwhile %s.ttf is version %s\nplease update file\n%s", internalversion, fontname, fontversion, fontfile)
-    end
-  end
+  check_one_font_version('gre@font@music')
+  check_one_font_version('gre@font@music@hollow')
+  check_one_font_version('gre@font@music@hole')
 end
 
 local function map_font(name, prefix)
@@ -886,32 +966,46 @@ local function def_glyph(csname, font_name, glyph, font_table, setter)
   setter(csname, font_csname, char)
 end
 
-local function change_single_score_glyph(glyph_name, font_name, replacement)
-  if font_name == '*' then def_glyph('GreCP'..glyph_name, 'greciliae', replacement, score_fonts, set_common_score_glyph)
+local function general_font_for(cavum)
+  if cavum == 'Hollow' then
+    return 'greciliae-hollow'
+  elseif cavum == 'Hole' then
+    return 'greciliae-hole'
   else
-    def_glyph('GreCP'..glyph_name, font_name, replacement, score_fonts,
-        set_score_glyph)
+    return 'greciliae'
   end
 end
 
-local function change_score_glyph(glyph_name, font_name, replacement)
+local function change_single_score_glyph(glyph_name, cavum, font_name, replacement)
+  if font_name == '*' then
+    def_glyph('Gre'..cavum..'CP'..glyph_name, general_font_for(cavum),
+        replacement, score_fonts, set_common_score_glyph)
+  else
+    def_glyph('Gre'..cavum..'CP'..glyph_name, font_name, replacement,
+        score_fonts, set_score_glyph)
+  end
+end
+
+local function change_score_glyph(glyph_name, font_name, replacement, cavum)
+  cavum = cavum or ''
   if string.match(glyph_name, '%*') then
     glyph_name = '^'..glyph_name:gsub('%*', '.*')..'$'
     if not string.match(replacement, '^%.') then
       err('If a wildcard is supplied for glyph name, replacement must start with a dot.')
     end
+    local general_font = general_font_for(cavum)
     local other_font
     if font_name == '*' then
-      other_font = get_score_font_resources('greciliae').unicodes
+      other_font = get_score_font_resources(general_font).unicodes
     else
       other_font = get_score_font_resources(font_name).unicodes
     end
     local name, char
-    for name, char in get_score_font_unicode_pairs('greciliae') do
+    for name, char in get_score_font_unicode_pairs(general_font) do
       if not string.match(name, '%.') and char >= 0 and string.match(name, glyph_name) then
         local matched_replacement = name..replacement
         if other_font[matched_replacement] ~= nil and other_font[matched_replacement] >= 0 then
-          change_single_score_glyph(name, font_name, matched_replacement)
+          change_single_score_glyph(name, cavum, font_name, matched_replacement)
         end
       end
     end
@@ -919,25 +1013,27 @@ local function change_score_glyph(glyph_name, font_name, replacement)
     if string.match(replacement, '^%.') then
       replacement = glyph_name..replacement
     end
-    change_single_score_glyph(glyph_name, font_name, replacement)
+    change_single_score_glyph(glyph_name, cavum, font_name, replacement)
   end
 end
 
-local function reset_score_glyph(glyph_name)
+local function reset_score_glyph(glyph_name, cavum)
+  cavum = cavum or ''
+  local general_font = general_font_for(cavum)
   if string.match(glyph_name, '%*') then
     glyph_name = '^'..glyph_name:gsub('%*', '.*')..'$'
     local name, char
-    for name, char in get_score_font_unicode_pairs('greciliae') do
+    for name, char in get_score_font_unicode_pairs(general_font) do
       if not string.match(name, '%.') and char >= 0 and string.match(name, glyph_name) then
-        set_common_score_glyph('GreCP'..name, nil, char)
+        set_common_score_glyph('Gre'..cavum..'CP'..name, nil, char)
       end
     end
   else
-    local char = get_score_font_resources("greciliae").unicodes[glyph_name]
+    local char = get_score_font_resources(general_font).unicodes[glyph_name]
     if char == nil then
       err('\nGlyph %s was not found.', glyph_name)
     end
-    set_common_score_glyph('GreCP'..glyph_name, nil, char)
+    set_common_score_glyph('Gre'..cavum..'CP'..glyph_name, nil, char)
   end
 end
 
@@ -969,14 +1065,44 @@ local function adjust_line_height(inside_discretionary)
   if score_heights then
     local heights = score_heights[tex.getattribute(glyph_id_attr)]
     if heights then
+      -- restore saved dims
+      local name, value
+      for name, value in pairs(saved_dims) do
+        tex.sprint(catcode_at_letter, string.format(
+            [[\def\gre@space@%s{%s}]], name, value))
+      end
+      -- clear saved dims
+      saved_dims = {}
+      -- apply per-line dims
+      local line_dims = per_line_dims[heights[1]]
+      if line_dims ~= nil then
+        for name, value in pairs(line_dims) do
+          tex.sprint(catcode_at_letter, string.format(
+              [[\gre@changedimforline{%s}{%s}{%s}]], name, value[1], value[2]))
+        end
+      end
+      -- recalculate spaces
       tex.sprint(catcode_at_letter, string.format(
           [[\gre@calculate@additionalspaces{%d}{%d}{%d}{%d}]],
-          heights[1], heights[2], heights[3], heights[4]))
+          heights[2], heights[3], heights[4], heights[5]))
       if inside_discretionary == 0 then
         tex.sprint(catcode_at_letter, [[\gre@updateleftbox ]])
       end
     end
   end
+end
+
+local function save_dim(name, value)
+  saved_dims[name] = value
+end
+
+local function change_next_score_line_dim(linenum, name, value, modifier)
+  local line_dims = per_line_dims[linenum]
+  if line_dims == nil then
+    line_dims = {}
+    per_line_dims[linenum] = line_dims
+  end
+  line_dims[name] = { value, modifier }
 end
 
 local function prep_save_position(index, fn)
@@ -987,7 +1113,7 @@ local function prep_save_position(index, fn)
 end
 
 local function save_position(index, which)
-  tex.print(string.format([[\luatexlatelua{gregoriotex.late_save_position('%s', %d, %d, \number\pdflastxpos, \number\pdflastypos)}]], cur_score_id, index, which))
+  tex.print(catcode_at_letter, string.format([[\luatexlatelua{gregoriotex.late_save_position('%s', %d, %d, \number\gre@lastxpos, \number\gre@lastypos)}]], cur_score_id, index, which))
 end
 
 local function late_save_position(score_id, index, which, xpos, ypos)
@@ -1040,7 +1166,7 @@ local function save_euouae(index, which)
   if which == 1 then
     prep_save_position(index, compute_saved_newline_before_euouae)
   end
-  tex.sprint([[\pdfsavepos]])
+  tex.sprint(catcode_at_letter, [[\gre@savepos]])
   save_position(index, which)
 end
 
@@ -1145,38 +1271,72 @@ local function mode_part(part)
   end
 end
 
-gregoriotex.number_to_letter     = number_to_letter
-gregoriotex.init                 = init
-gregoriotex.include_score        = include_score
-gregoriotex.atScoreEnd           = atScoreEnd
-gregoriotex.atScoreBeginning     = atScoreBeginning
-gregoriotex.check_font_version   = check_font_version
-gregoriotex.get_gregorioversion  = get_gregorioversion
-gregoriotex.map_font             = map_font
-gregoriotex.init_variant_font    = init_variant_font
-gregoriotex.change_score_glyph   = change_score_glyph
-gregoriotex.reset_score_glyph    = reset_score_glyph
-gregoriotex.scale_score_fonts    = scale_score_fonts
-gregoriotex.set_font_factor      = set_font_factor
-gregoriotex.def_symbol           = def_symbol
-gregoriotex.font_size            = font_size
-gregoriotex.direct_gabc          = direct_gabc
-gregoriotex.adjust_line_height   = adjust_line_height
-gregoriotex.var_brace_len        = var_brace_len
-gregoriotex.save_length          = save_length
-gregoriotex.mark_translation     = mark_translation
-gregoriotex.mark_abovelinestext  = mark_abovelinestext
-gregoriotex.width_to_bp          = width_to_bp
-gregoriotex.hypotenuse           = hypotenuse
-gregoriotex.rotation             = rotation
-gregoriotex.scale_space          = scale_space
-gregoriotex.set_header_capture   = set_header_capture
-gregoriotex.capture_header       = capture_header
-gregoriotex.is_ypos_different    = is_ypos_different
-gregoriotex.save_euouae          = save_euouae
-gregoriotex.mode_part            = mode_part
-gregoriotex.set_debug_string     = set_debug_string
-gregoriotex.late_save_position   = late_save_position
+-- this function is meant to be used from \ifcase; prints 0 for true and 1 for false
+local function is_last_syllable_on_line()
+  if score_last_syllables then
+    if score_last_syllables[tex.getattribute(syllable_id_attr)] then
+      tex.print(0)
+    else
+      tex.print(1)
+    end
+  else
+    -- if the last syllable is not computed, treat all syllables as the
+    -- last on a line
+    tex.print(0)
+  end
+end
+
+local function hash_spaces(name, value)
+  hashed_spaces[name] = value
+  local k, _
+  local keys = {}
+  for k,_ in pairs(hashed_spaces) do
+    table.insert(keys, k)
+  end
+  table.sort(keys)
+  local mash = ''
+  for _,k in ipairs(keys) do
+    mash = string.format('%s%s:%s|', mash, k, hashed_spaces[k])
+  end
+  space_hash = md5.sumhexa(mash)
+end
+
+gregoriotex.number_to_letter           = number_to_letter
+gregoriotex.init                       = init
+gregoriotex.include_score              = include_score
+gregoriotex.atScoreEnd                 = atScoreEnd
+gregoriotex.atScoreBeginning           = atScoreBeginning
+gregoriotex.check_font_version         = check_font_version
+gregoriotex.get_gregorioversion        = get_gregorioversion
+gregoriotex.map_font                   = map_font
+gregoriotex.init_variant_font          = init_variant_font
+gregoriotex.change_score_glyph         = change_score_glyph
+gregoriotex.reset_score_glyph          = reset_score_glyph
+gregoriotex.scale_score_fonts          = scale_score_fonts
+gregoriotex.set_font_factor            = set_font_factor
+gregoriotex.def_symbol                 = def_symbol
+gregoriotex.font_size                  = font_size
+gregoriotex.direct_gabc                = direct_gabc
+gregoriotex.adjust_line_height         = adjust_line_height
+gregoriotex.var_brace_len              = var_brace_len
+gregoriotex.save_length                = save_length
+gregoriotex.mark_translation           = mark_translation
+gregoriotex.mark_abovelinestext        = mark_abovelinestext
+gregoriotex.width_to_bp                = width_to_bp
+gregoriotex.hypotenuse                 = hypotenuse
+gregoriotex.rotation                   = rotation
+gregoriotex.scale_space                = scale_space
+gregoriotex.set_header_capture         = set_header_capture
+gregoriotex.capture_header             = capture_header
+gregoriotex.is_ypos_different          = is_ypos_different
+gregoriotex.save_euouae                = save_euouae
+gregoriotex.mode_part                  = mode_part
+gregoriotex.set_debug_string           = set_debug_string
+gregoriotex.late_save_position         = late_save_position
+gregoriotex.is_last_syllable_on_line   = is_last_syllable_on_line
+gregoriotex.hash_spaces                = hash_spaces
+gregoriotex.save_dim                   = save_dim
+gregoriotex.change_next_score_line_dim = change_next_score_line_dim
 
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))

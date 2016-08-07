@@ -1,6 +1,6 @@
 %GregorioTeX file.
 %
-% Copyright (C) 2007-2015 The Gregorio Project (see CONTRIBUTORS.md)
+% Copyright (C) 2007-2016 The Gregorio Project (see CONTRIBUTORS.md)
 %
 % This file is part of Gregorio.
 %
@@ -23,7 +23,7 @@
 \def\grebarbracewidth{.58879}%
 
 \gre@debugmsg{general}{Loading gregoriotex-signs.tex}%
-\gre@declarefileversion{gregoriotex-signs.tex}{4.1.1}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-signs.tex}{4.2.0-rc2}% GREGORIO_VERSION
 
 \def\gre@usestylecommon{%
   \ifgre@usestylefont\else %
@@ -142,11 +142,12 @@
     ]%
 }%
 
-
-%% marcro to define the clef that will appear at the beginning of the lines
-% the first argument is the type : f or c, and the second is the height
-% the third argument is whether we must type a space after or not (0 if not, 1 if yes)
-% if the fourth argument is 3, it means that we must not put a flat after the key, otherwise it's the height of the flat
+%% macro to define the clef that will appear at the beginning of the lines
+%% #1 c or f: type of first clef
+%% #2 int: line of first clef
+%% #3 int: 0 if not space, 1 if normal space, 2 for short space
+%% #4 int: height of the flat of first clef, 3 for no flat
+%% #5, #6, #7 = #1, #2, #3 for second clef
 \def\GreSetLinesClef#1#2#3#4#5#6#7{%
   \gre@localleftbox{%
     \gre@skip@temp@four = \gre@dimen@additionalleftspace\relax%
@@ -163,6 +164,15 @@
   }%
   \xdef\gre@clefflatheight{#4}%
   \xdef\gre@cleftwoflatheight{#7}%
+  \relax%
+}%
+
+% defines the largest clef of the score
+% arguments are the same as \GreSetLinesClef except that the #3 of
+% \GreSetLineClef is removed (always 1)
+\def\GreSetLargestClef#1#2#3#4#5#6{%
+  \gre@boxclef{#1}{#2}{0}{1}{#3}{#4}{#5}{#6}%
+  \gre@update@clefwidth@largest{\wd\gre@box@temp@width}%
   \relax%
 }%
 
@@ -183,18 +193,10 @@
 
 \newbox\gre@box@temp@clef%
 \newbox\gre@box@temp@cleftwo%
-% macro that typesets the clef
-% arguments are :
-%% #1: the type of the clef : c or f
-%% #2: the line of the clef (1 is the lowest)
-%% #3: if we must use small clef characters (inside a line) or not 0: if not inside, 1 if inside
-%% #4: if we must type a space after or not
-%% #5: if 3, it means that we must not put a flat after the clef, otherwise it's the height of the flat
-%% #6: the type of the secondary clef : c or f
-%% #7: the line of the secondary clef (1 is the lowest)
-%% #8: if 3, it means that we must not put a flat after the secondary clef, otherwise it's the height of the flat
-\def\gre@typeclef#1#2#3#4#5#6#7#8{%
-  \setbox\gre@box@temp@width=\hbox{%
+
+% sets \gre@box@temp@width with the clef, the arguments are the same as \gre@typeclef
+\def\gre@boxclef#1#2#3#4#5#6#7#8{%
+  \global\setbox\gre@box@temp@width=\hbox{%
     \ifcase#7%
       \gre@typesingleclef{#1}{#2}{#3}{#5}%
     \else %
@@ -214,13 +216,30 @@
       \fi %
     \fi %
   }%
+}
+
+% macro that typesets the clef
+% arguments are :
+%% #1: the type of the clef : c or f
+%% #2: the line of the clef (1 is the lowest)
+%% #3: if we must use small clef characters (inside a line) or not 0: if not inside, 1 if inside
+%% #4: 0: no space after, 1: normal space after, 2: short space after
+%% #5: if 3, it means that we must not put a flat after the clef, otherwise it's the height of the flat
+%% #6: the type of the secondary clef : c or f
+%% #7: the line of the secondary clef (1 is the lowest)
+%% #8: if 3, it means that we must not put a flat after the secondary clef, otherwise it's the height of the flat
+\def\gre@typeclef#1#2#3#4#5#6#7#8{%
+  \gre@boxclef{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}%
   \ifcase#3%
-    \global\gre@dimen@clefwidth=\wd\gre@box@temp@width %
+    \gre@update@clefwidth@current{\wd\gre@box@temp@width}%
   \fi %
   \copy\gre@box@temp@width %
-  \gre@skip@temp@two=\gre@space@skip@spaceafterlineclef\relax%
-  \ifnum#4=0\relax %
+  \ifcase#4 %
     \gre@skip@temp@two=\gre@space@skip@afterclefnospace\relax%
+  \or %
+    \gre@skip@temp@two=\gre@space@skip@spaceafterlineclef\relax%
+  \else %
+    \gre@skip@temp@two=\gre@space@skip@shortspaceafterlineclef\relax%
   \fi %
   \gre@hskip\gre@skip@temp@two %
 }%
@@ -269,10 +288,18 @@
 % macro that writes the initial key, and sets the next keys to the same value
 % if #3 is 3, it means that we must not put a flat after the key, otherwise it's the height
 % of the flat
-\def\GreSetInitialClef#1#2#3#4#5#6{%
+\def\GreSetInitialClef#1#2#3#4#5#6#7{%
   \gre@save@clef{#1}{#2}{#3}{#4}{#5}{#6}%
   \ifgre@showclef%
-    \gre@typeclef{#1}{#2}{0}{1}{#3}{#4}{#5}{#6}%
+    \ifnum\gre@initiallines=1\relax %
+      \ifnum#7=1\relax %
+        \gre@typeclef{#1}{#2}{0}{1}{#3}{#4}{#5}{#6}%
+      \else %
+        \gre@typeclef{#1}{#2}{0}{2}{#3}{#4}{#5}{#6}%
+      \fi %
+    \else %
+      \gre@typeclef{#1}{#2}{0}{1}{#3}{#4}{#5}{#6}%
+    \fi %
   \else%
     \gre@skip@temp@four = \gre@space@dimen@noclefspace\relax%
     \hbox{\kern\gre@skip@temp@four}%
@@ -357,7 +384,7 @@
       \gre@additionaltopcustoslinemiddle %
     \fi\fi %
   \fi %
-  \raise \gre@dimen@glyphraisevalue\relax%
+  \raise \gre@dimen@glyphraisevalue%
   \copy\gre@box@temp@width %
   \ifdim\gre@skip@bar@lastskip=0pt\relax %
     % for now we consider we always have a bar after the custos
@@ -400,7 +427,7 @@
         \gre@hskip\gre@space@skip@spacebeforeeolcustos\relax %
         \gre@custosalteration{#1}{#2}%
         \GreNoBreak%
-        \raise \gre@dimen@glyphraisevalue\relax%
+        \raise \gre@dimen@glyphraisevalue%
         \hbox{%
           \gre@pickcustos{#1}{2}\relax %
         }%
@@ -952,18 +979,18 @@
   \ifgre@boxing\else %
     \ifcase#2 % 0
       \gre@debugmsg{general}{save case 0}%
-      \pdfsavepos %
+      \gre@savepos %
     \or % 1
       \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
       \kern-\wd\gre@box@temp@sign %
-      \pdfsavepos %
+      \gre@savepos %
       \kern\wd\gre@box@temp@sign %
     \or % 2
       \gre@debugmsg{general}{save case 2}%
       \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
       \gre@dimen@temp@five=\wd\gre@box@temp@sign %
       \kern-.5\wd\gre@box@temp@sign %
-      \pdfsavepos %
+      \gre@savepos %
       \kern.5\wd\gre@box@temp@sign %
     \fi %
     \directlua{gregoriotex.save_length(#1, #3)}%
@@ -1093,15 +1120,6 @@
 \def\GreHighChoralSign#1#2#3{%
   \GreNoBreak %
   \gre@vepisemaorrare{#1}{#3}{}{3}{\gre@style@highchoralsign#2\endgre@style@highchoralsign}%
-  \relax %
-}%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% macros for the typesetting of linea
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\def\GreLinea#1#2#3#4#5#6{%
-  \GreGlyph{\GreCPLinea}{#1}{#2}{#3}{#4}{#5}{#6}%
   \relax %
 }%
 
@@ -1545,113 +1563,124 @@
 
 % we define two types of macro for each four bar : when it is inside a syllable, and when it is not
 
-\def\GreInVirgula#1#2{%
-  \gre@writebar{0}{1}{#1}{#2}%
+\def\GreInVirgula#1#2#3{%
+  \gre@writebar{0}{1}{#1}{#2}{#3}%
   \relax%
 }%
 
-\def\GreVirgula#1#2{%
-  \gre@writebar{0}{0}{#1}{#2}%
+\def\GreVirgula#1#2#3{%
+  \gre@writebar{0}{0}{#1}{#2}{#3}%
   \relax%
 }%
 
-\def\GreInDivisioMinima#1#2{%
-  \gre@writebar{1}{1}{#1}{#2}%
+\def\GreInDivisioMinima#1#2#3{%
+  \gre@writebar{1}{1}{#1}{#2}{#3}%
   \relax%
 }%
 
-\def\GreDivisioMinima#1#2{%
-  \gre@writebar{1}{0}{#1}{#2}%
+\def\GreDivisioMinima#1#2#3{%
+  \gre@writebar{1}{0}{#1}{#2}{#3}%
   \relax%
 }%
 
 \def\GreInDivisioMinor#1#2{%
-  \gre@writebar{2}{1}{#1}{#2}%
+  \gre@writebar{2}{1}{#1}{#2}{0}%
   \relax%
 }%
 
 \def\GreDivisioMinor#1#2{%
-  \gre@writebar{2}{0}{#1}{#2}%
+  \gre@writebar{2}{0}{#1}{#2}{0}%
   \relax%
 }%
 
 \def\GreInDivisioMaior#1#2{%
-  \gre@writebar{3}{1}{#1}{#2}%
+  \gre@writebar{3}{1}{#1}{#2}{0}%
   \relax%
 }%
 
 \def\GreDivisioMaior#1#2{%
-  \gre@writebar{3}{0}{#1}{#2}%
+  \gre@writebar{3}{0}{#1}{#2}{0}%
   \relax%
 }%
 
 \def\GreDominica#1#2#3{%
   \ifcase#1\or %
-    \gre@writebar{6}{0}{#2}{#3}%
+    \gre@writebar{6}{0}{#2}{#3}{0}%
   \or %
-    \gre@writebar{7}{0}{#2}{#3}%
+    \gre@writebar{7}{0}{#2}{#3}{0}%
   \or %
-    \gre@writebar{8}{0}{#2}{#3}%
+    \gre@writebar{8}{0}{#2}{#3}{0}%
   \or %
-    \gre@writebar{9}{0}{#2}{#3}%
+    \gre@writebar{9}{0}{#2}{#3}{0}%
   \or %
-    \gre@writebar{10}{0}{#2}{#3}%
+    \gre@writebar{10}{0}{#2}{#3}{0}%
   \or %
-    \gre@writebar{11}{0}{#2}{#3}%
+    \gre@writebar{11}{0}{#2}{#3}{0}%
   \or %
-    \gre@writebar{12}{0}{#2}{#3}%
+    \gre@writebar{12}{0}{#2}{#3}{0}%
   \or %
-    \gre@writebar{13}{0}{#2}{#3}%
+    \gre@writebar{13}{0}{#2}{#3}{0}%
   \fi %
   \relax%
 }%
 
 \def\GreInDominica#1#2#3{%
   \ifcase#1\or %
-    \gre@writebar{6}{1}{#2}{#3}%
+    \gre@writebar{6}{1}{#2}{#3}{0}%
   \or %
-    \gre@writebar{7}{1}{#2}{#3}%
+    \gre@writebar{7}{1}{#2}{#3}{0}%
   \or %
-    \gre@writebar{8}{1}{#2}{#3}%
+    \gre@writebar{8}{1}{#2}{#3}{0}%
   \or %
-    \gre@writebar{9}{1}{#2}{#3}%
+    \gre@writebar{9}{1}{#2}{#3}{0}%
   \or %
-    \gre@writebar{10}{1}{#2}{#3}%
+    \gre@writebar{10}{1}{#2}{#3}{0}%
   \or %
-    \gre@writebar{11}{1}{#2}{#3}%
+    \gre@writebar{11}{1}{#2}{#3}{0}%
   \or %
-    \gre@writebar{12}{1}{#2}{#3}%
+    \gre@writebar{12}{1}{#2}{#3}{0}%
   \or %
-    \gre@writebar{13}{1}{#2}{#3}%
+    \gre@writebar{13}{1}{#2}{#3}{0}%
   \fi %
   \relax%
 }%
 
 \def\GreInDivisioFinalis#1#2{%
   \ifgre@endofscore %
-    \gre@writebar{5}{1}{#1}{#2}%
+    \gre@writebar{5}{1}{#1}{#2}{0}%
   \else %
-    \gre@writebar{4}{1}{#1}{#2}%
+    \gre@writebar{4}{1}{#1}{#2}{0}%
   \fi %
   \relax%
 }%
 
 \def\GreDivisioFinalis#1#2{%
   \ifgre@endofscore %
-    \gre@writebar{5}{0}{#1}{#2}%
+    \gre@writebar{5}{0}{#1}{#2}{0}%
   \else %
-    \gre@writebar{4}{0}{#1}{#2}%
+    \gre@writebar{4}{0}{#1}{#2}{0}%
   \fi %
   \relax%
 }%
 
-% #1 is #2 of gre@writebar
-% #2 is #3 of gre@writebar
+% #1 is #2 of gre@writebar (@standalone or nothing)
+% #2 is #3 of gre@writebar (@text or @notext, only if standalone)
+% #3 is #5 of gre@writebar (@short or nothing)
 % emits the suffix of the space
-\def\gre@bar@space@suffix#1#2{%
-  \ifcase#1\ifgre@newbarspacing %
-    \ifcase#2 @standalone@notext\or @standalone@text\fi %
-  \fi\fi %
+\def\gre@bar@space@suffix#1#2#3{%
+  \ifgre@newbarspacing %
+    \ifcase#1 %
+      \ifcase#3 %
+        \ifcase#2 @standalone@notext\or @standalone@text\fi %
+      \or %
+        \ifcase#2 @standalone@notext@short\or @standalone@text@short\fi %
+      \fi %
+    \else %
+      \ifcase#3 \or @short\fi %
+    \fi %
+  \else %
+    \ifcase#3 \or @short\fi %
+  \fi %
 }%
 
 \newcount\gre@count@shiftaftermora
@@ -1725,38 +1754,18 @@
 %% 2: is 0 if it is in a syllable containing only this bar, 1 otherwise
 %% 3: is 0 if there's no text under the bar or 1 if there is text under the bar
 %% 4: macros that may happen before the skip after the bar (typically GreVEpisema)
-\def\gre@writebar#1#2#3#4{%
+%% 5: 0 for the normal version of spaces, 1 for the short one (virgula and minima only)
+\def\gre@writebar#1#2#3#4#5{%
   % first, for the bar to be really centered, if the last glyph has a punctum
   % mora, we kern of the corresponding space. We do it only in the case
   % of a bar in the middle of other notes.
   \ifgre@lastendswithmora %
-    \ifgre@newbarspacing %
-      \ifnum\gre@count@shiftaftermora=0\else\ifnum\gre@count@shiftaftermora=4\else %
-        % new bar spacing takes care of punctum mora on its own, but only when
-        % bar has its own syllable
-        \ifcase #2\or %
-          \gre@unkern@bar@aftermora %
-        \fi %
-      \fi\fi %
-    \else %
-      \ifcase\gre@count@shiftaftermora\or %
-        % barsinsideonly
-        \ifcase #2\or %
-          \gre@unkern@bar@aftermora %
-        \fi %
-      \or %
-        % barsnotextonly
-        \ifcase #3\relax %
-          \gre@unkern@bar@aftermora %
-        \fi %
-      \or %
-        % barsonly
-        \gre@unkern@bar@aftermora %
-      \or\or %
-        % always
+    \ifnum\gre@count@shiftaftermora=0\else\ifnum\gre@count@shiftaftermora=4\else %
+      % if bar doesn’t has its own syllable, then we need to take care of the kern after a punctum mora here
+      \ifcase #2\or %
         \gre@unkern@bar@aftermora %
       \fi %
-    \fi %
+    \fi\fi %
   \fi %
   \gre@newglyphcommon %
   \gre@calculate@glyphraisevalue{\gre@pitch@bar}{0}{}% bar glyphs are made to be at this height
@@ -1773,7 +1782,7 @@
   \gre@skip@temp@four=0pt\relax %
   \ifcase#1 % 0 : virgula
     \ifnum\gre@count@temp@one=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@virgula\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@virgula\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1782,12 +1791,12 @@
     #4\relax %
     \ifnum\gre@count@temp@one=1\relax %
       \GreNoBreak %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@virgula\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@virgula\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 1 : minima
     \ifnum\gre@count@temp@one=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@minima\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@minima\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1796,12 +1805,12 @@
     #4\relax %
     \ifnum\gre@count@temp@one=1\relax %
       \GreNoBreak %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@minima\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@minima\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 2 : minor
     \ifnum\gre@count@temp@one=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@minor\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@minor\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1810,12 +1819,12 @@
     #4\relax %
     \ifnum\gre@count@temp@one=1\relax %
       \GreNoBreak %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@minor\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@minor\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 3 : maior
     \ifnum\gre@count@temp@one=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@maior\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@maior\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1824,12 +1833,12 @@
     #4\relax %
     \ifnum\gre@count@temp@one=1\relax %
       \GreNoBreak %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@maior\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@maior\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 4 : finalis
     \ifnum\gre@count@temp@one=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@finalis\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@finalis\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1838,12 +1847,12 @@
     \gre@fontchar@divisiofinalis%
     \ifnum\gre@count@temp@one=1\relax %
       \GreNoBreak %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@finalis\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@finalis\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 5 : final finalis
     \ifnum\gre@count@temp@one=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@finalfinalis\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@finalfinalis\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1852,7 +1861,7 @@
     \gre@fontchar@divisiofinalis%
     \ifgre@newbarspacing %
       \GreNoBreak %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@finalfinalis\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@finalfinalis\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1861,7 +1870,7 @@
     % we need to adjust the height of the bar a little so that it is perfectly aligned with the bottom (or the top for some bars) of the staff line, which is not the case by default if \gre@stafflinefactor is not 10.
     \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff\relax%
     \ifnum\gre@count@temp@one=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1870,14 +1879,14 @@
     #4\relax %
     \ifnum\gre@count@temp@one=1\relax %
       \GreNoBreak %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 7 : dominican bar 2
     \gre@calculate@glyphraisevalue{\gre@pitch@e}{0}{}%
     \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff\relax%
     \ifnum\gre@count@temp@one=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1886,12 +1895,12 @@
     #4\relax %
     \ifnum\gre@count@temp@one=1\relax %
       \GreNoBreak %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 8 : dominican bar 3
     \ifnum\gre@count@temp@one=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1901,12 +1910,12 @@
     #4\relax %
     \ifnum\gre@count@temp@one=1\relax %
       \GreNoBreak %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 9 : dominican bar 4
     \ifnum\gre@count@temp@one=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1916,14 +1925,14 @@
     #4\relax %
     \ifnum\gre@count@temp@one=1\relax %
       \GreNoBreak %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 10 : dominican bar 5
     \gre@calculate@glyphraisevalue{\gre@pitch@i}{0}{}%
     \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff\relax%
     \ifnum\gre@count@temp@one=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1932,14 +1941,14 @@
     #4\relax %
     \ifnum\gre@count@temp@one=1\relax %
       \GreNoBreak %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 11 : dominican bar 6
     \gre@calculate@glyphraisevalue{\gre@pitch@i}{0}{}%
     \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff\relax%
     \ifnum\gre@count@temp@one=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1948,14 +1957,14 @@
     #4\relax %
     \ifnum\gre@count@temp@one=1\relax %
       \GreNoBreak %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 12 : dominican bar 7
     \gre@calculate@glyphraisevalue{\gre@pitch@k}{0}{}%
     \advance\gre@dimen@glyphraisevalue by -\gre@dimen@stafflinediff\relax%
     \ifnum\gre@count@temp@one=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1964,14 +1973,14 @@
     #4\relax %
     \ifnum\gre@count@temp@one=1\relax %
       \GreNoBreak %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \or % 13 : dominican bar 8
     \gre@calculate@glyphraisevalue{\gre@pitch@k}{0}{}%
     \advance\gre@dimen@glyphraisevalue by \gre@dimen@stafflinediff\relax%
     \ifnum\gre@count@temp@one=1\relax %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
@@ -1980,7 +1989,7 @@
     #4\relax %
     \ifnum\gre@count@temp@one=1\relax %
       \GreNoBreak %
-      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}\endcsname\relax%
+      \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \fi %
@@ -2090,16 +2099,17 @@
 % 2 if previous glyph is a cavum (which is the most interesting information)
 \gre@count@lastglyphiscavum=0
 
-% the argument is the character with which we fill the hole, and we suppose that
+% #1 is the character with which we fill the hole, and we suppose that
 % isonaline and glyphraisevalue are correctly set.
-\def\gre@fillhole#1{%
+% #2 is 0 for alteration or 1 for normal cavum
+\def\gre@fillhole#1#2{%
   \ifgre@boxing\else %
     \global\gre@count@lastglyphiscavum=1\relax %
     \setbox\gre@box@temp@sign=\hbox{#1}%
+    \ifcase#2\raise \gre@dimen@glyphraisevalue\fi%
     \hbox to 0pt{%
       {%
       \color{grebackgroundcolor}%
-      \raise \gre@dimen@glyphraisevalue\relax%
       \copy\gre@box@temp@sign %
       }%
       %\pdfliteral{}% this is a ugly hack for old versions of LuaTeX to work
@@ -2135,9 +2145,9 @@
   \kern-\gre@skip@temp@one %
   \gre@calculate@glyphraisevalue{#1}{0}{}%
   \ifgre@hidealtlines %
-    \gre@fillhole{#3}%
+    \gre@fillhole{#3}{0}%
   \fi %
-  \raise \gre@dimen@glyphraisevalue\relax%
+  \raise \gre@dimen@glyphraisevalue%
   \copy\gre@box@temp@width%
   #6\relax %
   \ifnum#4=0\relax %
@@ -2186,79 +2196,112 @@
 %% macros for typesetting punctum cavum
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\gre@fontchar@punctumcavum{\gre@font@music\GreCPPunctumCavum}%
-\def\gre@fontchar@lineapunctumcavum{\gre@font@music\GreCPLineaPunctumCavum}%
-\def\gre@fontchar@punctumcavumhole{\gre@font@music\GreCPPunctumCavumHole}%
-\def\gre@fontchar@lineapunctumcavumhole{\gre@font@music\GreCPLineaPunctumCavumHole}%
-
 \def\gresetpunctumcavum#1{%
   \IfStrEqCase{#1}{%
     {alternate}%
       {%
-        \grechangeglyph{PunctumCavum}{greciliae}{.caeciliae}%
-        \grechangeglyph{LineaPunctumCavum}{greciliae}{.caeciliae}%
-        \grechangeglyph{PunctumCavumHole}{greciliae}{.caeciliae}%
-        \grechangeglyph{LineaPunctumCavumHole}{greciliae}{.caeciliae}%
+        \grechangecavumglyph{Punctum}{greciliae-hollow}{.caeciliae}[greciliae-hole][.caeciliae]%
+        \grechangecavumglyph{LineaPunctum}{greciliae-hollow}{.caeciliae}[greciliae-hole][.caeciliae]%
       }%
     {normal}%
       {%
-        \greresetglyph{PunctumCavum}%
-        \greresetglyph{LineaPunctumCavum}%
-        \greresetglyph{PunctumCavumHole}%
-        \greresetglyph{LineaPunctumCavumHole}%
+        \greresetcavumglyph{Punctum}%
+        \greresetcavumglyph{LineaPunctum}%
       }%
     }[% all other cases
       \gre@error{Unrecognized option "#1" for \protect\gresetpunctumcavum\MessageBreak Possible options are: 'alternate' and 'normal'}%
     ]%
 }%
 
-
-\def\gre@char@cavum#1#2#3#4#5#6#7#8{%
-  \setbox\gre@box@temp@width=\hbox{#7}%
-  \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
-  \gre@skip@temp@four = \gre@dimen@lastglyphwidth\relax%
-  \kern\gre@skip@temp@four %
-  #4\relax %
-  \kern-\gre@skip@temp@four %
-  \gre@calculate@glyphraisevalue{#1}{0}{}%
+\def\GreCavum#1{%
   \ifgre@hidepclines%
-    \gre@fillhole{#8}%
+    \gre@fillhole{{\gre@font@music@hole\csname GreHoleCP#1\endcsname}}{1}%
   \fi %
-  \GreGlyph{#7}{#1}{#2}{#3}{}{#5}{#6}%
-  %\relax %
+  {\gre@font@music@hollow\csname GreHollowCP#1\endcsname}%
 }%
 
-\def\GrePunctumCavum#1#2#3#4#5#6{%
-  \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
-  {\gre@fontchar@punctumcavum}{\gre@fontchar@punctumcavumhole}%
-}%
-
-\def\GreLineaPunctumCavum#1#2#3#4#5#6{%
-  \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
-  {\gre@fontchar@lineapunctumcavum}{\gre@fontchar@lineapunctumcavumhole}%
-}%
-
-\def\GrePunctumCavumInclinatum#1#2#3#4#5#6{%
-  \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
-  {\gre@font@music\GreCPPunctumCavumInclinatum}{\gre@font@music\GreCPPunctumCavumInclinatumHole}%
-}%
-
-\def\GrePunctumCavumInclinatumAuctus#1#2#3#4#5#6{%
-  \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
-  {\gre@font@music\GreCPPunctumCavumInclinatumAuctus}{\gre@font@music\GreCPPunctumCavumInclinatumAuctusHole}%
-}%
-
-\def\GreAscendensOriscusCavum#1#2#3#4#5#6{%
-  \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
-  {\gre@font@music\GreCPAscendensOriscusCavum}{\gre@font@music\GreCPAscendensOriscusCavumHole}%
-}%
-
-\def\GreDescendensOriscusCavum#1#2#3#4#5#6{%
-  \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
-  {\gre@font@music\GreCPDescendensOriscusCavum}{\gre@font@music\GreCPDescendensOriscusCavumHole}%
-}%
-
-\def\GreOriscusCavumDeminutus#1#2#3#4#5#6{%
-  \gre@char@cavum{#1}{#2}{#3}{#4}{#5}{#6}%
-  {\gre@font@music\GreCPOriscusCavumDeminutus}{\gre@font@music\GreCPOriscusCavumDeminutusHole}%
+% #1 is 0 for left or 1 for right bracket
+% #2 is the height of the lowest note within the brackets
+% #3 is the height of the highest note within the brackets
+% #4 is the point-and-click string
+\def\GreBracket#1#2#3#4{%
+  \gre@newglyphcommon %
+  \ifcase\numexpr#1\relax\else\GreNoBreak\fi% no break before right bracket
+  \setbox\gre@box@temp@width=\hbox{\gre@pointandclick{\gre@font@music %
+    \csname GreCPBracket%
+      \ifcase\numexpr#1\relax Left\else Right\fi%
+      % Logic:
+      % if low pitch is on a line or below the staff:
+      %   if high pitch is on a line or above the staff:
+      %     use short bracket
+      %   else:
+      %     use normal bracket
+      % else:
+      %   if high pitch is on a line or above the staff:
+      %     use normal bracket
+      %   else:
+      %     use long bracket
+      \ifnum\numexpr#2\relax>\numexpr\gre@pitch@belowstaff\relax % low pitch not below staff
+        % numexpr+/ rounds rather than truncates
+        \ifnum\numexpr#2/2\relax=\numexpr(#2+1)/2\relax % =odd, low pitch not on a line
+          \ifnum\numexpr#3\relax<\numexpr\gre@pitch@abovestaff\relax % high pitch not above staff
+            \ifnum\numexpr#3/2\relax=\numexpr(#3+1)/2\relax % =odd, high pitch not on a line
+              Long%
+            \fi %
+          \fi %
+        \else % =even, low pitch on a line
+          \ifnum\numexpr#3\relax<\numexpr\gre@pitch@abovestaff\relax % high pitch not above staff
+            \ifnum\numexpr#3/2\relax=\numexpr(#3+1)/2\relax\else % =even, high pitch on a line
+              Short%
+            \fi %
+          \else % high pitch above staff
+            Short%
+          \fi %
+        \fi %
+      \else % low pitch below staff
+        % same as above!
+        \ifnum\numexpr#3\relax<\numexpr\gre@pitch@abovestaff\relax % high pitch not above staff
+          \ifnum\numexpr#3/2\relax=\numexpr(#3+1)/2\relax\else % =even, high pitch on a line
+            Short%
+          \fi %
+        \else % high pitch above staff
+          Short%
+        \fi %
+      \fi %
+      \ifcase\numexpr#3-#2\relax %
+          Zero%
+      \or One%
+      \or Two%
+      \or Three%
+      \or Four%
+      \or Five%
+      \or Six%
+      \or Seven%
+      \or Eight%
+      \or Nine%
+      \or Ten%
+      \or Eleven%
+      \or Twelve%
+      \or Thirteen%
+      \or Fourteen%
+      \fi%
+    \endcsname %
+  }{#4}}%
+  \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
+  \gre@calculate@glyphraisevalue{#2}{17}{}%
+  \raise\gre@dimen@glyphraisevalue%
+  \copy\gre@box@temp@width%
+  \ifcase\numexpr#1\relax
+    \GreNoBreak% no break after left bracket
+    \ifgre@firstglyph%
+      \gre@debugmsg{bolshift}{making adjustments for leading bracket}%
+      \global\advance\gre@dimen@notesaligncenter by \wd\gre@box@temp@width\relax %
+      \global\gre@dimen@bolextra = \wd\gre@box@temp@width\relax%
+      \gre@debugmsg{bolshift}{bolextra: \the\gre@dimen@bolextra}%
+    \fi %
+    \GreNoBreak% no break after left bracket
+  \fi %
+  \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
+  \gre@endofglyphcommon %
+  \relax%
 }%

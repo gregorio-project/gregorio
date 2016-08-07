@@ -1,7 +1,7 @@
 #!/usr/bin/env texlua
 --[[
 Gregorio Windows automatic installation script.
-Copyright (C) 2010-2015 Gregorio Project authors
+Copyright (C) 2010-2016 Gregorio Project authors
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -126,6 +126,7 @@ local old_base_dirs = {
   fixpath(texmflocal.."fonts/ovf/gregoriotex"),
   fixpath(texmflocal.."fonts/map/gregoriotex"),
   fixpath(texmflocal.."tex/luatex/gregoriotex"),
+  fixpath(texmflocal.."tex/lualatex/gregoriotex"),
   fixpath(texmflocal.."fonts/truetype/public/gregoriotex"),
   fixpath(texmflocal.."fonts/source/gregoriotex"),
   fixpath(texmflocal.."doc/luatex/gregoriotex"),
