@@ -307,6 +307,13 @@ local function dump_nodes(head)
   log('--end dump--')
 end
 
+-- helper function for center_translation()
+local function get_first_node_by_id(id, head)
+  for n in traverse_id(id, head) do
+    return n
+  end
+end
+
 local function center_translation(startnode, endnode, ratio, sign, order)
   -- total width between beginning the two centering points
   local total_width = node.dimensions(ratio, sign, order, startnode, endnode)
@@ -321,12 +328,23 @@ local function center_translation(startnode, endnode, ratio, sign, order)
   --    \kern 0pt
   --  }
   --
+  -- While normally we could use startnode.head.next.head.next.head
+  -- to reach the translation (glyph node), packages such as LuaTeX-ja
+  -- may have, for example, prepended a whatsit node to each list
+  -- to store e.g. text direction, moving our translation glyph node to
+  -- startnode.head.next.next.head.next.next.head.next instead.
+  --
+  -- To avoid unpleasant surprises, let's search for each desired node
+  -- by its type:
+  local vlistnode = get_first_node_by_id(vlist, startnode.head)
+  local hlistnode = get_first_node_by_id(hlist, vlistnode.head)
+  local glyphnode = get_first_node_by_id(glyph, hlistnode.head)
   -- hence translation width is:
-  local trans_width = node.dimensions(startnode.head.next.head.next.head)
+  local trans_width = node.dimensions(glyphnode)
   -- now we must transform the kern 0pt into kern Xpt and kern -Xpt where X is:
   local X = (total_width - trans_width) / 2
-  startnode.head.kern = X
-  startnode.head.next.next.kern = -X
+  vlistnode.prev.kern = X
+  vlistnode.next.kern = -X
 end
 
 local debug_types_activated = {['linesglues'] = false}
