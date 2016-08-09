@@ -2873,7 +2873,7 @@ static void write_signs(FILE *f, gtex_type type,
     fprintf(f, "}%%\n");
 }
 
-static char *determine_leading_shape(gregorio_glyph *glyph)
+static char *determine_leading_shape(const gregorio_glyph *const glyph)
 {
     static char buf[BUFSIZE];
     int ambitus = compute_ambitus(glyph->u.notes.first_note);
@@ -2928,8 +2928,9 @@ static __inline void write_composed_multinote_glyph(FILE *const f,
     }
 }
 
-static void write_glyph(FILE *f, gregorio_syllable *syllable,
-        gregorio_element *element, gregorio_glyph *glyph,
+static void write_glyph(FILE *const f, const gregorio_syllable *const syllable,
+        const gregorio_element *const element,
+        gregorio_glyph *const glyph,
         gregoriotex_status *const status, const gregorio_score *const score)
 {
     static char cpbuf[96], cpbuf2[96];
@@ -3137,8 +3138,10 @@ static __inline unsigned int glyph_note_units(const gregorio_glyph *glyph)
 /* here we absolutely need to pass the syllable as an argument, because we
  * will need the next note, that may be contained in the next syllable */
 
-static unsigned int write_element(FILE *f, gregorio_syllable *syllable,
-        gregorio_element *element, gregoriotex_status *status,
+static unsigned int write_element(FILE *const f,
+        const gregorio_syllable *const syllable,
+        const gregorio_element *const element,
+        gregoriotex_status *const status,
         const gregorio_score *const score)
 {
     unsigned int note_unit_count = 0;
@@ -3265,7 +3268,7 @@ static void write_text(FILE *const f, const gregorio_character *const text)
  * \GreChangeClef.
  */
 static void gregoriotex_print_change_line_clef(FILE *f,
-        gregorio_element *current_element)
+        const gregorio_element *const current_element)
 {
     if (current_element->type == GRE_CLEF) {
         /* the third argument is 0 or 1 according to the need for a space
@@ -3564,6 +3567,30 @@ static __inline void handle_last_of_voice(FILE *const f,
     }
 }
 
+static bool is_before_linebreak(const gregorio_syllable *syllable,
+        const gregorio_element *element)
+{
+    if (element) {
+        element = element->next;
+    }
+
+    while (syllable) {
+        if (element) {
+            if (element->type == GRE_END_OF_LINE) {
+                return true;
+            }
+            break;
+        }
+
+        syllable = syllable->next_syllable;
+        if (syllable) {
+            element = syllable->elements[0];
+        }
+    }
+
+    return false;
+}
+
 /*
  * Arguments are relatively obvious. The most obscure is certainly first_of_disc
  * which is 0 all the time, except in the case of a "clef change syllable". In
@@ -3584,7 +3611,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
         void (*const write_this_syllable_text)
         (FILE *, const char *, bool, const gregorio_character *, bool))
 {
-    gregorio_element *clef_change_element = NULL, *element;
+    const gregorio_element *clef_change_element = NULL, *element;
     const char *syllable_type = NULL;
     bool anticipated_event_written = false;
     bool end_of_word;
@@ -3606,13 +3633,13 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     if (syllable->euouae == EUOUAE_BEGINNING) {
         fprintf(f, "\\GreBeginEUOUAE{%hu}%%\n", syllable->euouae_id);
     }
-    /*
-     * first we check if the syllable is only a end of line. If it is the case,
-     * we don't print anything but a comment (to be able to read it if we read
-     * GregorioTeX). The end of lines are treated separately in GregorioTeX, it
-     * is buit inside the TeX structure.
-     */
     if (syllable->elements && *(syllable->elements)) {
+        /*
+         * first we check if the syllable is only a end of line. If it is the
+         * case, we don't print anything but a comment (to be able to read it
+         * if we read GregorioTeX). The end of lines are treated separately in
+         * GregorioTeX, it is buit inside the TeX structure.
+         */
         if ((syllable->elements)[0]->type == GRE_END_OF_LINE) {
             gregorio_assert(syllable != score->first_syllable, write_syllable,
                     "line break is not supported on the first syllable",
@@ -3835,22 +3862,37 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             case GRE_CLEF:
                 /* We don't print clef changes at the end of a line */
                 if (first_of_disc != 1) {
-                    /* the third argument is 0 or 1 according to the need
-                     * for a space before the clef */
-                    fprintf(f, "\\GreChangeClef{%c}{%d}{%c}{%d}{%c}{%d}{%d}%%\n",
-                            gregorio_clef_to_char(element->u.misc.clef.clef),
-                            element->u.misc.clef.line,
-                            (!element->previous || element->previous->type
-                             == GRE_BAR)? '0' : '1',
-                            clef_flat_height(element->u.misc.clef.clef,
-                                    element->u.misc.clef.line,
-                                    element->u.misc.clef.flatted),
-                            gregorio_clef_to_char(
-                                    element->u.misc.clef.secondary_clef),
-                            element->u.misc.clef.secondary_line,
-                            clef_flat_height(element->u.misc.clef.secondary_clef,
-                                    element->u.misc.clef.secondary_line,
-                                    element->u.misc.clef.secondary_flatted));
+                    if (is_before_linebreak(syllable, element)) {
+                        signed char next_note_pitch;
+                        gregorio_shape next_note_alteration;
+
+                        next_note_pitch = gregorio_adjust_pitch_into_staff(
+                                score, gregorio_determine_next_pitch(
+                                syllable, element, NULL, &next_note_alteration)
+                                - element->u.misc.clef.pitch_difference);
+
+                        fputs(next_custos(next_note_pitch,
+                                next_note_alteration), f);
+                        gregoriotex_print_change_line_clef(f, element);
+                    } else {
+                        /* the third argument is 0 or 1 according to the need
+                         * for a space before the clef */
+                        fprintf(f, "\\GreChangeClef{%c}{%d}{%c}{%d}{%c}{%d}{%d}%%\n",
+                                gregorio_clef_to_char(element->u.misc.clef.clef),
+                                element->u.misc.clef.line,
+                                (!element->previous || element->previous->type
+                                 == GRE_BAR)? '0' : '1',
+                                clef_flat_height(element->u.misc.clef.clef,
+                                        element->u.misc.clef.line,
+                                        element->u.misc.clef.flatted),
+                                gregorio_clef_to_char(
+                                        element->u.misc.clef.secondary_clef),
+                                element->u.misc.clef.secondary_line,
+                                clef_flat_height(
+                                        element->u.misc.clef.secondary_clef,
+                                        element->u.misc.clef.secondary_line,
+                                        element->u.misc.clef.secondary_flatted));
+                    }
                 }
                 break;
 

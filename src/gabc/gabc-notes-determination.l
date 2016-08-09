@@ -1116,7 +1116,7 @@ void gabc_det_notes_finish(void)
     }
 [\t\r\n]+ /* ignore ends of line and tabs */;
 z0  {
-        gregorio_add_custo_as_note(&current_note, &notes_lloc);
+        gregorio_add_custos_as_note(&current_note, &notes_lloc);
     }
 z   {
         gregorio_add_end_of_line_as_note(&current_note, false, false, false,

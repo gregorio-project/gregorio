@@ -197,7 +197,7 @@ static void end_definitions(void)
 {
     int i;
 
-    gregorio_assert_only(check_infos_integrity(score), end_definitions,
+    gregorio_assert_only(gabc_check_infos_integrity(score), end_definitions,
             "can't determine valid infos on the score");
 
     elements = (gregorio_element **) gregorio_malloc(number_of_voices *
@@ -505,16 +505,17 @@ gregorio_score *gabc_read_score(FILE *f_in, bool point_and_click)
      * initialized) */
     gabc_score_determination_parse();
     if (!score->legacy_oriscus_orientation) {
-        determine_oriscus_orientation(score);
+        gabc_determine_oriscus_orientation(score);
     }
-    determine_punctum_inclinatum_orientation(score);
+    gabc_determine_punctum_inclinatum_orientation(score);
     gregorio_fix_initial_keys(score, gregorio_default_clef);
     rebuild_score_characters();
-    fix_custos(score);
+    gabc_suppress_extra_custos_at_linebreak(score);
+    gabc_fix_custos_pitches(score);
     gabc_det_notes_finish();
     free_variables();
     /* then we check the validity and integrity of the score we have built. */
-    if (!check_score_integrity(score)) {
+    if (!gabc_check_score_integrity(score)) {
         gregorio_message(_("unable to determine a valid score from file"),
                 "gabc_read_score", VERBOSITY_ERROR, 0);
     }
