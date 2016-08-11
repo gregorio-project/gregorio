@@ -5,6 +5,8 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 [Unreleased][unreleased]
 ### Fixed
 - When the note after an oriscus is at the same pitch, the oriscus will now point downwards by default (see [#1177](https://github.com/gregorio-project/gregorio/issues/1177)).
+- With thanks to Claudio Beccari (@OldClaudio), adding a commentary no longer generates a bad `\hbox` during TeX processing (see [#1202](https://github.com/gregorio-project/gregorio/issues/1202)).
+
 
 
 ## [4.2.0-rc2] - 2016-07-05
