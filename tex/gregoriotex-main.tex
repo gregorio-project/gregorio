@@ -403,7 +403,7 @@
   % we then place that box inside one of 0 width so that our cursor doesn't move when we place the commentary
   \ifvoid\gre@box@commentary\else%
     \gre@debugmsg{commentary}{I am printing a commentary box}%
-    \raise\gre@dimen@commentarytrueraise\hbox to 0pt{\hbox to \gre@dimen@linewidth{\hfill\box\gre@box@commentary}}%
+    \raise\gre@dimen@commentarytrueraise\hbox to 0pt{\hbox to \gre@dimen@linewidth{\hfill\box\gre@box@commentary}\hss}%
   \fi%
   \gre@debugmsg{annotation}{Time to calculate the true raise.}%
   \gre@calculate@annotationtrueraise %
