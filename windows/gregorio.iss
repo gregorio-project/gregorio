@@ -48,7 +48,8 @@ Name: "{app}\texmf\doc\luatex\gregoriotex"
 Name: "{app}\texmf\doc\luatex\gregoriotex\examples"
 
 [Files]
-Source: "../src/gregorio.exe"; DestDir: "{app}\bin";
+; PARSE_VERSION_FILE_NEXTLINE
+Source: "../src/gregorio-4_2_0-rc2.exe"; DestDir: "{app}\bin";
 Source: "gregorio.ico"; DestDir: "{app}";
 Source: "install.lua"; DestDir: "{app}";
 Source: "uninstall.lua"; DestDir: "{app}";

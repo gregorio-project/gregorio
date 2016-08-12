@@ -21,14 +21,16 @@ SRCFILES = GregorioRef.tex Command_Index_gregorio.tex \
 		   Gabc.tex Appendix_Font_Tables.tex GregorioRef.lua factus.gabc
 NABCSRCFILES = GregorioNabcRef.tex veni.gabc
 
+GREGORIO=gregorio-$(FILENAME_VERSION)
+
 .NOTPARALLEL:
 
 # I know these rules look wrong, but they must not depend on anything that
 # gets generated or make distcheck will fail.
 
 GregorioRef.pdf: $(SRCFILES)
-	$(MAKE) $(AM_MAKEFLAGS) -C ../src gregorio
-	../src/gregorio -o factus.gtex $(<D)/factus.gabc
+	$(MAKE) $(AM_MAKEFLAGS) -C ../src $(GREGORIO)
+	../src/$(GREGORIO) -o factus.gtex $(<D)/factus.gabc
 	TEXINPUTS=$(<D):$(<D)/../tex: LUAINPUTS=$(<D):$(<D)/../tex: \
 		 TTFONTS=$(<D)/../fonts: PATH=../src:${PATH} latexmk -f -recorder -pdf \
 		 -interaction=nonstopmode -halt-on-error \
@@ -36,8 +38,8 @@ GregorioRef.pdf: $(SRCFILES)
 		 -jobname=GregorioRef $< || rm $@
 
 GregorioNabcRef.pdf: $(NABCSRCFILES)
-	$(MAKE) $(AM_MAKEFLAGS) -C ../src gregorio
-	../src/gregorio -o veni.gtex $(<D)/veni.gabc
+	$(MAKE) $(AM_MAKEFLAGS) -C ../src $(GREGORIO)
+	../src/$(GREGORIO) -o veni.gtex $(<D)/veni.gabc
 	TEXINPUTS=$(<D):$(<D)/../tex: LUAINPUTS=$(<D):$(<D)/../tex: \
 		 TTFONTS=$(<D)/../fonts: PATH=../src:${PATH} latexmk -recorder -pdf \
 		 -interaction=nonstopmode -halt-on-error \

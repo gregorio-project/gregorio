@@ -4,6 +4,14 @@ This file contains instructions to upgrade to a new release of Gregorio.
 
 ## 4.2
 
+### Executable file name
+
+In order to facilitate installation alongside TeX Live, the version number is now appended to the gregorio executable file name.  In version 4.2.0, the filename is gregorio-4.2.0.  If you run the executable directly, you will need to modify your procedures and/or scripts to use the new name.  Alternately, creating a symbolic link, if your system supports it, may work for you.
+
+If you auto-compile or force-compile your GABC files and are *not* using the Gregorio packaged with TeX Live, you will probably need to use the `--shell-escape` option when compiling your `.tex` files.  Alternately, you can add the new filename to your system's `shell_escape_commands` TeX option.
+
+Unforunately, there appears to be no easier way to let a user-installed Gregorio coexist with the TeX-Live-packaged Gregorio.
+
 ### Stemmed oriscus flexus orientation
 
 As of version 4.2, the orientation of the stemmed oriscus flexus `(gOe)` is consistent with the unstemmed oriscus flexus `(goe)` in that the oriscus points downwards (since the note which follows is of lower pitch).  If you prefer the oriscus to point upwards, you will need to use the `1` modifier (as in `(gO1e)`), which will force an upward orientation of the oriscus.
