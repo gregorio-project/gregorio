@@ -864,7 +864,7 @@ local function direct_gabc(gabc, header, allow_deprecated)
   os.remove(snippet_logname)
 end
 
-local function get_gregorioversion()
+local function get_gregoriotexluaversion()
   return internalversion
 end
 
