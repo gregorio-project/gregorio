@@ -53,10 +53,11 @@ YY_DECL;
 
 #define YYLTYPE gregorio_scanner_location
 
-void fix_custos(gregorio_score *score_to_check);
-bool check_score_integrity(gregorio_score *score_to_check);
-bool check_infos_integrity(gregorio_score *score_to_check);
-void determine_oriscus_orientation(const gregorio_score *score);
-void determine_punctum_inclinatum_orientation(const gregorio_score *score);
+void gabc_suppress_extra_custos_at_linebreak(gregorio_score *score);
+void gabc_fix_custos_pitches(gregorio_score *score_to_check);
+bool gabc_check_score_integrity(gregorio_score *score_to_check);
+bool gabc_check_infos_integrity(gregorio_score *score_to_check);
+void gabc_determine_oriscus_orientation(const gregorio_score *score);
+void gabc_determine_punctum_inclinatum_orientation(const gregorio_score *score);
 
 #endif

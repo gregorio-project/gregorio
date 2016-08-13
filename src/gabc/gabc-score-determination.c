@@ -32,63 +32,114 @@
 #include "gabc-score-determination.h"
 #include "messages.h"
 
-void fix_custos(gregorio_score *score_to_check)
+void gabc_suppress_extra_custos_at_linebreak(gregorio_score *score)
+{
+    gregorio_syllable *syllable;
+    gregorio_element **custos = NULL;
+
+    for (syllable = score->first_syllable; syllable;
+            syllable = syllable->next_syllable) {
+        gregorio_element **element;
+        for (element = syllable->elements; element && *element;
+                element = &((*element)->next)) {
+            switch ((*element)->type) {
+            case GRE_CUSTOS:
+                if (!((*element)->u.misc.pitched.force_pitch)) {
+                    /* save the encountered non-forced custos */
+                    custos = element;
+                } else {
+                    /* forget the (previous) custos */
+                    custos = NULL;
+                }
+                break;
+            case GRE_CLEF:
+            case GRE_BAR:
+                /* remember the custos if only these appear before linebreak */
+                break;
+            case GRE_END_OF_LINE:
+                if (custos) {
+                    /* suppress the custos when linebreak follows */
+                    gregorio_free_one_element(custos);
+                }
+                /* fall through */
+            default:
+                /* forget the custos */
+                custos = NULL;
+                break;
+            }
+        }
+    }
+}
+
+void gabc_fix_custos_pitches(gregorio_score *score_to_check)
 {
     gregorio_syllable *current_syllable;
     gregorio_element *current_element;
-    gregorio_element *custo_element;
-    char pitch = 0;
-    char pitch_difference = 0;
+    gregorio_element *custos_element;
     int newkey;
     int current_key;
+
     if (!score_to_check || !score_to_check->first_syllable
             || !score_to_check->first_voice_info) {
         return;
     }
+
     current_key = gregorio_calculate_new_key(
             score_to_check->first_voice_info->initial_clef);
-    current_syllable = score_to_check->first_syllable;
-    while (current_syllable) {
-        current_element = (current_syllable->elements)[0];
-        while (current_element) {
-            if (current_element->type == GRE_CUSTOS) {
-                custo_element = current_element;
-                pitch = custo_element->u.misc.pitched.pitch;
-                /* we look for the key */
-                while (current_element) {
-                    if (current_element->type == GRE_CLEF) {
-                        pitch = gregorio_determine_next_pitch(current_syllable,
-                                current_element, NULL, NULL);
-                        newkey = gregorio_calculate_new_key(
-                                current_element->u.misc.clef);
-                        pitch_difference = (char) newkey - (char) current_key;
-                        pitch -= pitch_difference;
-                        current_key = newkey;
-                    }
-                    if (!custo_element->u.misc.pitched.force_pitch) {
-                        while (pitch < LOWEST_PITCH) {
-                            pitch += 7;
-                        }
-                        while (pitch > score_to_check->highest_pitch) {
-                            pitch -= 7;
-                        }
-                        custo_element->u.misc.pitched.pitch = pitch;
-                    }
-                    assert(custo_element->u.misc.pitched.pitch >= LOWEST_PITCH 
-                            && custo_element->u.misc.pitched.pitch
-                            <= score_to_check->highest_pitch);
-                    current_element = current_element->next;
-                }
-            }
-            if (current_element) {
-                if (current_element->type == GRE_CLEF) {
-                    current_key = gregorio_calculate_new_key(
-                            current_element->u.misc.clef);
-                }
-                current_element = current_element->next;
+    for (current_syllable = score_to_check->first_syllable; current_syllable;
+            current_syllable = current_syllable->next_syllable) {
+        for (current_element = (current_syllable->elements)[0]; current_element;
+                current_element = current_element->next) {
+            if (current_element->type == GRE_CLEF) {
+                newkey = gregorio_calculate_new_key(
+                        current_element->u.misc.clef);
+                current_element->u.misc.clef.pitch_difference =
+                        (signed char) newkey - (signed char) current_key;
+                current_key = newkey;
             }
         }
-        current_syllable = current_syllable->next_syllable;
+    }
+
+    custos_element = NULL;
+    for (current_syllable = score_to_check->first_syllable; current_syllable;
+            current_syllable = current_syllable->next_syllable) {
+        for (current_element = (current_syllable->elements)[0]; current_element;
+                current_element = current_element->next) {
+            switch (current_element->type) {
+            case GRE_CUSTOS:
+                if (current_element->u.misc.pitched.force_pitch) {
+                    /* forget about the preceding custos if a forced one is
+                     * encountered */
+                    custos_element = NULL;
+                } else {
+                    /* the pitch is not forced, so it may need to be adjusted */
+                    custos_element = current_element;
+                    custos_element->u.misc.pitched.pitch =
+                            gregorio_determine_next_pitch(current_syllable,
+                                    current_element, NULL, NULL);
+                }
+                break;
+
+            case GRE_ELEMENT:
+                /* if it's an element, forget any preceding custos */
+                custos_element = NULL;
+                break;
+
+            case GRE_CLEF:
+                if (custos_element) {
+                    /* adjust the preceding custos for the clef */
+                    custos_element->u.misc.pitched.pitch =
+                            gregorio_adjust_pitch_into_staff(score_to_check,
+                            custos_element->u.misc.pitched.pitch
+                            - current_element->u.misc.clef.pitch_difference);
+                }
+                break;
+
+            default:
+                /* to prevent the warning */
+                break;
+            }
+        }
     }
 }
 
@@ -96,7 +147,7 @@ void fix_custos(gregorio_score *score_to_check)
  * A function that checks the score integrity.
  */
 
-bool check_score_integrity(gregorio_score *score_to_check)
+bool gabc_check_score_integrity(gregorio_score *score_to_check)
 {
     bool good = true;
 
@@ -144,7 +195,7 @@ bool check_score_integrity(gregorio_score *score_to_check)
  * Another function to be improved: this one checks the validity of the voice_infos.
  */
 
-bool check_infos_integrity(gregorio_score *score_to_check)
+bool gabc_check_infos_integrity(gregorio_score *score_to_check)
 {
     if (!score_to_check->name) {
         gregorio_message(_("no name specified, put `name:...;' at the "
@@ -213,7 +264,7 @@ static void oriscus_orientation_visit(
     }
 }
 
-void determine_oriscus_orientation(const gregorio_score *const score)
+void gabc_determine_oriscus_orientation(const gregorio_score *const score)
 {
     gregorio_note *oriscus = NULL;
 
@@ -329,7 +380,7 @@ static void punctum_inclinatum_orientation_visit(
     v->previous = *p;
 }
 
-void determine_punctum_inclinatum_orientation(
+void gabc_determine_punctum_inclinatum_orientation(
         const gregorio_score *const score)
 {
     punctum_inclinatum_vars v = {
@@ -350,7 +401,7 @@ void determine_punctum_inclinatum_orientation(
     };
 
     gregorio_for_each_note(score, punctum_inclinatum_orientation_visit, &v);
-    
+
     if (v.first.note) {
         v.orientation = (v.running > 0)
             ? S_PUNCTUM_INCLINATUM_ASCENDENS

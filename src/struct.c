@@ -58,6 +58,7 @@ unsigned short tex_position_id = 0;
 gregorio_clef_info gregorio_default_clef = {
     /*.line =*/ 3,
     /*.secondary_line =*/ 0,
+    /*.pitch_difference =*/ 0,
     /*.clef =*/ CLEF_C,
     /*.flatted =*/ false,
     /*.secondary_clef =*/ CLEF_C, /* not used since secondary_line is 0 */
@@ -230,7 +231,7 @@ void gregorio_add_end_of_line_as_note(gregorio_note **current_note,
     element->u.other.eol_forces_custos_on = eol_forces_custos_on;
 }
 
-void gregorio_add_custo_as_note(gregorio_note **current_note,
+void gregorio_add_custos_as_note(gregorio_note **current_note,
         const gregorio_scanner_location *const loc)
 {
     gregorio_note *element = create_and_link_note(current_note, loc);
@@ -897,22 +898,22 @@ static __inline void free_one_element(gregorio_element *element)
     free(element);
 }
 
-static void gregorio_free_one_element(gregorio_element **element)
+void gregorio_free_one_element(gregorio_element **element)
 {
     gregorio_element *next = NULL;
+    gregorio_element *to_free;
     gregorio_not_null_ptr(element, gregorio_free_one_element, return);
-    if ((*element)->next) {
-        (*element)->next->previous = NULL;
-        next = (*element)->next;
+    to_free = *element;
+    if (to_free->next) {
+        to_free->next->previous = NULL;
+        next = to_free->next;
     }
-    if ((*element)->previous) {
-        /* this doesn't currently happen, but it's safer to leave this in */
-        /* LCOV_EXCL_START */
-        (*element)->previous->next = NULL;
+    if (to_free->previous) {
+        to_free->previous->next = NULL;
     }
     /* The previous line is probably optimized out */
     /* LCOV_EXCL_STOP */
-    free_one_element(*element);
+    free_one_element(to_free);
     *element = next;
 }
 
