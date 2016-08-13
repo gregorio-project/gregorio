@@ -10,6 +10,8 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Added
 - More cavum shapes are now available.  To use them, simply add `r` in gabc to any note in a glyph.  See [#844](https://github.com/gregorio-project/gregorio/issues/844).
 - Square brackets can be placed around notes by using `[[` and `]]` to surround said notes in gabc (see [#844](https://github.com/gregorio-project/gregorio/issues/844)).
+- 8 new St. Gall neume glyphs have been added to the `gregall` font.
+- 4 new St. Gall neume glyphs have been added to the `gresgmodern` font.
 
 ### Removed
 - The gregorio and granapadano fonts are no longer distributed with the Gregorio distribution archive.  They will now be available for download separately (along with optional Dominican "-op" variants).  ***If there are other logistics, put them here or delete this statement before release.***  See [UPGRADE.md](UPGRADE.md) and [#844](https://github.com/gregorio-project/gregorio/issues/844) for details.
