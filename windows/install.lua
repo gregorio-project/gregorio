@@ -114,6 +114,7 @@ function run_texcommands()
     print("I don't recognize your TeX distribution.")
     print("You may need to rebuild your texmf indecies manually.")
   end
+  os.spawn("luaotfload-tool -u")
 end
 
 local old_base_dirs = {
@@ -129,6 +130,7 @@ local old_base_dirs = {
   fixpath(texmflocal.."tex/lualatex/gregoriotex"),
   fixpath(texmflocal.."fonts/truetype/public/gregoriotex"),
   fixpath(texmflocal.."fonts/source/gregoriotex"),
+  fixpath(texmflocal.."doc/luatex/gregoriotex/examples"),
   fixpath(texmflocal.."doc/luatex/gregoriotex"),
 }
 
@@ -163,7 +165,7 @@ local function rmdirrecursive(dir)
       rm_one(dir..pathsep..filename)
     end
   end
-  os.spawn("rmdir "..dir)
+  os.execute("rmdir "..dir)
 end
 
 -- gregorio used to be installed in other directories which have precedence
@@ -183,23 +185,27 @@ function remove_possible_old_install()
     end
   end
   if old_install_was_present then
-    if string.find(string.lower(texmfdist),"texlive") then
-      os.spawn("updmap-sys")
-    elseif string.find(string.lower(texmfdist), "miktex") then
-      os.spawn("initexmf --mkmaps")
+    if string.find(string.lower(texmfdist),"texlive") or string.find(string.lower(texmfdist), "miktex") then
+      os.spawn("luaotfload-tool -u")
     else
       print("I don't recognize your TeX distribution.")
       print("You may need to rebuild your font maps manually.")
     end
   end
-  --[[ Because we used to copy the executable into the TeX path to make it
-  available, we need to remove it from said locations to make sure we don't
-  have any version conflicts.
+  --[[ Prior to 4.1 we used to copy the executable into the TeX path to make it
+  available. Therefore we need to remove it from said location to make sure we
+  don't have any version conflicts when upgrading from 4.0 or earlier.
   ]]--
   if string.find(string.lower(texmfdist), "texlive") then
     local texmfbin = fixpath(texmfdist.."/../bin/win32/")
-    print("Removing old executable in bin...")
-    rm_one(texmfbin.."gregorio.exe")
+    --[[ In TL2016, gregorio 4.1 is included by default, so we need to preserve
+    that executable.  To make things easier, we simply assume that 4.0
+    or earlier has not been installed over TL2016 or later.
+    ]]--
+    if not string.find(string.lower(texmfdist), "2016") then
+      print("Removing old executable in bin...")
+      rm_one(texmfbin.."gregorio.exe")
+    end
   elseif string.find(string.lower(texmfdist), "miktex") then
     --[[ MiKTeX uses slightly different paths for the location of it's bin
     directory for 32 and 64 bit versions.  Since we used to copy to both of

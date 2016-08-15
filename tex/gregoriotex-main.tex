@@ -159,7 +159,7 @@
 
 % The version of gregorio. All gregoriotex*.tex files must have the same.
 % All gtex files must also have the same version.
-\xdef\gre@gregorioversion{4.2.0-rc2}% GREGORIO_VERSION - VersionManager.py
+\xdef\gre@gregoriotexversion{4.2.0-rc2}% GREGORIO_VERSION - VersionManager.py
 
 % first some macros to allow checks for version:
 % Tests that all gregoriotex files are of the same version.
@@ -167,8 +167,8 @@
 % #2 is the version
 
 \def\gre@declarefileversion#1#2{%
-  \IfStrEq*{#2}{\gre@gregorioversion}{}{%else
-    \gre@error{uncoherent file versions: gregoriotex-main.tex is in version \number\gre@gregorioversion \space\space while #1 is in version \number#2}}%
+  \IfStrEq*{#2}{\gre@gregoriotexversion}{}{%else
+    \gre@error{Version Inconsistency!\MessageBreak gregoriotex-main.tex is in version \number\gre@gregoriotexversion \space\space while #1 is in version \number#2}}%
 }%
 
 % Macro called by scores.
@@ -177,9 +177,9 @@
 % #1 is the version of GregorioTeX the score is made for.
 
 \def\GregorioTeXAPIVersion#1{%
-  \StrBefore{\gre@gregorioversion}{.}[\gre@gregoriomajorversion]%
+  \StrBefore{\gre@gregoriotexversion}{.}[\gre@gregoriomajorversion]%
   \IfBeginWith{#1}{\gre@gregoriomajorversion}{\relax}{%else
-    \gre@error{GregorioTeX is in version \gre@gregorioversion \space\space while a score you included requires version #1. Please recompile your scores}}%
+    \gre@error{Version Inconsistency!\MessageBreak GregorioTeX is in version \gre@gregoriotexversion \space\space while a score you included requires version #1. Please recompile your scores}}%
 }%
 
 \RequireLuaModule{gregoriotex}%
@@ -189,11 +189,11 @@
   \directlua{gregoriotex.init(arg, true)}%
 \fi %
 
-\xdef\gre@gregoriotexluaversion{\directlua{tex.write(gregoriotex.get_gregorioversion())}}%
+\xdef\gre@gregoriotexluaversion{\directlua{tex.write(gregoriotex.get_gregoriotexluaversion())}}%
 
 % Test to make sure that gregoriotex.lua is of the same version.
-\IfStrEq*{\gre@gregoriotexluaversion}{\gre@gregorioversion}{}{%else
-    \gre@error{uncoherent file versions: gregoriotex-main.tex is in version \number\gre@gregorioversion \space\space while gregoriotex.lua is in version \gre@gregoriotexluaversion}}%
+\IfStrEq*{\gre@gregoriotexluaversion}{\gre@gregoriotexversion}{}{%else
+    \gre@error{Version Inconsistency!\MessageBreak gregoriotex-main.tex is in version \number\gre@gregoriotexversion \space\space while gregoriotex.lua is in version \gre@gregoriotexluaversion}}%
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -428,7 +428,7 @@
   % we then place that box inside one of 0 width so that our cursor doesn't move when we place the commentary
   \ifvoid\gre@box@commentary\else%
     \gre@debugmsg{commentary}{I am printing a commentary box}%
-    \raise\gre@dimen@commentarytrueraise\hbox to 0pt{\hbox to \gre@dimen@linewidth{\hfill\box\gre@box@commentary}}%
+    \raise\gre@dimen@commentarytrueraise\hbox to 0pt{\hbox to \gre@dimen@linewidth{\hfill\box\gre@box@commentary}\hss}%
   \fi%
   \gre@debugmsg{annotation}{Time to calculate the true raise.}%
   \gre@calculate@annotationtrueraise %
