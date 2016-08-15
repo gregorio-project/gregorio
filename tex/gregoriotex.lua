@@ -37,6 +37,8 @@ local err, warn, info, log = luatexbase.provides_module({
     license            = "GPLv3+",
 })
 
+local gregorio_exe = 'gregorio-4_2_0-rc2' -- FILENAME_VERSION
+
 gregoriotex.module = { err = err, warn = warn, info = info, log = log }
 
 local format = string.format
@@ -709,14 +711,14 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
     extra_args = extra_args..' -D'
   end
 
-  local cmd = string.format("gregorio %s -W -o %s -l %s %s",
-      extra_args, gtex_file, glog_file, gabc_file)
+  local cmd = string.format("%s %s -W -o %s -l %s %s", gregorio_exe, extra_args,
+      gtex_file, glog_file, gabc_file)
   res = os.execute(cmd)
   if res == nil then
     err("\nSomething went wrong when executing\n    '%s'.\n"
         .."shell-escape mode may not be activated. Try\n\n"
         .."%s --shell-escape %s.tex\n\n"
-        .."See the documentation of gregorio or your TeX\n"
+        .."See the documentation of Gregorio or your TeX\n"
         .."distribution to automatize it.",
         cmd, tex.formatname, tex.jobname)
   elseif res ~= 0 then
@@ -735,7 +737,7 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
       glog:close()
     end
     err("\nAn error occured when compiling the score file\n"
-        .."'%s' with gregorio.\nPlease check your score file.", gabc_file)
+        .."'%s' with %s.\nPlease check your score file.", gabc_file, gregorio_exe)
   else
     -- open the gtex file for writing so that LuaTeX records output to it
     -- when the -recorder option is used
@@ -830,14 +832,14 @@ local function direct_gabc(gabc, header, allow_deprecated)
   gabc = gabc:match('^()%s*$') and '' or gabc:match('^%s*(.*%S)')
   f:write('name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par ', '\n'))
   f:close()
-  local cmd = string.format('gregorio -W %s-S -l %s %s', deprecated, snippet_logname,
-      snippet_filename)
+  local cmd = string.format('%s -W %s-S -l %s %s', gregorio_exe, deprecated,
+      snippet_logname, snippet_filename)
   local p = io.popen(cmd, 'r')
   if p == nil then
     err("\nSomething went wrong when executing\n    %s\n"
         .."shell-escape mode may not be activated. Try\n\n"
         .."%s --shell-escape %s.tex\n\n"
-        .."See the documentation of gregorio or your TeX\n"
+        .."See the documentation of Gregorio or your TeX\n"
         .."distribution to automatize it.", cmd, tex.formatname, tex.jobname)
   else
     tex.print(p:read("*a"):explode('\n'))
@@ -862,7 +864,7 @@ local function direct_gabc(gabc, header, allow_deprecated)
   os.remove(snippet_logname)
 end
 
-local function get_gregorioversion()
+local function get_gregoriotexluaversion()
   return internalversion
 end
 
@@ -1285,7 +1287,7 @@ gregoriotex.include_score              = include_score
 gregoriotex.atScoreEnd                 = atScoreEnd
 gregoriotex.atScoreBeginning           = atScoreBeginning
 gregoriotex.check_font_version         = check_font_version
-gregoriotex.get_gregorioversion        = get_gregorioversion
+gregoriotex.get_gregoriotexluaversion  = get_gregoriotexluaversion
 gregoriotex.map_font                   = map_font
 gregoriotex.init_variant_font          = init_variant_font
 gregoriotex.change_score_glyph         = change_score_glyph
