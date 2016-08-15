@@ -864,7 +864,7 @@ local function direct_gabc(gabc, header, allow_deprecated)
   os.remove(snippet_logname)
 end
 
-local function get_gregorioversion()
+local function get_gregoriotexluaversion()
   return internalversion
 end
 
@@ -1287,7 +1287,7 @@ gregoriotex.include_score              = include_score
 gregoriotex.atScoreEnd                 = atScoreEnd
 gregoriotex.atScoreBeginning           = atScoreBeginning
 gregoriotex.check_font_version         = check_font_version
-gregoriotex.get_gregorioversion        = get_gregorioversion
+gregoriotex.get_gregoriotexluaversion  = get_gregoriotexluaversion
 gregoriotex.map_font                   = map_font
 gregoriotex.init_variant_font          = init_variant_font
 gregoriotex.change_score_glyph         = change_score_glyph

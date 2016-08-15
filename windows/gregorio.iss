@@ -84,10 +84,10 @@ Source: "../doc/README.md"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
 Type: files; Name: "{app}\gregorio.exe"
 
 [Run]
-Filename: "texlua.exe"; Parameters: """{app}\install.lua"" > ""{app}\install.log"""; StatusMsg: "Adding files to texmf tree..."; Description: "Add files to texmf tree"; Flags: postinstall runascurrentuser ; WorkingDir: "{app}";
+Filename: "texlua.exe"; Parameters: """{app}\install.lua"" > ""{app}\install.log"""; StatusMsg: "Adding files to texmf tree..."; Description: "Add files to texmf tree"; Flags: postinstall runascurrentuser ; WorkingDir: "{app}"
 
 [UninstallRun]
-Filename: "texlua.exe"; Parameters: """{app}\uninstall.lua"" > ""{app}\uninstall.log"""; WorkingDir: "{app}"; RunOnceId: "Remove_texmf" ; Flags: runascurrentuser
+Filename: "texlua.exe"; Parameters: """{app}\uninstall.lua"" > ""{userdesktop}\uninstall.log"""; WorkingDir: "{app}"; RunOnceId: "Remove_texmf"; Flags: runascurrentuser
 
 [Tasks]
 Name: modifypath; Description: "Add gregorio to PATH"; GroupDescription: "New Installs and Upgrades from 4.0 and earlier"; Flags: checkedonce
