@@ -156,21 +156,33 @@ do
 	done
 done
 
-# Unversioned Files
-files="gregorio-vowels.dat
-gregoriotex-ictus.tex
-gsp-default.tex
-greciliae.ttf
+# Font Files
+files="greciliae.ttf
 greciliae-op.ttf
 greextra.ttf
 gregorio.ttf
 gregorio-op.ttf
+granapadano.ttf
+granapadano-op.ttf
+gregall.ttf"
+
+for f in $files
+do
+	echo "##### $f" >> $OUTPUT
+	locations=`kpsewhich -all $f`
+	for loc in $locations; do
+	  echo $loc >> $OUTPUT 2>&1
+	  otfinfo --info $loc | grep -m 1 -o '[0-9]*\.[0-9]*\.[0-9]*-*[betarc]*[0-9]*' >> $OUTPUT 2>&1
+	done
+done
+
+# Unversioned and Obsolete Files
+files="gregorio-vowels.dat
+gsp-default.tex
+gregoriotex-ictus.tex
 gresym.ttf
 parmesan.ttf
 parmesan-op.ttf
-granapadano.ttf
-granapadano-op.ttf
-gregall.ttf
 gregsmodern.ttf"
 
 for f in $files
