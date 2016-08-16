@@ -172,7 +172,7 @@ do
 	locations=`kpsewhich -all $f`
 	for loc in $locations; do
 	  echo $loc >> $OUTPUT 2>&1
-	  otfinfo --info $loc | grep -m 1 -o '[0-9]*\.[0-9]*\.[0-9]*-*[betarc]*[0-9]*' >> $OUTPUT 2>&1
+	  otfinfo --font-version $loc >> $OUTPUT 2>&1
 	done
 done
 
