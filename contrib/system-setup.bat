@@ -169,21 +169,33 @@ for %%G in (%files%) do (
 	)
 )
 
-:: Unversion files
-set files=gregorio-vowels.dat ^
-gregoriotex-ictus.tex ^
-gsp-default.tex ^
-greciliae.ttf ^
+:: Font Files
+set files=greciliae.ttf ^
 greciliae-op.ttf ^
 greextra.ttf ^
 gregorio.ttf ^
 gregorio-op.ttf ^
+granapadano.ttf ^
+granapadano-op.ttf ^
+gregall.ttf
+
+for %%G in (%files%) do (
+	echo ##### %%G >> %output%
+	for /f "delims=" %%H in ('kpsewhich -all %%G') do (
+		set loc=%%H
+		set loc=!loc:/=\!
+		echo !loc! >> %output%
+		otfinfo --font-version !loc! >> %output% 2>&1
+	)
+)
+
+:: Unversioned and Obsolete Files
+set files=gregorio-vowels.dat ^
+gsp-default.tex ^
+gregoriotex-ictus.tex ^
 gresym.ttf ^
 parmesan.ttf ^
 parmesan-op.ttf ^
-granapadano.ttf ^
-granapadano-op.ttf ^
-gregall.ttf ^
 gregsmodern.ttf
 
 for %%G in (%files%) do (
