@@ -983,6 +983,7 @@ end
 local function scale_space(factor)
   local skip = tex.getskip('gre@skip@temp@four')
   skip.width = skip.width * factor
+  tex.setskip('gre@skip@temp@four',skip)
   -- should skip.stretch and skip.shink also be scaled?
 end
 
