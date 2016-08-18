@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
+## [4.1.5] - 2016-08-18
+### Fixed
+- Use node.travese_id() to find our desired nodes when doing translation centering across syllables, thereby preventing a conflict with other packages which insert nodes (such as luatex-ja).  See [#1180](https://github.com/gregorio-project/gregorio/issues/1180).
+- Explicitly communicate the rescaling of `\gre@skip@temp@four` back to TeX, thereby fixing the problem with custom spacings.  See [#1199](https://github.com/gregorio-project/gregorio/issues/1199).
+
 ## [4.1.4] - 2016-05-29
 ### Fixed
 - Package conflict with luatex-ja also affected the custos.  Have now fixed that problem too.  See [this thread](http://www.mail-archive.com/gregorio-users@gna.org/msg03520.html).
