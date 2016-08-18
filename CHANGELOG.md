@@ -20,6 +20,10 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 [Unreleased][unreleased]
 ### Fixed
 - When the note after an oriscus is at the same pitch, the oriscus will now point downwards by default (see [#1177](https://github.com/gregorio-project/gregorio/issues/1177)).
+- With thanks to Claudio Beccari (@OldClaudio), adding a commentary no longer generates a bad `\hbox` during TeX processing (see [#1202](https://github.com/gregorio-project/gregorio/issues/1202)).
+
+### Changed
+- In order to facilitate installation alongside TeX Live, the version number is now appended to the gregorio executable file name.  If you are running the executable directly in your custom scripts, you will need to change them to include the version number.  If you are not using the TeX-Live-packaged version of Gregorio, you will probably need to use the `--shell-escape` option when compiling your `.tex` files.  Note that in TeX Live 2016, which includes Gregorio 4.1.1, the executable filename does not include the version number, though that will change starting with TeX Live 2017.  See UPGRADE.md and [#1197](https://github.com/gregorio-project/gregorio/issues/1197) for more information.
 
 
 ## [4.2.0-rc2] - 2016-07-05
@@ -59,7 +63,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Different glyphs are now used for puncta inclinata in an ascent versus in a descent.  A heuristic algorithm is used to ensure that the glyphs match when grouped together.  If the algorithm chooses the wrong shape, use `0` (for descending) or `1` (for ascending) to force an orientation.  See [UPGRADE.md](UPGRADE.md) and [#856](https://github.com/gregorio-project/gregorio/issues/856) for details.
 - The shape of the fused oriscus at ambitus one in the greciliae font has been tweaked to form a nicer connection (see [#1079](https://github.com/gregorio-project/gregorio/issues/1079)).
 - Syllables are now rewritten to improve ligature rendering.  This may be disabled by issuing `\gresetsyllablerewriting{off}`.  See GregorioRef for details (for the change request, see [#1098](https://github.com/gregorio-project/gregorio/issues/1098)).
-- Default mode style for PlainTeX no longer trys to invoke small caps since they are not defined by default.
+- Default mode style for PlainTeX no longer tries to invoke small caps since they are not defined by default.
 - Italic, bold, underlined, small capital, teletype, and colored styles now span multiple syllables.  Gregorio will also more consistently raise errors when styles are improperly started or ended.  See [UPGRADE.md](UPGRADE.md) and [#1121](https://github.com/gregorio-project/gregorio/issues/1121) for details.
 
 

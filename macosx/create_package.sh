@@ -74,9 +74,10 @@ else
     make doc
     cd ..
     cp doc/*.tex $EXTRASDIR/doc/
-    cp doc/*.pdf $EXTRASDIR/doc/
-    cp doc/*.md $EXTRASDIR/doc/
+    cp doc/*.lua $EXTRASDIR/doc/
     cp doc/*.gabc $EXTRASDIR/doc/
+    cp doc/*.pdf $EXTRASDIR/doc/
+    cp doc/README.md $EXTRASDIR/doc/
     cp -r contrib/ $EXTRASDIR/contrib
     find $EXTRASDIR/contrib -name 'Makefile*' -delete
     cp examples/*.tex $EXTRASDIR/examples/
@@ -120,7 +121,7 @@ packagesbuild Uninstall-Gregorio.pkgproj
 # care about the version of gregorio.
 VERSION=`echo $VERSION | sed s:[.]:_:g`
 mv $BUILDDIR/Gregorio.pkg ../Gregorio-$VERSION.pkg
-mv $BUILDDIR/Uninstall-Gregorio.pkg ../
+mv $BUILDDIR/Uninstall-Gregorio-$VERSION.pkg ../
 
 # Now we clean up
 if $clean; then
