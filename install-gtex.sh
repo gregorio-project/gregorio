@@ -68,9 +68,7 @@ TEXFILES=(tex/gregoriotex*.tex tex/gsp-default.tex tex/gregoriotex*.lua
           tex/*.dat)
 LATEXFILES=(tex/gregorio*.sty)
 TTFFILES=(fonts/*.ttf)
-DOCFILES=(doc/Appendix*.tex doc/Command*.tex doc/Gabc.tex
-          doc/*Ref.tex doc/*Ref.lua doc/*.gabc
-          doc/Gregorio*Ref.pdf)
+DOCFILES=(doc/*.tex doc/*.lua doc/*.gabc doc/*.pdf doc/README.md)
 EXAMPLEFILES=(examples/FactusEst.gabc examples/PopulusSion.gabc
               examples/main-lualatex.tex examples/debugging.tex)
 FONTSRCFILES=(gregorio-base.sfd granapadano-base.sfd greciliae-base.sfd

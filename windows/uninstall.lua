@@ -54,27 +54,6 @@ end
 local texmflocal = fixpath(kpse.expand_var("$TEXMFLOCAL"))..pathsep
 local texmfdist = fixpath(kpse.expand_var("$TEXMFDIST"))..pathsep
 
-function remove_executable()
-  print("Removing gregorio.exe...")
-  if string.find(string.lower(texmfdist), "texlive") then
-    texmfbin = fixpath(texmfdist.."../bin/win32/")
-    rm_one(texmfbin.."gregorio.exe")
-  elseif string.find(string.lower(texmfdist), "miktex") then
-    --[[ MiKTeX uses slightly different paths for the location of it's bin
-    directory for 32 and 64 bit versions.  Our current install solution is to
-    copy the executable to both of these locations, so we have to delete from
-    both as well.
-    --]]
-    texmfbin_32 = fixpath(texmfdist.."/miktex/bin/")
-    texmfbin_64 = fixpath(texmfdist.."/miktex/bin/x64/")
-    rm_one(texmfbin_32.."gregorio.exe")
-    rm_one(texmfbin_64.."gregorio.exe")
-  else
-    print("I don't recognize your TeX distribution.")
-    print("You may need to remove gregorio.exe manually.")
-  end
-end
-
 function remove_tex_files()
   if string.find(string.lower(texmfdist),"texlive") then
     remove_texmf_install()
@@ -96,8 +75,10 @@ end
 
 local texmf_install_dirs = {
   fixpath(texmflocal.."tex/luatex/gregoriotex"),
+  fixpath(texmflocal.."tex/lualatex/gregoriotex"),
   fixpath(texmflocal.."fonts/truetype/public/gregoriotex"),
   fixpath(texmflocal.."fonts/source/gregoriotex"),
+  fixpath(texmflocal.."doc/luatex/gregoriotex/examples"),
   fixpath(texmflocal.."doc/luatex/gregoriotex"),
 }
 
@@ -132,7 +113,7 @@ local function rmdirrecursive(dir)
       rm_one(dir..pathsep..filename)
     end
   end
-  os.spawn("rmdir"..dir)
+  os.execute("rmdir "..dir)
 end
 
 function remove_texmf_install()
@@ -156,7 +137,6 @@ function remove_texmf_install()
 end
 
 function main_install()
-  remove_executable()
   remove_tex_files()
   print("Uninstall script complete.")
   print("Press return to continue...")

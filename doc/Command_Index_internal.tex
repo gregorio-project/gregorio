@@ -1,5 +1,23 @@
 % !TEX root = GregorioRef.tex
 % !TEX program = LuaLaTeX+se
+%
+% Copyright (C) 2006-2016 The Gregorio Project (see CONTRIBUTORS.md)
+%
+% This file is part of Gregorio.
+%
+% Gregorio is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% Gregorio is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
+%
 \section{Gregorio\TeX{} Controls}
 
 These functions are the ones used by Gregorio\TeX{} internally as it
@@ -1070,7 +1088,7 @@ Macro which holds the point-and-click file name.
 \macroname{\textbackslash gre@gregoriotexluaversion}{}{gregoriotex-main.tex}
 Macro to hold the version number of \emph{gregoriotex.lua} so that it can be checked for consistency.
 
-\macroname{\textbackslash gre@gregorioversion}{}{gregoriotex-main.tex}
+\macroname{\textbackslash gre@gregoriotexversion}{}{gregoriotex-main.tex}
 Macro to hold the version number of Gregorio\TeX\ so that it can be checked for consistency.
 
 \macroname{\textbackslash gre@leftfill}{}{gregoriotex-main.tex}
@@ -1894,7 +1912,7 @@ Stored value of enddifference prior to the current one after adjusting for the p
 \macroname{\textbackslash gre@skip@nextbegindifference}{}{gregoriotex-spaces.tex}
 The difference between the start of the notes and the start of the text for the next syllable.  Positive when when text begins first, negative in other case.
 
-\macroname{\textbackslash gre@dimen@adjustednextbegindifference}{}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@skip@adjustednextbegindifference}{}{gregoriotex-spaces.tex}
 Only used in new bar spacing algorithm. It is \verb=grebegindifference= adjusted with \verb=alterationadjustmentbar= if relevant.
 
 \macroname{\textbackslash gre@dimen@begindifference}{}{gregoriotex-spaces.tex}

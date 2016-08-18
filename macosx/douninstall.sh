@@ -20,7 +20,7 @@ GREFONTDIR="$TEXMFLOCAL/fonts/truetype/public/gregoriotex"
 GREFONTSOURCE="$TEXMFLOCAL/fonts/source/gregoriotex"
 GREDOCDIR="$TEXMFLOCAL/doc/luatex/gregoriotex"
 
-rm "$BINDIR/gregorio"
+rm "$BINDIR/gregorio-4_2_0-rc2" # FILENAME_VERSION
 rm "$PKGCONFIGDIR/gregorio.pc"
 rm -rf "$GREINCLUDEDIR"
 rm -rf "$GRETEXDIR"

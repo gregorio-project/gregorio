@@ -48,7 +48,8 @@ Name: "{app}\texmf\doc\luatex\gregoriotex"
 Name: "{app}\texmf\doc\luatex\gregoriotex\examples"
 
 [Files]
-Source: "../src/gregorio.exe"; DestDir: "{app}\bin";
+; PARSE_VERSION_FILE_NEXTLINE
+Source: "../src/gregorio-4_2_0-rc2.exe"; DestDir: "{app}\bin";
 Source: "gregorio.ico"; DestDir: "{app}";
 Source: "install.lua"; DestDir: "{app}";
 Source: "uninstall.lua"; DestDir: "{app}";
@@ -57,8 +58,8 @@ Source: "../CHANGELOG.md"; DestDir: "{app}";
 Source: "../README.md"; DestDir: "{app}";
 Source: "../CONTRIBUTORS.md"; DestDir: "{app}";
 Source: "../UPGRADE.md"; DestDir: "{app}";
-Source: "../doc/Gregorio*Ref.pdf"; DestDir: "{app}";
-Source: "../doc/Gregorio*Ref.pdf"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
+Source: "../doc/*.pdf"; DestDir: "{app}";
+Source: "../doc/*.pdf"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
 Source: "../COPYING.md"; DestDir: "{app}";
 Source: "../contrib/system-setup.bat"; DestDir: "{app}";
 Source: "../contrib/*"; DestDir: "{app}\contrib"; Excludes: "Makefile*,TeXShop\*,*.command";
@@ -74,22 +75,19 @@ Source: "../fonts/*.ttf"; DestDir: "{app}\texmf\fonts\truetype\public\gregoriote
 Source: "../fonts/*.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/*.py"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/README.md"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
-Source: "../README.md"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
-Source: "../doc/Appendix*.tex"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
-Source: "../doc/Command*.tex"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
-Source: "../doc/Gabc.tex"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
-Source: "../doc/*Ref.tex"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
-Source: "../doc/*Ref.lua"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
+Source: "../doc/*.tex"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
+Source: "../doc/*.lua"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
 Source: "../doc/*.gabc"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
+Source: "../doc/README.md"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
 
 [InstallDelete]
 Type: files; Name: "{app}\gregorio.exe"
 
 [Run]
-Filename: "texlua.exe"; Parameters: """{app}\install.lua"" > ""{app}\install.log"""; StatusMsg: "Adding files to texmf tree..."; Description: "Add files to texmf tree"; Flags: postinstall runascurrentuser ; WorkingDir: "{app}";
+Filename: "texlua.exe"; Parameters: """{app}\install.lua"" > ""{app}\install.log"""; StatusMsg: "Adding files to texmf tree..."; Description: "Add files to texmf tree"; Flags: postinstall runascurrentuser ; WorkingDir: "{app}"
 
 [UninstallRun]
-Filename: "texlua.exe"; Parameters: """{app}\uninstall.lua"" > ""{app}\uninstall.log"""; WorkingDir: "{app}"; RunOnceId: "Remove_texmf" ; Flags: runascurrentuser
+Filename: "texlua.exe"; Parameters: """{app}\uninstall.lua"" > ""{userdesktop}\uninstall.log"""; WorkingDir: "{app}"; RunOnceId: "Remove_texmf"; Flags: runascurrentuser
 
 [Tasks]
 Name: modifypath; Description: "Add gregorio to PATH"; GroupDescription: "New Installs and Upgrades from 4.0 and earlier"; Flags: checkedonce
