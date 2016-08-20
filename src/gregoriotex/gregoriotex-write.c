@@ -3601,11 +3601,30 @@ static __inline unsigned int count_note_units(const gregorio_element *element)
 }
 
 static __inline void handle_last_of_voice(FILE *const f,
+        const gregorio_syllable *syllable,
         const gregorio_element *const element,
         const gregorio_element *const last_of_voice)
 {
     if (element == last_of_voice) {
-        fprintf(f, "\\GreLastOfScore");
+        if (syllable->next_syllable) {
+            /* check for no-element syllables that follow */
+            for (syllable = syllable->next_syllable;
+                    syllable && (!syllable->elements || !*(syllable->elements));
+                    syllable = syllable->next_syllable) {
+                /* just loop */
+            }
+            /* if syllable is NULL here, then all syllables that follow
+             * have no elements */
+        }
+        /* emit GreLastOfScore if we are either on the last syllable (and
+         * thus the loop above is not executed, leaving syllable at the
+         * current syllable) or if a syllable which follows the current
+         * syllable has an element of some sort (and thus the loop above
+         * stopped before running out of syllables); in any case, the check
+         * is that syllable, at this point, is not NULL */
+        if (syllable) {
+            fprintf(f, "\\GreLastOfScore");
+        }
     }
 }
 
@@ -3906,7 +3925,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                      * We don't print custos before a bar at the end of a line
                      */
                     /* we also print an unbreakable larger space before the custo */
-                    handle_last_of_voice(f, element, *last_of_voice);
+                    handle_last_of_voice(f, syllable, element, *last_of_voice);
                     next_note_pitch = gregorio_determine_next_pitch(syllable,
                             element, NULL, &next_note_alteration);
                     if (!element->u.misc.pitched.force_pitch) {
@@ -3920,7 +3939,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                 break;
 
             case GRE_BAR:
-                handle_last_of_voice(f, element, *last_of_voice);
+                handle_last_of_voice(f, syllable, element, *last_of_voice);
                 write_bar(f, score, syllable, element, first_of_disc);
                 break;
 
@@ -3942,7 +3961,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             default:
                 /* here current_element->type is GRE_ELEMENT */
                 assert(element->type == GRE_ELEMENT);
-                handle_last_of_voice(f, element, *last_of_voice);
+                handle_last_of_voice(f, syllable, element, *last_of_voice);
                 note_unit_count += write_element(f, syllable, element, status,
                         score);
                 if (element->next && (element->next->type == GRE_ELEMENT
