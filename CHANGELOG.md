@@ -3,9 +3,18 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 [Unreleased][unreleased]
+
+
+## [4.2.0-rc3] - 2016-08-22
+### Fixed
+- When the note after an oriscus is at the same pitch, the oriscus will now point downwards by default (see [#1177](https://github.com/gregorio-project/gregorio/issues/1177)).
+- When the last note in a score is not in the last syllable, it no longer merges into the (no-note) syllable(s) that follow (see [#1205](https://github.com/gregorio-project/gregorio/issues/1205)).
+
 ## Changed
 - Notes are now left-aligned as if all clefs had the same width as the largest clef in the score. You can get previous behavior back with `\grebolshiftcleftype{current}`, or temporary force alignment until the end of a score with `\grelocalbolshiftcleftype`. See Documentation of these functions and [#1189](https://github.com/gregorio-project/gregorio/issues/1189).
 - A clef change immediately before a line break `(z)` will now typeset the new clef at the beginning of the next line.  An explicit custos `(z0)` immediately before such a clef change (or separated by only a bar) will be suppressed.  See [1190](https://github.com/gregorio-project/gregorio/issues/1190).
+### Changed
+- In order to facilitate installation alongside TeX Live, the version number is now appended to the gregorio executable file name.  If you are running the executable directly in your custom scripts, you will need to change them to include the version number.  If you are not using the TeX-Live-packaged version of Gregorio, you will probably need to use the `--shell-escape` option when compiling your `.tex` files.  Note that in TeX Live 2016, which includes Gregorio 4.1.1, the executable filename does not include the version number, though that will change starting with TeX Live 2017.  See UPGRADE.md and [#1197](https://github.com/gregorio-project/gregorio/issues/1197) for more information.
 
 ### Added
 - More cavum shapes are now available.  To use them, simply add `r` in gabc to any note in a glyph.  See [#844](https://github.com/gregorio-project/gregorio/issues/844).
@@ -15,15 +24,6 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 
 ### Removed
 - The gregorio and granapadano fonts are no longer distributed with the Gregorio distribution archive.  They will now be available for download separately (along with optional Dominican "-op" variants).  ***If there are other logistics, put them here or delete this statement before release.***  See [UPGRADE.md](UPGRADE.md) and [#844](https://github.com/gregorio-project/gregorio/issues/844) for details.
-
-
-[Unreleased][unreleased]
-### Fixed
-- When the note after an oriscus is at the same pitch, the oriscus will now point downwards by default (see [#1177](https://github.com/gregorio-project/gregorio/issues/1177)).
-- With thanks to Claudio Beccari (@OldClaudio), adding a commentary no longer generates a bad `\hbox` during TeX processing (see [#1202](https://github.com/gregorio-project/gregorio/issues/1202)).
-
-### Changed
-- In order to facilitate installation alongside TeX Live, the version number is now appended to the gregorio executable file name.  If you are running the executable directly in your custom scripts, you will need to change them to include the version number.  If you are not using the TeX-Live-packaged version of Gregorio, you will probably need to use the `--shell-escape` option when compiling your `.tex` files.  Note that in TeX Live 2016, which includes Gregorio 4.1.1, the executable filename does not include the version number, though that will change starting with TeX Live 2017.  See UPGRADE.md and [#1197](https://github.com/gregorio-project/gregorio/issues/1197) for more information.
 
 
 ## [4.2.0-rc2] - 2016-07-05
@@ -110,6 +110,12 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\grepretolerance`
 - `\greemergencystretch`
 
+
+## [4.1.5] - 2016-08-18
+### Fixed
+- Use node.travese_id() to find our desired nodes when doing translation centering across syllables, thereby preventing a conflict with other packages which insert nodes (such as luatex-ja).  See [#1180](https://github.com/gregorio-project/gregorio/issues/1180).
+- Explicitly communicate the rescaling of `\gre@skip@temp@four` back to TeX, thereby fixing the problem with custom spacings.  See [#1199](https://github.com/gregorio-project/gregorio/issues/1199).
+- With thanks to Claudio Beccari (@OldClaudio), adding a commentary no longer generates a bad `\hbox` during TeX processing (see [#1202](https://github.com/gregorio-project/gregorio/issues/1202)).
 
 ## [4.1.4] - 2016-05-29
 ### Fixed
