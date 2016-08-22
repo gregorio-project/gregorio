@@ -5,7 +5,6 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 [Unreleased][unreleased]
 ### Fixed
 - When the note after an oriscus is at the same pitch, the oriscus will now point downwards by default (see [#1177](https://github.com/gregorio-project/gregorio/issues/1177)).
-- With thanks to Claudio Beccari (@OldClaudio), adding a commentary no longer generates a bad `\hbox` during TeX processing (see [#1202](https://github.com/gregorio-project/gregorio/issues/1202)).
 - When the last note in a score is not in the last syllable, it no longer merges into the (no-note) syllable(s) that follow (see [#1205](https://github.com/gregorio-project/gregorio/issues/1205)).
 
 ### Changed
@@ -96,6 +95,12 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `\grepretolerance`
 - `\greemergencystretch`
 
+
+## [4.1.5] - 2016-08-18
+### Fixed
+- Use node.travese_id() to find our desired nodes when doing translation centering across syllables, thereby preventing a conflict with other packages which insert nodes (such as luatex-ja).  See [#1180](https://github.com/gregorio-project/gregorio/issues/1180).
+- Explicitly communicate the rescaling of `\gre@skip@temp@four` back to TeX, thereby fixing the problem with custom spacings.  See [#1199](https://github.com/gregorio-project/gregorio/issues/1199).
+- With thanks to Claudio Beccari (@OldClaudio), adding a commentary no longer generates a bad `\hbox` during TeX processing (see [#1202](https://github.com/gregorio-project/gregorio/issues/1202)).
 
 ## [4.1.4] - 2016-05-29
 ### Fixed
