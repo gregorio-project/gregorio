@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 [Unreleased][unreleased]
+
+
+## [4.2.0-rc3] - 2016-08-22
 ### Fixed
 - When the note after an oriscus is at the same pitch, the oriscus will now point downwards by default (see [#1177](https://github.com/gregorio-project/gregorio/issues/1177)).
 - When the last note in a score is not in the last syllable, it no longer merges into the (no-note) syllable(s) that follow (see [#1205](https://github.com/gregorio-project/gregorio/issues/1205)).
