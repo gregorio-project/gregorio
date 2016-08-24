@@ -10,7 +10,7 @@ In order to facilitate installation alongside TeX Live, the version number is no
 
 If you auto-compile or force-compile your GABC files and are *not* using the Gregorio packaged with TeX Live, you will probably need to use the `--shell-escape` option when compiling your `.tex` files.  Alternately, you can add the new filename to your system's `shell_escape_commands` TeX option.
 
-Unforunately, there appears to be no easier way to let a user-installed Gregorio coexist with the TeX-Live-packaged Gregorio.  Please note: in TeX Live 2016, which includes Gregorio 4.1.1, the executable filename does not include the version number, though that will change starting with TeX Live 2017.
+Unfortunately, there appears to be no easier way to let a user-installed Gregorio coexist with the TeX-Live-packaged Gregorio.  Please note: in TeX Live 2016, which includes Gregorio 4.1.1, the executable filename does not include the version number, though that will change starting with TeX Live 2017.
 
 ### Stemmed oriscus flexus orientation
 
