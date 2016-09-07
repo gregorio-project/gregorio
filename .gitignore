@@ -105,6 +105,7 @@ auto/
 
 #gregorio specific
 doc/_minted-*
+doc/*.pyg
 fonts/*.ttf
 *.greaux
 *.gz

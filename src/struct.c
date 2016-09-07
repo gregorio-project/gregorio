@@ -1106,7 +1106,6 @@ gregorio_score *gregorio_new_score(void)
 {
     gregorio_score *new_score = gregorio_calloc(1, sizeof(gregorio_score));
     new_score->number_of_voices = 1;
-    new_score->initial_style = INITIAL_NOT_SPECIFIED;
     gregorio_set_score_staff_lines(new_score, 4);
     return new_score;
 }

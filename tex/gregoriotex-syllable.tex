@@ -1449,11 +1449,6 @@
 }%
 \gresetinitiallines{1}% default to one-line initials
 
-\def\GreSetInitialStyle#1{%%% DEPRECATED for removal in 5.0
-  \gre@deprecated{initial-style gabc header}{\protect\gresetinitiallines}%%% DEPRECATED for removal in 5.0
-  \def\gre@opening@initialstyle{#1}%%% DEPRECATED for removal in 5.0
-}%%% DEPRECATED for removal in 5.0
-
 %% sets the first syllable text
 %% #1 - Initial
 %% #2 - First letter after the initial
@@ -1462,8 +1457,7 @@
 %% #5 - Three syllable parts where there is no separated initial
 %% #6 - Extra macros to run if there is an initial
 \def\GreSetFirstSyllableText#1#2#3#4#5#6{%
-  %%% DEPRECATED for removal in 5.0: When \gre@opening@initialstyle is removed, use \gre@initiallines directly in the following line
-  \ifcase\gre@opening@initialstyle\relax % no initial
+  \ifcase\gre@initiallines\relax % no initial
     \gre@noinitial %
     \gre@setfirstsyllabletext#5{#1}{#2#3}{}%
   \or % regular intiial

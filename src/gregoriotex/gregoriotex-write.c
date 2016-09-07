@@ -4330,13 +4330,6 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
         fprintf(f, "}%%\n");
     }
 
-    /* DEPRECATED for removal in 5.0 */
-    /* LCOV_EXCL_START */
-    if (score->initial_style != INITIAL_NOT_SPECIFIED) { /* DEPRECATED for removal in 5.0 */
-        fprintf(f, "\\GreSetInitialStyle{%d}%%\n", score->initial_style); /* DEPRECATED for removal in 5.0 */
-    }
-    /* LCOV_EXCL_STOP */
-
     write_largest_clef(f, score);
     fprintf(f, "\\GreScoreOpening{%%\n"); /* GreScoreOpening#1 */
     if (score->first_voice_info) {

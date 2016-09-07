@@ -179,10 +179,6 @@ semicolon. */
                 gregorio_strdup(gabc_score_determination_text);
         return GABC_COPYRIGHT;
     }
-<INITIAL>initial-style {
-        /* DEPRECATED for removal in 5.0 */
-        return INITIAL_STYLE;
-    }
 <INITIAL>mode {
         gabc_score_determination_lval.text =
                 gregorio_strdup(gabc_score_determination_text);
