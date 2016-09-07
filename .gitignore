@@ -123,3 +123,4 @@ res.txt
 *.rc
 gregorio-*
 ctan
+uninstall-gtex.sh
