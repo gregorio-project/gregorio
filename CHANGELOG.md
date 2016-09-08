@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 [Unreleased][unreleased]
+## Fixed
+- Horizontal episemata bridge spaces more correctly.  As mentioned earlier, you can prevent this by appending `2` to the `_` on the note before the space you do not want bridged.  See [#1216](https://github.com/gregorio-project/gregorio/issues/1216).
+
 ## Changed
 - Notes are now left-aligned as if all clefs had the same width as the largest clef in the score. You can get previous behavior back with `\grebolshiftcleftype{current}`, or temporary force alignment until the end of a score with `\grelocalbolshiftcleftype`. See Documentation of these functions and [#1189](https://github.com/gregorio-project/gregorio/issues/1189).
 - A clef change immediately before a line break `(z)` will now typeset the new clef at the beginning of the next line.  An explicit custos `(z0)` immediately before such a clef change (or separated by only a bar) will be suppressed.  See [1190](https://github.com/gregorio-project/gregorio/issues/1190).
