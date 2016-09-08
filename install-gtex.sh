@@ -60,6 +60,10 @@
 # To do this, set the SKIP environment variable to a comma-separated list of
 # the parts you want don't want installed: tex, latex, fonts, docs, examples,
 # and/or font-sources
+#
+# Setting the GENERATE_UNINSTALL environment variable to "false" will bypass
+# uninstall script generation and any existing uninstall script will be left
+# alone.
 
 VERSION=`head -1 .gregorio-version`
 FILEVERSION=`echo $VERSION | sed 's/\./_/g'`
@@ -94,6 +98,8 @@ RM=${RM:-rm}
 
 FONTSRCFILES=("${FONTSRCFILES[@]/#/fonts/}")
 
+GENERATE_UNINSTALL=${GENERATE_UNINSTALL:-true}
+
 arg="$1"
 case "$arg" in
     system)
@@ -110,6 +116,7 @@ case "$arg" in
     tds)
         TDS_ZIP="${NAME}.tds.zip"
         TEXMFROOT=./tmp-texmf
+        GENERATE_UNINSTALL=false
         ;;
     var:*)
         TEXMFROOT=`${KPSEWHICH} -expand-path "\$${arg#var:}"`
@@ -139,9 +146,9 @@ esac
 
 if [ "$TEXMFROOT" = "" ]
 then
-    echo "Usage: $0 var:{tex-variable}"
-    echo "       $0 dir:{directory}"
-    echo "       $0 system|user|tds"
+    echo "Usage: $0 [--no-uninstall] var:{tex-variable}"
+    echo "       $0 [--no-uninstall] dir:{directory}"
+    echo "       $0 [--no-uninstall] system|user|tds"
     exit 1
 fi
 
@@ -156,7 +163,7 @@ function install_to {
     mkdir -p "${TEXMFROOT}/$dir" || die
     $CP "$@" "${TEXMFROOT}/$dir" || die
 
-    if [ "$arg" != 'tds' ]
+    if ${GENERATE_UNINSTALL}
     then
         for name in "$@"
         do
@@ -182,7 +189,7 @@ function not_installing {
     echo "install-gtex.sh: not installing $@"
 }
 
-if [ "$arg" != 'tds' ]
+if ${GENERATE_UNINSTALL}
 then
     if [ -e "uninstall-gtex.sh" ]
     then
@@ -197,6 +204,9 @@ then
     echo >> uninstall-gtex.sh
     echo "cd '${TEXMFROOT}'" >> uninstall-gtex.sh
     echo >> uninstall-gtex.sh
+elif [ "$arg" != 'tds' ]
+then
+    echo "Not generating uninstall-gtex.sh"
 fi
 
 echo "Removing old files"
@@ -229,7 +239,7 @@ ${skip_install[examples]:-false} && not_installing examples ||
 ${skip_install[font-sources]:-false} && not_installing font sources ||
     install_to "fonts/source/${NAME}" "${FONTSRCFILES[@]}"
 
-if [ "$arg" != 'tds' ]
+if ${GENERATE_UNINSTALL}
 then
     echo '${TEXHASH}' >> uninstall-gtex.sh
 fi
