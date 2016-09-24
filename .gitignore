@@ -123,4 +123,5 @@ res.txt
 *.rc
 gregorio-*
 ctan
+*.pyg
 uninstall-gtex.sh

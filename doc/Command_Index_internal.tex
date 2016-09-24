@@ -600,6 +600,9 @@ Macro called at end of a syllable, adds a penalty and a space.
   & \texttt{0} & otherwise\\
 \end{argtable}
 
+\macroname{\textbackslash gre@endofglyphcommon}{}{gregoriotex-syllable.tex}
+Macro called at the end of every glyph.  Checks to see if glyph being ended is the last of the score and does some clean-up if it is.
+
 \macroname{\textbackslash gre@setfirstsyllabletext}{\#1\#2\#3\#4\#5\#6}{gregoriotex-syllable.tex}
 Internal macro to set the first syllable text after all parts are known.
 
@@ -1332,6 +1335,12 @@ Macro to typeset a punctum mora.
 \macroname{\textbackslash gre@changecavumhole}{\#1[\#2][\#3]}{gregoriotex-main.tex}
 Macro used by \verb=\grechangecavumglyph= to handle the optional arguments.
 
+\macroname{\textbackslash gre@alterationadjustment}{\#1}{gregoriotex-spaces.tex}
+Macro to make adjustments to \verb=nextbegindifference= in order to account for an alteration at the begining of the next syllable.
+
+\macroname{\textbackslash gre@punctummoraadjustment}{}{gregoriotex-spaces.tex}
+Macro to make adjustments to cursor position and \verb=previousenddifference= based on the presence of a punctum mora at the end of the last syllable.
+
 
 \subsection{Auxiliary File}
 Gregorio\TeX\ creates its own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.
@@ -1488,6 +1497,14 @@ A fused character consisting of a leading quilisma (of ambitus two) and a regula
 \macroname{\textbackslash gre@char@he@...}{\#1}{gregoriotex-chars.tex}
 A class of macros for the horizontal episema which populates the \verb=\gre@box@hep= box.
 
+\macroname{\textbackslash gre@nabccharno}{\#1\#2\#3}{gregoriotex-nabc.tex}
+Prints the nabc glyphs for the given nabc string.
+
+\begin{argtable}
+  \#1 & string & nabc code representing the character\\
+  \#2 & string & name of nabc font to use\\
+  \#3 & integer & scaling factor\\
+\end{argtable}
 
 
 \subsection{Flags}
@@ -1765,6 +1782,11 @@ Boolean indicating whether the notes should be shown.
 \macroname{\textbackslash ifgre@showlyrics}{}{gregoriotex-syllable.tex}
 Boolean indicating whether the lyrics should be shown.
 
+\macroname{\textbackslash gre@initiallines}{}{gregoriotex-syllable.tex}
+Number of lines the initial takes up.  Currently limited to 0, 1, or 2.  Not currently a count, but will be changed to one in 5.0.
+
+\macroname{\textbackslash ifgre@rewritethissyllable}{}{gregoriotex-syllable.tex}
+Boolean indicating that a syllable should be rewritten to improve ligature rendering.
 
 \subsection{Boxes}
 
@@ -1862,6 +1884,9 @@ Dimension representing extra space above the staff needed for high notes.
 
 \macroname{\textbackslash gre@dimen@additionaltopspacealt}{}{gregoriotex-spaces.tex}
 Dimension representing extra space above the staff needed for above lines text.
+
+\macroname{\textbackslash gre@dimen@additionaltopspacenabc}{}{gregoriotex-spaces.tex}
+Dimension representing extra space above the staff needed for nabc notation.
 
 \macroname{\textbackslash gre@dimen@textlower}{}{gregoriotex-spaces.tex}
 Dimension representing the height of the separation between the 0th
@@ -2003,7 +2028,22 @@ Space required by the text in the new bar spacing algorithm.
 Skip after the most recent bar.
 
 \macroname{\textbackslash gre@skip@punctummorashift}{}{gregoriotex-spaces.tex}
-Displacement of whole syllable to account for the presence of a punctum mora at the end of the previous syllable
+Displacement of whole syllable to account for the presence of a punctum mora at the end of the previous syllable.
+
+\macroname{\textbackslash gre@skip@alterationshift}{}{gregoriotex-spaces.tex}
+Displacement of whole syllable to account for the presence of an alteration at the beginning of the next syllable.
+
+\macroname{\textbackslash gre@skip@baselineskip@save}{}{gregoriotex-spaces.tex}
+Saved value of \verb=\baselineskip= from before a score so that it can be restored when the score ends.
+
+\macroname{\textbackslash gre@skip@lineskip@save}{}{gregoriotex-spaces.tex}
+Saved value of \verb=\lineskip= from before a score so that it can be restored when the score ends.
+
+\macroname{\textbackslash gre@skip@lineskiplimit@save}{}{gregoriotex-spaces.tex}
+Saved value of \verb=\lineskiplimit= from before a score so that it can be restored when the score ends.
+
+\macroname{\textbackslash gre@skip@parskip@save}{}{gregoriotex-spaces.tex}
+Saved value of \verb=\parskip= from before a score so that it can be restored when the score ends.
 
 
 \subsection{Penalties}
@@ -2087,6 +2127,38 @@ A place to save the current value of the tolerance so that we can change it temp
 \macroname{\textbackslash gre@pretolerancesave}{}{gregoriotex-spaces.tex}
 A place to save the current value of the pretolerance so that we can change it temporarily and then restore it later.
 
+
+\subsection{Backwards compatibility}
+Depending on version of Lua\TeX / \LaTeX, some primitives have different names
+We define the following local aliases to account for this eventuality.
+
+\macroname{\textbackslash gre@localleftbox}{}{gregoriotex-main.tex}
+Current primitive: \verb=\localleftbox=
+Legacy primitive: \verb=\luatexlocalleftbox=
+
+\macroname{\textbackslash gre@localrightbox}{}{gregoriotex-main.tex}
+Current primitive: \verb=\localrightbox=
+Legacy primitive: \verb=\luatexlocalrightbox=
+
+\macroname{\textbackslash gre@startlink}{}{gregoriotex-main.tex}
+Current primitive: \verb=\pdfextension startlink=
+Legacy primitive: \verb=\pdfstartlink=
+
+\macroname{\textbackslash gre@endlink}{}{gregoriotex-main.tex}
+Current primitive: \verb=\pdfextension endlink=
+Legacy primitive: \verb=\pdfendlink=
+
+\macroname{\textbackslash gre@savepos}{}{gregoriotex-main.tex}
+Current primitive: \verb=\savepos=
+Legacy primitive: \verb=\pdfsavepos=
+
+\macroname{\textbackslash gre@lastxpos}{}{gregoriotex-main.tex}
+Current primitive: \verb=\lastxpos=
+Legacy primitive: \verb=\pdflastxpos=
+
+\macroname{\textbackslash gre@lastypos}{}{gregoriotex-main.tex}
+Current primitive: \verb=\lastypos=
+Legacy primitive: \verb=\pdflastypos=
 
 
 \subsection{\LaTeX/Plain \TeX\ compatibility}

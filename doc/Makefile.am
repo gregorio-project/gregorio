@@ -65,4 +65,5 @@ maintainer-clean-local: clean-doc
 
 EXTRA_DIST = $(SRCFILES) $(NABCSRCFILES) \
 	     GregorioRef.pdf \
-	     GregorioNabcRef.pdf
+	     GregorioNabcRef.pdf \
+	     README.md
