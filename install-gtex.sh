@@ -60,6 +60,10 @@
 # To do this, set the SKIP environment variable to a comma-separated list of
 # the parts you want don't want installed: tex, latex, fonts, docs, examples,
 # and/or font-sources
+#
+# Setting the GENERATE_UNINSTALL environment variable to "false" will bypass
+# uninstall script generation and any existing uninstall script will be left
+# alone.
 
 VERSION=`head -1 .gregorio-version`
 FILEVERSION=`echo $VERSION | sed 's/\./_/g'`
@@ -94,6 +98,8 @@ RM=${RM:-rm}
 
 FONTSRCFILES=("${FONTSRCFILES[@]/#/fonts/}")
 
+GENERATE_UNINSTALL=${GENERATE_UNINSTALL:-true}
+
 arg="$1"
 case "$arg" in
     system)
@@ -110,6 +116,7 @@ case "$arg" in
     tds)
         TDS_ZIP="${NAME}.tds.zip"
         TEXMFROOT=./tmp-texmf
+        GENERATE_UNINSTALL=false
         ;;
     var:*)
         TEXMFROOT=`${KPSEWHICH} -expand-path "\$${arg#var:}"`
@@ -139,9 +146,9 @@ esac
 
 if [ "$TEXMFROOT" = "" ]
 then
-    echo "Usage: $0 var:{tex-variable}"
-    echo "       $0 dir:{directory}"
-    echo "       $0 system|user|tds"
+    echo "Usage: $0 [--no-uninstall] var:{tex-variable}"
+    echo "       $0 [--no-uninstall] dir:{directory}"
+    echo "       $0 [--no-uninstall] system|user|tds"
     exit 1
 fi
 
@@ -153,8 +160,18 @@ function die {
 function install_to {
     dir="$1"
     shift
-    mkdir -p "$dir" || die
-    $CP "$@" "$dir" || die
+    mkdir -p "${TEXMFROOT}/$dir" || die
+    $CP "$@" "${TEXMFROOT}/$dir" || die
+
+    if ${GENERATE_UNINSTALL}
+    then
+        for name in "$@"
+        do
+            echo '$RM'" $dir/$(basename $name)" >> uninstall-gtex.sh
+        done
+        echo "rmdir -p $dir 2> /dev/null || true" >> uninstall-gtex.sh
+        echo >> uninstall-gtex.sh
+    fi
 }
 
 function find_and_remove {
@@ -171,6 +188,26 @@ function find_and_remove {
 function not_installing {
     echo "install-gtex.sh: not installing $@"
 }
+
+if ${GENERATE_UNINSTALL}
+then
+    if [ -e "uninstall-gtex.sh" ]
+    then
+        echo "uninstall-gtex.sh exists; delete it to continue"
+        exit 1
+    fi
+
+    echo '#!/usr/bin/env bash' > uninstall-gtex.sh
+    echo >> uninstall-gtex.sh
+    echo 'RM=${RM:-rm}' >> uninstall-gtex.sh
+    echo 'TEXHASH=${TEXHASH:-texhash}' >> uninstall-gtex.sh
+    echo >> uninstall-gtex.sh
+    echo "cd '${TEXMFROOT}'" >> uninstall-gtex.sh
+    echo >> uninstall-gtex.sh
+elif [ "$arg" != 'tds' ]
+then
+    echo "Not generating uninstall-gtex.sh"
+fi
 
 echo "Removing old files"
 find_and_remove "${LEGACYFILES[@]}"
@@ -190,17 +227,22 @@ fi
 
 echo "Installing in '${TEXMFROOT}'."
 ${skip_install[tex]:-false} && not_installing tex files ||
-    install_to "${TEXMFROOT}/tex/${FORMAT}/${NAME}" "${TEXFILES[@]}"
+    install_to "tex/${FORMAT}/${NAME}" "${TEXFILES[@]}"
 ${skip_install[latex]:-false} && not_installing latex files ||
-    install_to "${TEXMFROOT}/tex/${LATEXFORMAT}/${NAME}" "${LATEXFILES[@]}"
+    install_to "tex/${LATEXFORMAT}/${NAME}" "${LATEXFILES[@]}"
 ${skip_install[fonts]:-false} && not_installing fonts ||
-    install_to "${TEXMFROOT}/fonts/truetype/public/${NAME}" "${TTFFILES[@]}"
+    install_to "fonts/truetype/public/${NAME}" "${TTFFILES[@]}"
 ${skip_install[docs]:-false} && not_installing docs ||
-    install_to "${TEXMFROOT}/doc/${FORMAT}/${NAME}" "${DOCFILES[@]}"
+    install_to "doc/${FORMAT}/${NAME}" "${DOCFILES[@]}"
 ${skip_install[examples]:-false} && not_installing examples ||
-    install_to "${TEXMFROOT}/doc/${FORMAT}/${NAME}/examples" "${EXAMPLEFILES[@]}"
+    install_to "doc/${FORMAT}/${NAME}/examples" "${EXAMPLEFILES[@]}"
 ${skip_install[font-sources]:-false} && not_installing font sources ||
-    install_to "${TEXMFROOT}/fonts/source/${NAME}" "${FONTSRCFILES[@]}"
+    install_to "fonts/source/${NAME}" "${FONTSRCFILES[@]}"
+
+if ${GENERATE_UNINSTALL}
+then
+    echo '${TEXHASH}' >> uninstall-gtex.sh
+fi
 
 if [ "$arg" = 'tds' ]
 then

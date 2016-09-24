@@ -1320,11 +1320,17 @@ static __inline bool is_connected_right(const grehepisema_size size) {
     return size == H_NORMAL || size == H_SMALL_RIGHT;
 }
 
-static __inline bool is_connectable_interglyph_ambitus(
+static __inline bool is_connectable_interglyph_ambitus(const signed char first,
+        const signed char second)
+{
+    return abs(first - second) < 3;
+}
+
+static __inline bool is_connectable_interglyph_notes(
         const gregorio_note *const first, const gregorio_note *const second)
 {
-    return first && second
-            && abs(first->u.note.pitch - second->u.note.pitch) < 3;
+    return first && second && is_connectable_interglyph_ambitus(
+            first->u.note.pitch, second->u.note.pitch);
 }
 
 static __inline bool has_space_to_left(const gregorio_note *const note) {
@@ -1333,7 +1339,7 @@ static __inline bool has_space_to_left(const gregorio_note *const note) {
     case S_PUNCTUM_INCLINATUM_DESCENDENS:
     case S_PUNCTUM_INCLINATUM_DEMINUTUS:
     case S_PUNCTUM_INCLINATUM_AUCTUS:
-        return !is_connectable_interglyph_ambitus(note->previous, note);
+        return !is_connectable_interglyph_notes(note->previous, note);
 
     default:
         return !note->previous;
@@ -1422,7 +1428,6 @@ static __inline void compute_h_episema(height_computation *const h,
         const gregorio_glyph *const glyph, gregorio_note *const note,
         const int i, const gtex_type type, const gregorio_score *const score)
 {
-    signed char next_height;
     grehepisema_size size;
 
     if (h->is_applicable(note)) {
@@ -1430,11 +1435,11 @@ static __inline void compute_h_episema(height_computation *const h,
             size = h->get_size(note);
 
             if (h->active) {
+                const signed char next_height = compute_h_episema_height(
+                        glyph, note, h->vpos);
                 if (h->connected && is_connected_left(size)
                         && (i != 1 || is_connectable_interglyph_ambitus(
-                                note, h->last_connected_note))) {
-                    next_height = compute_h_episema_height(glyph, note,
-                            h->vpos);
+                                next_height, h->height))) {
                     if (h->is_better_height(next_height, h->height)) {
                         h->height = next_height;
                     }

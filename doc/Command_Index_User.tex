@@ -1090,8 +1090,8 @@ When a punctum mora is ignored, the bar will also be shifted by \texttt{moraadju
 Macro to activate the new bar spacing algorithm.  The new algorithm attempts to place the bar line exactly midway between its surrounding notes.  Any text associated with the bar is placed midway between its surrounding text.  Since this might result in the bar line and the text being widely separated, there are also a limits to the distance between their respective centers: \texttt{maxbaroffsettextleft} and \texttt{maxbaroffsettextright} (when text center is respectively on the left or on the right of bar center).
 
 \begin{argtable}
-  \#1 & \texttt{new} & Activates the new spacing algorithm\\
-  & \texttt{old} & Activates the old behavior (Default)\\
+  \#1 & \texttt{new} & Activates the new spacing algorithm (Default)\\
+  & \texttt{old} & Activates the old behavior\\
 \end{argtable}
 
 \subsubsection{Sign printing}
@@ -1733,6 +1733,9 @@ The effective \verb=\baselineskip= inside of a score.
 The effective \verb=\lineskiplimit= inside of a score.
 \end{gdimension}
 
+\begin{gdimension}{shortspaceafterlineclef}
+Space after a clef at the beginning of a line, when the clef and first note are vertically distant.
+\end{gdimension}
 
 \subsubsection{Bar distances}
 

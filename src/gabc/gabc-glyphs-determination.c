@@ -41,6 +41,12 @@ static __inline gregorio_scanner_location *copy_note_location(
     return loc;
 }
 
+static __inline bool is_normal_punctum(const gregorio_note *const note)
+{
+    return note->u.note.shape == S_PUNCTUM
+        && note->u.note.liquescentia != L_INITIO_DEBILIS;
+}
+
 /****************************
  *
  * This function is the basis of all the determination of glyphs. The
@@ -88,6 +94,10 @@ static char add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
         gabc_determination *end_of_glyph,
         gregorio_shape *punctum_inclinatum_orientation)
 {
+    #define this_note_starts_new_glyph { \
+        next_glyph_type = G_PUNCTUM; \
+        *end_of_glyph = DET_END_OF_PREVIOUS; \
+    }
 
     /* next glyph type is the type of the glyph that will be returned (the
      * new type of the glyph with the note added to it, or the type of the
@@ -122,8 +132,7 @@ static char add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
          * we determine here the shape of the thing if it is made of puncta
          */
         if (current_pitch == last_pitch) {
-            next_glyph_type = G_PUNCTUM;
-            *end_of_glyph = DET_END_OF_PREVIOUS;
+            this_note_starts_new_glyph;
             break;
         }
         switch (current_glyph_type) {
@@ -136,14 +145,11 @@ static char add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
             break;
         case G_PODATUS:
             if (current_pitch > last_pitch) {
-                if (current_glyph_first_note->u.note.shape == S_PUNCTUM &&
-                        current_glyph_first_note->u.note.liquescentia !=
-                        L_INITIO_DEBILIS) {
+                if (is_normal_punctum(current_glyph_first_note)) {
                     next_glyph_type = G_SCANDICUS;
                     *end_of_glyph = DET_END_OF_CURRENT;
                 } else {
-                    next_glyph_type = G_PUNCTUM;
-                    *end_of_glyph = DET_END_OF_PREVIOUS;
+                    this_note_starts_new_glyph;
                 }
             } else {
                 next_glyph_type = G_TORCULUS;
@@ -162,16 +168,14 @@ static char add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
                 next_glyph_type = G_PES_QUADRATUM;
                 *end_of_glyph = DET_END_OF_CURRENT;
             } else {
-                next_glyph_type = G_PUNCTUM;
-                *end_of_glyph = DET_END_OF_PREVIOUS;
+                this_note_starts_new_glyph;
             }
             break;
         case G_VIRGA_STRATA: /* really a pes stratus */
             if (current_pitch > last_pitch) {
                 next_glyph_type = G_SALICUS;
             } else {
-                next_glyph_type = G_PUNCTUM;
-                *end_of_glyph = DET_END_OF_PREVIOUS;
+                this_note_starts_new_glyph;
             }
             break;
         case G_SALICUS:
@@ -179,20 +183,22 @@ static char add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
                 next_glyph_type = G_SALICUS_FLEXUS;
                 *end_of_glyph = DET_END_OF_CURRENT;
             } else {
-                next_glyph_type = G_PUNCTUM;
-                *end_of_glyph = DET_END_OF_PREVIOUS;
+                this_note_starts_new_glyph;
             }
             break;
         case G_FLEXA:
             if (current_pitch > last_pitch) {
-                next_glyph_type = G_PORRECTUS;
+                if (is_normal_punctum(current_glyph_first_note)) {
+                    next_glyph_type = G_PORRECTUS;
+                } else {
+                    this_note_starts_new_glyph;
+                }
             } else {
                 if (liquescentia & L_DEMINUTUS) {
                     *end_of_glyph = DET_END_OF_CURRENT;
                     next_glyph_type = G_ANCUS;
                 } else {
-                    *end_of_glyph = DET_END_OF_PREVIOUS;
-                    next_glyph_type = G_PUNCTUM;
+                    this_note_starts_new_glyph;
                 }
             }
             break;
@@ -203,14 +209,12 @@ static char add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
                 *end_of_glyph = DET_END_OF_CURRENT;
                 next_glyph_type = G_TORCULUS_LIQUESCENS;
             } else {
-                *end_of_glyph = DET_END_OF_PREVIOUS;
-                next_glyph_type = G_PUNCTUM;
+                this_note_starts_new_glyph;
             }
             break;
         case G_TORCULUS_RESUPINUS:
             if (current_pitch > last_pitch) {
-                *end_of_glyph = DET_END_OF_PREVIOUS;
-                next_glyph_type = G_PUNCTUM;
+                this_note_starts_new_glyph;
             } else {
                 *end_of_glyph = DET_END_OF_CURRENT;
                 next_glyph_type = G_TORCULUS_RESUPINUS_FLEXUS;
@@ -218,16 +222,14 @@ static char add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
             break;
         case G_PORRECTUS:
             if (current_pitch > last_pitch) {
-                *end_of_glyph = DET_END_OF_PREVIOUS;
-                next_glyph_type = G_PUNCTUM;
+                this_note_starts_new_glyph;
             } else {
                 *end_of_glyph = DET_END_OF_CURRENT;
                 next_glyph_type = G_PORRECTUS_FLEXUS;
             }
             break;
         default:
-            *end_of_glyph = DET_END_OF_PREVIOUS;
-            next_glyph_type = G_PUNCTUM;
+            this_note_starts_new_glyph;
             break;
         }
         break;
@@ -236,8 +238,7 @@ static char add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
     case S_ORISCUS_DESCENDENS:
     case S_ORISCUS_DEMINUTUS:
     case S_QUILISMA:
-        *end_of_glyph = DET_END_OF_PREVIOUS;
-        next_glyph_type = G_PUNCTUM;
+        this_note_starts_new_glyph;
         break;
     case S_VIRGA:
         if (current_glyph_type == G_VIRGA && last_pitch == current_pitch) {
@@ -282,8 +283,7 @@ static char add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
         if (current_glyph_type == G_PUNCTUM && last_pitch < current_pitch) {
             next_glyph_type = G_VIRGA_STRATA;
         } else {
-            *end_of_glyph = DET_END_OF_PREVIOUS;
-            next_glyph_type = G_PUNCTUM;
+            this_note_starts_new_glyph;
         }
         break;
     case S_PUNCTUM_INCLINATUM_UNDETERMINED:
