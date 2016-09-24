@@ -578,7 +578,6 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
 %token LANGUAGE STAFF_LINES ORISCUS_ORIENTATION
 %token DEF_MACRO OTHER_HEADER
 %token ANNOTATION MODE MODE_MODIFIER MODE_DIFFERENTIA
-%token INITIAL_STYLE /* DEPRECATED for removal in 5.0 */
 %token END_OF_DEFINITIONS END_OF_FILE
 %token COLON SEMICOLON SPACE CHARACTERS NOTES HYPHEN ATTRIBUTE
 %token OPENING_BRACKET CLOSING_BRACKET CLOSING_BRACKET_WITH_SPACE
@@ -684,16 +683,6 @@ definition:
             gregorio_add_score_header(score, $1.text, $2.text);
             nabc_lines=atoi($2.text);
             score->nabc_lines=nabc_lines;
-        }
-    }
-    | INITIAL_STYLE attribute {
-        if ($2.text) {
-            /* DEPRECATED for removal in 5.0 */
-            gregorio_message("\"initial-style\" header is deprecated. Please "
-            "use \\gresetinitiallines in TeX instead.",
-            "gabc_score_determination_parse", VERBOSITY_DEPRECATION, 0);
-            score->initial_style = atoi($2.text);
-            free($2.text);
         }
     }
     | ANNOTATION attribute {
