@@ -20,7 +20,7 @@
 % this file contains macros for St. Gall ancient neume support
 
 \gre@debugmsg{general}{Loading gregoriotex-nabc.tex}%
-\gre@declarefileversion{gregoriotex-nabc.tex}{4.2.0-rc3}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-nabc.tex}{4.2.0}% GREGORIO_VERSION
 
 
 \xdef\gre@nabcfontname{gregall}%
@@ -37,7 +37,7 @@
   \gre@nabcfontloadedtrue%
 }
 
-\def\grenabccharno#1#2#3{{\directlua{
+\def\gre@nabccharno#1#2#3{{\directlua{
   gregoriotex.print_nabc(gregoriotex.parse_nabc("#1", "\luatexluaescapestring{#2}", #3))
 }}}
 
@@ -46,7 +46,7 @@
   %\catcode`\@=11{}%
   \gre@font@nabc %
   \gre@style@nabc %
-  \grenabccharno{#1}{\gre@nabcfontname}{1}%
+  \gre@nabccharno{#1}{\gre@nabcfontname}{1}%
   \endgre@style@nabc%
 }}
 
