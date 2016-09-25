@@ -12,9 +12,9 @@ The gregorio and granapadano fonts, as well as their "-op" Dominican variants, w
 
 ### Ledger lines
 
-As of version 5.0, ledger lines are extended through higher pitched notes on either side of a ledger line.
+As of version 5.0, ledger lines are extended through notes on either side of a ledger line that crosses a stem, as long as the notes are within the same element.
 
-The algorithm for this is simple so it can be predictable, but this means it may not produce the exactly desired results.  In order to get the results you want, you can override the automatic behavior in gabc:
+The algorithm for this is simple so it can be predictable, and it cannot take into account spacing adjustments made it TeX.  This means it may not produce the exactly desired results.  In order to get the results you want, you can override the automatic behavior in gabc:
 
 - `[oll:1]` will force an over-the-staff ledger line on a note.
 - `[oll:0]` will suppress an over-the-staff ledger line on a note.
@@ -22,6 +22,8 @@ The algorithm for this is simple so it can be predictable, but this means it may
 - `[ull:0]` will suppress an under-the-staff ledger line on a note.
 
 The other `oll` and `ull` forms take precendence over and will interfere with the above settings, so if you are using them, you may need to adjust them to get the output you want.
+
+Note: You may need to use a construct such as `/!` to keep notes that are separated in the same element.  For example, `abcV` is two elements (`ab` and `cV`), so the ledger line on `b` is not extended to `cV`.  In contrast, `ab/!cV` is one element, so the ledger line on `b` is extended to `cV`.
 
 ## 4.2
 

@@ -452,18 +452,24 @@ static void note_stack_clear(note_stack **const stack) {
 typedef struct {
     note_stack *high, *low;
     gregorio_note *prev_note;
+    signed char high_ledger_line_pitch;
     bool running_high, running_low;
 } ledger_line_vars;
 
 static __inline void clear_ledger_line_vars(ledger_line_vars *const v) {
-    memset(v, 0, sizeof(ledger_line_vars));
+    note_stack_clear(&v->high);
+    note_stack_clear(&v->low);
+    v->prev_note = NULL;
+    v->running_high = false;
+    v->running_low = false;
 }
 
 static __inline void adjust_ledger(const gregorio_note_iter_position *const p,
         const gregorio_ledger_specificity specificity, bool ledger_line,
         note_stack **const stack, bool *const running, gregorio_note *prev_note,
+        const signed char high_ledger_line_pitch,
         bool (*extend_ledger)(gregorio_note *, const gregorio_note *,
-            const gregorio_note *))
+            const gregorio_note *, signed char))
 {
     if (specificity & LEDGER_DRAWN) {
         if (ledger_line) {
@@ -471,7 +477,7 @@ static __inline void adjust_ledger(const gregorio_note_iter_position *const p,
             gregorio_note *note;
             /* process from this ledger backwards */
             while ((note = note_stack_pop(stack))) {
-                if (!extend_ledger(note, NULL, after)) {
+                if (!extend_ledger(note, NULL, after, high_ledger_line_pitch)) {
                     /* ledger has ended */
                     break;
                 }
@@ -484,7 +490,8 @@ static __inline void adjust_ledger(const gregorio_note_iter_position *const p,
         note_stack_clear(stack);
     } else {
         if (*running) {
-            if (!extend_ledger(p->note, prev_note, NULL)) {
+            if (!extend_ledger(p->note, prev_note, NULL,
+                    high_ledger_line_pitch)) {
                 /* ledger has ended */
                 note_stack_push(stack, p->note);
                 *running = false;
@@ -498,28 +505,50 @@ static __inline void adjust_ledger(const gregorio_note_iter_position *const p,
 
 static bool extend_high_ledger(gregorio_note *const note,
         const gregorio_note *const note_before,
-        const gregorio_note *const note_after)
+        const gregorio_note *const note_after,
+        const signed char high_ledger_line_pitch)
 {
-    if ((note_before && note_before->u.note.pitch < note->u.note.pitch)
-            || (note_after && note_after->u.note.pitch < note->u.note.pitch)) {
+    bool extend = false;
+
+    if (note_before) {
+        extend = note_before->u.note.pitch < note->u.note.pitch
+            || (note_before->u.note.pitch > high_ledger_line_pitch
+                && note->u.note.pitch < high_ledger_line_pitch);
+    } else if (note_after) {
+        extend = note_after->u.note.pitch < note->u.note.pitch
+            || (note_after->u.note.pitch > high_ledger_line_pitch
+                && note->u.note.pitch < high_ledger_line_pitch);
+    }
+
+    if (extend) {
         note->high_ledger_line = true;
         note->high_ledger_specificity = LEDGER_DRAWN;
-        return true;
     }
-    return false;
+    return extend;
 }
 
 static bool extend_low_ledger(gregorio_note *const note,
         const gregorio_note *const note_before,
-        const gregorio_note *const note_after)
+        const gregorio_note *const note_after,
+        const signed char high_ledger_line_pitch __attribute__((__unused__)))
 {
-    if ((note_before && note_before->u.note.pitch < note->u.note.pitch)
-            || (note_after && note_after->u.note.pitch < note->u.note.pitch)) {
+    bool extend = false;
+
+    if (note_before) {
+        extend = note_before->u.note.pitch < note->u.note.pitch
+            || (note_before->u.note.pitch > LOW_LEDGER_LINE_PITCH
+                && note->u.note.pitch < LOW_LEDGER_LINE_PITCH);
+    } else if (note_after) {
+        extend = note_after->u.note.pitch < note->u.note.pitch
+            || (note_after->u.note.pitch > LOW_LEDGER_LINE_PITCH
+                && note->u.note.pitch < LOW_LEDGER_LINE_PITCH);
+    }
+
+    if (extend) {
         note->low_ledger_line = true;
         note->low_ledger_specificity = LEDGER_DRAWN;
-        return true;
     }
-    return false;
+    return extend;
 }
 
 /* data must be (ledger_line_vars *) */
@@ -529,9 +558,11 @@ static void ledger_line_visit(const gregorio_note_iter_position *const p,
     ledger_line_vars *const v = (ledger_line_vars *)data;
 
     adjust_ledger(p, p->note->high_ledger_specificity, p->note->high_ledger_line,
-            &v->high, &v->running_high, v->prev_note, &extend_high_ledger);
+            &v->high, &v->running_high, v->prev_note, v->high_ledger_line_pitch,
+            &extend_high_ledger);
     adjust_ledger(p, p->note->low_ledger_specificity, p->note->low_ledger_line,
-            &v->low, &v->running_low, v->prev_note, &extend_low_ledger);
+            &v->low, &v->running_low, v->prev_note, v->high_ledger_line_pitch,
+            &extend_low_ledger);
 
     v->prev_note = p->note;
 }
@@ -549,11 +580,11 @@ static void ledger_line_end_item(
 void gabc_determine_ledger_lines(const gregorio_score *const score)
 {
     ledger_line_vars v;
-    clear_ledger_line_vars(&v);
+    memset(&v, 0, sizeof v);
+    v.high_ledger_line_pitch = score->high_ledger_line_pitch;
 
     gregorio_for_each_note(score, ledger_line_visit, ledger_line_end_item,
             GRESTRUCT_ELEMENT, &v);
 
-    note_stack_clear(&v.high);
-    note_stack_clear(&v.low);
+    /* stacks should be cleared by ledger_line_end_item */
 }
