@@ -1629,57 +1629,6 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
     return shift;
 }
 
-static __inline void guess_ledger_lines(const gregorio_element *element)
-{
-    bool high_ledger_line = false;
-    bool low_ledger_line = false;
-    gregorio_note *prev = NULL;
-
-    for (; element; element = element->next) {
-        if (element->type == GRE_ELEMENT) {
-            gregorio_glyph *glyph;
-            for (glyph = element->u.first_glyph; glyph;
-                    glyph = glyph->next) {
-                if (glyph->type == GRE_GLYPH) {
-                    gregorio_note *note;
-                    for (note = glyph->u.notes.first_note; note;
-                            note = note->next) {
-                        if (note->type == GRE_NOTE) {
-                            if (high_ledger_line
-                                    && !note->high_ledger_specificity
-                                    && !note->high_ledger_line) {
-                                note->high_ledger_line = true;
-                            }
-                            if (low_ledger_line
-                                    && !note->low_ledger_specificity
-                                    && !note->low_ledger_line) {
-                                note->low_ledger_line = true;
-                            }
-                            if ((high_ledger_line = note->high_ledger_line)) {
-                                if (prev && !prev->high_ledger_specificity
-                                        && !prev->high_ledger_line) {
-                                    prev->high_ledger_line = true;
-                                }
-                            }
-                            if ((low_ledger_line = note->low_ledger_line)) {
-                                if (prev && !prev->low_ledger_specificity
-                                        && !prev->low_ledger_line) {
-                                    prev->low_ledger_line = true;
-                                }
-                            }
-                            prev = note;
-                        }
-                    }
-                }
-            }
-            /* this heuristic ends eith the element */
-            high_ledger_line = false;
-            low_ledger_line = false;
-            prev = NULL;
-        }
-    }
-}
-
 void gregoriotex_compute_positioning(
         const gregorio_element *const param_element,
         const gregorio_score *const score)
@@ -1730,8 +1679,6 @@ void gregoriotex_compute_positioning(
     gtex_alignment ignored;
     gtex_type type;
     const gregorio_element *element;
-
-    guess_ledger_lines(param_element);
 
     for (element = param_element; element; element = element->next) {
         if (element->type == GRE_ELEMENT) {
