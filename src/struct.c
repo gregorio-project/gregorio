@@ -206,6 +206,10 @@ void gregorio_add_note(gregorio_note **current_note, signed char pitch,
                 prototype->he_adjustment_index[SO_OVER];
         element->he_adjustment_index[SO_UNDER] =
                 prototype->he_adjustment_index[SO_UNDER];
+        element->high_ledger_line = prototype->high_ledger_line;
+        element->high_ledger_specificity = prototype->high_ledger_specificity;
+        element->low_ledger_line = prototype->low_ledger_line;
+        element->low_ledger_specificity = prototype->low_ledger_specificity;
     }
     element->texverb = 0;
     element->choral_sign = NULL;

@@ -125,3 +125,4 @@ gregorio-*
 ctan
 *.pyg
 uninstall-gtex.sh
+.agignore

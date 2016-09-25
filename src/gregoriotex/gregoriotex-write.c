@@ -207,10 +207,10 @@ static queuetype adjusted_queuetype_of(const gregorio_note *const note,
     case 1:
         return Q_ON_BOTTOM_LINE;
     case 2:
-        return queue_note->supposed_low_ledger_line?
+        return queue_note->low_ledger_line?
                 Q_ON_SPACE_ABOVE_BOTTOM_LINE : Q_ON_SPACE_BELOW_BOTTOM_LINE;
     case 3:
-        return queue_note->supposed_low_ledger_line?
+        return queue_note->low_ledger_line?
                 Q_ON_LINE_ABOVE_BOTTOM_LINE : Q_ON_BOTTOM_LINE;
     case 5:
     case 7:
@@ -1758,12 +1758,12 @@ static void write_bar(FILE *f, const gregorio_score *const score,
 
 static __inline char *suppose_high_ledger_line(const gregorio_note *const note)
 {
-    return note->supposed_high_ledger_line? "\\GreSupposeHighLedgerLine" : "";
+    return note->high_ledger_line? "\\GreSupposeHighLedgerLine" : "";
 }
 
 static __inline char *suppose_low_ledger_line(const gregorio_note *const note)
 {
-    return note->supposed_low_ledger_line? "\\GreSupposeLowLedgerLine" : "";
+    return note->low_ledger_line? "\\GreSupposeLowLedgerLine" : "";
 }
 
 /*
@@ -2765,6 +2765,12 @@ static __inline void fixup_height_extrema(signed char *const top_height,
     }
 }
 
+static __inline bool is_ledger_drawn(const bool setting,
+        const gregorio_ledger_specificity specificity)
+{
+    return ((specificity & LEDGER_DRAWN) && setting);
+}
+
 static void write_signs(FILE *f, gtex_type type,
         const gregorio_glyph *glyph, const gregorio_note *note,
         int fuse_to_next_note, gregoriotex_status *const status,
@@ -2783,11 +2789,13 @@ static void write_signs(FILE *f, gtex_type type,
     for (current_note = note, i = 1; current_note;
             current_note = current_note->next, ++i) {
         /* we start by the additional lines */
-        if (current_note->u.note.pitch <= LOW_LEDGER_LINE_PITCH) {
+        if (is_ledger_drawn(current_note->low_ledger_line,
+                current_note->low_ledger_specificity)) {
             write_additional_line(f, i, type, true, current_note, score);
             status->bottom_line = 1;
         }
-        if (current_note->u.note.pitch >= score->high_ledger_line_pitch) {
+        if (is_ledger_drawn(current_note->high_ledger_line,
+                current_note->high_ledger_specificity)) {
             write_additional_line(f, i, type, false, current_note, score);
         }
         if (current_note->texverb) {

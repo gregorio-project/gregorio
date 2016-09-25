@@ -442,11 +442,25 @@ static const char *mora_vposition(gregorio_note *note)
 }
 
 static void write_note_heuristics(FILE *f, gregorio_note *note) {
-    if (note->explicit_high_ledger_line) {
-        fprintf(f, "[hl:%c]", note->supposed_high_ledger_line? '1' : '0');
+    switch (note->high_ledger_specificity) {
+    case LEDGER_EXPLICIT:
+        fprintf(f, "[hl:%c]", note->high_ledger_line? '1' : '0');
+        break;
+    case LEDGER_EXPLICITLY_DRAWN:
+        fprintf(f, "[oll:%c]", note->high_ledger_line? '1' : '0');
+        break;
+    default:
+        break;
     }
-    if (note->explicit_low_ledger_line) {
-        fprintf(f, "[ll:%c]", note->supposed_low_ledger_line? '1' : '0');
+    switch (note->low_ledger_specificity) {
+    case LEDGER_EXPLICIT:
+        fprintf(f, "[ll:%c]", note->low_ledger_line? '1' : '0');
+        break;
+    case LEDGER_EXPLICITLY_DRAWN:
+        fprintf(f, "[ull:%c]", note->low_ledger_line? '1' : '0');
+        break;
+    default:
+        break;
     }
 }
 
