@@ -49,10 +49,17 @@ static char *before_ledger_length = NULL;
 static unsigned short ledger_var[2] = { 0, 0 };
 static unsigned char staff_lines;
 static signed char highest_pitch;
+static signed char high_ledger_line_pitch;
 static bool legacy_oriscus_orientation;
 static unsigned short he_adjustment_index[2] = { 0, 0 };
 static signed char bracket_low_pitch, bracket_high_pitch;
 static unsigned short left_bracket_texverb = 0;
+
+#define LEDGER(WHICH, SPECIFICITY, VALUE) \
+    if (LEDGER_##SPECIFICITY > current_note->WHICH##_ledger_specificity) { \
+        current_note->WHICH##_ledger_line = VALUE; \
+        current_note->WHICH##_ledger_specificity = LEDGER_##SPECIFICITY; \
+    }
 
 typedef struct slur_info {
     unsigned short var;
@@ -130,21 +137,25 @@ static gregorio_shape punctum_inclinatum(const char orientation)
 static __inline void lex_add_note(int i, gregorio_shape shape, char signs,
         char liquescentia)
 {
+    signed char height = pitch_letter_to_height(tolower(
+            (unsigned char)gabc_notes_determination_text[i]));
+
     nbof_isolated_episema = 0;
-    gregorio_add_note(&current_note, pitch_letter_to_height(
-            tolower((unsigned char)gabc_notes_determination_text[i])),
-            shape, signs, liquescentia, NULL, &notes_lloc);
+    gregorio_add_note(&current_note, height, shape, signs, liquescentia, NULL,
+            &notes_lloc);
     current_note->he_adjustment_index[SO_OVER] = he_adjustment_index[SO_OVER];
     current_note->he_adjustment_index[SO_UNDER] = he_adjustment_index[SO_UNDER];
 
-    if (ledger_var[SO_OVER]) {
-        current_note->supposed_high_ledger_line = true;
-        current_note->explicit_high_ledger_line = true;
+    if (height >= high_ledger_line_pitch) {
+        LEDGER(high, DRAWN, true);
+    } else if (ledger_var[SO_OVER]) {
+        LEDGER(high, EXPLICIT, true);
     }
 
-    if (ledger_var[SO_UNDER]) {
-        current_note->supposed_low_ledger_line = true;
-        current_note->explicit_low_ledger_line = true;
+    if (height <= LOW_LEDGER_LINE_PITCH) {
+        LEDGER(low, DRAWN, true);
+    } else if (ledger_var[SO_UNDER]) {
+        LEDGER(low, EXPLICIT, true);
     }
 }
 
@@ -1035,6 +1046,12 @@ void gabc_det_notes_finish(void)
         gregorio_add_space_as_note(&current_note, SP_AD_HOC_SPACE_NB,
                 gregorio_strdup(gabc_notes_determination_text), &notes_lloc);
     }
+<INITIAL>\[oll:1\] {
+        LEDGER(high, EXPLICITLY_DRAWN, true);
+    }
+<INITIAL>\[oll:0\] {
+        LEDGER(high, EXPLICITLY_DRAWN, false);
+    }
 <INITIAL>\[oll:\}\] {
         end_variable_ledger(SO_OVER);
     }
@@ -1052,6 +1069,12 @@ void gabc_det_notes_finish(void)
 <overledger2>\{[^\]]+ {
         add_variable_ledger(SO_OVER, gabc_notes_determination_text);
         BEGIN(endledger);
+    }
+<INITIAL>\[ull:1\] {
+        LEDGER(low, EXPLICITLY_DRAWN, true);
+    }
+<INITIAL>\[ull:0\] {
+        LEDGER(low, EXPLICITLY_DRAWN, false);
     }
 <INITIAL>\[ull:\}\] {
         end_variable_ledger(SO_UNDER);
@@ -1383,20 +1406,16 @@ s   {
                 legacy_oriscus_orientation);
     }
 \[hl:1\] {
-        current_note->supposed_high_ledger_line = true;
-        current_note->explicit_high_ledger_line = true;
+        LEDGER(high, EXPLICIT, true);
     }
 \[hl:0\] {
-        current_note->supposed_high_ledger_line = false;
-        current_note->explicit_high_ledger_line = true;
+        LEDGER(high, EXPLICIT, false);
     }
 \[ll:1\] {
-        current_note->supposed_low_ledger_line = true;
-        current_note->explicit_low_ledger_line = true;
+        LEDGER(low, EXPLICIT, true);
     }
 \[ll:0\] {
-        current_note->supposed_low_ledger_line = false;
-        current_note->explicit_low_ledger_line = true;
+        LEDGER(low, EXPLICIT, false);
     }
 .|\n {
         gregorio_messagef("det_notes_from_string", VERBOSITY_ERROR, 0,
@@ -1423,6 +1442,7 @@ gregorio_note *gabc_det_notes_from_string(char *str, char *newmacros[10],
 
     staff_lines = score->staff_lines;
     highest_pitch = score->highest_pitch;
+    high_ledger_line_pitch = score->high_ledger_line_pitch;
     legacy_oriscus_orientation = score->legacy_oriscus_orientation;
 
     /* a small optimization could uccur here: we could do it only once at the

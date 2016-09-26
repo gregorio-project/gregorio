@@ -32,6 +32,14 @@
 
 #include "struct.h"
 
+typedef enum {
+    GRESTRUCT_NONE = 0,
+    GRESTRUCT_NOTE = 1 << 0,
+    GRESTRUCT_GLYPH = 1 << 1,
+    GRESTRUCT_ELEMENT = 1 << 2,
+    GRESTRUCT_SYLLABLE = 1 << 3
+} gregorio_note_iter_item_type;
+
 typedef struct {
     gregorio_syllable *syllable;
     gregorio_element *element;
@@ -43,7 +51,9 @@ static __inline void gregorio_from_note_to_note(
         const gregorio_note_iter_position *const start,
         const gregorio_note_iter_position *const end,
         void (*const visit)(const gregorio_note_iter_position *, void *),
-        void *data)
+        void (*const end_item)(const gregorio_note_iter_position *,
+            gregorio_note_iter_item_type, void *),
+        const gregorio_note_iter_item_type desired_iter_items, void *data)
 {
     gregorio_note_iter_position p = *start;
 
@@ -67,24 +77,55 @@ static __inline void gregorio_from_note_to_note(
                             }
 
                             if (end && p.note == end->note) {
+                                if (end_item) {
+                                    if (desired_iter_items & GRESTRUCT_NOTE) {
+                                        end_item(&p, GRESTRUCT_NOTE, data);
+                                    }
+                                    if (desired_iter_items & GRESTRUCT_GLYPH) {
+                                        end_item(&p, GRESTRUCT_GLYPH, data);
+                                    }
+                                    if (desired_iter_items
+                                            & GRESTRUCT_ELEMENT) {
+                                        end_item(&p, GRESTRUCT_ELEMENT, data);
+                                    }
+                                    if (desired_iter_items
+                                            & GRESTRUCT_SYLLABLE) {
+                                        end_item(&p, GRESTRUCT_SYLLABLE, data);
+                                    }
+                                }
                                 return;
                             }
 
+                            if (end_item
+                                    && (desired_iter_items & GRESTRUCT_NOTE)) {
+                                end_item(&p, GRESTRUCT_NOTE, data);
+                            }
                             p.note = p.note->next;
                         } /* note */
+                    }
+                    if (end_item && (desired_iter_items & GRESTRUCT_GLYPH)) {
+                        end_item(&p, GRESTRUCT_GLYPH, data);
                     }
                     p.glyph = p.glyph->next;
                 } /* glyph */
             }
+            if (end_item && (desired_iter_items & GRESTRUCT_ELEMENT)) {
+                end_item(&p, GRESTRUCT_ELEMENT, data);
+            }
             p.element = p.element->next;
         } /* element */
+        if (end_item && (desired_iter_items & GRESTRUCT_SYLLABLE)) {
+            end_item(&p, GRESTRUCT_SYLLABLE, data);
+        }
         p.syllable = p.syllable->next_syllable;
     } /* syllable */
 }
 
 static __inline void gregorio_for_each_note(const gregorio_score *score,
         void (*const visit)(const gregorio_note_iter_position *, void *),
-        void *data)
+        void (*const end_item)(const gregorio_note_iter_position *,
+            gregorio_note_iter_item_type, void *),
+        const gregorio_note_iter_item_type desired_iter_items, void *data)
 {
     gregorio_note_iter_position p = {
         /* .syllable = */ NULL,
@@ -95,7 +136,8 @@ static __inline void gregorio_for_each_note(const gregorio_score *score,
 
     p.syllable = score->first_syllable;
 
-    gregorio_from_note_to_note(&p, NULL, visit, data);
+    gregorio_from_note_to_note(&p, NULL, visit, end_item, desired_iter_items,
+            data);
 }
 
 #endif

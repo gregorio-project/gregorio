@@ -374,6 +374,15 @@ ENUM(gregorio_sign_orientation, GREGORIO_SIGN_ORIENTATION);
     X(HVB_U_HIGH, 5)
 ENUM(gregorio_hepisema_vbasepos, GREGORIO_HEPISEMA_VBASEPOS);
 
+/* these may be used as bit fields, with LEDGER_EXPLICIT and LEDGER_DRAWN being
+ * the bits */
+#define GREGORIO_LEDGER_SPECIFICITY(A,E,X,L) \
+    A(LEDGER_SUPPOSED, 0) \
+    A(LEDGER_EXPLICIT, 1) \
+    A(LEDGER_DRAWN, 2) \
+    X(LEDGER_EXPLICITLY_DRAWN, 3)
+ENUM(gregorio_ledger_specificity, GREGORIO_LEDGER_SPECIFICITY);
+
 typedef struct gregorio_extra_info {
     char *ad_hoc_space_factor;
     ENUM_BITFIELD(gregorio_bar) bar:4;
@@ -481,12 +490,11 @@ typedef struct gregorio_note {
     ENUM_BITFIELD(grehepisema_size) h_episema_below_size:2;
     bool h_episema_above_connect:1;
     bool h_episema_below_connect:1;
-    bool supposed_high_ledger_line:1;
-    bool supposed_low_ledger_line:1;
-    /* the "explicit" flags indicate that the "supposed" flags contain values
-     * that were explicitly specified in the gabc file */
-    bool explicit_high_ledger_line:1;
-    bool explicit_low_ledger_line:1;
+    /* the "specificity" field indicates how to interpret the line flag */
+    bool high_ledger_line:1;
+    ENUM_BITFIELD(gregorio_ledger_specificity) high_ledger_specificity:2;
+    bool low_ledger_line:1;
+    ENUM_BITFIELD(gregorio_ledger_specificity) low_ledger_specificity:2;
     bool is_lower_note:1;
     bool is_upper_note:1;
     ENUM_BITFIELD(gregorio_vposition) mora_vposition:2;

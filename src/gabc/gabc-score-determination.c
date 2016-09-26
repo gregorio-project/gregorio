@@ -24,6 +24,7 @@
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 #include "bool.h"
 #include "struct.h"
@@ -31,6 +32,7 @@
 #include "gabc.h"
 #include "gabc-score-determination.h"
 #include "messages.h"
+#include "support.h"
 
 void gabc_suppress_extra_custos_at_linebreak(gregorio_score *score)
 {
@@ -268,7 +270,8 @@ void gabc_determine_oriscus_orientation(const gregorio_score *const score)
 {
     gregorio_note *oriscus = NULL;
 
-    gregorio_for_each_note(score, oriscus_orientation_visit, &oriscus);
+    gregorio_for_each_note(score, oriscus_orientation_visit, NULL,
+            GRESTRUCT_NONE, &oriscus);
 
     if (oriscus) {
         /* oriscus at the end of the score */
@@ -363,8 +366,8 @@ static void punctum_inclinatum_orientation_visit(
                     ? S_PUNCTUM_INCLINATUM_ASCENDENS
                     : S_PUNCTUM_INCLINATUM_DESCENDENS;
             }
-            gregorio_from_note_to_note(&v->first, &v->previous, set_shape,
-                    &v->orientation);
+            gregorio_from_note_to_note(&v->first, &v->previous, set_shape, NULL,
+                    GRESTRUCT_NONE, &v->orientation);
             v->first.syllable = NULL;
             v->first.element = NULL;
             v->first.glyph = NULL;
@@ -400,13 +403,188 @@ void gabc_determine_punctum_inclinatum_orientation(
         /* .running = */ 0,
     };
 
-    gregorio_for_each_note(score, punctum_inclinatum_orientation_visit, &v);
+    gregorio_for_each_note(score, punctum_inclinatum_orientation_visit, NULL,
+            GRESTRUCT_NONE, &v);
 
     if (v.first.note) {
         v.orientation = (v.running > 0)
             ? S_PUNCTUM_INCLINATUM_ASCENDENS
             : S_PUNCTUM_INCLINATUM_DESCENDENS;
-        gregorio_from_note_to_note(&v.first, &v.previous, set_shape,
-                &v.orientation);
+        gregorio_from_note_to_note(&v.first, &v.previous, set_shape, NULL,
+                GRESTRUCT_NONE, &v.orientation);
     }
+}
+
+typedef struct note_stack {
+    gregorio_note *note;
+    struct note_stack *prev;
+} note_stack;
+
+static void note_stack_push(note_stack **const stack, gregorio_note *note) {
+    note_stack *item = gregorio_malloc(sizeof(note_stack));
+    item->note = note;
+    item->prev = *stack;
+    *stack = item;
+}
+
+static gregorio_note *note_stack_pop(note_stack **const stack) {
+    note_stack *item = *stack;
+    if (item) {
+        gregorio_note *note = item->note;
+        note_stack *prev = item->prev;
+        free(item);
+        *stack = prev;
+        return note;
+    }
+    return NULL;
+}
+
+static void note_stack_clear(note_stack **const stack) {
+    note_stack *item = *stack;
+    while (item) {
+        note_stack *prev = item->prev;
+        free(item);
+        item = prev;
+    }
+    *stack = NULL;
+}
+
+typedef struct {
+    note_stack *high, *low;
+    gregorio_note *prev_note;
+    signed char high_ledger_line_pitch;
+    bool running_high, running_low;
+} ledger_line_vars;
+
+static __inline void clear_ledger_line_vars(ledger_line_vars *const v) {
+    note_stack_clear(&v->high);
+    note_stack_clear(&v->low);
+    v->prev_note = NULL;
+    v->running_high = false;
+    v->running_low = false;
+}
+
+static __inline void adjust_ledger(const gregorio_note_iter_position *const p,
+        const gregorio_ledger_specificity specificity, bool ledger_line,
+        note_stack **const stack, bool *const running, gregorio_note *prev_note,
+        const signed char high_ledger_line_pitch,
+        bool (*extend_ledger)(gregorio_note *, const gregorio_note *,
+            const gregorio_note *, signed char))
+{
+    if (specificity & LEDGER_DRAWN) {
+        if (ledger_line) {
+            gregorio_note *after = p->note;
+            gregorio_note *note;
+            /* process from this ledger backwards */
+            while ((note = note_stack_pop(stack))) {
+                if (!extend_ledger(note, NULL, after, high_ledger_line_pitch)) {
+                    /* ledger has ended */
+                    break;
+                }
+                after = note;
+            }
+            *running = true;
+        } else {
+            *running = false;
+        }
+        note_stack_clear(stack);
+    } else {
+        if (*running) {
+            if (!extend_ledger(p->note, prev_note, NULL,
+                    high_ledger_line_pitch)) {
+                /* ledger has ended */
+                note_stack_push(stack, p->note);
+                *running = false;
+            }
+            /* else stack should be empty, keep it that way */
+        } else {
+            note_stack_push(stack, p->note);
+        }
+    }
+}
+
+static bool extend_high_ledger(gregorio_note *const note,
+        const gregorio_note *const note_before,
+        const gregorio_note *const note_after,
+        const signed char high_ledger_line_pitch)
+{
+    bool extend = false;
+
+    if (note_before) {
+        extend = note_before->u.note.pitch < note->u.note.pitch
+            || (note_before->u.note.pitch > high_ledger_line_pitch
+                && note->u.note.pitch < high_ledger_line_pitch);
+    } else if (note_after) {
+        extend = note_after->u.note.pitch < note->u.note.pitch
+            || (note_after->u.note.pitch > high_ledger_line_pitch
+                && note->u.note.pitch < high_ledger_line_pitch);
+    }
+
+    if (extend) {
+        note->high_ledger_line = true;
+        note->high_ledger_specificity = LEDGER_DRAWN;
+    }
+    return extend;
+}
+
+static bool extend_low_ledger(gregorio_note *const note,
+        const gregorio_note *const note_before,
+        const gregorio_note *const note_after,
+        const signed char high_ledger_line_pitch __attribute__((__unused__)))
+{
+    bool extend = false;
+
+    if (note_before) {
+        extend = note_before->u.note.pitch < note->u.note.pitch
+            || (note_before->u.note.pitch > LOW_LEDGER_LINE_PITCH
+                && note->u.note.pitch < LOW_LEDGER_LINE_PITCH);
+    } else if (note_after) {
+        extend = note_after->u.note.pitch < note->u.note.pitch
+            || (note_after->u.note.pitch > LOW_LEDGER_LINE_PITCH
+                && note->u.note.pitch < LOW_LEDGER_LINE_PITCH);
+    }
+
+    if (extend) {
+        note->low_ledger_line = true;
+        note->low_ledger_specificity = LEDGER_DRAWN;
+    }
+    return extend;
+}
+
+/* data must be (ledger_line_vars *) */
+static void ledger_line_visit(const gregorio_note_iter_position *const p,
+        void *const data)
+{
+    ledger_line_vars *const v = (ledger_line_vars *)data;
+
+    adjust_ledger(p, p->note->high_ledger_specificity, p->note->high_ledger_line,
+            &v->high, &v->running_high, v->prev_note, v->high_ledger_line_pitch,
+            &extend_high_ledger);
+    adjust_ledger(p, p->note->low_ledger_specificity, p->note->low_ledger_line,
+            &v->low, &v->running_low, v->prev_note, v->high_ledger_line_pitch,
+            &extend_low_ledger);
+
+    v->prev_note = p->note;
+}
+
+/* data must be (ledger_line_vars *) */
+static void ledger_line_end_item(
+        const gregorio_note_iter_position *const p __attribute__((__unused__)),
+        const gregorio_note_iter_item_type item_type, void *const data)
+{
+    if (item_type == GRESTRUCT_ELEMENT) {
+        clear_ledger_line_vars((ledger_line_vars *)data);
+    }
+}
+
+void gabc_determine_ledger_lines(const gregorio_score *const score)
+{
+    ledger_line_vars v;
+    memset(&v, 0, sizeof v);
+    v.high_ledger_line_pitch = score->high_ledger_line_pitch;
+
+    gregorio_for_each_note(score, ledger_line_visit, ledger_line_end_item,
+            GRESTRUCT_ELEMENT, &v);
+
+    /* stacks should be cleared by ledger_line_end_item */
 }

@@ -59,5 +59,6 @@ bool gabc_check_score_integrity(gregorio_score *score_to_check);
 bool gabc_check_infos_integrity(gregorio_score *score_to_check);
 void gabc_determine_oriscus_orientation(const gregorio_score *score);
 void gabc_determine_punctum_inclinatum_orientation(const gregorio_score *score);
+void gabc_determine_ledger_lines(const gregorio_score *const score);
 
 #endif

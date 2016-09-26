@@ -508,6 +508,7 @@ gregorio_score *gabc_read_score(FILE *f_in, bool point_and_click)
         gabc_determine_oriscus_orientation(score);
     }
     gabc_determine_punctum_inclinatum_orientation(score);
+    gabc_determine_ledger_lines(score);
     gregorio_fix_initial_keys(score, gregorio_default_clef);
     rebuild_score_characters();
     gabc_suppress_extra_custos_at_linebreak(score);
