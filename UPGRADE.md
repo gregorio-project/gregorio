@@ -29,7 +29,7 @@ Note: You may need to use a construct such as `/!` to keep notes that are separa
 
 ### Executable file name
 
-In order to facilitate installation alongside TeX Live, the version number is now appended to the gregorio executable file name.  In version 4.2.0, the filename is gregorio-4.2.0.  If you run the executable directly, you will need to modify your procedures and/or scripts to use the new name.  Alternately, creating a symbolic link, if your system supports it, may work for you.
+In order to facilitate installation alongside TeX Live, the version number is now appended to the gregorio executable file name.  In version 4.2.0, the filename is `gregorio-4_2_0`.  If you run the executable directly, you will need to modify your procedures and/or scripts to use the new name.  Alternately, creating a symbolic link, if your system supports it, may work for you.
 
 If you auto-compile or force-compile your GABC files and are *not* using the Gregorio packaged with TeX Live, you will probably need to use the `--shell-escape` option when compiling your `.tex` files.  Alternately, you can add the new filename to your system's `shell_escape_commands` TeX option.
 
