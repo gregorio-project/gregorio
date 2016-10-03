@@ -62,7 +62,6 @@ GREGORIO_FILES = ["configure.ac",
                   "tex/gregoriotex-nabc.lua",
                   "tex/gregoriosyms.sty",
                   "fonts/squarize.py",
-                  "contrib/gregorio-scribus.lua",
                  ]
 
 def get_parser():
