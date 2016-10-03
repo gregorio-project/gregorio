@@ -80,10 +80,14 @@ texfile:write("\n\\gregorioscore[f]{" .. f .. "-score}\n\\end{document}\n")
 texfile:close()
 gabcfile:close()
 
-local command = latexmkbin .. " -g -pdflatex='" .. lualatexbin ..
-    " --interaction=nonstopmode --shell-escape' -pdf " .. f
-print("calling "..command.."\n")
-os.spawn(command)
+print("calling "..latexmkbin.."\n")
+os.exec({
+    latexmkbin,
+    '-g',
+    '-pdf',
+    '-pdflatex=' .. lualatexbin .. ' --interaction=nonstopmode --shell-escape',
+    f
+})
 </postamble>
     <tab type="settings">
         <title>
