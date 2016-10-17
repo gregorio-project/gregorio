@@ -2754,6 +2754,24 @@ static void compute_height_extrema(const gregorio_glyph *const glyph,
     }
 }
 
+static void compute_element_height_extrema(
+        const gregorio_element *const element, signed char *const top_height,
+        signed char *const bottom_height)
+{
+    const gregorio_glyph *glyph;
+    gregorio_not_null(element, compute_element_height_extrema, return);
+    if (element->type != GRE_ELEMENT) {
+        return;
+    }
+    /* get the minima/maxima pitches */
+    for (glyph = element->u.first_glyph; glyph; glyph = glyph->next) {
+        if (glyph->type == GRE_GLYPH) {
+            compute_height_extrema(glyph, glyph->u.notes.first_note,
+                    top_height, bottom_height);
+        }
+    }
+}
+
 static __inline void fixup_height_extrema(signed char *const top_height,
         signed char *const bottom_height)
 {
@@ -3806,12 +3824,18 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     if (syllable->elements) {
         for (element = *syllable->elements; element; element = element->next) {
             if (element->nabc_lines && element->nabc) {
+                signed char high_pitch = UNDETERMINED_HEIGHT;
+                signed char low_pitch = UNDETERMINED_HEIGHT;
                 size_t i;
+                compute_element_height_extrema(element, &high_pitch,
+                        &low_pitch);
+                fixup_height_extrema(&high_pitch, &low_pitch);
                 for (i = 0; i < element->nabc_lines; i++) {
                     if (element->nabc[i]) {
                         fprintf(f, "\\GreNABCNeumes{%d}{", (int)(i+1));
                         tex_escape_text(f, element->nabc[i]);
-                        fprintf(f, "}%%\n");
+                        fprintf(f, "}{%d}{%d}%%\n", pitch_value(high_pitch),
+                                pitch_value(low_pitch));
                     }
                 }
             }
