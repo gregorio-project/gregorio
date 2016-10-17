@@ -1095,12 +1095,14 @@ Macro used to prevent a line break from occurring at a given position.
 \macroname{\textbackslash GreScoreId}{}{gregoriotex-main.tex}
 A Lua\TeX\ attribute which designates a unique identifier for each score.
 
-\macroname{\textbackslash GreNABCNeumes}{\#1\#2}{gregoriotex-nabc.tex}
+\macroname{\textbackslash GreNABCNeumes}{\#1\#2\#3\#4}{gregoriotex-nabc.tex}
 Macro to print a nabc character above the lines.
 
 \begin{argtable}
   \#1 & integer & the line on which the character should appear (currently unused)\\
   \#2 & string & The \texttt{nabc} syntax which indicates what neumes are to be printed\\
+  \#3 & integer & The high pitch of the notes covered by the nabc character(s).\\
+  \#4 & integer & The low pitch of the notes covered by the nabc character(s).\\
 \end{argtable}
 
 \macroname{\textbackslash GreNABCChar}{\#1}{gregoriotex-nabc.tex}
