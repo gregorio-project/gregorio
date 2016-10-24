@@ -20,6 +20,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - 9 new St. Gall neume glyphs have been added to the `gregall` font.
 - 5 new St. Gall neume glyphs have been added to the `gresgmodern` font.
 - install-gtex.sh now generates uninstall-gtex.sh, which can be used to uninstall the TeX portion of the installation when GregorioTeX was installed from source.
+- A `<clear>` tag may be added to a syllable to indicate that its text should not overlap any previous syllable (see [#1029](https://github.com/gregorio-project/gregorio/issues/1029)).
 
 ### Removed
 - `initial-style` gabc header, supplanted by the `\gresetinitiallines` TeX command.

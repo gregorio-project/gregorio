@@ -783,6 +783,12 @@
   \relax %
 }%
 
+\newif\ifgre@textcleared%
+
+\def\GreClearSyllableText{%
+  \gre@textclearedtrue%
+}%
+
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : macro setting the letters of this syllable
 % #2 : reserved (unused)
@@ -798,6 +804,7 @@
 %% with a special option for #7 : if it is a bar, we don't put a space at the end
 %% at the end we wall \greendofword or \gre@endofsyllable with #7, to reduce the space in case of a flat or natural
 \def\GreSyllable#1#2#3#4#5#6#7#8#9{%
+  \gre@textclearedfalse%
   \def\gre@syllable@args{{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}{#9}}%
   \futurelet\gre@syllable@next\gre@syllable@expand%
 }%
@@ -1133,6 +1140,7 @@
 
 %a macro to typeset a syllable with only a bar inside
 \def\GreBarSyllable#1#2#3#4#5#6#7#8#9{%
+  \gre@textclearedfalse%
   \gre@debugmsg{general}{}%
   \gre@debugmsg{general}{New bar syllable}%
   \gre@debugmsg{general}{}%

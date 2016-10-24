@@ -657,6 +657,7 @@ typedef struct gregorio_syllable {
     ENUM_BITFIELD(gregorio_word_position) position:3;
     bool first_word:1;
     bool forced_center:1;
+    bool clear:1;
 } gregorio_syllable;
 
 /* Stores a header in a singly-linked list */
@@ -808,7 +809,7 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
         gregorio_word_position position, char *abovelinestext,
         gregorio_tr_centering translation_type, gregorio_nlba no_linebreak_area,
         gregorio_euouae euouae, const gregorio_scanner_location *loc,
-        bool first_word);
+        bool first_word, bool clear);
 void gregorio_add_special_sign(gregorio_note *current_note, gregorio_sign sign);
 void gregorio_change_shape(gregorio_note *note, gregorio_shape shape,
         bool legacy_oriscus_orientation);

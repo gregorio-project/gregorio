@@ -108,6 +108,7 @@ static bool started_first_word;
 static struct sha1_ctx digester;
 static gabc_style_bits styles;
 static bool generate_point_and_click;
+static bool clear_syllable_text;
 
 /* punctum_inclinatum_orientation maintains the running punctum inclinatum
  * orientation in order to decide if the glyph needs to be cut when a punctum
@@ -173,6 +174,7 @@ static void initialize_variables(bool point_and_click)
     styles = 0;
     punctum_inclinatum_orientation = S_PUNCTUM_INCLINATUM_UNDETERMINED;
     generate_point_and_click = point_and_click;
+    clear_syllable_text = false;
 }
 
 /*
@@ -367,7 +369,7 @@ static void close_syllable(YYLTYPE *loc)
     gregorio_add_syllable(&current_syllable, number_of_voices, elements,
             first_text_character, first_translation_character, position,
             abovelinestext, translation_type, no_linebreak_area, euouae, loc,
-            started_first_word);
+            started_first_word, clear_syllable_text);
     if (!score->first_syllable) {
         /* we rebuild the first syllable if we have to */
         score->first_syllable = current_syllable;
@@ -398,6 +400,7 @@ static void close_syllable(YYLTYPE *loc)
         elements[i] = NULL;
     }
     current_element = NULL;
+    clear_syllable_text = false;
 }
 
 /* a function called when we see a [, basically, all characters are added to
@@ -597,6 +600,7 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
 %token NLBA_B NLBA_E
 %token EUOUAE_B EUOUAE_E
 %token NABC_CUT NABC_LINES
+%token CLEAR
 
 %%
 
@@ -852,6 +856,9 @@ character:
     | style_end
     | linebreak_area
     | euouae
+    | CLEAR {
+        clear_syllable_text = true;
+    }
     ;
 
 text_hyphen:

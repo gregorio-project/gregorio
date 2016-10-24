@@ -361,6 +361,9 @@ semicolon. */
 <score>\] {
         return TRANSLATION_END;
     }
+<score><[\n\r \t]*clear[\n\r \t]*\/?[\n\r \t]*> {
+        return CLEAR;
+    }
 <score>\( {
         BEGIN(notes);
         return OPENING_BRACKET;
