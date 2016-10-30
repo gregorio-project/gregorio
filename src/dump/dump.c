@@ -215,6 +215,9 @@ void dump_write_score(FILE *f, gregorio_score *score)
             fprintf(f, "   euouae                    %s\n",
                     gregorio_euouae_to_string(syllable->euouae));
         }
+        if (syllable->clear) {
+            fprintf(f, "   clear                     true\n");
+        }
         if (syllable->text) {
             if (syllable->translation) {
                 fprintf(f, "\n  Text\n");
