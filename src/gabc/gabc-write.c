@@ -1019,6 +1019,9 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
     if (syllable->euouae == EUOUAE_BEGINNING) {
         fprintf(f, "<eu>");
     }
+    if (syllable->clear) {
+        fprintf(f, "<clear>");
+    }
     if (syllable->text) {
         /* we call the magic function (defined in struct_utils.c), that will
          * write our text. */
