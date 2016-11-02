@@ -1210,6 +1210,12 @@ static void gtex_write_begin(FILE *f, grestyle_style style)
     case ST_FIRST_SYLLABLE_INITIAL:
         fprintf(f, "\\GreFirstSyllableInitial{");
         break;
+    case ST_PROTRUSION_FACTOR:
+        fprintf(f, "\\GreProtrusion{");
+        break;
+    case ST_PROTRUSION:
+        fprintf(f, "{");
+        break;
     default:
         break;
     }

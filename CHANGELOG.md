@@ -21,6 +21,10 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - 5 new St. Gall neume glyphs have been added to the `gresgmodern` font.
 - install-gtex.sh now generates uninstall-gtex.sh, which can be used to uninstall the TeX portion of the installation when GregorioTeX was installed from source.
 - A `<clear>` tag may be added to a syllable to indicate that its text should not overlap any previous syllable (see [#1029](https://github.com/gregorio-project/gregorio/issues/1029)).
+- More general support for protrusions.  The `<pr>` tag in gabc indicates where a protrusion should begin.  There is an optional argument `<pr:.5>` that allows the protrusion factor to be specified (in this example, `.5`).  Additionally, the comma, semicolon, colon, and period are automatically protruded, with configurable protrusion factors.  See GregorioRef and [#931](https://github.com/gregorio-project/gregorio/issues/931) for more information.
+
+### Deprecated
+- '\gresethyphenprotrusion{percentage}`, supplanted by `\gresetprotrusionfactor{eolhyphen}{factor}`.  Note that the value the new command takes is a factor rather than a percentage.
 
 ### Removed
 - `initial-style` gabc header, supplanted by the `\gresetinitiallines` TeX command.

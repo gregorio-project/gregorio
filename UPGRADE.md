@@ -25,6 +25,10 @@ The other `oll` and `ull` forms take precendence over and will interfere with th
 
 Note: You may need to use a construct such as `/!` to keep notes that are separated in the same element.  For example, `abcV` is two elements (`ab` and `cV`), so the ledger line on `b` is not extended to `cV`.  In contrast, `ab/!cV` is one element, so the ledger line on `b` is extended to `cV`.
 
+### End-of-line hyphen protrusion factor
+
+As of version 5.0, the `\gresethyphenprotrusion{percentage}` command is deprecated.  To set this protrusion factor, use `\gresetprotrusionfactor{eolhyphen}{factor}` instead.  Note that the `factor` taken by the new command is a factor rather than the percentage taken by the deprecated command, so for example, use `\gresetprotrusionfactor{eolhyphen}{0.5}` instead of `\gresethyphenprotrusion{50}`.
+
 ## 4.2
 
 ### Executable file name

@@ -750,6 +750,25 @@ Macro to typeset a curly brace above the lines.
   & \texttt{1} & Typeset an accentus above the brace.
 \end{argtable}
 
+\macroname{\textbackslash GreProtrusion}{\#1\#2}{gregoriotex-spaces.tex}
+Typesets a protrusion.
+
+\begin{argtable}
+  \#1 & float & The protrusion factor.  May be a call to \verb=\GreProtrusionFactor=\\
+  \#2 & \TeX\ code & The content of the protrusion.\\
+\end{argtable}
+
+\macroname{\textbackslash GreProtrusionFactor}{\#1}{gregoriotex-spaces.tex}
+Returns a automatic protrusion factor.  The argument is character whose
+automatic protrusion factor is desired.
+
+\begin{argtable}
+  \#1 & \texttt{,} & The comma protrusion factor.\\
+      & \texttt{;} & The semicolon protrusion factor.\\
+      & \texttt{:} & The colon protrusion factor.\\
+      & \texttt{.} & The period protrusion factor.\\
+\end{argtable}
+
 \macroname{\textbackslash GrePunctumMora}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
 Macro for typesetting punctum mora.
 

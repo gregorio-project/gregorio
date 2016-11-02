@@ -77,7 +77,7 @@ LDADD += gregorio-resources.o
 endif
 
 gabc/gabc-score-determination-y.c: gabc/gabc-score-determination.y
-	$(YACC) -d -p "gabc_score_determination_" -o $@ $<
+	$(YACC) -v -d -p "gabc_score_determination_" -o $@ $<
 gabc/gabc-score-determination-y.h: gabc/gabc-score-determination-y.c
 	## Recover from the removal of gabc/gabc-score-determination-y.h, see
 	## https://www.gnu.org/software/automake/manual/html_node/Multiple-Outputs.html
@@ -100,7 +100,7 @@ gabc/gabc-notes-determination-l.c: gabc/gabc-notes-determination.l
 	$(LEX) -o $@ $<
 
 vowel/vowel-rules-y.c: vowel/vowel-rules.y
-	$(YACC) -d -o $@ $<
+	$(YACC) -v -d -o $@ $<
 vowel/vowel-rules-y.h: vowel/vowel-rules-y.c
 	## Recover from the removal of vowel/vowel-rules-y.h, see
 	## https://www.gnu.org/software/automake/manual/html_node/Multiple-Outputs.html

@@ -943,6 +943,40 @@ for ligaturing based on \TeX{} and font settings.
                         syllables.\\
 \end{argtable}
 
+\macroname{\textbackslash gresetprotrusionfactor}{\{\#1\}\{\#2\}}{gregoriotex-spaces.tex}
+Sets a global protrusion factor.  Depending on the first argument, these
+protrusion factors will be used for various characters as well as for
+\verb=<pr>= tags with no specified protrusion factor.  A protrusion factor of 0
+means no protrusion and 1 means full protrusion.  Any floating-point value from
+0 to 1 is allowed.  All of these global protrusion factors may be set in
+gsp-default.tex or in your own \TeX\ files.
+
+\begin{argtable}
+  \#1 & \texttt{,}         & Sets the automatic protrusion factor for a comma at
+                             the end of a syllable.  Default is
+                             \GreProtrusionFactor{comma}.\\
+      & \texttt{;}         & Sets the automatic protrusion factor for a
+                             semicolon at the end of a syllable.  Default is
+                             \GreProtrusionFactor{semicolon}.\\
+      & \texttt{:}         & Sets the automatic protrusion factor for a colon at
+                             the end of a syllable.  Default is
+                             \GreProtrusionFactor{colon}.\\
+      & \texttt{.}         & Sets the automatic protrusion factor for a period
+                             at the end of a syllable.  Default is
+                             \GreProtrusionFactor{period}.\\
+      & \texttt{eolhyphen} & Sets the protrusion factor for a hyphen at
+                             the end of a line.  Default is
+                             \GreProtrusionFactor{eolhyphen}.  This protrusion
+                             factor only applies to hyphens inserted by the Lua
+                             pass), so use it with caution.\\
+      & \texttt{default}   & Sets the default protrusion factor for a
+                             \verb=<pr>= tag in gabc.  Default is
+                             \GreProtrusionFactor{default}.\\
+  \#2 & factor             & The desired protrusion factor, a floating point
+                             value from 0 (no protrusion) to 1 (full
+                             protrusion).  See defaults above.\\
+\end{argtable}
+
 \subsubsection{End of Line Behavior}
 While Gregorio\TeX\ will automatically wrap scores to fit your page, there are several ways to fine tune that line breaking behavior with the following commands.
 
@@ -1145,15 +1179,6 @@ Marco to determine how much space the hyphen at the end of a line occupies for t
   \#1 & \texttt{normal} & The hyphen occupies its normal space\\
   & \texttt{zero} & The hyphen is considered to take up no space
 \end{argtable}
-
-\macroname{\textbackslash gresethyphenprotrusion}{\{\#1\}}{gregoriotex-spaces.tex}
-Sets the protrusion factor of hyphens at end of lines. The default value is 50, a good compromise in the tested scores.
-
-\begin{argtable}
-  \#1 & \texttt{number} & The protrusion factor, percent
-\end{argtable}
-
-Note that a proper interface for setting protrusion factor of punctuation signs might appear in the next version, deprecating this one. Also, this protrusion factor does not apply to all hyphens (only those inserted by the Lua pass), so use it with caution.
 
 \subsubsection{Clef Visibility}
 

@@ -312,6 +312,10 @@ ENUM(gregorio_glyph_type, GREGORIO_GLYPH_TYPE);
     E(ST_FIRST_SYLLABLE) \
     E(ST_FIRST_SYLLABLE_INITIAL) \
     E(ST_SYLLABLE_INITIAL) \
+    /* protrusion is implemented a PROTRUSION_FACTOR followed by a PROTRUSION;
+     * an automatic protrusion will have a verbatim TeX macro as factor */ \
+    E(ST_PROTRUSION_FACTOR) \
+    E(ST_PROTRUSION) \
     L(ST_SENTINEL) /* a temporary style to signify the end of a syllable */
 ENUM(grestyle_style, GRESTYLE_STYLE);
 
