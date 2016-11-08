@@ -1632,6 +1632,7 @@
     {beforeinitialshift}{\gre@rubberfalse}%
     {minimalspaceatlinebeginning}{\gre@rubberfalse}%
     {manualinitialwidth}{\gre@rubberfalse}%
+    {minimalinitialwidth}{\gre@rubberfalse}%
     {annotationseparation}{\gre@rubberfalse}%
     {intersyllablespacenotes}{\gre@rubberfalse}%
     {intersyllablespacenotes@alteration}{\gre@rubberfalse}%
@@ -2020,6 +2021,9 @@
   \fi%
   \ifgre@scale@manualinitialwidth%
     \gre@changeonedimenfactor{manualinitialwidth}{#1}{#2}%
+  \fi%
+  \ifgre@scale@minimalinitialwidth%
+    \gre@changeonedimenfactor{minimalinitialwidth}{#1}{#2}%
   \fi%
   \ifgre@scale@annotationseparation%
     \gre@changeonedimenfactor{annotationseparation}{#1}{#2}%
