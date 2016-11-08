@@ -109,6 +109,8 @@ static bool eof_found = false;
 %x comments
 %x inicomments
 %x alt
+%x protrusion_value
+%x protrusion_end
 
 %option stack
 %option pointer
@@ -241,11 +243,16 @@ semicolon. */
 <score>[\n\r][\n\r \t]* {
         RETURN_SPACE;
     }
-<score,sp>[^-\{\}\(\[\]<%\n\r]+ {
+<score,sp>[^-,;:.\{\}\(\[\]<%\n\r]+ {
         RETURN_CHARACTERS;
     }
 <score>- {
         return HYPHEN;
+    }
+<score>[,;:.] {
+        gabc_score_determination_lval.text =
+                gregorio_strdup(gabc_score_determination_text);
+        return PROTRUDING_PUNCTUATION;
     }
 <score><nlba> {
         return NLBA_B;
@@ -360,6 +367,26 @@ semicolon. */
     }
 <score>\] {
         return TRANSLATION_END;
+    }
+<score><[\n\r \t]*clear[\n\r \t]*\/?[\n\r \t]*> {
+        return CLEAR;
+    }
+<score><[\n\r \t]*pr[\n\r \t]*\/?[\n\r \t]*> {
+        return PROTRUSION;
+    }
+<score><[\n\r \t]*pr[\n\r \t]*:[\n\r \t]* {
+        BEGIN(protrusion_value);
+        return PROTRUSION;
+    }
+<protrusion_value>([0-9]*\.?[0-9]+|[0-9]+\.) {
+        BEGIN(protrusion_end);
+        gabc_score_determination_lval.text =
+                gregorio_strdup(gabc_score_determination_text);
+        return PROTRUSION_VALUE;
+    }
+<protrusion_end>[\n\r \t]*\/?[\n\r \t]*> {
+        BEGIN(score);
+        return PROTRUSION_END;
     }
 <score>\( {
         BEGIN(notes);

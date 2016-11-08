@@ -36,6 +36,14 @@
 
 #include "gabc.h"
 
+typedef enum {
+    GABC_NORMAL,
+    GABC_AT_PROTRUSION_FACTOR,
+    GABC_IN_PROTRUSION_FACTOR
+} gabc_write_state;
+
+static gabc_write_state write_state;
+
 static __inline char pitch_letter(const char height) {
     char result = height + 'a' - LOWEST_PITCH;
     if (result == 'o') {
@@ -102,11 +110,15 @@ static void gabc_write_begin(FILE *f, grestyle_style style)
     case ST_ELISION:
         fprintf(f, "<e>");
         break;
+    case ST_PROTRUSION_FACTOR:
+        write_state = GABC_AT_PROTRUSION_FACTOR;
+        break;
     case ST_INITIAL:
     case ST_CENTER:
     case ST_FIRST_WORD:
     case ST_FIRST_SYLLABLE:
     case ST_FIRST_SYLLABLE_INITIAL:
+    case ST_PROTRUSION:
         /* nothing should be emitted for these */
         break;
     default:
@@ -152,11 +164,17 @@ static void gabc_write_end(FILE *f, grestyle_style style)
     case ST_ELISION:
         fprintf(f, "</e>");
         break;
+    case ST_PROTRUSION_FACTOR:
+        if (write_state == GABC_IN_PROTRUSION_FACTOR) {
+            fprintf(f, ">");
+        }
+        break;
     case ST_INITIAL:
     case ST_CENTER:
     case ST_FIRST_WORD:
     case ST_FIRST_SYLLABLE:
     case ST_FIRST_SYLLABLE_INITIAL:
+    case ST_PROTRUSION:
         /* nothing should be emitted for these */
         break;
     default:
@@ -191,9 +209,14 @@ static void gabc_write_special_char(FILE *f, const grewchar *first_char)
  */
 static void gabc_write_verb(FILE *f, const grewchar *first_char)
 {
-    fprintf(f, "<v>");
-    gregorio_print_unistring(f, first_char);
-    fprintf(f, "</v>");
+    if (write_state == GABC_AT_PROTRUSION_FACTOR) {
+        /* this is an auto protrusion, so ignore it */
+        write_state = GABC_NORMAL;
+    } else {
+        fprintf(f, "<v>");
+        gregorio_print_unistring(f, first_char);
+        fprintf(f, "</v>");
+    }
 }
 
 /*
@@ -206,7 +229,17 @@ static void gabc_write_verb(FILE *f, const grewchar *first_char)
 
 static void gabc_print_char(FILE *f, const grewchar to_print)
 {
-    gregorio_print_unichar(f, to_print);
+    if (write_state == GABC_AT_PROTRUSION_FACTOR) {
+        write_state = GABC_IN_PROTRUSION_FACTOR;
+        if (to_print == ':') {
+            fprintf(f, "<pr");
+        } else {
+            fprintf(f, "<pr:");
+            gregorio_print_unichar(f, to_print);
+        }
+    } else {
+        gregorio_print_unichar(f, to_print);
+    }
 }
 
 /*
@@ -1013,11 +1046,15 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
     bool linebreak_or_bar_in_element;
     gregorio_assert(syllable, gabc_write_gregorio_syllable,
             "call with NULL argument", return);
+    write_state = GABC_NORMAL;
     if (syllable->no_linebreak_area == NLBA_BEGINNING) {
         fprintf(f, "<nlba>");
     }
     if (syllable->euouae == EUOUAE_BEGINNING) {
         fprintf(f, "<eu>");
+    }
+    if (syllable->clear) {
+        fprintf(f, "<clear>");
     }
     if (syllable->text) {
         /* we call the magic function (defined in struct_utils.c), that will

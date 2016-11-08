@@ -186,6 +186,9 @@ Macro for typesetting a circulus.
   \#2 & string  & Type of glyph the circulus is attached to.  See \nameref{EpisemaSpecial} argument for description of options.\\
 \end{argtable}
 
+\macroname{\textbackslash GreClearSyllableText}{\#1\#2}{gregoriotex-syllable.tex}
+Macro indicating that the text in this syllable should not overlap any previous syllable.
+
 \macroname{\textbackslash GreColored}{\#1}{gregoriotex.sty \textup{and} gregoriotex.tex}
 Colors argument (a string) in \verb=gregoriocolor.=  Corresponds to ``<c></c>'' tags in gabc.  Does nothing in Plain \TeX\ because color is not supported there.
 
@@ -745,6 +748,25 @@ Macro to typeset a curly brace above the lines.
   & \texttt{1} & Shift back a punctum's width before starting the brace.\\
   \#5 & \texttt{0} & No accentus above the brace.\\
   & \texttt{1} & Typeset an accentus above the brace.
+\end{argtable}
+
+\macroname{\textbackslash GreProtrusion}{\#1\#2}{gregoriotex-spaces.tex}
+Typesets a protrusion.
+
+\begin{argtable}
+  \#1 & float & The protrusion factor.  May be a call to \verb=\GreProtrusionFactor=\\
+  \#2 & \TeX\ code & The content of the protrusion.\\
+\end{argtable}
+
+\macroname{\textbackslash GreProtrusionFactor}{\#1}{gregoriotex-spaces.tex}
+Returns a automatic protrusion factor.  The argument is character whose
+automatic protrusion factor is desired.
+
+\begin{argtable}
+  \#1 & \texttt{,} & The comma protrusion factor.\\
+      & \texttt{;} & The semicolon protrusion factor.\\
+      & \texttt{:} & The colon protrusion factor.\\
+      & \texttt{.} & The period protrusion factor.\\
 \end{argtable}
 
 \macroname{\textbackslash GrePunctumMora}{\#1\#2\#3\#4}{gregoriotex-signs.tex}

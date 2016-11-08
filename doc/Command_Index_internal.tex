@@ -1788,6 +1788,9 @@ Number of lines the initial takes up.  Currently limited to 0, 1, or 2.  Not cur
 \macroname{\textbackslash ifgre@rewritethissyllable}{}{gregoriotex-syllable.tex}
 Boolean indicating that a syllable should be rewritten to improve ligature rendering.
 
+\macroname{\textbackslash ifgre@textcleared}{}{gregoriotex-syllable.tex}
+Boolean indicating that the text of this syllable should not overlap any previous syllable.
+
 \subsection{Boxes}
 
 Boxes are used to store elements of the score before they are printed for the purposes of reusing them and/or measuring them in order to determine their appropriate placement.
@@ -1836,10 +1839,11 @@ Box holding the horizontal episema.
 
 
 \subsection{Protrusion factors}
-Protrusion factors are counts representing a protrusion factor over 100.
 
-\macroname{\textbackslash gre@count@protrusion@hyphen@eol}{}{gregoriotex-spaces.tex}
-Protrusion factor applied to hyphens at end of lines.
+
+\macroname{\textbackslash gre@protrusionfactor@...}{}{gregoriotex-spaces.tex}
+Macros that store the protrusion factors created by
+\verb=\gresetprotrusionfactor=.
 
 
 \subsection{Distances}
