@@ -444,6 +444,11 @@
     \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
     \ifdim\gre@space@dimen@manualinitialwidth=0 pt\relax%
       \global\gre@dimen@initialwidth=\wd\gre@box@initial %
+      \ifdim\gre@dimen@initialwidth<\gre@space@dimen@minimalinitialwidth\relax%
+        \gre@style@initial%
+        \global\gre@dimen@initialwidth=\gre@space@dimen@minimalinitialwidth\relax%
+        \endgre@style@initial%
+      \fi%
     \else%
       \gre@style@initial%
       \global\gre@dimen@initialwidth=\gre@space@dimen@manualinitialwidth\relax%
@@ -475,6 +480,11 @@
     \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
     \ifdim\gre@space@dimen@manualinitialwidth=0 pt\relax%
       \global\gre@dimen@initialwidth=\wd\gre@box@initial %
+      \ifdim\gre@dimen@initialwidth<\gre@space@dimen@minimalinitialwidth\relax%
+        \gre@style@initial%
+        \global\gre@dimen@initialwidth=\gre@space@dimen@minimalinitialwidth\relax%
+        \endgre@style@initial%
+      \fi%
     \else%
       \gre@style@initial%
       \global\gre@dimen@initialwidth=\gre@space@dimen@manualinitialwidth\relax%
