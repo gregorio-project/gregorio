@@ -38,7 +38,7 @@ respecting the annotation value in the \texttt{main.tex} file.
   \#2 & string & Second line text to place above the initial.\\
 \end{argtable}
 
-\macroname{\textbackslash GreBeginScore}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-main.tex}
+\macroname{\textbackslash GreBeginScore}{\#1\#2\#3\#4\#5\#6\#7\#8}{gregoriotex-main.tex}
 Macro to start a score.
 
 \begin{argtable}
@@ -51,6 +51,8 @@ Macro to start a score.
       & 1 & there is above lines text somewhere in the score\\
   \#6 & string  & the absolute filename of the gabc file if point-and-click is enabled\\
   \#7 & integer & the number of staff lines\\
+  \#8 & \TeX\ code & macros to run before the score (\eg, setting clef
+                     extrema)\\
 \end{argtable}
 
 \macroname{\textbackslash GreEndScore}{}{gregoriotex-main.tex}
@@ -597,6 +599,15 @@ Same as \verb=\GreDivisioMinor= except inside a syllable.
 
 \macroname{\textbackslash GreInDominica}{\#1\#2\#3}{gregoriotex-signs.tex}
 Same as \verb=\GreDominica= except inside a syllable.
+
+\macroname{\textbackslash GreInitialClefPosition}{\#1\#2}{gregoriotex-signs.tex}
+Saves the extrema of the initial clef.
+
+\begin{argtable}
+  \#1 & integer & the line of the primary clef (1 is the bottom line)\\
+  \#2 & integer & the line of the secondary clef (1 is the bottom line, 0 means
+                  no secondary clef)\\
+\end{argtable}
 
 \macroname{\textbackslash GreInVirgula}{\#1\#2\#3}{gregoriotex-signs.tex}
 Same as \verb=\GreVirgula= except inside a syllable.
