@@ -34,6 +34,11 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - The gregorio and granapadano fonts are no longer distributed with the Gregorio distribution archive.  They will now be available for download separately (along with optional Dominican "-op" variants).  ***If there are other logistics, put them here or delete this statement before release.***  See [UPGRADE.md](UPGRADE.md) and [#844](https://github.com/gregorio-project/gregorio/issues/844) for details.
 
 
+## [4.2.1][Unreleased]
+### Fixed
+- Debian build scripts now use directories compatible with the TeXLive 2016 packaging of Gregorio (see [#1241](https://github.com/gregorio-project/gregorio/issues/1241)).
+
+
 ## [4.2.0] - 2016-09-23
 ### Fixed
 - When the note after an oriscus is at the same pitch, the oriscus will now point downwards by default (see [#1177](https://github.com/gregorio-project/gregorio/issues/1177)).
