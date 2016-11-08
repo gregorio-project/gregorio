@@ -4329,12 +4329,16 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
 
     write_headers(f, score);
 
-    fprintf(f, "\\GreBeginScore{%s}{%d}{%d}{%d}{%d}{%s}{%u}%%\n",
+    if (score->first_voice_info) {
+        clef = score->first_voice_info->initial_clef;
+    }
+    fprintf(f, "\\GreBeginScore{%s}{%d}{%d}{%d}{%d}{%s}{%u}"
+            "{\\GreInitialClefPosition{%d}{%d}}%%\n",
             digest_to_hex(score->digest), status.top_height,
             status.bottom_height, bool_to_int(status.translation),
             bool_to_int(status.abovelinestext),
             point_and_click_filename? point_and_click_filename : "",
-            score->staff_lines);
+            score->staff_lines, clef.line, clef.secondary_line);
     if (score->nabc_lines) {
         fprintf(f, "\\GreScoreNABCLines{%d}", (int)score->nabc_lines);
     }
@@ -4372,9 +4376,6 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
         gregoriotex_write_voice_info(f, score->first_voice_info);
     }
     fprintf(f, "}{%%\n"); /* GreScoreOpening#2 */
-    if (score->first_voice_info) {
-        clef = score->first_voice_info->initial_clef;
-    }
     fprintf(f, "\\GreSetInitialClef{%c}{%d}{%d}{%c}{%d}{%d}{%d}%%\n",
             gregorio_clef_to_char(clef.clef), clef.line,
             clef_flat_height(clef.clef, clef.line, clef.flatted),
