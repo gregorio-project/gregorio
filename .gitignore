@@ -125,5 +125,4 @@ res.txt
 gregorio-*
 ctan
 *.pyg
-uninstall-gtex.sh
 .agignore
