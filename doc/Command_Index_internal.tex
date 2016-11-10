@@ -1154,6 +1154,22 @@ A meaningless (don't-care) pitch.
 \macroname{\textbackslash gre@pitch@nominal}{}{gregoriotex-main.tex}
 A pitch guaranteed to be in the staff.
 
+\macroname{\textbackslash gre@pitch@cleftop}{}{gregoriotex-spaces.tex}
+The pitch of the highest point of the current clef.
+
+\macroname{\textbackslash gre@pitch@clefbottom}{}{gregoriotex-spaces.tex}
+The pitch of the lowest point of the current clef.
+
+\macroname{\textbackslash gre@saveclefextrema}{\#1\#2}{gregoriotex-signs.tex}
+Computes the pitches of the lowest and highest points of a clef and saves them
+into \verb=\gre@pitch@cleftop= and \verb=\gre@pitch@clefbottom=.
+
+\begin{argtable}
+  \#1 & integer & the line of the primary clef (1 is the bottom line)\\
+  \#2 & integer & the line of the secondary clef (1 is the bottom line, 0 means
+                  no secondary clef)\\
+\end{argtable}
+
 \macroname{\textbackslash gre@pointandclick}{\#1\#2}{gregoriotex-main.tex}
 Macro to generate the point-and-click links.
 
@@ -1341,6 +1357,21 @@ Macro to make adjustments to \verb=nextbegindifference= in order to account for 
 \macroname{\textbackslash gre@punctummoraadjustment}{}{gregoriotex-spaces.tex}
 Macro to make adjustments to cursor position and \verb=previousenddifference= based on the presence of a punctum mora at the end of the last syllable.
 
+\macroname{\textbackslash gre@num@min}{\#1\#2}{gregoriotex-spaces.tex}
+Puts the lower of its two integer arguments into \verb=\gre@count@temp@one=.
+
+\begin{argtable}
+  \#1 & integer & the first value to compare\\
+  \#2 & integer & the second value to compare\\
+\end{argtable}
+
+\macroname{\textbackslash gre@num@max}{\#1\#2}{gregoriotex-spaces.tex}
+Puts the greater of its two integer arguments into \verb=\gre@count@temp@one=.
+
+\begin{argtable}
+  \#1 & integer & the first value to compare\\
+  \#2 & integer & the second value to compare\\
+\end{argtable}
 
 \subsection{Auxiliary File}
 Gregorio\TeX\ creates its own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.
@@ -1839,10 +1870,11 @@ Box holding the horizontal episema.
 
 
 \subsection{Protrusion factors}
-Protrusion factors are counts representing a protrusion factor over 100.
 
-\macroname{\textbackslash gre@count@protrusion@hyphen@eol}{}{gregoriotex-spaces.tex}
-Protrusion factor applied to hyphens at end of lines.
+
+\macroname{\textbackslash gre@protrusionfactor@...}{}{gregoriotex-spaces.tex}
+Macros that store the protrusion factors created by
+\verb=\gresetprotrusionfactor=.
 
 
 \subsection{Distances}

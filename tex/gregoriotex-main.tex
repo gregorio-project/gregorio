@@ -444,6 +444,11 @@
     \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
     \ifdim\gre@space@dimen@manualinitialwidth=0 pt\relax%
       \global\gre@dimen@initialwidth=\wd\gre@box@initial %
+      \gre@style@initial%
+        \ifdim\gre@dimen@initialwidth<\gre@space@dimen@minimalinitialwidth\relax%
+          \global\gre@dimen@initialwidth=\gre@space@dimen@minimalinitialwidth\relax%
+        \fi%
+      \endgre@style@initial%
     \else%
       \gre@style@initial%
       \global\gre@dimen@initialwidth=\gre@space@dimen@manualinitialwidth\relax%
@@ -475,6 +480,11 @@
     \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
     \ifdim\gre@space@dimen@manualinitialwidth=0 pt\relax%
       \global\gre@dimen@initialwidth=\wd\gre@box@initial %
+      \gre@style@initial%
+        \ifdim\gre@dimen@initialwidth<\gre@space@dimen@minimalinitialwidth\relax%
+          \global\gre@dimen@initialwidth=\gre@space@dimen@minimalinitialwidth\relax%
+        \fi%
+      \endgre@style@initial%
     \else%
       \gre@style@initial%
       \global\gre@dimen@initialwidth=\gre@space@dimen@manualinitialwidth\relax%
@@ -1171,7 +1181,8 @@
 % #5 is if 1 if we have space above the staff
 % #6 is the point-and-click filename
 % #7 is the number of staff lines
-\def\GreBeginScore#1#2#3#4#5#6#7{%
+% #8 is to set the initial clef position
+\def\GreBeginScore#1#2#3#4#5#6#7#8{%
   % scores must be new paragraphs!
   \ifhmode\par\fi %
   \gre@beginningofscoretrue%
@@ -1180,6 +1191,8 @@
   \gre@resetledgerlineheuristics%
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \global\setluatexattribute\gre@attr@syllable@id{0}%
+  \let\gre@pitch@cleftop\gre@pitch@dummy %
+  \let\gre@pitch@clefbottom\gre@pitch@dummy %
   \xdef\gre@gabcname{#6}%
   \gre@setstafflines{#7}%
   \ifgre@justifylastline%
@@ -1197,6 +1210,7 @@
   \gre@generatelines %
   \noindent%
   \gre@calculate@additionalspaces{#2}{#3}{#4}{#5}%
+  #8%
   \directlua{
     gregoriotex.atScoreBeginning([[#1]], #2, #3, #4, #5,
         \gre@pitch@adjust@top, \gre@pitch@adjust@bottom,

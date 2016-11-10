@@ -111,6 +111,7 @@ fonts/*.ttf
 *.bz2
 *.zip
 *-[ly].[ch]
+*-y.output
 windows/Ouput
 *.dirstamp
 config_.h

@@ -219,6 +219,77 @@
   }%
 }
 
+\def\gre@saveclefextrema#1#2{%
+  % compute the clef extrema
+  \ifcase#1\or % first@1
+    \global\let\gre@pitch@cleftop\gre@pitch@e %
+    \global\let\gre@pitch@clefbottom\gre@pitch@c %
+    \ifcase#2\or\or % second@2
+      \global\let\gre@pitch@cleftop\gre@pitch@g %
+    \or % second@3
+      \global\let\gre@pitch@cleftop\gre@pitch@i %
+    \or % second@4
+      \global\let\gre@pitch@cleftop\gre@pitch@k %
+    \or % second@5
+      \global\let\gre@pitch@cleftop\gre@pitch@m %
+    \fi %
+  \or % first@2
+    \global\let\gre@pitch@cleftop\gre@pitch@g %
+    \global\let\gre@pitch@clefbottom\gre@pitch@e %
+    \ifcase#2\or % second@1
+      \global\let\gre@pitch@clefbottom\gre@pitch@c %
+    \or\or % second@3
+      \global\let\gre@pitch@cleftop\gre@pitch@i %
+    \or % second@4
+      \global\let\gre@pitch@cleftop\gre@pitch@k %
+    \or % second@5
+      \global\let\gre@pitch@cleftop\gre@pitch@m %
+    \fi %
+  \or % first@3
+    \global\let\gre@pitch@cleftop\gre@pitch@i %
+    \global\let\gre@pitch@clefbottom\gre@pitch@g %
+    \ifcase#2\or % second@1
+      \global\let\gre@pitch@clefbottom\gre@pitch@c %
+    \or % second@2
+      \global\let\gre@pitch@clefbottom\gre@pitch@e %
+    \or\or % second@4
+      \global\let\gre@pitch@cleftop\gre@pitch@k %
+    \or % second@5
+      \global\let\gre@pitch@cleftop\gre@pitch@m %
+    \fi %
+  \or % first@4
+    \global\let\gre@pitch@cleftop\gre@pitch@k %
+    \global\let\gre@pitch@clefbottom\gre@pitch@i %
+    \ifcase#2\or % second@1
+      \global\let\gre@pitch@clefbottom\gre@pitch@c %
+    \or % second@2
+      \global\let\gre@pitch@clefbottom\gre@pitch@e %
+    \or % second@3
+      \global\let\gre@pitch@clefbottom\gre@pitch@g %
+    \or\or % second@5
+      \global\let\gre@pitch@cleftop\gre@pitch@m %
+    \fi %
+  \or % first@5
+    \global\let\gre@pitch@cleftop\gre@pitch@m %
+    \global\let\gre@pitch@clefbottom\gre@pitch@k %
+    \ifcase#2\or % second@1
+      \global\let\gre@pitch@clefbottom\gre@pitch@c %
+    \or % second@2
+      \global\let\gre@pitch@clefbottom\gre@pitch@e %
+    \or % second@3
+      \global\let\gre@pitch@clefbottom\gre@pitch@g %
+    \or % second@4
+      \global\let\gre@pitch@clefbottom\gre@pitch@i %
+    \fi %
+  \fi %
+}%
+
+\def\GreInitialClefPosition#1#2{%
+  \ifgre@showclef %
+    \gre@saveclefextrema{#1}{#2}%
+  \fi %
+}%
+
 % macro that typesets the clef
 % arguments are :
 %% #1: the type of the clef : c or f
@@ -230,6 +301,7 @@
 %% #7: the line of the secondary clef (1 is the lowest)
 %% #8: if 3, it means that we must not put a flat after the secondary clef, otherwise it's the height of the flat
 \def\gre@typeclef#1#2#3#4#5#6#7#8{%
+  \gre@saveclefextrema{#2}{#7}%
   \gre@boxclef{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}%
   \ifcase#3%
     \gre@update@clefwidth@current{\wd\gre@box@temp@width}%

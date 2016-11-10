@@ -499,17 +499,46 @@
     ]%
 }
 
+\def\GreProtrusionFactor#1{\csname gre@protrusionfactor@#1\endcsname}%
+
+\def\gresetprotrusionfactor#1#2{%
+  \IfStrEqCase{#1}{%
+    {,}{\def\gre@protrusionfactor@comma{#2}}%
+    {;}{\def\gre@protrusionfactor@semicolon{#2}}%
+    {:}{\def\gre@protrusionfactor@colon{#2}}%
+    {.}{\def\gre@protrusionfactor@period{#2}}%
+    {eolhyphen}{\def\gre@protrusionfactor@eolhyphen{#2}}%
+    {default}{\def\gre@protrusionfactor@default{#2}}%
+  }[%
+    \gre@error{Unrecognized protrusion "#1" for \protect\gresetprotrusionfactor\MessageBreak Possible options are: ',', ';', ':', '.', 'eolhyphen', and\MessageBreak 'default'}%
+  ]%
+}%
+
+\def\GreProtrusion#1#2{%
+  \gre@widthof{#2}%
+  \IfStrEq{#1}{d}{% d = default
+    \gre@dimen@temp@four=\dimexpr(\gre@dimen@temp@three-\gre@protrusionfactor@default\gre@dimen@temp@three)\relax %
+  }{%
+    \gre@dimen@temp@four=\dimexpr(\gre@dimen@temp@three-#1\gre@dimen@temp@three)\relax %
+  }%
+  \ifdim\gre@dimen@temp@four<0pt\relax %
+    \gre@warning{protrusion factor may not be more than 1}%
+    \gre@dimen@temp@four=0pt\relax %
+  \fi %
+  \ifdim\gre@dimen@temp@four>\gre@dimen@temp@three\relax %
+    \gre@warning{protrusion factor may not be less than 0}%
+    \gre@dimen@temp@four=\gre@dimen@temp@three\relax %
+  \fi %
+  \hbox to \gre@dimen@temp@four{#2\hss}%
+}%
+
+\def\gresethyphenprotrusion#1{% DEPRECATED for removal in 5.1
+  \gre@deprecated{\protect\gresethyphenprotrusion{percentage}}{\protect\gresetprotrusionfactor{eolhyphen}{factor}}% DEPRECATED for removal in 5.1
+  \gresetprotrusionfactor{eolhyphen}{\directlua{tex.print(string.format(string.char(37)..'g', #1 / 100.0))}}% DEPRECATED for removal in 5.1
+}% DEPRECATED for removal in 5.1
+
 % dimen keeping the shift computed with next function
 \newdimen\gre@dimen@eolshift
-\newcount\gre@count@protrusion@hyphen@eol %
-
-% protrusion for hyphens inerted by Lua
-\gre@count@protrusion@hyphen@eol = 0\relax
-
-\def\gresethyphenprotrusion#1{%
-  \gre@count@protrusion@hyphen@eol = #1\relax %
-  \relax %
-}
 
 %% @desc Macro used in \GreSyllable. Sets \gre@dimen@eolshift to the right kern
 %%       that should appear before an end of line.  When active this prevents
@@ -525,7 +554,7 @@
   % if there is a possible hyphen (added afterwards in lua), we keep some room for it
   \ifgre@possibleluahyphenafterthissyllable %
     \setbox\gre@box@temp@width=\hbox{\GreHyph}%
-    \gre@dimen@temp@three=\dimexpr(\wd\gre@box@temp@width * ((100 - \gre@count@protrusion@hyphen@eol) / 100))\relax%
+    \gre@dimen@temp@three=\dimexpr(\wd\gre@box@temp@width-\gre@protrusionfactor@eolhyphen\wd\gre@box@temp@width)\relax%
     \gre@debugmsg{eolshift}{widthof the potential hyphen: \the\gre@dimen@temp@three}%
   \fi %
   % The basic value for the eol shift is -enddifference + width of the hyphen
@@ -839,31 +868,53 @@
 \newcount\gre@space@count@additionaltopspacenabcthreshold\relax%
 \gre@space@count@additionaltopspacenabcthreshold=4
 
+\def\gre@num@min#1#2{%
+  \ifnum#1 < #2\relax %
+    \gre@count@temp@one=#1\relax %
+  \else %
+    \gre@count@temp@one=#2\relax %
+  \fi %
+}%
+\def\gre@num@max#1#2{%
+  \ifnum#1 > #2\relax %
+    \gre@count@temp@one=#1\relax %
+  \else %
+    \gre@count@temp@one=#2\relax %
+  \fi %
+}%
+
+\let\gre@pitch@cleftop\gre@pitch@dummy %
+\let\gre@pitch@clefbottom\gre@pitch@dummy %
+
 % #1 is the high height
 % #2 is the low height
 % #3 is 1 if there is a translation somewhere
 % #4 is if 1 if we have space above the staff
 \def\gre@calculate@additionalspaces#1#2#3#4{%
   \gre@debugmsg{lineheight}{gre@calculate@additional@spaces called with #1 #2 #3 #4}%
-  \gre@count@temp@one=\numexpr(#1 - \gre@pitch@adjust@top - \gre@space@count@additionaltopspacethreshold)\relax %
+  \gre@num@max{#1}{\gre@pitch@cleftop}%
+  \gre@count@temp@one=\numexpr(\gre@count@temp@one - \gre@pitch@adjust@top - \gre@space@count@additionaltopspacethreshold)\relax %
   \ifnum\gre@count@temp@one>0\relax %
     \global\gre@dimen@additionaltopspace=\dimexpr(15750 sp * \gre@count@temp@one * \gre@factor)\relax %
   \else %
     \global\gre@dimen@additionaltopspace=0 sp%
   \fi %
-  \gre@count@temp@one=\numexpr(#1 - \gre@pitch@adjust@top - \gre@space@count@additionaltopspacealtthreshold)\relax %
+  \gre@num@max{#1}{\gre@pitch@cleftop}%
+  \gre@count@temp@one=\numexpr(\gre@count@temp@one - \gre@pitch@adjust@top - \gre@space@count@additionaltopspacealtthreshold)\relax %
   \ifnum\gre@count@temp@one>0\relax %
     \global\gre@dimen@additionaltopspacealt=\dimexpr(15750 sp * \gre@count@temp@one * \gre@factor)\relax %
   \else %
     \global\gre@dimen@additionaltopspacealt=0 sp%
   \fi %
-  \gre@count@temp@one=\numexpr(#1 - \gre@pitch@adjust@top - \gre@space@count@additionaltopspacenabcthreshold)\relax %
+  \gre@num@max{#1}{\gre@pitch@cleftop}%
+  \gre@count@temp@one=\numexpr(\gre@count@temp@one - \gre@pitch@adjust@top - \gre@space@count@additionaltopspacenabcthreshold)\relax %
   \ifnum\gre@count@temp@one>0\relax %
     \global\gre@dimen@additionaltopspacenabc=\dimexpr(15750 sp * \gre@count@temp@one * \gre@factor)\relax %
   \else %
     \global\gre@dimen@additionaltopspacenabc=0 sp%
   \fi %
-  \gre@count@temp@one=\numexpr((#2 - \gre@pitch@adjust@bottom) * -1)\relax %
+  \gre@num@min{#2}{\gre@pitch@clefbottom}%
+  \gre@count@temp@one=\numexpr((\gre@count@temp@one - \gre@pitch@adjust@bottom) * -1)\relax %
   \ifnum\gre@count@temp@one>0\relax %
     \global\gre@dimen@additionalbottomspace=\dimexpr(15750 sp * \gre@count@temp@one * \gre@factor)\relax %
   \else %
@@ -923,8 +974,12 @@
 % #4: notesaligncenter (defined above too)
 % #5: if we have to set previousenddifference or not
 \def\gre@calculate@enddifference#1#2#3#4#5{%
-  \ifcase#5\or %
-    \global\gre@dimen@previousenddifference=\the\gre@dimen@enddifference\relax%
+  \ifgre@textcleared %
+    \global\gre@dimen@previousenddifference=0pt\relax%
+  \else %
+    \ifcase#5\or %
+      \global\gre@dimen@previousenddifference=\the\gre@dimen@enddifference\relax%
+    \fi %
   \fi %
   \global\gre@dimen@enddifference=\dimexpr(#1 - #2 + #3 - #4)\relax%
   \relax%
@@ -1581,6 +1636,7 @@
     {beforeinitialshift}{\gre@rubberfalse}%
     {minimalspaceatlinebeginning}{\gre@rubberfalse}%
     {manualinitialwidth}{\gre@rubberfalse}%
+    {minimalinitialwidth}{\gre@rubberfalse}%
     {annotationseparation}{\gre@rubberfalse}%
     {intersyllablespacenotes}{\gre@rubberfalse}%
     {intersyllablespacenotes@alteration}{\gre@rubberfalse}%
@@ -1969,6 +2025,9 @@
   \fi%
   \ifgre@scale@manualinitialwidth%
     \gre@changeonedimenfactor{manualinitialwidth}{#1}{#2}%
+  \fi%
+  \ifgre@scale@minimalinitialwidth%
+    \gre@changeonedimenfactor{minimalinitialwidth}{#1}{#2}%
   \fi%
   \ifgre@scale@annotationseparation%
     \gre@changeonedimenfactor{annotationseparation}{#1}{#2}%
