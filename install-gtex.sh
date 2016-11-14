@@ -145,9 +145,11 @@ esac
 
 if [ "$TEXMFROOT" = "" ]
 then
-    echo "Usage: $0 [--no-uninstall] var:{tex-variable}"
-    echo "       $0 [--no-uninstall] dir:{directory}"
-    echo "       $0 [--no-uninstall] system|user|tds"
+    echo "Usage: $0 var:{tex-variable}"
+    echo "       $0 dir:{directory}"
+    echo "       $0 system|user|tds"
+    echo
+    echo "Please read the documentation in the script for additional options"
     exit 1
 fi
 
@@ -201,7 +203,8 @@ then
     fi
 
     mkdir -p "${TEXMFROOT}/${UNINSTALL_SCRIPT_DIR}" || die
-    echo '#!/usr/bin/env bash' > "${UNINSTALL_SCRIPT}"
+    echo '# This script uninstalls GregorioTeX.' > "${UNINSTALL_SCRIPT}"
+    echo '# Run it with "bash /path/to/uninstall-gtex.sh".' >> "${UNINSTALL_SCRIPT}"
     echo >> "${UNINSTALL_SCRIPT}"
     echo 'RM=${RM:-rm}' >> "${UNINSTALL_SCRIPT}"
     echo 'TEXHASH=${TEXHASH:-texhash}' >> "${UNINSTALL_SCRIPT}"
