@@ -116,7 +116,6 @@ case "$arg" in
     tds)
         TDS_ZIP="${NAME}.tds.zip"
         TEXMFROOT=./tmp-texmf
-        GENERATE_UNINSTALL=false
         ;;
     var:*)
         TEXMFROOT=`${KPSEWHICH} -expand-path "\$${arg#var:}"`
@@ -146,11 +145,17 @@ esac
 
 if [ "$TEXMFROOT" = "" ]
 then
-    echo "Usage: $0 [--no-uninstall] var:{tex-variable}"
-    echo "       $0 [--no-uninstall] dir:{directory}"
-    echo "       $0 [--no-uninstall] system|user|tds"
+    echo "Usage: $0 var:{tex-variable}"
+    echo "       $0 dir:{directory}"
+    echo "       $0 system|user|tds"
+    echo
+    echo "Please read the documentation in the script for additional options"
     exit 1
 fi
+
+UNINSTALL_SCRIPT_DIR="scripts/gregoriotex"
+UNINSTALL_SCRIPT_FILE="uninstall-gtex.sh"
+UNINSTALL_SCRIPT="${TEXMFROOT}/${UNINSTALL_SCRIPT_DIR}/${UNINSTALL_SCRIPT_FILE}"
 
 function die {
     echo 'Failed.'
@@ -167,10 +172,10 @@ function install_to {
     then
         for name in "$@"
         do
-            echo '$RM'" $dir/$(basename $name)" >> uninstall-gtex.sh
+            echo '$RM'" $dir/$(basename $name)" >> "${UNINSTALL_SCRIPT}"
         done
-        echo "rmdir -p $dir 2> /dev/null || true" >> uninstall-gtex.sh
-        echo >> uninstall-gtex.sh
+        echo "rmdir -p $dir 2> /dev/null || true" >> "${UNINSTALL_SCRIPT}"
+        echo >> "${UNINSTALL_SCRIPT}"
     fi
 }
 
@@ -191,22 +196,24 @@ function not_installing {
 
 if ${GENERATE_UNINSTALL}
 then
-    if [ -e "uninstall-gtex.sh" ]
+    if [ -e "${UNINSTALL_SCRIPT}" ]
     then
-        echo "uninstall-gtex.sh exists; delete it to continue"
+        echo "${UNINSTALL_SCRIPT} exists; delete it to continue"
         exit 1
     fi
 
-    echo '#!/usr/bin/env bash' > uninstall-gtex.sh
-    echo >> uninstall-gtex.sh
-    echo 'RM=${RM:-rm}' >> uninstall-gtex.sh
-    echo 'TEXHASH=${TEXHASH:-texhash}' >> uninstall-gtex.sh
-    echo >> uninstall-gtex.sh
-    echo "cd '${TEXMFROOT}'" >> uninstall-gtex.sh
-    echo >> uninstall-gtex.sh
+    mkdir -p "${TEXMFROOT}/${UNINSTALL_SCRIPT_DIR}" || die
+    echo '# This script uninstalls GregorioTeX.' > "${UNINSTALL_SCRIPT}"
+    echo '# Run it with "bash /path/to/uninstall-gtex.sh".' >> "${UNINSTALL_SCRIPT}"
+    echo >> "${UNINSTALL_SCRIPT}"
+    echo 'RM=${RM:-rm}' >> "${UNINSTALL_SCRIPT}"
+    echo 'TEXHASH=${TEXHASH:-texhash}' >> "${UNINSTALL_SCRIPT}"
+    echo >> "${UNINSTALL_SCRIPT}"
+    echo 'cd $(dirname ${BASH_SOURCE[0]})/../..' >> "${UNINSTALL_SCRIPT}"
+    echo >> "${UNINSTALL_SCRIPT}"
 elif [ "$arg" != 'tds' ]
 then
-    echo "Not generating uninstall-gtex.sh"
+    echo "Not generating "${UNINSTALL_SCRIPT}""
 fi
 
 echo "Removing old files"
@@ -241,7 +248,11 @@ ${skip_install[font-sources]:-false} && not_installing font sources ||
 
 if ${GENERATE_UNINSTALL}
 then
-    echo '${TEXHASH}' >> uninstall-gtex.sh
+    echo '$RM'" ${UNINSTALL_SCRIPT_DIR}/${UNINSTALL_SCRIPT_FILE}" >> "${UNINSTALL_SCRIPT}"
+    echo "rmdir -p ${UNINSTALL_SCRIPT_DIR} 2> /dev/null || true" >> "${UNINSTALL_SCRIPT}"
+    echo >> "${UNINSTALL_SCRIPT}"
+
+    echo '${TEXHASH}' >> "${UNINSTALL_SCRIPT}"
 fi
 
 if [ "$arg" = 'tds' ]
