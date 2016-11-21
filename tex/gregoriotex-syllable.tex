@@ -883,7 +883,17 @@
   \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@nextendsyllablepart}{#7}%
   \gre@unsetfixednexttextformat %
   \ifgre@showlyrics%
-    \setbox\gre@box@syllabletext=\hbox{\gre@emit@syllabletext{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart}{#6}}}%
+    \setbox\gre@box@syllabletext=\hbox{%
+      \IfSubStr{\gre@debug}{,notespacing,}%
+        % when debugging we add a zero-width line to mark the syllable bound
+        {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
+        {}% do nothing if not debugging
+      \gre@emit@syllabletext{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart}{#6}}%
+      \IfSubStr{\gre@debug}{,notespacing,}%
+        % when debugging we add a zero-width line to mark the syllable bound
+        {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
+        {}% do nothing if not debugging
+    }%
   \else%
     \setbox\gre@box@syllabletext=\box\voidb@x%
   \fi%
@@ -924,13 +934,34 @@
     % if it's the last syllable of line, the hyphen will be \GreHyph
     \ifnum\gre@lastoflinecount=1\relax %
       \ifgre@showlyrics%
-        \setbox\gre@box@syllabletext=\hbox{\gre@emit@syllabletext{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart#3{\GreHyph}\relax}{#6}}}%
+        \setbox\gre@box@syllabletext=\hbox{%
+          \IfSubStr{\gre@debug}{,notespacing,}%
+            % when debugging we add a zero-width line to mark the syllable bound
+            {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
+            {}% do nothing if not debugging
+          \gre@emit@syllabletext{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart#3{\GreHyph}\relax}{#6}}%
+          \IfSubStr{\gre@debug}{,notespacing,}%
+            % when debugging we add a zero-width line to mark the syllable bound
+            {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
+            {}% do nothing if not debugging
+
+        }%
       \else%
         \setbox\gre@box@syllabletext=\box\voidb@x%
       \fi%
     \else %
       \ifgre@showlyrics%
-        \setbox\gre@box@syllabletext=\hbox{\gre@emit@syllabletext{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart#3{-}}{#6}}}%
+        \setbox\gre@box@syllabletext=\hbox{%
+          \IfSubStr{\gre@debug}{,notespacing,}%
+            % when debugging we add a zero-width line to mark the syllable bound
+            {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
+            {}% do nothing if not debugging
+          \gre@emit@syllabletext{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart#3{-}}{#6}}%
+          \IfSubStr{\gre@debug}{,notespacing,}%
+            % when debugging we add a zero-width line to mark the syllable bound
+            {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
+            {}% do nothing if not debugging
+        }%
       \else%
         \setbox\gre@box@syllabletext=\box\voidb@x%
       \fi%
@@ -946,7 +977,17 @@
       \gre@attr@dash=1\relax % in this particular case where it is not the end of a word and we haven't put a dash, we set potentital dash to 1
       % we rebuild this box, in order it to have the attribute
       \ifgre@showlyrics%
-        \setbox\gre@box@syllabletext=\hbox{\gre@emit@syllabletext{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart}{#6}}}%
+        \setbox\gre@box@syllabletext=\hbox{%
+          \IfSubStr{\gre@debug}{,notespacing,}%
+            % when debugging we add a zero-width line to mark the syllable bound
+            {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
+            {}% do nothing if not debugging
+          \gre@emit@syllabletext{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart}{#6}}%
+          \IfSubStr{\gre@debug}{,notespacing,}%
+            % when debugging we add a zero-width line to mark the syllable bound
+            {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
+            {}% do nothing if not debugging
+        }%
       \else%
         \setbox\gre@box@syllabletext=\box\voidb@x%
       \fi%
@@ -976,7 +1017,15 @@
   \gre@attr@dash=0\relax %
   \GreNoBreak % no line breaks between text and notes
   \ifgre@shownotes%
+    \IfSubStr{\gre@debug}{,notespacing,}%
+      % when debugging we add a zero-width line to mark the syllable bound
+      {\raise 12pt\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
+      {}% do nothing if not debugging
     #9% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
+    \IfSubStr{\gre@debug}{,notespacing,}%
+      % when debugging we add a zero-width line to mark the syllable bound
+      {\raise 12pt\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
+      {}% do nothing if not debugging
   \fi%
   \GreNoBreak % no line breaks between notes and end of syllable skips
   \gre@debugmsg{ifdim}{ enddifference < 0pt}%
@@ -1154,7 +1203,17 @@
   #1%
   \gre@calculate@textaligncenter{\gre@save@endsyllablepart}{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}%
   \ifgre@showlyrics%
-    \setbox\gre@box@syllabletext=\hbox{\gre@emit@syllabletext{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart}{#6}}}%
+    \setbox\gre@box@syllabletext=\hbox{%
+      \IfSubStr{\gre@debug}{,barspacing,}%
+        % when debugging we add a zero-width line to mark the syllable bound
+        {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
+        {}% do nothing if not debugging
+      \gre@emit@syllabletext{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@emit@endsyllablepart}{#6}}
+      \IfSubStr{\gre@debug}{,barspacing,}%
+        % when debugging we add a zero-width line to mark the syllable bound
+        {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
+        {}% do nothing if not debugging
+      }%
   \else%
     \setbox\gre@box@syllabletext=\box\voidb@x%
   \fi%
@@ -1209,7 +1268,15 @@
       -\wd\gre@box@syllablenotes)\relax % back up from end of bar line to beginning
     \GreNoBreak%
     \ifgre@shownotes%
+      \IfSubStr{\gre@debug}{,barspacing,}%
+        % when debugging we add a zero-width line to mark the syllable bound
+        {\raise 12pt\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
+        {}% do nothing if not debugging
       #9%
+      \IfSubStr{\gre@debug}{,barspacing,}%
+        % when debugging we add a zero-width line to mark the syllable bound
+        {\raise 12pt\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
+        {}% do nothing if not debugging
     \fi%
     \global\let\gre@newlinecommon\gre@newlinecommonsaved %
     \GreNoBreak%
