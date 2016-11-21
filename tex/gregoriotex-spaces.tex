@@ -974,12 +974,8 @@
 % #4: notesaligncenter (defined above too)
 % #5: if we have to set previousenddifference or not
 \def\gre@calculate@enddifference#1#2#3#4#5{%
-  \ifgre@textcleared %
-    \global\gre@dimen@previousenddifference=0pt\relax%
-  \else %
-    \ifcase#5\or %
-      \global\gre@dimen@previousenddifference=\the\gre@dimen@enddifference\relax%
-    \fi %
+  \ifcase#5\or %
+    \global\gre@dimen@previousenddifference=\the\gre@dimen@enddifference\relax%
   \fi %
   \global\gre@dimen@enddifference=\dimexpr(#1 - #2 + #3 - #4)\relax%
   \relax%
