@@ -8,6 +8,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - A rising note after an oriscus flexus will no longer generate a porrectus (see [#1220](https://github.com/gregorio-project/gregorio/issues/1220)).
 - The Scribus external tool script now uses latexmk in order to handle the multi-pass features of Gregorio (see [#1236](https://github.com/gregorio-project/gregorio/issues/1236)).
 - Translation text in a syllable with a trailing (forced) hyphen is no longer truncated to its first character (see [#1254](https://github.com/gregorio-project/gregorio/issues/1254)).
+- A trailing (forced) hyphen in a syllable no longer generates a forced hyphen in the previous syllable (see [#1255](https://github.com/gregorio-project/gregorio/issues/1255)).
 
 ## Changed
 - Notes are now left-aligned as if all clefs had the same width as the largest clef in the score. You can get previous behavior back with `\grebolshiftcleftype{current}`, or temporary force alignment until the end of a score with `\grelocalbolshiftcleftype`. See Documentation of these functions and [#1189](https://github.com/gregorio-project/gregorio/issues/1189).
