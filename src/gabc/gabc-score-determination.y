@@ -89,6 +89,7 @@ gregorio_element *current_element;
 static char *macros[10];
 /* other variables that we will have to use */
 static gregorio_character *current_character;
+static gregorio_character *suspended_character;
 static gregorio_character *first_text_character;
 static gregorio_character *first_translation_character;
 static gregorio_tr_centering translation_type;
@@ -159,6 +160,7 @@ static void initialize_variables(bool point_and_click)
     number_of_voices = 1;
     voice = 0; /* first (and only) voice */
     current_character = NULL;
+    suspended_character = NULL;
     first_translation_character = NULL;
     first_text_character = NULL;
     translation_type = TR_NORMAL;
@@ -342,9 +344,9 @@ static __inline void save_text(void)
  * the translation pointer instead of the text pointer */
 static void start_translation(unsigned char asked_translation_type)
 {
-    save_text();
+    suspended_character = current_character;
     /* the middle letters of the translation have no sense */
-    center_is_determined = CENTER_FULLY_DETERMINED;
+    /*center_is_determined = CENTER_FULLY_DETERMINED;*/
     current_character = NULL;
     translation_type = asked_translation_type;
 }
@@ -353,6 +355,7 @@ static void end_translation(void)
 {
     ready_characters();
     first_translation_character = current_character;
+    current_character = suspended_character;
 }
 
 /*
@@ -542,6 +545,7 @@ static void close_syllable(YYLTYPE *loc)
     }
     center_is_determined = CENTER_NOT_DETERMINED;
     current_character = NULL;
+    suspended_character = NULL;
     first_text_character = NULL;
     first_translation_character = NULL;
     translation_type = TR_NORMAL;
@@ -862,23 +866,6 @@ style_beginning:
     | SP_BEGIN {
         add_style(ST_SPECIAL_CHAR);
     }
-    | ELISION_BEGIN {
-        add_style(ST_ELISION);
-    }
-    | CENTER_BEGIN {
-        if (center_is_determined) {
-            gregorio_message(
-                    "syllable already has center; ignoring additional center",
-                    "det_score", VERBOSITY_WARNING, 0);
-        } else if (has_protrusion) {
-            gregorio_message(
-                    "center not allowed after protrusion; ignored",
-                    "det_score", VERBOSITY_WARNING, 0);
-        } else {
-            add_style(ST_FORCED_CENTER);
-            center_is_determined = CENTER_HALF_DETERMINED;
-        }
-    }
     ;
 
 style_end:
@@ -906,7 +893,30 @@ style_end:
     | SP_END {
         end_style(ST_SPECIAL_CHAR);
     }
-    | ELISION_END {
+    ;
+
+special_style_beginning:
+    ELISION_BEGIN {
+        add_style(ST_ELISION);
+    }
+    | CENTER_BEGIN {
+        if (center_is_determined) {
+            gregorio_message(
+                    "syllable already has center; ignoring additional center",
+                    "det_score", VERBOSITY_WARNING, 0);
+        } else if (has_protrusion) {
+            gregorio_message(
+                    "center not allowed after protrusion; ignored",
+                    "det_score", VERBOSITY_WARNING, 0);
+        } else {
+            add_style(ST_FORCED_CENTER);
+            center_is_determined = CENTER_HALF_DETERMINED;
+        }
+    }
+    ;
+
+special_style_end:
+    ELISION_END {
         end_style(ST_ELISION);
     }
     | CENTER_END {
@@ -955,6 +965,8 @@ character:
     }
     | style_beginning
     | style_end
+    | special_style_beginning
+    | special_style_end
     | linebreak_area
     | euouae
     | CLEAR {
@@ -974,6 +986,25 @@ text:
     | text character
     ;
 
+translation_character:
+    CHARACTERS {
+        add_text($1.text);
+    }
+    | style_beginning
+    | style_end
+    | HYPHEN {
+        add_text(gregorio_strdup("-"));
+    }
+    | PROTRUDING_PUNCTUATION {
+        add_text($1.text);
+    }
+    ;
+
+translation_text:
+    translation_character
+    | translation_text translation_character
+    ;
+
 translation_beginning:
     TRANSLATION_BEGIN {
         start_translation(TR_NORMAL);
@@ -984,11 +1015,12 @@ translation:
     translation_beginning TRANSLATION_END {
         end_translation();
     }
-    | translation_beginning text TRANSLATION_END {
+    | translation_beginning translation_text TRANSLATION_END {
         end_translation();
     }
     | TRANSLATION_CENTER_END {
         start_translation(TR_WITH_CENTER_END);
+        end_translation();
     }
     ;
 
@@ -1028,26 +1060,31 @@ syllable_with_notes:
         close_syllable(&@1);
     }
     | text translation OPENING_BRACKET notes {
+        save_text();
         close_syllable(&@1);
     }
     | HYPHEN translation OPENING_BRACKET notes {
         add_style(ST_VERBATIM);
         add_text(gregorio_strdup("\\GreForceHyphen"));
         end_style(ST_VERBATIM);
+        save_text();
         close_syllable(&@1);
     }
     | text HYPHEN translation OPENING_BRACKET notes {
         add_style(ST_VERBATIM);
         add_text(gregorio_strdup("\\GreForceHyphen"));
         end_style(ST_VERBATIM);
+        save_text();
         close_syllable(&@1);
     }
     | PROTRUDING_PUNCTUATION translation OPENING_BRACKET notes {
         add_auto_protrusion($1.text);
+        save_text();
         close_syllable(&@1);
     }
     | text PROTRUDING_PUNCTUATION translation OPENING_BRACKET notes {
         add_auto_protrusion($2.text);
+        save_text();
         close_syllable(&@1);
     }
     ;
