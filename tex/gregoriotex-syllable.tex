@@ -294,7 +294,7 @@
           % clivis alignment
           \gre@widthof{\gre@endsyllablepart}%
         \else%
-          \gre@widthof{\gre@nextendsyllablepart}%
+          \gre@widthof{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}%
         \fi%
         \gre@debugmsg{ifdim}{ temp@three > clivisalignmentmin}%
         \ifdim\gre@dimen@temp@three >\gre@space@dimen@clivisalignmentmin\relax%
@@ -664,8 +664,23 @@
     ]%
 }%
 
+\newif\ifgre@evaluatingnextsyllable%
+\gre@evaluatingnextsyllablefalse%
+\def\gre@evaluatenextsyllable#1{%
+  \gre@evaluatingnextsyllabletrue%
+  #1%
+  \gre@evaluatingnextsyllablefalse%
+}%
+
 \newif\ifgre@showhyphenafterthissyllable%
-\def\GreForceHyphen{\global\gre@showhyphenafterthissyllabletrue\gre@debugmsg{hyphen}{Forcing hyphen in gabc}}
+\def\GreForceHyphen{%
+  \ifgre@evaluatingnextsyllable%
+    -%
+  \else%
+    \global\gre@showhyphenafterthissyllabletrue%
+    \gre@debugmsg{hyphen}{Forcing hyphen in gabc}%
+  \fi%
+}%
 \def\GreEmptyFirstSyllableHyphen{\ifgre@forceemptyfirstsyllablehyphen\GreForceHyphen\fi}%
 
 % if an hyphen maybe be added by lua for this syllable. When syllable is not end of word and
@@ -880,7 +895,7 @@
   % by default, gre@attr@dash will be 2
   \gre@attr@dash=2\relax %
   #5%
-  \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@nextendsyllablepart}{#7}%
+  \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{#7}%
   \gre@unsetfixednexttextformat %
   \ifgre@showlyrics%
     \setbox\gre@box@syllabletext=\hbox{%
@@ -966,7 +981,7 @@
       \fi%
     \fi %
     % recomputing end difference and final skip with the final hyphen
-    \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@nextendsyllablepart}{#7}%
+    \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{#7}%
     \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{0}%
     \gre@calculate@syllablefinalskip{#4}{\gre@count@temp@one}%
   \else %
@@ -1034,7 +1049,7 @@
     \GreNoBreak %
   \fi%
   % we call end of syllable
-  \gre@syllable@end{#7}{\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart}{#4}%
+  \gre@syllable@end{#7}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart}}{#4}%
   \gre@push@endsyllable{#6}\relax %
   \global\gre@dimen@notesaligncenter=0pt\relax% very important, see flat and natural
   \gre@unsetfixedtextformat %
@@ -1226,7 +1241,7 @@
   \gre@dimen@begindifference=\dimexpr(\gre@dimen@notesaligncenter - \gre@dimen@textaligncenter)\relax%
   \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
   #5%
-  \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@nextendsyllablepart}{#7}%
+  \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{#7}%
   \gre@unsetfixednexttextformat %
   \gre@debugmsg{barspacing}{previousenddifference: \the\gre@dimen@previousenddifference}%
   \gre@debugmsg{barspacing}{begindifference: \the\gre@dimen@begindifference}%
