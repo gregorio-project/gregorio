@@ -1373,6 +1373,9 @@ Puts the greater of its two integer arguments into \verb=\gre@count@temp@one=.
   \#2 & integer & the second value to compare\\
 \end{argtable}
 
+\macroname{\textbackslash gre@evaluatenextsyllable}{\#1}{gregoriotex-syllable.tex}
+Evaluates its first argument as an advance computation against the next syllable.  Twiddles the \verb=ifgre@evaluatingnextsyllable= flag around evaluation of the macro argument.
+
 \subsection{Auxiliary File}
 Gregorio\TeX\ creates its own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.
 
@@ -1821,6 +1824,9 @@ Boolean indicating that a syllable should be rewritten to improve ligature rende
 
 \macroname{\textbackslash ifgre@textcleared}{}{gregoriotex-syllable.tex}
 Boolean indicating that the text of this syllable should not overlap any previous syllable.
+
+\macroname{\textbackslash ifgre@evaluatingnextsyllable}{}{gregoriotex-syllable.tex}
+Boolean indicating that some aspect of the next syllable is being evaluated in advance.
 
 \subsection{Boxes}
 
