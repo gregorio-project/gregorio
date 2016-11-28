@@ -1009,6 +1009,9 @@
       \global\gre@possibleluahyphenafterthissyllablefalse %
     \fi %
   \fi%
+  \ifgre@textcleared%
+    \gre@clearsyllable{note}%
+  \fi%
   % then we reuse temp, we assign to it the \gre@dimen@begindifference, but only if it is positive, else it is 0
   \gre@debugmsg{ifdim}{ begindifference > 0pt}%
   \ifdim\gre@dimen@begindifference > 0 pt\relax%
@@ -1252,6 +1255,9 @@
     % New bar spacing algorithm
     %
     \gre@calculate@barposition{#4}{#7}%
+    \ifgre@textcleared%
+      \gre@clearsyllable{bar}%
+    \fi%
     %now we can place the text and bar
     %we're going to use the bar line to control positioning, so we need to start by getting to the end of the notes of the previous syllable
     \ifdim\gre@dimen@adjustedpreviousenddifference < 0pt\relax%
@@ -1371,6 +1377,9 @@
     %
     %This is the old algorithm.  I've kept it in case people still want to use it.
     \gre@punctummoraadjustment%
+    \ifgre@textcleared%
+      \gre@clearsyllable{bar}%
+    \fi%
     % then we check if there is something to write
     \global\let\gre@newlinecommon\gre@newlinecommonsaved %
     \gre@debugmsg{ifdim}{ wd(gre@box@syllabletext) = 0pt}%
