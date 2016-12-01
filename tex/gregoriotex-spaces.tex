@@ -1190,6 +1190,11 @@
     \gre@dimen@temp@three=\gre@space@dimen@maxbaroffsettextleft@eol\relax%
     \gre@dimen@temp@two=\gre@space@dimen@maxbaroffsettextright@eol\relax%
   \fi%
+  % If the bar syllable is to be cleared from overlapping the previous syllable then we force the text and bar to be exactly aligned.
+  \ifgre@textcleared%
+    \gre@dimen@temp@three=0pt\relax%
+    \gre@dimen@temp@two=0pt\relax%
+  \fi%
   \gre@debugmsg{barspacing}{left offset limit: \the\gre@dimen@temp@three}%
   \gre@debugmsg{barspacing}{right offset limit: \the\gre@dimen@temp@two}%
   % All this worry about shifts is superfluous if the text isn’t present,
@@ -1292,7 +1297,7 @@
   \fi\fi %
 }
 
-%punctum mora adjustment calculations
+%punctum mora adjustment calculations for bars
 \def\gre@punctummoraadjustment{%
   % taking into account the punctum mora shift
   \global\gre@dimen@adjustedpreviousenddifference=\gre@dimen@previousenddifference %
@@ -1331,6 +1336,68 @@
       \fi %
     \fi %
   \fi %
+}%
+
+% Clearing a syllable so it doesn't overlap with the previous one
+\def\gre@clearsyllable#1{%
+  \gre@debugmsg{clear}{Clearing syllable}%
+  % because the way mora shifts are implemented is different for bars and
+  % notes, we have to use a different set of dimensions depending on which
+  % kind of syllable we're dealing with.  We know this by looking at the
+  % argument of this function, which should be 'bar' for a bar syllable and 'note'
+  % for a note syllable.
+  \IfStrEq{#1}{bar}%
+    {%
+      \gre@debugmsg{clear}{adjustedpreviousenddifference = \the\gre@dimen@adjustedpreviousenddifference}%
+      \gre@dimen@temp@one=\gre@dimen@adjustedpreviousenddifference%
+    }%
+    {%
+      \gre@debugmsg{clear}{previousenddifference = \the\gre@dimen@previousenddifference}%
+      \gre@dimen@temp@one=\gre@dimen@previousenddifference%
+    }%
+  \gre@debugmsg{clear}{begindifference = \the\gre@dimen@begindifference}%
+  \gre@debugmsg{clear}{syllablefinalskip = \the\gre@skip@syllablefinalskip}%
+  \ifdim\gre@dimen@temp@one > 0pt\relax%
+    \ifdim\gre@dimen@begindifference < 0pt\relax%
+      \ifdim\gre@dimen@temp@one > -\gre@dimen@begindifference\relax%
+        \gre@debugmsg{clear}{Case 1}%
+        \kern -\gre@dimen@begindifference\relax%
+      \else%
+        \gre@debugmsg{clear}{Case 2}%
+        \kern \gre@dimen@temp@one\relax%
+      \fi%
+      \IfStrEq{#1}{note}%
+        {% when dealing with notes we may have already skipped
+        % forward some, in which case we need to account for that
+          \ifdim\gre@skip@syllablefinalskip > 0pt\relax%
+            \gre@debugmsg{clear}{undo syllablefinalskip}%
+            \kern -\gre@skip@syllablefinalskip\relax%
+          \fi%
+        }{}%
+    \else%
+      \gre@debugmsg{clear}{Syllable already clear}%
+    \fi%
+  \else%
+    \ifdim\gre@dimen@begindifference > 0pt\relax%
+      \ifdim-\gre@dimen@temp@one > \gre@dimen@begindifference\relax%
+        \gre@debugmsg{clear}{Case 3}%
+        \kern \gre@dimen@begindifference\relax%
+      \else%
+        \gre@debugmsg{clear}{Case 4}%
+        \kern -\gre@dimen@temp@one\relax%
+      \fi%
+      \IfStrEq{#1}{note}%
+        {% when dealing with notes we may have already skipped
+        % forward some, in which case we need to account for that
+          \ifdim\gre@skip@syllablefinalskip > 0pt\relax%
+            \gre@debugmsg{clear}{undo syllablefinalskip}%
+            \kern -\gre@skip@syllablefinalskip\relax%
+          \fi%
+        }{}%
+    \else%
+      \gre@debugmsg{clear}{Syllable already clear}%
+    \fi%
+  \fi%
 }%
 
 %%%%%%%%%%%%%%%%%%%
