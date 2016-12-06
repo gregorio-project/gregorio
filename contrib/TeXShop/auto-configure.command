@@ -34,7 +34,7 @@ fi
 TeXShopDir=`osascript -e 'POSIX path of (path to app "TeXShop")'`
 
 echo "Adding gabc to list of valid extensions in TeXShop"
-defaults write "$TeXShopDir/Contents/Info.plist" CFBundleDocumentTypes -array-add '<dict>
+sudo defaults write "$TeXShopDir/Contents/Info.plist" CFBundleDocumentTypes -array-add '<dict>
 <key>CFBundleTypeExtensions</key>
 <array>
 <string>gabc</string>
