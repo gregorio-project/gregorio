@@ -61,7 +61,7 @@ sudo defaults write "$TeXShopDir/Contents/Info.plist" CFBundleDocumentTypes -arr
 
 echo "Adding Gregorio file extensions to appropriate preference lists"
 #enable syntax coloring and the Typeset button for gabc files
-TeXExtensions=`defaults read TeXShop OtherTeXExtensions`
+TeXExtensions=$(defaults read TeXShop OtherTeXExtensions 2>/dev/null)
 if [[ ! $TeXExtensions == *"gabc"* ]]; then
   defaults write TeXShop OtherTeXExtensions -array-add "gabc"
 fi
@@ -70,7 +70,7 @@ if [[ ! $TeXExtensions == *"gtex"* ]]; then
 fi
 
 #Add gtex and gaux to the list of aux files deleted with Trash Aux Files
-TrashExtensions=`defaults read TeXShop OtherTrashExtensions`
+TrashExtensions=$(defaults read TeXShop OtherTrashExtensions 2>/dev/null)
 if [[ ! $TrashExtensions == *"gtex"* ]]; then
   defaults write TeXShop OtherTrashExtensions -array-add "gtex"
 fi
