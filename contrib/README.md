@@ -20,20 +20,24 @@ under Windows).
    * click `Add` in the `Render Frames`
    * select the file `900_gregorio.xml`
 
-After that you can insert a render frame using Gregorio, and simply 
+After that you can insert a render frame using Gregorio, and simply
 typing gabc (`right-click->edit sources`).
 
 For more details see [the website](http://home.gna.org/gregorio/scribus).
 
+## Syllabation checker (Python script)
+
+The `check-syllabation/` folder contains Python scripts to check a gabc score against syllabation rules. See `check-syllabation/README.md` for details.
+
 ## Kde editors (Kate, Kedit)
 
-You can use `gabc.xml` for syntax highlighting in kate (and Kedit, etc.). To 
+You can use `gabc.xml` for syntax highlighting in kate (and Kedit, etc.). To
 install it, copy the file in `/usr/share/apps/katepart/syntax`. This path
 may vary according to your distribution.
 
 ## Gnome editors (Gedit)
 
-You can use `gabc.lang` for syntax highlighting in GtkSourceView (Gedit, etc.). To 
+You can use `gabc.lang` for syntax highlighting in GtkSourceView (Gedit, etc.). To
 install it, copy the file in `/usr/share/gtksourceview-3.0/language-specs`. This path
 may vary according to your distribution.
 
@@ -45,7 +49,7 @@ To use gregorio in [Emacs](https://www.gnu.org/software/emacs/), see [this scrip
 
 To get gabc syntax highlighting in [Vim](http://www.vim.org/):
 
- * copy `gabc.vim` in `/usr/share/vim/vimcurrent/syntax` 
+ * copy `gabc.vim` in `/usr/share/vim/vimcurrent/syntax`
  * add the line `au BufNewFile,BufRead *.gabc setf gabc`
 somewhere near lines of the same type (near line 100 for example) in
 `/usr/share/vim/vimcurrent/filetype.vim`. This will autodetect the filetypes.
