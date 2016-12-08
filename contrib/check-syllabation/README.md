@@ -25,3 +25,9 @@ checkAllGabc.sh my_directory
 ```
 
 by default it will consider that the `.dic` file is `hyph_la_liturgical.dic` in the current directory. If it's not the case, please change the `PATPATH` variable in the script.
+
+## Hyphenation problems
+
+If you encounter problems of hyphenation, meaning you disagree with the proposed hyphenation, please contact the author of the hyphenation rules you are using ([here](https://github.com/gregorio-project/hyphen-la/issues) for `hyphen-la` for example).
+
+If you encounter problems because the script got confused by a gabc construct you are using or has bugs not directly related to hyphenation, please report it on the [gregorio tracker](https://github.com/gregorio-project/gregorio/issues).
