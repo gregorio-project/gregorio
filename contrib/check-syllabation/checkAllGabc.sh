@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PATPATH="/home/eroux/gregorio/hyphen-la/patterns/hyph_la_liturgical.dic";
+PATPATH="hyph_la_liturgical.dic";
 
 DIR=${1:-'.'}
 

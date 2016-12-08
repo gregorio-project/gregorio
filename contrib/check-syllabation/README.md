@@ -23,3 +23,5 @@ You can also check a whole directory with subdirectories running
 ```
 checkAllGabc.sh my_directory
 ```
+
+by default it will consider that the `.dic` file is `hyph_la_liturgical.dic` in the current directory. If it's not the case, please change the `PATPATH` variable in the script.
