@@ -34,7 +34,7 @@ fi
 TeXShopDir=`osascript -e 'POSIX path of (path to app "TeXShop")'`
 
 echo "Adding gabc to list of valid extensions in TeXShop"
-defaults write "$TeXShopDir/Contents/Info.plist" CFBundleDocumentTypes -array-add '<dict>
+sudo defaults write "$TeXShopDir/Contents/Info.plist" CFBundleDocumentTypes -array-add '<dict>
 <key>CFBundleTypeExtensions</key>
 <array>
 <string>gabc</string>
@@ -61,13 +61,25 @@ defaults write "$TeXShopDir/Contents/Info.plist" CFBundleDocumentTypes -array-ad
 
 echo "Adding Gregorio file extensions to appropriate preference lists"
 #enable syntax coloring and the Typeset button for gabc files
-defaults write TeXShop OtherTeXExtensions -array-add "gabc"
-defaults write TeXShop OtherTeXExtensions -array-add "gtex"
+TeXExtensions=$(defaults read TeXShop OtherTeXExtensions 2>/dev/null)
+if [[ ! $TeXExtensions == *gabc* ]]; then
+  defaults write TeXShop OtherTeXExtensions -array-add "gabc"
+fi
+if [[ ! $TeXExtensions == *gtex* ]]; then
+  defaults write TeXShop OtherTeXExtensions -array-add "gtex"
+fi
 
 #Add gtex and gaux to the list of aux files deleted with Trash Aux Files
-defaults write TeXShop OtherTrashExtensions -array-add "gtex"
-defaults write TeXShop OtherTrashExtensions -array-add "gaux"
-defaults write TeXShop OtherTrashExtensions -array-add "glog"
+TrashExtensions=$(defaults read TeXShop OtherTrashExtensions 2>/dev/null)
+if [[ ! $TrashExtensions == *gtex* ]]; then
+  defaults write TeXShop OtherTrashExtensions -array-add "gtex"
+fi
+if [[ ! $TrashExtensions == *gaux* ]]; then
+  defaults write TeXShop OtherTrashExtensions -array-add "gaux"
+fi
+if [[ ! $TrashExtensions == *glog* ]]; then
+  defaults write TeXShop OtherTrashExtensions -array-add "glog"
+fi
 
 echo "Configuration complete"
 exit 0
