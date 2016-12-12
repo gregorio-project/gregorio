@@ -111,6 +111,7 @@ AC_CONFIG_FILES([
     examples/Makefile
     contrib/Makefile
     contrib/TeXShop/Makefile
+    contrib/check-syllabation/Makefile
     doc/Makefile
     tex/Makefile
     fonts/Makefile
