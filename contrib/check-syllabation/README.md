@@ -13,18 +13,16 @@ If you want liturgical Latin hyphenation rules, you can pick those in [hyphen-la
 Once you have the hyphenation rules in the `libhyphen` format, you can check one score by running
 
 ```
-checkSyllable.py -p path/to/file.dic my_file.gabc
+checkSyllabation.py -p path/to/file.dic my_file.gabc
 ```
 
-where `path/to/file.dic` is the path to the hyphenation rules file.
+where `path/to/file.dic` is the path to the hyphenation rules file (default is `hyph_la_liturgical.dic` in the current directory). You can also analyze all gabc scores of a directory (with subdirectories) by replacing `my_file.gabc` by the name of the directory. By default, the script analyzes the current directory. The script outputs the report to `stdout` on Unix systems, and to `check-syllabation.log` on Windows systems.
 
-You can also check a whole directory with subdirectories running
+You can see more options by running
 
 ```
-checkAllGabc.sh my_directory
+checkSyllabation.py --help
 ```
-
-by default it will consider that the `.dic` file is `hyph_la_liturgical.dic` in the current directory. If it's not the case, please change the `PATPATH` variable in the script.
 
 ## Hyphenation problems
 
