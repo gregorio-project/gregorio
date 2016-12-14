@@ -50,8 +50,25 @@
   \endgre@style@nabc%
 }}
 
+\newif\ifgre@nabcvoice@i@visible
+\gre@nabcvoice@i@visibletrue
+% define more of these when more voices are supported
+
+\def\gresetnabc#1#2{%
+  \IfStrEqCase{#2}{%
+    {visible}%
+      {\csname gre@nabcvoice@\romannumeral#1@visibletrue\endcsname}%
+    {invisible}%
+      {\csname gre@nabcvoice@\romannumeral#1@visiblefalse\endcsname}%
+    }[% all other cases
+      \gre@error{Unrecognized option "#2" for \protect\gresetnabc\MessageBreak Possible options are: 'visible' and 'invisible'}%
+    ]%
+}
+
 \def\GreNABCNeumes#1#2#3#4{%
-  \GreSetNabcAboveLines{\GreNABCChar{#2}}%
+  \csname ifgre@nabcvoice@\romannumeral#1@visible\endcsname %
+    \GreSetNabcAboveLines{\GreNABCChar{#2}}%
+  \fi %
 }
 
 \newif\ifgre@nabcfontloaded%
