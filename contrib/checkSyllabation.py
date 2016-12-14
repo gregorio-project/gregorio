@@ -79,13 +79,14 @@ def checkwords(words_list, hyphenator):
 def get_words_list(gabc_content):
     gabc_content = gabc_content.split('%%\n', 1)[1] # no headers
     gabc_content = re.sub(r'%.*\n', '', gabc_content)
-    gabc_content = gabc_content.replace('\n', ' ').replace('\r', ' ').replace('{','').replace('}','').replace('<sp>\'ae</sp>', 'ǽ').replace('<sp>ae</sp>', 'æ')
+    gabc_content = gabc_content.replace('\n', ' ').replace('\r', ' ').replace('{','').replace('}','').replace('<sp>\'ae</sp>', 'ǽ').replace('<sp>ae</sp>', 'æ').replace('<sp>\'æ</sp>', 'ǽ').replace('<sp>\'œ</sp>', 'œ')
     gabc_content = gabc_content.replace('<sp>oe</sp>', 'œ').replace('<sp>\'oe</sp>', 'œ').replace('.','').replace(':','').replace(';','').replace(',','').replace('*','').replace('?','').replace('!','')
     gabc_content = re.sub(r'\([^\)]*\)', '-', gabc_content)
-    gabc_content = re.sub(r'<\/?[ibuc]>', '', gabc_content)
+    gabc_content = re.sub(r'<\/?[ibuec]>', '', gabc_content)
     gabc_content = re.sub(r'<\/?sc>', '', gabc_content)
     gabc_content = re.sub(r'<\/?eu>', '', gabc_content)
     gabc_content = re.sub(r'<v>[^>]*</v>', '', gabc_content)
+    gabc_content = re.sub(r'<sp>[^>]*</sp>', '', gabc_content)
     gabc_content = re.sub(r'<alt>[^>]*</alt>', '', gabc_content)
     gabc_content = re.sub(r'\[[^\]]*\]', '', gabc_content)
     gabc_content = re.sub(r'-+', '-', gabc_content)
@@ -97,7 +98,7 @@ def get_file_list(path):
     if os.path.isfile(path):
         return [path]
     elif os.path.isdir(path):
-        files = glob.glob(os.path.join(path, '')+'**/*.gabc', recursive=True)
+        files = glob.glob(os.path.join(path, '**/*.gabc'), recursive=True)
         files = sorted(files)
         return files
     else:
