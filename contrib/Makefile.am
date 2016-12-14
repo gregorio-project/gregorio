@@ -17,4 +17,4 @@
 
 SUBDIRS = TeXShop
 
-EXTRA_DIST = gprocess gabc.xml gabc.lang gabc.vim 900_gregorio.xml gregorio-scribus.lua gregorio.png gabc-syntax.plist README.md system-setup.command system-setup.bat config-texworks.command
+EXTRA_DIST = gprocess gabc.xml gabc.lang gabc.vim 900_gregorio.xml gregorio.png gabc-syntax.plist README.md system-setup.command system-setup.bat config-texworks.command checkSyllabation.py
