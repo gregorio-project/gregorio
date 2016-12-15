@@ -729,7 +729,7 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
     extra_args = extra_args..' -D'
   end
 
-  local cmd = string.format("%s %s -W -o %s -l %s %s", gregorio_exe, extra_args,
+  local cmd = string.format("%s %s -W -o %s -l %s '%s'", gregorio_exe, extra_args,
       gtex_file, glog_file, gabc_file)
   res = os.execute(cmd)
   if res == nil then
@@ -784,21 +784,31 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
 end
 
 local function include_score(input_file, force_gabccompile, allow_deprecated)
-  local file_root
-  if string.match(input_file:sub(-5), '%.gtex') then
-    file_root = input_file:sub(1,-6)
-  elseif string.match(input_file:sub(-4), '%.tex') then
-    file_root = input_file:sub(1,-5)
-  elseif string.match(input_file:sub(-5), '%.gabc') then
-    file_root = input_file:sub(1,-6)
-  elseif not file_root then
-    file_root = input_file
+  if string.match(input_file, "[#%%]") then
+    err("GABC filename contains invalid character(s): # %%\n"
+	  .."Rename the file and retry: %s", input_file)
   end
-  local gtex_file = file_root.."-"..internalversion:gsub("%.", "_")..".gtex"
-  local glog_file = file_root.."-"..internalversion:gsub("%.", "_")..".glog"
-  local gabc_file = file_root..".gabc"
+  local has_extention = false
+  local file_dir,input_name
+  local extensions = {['gabc']=true, ['gtex']=true, ['tex']=true}
+  if extensions[string.match(input_file, "([^%.\\/]*)$")] then
+    has_extention = true
+  end
+  if has_extention then
+    file_dir,input_name = string.match(input_file,
+				       "(.-)([^\\/]-)%.?[^%.\\/]*$")
+  else
+    file_dir,input_name = string.match(input_file, "(.-)([^\\/]*)$")
+  end
+
+  local cleaned_filename = input_name:gsub("[%s%+%&%*%?$@:;!\"\'`]", "-")
+  local gabc_file = string.format("%s%s.gabc", file_dir, input_name)
+  local gtex_file = string.format("%s%s-%s.gtex", file_dir, cleaned_filename,
+				  internalversion:gsub("%.", "_"))
+  local glog_file = string.format("%s%s-%s.glog", file_dir, cleaned_filename,
+				  internalversion:gsub("%.", "_"))
   if not lfs.isfile(gtex_file) then
-    clean_old_gtex_files(file_root)
+    clean_old_gtex_files(file_dir..cleaned_filename)
     log("The file %s does not exist. Searching for a gabc file", gtex_file)
     if lfs.isfile(gabc_file) then
       local gabc = io.open(gabc_file, 'r')
@@ -831,7 +841,7 @@ local function include_score(input_file, force_gabccompile, allow_deprecated)
     log("%s has been modified and %s needs to be updated. Recompiling the gabc file.", gabc_file, gtex_file)
     compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
   elseif force_gabccompile then
-    compile_gabc(gabc_file, gtex_file, glog_file)
+    compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
   end
   tex.print(string.format([[\input %s\relax]], gtex_file))
   return
