@@ -99,6 +99,7 @@ RM=${RM:-rm}
 FONTSRCFILES=("${FONTSRCFILES[@]/#/fonts/}")
 
 GENERATE_UNINSTALL=${GENERATE_UNINSTALL:-true}
+AUTO_UNINSTALL=${AUTO_UNINSTALL:-false}
 
 arg="$1"
 case "$arg" in
@@ -198,8 +199,18 @@ if ${GENERATE_UNINSTALL}
 then
     if [ -e "${UNINSTALL_SCRIPT}" ]
     then
-        echo "${UNINSTALL_SCRIPT} exists; delete it to continue"
-        exit 1
+        echo "${UNINSTALL_SCRIPT} exists."
+        echo "This suggests that some version of GregorioTeX is already installed."
+        if ${AUTO_UNINSTALL}
+        then
+            echo "AUTO_UNINSTALL=true, so uninstalling the old version of GregorioTeX."
+            bash "${UNINSTALL_SCRIPT}"
+        else
+            echo "Re-run this script setting the environment variable AUTO_UNINSTALL=true"
+            echo "to automatically uninstall the other version before installing the new one,"
+            echo "or clean up the old installation files manually."
+            exit 1
+        fi
     fi
 
     mkdir -p "${TEXMFROOT}/${UNINSTALL_SCRIPT_DIR}" || die
@@ -216,7 +227,7 @@ then
     echo "Not generating "${UNINSTALL_SCRIPT}""
 fi
 
-echo "Removing old files"
+echo "Removing old files."
 find_and_remove "${LEGACYFILES[@]}"
 
 declare -A skip_install
