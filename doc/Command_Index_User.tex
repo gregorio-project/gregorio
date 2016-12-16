@@ -1140,6 +1140,15 @@ Sets the visibility of the notes.
 
 \textbf{Nota Bene:} If the notes are set to be invisible, then bar lines, rythmic signs, and the like will also be invisible.  However, the staff lines and clefs will still show up (since their visibility is controlled by other settings).
 
+\macroname{\textbackslash gresetnabc}{\{\#1\}\{\#2\}}{gregoriotex-nabc.tex}
+Sets the visibility of a nabc voice.
+
+\begin{argtable}
+  \#1 & integer & The nabc voice number.\\
+  \#2 & \texttt{visible} & Notes are visible (default).\\
+  & \texttt{invisible} & Notes are not visible.\\
+\end{argtable}
+
 \macroname{\textbackslash greprintsigns}{\{\#1\}\{\#2\}}{gregoriotex-signs.tex}
 Macro to prevent rythmic signs from printing (all signs are printed by default):
 
