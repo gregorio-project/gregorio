@@ -31,9 +31,9 @@ The scripts in this folder allow to check the syllabation of a gabc score agains
 
 #### Dependencies
 
-The main script, `checkSyllabation.py` is in Python3, so you obviously need it. It uses the [pyphen](http://pyphen.org/) package. You will also need the hyphenation of the text language in order to run it.
+The main script, `checkSyllabation.py` is in Python3, so you obviously need it. It uses the [pyphen](http://pyphen.org/) package. You will also need the hyphenation of the text language in the `libhyphen` format in order to run it.
 
-If you want liturgical Latin hyphenation rules, you can pick those in [hyphen-la](https://github.com/gregorio-project/hyphen-la). Note that you will have to convert them to the `libhyphen` format in order to use them with `pyphen`, see [hyphen-la pattern documentation](https://github.com/gregorio-project/hyphen-la/tree/master/patterns#converting-to-libhyphen-format) for that.
+If you want liturgical Latin hyphenation rules, you can pick those from the [hyphen-la](https://github.com/gregorio-project/hyphen-la) project. They are available in `libhyphen` format on the [webpage](http://gregorio-project.github.io/hyphen-la/).
 
 #### Running the scripts
 
