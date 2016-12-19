@@ -16,6 +16,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Ledger lines are now extended through notes on either side of a ledger line that crosses a stem, as long as the notes are within the same "element."  If the algorithm doesn't produce the result you want, you can use `[oll:0]` to suppress an over-the-staff ledger line on a note, `[ull:0]` to suppress an under-the-staff ledger line on a note, `[oll:1]` to force an over-the-line ledger line on a note, or [ull:1] to force an under-the-staff ledger line on a note.  Please note that other forms of `[oll:...]` and `[ull:...]` can interfere with these new settings. See [UPGRADE.md](UPGRADE.md) and [#1215](https://github.com/gregorio-project/gregorio/issues/1215) for details.
 - The left stem of Dominican plicae on lines has been shortened (see [#1238](https://github.com/gregorio-project/gregorio/issues/1238)).
 - Clefs on the top or bottom line adjust the spacing as if there were a note above the top line or below the bottom line, respectively (see [#1007](https://github.com/gregorio-project/gregorio/issues/1007)).
+- Default spaces have been adjusted (see [#1182](https://github.com/gregorio-project/gregorio/issues/1182)).
 
 ### Added
 - More cavum shapes are now available.  To use them, simply add `r` in gabc to any note in a glyph.  See [#844](https://github.com/gregorio-project/gregorio/issues/844).
