@@ -69,7 +69,7 @@ static bool eof_found = false;
 #define YY_INPUT(buf,result,max_size) \
     if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) { \
         int c = '*'; \
-        size_t n; \
+        int n; \
         for (n = 0; n < max_size \
                 && (c = getc(gabc_score_determination_in)) != EOF \
                 && c != '\n'; ++n ) { \
@@ -243,7 +243,7 @@ semicolon. */
 <score>[\n\r][\n\r \t]* {
         RETURN_SPACE;
     }
-<score,sp>[^-,;:.\{\}\(\[\]<%\n\r]+ {
+<score>[^-,;:.\{\}\(\[\]<%\n\r]+ {
         RETURN_CHARACTERS;
     }
 <score>- {
@@ -336,7 +336,7 @@ semicolon. */
 <verb,alt>[^<]+ {
         RETURN_CHARACTERS;
     }
-<verb,sp,score,alt>< {
+<verb,score,alt>< {
         RETURN_CHARACTERS;
     }
 <score>\{ {

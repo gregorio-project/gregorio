@@ -1297,12 +1297,17 @@ static __inline void tex_escape_wtext(FILE *const f, const grewchar *text)
             /* these characters have special meaning to TeX */
             fprintf(f, "\\string\\%03d", *text);
             break;
+        /* There is currently no way to get a carriage return or a newline into
+         * an <sp>, but we'll leave this code here, but #if'd out, in case we
+         * need this function in a different context */
+#if 0
         case L'\n':
             fprintf(f, "\\string\\n");
             break;
         case L'\r':
-            /* ignore */
+            / * ignore * /
             break;
+#endif
         default:
             gregorio_print_unichar(f, *text);
             break;

@@ -102,8 +102,12 @@ void gregorio_struct_destroy(void)
 
     for (i = 0, texverb = texverbs; i <= texverbs_last; ++i, ++texverb) {
         if (*texverb) {
+            /* If the code falls here, this is a programming error. */
+            /* LCOV_EXCL_START */
+            gregorio_fail(gregorio_struct_destroy, "unfreed texverb");
             free(*texverb);
         }
+        /* LCOV_EXCL_STOP */
     }
     free(texverbs);
 }
@@ -113,8 +117,8 @@ static unsigned short register_texverb(char *const texverb)
     if (texverbs_last == USHRT_MAX) {
         /* It's not reasonable to trigger this condition while testing */
         /* LCOV_EXCL_START */
-        gregorio_message(_("too many texverbs"),
-                "gregorio_register_texverb", VERBOSITY_ERROR, 0);
+        gregorio_message(_("too many texverbs"), "register_texverb",
+                VERBOSITY_ERROR, 0);
         return 0;
         /* LCOV_EXCL_STOP */
     }
@@ -1280,7 +1284,13 @@ static __inline signed char next_pitch_from_glyph(const gregorio_glyph *glyph,
                         }
                         break;
                     default:
+                        /* not reachable unless there's a programming error */
+                        /* LCOV_EXCL_START */
+                        gregorio_fail2(next_pitch_from_glyph,
+                                "unrecognized alteration shape: %s",
+                                gregorio_shape_to_string(note->u.note.shape));
                         break;
+                        /* LCOV_EXCL_STOP */
                     }
                 }
             } else if (glyph->u.notes.first_note) {
@@ -1469,11 +1479,15 @@ bool gregorio_is_only_special(gregorio_element *element)
     return 1;
 }
 
+/* This should only be called when an unknown enum value is encountered; as
+ * such, this is a programming error */
+/* LCOV_EXCL_START */
 const char *gregorio_unknown(int value) {
     static char buf[20];
     gregorio_snprintf(buf, sizeof buf, "?%d", value);
     return buf;
 }
+/* LCOV_EXCL_STOP */
 
 /*
  * A small helper for the following function
