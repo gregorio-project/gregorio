@@ -482,10 +482,9 @@ static void close_syllable(YYLTYPE *loc)
                 switch (ch->cos.s.type) {
                 case ST_T_BEGIN:
                     ++i;
-                    if (i > 1) {
-                        gregorio_message(_("elisions may not be nested"),
-                                "close_syllable", VERBOSITY_ERROR, 0);
-                    }
+                    /* the parser precludes this from falling here */
+                    gregorio_assert_only(i <= 1, close_syllable,
+                            "elisions may not be nested");
                     break;
 
                 case ST_T_END:

@@ -231,7 +231,7 @@ static void gabc_print_char(FILE *f, const grewchar to_print)
 {
     if (write_state == GABC_AT_PROTRUSION_FACTOR) {
         write_state = GABC_IN_PROTRUSION_FACTOR;
-        if (to_print == ':') {
+        if (to_print == 'd') {
             fprintf(f, "<pr");
         } else {
             fprintf(f, "<pr:");

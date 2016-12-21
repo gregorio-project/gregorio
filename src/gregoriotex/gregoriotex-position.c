@@ -1576,18 +1576,6 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
     gregorio_assert(prev_note->type == GRE_NOTE, compute_fused_shift,
             "previous note wasn't a note", return 0);
 
-    switch (prev_note->u.note.shape) {
-    case S_FLAT:
-    case S_SHARP:
-    case S_NATURAL:
-        /* these don't fuse to anything */
-        return 0;
-
-    default:
-        /* anything else is potentially fusible */
-        break;
-    }
-
     shift = first_note->u.note.pitch - prev_note->u.note.pitch;
     gregorio_assert(shift >= -MAX_AMBITUS && shift <= MAX_AMBITUS,
             compute_fused_shift, "ambitus too large to fuse", return 0);

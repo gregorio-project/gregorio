@@ -975,8 +975,15 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
                         /* just loop */
                     }
                     if (current_style) {
+                        /* repeated styles should already have been filtered out
+                         * during parsing, so if this is hit, it's a programming
+                         * error */
+                        /* LCOV_EXCL_START */
+                        gregorio_fail(gregorio_rebuild_characters,
+                                "encountered repeated style");
                         current_character = suppress_character(current_character);
                         continue;
+                        /* LCOV_EXCL_STOP */
                     }
                     /* if it is something to add then we just push the style in the
                      * stack and continue. */
