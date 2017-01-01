@@ -642,6 +642,13 @@ static void gabc_y_add_notes(char *notes, YYLTYPE loc) {
         current_element->nabc_lines = nabc_state;
     }
 }
+
+static char *concatenate(char *first, char *const second) {
+    first = (char *)gregorio_realloc(first, strlen(first) + strlen(second) + 1);
+    strcat(first, second);
+    free(second);
+    return first;
+}
 %}
 
 %initial-action {
@@ -702,8 +709,17 @@ definitions:
     | definitions definition
     ;
 
+attribute_value:
+    ATTRIBUTE {
+        $$.text = $1.text;
+    }
+    | attribute_value ATTRIBUTE {
+        $$.text = concatenate($1.text, $2.text);
+    }
+    ;
+
 attribute:
-    COLON ATTRIBUTE SEMICOLON {
+    COLON attribute_value SEMICOLON {
         $$.text = $2.text;
     }
     | COLON SEMICOLON {
