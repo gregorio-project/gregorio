@@ -153,15 +153,20 @@ semicolon. */
         BEGIN(attribute);
         return COLON;
     }
-<attribute>[^;\n\r]*(;[^;\n\r]+)*([\n\r]+[^;]*(;[^;]+)*)? {
+<attribute>;;?[\n\r \t]*[\n\r] {
+         BEGIN(INITIAL);
+         return SEMICOLON;
+    }
+<attribute>[^;]+ {
         gabc_score_determination_lval.text =
                 gregorio_strdup(gabc_score_determination_text);
         return ATTRIBUTE;
     }
-<attribute>;;?[\n\r]+ {
-         BEGIN(INITIAL);
-         return SEMICOLON;
-    }
+<attribute>; {
+        gabc_score_determination_lval.text =
+                gregorio_strdup(gabc_score_determination_text);
+        return ATTRIBUTE;
+}
 <INITIAL>def-m[0-9] {
          gabc_score_determination_lval.character = gabc_score_determination_text[5];
          return DEF_MACRO;
