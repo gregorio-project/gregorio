@@ -328,7 +328,7 @@
   \fi %
   \gre@adjustlineifnecessary\relax %
   %%
-  \gre@reseteolcustos\relax %
+  \GreResetEolCustos\relax %
 }%
 
 \def\gre@mark@translation{\directlua{gregoriotex.mark_translation()}}%
@@ -1187,7 +1187,7 @@
   \ifhmode\par\fi %
   \gre@beginningofscoretrue%
   \global\gre@dimen@morawidth=0pt\relax %
-  \gre@reseteolcustos%
+  \GreResetEolCustos%
   \gre@resetledgerlineheuristics%
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \global\setluatexattribute\gre@attr@syllable@id{0}%
@@ -1334,7 +1334,7 @@
   %blank line removing algorithm (in lua) will let some blank space after the
   %last line... (see bug #20953)
   \global\gre@endofscoretrue %
-  \gre@usemanualeolcustos%
+  \GreSuppressEolCustos%
   \gre@debugmsg{eolshift}{set lastoflinecount to 1}%
   \relax%
 }%
@@ -1375,7 +1375,7 @@
 
 % Flag indicating if we block the custos. We just block custos at the end of a score, to prevent a bug.
 \newif\ifgre@blockeolcustos%
-\def\gre@usemanualeolcustos{%
+\def\GreSuppressEolCustos{%
   \gre@blockeolcustostrue%
   \gre@localrightbox{}%
 }%
@@ -1385,9 +1385,9 @@
 \def\greseteolcustos#1{%
   \IfStrEqCase{#1}{%
     {manual}%
-      {\global\let\gre@reseteolcustos\gre@usemanualeolcustos\relax}%
+      {\global\let\GreResetEolCustos\GreSuppressEolCustos\relax}%
     {auto}%
-      {\global\let\gre@reseteolcustos\gre@useautoeolcustos\relax}%
+      {\global\let\GreResetEolCustos\gre@useautoeolcustos\relax}%
     }[% all other cases
       \gre@error{Unrecognized option "#1" for \protect\greseteolcustos\MessageBreak Possible options are: 'manual' and 'auto'}%
     ]%
@@ -1691,7 +1691,7 @@
   \gre@in@euouaetrue %
   % as soon as the EUOUAE starts, we stop blocking the EOL custos that might
   % have been blocked on the prior syllable.
-  \gre@reseteolcustos %
+  \GreResetEolCustos %
 }
 
 \def\GreEndEUOUAE#1{%

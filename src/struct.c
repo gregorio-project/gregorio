@@ -252,6 +252,13 @@ void gregorio_add_manual_custos_as_note(gregorio_note **current_note,
     add_pitched_item_as_note(current_note, GRE_MANUAL_CUSTOS, pitch, loc);
 }
 
+void gregorio_add_suppress_custos_as_note(gregorio_note **current_note,
+        const gregorio_scanner_location *const loc)
+{
+    gregorio_note *element = create_and_link_note(current_note, loc);
+    element->type = GRE_SUPPRESS_CUSTOS;
+}
+
 void gregorio_add_clef_as_note(gregorio_note **current_note,
         gregorio_clef clef, signed char clef_line, bool flatted,
         const gregorio_scanner_location *const loc)

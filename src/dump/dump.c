@@ -259,6 +259,9 @@ void dump_write_score(FILE *f, gregorio_score *score)
                     fprintf(f, "     force_pitch             true\n");
                 }
                 break;
+            case GRE_SUPPRESS_CUSTOS:
+                /* not handling this would generate an error below */
+                break;
             case GRE_SPACE:
                 if (element->u.misc.unpitched.info.space) {
                     char *factor = element->u.misc.unpitched.info.

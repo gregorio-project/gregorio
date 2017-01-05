@@ -692,6 +692,14 @@ where this macro is called.
       & \textit{empty} & The custos should not have an alteration.\\
 \end{argtable}
 
+\macroname{\textbackslash GreSuppressEolCustos}{}{gregoriotex-main.tex}
+Macro which disables automatic custos at the end of lines.
+
+\macroname{\textbackslash GreResetEolCustos}{}{gregoriotex-main.tex}
+Alias that resets the use of automatic custos to the value set by
+\verb=\greseteolcustos=.  This macro is aliased to \verb=\gre@useautoeolcustos=
+or \verb=\GreSuppressEolCustos= by \verb=\greseteolcustos=.
+
 \macroname{\textbackslash GreNextSyllableBeginsEUOUAE}{\#1\#2}{gregoriotex-syllable.tex}
 Indicates that the syllable which follows begins a EUOUAE block.
 

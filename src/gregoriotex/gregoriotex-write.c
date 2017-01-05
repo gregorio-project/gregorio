@@ -60,6 +60,8 @@ typedef struct gregoriotex_status {
 
     /* indicates if there is "above lines text" on the line */
     bool abovelinestext;
+
+    bool suppressed_custos;
 } gregoriotex_status;
 
 #define UNDETERMINED_HEIGHT -127
@@ -2435,13 +2437,17 @@ static __inline const char *alteration_name(
 }
 
 static const char *next_custos(const signed char next_note_pitch,
-        const gregorio_shape next_note_alteration)
+        const gregorio_shape next_note_alteration,
+        gregoriotex_status *const status)
 {
-    static char buf[30];
+    static char buf[50];
 
-    gregorio_snprintf(buf, sizeof buf, "\\GreNextCustos{%d}{%s}",
+    gregorio_snprintf(buf, sizeof buf, "%s\\GreNextCustos{%d}{%s}",
+            status->suppressed_custos? "\\GreResetEolCustos" : "",
             pitch_value(next_note_pitch),
             alteration_name(next_note_alteration));
+
+    status->suppressed_custos = false;
 
     return buf;
 }
@@ -2452,7 +2458,8 @@ static const char *next_custos(const signed char next_note_pitch,
 
 static void write_note(FILE *f, gregorio_note *note,
         const gregorio_glyph *glyph, const char next_note_pitch,
-        const gregorio_shape next_note_alteration)
+        const gregorio_shape next_note_alteration,
+        gregoriotex_status *const status)
 {
     unsigned int initial_shape = note->u.note.shape;
     const char *shape;
@@ -2507,7 +2514,8 @@ static void write_note(FILE *f, gregorio_note *note,
         fprintf(f, "\\GreGlyph{%s}{%d}{%s}{%d}",
                 code_point(shape, glyph->u.notes.is_cavum, cpbuf, sizeof cpbuf),
                 pitch_value(note->u.note.pitch),
-                next_custos(next_note_pitch, next_note_alteration), type);
+                next_custos(next_note_pitch, next_note_alteration, status),
+                type);
         break;
     }
 }
@@ -2951,10 +2959,10 @@ static __inline void write_composed_multinote_glyph(FILE *const f,
         const bool has_next = current_note->next != NULL;
         if (has_next) {
             write_note(f, current_note, glyph, current_note->next->u.note.pitch,
-                    S_UNDETERMINED);
+                    S_UNDETERMINED, status);
         } else {
             write_note(f, current_note, glyph, next_note_pitch,
-                    next_note_alteration);
+                    next_note_alteration, status);
         }
         write_signs(f, T_ONE_NOTE, glyph, current_note,
                 has_next ? 0 : fuse_to_next_note, status, score);
@@ -3022,7 +3030,8 @@ static void write_glyph(FILE *const f, const gregorio_syllable *const syllable,
             fprintf(f, "\\GreGlyph{%s}{%d}{%s}{%d}", code_point(shape,
                         glyph->u.notes.is_cavum, cpbuf, sizeof cpbuf),
                     pitch_value(glyph->u.notes.first_note->u.note.pitch),
-                    next_custos(next_note_pitch, next_note_alteration), type);
+                    next_custos(next_note_pitch, next_note_alteration, status),
+                    type);
             write_signs(f, gtype, glyph, glyph->u.notes.first_note,
                     fuse_to_next_note, status, score);
         } else {
@@ -3038,7 +3047,8 @@ static void write_glyph(FILE *const f, const gregorio_syllable *const syllable,
         fprintf(f, "\\GreGlyph{%s}{%d}{%s}{%d}", code_point(shape,
                         glyph->u.notes.is_cavum, cpbuf, sizeof cpbuf),
                 pitch_value(glyph->u.notes.first_note->u.note.pitch),
-                next_custos(next_note_pitch, next_note_alteration), type);
+                next_custos(next_note_pitch, next_note_alteration, status),
+                type);
         write_signs(f, gtype, glyph, glyph->u.notes.first_note,
                 fuse_to_next_note, status, score);
         break;
@@ -3056,7 +3066,8 @@ static void write_glyph(FILE *const f, const gregorio_syllable *const syllable,
                 code_point(shape, glyph->u.notes.is_cavum, cpbuf2,
                     sizeof cpbuf2),
                 pitch_value(glyph->u.notes.first_note->u.note.pitch),
-                next_custos(next_note_pitch, next_note_alteration), type);
+                next_custos(next_note_pitch, next_note_alteration, status),
+                type);
         glyph->u.notes.first_note = current_note;
         glyph->u.notes.glyph_type = G_TORCULUS_RESUPINUS_FLEXUS;
         write_signs(f, gtype, glyph, glyph->u.notes.first_note,
@@ -3118,7 +3129,7 @@ static void write_glyph(FILE *const f, const gregorio_syllable *const syllable,
     case G_STROPHA_AUCTA:
     case G_ALTERATION:
         write_note(f, glyph->u.notes.first_note, glyph, next_note_pitch,
-                next_note_alteration);
+                next_note_alteration, status);
         write_signs(f, T_ONE_NOTE, glyph, current_note, fuse_to_next_note,
                 status, score);
         break;
@@ -3141,7 +3152,8 @@ static void write_glyph(FILE *const f, const gregorio_syllable *const syllable,
                     code_point(shape, glyph->u.notes.is_cavum, cpbuf2,
                         sizeof cpbuf2),
                     pitch_value(glyph->u.notes.first_note->u.note.pitch),
-                    next_custos(next_note_pitch, next_note_alteration), type);
+                    next_custos(next_note_pitch, next_note_alteration, status),
+                    type);
             glyph->u.notes.first_note = current_note;
             glyph->u.notes.glyph_type = G_TORCULUS_RESUPINUS;
             write_signs(f, gtype, glyph, glyph->u.notes.first_note,
@@ -3152,7 +3164,8 @@ static void write_glyph(FILE *const f, const gregorio_syllable *const syllable,
             fprintf(f, "\\GreGlyph{%s}{%d}{%s}{%d}", code_point(shape,
                         glyph->u.notes.is_cavum, cpbuf, sizeof cpbuf),
                     pitch_value(glyph->u.notes.first_note->u.note.pitch),
-                    next_custos(next_note_pitch, next_note_alteration), type);
+                    next_custos(next_note_pitch, next_note_alteration, status),
+                    type);
             write_signs(f, gtype, glyph, glyph->u.notes.first_note,
                     fuse_to_next_note, status, score);
             break;
@@ -3931,8 +3944,8 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                                 syllable, element, NULL, &next_note_alteration)
                                 - element->u.misc.clef.pitch_difference);
 
-                        fputs(next_custos(next_note_pitch,
-                                next_note_alteration), f);
+                        fputs(next_custos(next_note_pitch, next_note_alteration,
+                                status), f);
                         gregoriotex_print_change_line_clef(f, element);
                     } else {
                         /* the third argument is 0 or 1 according to the need
@@ -3961,10 +3974,9 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                     signed char next_note_pitch;
                     gregorio_shape next_note_alteration;
                     const char *alteration = "";
-                    /*
-                     * We don't print custos before a bar at the end of a line
-                     */
-                    /* we also print an unbreakable larger space before the custo */
+                    /* We don't print custos before a bar at the end of a line.
+                     * We also print an unbreakable larger space before the
+                     * custos */
                     handle_last_of_voice(f, syllable, element, *last_of_voice);
                     next_note_pitch = gregorio_determine_next_pitch(syllable,
                             element, NULL, &next_note_alteration);
@@ -3973,9 +3985,16 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                     }
                     fprintf(f, "\\GreCustos{%d}{%s}%s%%\n",
                             pitch_value(element->u.misc.pitched.pitch), alteration,
-                            next_custos(next_note_pitch, next_note_alteration));
+                            next_custos(next_note_pitch, next_note_alteration,
+                            status));
                     ++note_unit_count;
                 }
+                break;
+
+            case GRE_SUPPRESS_CUSTOS:
+                handle_last_of_voice(f, syllable, element, *last_of_voice);
+                fprintf(f, "\\GreSuppressEolCustos %%\n");
+                status->suppressed_custos = true;
                 break;
 
             case GRE_BAR:
@@ -4058,6 +4077,7 @@ static void initialize_score(gregoriotex_status *const status,
     status->bottom_line = false;
     status->top_height = status->bottom_height = UNDETERMINED_HEIGHT;
     status->abovelinestext = status->translation = false;
+    status->suppressed_custos = false;
 
     /* first pass to compute positioning */
     for (syllable = score->first_syllable; syllable;

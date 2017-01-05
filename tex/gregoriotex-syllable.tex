@@ -1068,7 +1068,7 @@
 \def\GreNextSyllableBeginsEUOUAE#1#2{%
   \GreNoBreak %
   \ifgre@blockeolcustosbeforeeuouae %
-    \gre@usemanualeolcustos %
+    \GreSuppressEolCustos %
   \fi %
   \ifgre@raggedbreakbeforeeuouae %
     \directlua{gregoriotex.save_euouae(#1,1)}%
@@ -1575,7 +1575,7 @@
 
 \def\GreUpcomingNewLineForcesCustos#1{%
   \ifcase#1\relax % 0 - forced off
-    \gre@usemanualeolcustos %
+    \GreSuppressEolCustos %
   \or % 1 - forced on
     \gre@useautoeolcustos %
     \GreNextCustos{\gre@nextcustospitch}{\gre@nextcustosalteration}%
