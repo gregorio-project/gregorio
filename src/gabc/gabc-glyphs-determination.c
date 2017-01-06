@@ -171,7 +171,8 @@ static char add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
                 this_note_starts_new_glyph;
             }
             break;
-        case G_VIRGA_STRATA: /* really a pes stratus */
+        case G_PES_ASCENDENS_ORISCUS:
+        case G_PES_DESCENDENS_ORISCUS:
             if (current_pitch > last_pitch) {
                 next_glyph_type = G_SALICUS;
             } else {
@@ -279,9 +280,18 @@ static char add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
         break;
     case S_ORISCUS_SCAPUS_UNDETERMINED:
     case S_ORISCUS_SCAPUS_ASCENDENS:
+        if (current_glyph_type == G_PUNCTUM && last_pitch < current_pitch) {
+            next_glyph_type = G_PES_ASCENDENS_ORISCUS;
+            /* Therefore G_PES_ASCENDENS_ORISCUS might be fronting an
+             * undetermined oriscus scapus.  This will be resolved during
+             * oriscus orientation determination */
+        } else {
+            this_note_starts_new_glyph;
+        }
+        break;
     case S_ORISCUS_SCAPUS_DESCENDENS:
         if (current_glyph_type == G_PUNCTUM && last_pitch < current_pitch) {
-            next_glyph_type = G_VIRGA_STRATA;
+            next_glyph_type = G_PES_DESCENDENS_ORISCUS;
         } else {
             this_note_starts_new_glyph;
         }

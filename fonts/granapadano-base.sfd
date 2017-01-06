@@ -2304,7 +2304,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: PesQuilismaOneNothing
+StartChar: QuilismaPesOneNothing
 Encoding: 100 -1 100
 Width: 161
 Flags: HW
@@ -2346,7 +2346,7 @@ EndSplineSet
 Validated: 1
 EndChar
 
-StartChar: PesQuilismaOneNothing#Cavum
+StartChar: QuilismaPesOneNothing#Cavum
 Encoding: 101 -1 101
 Width: 161
 Flags: HW

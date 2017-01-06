@@ -277,7 +277,8 @@ ENUM(gregorio_vposition, GREGORIO_VPOSITION);
     E(G_VIRGA_REVERSA) \
     E(G_SALICUS) \
     E(G_SALICUS_FLEXUS) \
-    E(G_VIRGA_STRATA) \
+    E(G_PES_ASCENDENS_ORISCUS) \
+    E(G_PES_DESCENDENS_ORISCUS) \
     E(G_TORCULUS_LIQUESCENS) \
     /* additional glyph types, necessary for determination */ \
     E(G_PORRECTUS_NO_BAR) \

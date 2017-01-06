@@ -189,7 +189,7 @@ def main():
     virga()
     pes()
     pes_quadratum()
-    virga_strata()
+    pes_oriscus()
     flexus()
     scandicus()
     ancus()
@@ -559,7 +559,7 @@ S_LOWER_PES_QUADRATUM_LONGQUEUE              = 'LowerPesQuadratumLongqueue'
 S_PES_QUADRATUM_OPENQUEUE                    = 'PesQuadratumOpenqueue'
 S_UPPER_PES_QUADRATUM_OPENQUEUE              = 'UpperPesQuadratumOpenqueue'
 S_LOWER_PES_QUADRATUM_OPENQUEUE              = 'LowerPesQuadratumOpenqueue'
-S_PES_QUILISMA                               = 'PesQuilisma'
+S_QUILISMA_PES                               = 'QuilismaPes'
 S_PES_QUASSUS                                = 'PesQuassus'
 S_UPPER_PES_QUASSUS                          = 'UpperPesQuassus'
 S_LOWER_PES_QUASSUS                          = 'LowerPesQuassus'
@@ -584,9 +584,9 @@ S_PES_QUASSUS_INUSITATUS_OPENQUEUE           = 'PesQuassusInusitatusOpenqueue'
 S_UPPER_PES_QUASSUS_INUSITATUS_OPENQUEUE     = 'UpperPesQuassusInusitatusOpenqueue'
 S_LOWER_PES_QUASSUS_INUSITATUS_OPENQUEUE     = 'LowerPesQuassusInusitatusOpenqueue'
 S_LOWER_OBLATUS_PES_QUASSUS_INUSITATUS_OPENQUEUE = 'LowerOblatusPesQuassusInusitatusOpenqueue'
-S_PES_QUILISMA_QUADRATUM                     = 'PesQuilismaQuadratum'
-S_PES_QUILISMA_QUADRATUM_LONGQUEUE           = 'PesQuilismaQuadratumLongqueue'
-S_PES_QUILISMA_QUADRATUM_OPENQUEUE           = 'PesQuilismaQuadratumOpenqueue'
+S_QUILISMA_PES_QUADRATUM                     = 'QuilismaPesQuadratum'
+S_QUILISMA_PES_QUADRATUM_LONGQUEUE           = 'QuilismaPesQuadratumLongqueue'
+S_QUILISMA_PES_QUADRATUM_OPENQUEUE           = 'QuilismaPesQuadratumOpenqueue'
 S_FLEXUS                                     = 'Flexus'
 S_UPPER_FLEXUS                               = 'UpperFlexus'
 S_LOWER_FLEXUS                               = 'LowerFlexus'
@@ -617,7 +617,8 @@ S_SCANDICUS                                  = 'Scandicus'
 S_ANCUS                                      = 'Ancus'
 S_ANCUS_LONGQUEUE                            = 'AncusLongqueue'
 S_ANCUS_OPENQUEUE                            = 'AncusOpenqueue'
-S_VIRGA_STRATA                               = 'VirgaStrata'
+S_PES_ASCENDENS_ORISCUS                      = 'PesAscendensOriscus'
+S_PES_DESCENDENS_ORISCUS                     = 'PesDescendensOriscus'
 S_SALICUS                                    = 'Salicus'
 S_SALICUS_LONGQUEUE                          = 'SalicusLongqueue'
 S_SALICUS_OPENQUEUE                          = 'SalicusOpenqueue'
@@ -801,7 +802,7 @@ STEM_SHAPE_FALLBACKS = {
     S_FLEXUS_ORISCUS_SCAPUS: S_FLEXUS,
     S_PES_QUADRATUM: S_FLEXUS,
     S_PES_QUASSUS: S_PES_QUADRATUM,
-    S_PES_QUILISMA_QUADRATUM: S_PES_QUADRATUM,
+    S_QUILISMA_PES_QUADRATUM: S_PES_QUADRATUM,
     S_UPPER_PES_QUADRATUM: S_PES_QUADRATUM,
     S_LOWER_PES_QUADRATUM: S_PES_QUADRATUM,
     S_UPPER_PES_QUASSUS: S_PES_QUASSUS,
@@ -1103,9 +1104,9 @@ def pes():
     precise_message("pes deminutus")
     write_all_pes_deminutus("pesdeminutus", S_PES, L_DEMINUTUS)
     precise_message("pes quilisma")
-    write_all_pes("QuilismaLineTR", S_PES_QUILISMA)
+    write_all_pes("QuilismaLineTR", S_QUILISMA_PES)
     precise_message("pes quilisma deminutus")
-    write_all_pes_deminutus("QuilismaLineTR", S_PES_QUILISMA, L_DEMINUTUS)
+    write_all_pes_deminutus("QuilismaLineTR", S_QUILISMA_PES, L_DEMINUTUS)
     precise_message("pes quassus deminutus")
     write_all_pes_deminutus("AscendensOriscusLineTR", S_PES_QUASSUS, L_DEMINUTUS)
     write_all_pes_deminutus("DescendensOriscusLineTR", S_PES_QUASSUS_INUSITATUS,
@@ -1252,14 +1253,14 @@ def pes_quadratum():
             qtype='open')
     precise_message("pes quilisma quadratum")
     write_all_pes_quadratum("QuilismaLineTR", "VirgaBaseLineBL",
-            S_PES_QUILISMA_QUADRATUM, stemshape=S_PES_QUILISMA_QUADRATUM,
+            S_QUILISMA_PES_QUADRATUM, stemshape=S_QUILISMA_PES_QUADRATUM,
             qtype='short')
     write_all_pes_quadratum("QuilismaLineTR", "VirgaBaseLineBL",
-            S_PES_QUILISMA_QUADRATUM_LONGQUEUE, stemshape=S_PES_QUILISMA_QUADRATUM,
+            S_QUILISMA_PES_QUADRATUM_LONGQUEUE, stemshape=S_QUILISMA_PES_QUADRATUM,
             qtype='long')
     write_pes_quadratum(1, "QuilismaLineTR", "VirgaBaseLineBL",
-            S_PES_QUILISMA_QUADRATUM_OPENQUEUE,
-            stemshape=S_PES_QUILISMA_QUADRATUM, qtype='open')
+            S_QUILISMA_PES_QUADRATUM_OPENQUEUE,
+            stemshape=S_QUILISMA_PES_QUADRATUM, qtype='open')
     precise_message("pes auctus ascendens")
     write_all_pes_quadratum("PunctumLineTR", "auctusa2", S_PES_QUADRATUM,
             L_ASCENDENS)
@@ -1273,7 +1274,7 @@ def pes_quadratum():
             S_PES_QUASSUS_INUSITATUS, L_ASCENDENS)
     precise_message("pes quilisma auctus ascendens")
     write_all_pes_quadratum("QuilismaLineTR", "auctusa2",
-            S_PES_QUILISMA_QUADRATUM, L_ASCENDENS)
+            S_QUILISMA_PES_QUADRATUM, L_ASCENDENS)
     precise_message("pes auctus descendens")
     write_all_pes_quadratum("PunctumLineTR", "PunctumAuctusLineBL",
             S_PES_QUADRATUM, L_DESCENDENS)
@@ -1287,7 +1288,7 @@ def pes_quadratum():
             S_PES_QUASSUS_INUSITATUS, L_DESCENDENS)
     precise_message("pes quilisma auctus descendens")
     write_all_pes_quadratum("QuilismaLineTR", "PunctumAuctusLineBL",
-            S_PES_QUILISMA_QUADRATUM, L_DESCENDENS)
+            S_QUILISMA_PES_QUADRATUM, L_DESCENDENS)
 
 def fusion_pes_quadratum():
     "Makes the fusion pes quadratum."
@@ -1454,19 +1455,21 @@ def write_pes_quadratum(i, first_glyph, last_glyph, shape, lique=L_NOTHING,
     set_width(width)
     end_glyph(glyph_name)
 
-def virga_strata():
-    "Creates the virga strata."
-    precise_message("virga strata")
-    write_all_virga_strata("PunctumLineTR", "AscendensOriscusLineBL",
-            S_VIRGA_STRATA)
+def pes_oriscus():
+    "Creates the pes oriscus."
+    precise_message("pes oriscus")
+    write_all_pes_oriscus("PunctumLineTR", "AscendensOriscusLineBL",
+            S_PES_ASCENDENS_ORISCUS)
+    write_all_pes_oriscus("PunctumLineTR", "DescendensOriscusLineBL",
+            S_PES_DESCENDENS_ORISCUS)
 
-def write_all_virga_strata(first_glyph, last_glyph, shape, lique=L_NOTHING,
+def write_all_pes_oriscus(first_glyph, last_glyph, shape, lique=L_NOTHING,
         i_range=ALL_AMBITUS):
     for i in i_range:
-        write_virga_strata(i, first_glyph, last_glyph, shape, lique)
+        write_pes_oriscus(i, first_glyph, last_glyph, shape, lique)
 
-def write_virga_strata(i, first_glyph, last_glyph, shape, lique=L_NOTHING):
-    "Writes the virga strata glyphs."
+def write_pes_oriscus(i, first_glyph, last_glyph, shape, lique=L_NOTHING):
+    "Writes the pes oriscus glyphs."
     new_glyph()
     glyph_name = '%s%s%s' % (shape, AMBITUS[i], lique)
     if copy_existing_glyph(glyph_name):
@@ -1474,7 +1477,10 @@ def write_virga_strata(i, first_glyph, last_glyph, shape, lique=L_NOTHING):
     if i == 1:
         first_glyph = 'Punctum'
         first_width = get_width(first_glyph)
-        last_glyph = FLATTENED_ORISCUS['AscendensOriscusFlatBottom']
+        if last_glyph == 'AscendensOriscusLineBL':
+            last_glyph = FLATTENED_ORISCUS['AscendensOriscusFlatBottom']
+        elif last_glyph == 'DescendensOriscusLineBL':
+            last_glyph = FLATTENED_ORISCUS['DescendensOriscusFlatBottom']
     else:
         first_width = get_width(first_glyph)-get_width('line2')
     paste_glyph(first_glyph)
