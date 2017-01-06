@@ -76,6 +76,7 @@ typedef struct gregorio_scanner_location {
     E(GRE_BAR) \
     E(GRE_CUSTOS) \
     E(GRE_MANUAL_CUSTOS) \
+    E(GRE_SUPPRESS_CUSTOS) \
     /* I don't really know how I could use the a TEXVERB_NOTE in gregoriotex,
      * as we don't write note by note... */ \
     /* GRE_TEXVERB_NOTE, */ \
@@ -853,6 +854,8 @@ void gregorio_add_custos_as_note(gregorio_note **current_note,
         const gregorio_scanner_location *loc);
 void gregorio_add_manual_custos_as_note(gregorio_note **current_note,
         signed char pitch, const gregorio_scanner_location *loc);
+void gregorio_add_suppress_custos_as_note(gregorio_note **current_note,
+        const gregorio_scanner_location *loc);
 void gregorio_add_clef_as_note(gregorio_note **current_note,
         gregorio_clef clef, signed char clef_line, bool flatted,
         const gregorio_scanner_location *loc);

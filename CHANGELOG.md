@@ -30,7 +30,8 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - More general support for protrusions.  The `<pr>` tag in gabc indicates where a protrusion should begin.  There is an optional argument `<pr:.5>` that allows the protrusion factor to be specified (in this example, `.5`).  Additionally, the comma, semicolon, colon, and period are automatically protruded, with configurable protrusion factors.  See GregorioRef and [#931](https://github.com/gregorio-project/gregorio/issues/931) for more information.
 - `minimalinitialwidth` space, controlling the minimum amount of space an initial should take require; ignored when `manualinitialwidth` is set to something non-zero (see [#1213](https://github.com/gregorio-project/gregorio/issues/1213)).
 - new scripts in `contrib/` to check the syllabation of a gabc score against hyphenation rules, such as those on [hyphen-la](https://github.com/gregorio-project/hyphen-la)
-- the visibility of a particular nabc voice can now be set by `\gresetnabc{n}{(in)visible}` (where `n` is the number of the nabc voice), see (see [#1257](https://github.com/gregorio-project/gregorio/issues/1257)).
+- the visibility of a particular nabc voice can now be set by `\gresetnabc{n}{(in)visible}`, where `n` is the number of the nabc voice (see [#1257](https://github.com/gregorio-project/gregorio/issues/1257)).
+- `[nocustos]` may be used in gabc to prevent a custos should the line end at that point (see [#1271](https://github.com/gregorio-project/gregorio/issues/1271)).
 
 ### Deprecated
 - '\gresethyphenprotrusion{percentage}`, supplanted by `\gresetprotrusionfactor{eolhyphen}{factor}`.  Note that the value the new command takes is a factor rather than a percentage.

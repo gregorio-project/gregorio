@@ -976,6 +976,9 @@ static void gabc_write_gregorio_element(FILE *f, gregorio_element *element,
             fprintf(f, "z0");
         }
         break;
+    case GRE_SUPPRESS_CUSTOS:
+        fprintf(f, "[nocustos]");
+        break;
     case GRE_NLBA:
         switch (element->u.misc.unpitched.info.nlba) {
         case NLBA_BEGINNING:
