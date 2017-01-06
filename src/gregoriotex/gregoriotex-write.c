@@ -104,6 +104,8 @@ SHAPE(LineaPunctum);
 SHAPE(Natural);
 SHAPE(OriscusDeminutus);
 SHAPE(Pes);
+SHAPE(PesAscendensOriscus);
+SHAPE(PesDescendensOriscus);
 SHAPE(PesQuadratum);
 SHAPE(PesQuadratumLongqueue);
 SHAPE(PesQuadratumOpenqueue);
@@ -113,10 +115,6 @@ SHAPE(PesQuassusInusitatusLongqueue);
 SHAPE(PesQuassusInusitatusOpenqueue);
 SHAPE(PesQuassusLongqueue);
 SHAPE(PesQuassusOpenqueue);
-SHAPE(PesQuilisma);
-SHAPE(PesQuilismaQuadratum);
-SHAPE(PesQuilismaQuadratumLongqueue);
-SHAPE(PesQuilismaQuadratumOpenqueue);
 SHAPE(Porrectus);
 SHAPE(PorrectusFlexus);
 SHAPE(PorrectusFlexusLongqueue);
@@ -132,6 +130,10 @@ SHAPE(PunctumInclinatumDeminutus);
 SHAPE(PunctumLineBL);
 SHAPE(PunctumLineTL);
 SHAPE(Quilisma);
+SHAPE(QuilismaPes);
+SHAPE(QuilismaPesQuadratum);
+SHAPE(QuilismaPesQuadratumLongqueue);
+SHAPE(QuilismaPesQuadratumOpenqueue);
 SHAPE(Salicus);
 SHAPE(SalicusFlexus);
 SHAPE(SalicusLongqueue);
@@ -158,7 +160,6 @@ SHAPE(VirgaReversaLongqueueDescendens);
 SHAPE(VirgaReversaOpenqueue);
 SHAPE(VirgaReversaOpenqueueAscendens);
 SHAPE(VirgaReversaOpenqueueDescendens);
-SHAPE(VirgaStrata);
 
 #define LIQ(NAME) static const char *const LIQ_##NAME = #NAME
 LIQ(Deminutus);
@@ -869,18 +870,18 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
              * look like pes quadratum. */
             if (glyph->u.notes.liquescentia
                     & (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS)) {
-                *gtype = T_PESQUILISMAQUADRATUM;
-                shape = SHAPE_PesQuilismaQuadratum;
+                *gtype = T_QUILISMA_PES_QUADRATUM;
+                shape = SHAPE_QuilismaPesQuadratum;
             } else {
-                *gtype = T_PESQUILISMA;
-                shape = SHAPE_PesQuilisma;
+                *gtype = T_QUILISMA_PES;
+                shape = SHAPE_QuilismaPes;
             }
             ltype = LG_NO_INITIO;
             break;
         case S_ORISCUS_ASCENDENS:
         case S_ORISCUS_SCAPUS_ASCENDENS:
             *type = AT_ORISCUS;
-            *gtype = T_PESQUASSUS;
+            *gtype = T_PES_QUASSUS;
             shape = quadratum_shape(glyph, SHAPE_PesQuassus,
                     SHAPE_PesQuassusLongqueue, SHAPE_PesQuassusOpenqueue);
             ltype = LG_NO_INITIO;
@@ -888,7 +889,7 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
         case S_ORISCUS_DESCENDENS:
         case S_ORISCUS_SCAPUS_DESCENDENS:
             *type = AT_ORISCUS;
-            *gtype = T_PESQUASSUS;
+            *gtype = T_PES_QUASSUS;
             shape = quadratum_shape(glyph, SHAPE_PesQuassusInusitatus,
                     SHAPE_PesQuassusInusitatusLongqueue,
                     SHAPE_PesQuassusInusitatusOpenqueue);
@@ -898,7 +899,7 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
             *type = AT_ONE_NOTE;
             if (glyph->u.notes.liquescentia
                     & (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS)) {
-                *gtype = T_PESQUADRATUM;
+                *gtype = T_PES_QUADRATUM;
                 shape = SHAPE_PesQuadratum;
             } else {
                 *gtype = T_PES;
@@ -912,25 +913,31 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
         switch (glyph->u.notes.first_note->u.note.shape) {
         case S_QUILISMA:
             *type = AT_QUILISMA;
-            *gtype = T_PESQUILISMAQUADRATUM;
-            shape = quadratum_shape(glyph, SHAPE_PesQuilismaQuadratum,
-                   SHAPE_PesQuilismaQuadratumLongqueue,
-                   SHAPE_PesQuilismaQuadratumOpenqueue);
+            *gtype = T_QUILISMA_PES_QUADRATUM;
+            shape = quadratum_shape(glyph, SHAPE_QuilismaPesQuadratum,
+                   SHAPE_QuilismaPesQuadratumLongqueue,
+                   SHAPE_QuilismaPesQuadratumOpenqueue);
             ltype = LG_NO_INITIO;
             break;
         default:
             *type = AT_ONE_NOTE;
-            *gtype = T_PESQUADRATUM;
+            *gtype = T_PES_QUADRATUM;
             shape = quadratum_shape(glyph, SHAPE_PesQuadratum,
                    SHAPE_PesQuadratumLongqueue, SHAPE_PesQuadratumOpenqueue);
             ltype = LG_ALL;
             break;
         }
         break;
-    case G_VIRGA_STRATA:
+    case G_PES_ASCENDENS_ORISCUS:
         *type = AT_ONE_NOTE;
-        *gtype = T_VIRGA_STRATA;
-        shape = SHAPE_VirgaStrata;
+        *gtype = T_PES_ORISCUS;
+        shape = SHAPE_PesAscendensOriscus;
+        ltype = LG_ALL;
+        break;
+    case G_PES_DESCENDENS_ORISCUS:
+        *type = AT_ONE_NOTE;
+        *gtype = T_PES_ORISCUS;
+        shape = SHAPE_PesDescendensOriscus;
         ltype = LG_ALL;
         break;
     case G_FLEXA:

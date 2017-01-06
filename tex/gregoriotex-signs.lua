@@ -407,14 +407,14 @@ local offset_cases = {
   -- least two
   {
     case = 'SalicusOriscusWide',
-    v = [[\gre@vepisemaorrareaux{\GreCPVirgaStrataThreeNothing}{\GreCPAscendensOriscusLineBLTR}{3}{0}{#2}{#3}{#4}]],
-    h = [[\gre@hepisorlineaux{\GreCPVirgaStrataThreeNothing}{\gre@char@he@salicus@oriscus{#4}}{4}{#3}]],
+    v = [[\gre@vepisemaorrareaux{\GreCPPesAscendensOriscusThreeNothing}{\GreCPAscendensOriscusLineBLTR}{3}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPPesAscendensOriscusThreeNothing}{\gre@char@he@salicus@oriscus{#4}}{4}{#3}]],
   },
   -- "oriscus" as the middle note of a salicus with a second ambitus of one
   {
     case = 'SalicusOriscusOne',
-    v = [[\gre@vepisemaorrareaux{\GreCPVirgaStrataOneNothing}{\GreCPAscendensOriscus}{3}{0}{#2}{#3}{#4}]],
-    h = [[\gre@hepisorlineaux{\GreCPVirgaStrataOneNothing}{\gre@char@he@salicus@oriscus{#4}}{4}{#3}]],
+    v = [[\gre@vepisemaorrareaux{\GreCPPesAscendensOriscusOneNothing}{\GreCPAscendensOriscus}{3}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPPesAscendensOriscusOneNothing}{\gre@char@he@salicus@oriscus{#4}}{4}{#3}]],
   },
   -- punctum fused to the next note
   {

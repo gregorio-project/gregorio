@@ -377,7 +377,7 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
 
     switch (type) {
     case T_PES:
-    case T_PESQUILISMA:
+    case T_QUILISMA_PES:
         /*
          * in the case of a pes, we put the episema just under the bottom note 
          */
@@ -408,9 +408,9 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             v_episema = below_if_auctus(glyph);
         }
         break;
-    case T_PESQUADRATUM:
-    case T_PESQUASSUS:
-    case T_PESQUILISMAQUADRATUM:
+    case T_PES_QUADRATUM:
+    case T_PES_QUASSUS:
+    case T_QUILISMA_PES_QUADRATUM:
         if (i == 1) {
             note->gtex_offset_case = first_note_case(note, glyph);
             h_episema = above_if_h_episema(note->next);

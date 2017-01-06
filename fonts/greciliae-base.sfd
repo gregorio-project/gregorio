@@ -3014,7 +3014,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: PesQuilismaOneNothing
+StartChar: QuilismaPesOneNothing
 Encoding: 130 -1 130
 Width: 166
 VWidth: 2496
@@ -3047,7 +3047,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: PesQuilismaOneNothing#Cavum
+StartChar: QuilismaPesOneNothing#Cavum
 Encoding: 131 -1 131
 Width: 166
 VWidth: 2496

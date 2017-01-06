@@ -207,25 +207,34 @@ bool gabc_check_infos_integrity(gregorio_score *score_to_check)
     return true;
 }
 
-/* data must be (gregorio_note **) */
+typedef struct {
+    gregorio_note *note;
+    gregorio_glyph *glyph;
+} oriscus_orientation_vars;
+
+/* data must be (oriscus_orientation_vars *) */
 static void oriscus_orientation_visit(
         const gregorio_note_iter_position *const p, void *const data)
 {
     gregorio_note *const note = p->note;
-    gregorio_note **const oriscus_ptr = (gregorio_note **const)data;
-    gregorio_note *const oriscus = *oriscus_ptr;
-    /* making oriscus const ensures we don't attempt to change *oriscus_ptr
-     * via oriscus */
+    oriscus_orientation_vars *const oriscus =
+        (oriscus_orientation_vars *const)data;
 
-    if (oriscus) {
-        if (note->u.note.pitch <= oriscus->u.note.pitch) {
+    if (oriscus->note && oriscus->glyph) {
+        if (note->u.note.pitch <= oriscus->note->u.note.pitch) {
             /* descending or unison */
-            switch(oriscus->u.note.shape) {
+            switch(oriscus->note->u.note.shape) {
             case S_ORISCUS_UNDETERMINED:
-                oriscus->u.note.shape = S_ORISCUS_DESCENDENS;
+                oriscus->note->u.note.shape = S_ORISCUS_DESCENDENS;
                 break;
             case S_ORISCUS_SCAPUS_UNDETERMINED:
-                oriscus->u.note.shape = S_ORISCUS_SCAPUS_DESCENDENS;
+                oriscus->note->u.note.shape = S_ORISCUS_SCAPUS_DESCENDENS;
+                gregorio_assert_only(oriscus->glyph->u.notes.glyph_type
+                        != G_PES_DESCENDENS_ORISCUS, oriscus_orientation_visit,
+                        "glyph type should not be G_PES_DESCENDENS_ORISCUS");
+                if (oriscus->glyph->u.notes.glyph_type == G_PES_ASCENDENS_ORISCUS) {
+                    oriscus->glyph->u.notes.glyph_type = G_PES_DESCENDENS_ORISCUS;
+                }
                 break;
             default:
                 /* not reachable unless there's a
@@ -236,12 +245,15 @@ static void oriscus_orientation_visit(
                 /* LCOV_EXCL_STOP */
             }
         } else { /* ascending */
-            switch(oriscus->u.note.shape) {
+            switch(oriscus->note->u.note.shape) {
             case S_ORISCUS_UNDETERMINED:
-                oriscus->u.note.shape = S_ORISCUS_ASCENDENS;
+                oriscus->note->u.note.shape = S_ORISCUS_ASCENDENS;
                 break;
             case S_ORISCUS_SCAPUS_UNDETERMINED:
-                oriscus->u.note.shape = S_ORISCUS_SCAPUS_ASCENDENS;
+                oriscus->note->u.note.shape = S_ORISCUS_SCAPUS_ASCENDENS;
+                gregorio_assert_only(oriscus->glyph->u.notes.glyph_type
+                        != G_PES_DESCENDENS_ORISCUS, oriscus_orientation_visit,
+                        "glyph type should not be G_PES_DESCENDENS_ORISCUS");
                 break;
             default:
                 /* not reachable unless there's a
@@ -252,13 +264,15 @@ static void oriscus_orientation_visit(
                 /* LCOV_EXCL_STOP */
             }
         }
-        *oriscus_ptr = NULL;
+        oriscus->note = NULL;
+        oriscus->glyph = NULL;
     }
 
     switch (note->u.note.shape) {
     case S_ORISCUS_UNDETERMINED:
     case S_ORISCUS_SCAPUS_UNDETERMINED:
-        *oriscus_ptr = note;
+        oriscus->note = note;
+        oriscus->glyph = p->glyph;
         break;
 
     default:
@@ -268,19 +282,26 @@ static void oriscus_orientation_visit(
 
 void gabc_determine_oriscus_orientation(const gregorio_score *const score)
 {
-    gregorio_note *oriscus = NULL;
+    oriscus_orientation_vars oriscus = { NULL, NULL };
 
     gregorio_for_each_note(score, oriscus_orientation_visit, NULL,
             GRESTRUCT_NONE, &oriscus);
 
-    if (oriscus) {
+    if (oriscus.note && oriscus.glyph) {
         /* oriscus at the end of the score */
-        switch(oriscus->u.note.shape) {
+        switch(oriscus.note->u.note.shape) {
         case S_ORISCUS_UNDETERMINED:
-            oriscus->u.note.shape = S_ORISCUS_DESCENDENS;
+            oriscus.note->u.note.shape = S_ORISCUS_DESCENDENS;
             break;
         case S_ORISCUS_SCAPUS_UNDETERMINED:
-            oriscus->u.note.shape = S_ORISCUS_SCAPUS_DESCENDENS;
+            oriscus.note->u.note.shape = S_ORISCUS_SCAPUS_DESCENDENS;
+            gregorio_assert_only(oriscus.glyph->u.notes.glyph_type
+                    != G_PES_DESCENDENS_ORISCUS,
+                    gabc_determine_oriscus_orientation,
+                    "glyph type should not be G_PES_DESCENDENS_ORISCUS");
+            if (oriscus.glyph->u.notes.glyph_type == G_PES_ASCENDENS_ORISCUS) {
+                oriscus.glyph->u.notes.glyph_type = G_PES_DESCENDENS_ORISCUS;
+            }
             break;
         default:
             /* not reachable unless there's a programming error */
