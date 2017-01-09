@@ -406,6 +406,7 @@ static void add_protrusion(char *factor)
     if (has_protrusion) {
         gregorio_message("syllable already has protrusion; pr tag ignored",
                 "det_score", VERBOSITY_WARNING, 0);
+        free(factor);
     } else {
         if (center_is_determined == CENTER_HALF_DETERMINED) {
             gregorio_message("closing open syllable center before protrusion",
