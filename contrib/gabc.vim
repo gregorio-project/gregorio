@@ -15,7 +15,7 @@ syn match gabcBasicNote "[A-NP][01]\?" contained
 syn match gabcAlteration "[\<\>~xy#vVwWqQR\-Ss\.+]" contained
 syn match gabcAlteration "_[0-5]*" contained
 syn match gabcAlteration "[oO'\.][01]\?" contained
-syn match gabcAlteration "r[0-5]\?" contained
+syn match gabcAlteration "r[0-8]\?" contained
 syn match gabcClef "[cf]b\?[1-5]" contained
 syn match gabcTextMarkup "</\?e>" contained
 syn match gabcTextMarkup "</\?b>" contained

@@ -178,7 +178,11 @@ ENUM(gregorio_bar, GREGORIO_BAR);
     A(_SEMI_CIRCULUS_REVERSUS, 0x07) \
     /* signs of a bar */ \
     A(_BAR_H_EPISEMA, 0x08) \
-    X(_V_EPISEMA_BAR_H_EPISEMA, 0x18)
+    A(_V_EPISEMA_BAR_H_EPISEMA, 0x18) \
+    /* musica ficta */ \
+    A(_MUSICA_FICTA_FLAT, 0x09) \
+    A(_MUSICA_FICTA_NATURAL, 0x0a) \
+    X(_MUSICA_FICTA_SHARP, 0x0b)
 ENUM(gregorio_sign, GREGORIO_SIGN);
 
 /* the different spaces */

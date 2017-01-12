@@ -1235,6 +1235,15 @@ r4  {
 r5  {
         gregorio_add_special_sign(current_note, _SEMI_CIRCULUS_REVERSUS);
     }
+r6  {
+        gregorio_add_special_sign(current_note, _MUSICA_FICTA_FLAT);
+    }
+r7  {
+        gregorio_add_special_sign(current_note, _MUSICA_FICTA_NATURAL);
+    }
+r8  {
+        gregorio_add_special_sign(current_note, _MUSICA_FICTA_SHARP);
+    }
 x   {
         gregorio_change_shape(current_note, S_FLAT, legacy_oriscus_orientation);
     }
