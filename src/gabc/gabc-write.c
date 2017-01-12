@@ -647,6 +647,15 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     case _SEMI_CIRCULUS_REVERSUS:
         fprintf(f, "r5");
         break;
+    case _MUSICA_FICTA_FLAT:
+        fprintf(f, "r6");
+        break;
+    case _MUSICA_FICTA_NATURAL:
+        fprintf(f, "r7");
+        break;
+    case _MUSICA_FICTA_SHARP:
+        fprintf(f, "r8");
+        break;
     case _NO_SIGN:
         /* if there's no sign, don't emit anything */
         break;

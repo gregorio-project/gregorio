@@ -2417,6 +2417,21 @@ static void write_rare_sign(FILE *f, const gregorio_note *const current_note,
                 pitch_value(current_note->u.note.pitch),
                 current_note->gtex_offset_case);
         break;
+    case _MUSICA_FICTA_FLAT:
+        fprintf(f, "\\GreMusicaFictaFlat{%d}{\\GreOCase%s}%%\n",
+                pitch_value(current_note->u.note.pitch),
+                current_note->gtex_offset_case);
+        break;
+    case _MUSICA_FICTA_NATURAL:
+        fprintf(f, "\\GreMusicaFictaNatural{%d}{\\GreOCase%s}%%\n",
+                pitch_value(current_note->u.note.pitch),
+                current_note->gtex_offset_case);
+        break;
+    case _MUSICA_FICTA_SHARP:
+        fprintf(f, "\\GreMusicaFictaSharp{%d}{\\GreOCase%s}%%\n",
+                pitch_value(current_note->u.note.pitch),
+                current_note->gtex_offset_case);
+        break;
         /* the cases of the bar signs are dealt in another function
          * (write_bar) */
     default:
