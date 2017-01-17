@@ -298,6 +298,15 @@ Macro to change one of Gregorio\TeX’s counts or penalities (numeric values).
   \#2 & integer & The new value.\\
 \end{argtable}
 
+\macroname{\textbackslash grechangenextscorelinecount}{\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-spaces.tex}
+Changes one of Gregorio\TeX’s counts or penalties for a given line in the next included score.
+
+\begin{argtable}
+  \#1 & integer & The number of the line in the next score to be adjusted.\\
+  \#2 & string & The name of the count to be changed.  See \nameref{counts} and \nameref{penalties} below.\\
+  \#3 & integer & The new value.\\
+\end{argtable}
+
 \macroname{\textbackslash greloadspaceconf}{\{\#1\}}{gregoriotex-spaces.tex}
 Macro to load a space configuration file.  Space configuration file names have the format \verb=gsp-identifier.tex= and must be in the same directory as your project or in your texmf directory.
 
