@@ -652,6 +652,7 @@ local function atScoreBeginning(score_id, top_height, bottom_height,
   score_id = score_id..'.'..inclusion
   cur_score_id = score_id
   if (top_height > top_height_adj or bottom_height < bottom_height_adj
+      or per_line_counts['noteadditionalspacelinestext'] ~= nil
       or has_translation ~= 0 or has_above_lines_text ~= 0)
       and tex.count['gre@variableheightexpansion'] == 1 then
     score_heights = line_heights[score_id] or {}

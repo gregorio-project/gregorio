@@ -868,6 +868,9 @@
 \newcount\gre@space@count@additionaltopspacenabcthreshold\relax%
 \gre@space@count@additionaltopspacenabcthreshold=4
 
+\newcount\gre@space@count@noteadditionalspacelinestextthreshold\relax%
+\gre@space@count@noteadditionalspacelinestextthreshold=2
+
 \def\gre@num@min#1#2{%
   \ifnum#1 < #2\relax %
     \gre@count@temp@one=#1\relax %
@@ -914,9 +917,9 @@
     \global\gre@dimen@additionaltopspacenabc=0 sp%
   \fi %
   \gre@num@min{#2}{\gre@pitch@clefbottom}%
-  \gre@count@temp@one=\numexpr((\gre@count@temp@one - \gre@pitch@adjust@bottom) * -1)\relax %
+  \gre@count@temp@one=\numexpr(\gre@pitch@adjust@bottom - \gre@count@temp@one)\relax %
   \ifnum\gre@count@temp@one>0\relax %
-    \global\gre@dimen@additionalbottomspace=\dimexpr(15750 sp * \gre@count@temp@one * \gre@factor)\relax %
+    \global\gre@dimen@additionalbottomspace=\dimexpr(\gre@space@dimen@noteadditionalspacelinestext * \gre@count@temp@one)\relax %
   \else %
     \global\gre@dimen@additionalbottomspace=0 sp%
   \fi %
@@ -1749,6 +1752,7 @@
     {alterationadjustmentbar}{\gre@rubberfalse}%
     {bracketupshift}{\gre@rubberfalse}%
     {bracketdownshift}{\gre@rubberfalse}%
+    {noteadditionalspacelinestext}{\gre@rubberfalse}%
   }[\gre@rubbertrue]%
 }%
 
@@ -2173,6 +2177,9 @@
   \ifgre@scale@stafflinefactor%
     \gre@count@temp@two = \numexpr((\gre@stafflinefactor * #2) / #1)\relax%
     \xdef\gre@stafflinefactor{\the\gre@count@temp@two}%
+  \fi%
+  \ifgre@scale@noteadditionalspacelinestext%
+    \gre@changeonedimenfactor{noteadditionalspacelinestext}{#1}{#2}%
   \fi%
   \relax %
 }%

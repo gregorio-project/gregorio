@@ -1325,10 +1325,10 @@ Each of the following counts controls some aspect of the configuration of the Gr
 
 \begin{gcount}{additionaltopspacethreshold}
 The threshold above which we start accounting notes above lines for additional
-vertical space. For instance with a threshold of \texttt{2}, notes with a pitch
-of \texttt{k} and \texttt{l} will not interfere with the space above lines.
-Set it to a high value if you don't want high notes to interfere with space
-above lines.
+vertical space. For instance with a threshold of \texttt{2} and four line
+staves, notes with a pitch of \texttt{k} and \texttt{l} will not interfere with
+the space above lines.  Set it to a high value if you don't want high notes to
+interfere with space above lines.
 \end{gcount}
 
 \begin{gcount}{additionaltopspacealtthreshold}
@@ -1340,6 +1340,13 @@ notes taken into account with above lines text vertical placement.
 Same as \texttt{additionaltopspacethreshold} but setting the threshold for
 notes taken into account with above lines nabc neume vertical placement
 baseline.
+\end{gcount}
+
+\begin{gcount}{noteadditionalspacelinestextthreshold}
+The number of low notes which will add on the
+\texttt{noteadditionalspacelinestext} space.  For instance, with a threshold of
+\texttt{2}, every note below \texttt{c} will add {noteadditionalspacelinestext}
+space for each pitch needed below \texttt{c}, accounting for the various signs.
 \end{gcount}
 
 \subsection{Distances}\label{distances}
@@ -1639,6 +1646,11 @@ The space above the lines.
 
 \begin{gdimension}{spacelinestext}
 The space between the lines and the bottom of the text.
+\end{gdimension}
+
+\begin{gdimension}{noteadditionalspacelinestext}
+The space added between the lines and the bottom of the text for every pitch
+below the \texttt{noteadditionalspacelinestextthreshold}.
 \end{gdimension}
 
 \begin{gdimension}{spacebeneathtext}

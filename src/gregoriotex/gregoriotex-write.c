@@ -2789,8 +2789,50 @@ static void compute_height_extrema(const gregorio_glyph *const glyph,
         } else {
             height = note->u.note.pitch;
         }
-        if (*bottom_height == UNDETERMINED_HEIGHT || height < *bottom_height) {
-            *bottom_height = height;
+        if (glyph->type == GRE_GLYPH) {
+            bool has_stem = false;
+            switch (glyph->u.notes.glyph_type) {
+            case G_BIVIRGA:
+            case G_TRIVIRGA:
+            case G_VIRGA:
+            case G_VIRGA_REVERSA:
+                has_stem = true;
+                break;
+
+            case G_PUNCTUM:
+                switch (note->u.note.shape) {
+                case S_ORISCUS_SCAPUS_ASCENDENS:
+                case S_ORISCUS_SCAPUS_DESCENDENS:
+                    has_stem = true;
+                    break;
+
+                default:
+                    /* default to avoid the warning */
+                    break;
+                }
+                break;
+
+            default:
+                /* default to avoid the warning */
+
+                /* other shapes like the porrectus have stems, but the height
+                 * computation will cover other notes in the shape, negating
+                 * the need to account for the stem on the shape */
+                break;
+            }
+
+            if (has_stem) {
+                /* we assume the stem lowers the height by one */
+                if (*bottom_height == UNDETERMINED_HEIGHT
+                        || (height - 1) < *bottom_height) {
+                    *bottom_height = height - 1;
+                }
+            } else {
+                if (*bottom_height == UNDETERMINED_HEIGHT
+                        || height < *bottom_height) {
+                    *bottom_height = height;
+                }
+            }
         }
     }
 }
