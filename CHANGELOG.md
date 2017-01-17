@@ -33,6 +33,8 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - the visibility of a particular nabc voice can now be set by `\gresetnabc{n}{(in)visible}`, where `n` is the number of the nabc voice (see [#1257](https://github.com/gregorio-project/gregorio/issues/1257)).
 - `[nocustos]` may be used in gabc to prevent a custos should the line end at that point (see [#1271](https://github.com/gregorio-project/gregorio/issues/1271)).
 - Musica ficta signs: Add `r6`, `r7`, and `r8` to a note for a flat, natural, or sharp (respectively) above the note (see [#1278](https://github.com/gregorio-project/gregorio/issues/1278)).
+- The spacing added for low notes in the staff is now adjustable by setting dimension `noteadditionalspacelinestext`, with the number of notes settable as count `noteadditionalspacelinestextthreshold`.  See GregorioRef and [#1125](https://github.com/gregorio-project/gregorio/issues/1125) for details.
+- Some counts can now be adjusted for a particular line in a score.  Use `\grechangenextscorelinecount` prior to including the score to set the desired values.  The various spacing thresholds may be changed with this command.  See GregorioRef for details.
 
 ### Deprecated
 - '\gresethyphenprotrusion{percentage}`, supplanted by `\gresetprotrusionfactor{eolhyphen}{factor}`.  Note that the value the new command takes is a factor rather than a percentage.

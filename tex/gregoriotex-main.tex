@@ -240,7 +240,7 @@
 \def\gre@pitch@n{16}%
 \def\gre@pitch@p{17}%
 
-\let\gre@pitch@adjust@bottom\gre@pitch@c %
+\def\gre@pitch@adjust@bottom{\the\numexpr(\gre@space@count@noteadditionalspacelinestextthreshold + \gre@pitch@a)\relax} %
 \let\gre@pitch@belowstaff\gre@pitch@c %
 \let\gre@pitch@ledger@below\gre@pitch@b %
 \let\gre@pitch@barvepisema\gre@pitch@c %

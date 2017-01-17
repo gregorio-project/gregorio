@@ -868,6 +868,9 @@
 \newcount\gre@space@count@additionaltopspacenabcthreshold\relax%
 \gre@space@count@additionaltopspacenabcthreshold=4
 
+\newcount\gre@space@count@noteadditionalspacelinestextthreshold\relax%
+\gre@space@count@noteadditionalspacelinestextthreshold=2
+
 \def\gre@num@min#1#2{%
   \ifnum#1 < #2\relax %
     \gre@count@temp@one=#1\relax %
@@ -914,9 +917,9 @@
     \global\gre@dimen@additionaltopspacenabc=0 sp%
   \fi %
   \gre@num@min{#2}{\gre@pitch@clefbottom}%
-  \gre@count@temp@one=\numexpr((\gre@count@temp@one - \gre@pitch@adjust@bottom) * -1)\relax %
+  \gre@count@temp@one=\numexpr(\gre@pitch@adjust@bottom - \gre@count@temp@one)\relax %
   \ifnum\gre@count@temp@one>0\relax %
-    \global\gre@dimen@additionalbottomspace=\dimexpr(15750 sp * \gre@count@temp@one * \gre@factor)\relax %
+    \global\gre@dimen@additionalbottomspace=\dimexpr(\gre@space@dimen@noteadditionalspacelinestext * \gre@count@temp@one)\relax %
   \else %
     \global\gre@dimen@additionalbottomspace=0 sp%
   \fi %
@@ -1622,12 +1625,13 @@
   \fi%
   \directlua{%
     gregoriotex.save_dim(%
-      "\luatexluaescapestring{\gre@prefix @#1}",%
+      "\luatexluaescapestring{#1}",%
       "\luatexluaescapestring{\expandafter\unexpanded%
         \expandafter\expandafter\expandafter{%
           \csname gre@space@\gre@prefix @#1\endcsname%
         }%
-      }"%
+      }",%
+      "\csname ifgre@scale@#1\endcsname scalable\else fixed\fi"%
     )%
   }%
   \grechangedim{#1}{#2}{#3}%
@@ -1641,6 +1645,33 @@
       "\luatexluaescapestring{#2}",%
       "\luatexluaescapestring{#3}",%
       "\luatexluaescapestring{#4}"%
+    )%
+  }%
+}%
+
+% same arguments as \grechangecount, but used for setting the dimension for a
+% single line
+\def\gre@changecountforline#1#2{%
+  \directlua{%
+    gregoriotex.save_count(%
+      "\luatexluaescapestring{#1}",%
+      "\luatexluaescapestring{\expandafter\unexpanded%
+        \expandafter\expandafter\expandafter{%
+          \expandafter\the\csname gre@space@count@#1\endcsname%
+        }%
+      }"%
+    )%
+  }%
+  \grechangecount{#1}{#2}%
+}%
+
+% #1 : line number
+% #2-#3 : same as #1-#2 of \grechangecount
+\def\grechangenextscorelinecount#1#2#3{%
+  \directlua{%
+    gregoriotex.change_next_score_line_count(#1,%
+      "\luatexluaescapestring{#2}",%
+      "\luatexluaescapestring{#3}"%
     )%
   }%
 }%
@@ -1749,6 +1780,7 @@
     {alterationadjustmentbar}{\gre@rubberfalse}%
     {bracketupshift}{\gre@rubberfalse}%
     {bracketdownshift}{\gre@rubberfalse}%
+    {noteadditionalspacelinestext}{\gre@rubberfalse}%
   }[\gre@rubbertrue]%
 }%
 
@@ -2173,6 +2205,9 @@
   \ifgre@scale@stafflinefactor%
     \gre@count@temp@two = \numexpr((\gre@stafflinefactor * #2) / #1)\relax%
     \xdef\gre@stafflinefactor{\the\gre@count@temp@two}%
+  \fi%
+  \ifgre@scale@noteadditionalspacelinestext%
+    \gre@changeonedimenfactor{noteadditionalspacelinestext}{#1}{#2}%
   \fi%
   \relax %
 }%
