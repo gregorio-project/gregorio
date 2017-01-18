@@ -646,7 +646,7 @@ local function get_score_font_unicode_pairs(name)
   return pairs(unicodes)
 end
 
-local function atScoreBeginning(score_id, top_height, bottom_height,
+local function at_score_beginning(score_id, top_height, bottom_height,
     has_translation, has_above_lines_text, top_height_adj, bottom_height_adj,
     score_font_name)
   local inclusion = score_inclusion[score_id] or 1
@@ -654,7 +654,6 @@ local function atScoreBeginning(score_id, top_height, bottom_height,
   score_id = score_id..'.'..inclusion
   cur_score_id = score_id
   if (top_height > top_height_adj or bottom_height < bottom_height_adj
-      or per_line_counts['noteadditionalspacelinestext'] ~= nil
       or has_translation ~= 0 or has_above_lines_text ~= 0)
       and tex.count['gre@variableheightexpansion'] == 1 then
     score_heights = line_heights[score_id] or {}
@@ -687,7 +686,7 @@ local function atScoreBeginning(score_id, top_height, bottom_height,
   luatexbase.add_to_callback("hyphenate", disable_hyphenation, "gregoriotex.disable_hyphenation", 1)
 end
 
-local function atScoreEnd()
+local function at_score_end()
   luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.post_linebreak')
   luatexbase.remove_from_callback("hyphenate", "gregoriotex.disable_hyphenation")
   per_line_dims = {}
@@ -1137,22 +1136,30 @@ local function save_count(name, value)
   saved_counts[name] = value
 end
 
-local function change_next_score_line_dim(linenum, name, value, modifier)
-  local line_dims = per_line_dims[linenum]
-  if line_dims == nil then
-    line_dims = {}
-    per_line_dims[linenum] = line_dims
+local function change_next_score_line_dim(line_expr, name, value, modifier)
+  local linenum_str
+  for linenum_str in string.gmatch(line_expr, "%s*([^,]+)%s*") do
+    local linenum = tonumber(linenum_str)
+    local line_dims = per_line_dims[linenum]
+    if line_dims == nil then
+      line_dims = {}
+      per_line_dims[linenum] = line_dims
+    end
+    line_dims[name] = { value, modifier }
   end
-  line_dims[name] = { value, modifier }
 end
 
-local function change_next_score_line_count(linenum, name, value)
-  local line_counts = per_line_counts[linenum]
-  if line_counts == nil then
-    line_counts = {}
-    per_line_counts[linenum] = line_counts
+local function change_next_score_line_count(line_expr, name, value)
+  local linenum_str
+  for linenum_str in string.gmatch(line_expr, "([^,]+)") do
+    local linenum = tonumber(linenum_str)
+    local line_counts = per_line_counts[linenum]
+    if line_counts == nil then
+      line_counts = {}
+      per_line_counts[linenum] = line_counts
+    end
+    line_counts[name] = value
   end
-  line_counts[name] = value
 end
 
 local function prep_save_position(index, fn)
@@ -1355,8 +1362,8 @@ end
 gregoriotex.number_to_letter             = number_to_letter
 gregoriotex.init                         = init
 gregoriotex.include_score                = include_score
-gregoriotex.atScoreEnd                   = atScoreEnd
-gregoriotex.atScoreBeginning             = atScoreBeginning
+gregoriotex.at_score_end                 = at_score_end
+gregoriotex.at_score_beginning           = at_score_beginning
 gregoriotex.check_font_version           = check_font_version
 gregoriotex.get_gregoriotexluaversion    = get_gregoriotexluaversion
 gregoriotex.map_font                     = map_font

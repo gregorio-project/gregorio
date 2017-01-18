@@ -1641,7 +1641,8 @@
 % #2-#4 : same as #1-#3 of \grechangedim
 \def\grechangenextscorelinedim#1#2#3#4{%
   \directlua{%
-    gregoriotex.change_next_score_line_dim(#1,%
+    gregoriotex.change_next_score_line_dim(%
+      "\luatexluaescapestring{#1}",%
       "\luatexluaescapestring{#2}",%
       "\luatexluaescapestring{#3}",%
       "\luatexluaescapestring{#4}"%
@@ -1669,7 +1670,8 @@
 % #2-#3 : same as #1-#2 of \grechangecount
 \def\grechangenextscorelinecount#1#2#3{%
   \directlua{%
-    gregoriotex.change_next_score_line_count(#1,%
+    gregoriotex.change_next_score_line_count(%
+      "\luatexluaescapestring{#1}",%
       "\luatexluaescapestring{#2}",%
       "\luatexluaescapestring{#3}"%
     )%

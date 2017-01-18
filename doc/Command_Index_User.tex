@@ -271,12 +271,18 @@ Macro to change one of Gregorio\TeX’s distances.  This function will check to 
 Changes one of Gregorio\TeX’s distances for a given line in the next included score.  This works with \texttt{spaceabovelines}, \texttt{spacebeneathtext}, and \texttt{spacelinestext}.
 
 \begin{argtable}
-  \#1 & integer & The number of the line in the next score to be adjusted.\\
-  \#2 & string & The name of the distance to be changed.  See \nameref{distances} below.\\
-  \#3 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that Gregorio\TeX\ handles spaces.\\
+  \#1 & list of integers & A comma-separated list of line numbers in the next
+                           score to be adjusted.\\
+  \#2 & string & The name of the distance to be changed.  See
+                 \nameref{distances} below.\\
+  \#3 & string & The distance in string format.  \textbf{Note:} You cannot use
+                 a length register for this argument.  You \emph{must} use a
+                 string because of the way that Gregorio\TeX\ handles spaces.\\
   \#4 & \texttt{fixed} & Distance will not scale when staff size is changed.\\
   & \texttt{scalable} & Distance will scale when staff size is changed.\\
-  & \texttt{inherited} & Distance will inherit its value from another distance.  When this argument is used, then \#3 should be the name of another Gregorio\TeX\ distance.
+  & \texttt{inherited} & Distance will inherit its value from another
+                         distance.  When this argument is used, then \#3 should
+                         be the name of another Gregorio\TeX\ distance.
 \end{argtable}
 
 \macroname{\textbackslash grescaledim}{\{\#1\}\{\#2\}}{gregoriotex-spaces.tex}
@@ -302,8 +308,10 @@ Macro to change one of Gregorio\TeX’s counts or penalities (numeric values).
 Changes one of Gregorio\TeX’s counts or penalties for a given line in the next included score.
 
 \begin{argtable}
-  \#1 & integer & The number of the line in the next score to be adjusted.\\
-  \#2 & string & The name of the count to be changed.  See \nameref{counts} and \nameref{penalties} below.\\
+  \#1 & list of integers & A comma-separated list of line numbers in the next
+                           score to be adjusted.\\
+  \#2 & string & The name of the count to be changed.  See \nameref{counts} and
+                 \nameref{penalties} below.\\
   \#3 & integer & The new value.\\
 \end{argtable}
 
