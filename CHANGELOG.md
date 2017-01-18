@@ -36,6 +36,9 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - The spacing added for low notes in the staff is now adjustable by setting dimension `noteadditionalspacelinestext`, with the number of notes settable as count `noteadditionalspacelinestextthreshold`.  See GregorioRef and [#1125](https://github.com/gregorio-project/gregorio/issues/1125) for details.
 - Some counts can now be adjusted for a particular line in a score.  Use `\grechangenextscorelinecount` prior to including the score to set the desired values.  The various spacing thresholds may be changed with this command.  See GregorioRef for details.
 
+### Changed
+- `\grechangenextscorelinedim` can now take a comma-separated list of line numbers as its first argument (see [#1280](https://github.com/gregorio-project/gregorio/issues/1280)).
+
 ### Deprecated
 - '\gresethyphenprotrusion{percentage}`, supplanted by `\gresetprotrusionfactor{eolhyphen}{factor}`.  Note that the value the new command takes is a factor rather than a percentage.
 

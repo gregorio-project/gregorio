@@ -1212,7 +1212,7 @@
   \gre@calculate@additionalspaces{#2}{#3}{#4}{#5}%
   #8%
   \directlua{
-    gregoriotex.atScoreBeginning([[#1]], #2, #3, #4, #5,
+    gregoriotex.at_score_beginning([[#1]], #2, #3, #4, #5,
         \gre@pitch@adjust@top, \gre@pitch@adjust@bottom,
         "\luatexluaescapestring{\gre@gregoriofontname}")
     gregoriotex.adjust_line_height(1)
@@ -1269,7 +1269,7 @@
   \gre@skip@temp@four=0pt\relax%
   \setbox\gre@box@annotation=\box\voidb@x%
   \setbox\gre@box@commentary=\box\voidb@x%
-  \directlua{gregoriotex.atScoreEnd()}%
+  \directlua{gregoriotex.at_score_end()}%
   \unsetluatexattribute{\gre@attr@glyph@id}%
   \unsetluatexattribute{\gre@attr@glyph@top}%
   \unsetluatexattribute{\gre@attr@glyph@bottom}%
