@@ -2788,22 +2788,23 @@ static void compute_height_extrema(const gregorio_glyph *const glyph,
             height = note->v_episema_height;
         } else {
             height = note->u.note.pitch;
-        }
-        if (glyph->type == GRE_GLYPH) {
-            bool has_stem = false;
+
+            /* no vertical episema, so we need to check for a stem */
+            gregorio_assert(glyph->type == GRE_GLYPH, compute_height_extrema,
+                    "glyph->type must be GRE_GLYPH here", return);
             switch (glyph->u.notes.glyph_type) {
             case G_BIVIRGA:
             case G_TRIVIRGA:
             case G_VIRGA:
             case G_VIRGA_REVERSA:
-                has_stem = true;
+                --height;
                 break;
 
             case G_PUNCTUM:
                 switch (note->u.note.shape) {
                 case S_ORISCUS_SCAPUS_ASCENDENS:
                 case S_ORISCUS_SCAPUS_DESCENDENS:
-                    has_stem = true;
+                    --height;
                     break;
 
                 default:
@@ -2820,19 +2821,10 @@ static void compute_height_extrema(const gregorio_glyph *const glyph,
                  * the need to account for the stem on the shape */
                 break;
             }
+        }
 
-            if (has_stem) {
-                /* we assume the stem lowers the height by one */
-                if (*bottom_height == UNDETERMINED_HEIGHT
-                        || (height - 1) < *bottom_height) {
-                    *bottom_height = height - 1;
-                }
-            } else {
-                if (*bottom_height == UNDETERMINED_HEIGHT
-                        || height < *bottom_height) {
-                    *bottom_height = height;
-                }
-            }
+        if (*bottom_height == UNDETERMINED_HEIGHT || height < *bottom_height) {
+            *bottom_height = height;
         }
     }
 }
