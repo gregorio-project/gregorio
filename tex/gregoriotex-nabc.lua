@@ -71,7 +71,7 @@ local gregallaliases = {
   ["pf!cl~ppt1"] = "cl!po>ppt1"
 }
 
-local function gregallreadfont(font_id)
+local function gregallreadfont(fontname, font_id)
   local tab = {}
   local metrics = {}
   local fontdata = font.getfont(font_id)
@@ -92,10 +92,12 @@ local function gregallreadfont(font_id)
       metrics[name] = { width = g.width, height = g.height, depth = (g.depth and g.depth or 0) }
     end
   end
-  for key, value in pairs(gregallaliases) do
-    if tab[value] and not tab[key] then
-      tab[key] = tab[value]
-      metrics[key] = metrics[value]
+  if fontname ~= "grelaon" then
+    for key, value in pairs(gregallaliases) do
+      if tab[value] and not tab[key] then
+        tab[key] = tab[value]
+        metrics[key] = metrics[value]
+      end
     end
   end
   return tab, metrics
@@ -105,12 +107,15 @@ local gregalltab = {}
 local gregallmetrics = {}
 
 local gregallneumekinds = { vi = 1, pu = 1, ta = 1, gr = 1, cl = 1, un = 1, pv = 1, pe = 1, po = 1, to = 1, ci = 1, sc = 1, pf = 1, sf = 1, tr = 1,
-  st = 1, ds = 1, ts = 1, tg = 1, bv = 1, tv = 1, pr = 1, pi = 1, vs = 1, ["or"] = 1, sa = 1, pq = 1, qi = 1, ql = 1, pt = 1 }
+  st = 1, ds = 1, ts = 1, tg = 1, bv = 1, tv = 1, pr = 1, pi = 1, vs = 1, ["or"] = 1, sa = 1, pq = 1, qi = 1, ql = 1, pt = 1,
+  un = 1, oc = 1 }
 local gregalllskinds = { c = 1, t = 1, s = 1, l = 1, x = 1, ["+"] = 1, a = 1, al = 1, am = 1, b = 1, cm = 1, co = 1, cw = 1, d = 1, e = 1, eq = 1,
   ew = 1, f = 1, fid = 1, fr = 1, g = 1, h = 1, hp = 1, hn = 1, i = 1, im = 1, iv = 1, k = 1, lb = 1, lc = 1, len = 1,
   lm = 1, lp = 1, lt = 1, m = 1, md = 1, moll = 1, n = 1, nl = 1, nt = 1, p = 1, par = 1, pfec = 1, pm = 1, q = 1,
   sb = 1, sc = 1, sc = 1, simil = 1, simul = 1, sj = 1, sjc = 1, sjcm = 1, sm = 1, st = 1, sta = 1, su = 1, tb = 1,
-  th = 1, tm = 1, tw = 1, v = 1, ve = 1, vol = 1 }
+  th = 1, tm = 1, tw = 1, v = 1, ve = 1, vol = 1,
+  ["eq-"] = 1, equ = 1, simp = 1, simpl = 1, sp = 1 }
+local grelaonltkinds = { i = 1, ["do"] = 1, dr = 1, dx = 1, ps = 1, qm = 1, sb = 1, se = 1, sj = 1, sl = 1, sn = 1, sp = 1, sr = 1, st = 1, us = 1 }
 
 -- Parse a single base neume
 local gregallparse_base = function (str, idx, len)
@@ -170,10 +175,19 @@ local gregallparse_neume = function (str, idx, len)
     local v = str:sub(idx, idx + 1)
     if v == "ls" then
       local idx2 = idx + 2
-      while idx2 <= len and not string.find("12346789", str:sub(idx2, idx2)) do
+      while idx2 <= len and not string.find("123456789", str:sub(idx2, idx2)) do
         idx2 = idx2 + 1
       end
       if idx2 > len or not gregalllskinds[str:sub(idx + 2, idx2 - 1)] then return 1 end
+      ls[lsidx] = str:sub(idx, idx2)
+      lsidx = lsidx + 1
+      idx = idx2 + 1
+    elseif v == "lt" then
+      local idx2 = idx + 2
+      while idx2 <= len and not string.find("123456789", str:sub(idx2, idx2)) do
+        idx2 = idx2 + 1
+      end
+      if idx2 > len or not grelaonltkinds[str:sub(idx + 2, idx2 - 1)] then return 1 end
       ls[lsidx] = str:sub(idx, idx2)
       lsidx = lsidx + 1
       idx = idx2 + 1
@@ -181,7 +195,7 @@ local gregallparse_neume = function (str, idx, len)
       local mod = ''
       idx = idx + 2
       local c = str:sub(idx, idx)
-      if idx <= len and string.find("tuvwxy", c) then
+      if idx <= len and string.find("tuvwxyqnz", c) then
         mod = mod .. c
         idx = idx + 1
         c = str:sub(idx, idx)
@@ -411,7 +425,7 @@ end
 
 local function init_font(fontname)
   if not gregalltab[fontname] then
-    gregalltab[fontname], gregallmetrics[fontname] = gregallreadfont(font.current())
+    gregalltab[fontname], gregallmetrics[fontname] = gregallreadfont(fontname, font.current())
   end
 end
 
