@@ -5,7 +5,7 @@
 
     See VersionUpdate.py -h for help
 
-    Copyright (C) 2015 The Gregorio Project (see CONTRIBUTORS.md)
+    Copyright (C) 2015-2017 The Gregorio Project (see CONTRIBUTORS.md)
 
     This file is part of Gregorio.
 

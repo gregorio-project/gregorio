@@ -7,7 +7,7 @@
     Python fontforge script to convert from fontforge's native sfd
     to a TrueType font (ttf).
 
-    Copyright (C) 2015 The Gregorio Project (see CONTRIBUTORS.md)
+    Copyright (C) 2015-2017 The Gregorio Project (see CONTRIBUTORS.md)
 
     This file is part of Gregorio.
 

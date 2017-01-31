@@ -1,6 +1,6 @@
 --GregorioTeX Lua file.
 --
---Copyright (C) 2008-2016 The Gregorio Project (see CONTRIBUTORS.md)
+--Copyright (C) 2008-2017 The Gregorio Project (see CONTRIBUTORS.md)
 --
 --This file is part of Gregorio.
 --
@@ -24,20 +24,20 @@ local hpack, traverse, traverse_id, has_attribute, count, remove, insert_after, 
 gregoriotex = gregoriotex or {}
 local gregoriotex = gregoriotex
 
-local internalversion = '4.2.0' -- GREGORIO_VERSION (comment used by VersionManager.py)
+local internalversion = '5.0.0-beta1' -- GREGORIO_VERSION (comment used by VersionManager.py)
 
 local err, warn, info, log = luatexbase.provides_module({
     name               = "gregoriotex",
-    version            = '4.2.0', -- GREGORIO_VERSION
+    version            = '5.0.0-beta1', -- GREGORIO_VERSION
     greinternalversion = internalversion,
-    date               = "2016/09/23", -- GREGORIO_DATE_LTX
+    date               = "2017/01/31", -- GREGORIO_DATE_LTX
     description        = "GregorioTeX module.",
     author             = "The Gregorio Project (see CONTRIBUTORS.md)",
-    copyright          = "2008-2016 - The Gregorio Project",
+    copyright          = "2008-2017 - The Gregorio Project",
     license            = "GPLv3+",
 })
 
-local gregorio_exe = 'gregorio-4_2_0' -- FILENAME_VERSION
+local gregorio_exe = 'gregorio-5_0_0-beta1' -- FILENAME_VERSION
 
 gregoriotex.module = { err = err, warn = warn, info = info, log = log }
 

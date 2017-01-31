@@ -4,15 +4,15 @@ Upstream-Contact: Elie Roux <elie.roux@telecom-bretagne.eu>
 Source: https://github.com/gregorio-project/gregorio/releases
 
 Files: *
-Copyright: 2008-2016 The Gregorio Project
+Copyright: 2008-2017 The Gregorio Project
 License: GPL-3+
 
 Files: fonts/gregorio*
-Copyright: 2008-2016 The Gregorio Project
+Copyright: 2008-2017 The Gregorio Project
 License: GPL-3font+
 
 Files: fonts/granapadano*
-Copyright: 2008-2016 Juergen Reuter, the Gregorio Project
+Copyright: 2008-2017 Juergen Reuter, the Gregorio Project
 License: GPL-3font+
 
 Files: fonts/greciliae*
