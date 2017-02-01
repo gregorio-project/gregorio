@@ -27,6 +27,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Added
 - More cavum shapes are now available.  To use them, simply add `r` in gabc to any note in a glyph.  See [#844](https://github.com/gregorio-project/gregorio/issues/844).
 - Square brackets can be placed around notes by using `[[` and `]]` to surround said notes in gabc (see [#844](https://github.com/gregorio-project/gregorio/issues/844)).
+- a font `grelaon` for Laon style adiastematic notation has been added (see GregorioNabcRef.pdf for details). This is a preview, backward incompatible change are possible in future releases.
 - 9 new St. Gall neume glyphs have been added to the `gregall` font.
 - 5 new St. Gall neume glyphs have been added to the `gresgmodern` font.
 - install-gtex.sh now generates uninstall-gtex.sh, which can be used to uninstall the TeX portion of the installation when GregorioTeX was installed from source.
