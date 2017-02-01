@@ -40,7 +40,7 @@ Gregorio has been developed with valuable help and support from:
  * [e-codices](http://www.e-codices.unifr.ch)
  * [Stiftsbibliothek, St. Gallen (CH)](http://www.stibi.ch/)
  * [Stiftsbibliothek, Einsiedeln (CH)](http://kloster-einsiedeln.ch/)
- * [Bibliotheque municipale de Laon (FR)](http://manuscrit.ville-laon.fr/)
+ * [Bibliothèque municipale de Laon (FR)](http://manuscrit.ville-laon.fr/)
  * [Gna!](http://gna.org)
  * [Github](https://github.com/)
 
