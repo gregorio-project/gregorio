@@ -22,6 +22,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - The left stem of Dominican plicae on lines has been shortened (see [#1238](https://github.com/gregorio-project/gregorio/issues/1238)).
 - Clefs on the top or bottom line adjust the spacing as if there were a note above the top line or below the bottom line, respectively (see [#1007](https://github.com/gregorio-project/gregorio/issues/1007)).
 - Default spaces have been adjusted (see [#1182](https://github.com/gregorio-project/gregorio/issues/1182)).
+- `\grechangenextscorelinedim` can now take a comma-separated list of line numbers as its first argument (see [#1280](https://github.com/gregorio-project/gregorio/issues/1280)).
 
 ### Added
 - More cavum shapes are now available.  To use them, simply add `r` in gabc to any note in a glyph.  See [#844](https://github.com/gregorio-project/gregorio/issues/844).
@@ -38,9 +39,6 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Musica ficta signs: Add `r6`, `r7`, and `r8` to a note for a flat, natural, or sharp (respectively) above the note (see [#1278](https://github.com/gregorio-project/gregorio/issues/1278)).
 - The spacing added for low notes in the staff is now adjustable by setting dimension `noteadditionalspacelinestext`, with the number of notes settable as count `noteadditionalspacelinestextthreshold`.  See GregorioRef and [#1125](https://github.com/gregorio-project/gregorio/issues/1125) for details.
 - Some counts can now be adjusted for a particular line in a score.  Use `\grechangenextscorelinecount` prior to including the score to set the desired values.  The various spacing thresholds may be changed with this command.  See GregorioRef for details.
-
-### Changed
-- `\grechangenextscorelinedim` can now take a comma-separated list of line numbers as its first argument (see [#1280](https://github.com/gregorio-project/gregorio/issues/1280)).
 
 ### Deprecated
 - '\gresethyphenprotrusion{percentage}`, supplanted by `\gresetprotrusionfactor{eolhyphen}{factor}`.  Note that the value the new command takes is a factor rather than a percentage.
