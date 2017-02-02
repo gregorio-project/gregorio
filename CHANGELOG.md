@@ -2,11 +2,12 @@
 All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
-[Unreleased][unreleased]
-
+## [Unreleased][unreleased]
+### Changed
+- The default behaviour of `\gregorioscore` has been changed to autocompile.
 
 ## [5.0.0-beta1] - 2017-01-31
-## Fixed
+### Fixed
 - Horizontal episemata bridge spaces more correctly.  As mentioned earlier, you can prevent this by appending `2` to the `_` on the note before the space you do not want bridged.  See [#1216](https://github.com/gregorio-project/gregorio/issues/1216).
 - A rising note after an oriscus flexus will no longer generate a porrectus (see [#1220](https://github.com/gregorio-project/gregorio/issues/1220)).
 - The Scribus external tool script now uses latexmk in order to handle the multi-pass features of Gregorio (see [#1236](https://github.com/gregorio-project/gregorio/issues/1236)).
@@ -15,7 +16,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - A trailing space on a header line is now ignored (see [#1269](https://github.com/gregorio-project/gregorio/issues/1269)).
 - A pes whose second note is an oriscus now obeys the oriscus orientation rules (see [#1272](https://github.com/gregorio-project/gregorio/issues/1272))
 
-## Changed
+### Changed
 - Notes are now left-aligned as if all clefs had the same width as the largest clef in the score. You can get previous behavior back with `\grebolshiftcleftype{current}`, or temporary force alignment until the end of a score with `\grelocalbolshiftcleftype`. See Documentation of these functions and [#1189](https://github.com/gregorio-project/gregorio/issues/1189).
 - A clef change immediately before a line break `(z)` will now typeset the new clef at the beginning of the next line.  An explicit custos `(z0)` immediately before such a clef change (or separated by only a bar) will be suppressed.  See [#1190](https://github.com/gregorio-project/gregorio/issues/1190).
 - Ledger lines are now extended through notes on either side of a ledger line that crosses a stem, as long as the notes are within the same "element."  If the algorithm doesn't produce the result you want, you can use `[oll:0]` to suppress an over-the-staff ledger line on a note, `[ull:0]` to suppress an under-the-staff ledger line on a note, `[oll:1]` to force an over-the-line ledger line on a note, or [ull:1] to force an under-the-staff ledger line on a note.  Please note that other forms of `[oll:...]` and `[ull:...]` can interfere with these new settings. See [UPGRADE.md](UPGRADE.md) and [#1215](https://github.com/gregorio-project/gregorio/issues/1215) for details.
