@@ -4,6 +4,10 @@ This file contains instructions to upgrade to a new release of Gregorio.
 
 ## 5.0
 
+### Auto-compilation
+
+The `autocompile` option is now the default option for the behavior of `\gregorioscore`.  If you want to go back to the old, manual behavior, then you should pass the `nevercompile` option when loading `gregoriotex`.
+
 ### Gregorio and Grana Padano fonts
 
 The gregorio and granapadano fonts, as well as their "-op" Dominican variants, will now be available as separate downloads.  If you were using these fonts, either download and install them or switch to greciliae, which continues to be distributed along with Gregorio by default.
