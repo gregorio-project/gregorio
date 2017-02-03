@@ -4,7 +4,7 @@ This file contains instructions to upgrade to a new release of Gregorio.
 
 ## 5.0
 
-### Auto-compiliation
+### Auto-compilation
 
 The `autocompile` option is now the default option for the behavior of `\gregorioscore`.  If you want to go back to the old, manual behavior, then you should pass the `nevercompile` option when loading `gregoriotex`.
 
