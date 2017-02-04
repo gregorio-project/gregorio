@@ -206,8 +206,9 @@ def main():
     fusion_pes_quadratum()
     fusion_flexus()
     fusion_porrectus()
-    # variants must be copied last!
+    # variants and extras must be copied last!
     copy_variant_glyphs()
+    copy_extra_glyphs()
     newfont.generate(outfile)
     oldfont.close()
     newfont.close()
@@ -394,8 +395,8 @@ def glyph_exists(glyph_name):
         return GLYPH_EXISTS[glyph_name]
     result = True
     try:
-        oldfont.selection.select(glyph_name)
-    except:
+        oldfont.selection.select(glyph_name + '')
+    except Exception as ex:
         result = False
     GLYPH_EXISTS[glyph_name] = result
     return result
@@ -436,6 +437,9 @@ def copy_existing_glyph_as_new(glyph_name, as_name=None, fallback=None,
         new_glyph()
         complete_paste(glyph_to_copy, has_cavum, variant)
         set_glyph_name(as_name or glyph_name)
+        return True
+    else:
+        return False
 
 # This will be populated by initialize_glyphs
 COMMON_DIRECT_VARIANTS = {}
@@ -532,6 +536,20 @@ def copy_variant_glyphs():
                     base_name = VARIANT_CAVUM[base_name]
                     complete_paste(base_name, DIRECT_GLYPHS[base_name], variant)
                     set_glyph_name(base_name + variant)
+
+def copy_extra_glyphs():
+    "Copies the extra glyphs."
+    global FONT_CONFIG, cavum
+    # extra glyphs are only supported in the non-cavum font
+    if not cavum:
+        extra_glyphs = FONT_CONFIG.get('extra glyphs', [])
+        if len(extra_glyphs) > 0:
+            message('extra glyphs')
+            for name in extra_glyphs:
+                # must use str(name) here because the JSON strings are
+                # apparently not normal strings
+                if copy_existing_glyph_as_new(str(name), has_cavum=False):
+                    precise_message(name)
 
 # this will be populated by get_width
 WIDTHS = {}
