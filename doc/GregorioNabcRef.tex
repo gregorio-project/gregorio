@@ -59,6 +59,26 @@
       \end{list}%
     \endgroup%
 
+    \vspace{1cm}
+    \begingroup%
+      \greannotation{\scriptsize{CO}}
+      \greannotation{\scriptsize{II}}
+      \gresetnabcfont{grelaon}{8}
+      \color{black!60}
+      \setmainfont[SmallCapsFont=AlegreyaSC]{Alegreya}%
+      \addtolength{\hsize}{-4cm}%
+      \setlength{\fboxsep}{5mm}%
+      \begin{list}{}{%
+        \setlength{\topsep}{0pt}%
+        \setlength{\leftmargin}{1.5cm}%
+        \setlength{\rightmargin}{1.5cm}%
+        \setlength{\listparindent}{0pt}%
+        \setlength{\itemindent}{0pt}%
+        \setlength{\parsep}{0pt}%
+      }\item[]{\fbox{\parbox{\hsize}{\gregorioscore[f]{omnes}}}}%
+      \end{list}%
+    \endgroup%
+
 \vfill
 \pagebreak
 
@@ -538,13 +558,14 @@ Symbols & Symbols & \multicolumn{3}{c|}{} & \multicolumn{3}{c|}{a special meanin
 & & & (neumatic break) & & & augment. & diminut. \\ \cline{3-5}\cline{7-8}
 uncinus & \neume{un} & & & & & & \\
 punctum & \neume{pu} & & & & & & \\
-virga & \neume{vi} & \neume{vipp2su2vihh} & & & & \neume{vi>1} & \\
+virga & \neume{vi} & \neume{viS} \neume{vipp2su2vihh} & & & & \neume{vi>1} & \\
 tractulus & \neume{ta} & \neume{ds} \neume{ts} & & \neume{talst2} \neume{tslsc2lst2} & & \neume{ta>2} & \\
-clivis & \neume{cl} & & \neume{clG} & \neume{cllsn9} \neume{cllst9} \neume{clGlsa5} & \neume{clG1} & \neume{cl>} \neume{cl>1} & \neume{vi>} \neume{ta>2} \\
+clivis & \neume{cl} & & \neume{clG} & \neume{cllsn9} \neume{cllst9} \neume{clGlsa5} & \neume{clG1} \neume{clM} & \neume{cl>} \neume{cl>1} & \neume{vi>} \neume{ta>2} \\
 pes & \neume{pe} & & \neume{peG} & \neume{pelsn3} \neume{pelst2} \neume{pelsc2} & & \neume{pe>1} & \neume{ta>} \\
 porrectus & \neume{po} & & \neume{poG} & & \neume{poM} & \neume{po>} & \\
 torculus & \neume{to} & \neume{toS1} & \neume{toG} & \neume{toGlsa5} \neume{toSlsa5} \neume{toSsun1lsa5} \neume{tolst9} & & \neume{to>} & \\
-climacus & \neume{ci} & \neume{pusu1sun1} \neume{visu2} \neume{unsun2} & & \neume{visu2lst3} & & & \\ \hline
+climacus & \neume{ci} & \neume{pusu1sun1} \neume{visu2} \neume{unsun2} & & \neume{visu2lst3} & & & \neume{cl>1} \\
+scandicus & \neume{sc} \neume{sc1} & \neume{vippn1pp1} \neume{vippn2} & \neume{pevihl} & \neume{sclst2} \neume{pelst2vihl} \neume{pelsa2vihl} & & \neume{vi>1pp2} & \neume{ta>ppn1} \neume{ta>pp2} \\ \hline
 \end{tabular}
 }
 
@@ -1649,6 +1670,7 @@ only present in the font source file to help drawing the glyphs.}
 \texttt{L107H} Haec dies \texttt{GT206}\\
 \texttt{L109P} Populus acquisitionis \texttt{GT210}\\
 \texttt{L112D} Deus Deus meus \texttt{GT224}\\
+\texttt{L112O} Omnes qui in Christo \texttt{GT61}\\
 \texttt{L113E} Ego sum pastor \texttt{GT224}\\
 \texttt{L114C} Cantate Domino \texttt{GT225}\\
 \texttt{L114V} Vocem iucunditatis \texttt{GT229}\\
@@ -1697,6 +1719,7 @@ only present in the font source file to help drawing the glyphs.}
 \lneume{unlst1} & \texttt{unlst1} & \texttt{L103R} & alleluia\\
 \lneume{unlst2} & \texttt{unlst2} & \texttt{L82O} & fac\\
 \lneume{unlst8} & \texttt{unlst8} & \texttt{L24D} & opera\\
+\lneume{un1lst8} & \texttt{un1lst8} & \texttt{L112O} & Christo\\
 \lneume{unlsm2lss3lst8} & \texttt{unlsm2lss3lst8} & \texttt{L43S} & scuto\\ \hline
 & \multicolumn{3}{l}{\textbf{punctum}} & \\
 \lneume{pu} & \texttt{pu} & \texttt{L82O} & iudicio\\
@@ -1704,6 +1727,7 @@ only present in the font source file to help drawing the glyphs.}
 \lneume{pulsnt3} & \texttt{pulsnt3} & \texttt{L75V} & flentes\\ \hline
 & \multicolumn{3}{l}{\textbf{virga}} & \\
 \lneume{vi} & \texttt{vi} & \texttt{L82O} & Domine\\
+\lneume{viS} & \texttt{viS} \textit{Cf.} \lneume{vipp2su2} & \multicolumn{3}{l}{\texttt{vipp2su2} minus punctis} \\
 \lneume{vi>} & \texttt{vi>} & \texttt{L78H} & in\\
 \lneume{vi>1} & \texttt{vi>1} \textit{Cf.} \lneume{vi>1lsa2lsc8} & \multicolumn{3}{l}{\texttt{vi>1lsa2lsc8} minus letters} \\
 \lneume{vi>2} & \texttt{vi>2} & \texttt{L82O} & nobiscum\\
@@ -1754,11 +1778,12 @@ only present in the font source file to help drawing the glyphs.}
 \lneume{polsf2lst3} & \texttt{polsf2lst3} & \texttt{L95D} & meus\\
 \lneume{polst2} & \texttt{polst2} & \texttt{L103H} & saeculum\\ \hline
 & \multicolumn{3}{l}{\textbf{clivis}} & \\
-\lneume{cl} & \texttt{cl} & \texttt{L78H} & quotiescumque\\
+\lneume{cl} & \texttt{cl} \textit{Cf.} \lneume{cllsn9} & \multicolumn{3}{l}{\texttt{cllsn9} minus letter} \\
 \lneume{clG} & \texttt{clG} & \texttt{L78H} & hoc\\
 \lneume{clG1} & \texttt{clG1} & \texttt{L105N} & accedens\\
 \lneume{clGlsa5} & \texttt{clGlsa5} & \texttt{L82O} & obedivimus\\
 \lneume{clGlsnl2} & \texttt{clGlsnl2} & \texttt{L44I} & Elevatio\\
+\lneume{clM} & \texttt{clM} & \texttt{L78H} & quotiescumque\\
 \lneume{cl>} & \texttt{cl>} & \texttt{L75V} & monumentum\\
 \lneume{cl>1} & \texttt{cl>1} & \texttt{L34E} & locum\\
 \lneume{cllshn8} & \texttt{cllshn8} & \texttt{L64O} & imples\\
@@ -1840,6 +1865,7 @@ only present in the font source file to help drawing the glyphs.}
 \lneume{un1sun1su2} & \texttt{un1sun1su2} \textit{Cf.} \lneume{un1sun1su2lsa5} & \multicolumn{3}{l}{\texttt{un1sun1su2lsa5} minus letter} \\
 \lneume{un1sun1su2lsa5} & \texttt{un1sun1su2lsa5} & \texttt{L107H} & Domini\\ \hline
 & \multicolumn{3}{l}{\textbf{scandicus}} & \\
+\lneume{sc} & \texttt{sc} \textit{Cf.} \lneume{sclst2} & \multicolumn{3}{l}{\texttt{sclst2} minus letter} \\
 \lneume{sc1} & \texttt{sc1} & \texttt{L82O} & quia\\
 \lneume{sclst2} & \texttt{sclst2} & \texttt{L78H} & quotiescumque\\
 \lneume{sc1lsc4} & \texttt{sc1lsc4} & \texttt{L109P} & vocavit\\ \hline
@@ -2108,7 +2134,8 @@ only present in the font source file to help drawing the glyphs.}
 \lneume{vippn1ppz1ppq1} & \texttt{vippn1ppz1ppq1} & \texttt{L101V} & Israel\\
 \lneume{vippn1pp1ppz1} & \texttt{vippn1pp1ppz1} \textit{Cf.} \lneume{vippn1pp1ppz1lst8} & \multicolumn{3}{l}{\texttt{vippn1pp1ppz1lst8} minus letter} \\
 \lneume{vippn1pp1ppz1lst8} & \texttt{vippn1pp1ppz1lst8} & \texttt{L25M} & ore\\
-\lneume{vippn2ppz1ppq1} & \texttt{vippn2ppz1ppq1} \textit{Cf.} \lneume{vippn2ppz1ppq1lst2lsa8} & \multicolumn{3}{l}{\texttt{vippn2ppz1ppq1lst2lsa8} minus letters} \\
+\lneume{vippn2ppz1ppq1} & \texttt{vippn2ppz1ppq1} \textit{Cf.} \lneume{vippn2ppz1ppq1lst2lsa8} & \multicolumn{3}{l}{\texttt{vippn2ppz1ppq1lst2lsa8} minus} \\
+& & \multicolumn{3}{r}{letters} \\
 \lneume{vippn2ppz1ppq1lst2lsa8} & \texttt{vippn2ppz1ppq1lst2lsa8} & \texttt{L169A} & confitebor\\
 \lneume{vippn2ppz1sun1lsa5} & \texttt{vippn2ppz1sun1lsa5} & \texttt{L173D} & Alleluia.\\
 \lneume{vippn3sun1lsa5} & \texttt{vippn3sun1lsa5} & \texttt{L173D} & Alleluia.\\
@@ -2222,6 +2249,10 @@ only present in the font source file to help drawing the glyphs.}
 \lneume{pfsun1} & \texttt{pfsun1} \textit{Cf.} \lneume{pfsun1lsn5} & \multicolumn{3}{l}{\texttt{pfsun1lsn5} minus letter} \\
 \lneume{pfsun1lsn5} & \texttt{pfsun1lsn5} & \texttt{L67S} & tua,\\
 \lneume{pfppn1ppq1sun1lsa5} & \texttt{pfppn1ppq1sun1lsa5} & \texttt{L123A} & Deus\\
+\lneume{un1ppn1ppq1sun2} & \texttt{un1ppn1ppq1sun2} & \texttt{L112O} & estis,\\
+\lneume{un1sun2} & \texttt{un1sun2} \textit{Cf.} \lneume{un1ppn1ppq1sun2} & \multicolumn{3}{l}{\texttt{un1ppn1ppq1sun2} minus uncinus} \\
+& & \multicolumn{3}{r}{\& quilisma} \\
+\lneume{un1ppn1sun2} & \texttt{un1ppn1sun2} & \texttt{L112O} & Christum\\
 \lneume{un1ppn1sun1su2lsa5} & \texttt{un1ppn1sun1su2lsa5} & \texttt{L152I} & accelera,\\
 \lneume{clsun1lst5} & \texttt{clsun1lst5} & \texttt{L44I} & vespertinum.\\
 \lneume{clsu3lst5} & \texttt{clsu3lst5} & \texttt{L60E} & tuo.\\
@@ -2231,18 +2262,18 @@ only present in the font source file to help drawing the glyphs.}
 \lneume{tosu2} & \texttt{tosu2} \textit{Cf.} \lneume{tosu2lst6} & \multicolumn{3}{l}{\texttt{tosu2lst6} minus letter} \\
 \lneume{tosu2lst6} & \texttt{tosu2lst6} & \texttt{L37M} & tu\\
 \lneume{tgsun1lsa5} & \texttt{tgsun1lsa5} & \texttt{L103H} & quoniam\\
-\lneume{cl!cl!clsun1lsa5} & \texttt{cl!cl!clsun1lsa5} & \texttt{L103P} & Alleluia.\\
-\lneume{cl!cl!cl} & \texttt{cl!cl!cl} \textit{Cf.} \lneume{cl!cl!cllsn9} & \multicolumn{3}{l}{\texttt{cl!cl!cllsn9} minus letter} \\
-\lneume{cl!cl!cllsn9} & \texttt{cl!cl!cllsn9} & \texttt{L31D} & Domine\\
-\lneume{cl!cl!pi} & \texttt{cl!cl!pi} & \texttt{L54B} & commovear\\
-\lneume{cl!cl!pi!vi} & \texttt{cl!cl!pi!vi} & \texttt{L123A} & Dominus\\
-\lneume{cl!cl!to} & \texttt{cl!cl!to} & \texttt{L149E} & meam,\\
 \end{supertabular}
 
 \vfill
 \pagebreak
 
 \begin{supertabular}{lllll}\noindent
+\lneume{cl!cl!clsun1lsa5} & \texttt{cl!cl!clsun1lsa5} & \texttt{L103P} & Alleluia.\\
+\lneume{cl!cl!cl} & \texttt{cl!cl!cl} \textit{Cf.} \lneume{cl!cl!cllsn9} & \multicolumn{3}{l}{\texttt{cl!cl!cllsn9} minus letter} \\
+\lneume{cl!cl!cllsn9} & \texttt{cl!cl!cllsn9} & \texttt{L31D} & Domine\\
+\lneume{cl!cl!pi} & \texttt{cl!cl!pi} & \texttt{L54B} & commovear\\
+\lneume{cl!cl!pi!vi} & \texttt{cl!cl!pi!vi} & \texttt{L123A} & Dominus\\
+\lneume{cl!cl!to} & \texttt{cl!cl!to} & \texttt{L149E} & meam,\\
 \lneume{cl!cl!po} & \texttt{cl!cl!po} & \texttt{L81R} & insurgentibus\\
 \lneume{cl1!pi!pi!vi} & \texttt{cl1!pi!pi!vi} & \texttt{L54B} & es\\
 \lneume{cl1!pi!pisun1lsa5} & \texttt{cl1!pi!pisun1lsa5} & \texttt{L174O} & plaudite\\
