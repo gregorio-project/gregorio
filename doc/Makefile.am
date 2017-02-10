@@ -19,7 +19,7 @@
 SRCFILES = GregorioRef.tex Command_Index_gregorio.tex \
 		   Command_Index_internal.tex Command_Index_User.tex \
 		   Gabc.tex Appendix_Font_Tables.tex GregorioRef.lua factus.gabc
-NABCSRCFILES = GregorioNabcRef.tex veni.gabc
+NABCSRCFILES = GregorioNabcRef.tex veni.gabc omnes.gabc
 
 GREGORIO=gregorio-$(FILENAME_VERSION)
 
@@ -40,6 +40,7 @@ GregorioRef.pdf: $(SRCFILES)
 GregorioNabcRef.pdf: $(NABCSRCFILES)
 	$(MAKE) $(AM_MAKEFLAGS) -C ../src $(GREGORIO)
 	../src/$(GREGORIO) -o veni.gtex $(<D)/veni.gabc
+	../src/$(GREGORIO) -o omnes.gtex $(<D)/omnes.gabc
 	TEXINPUTS=$(<D):$(<D)/../tex: LUAINPUTS=$(<D):$(<D)/../tex: \
 		 TTFONTS=$(<D)/../fonts: PATH=../src:${PATH} latexmk -recorder -pdf \
 		 -interaction=nonstopmode -halt-on-error \
