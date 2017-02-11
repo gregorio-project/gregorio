@@ -211,7 +211,7 @@ local gregallparse_neume = function (str, idx, len)
   return 0, idx, bases, heights, ls, pp, su
 end
 
-local add_ls = function(base, pre, ls, position, glyphbox, lsbox, baseraise, lwidths, curlwidths, scale)
+local add_ls = function(base, pre, post, ls, position, glyphbox, lsbox, baseraise, lwidths, curlwidths, scale)
   local raise = 0
   if position == 3 or position == 6 or position == 9 then
     if position == 3 then
@@ -231,7 +231,7 @@ local add_ls = function(base, pre, ls, position, glyphbox, lsbox, baseraise, lwi
     kern1 = kern1 * scale
     kern2 = kern2 * scale
     raise = raise * scale
-    return base..'\\kern '..string.format("%.3f",kern1)..'sp\\raise '..string.format("%.3f",raise)..'sp\\hbox{'..ls..'}\\kern '..string.format("%.3f",kern2)..'sp', pre
+    return base, pre, post..'\\kern '..string.format("%.3f",kern1)..'sp\\raise '..string.format("%.3f",raise)..'sp\\hbox{'..ls..'}\\kern '..string.format("%.3f",kern2)..'sp'
   elseif position == 2 or position == 8 then
     if position == 2 then
       raise = glyphbox.height + lsbox.depth + baseraise
@@ -249,7 +249,7 @@ local add_ls = function(base, pre, ls, position, glyphbox, lsbox, baseraise, lwi
     kern1 = kern1 * scale
     kern2 = kern2 * scale
     raise = raise * scale
-    return base..'\\kern '..string.format("%.3f",kern1)..'sp\\raise '..string.format("%.3f",raise)..'sp\\hbox{'..ls..'}\\kern '..string.format("%.3f",kern2)..'sp', pre
+    return base..'\\kern '..string.format("%.3f",kern1)..'sp\\raise '..string.format("%.3f",raise)..'sp\\hbox{'..ls..'}\\kern '..string.format("%.3f",kern2)..'sp', pre, post
   else
     if position == 1 then
       raise = glyphbox.height - (lsbox.height-lsbox.depth)/2 + baseraise
@@ -268,7 +268,7 @@ local add_ls = function(base, pre, ls, position, glyphbox, lsbox, baseraise, lwi
     kern1 = kern1 * scale
     kern2 = kern2 * scale
     raise = raise * scale
-    return base, pre..'\\kern '..string.format("%.3f",kern1)..'sp\\raise '..string.format("%.3f",raise)..'sp\\hbox{'..ls..'}\\kern '..string.format("%.3f",kern2)..'sp'
+    return base, pre..'\\kern '..string.format("%.3f",kern1)..'sp\\raise '..string.format("%.3f",raise)..'sp\\hbox{'..ls..'}\\kern '..string.format("%.3f",kern2)..'sp', post
   end
 end
 
@@ -315,38 +315,67 @@ local gregallparse_neumes = function(str, kind, scale)
       end
       i = i + 1
     end
+    local ls5 = ''
     lscount = 0
     while ls[lscount] do
       if not gregalltab[kind][ls[lscount]:sub(1, -2)] then base = "ERR" end
+      if tonumber(ls[lscount]:sub(-1, -1)) == 5 then
+        ls5 = ls5 .. ls[lscount]
+        ls[lscount] = ''
+      end
       lscount = lscount + 1
     end
     if base ~= "ERR" then
       local l = {}
-      function l.try (kind, base, parts, pp, su, ls)
-        if parts == 2 and pp ~= '' and su ~= '' and gregalltab[kind][base .. pp .. su .. ls] then return base .. pp .. su .. ls, '', '' end
+      function l.try (kind, base, parts, pp, su, ls5, ls)
+        if parts == 2 and pp ~= '' and su ~= '' and gregalltab[kind][base .. pp .. su .. ls5 .. ls] then return base .. pp .. su .. ls5 .. ls, '', '' end
         -- Prefer subpunctis over prepunctis.
-        if parts == 1 and su ~= '' and gregalltab[kind][base .. su .. ls] then return base .. su .. ls, pp, '' end
-        if parts == 1 and pp ~= '' and gregalltab[kind][base .. pp .. ls] then return base .. pp .. ls, '', su end
+        if parts == 1 and su ~= '' and gregalltab[kind][base .. su .. ls5 .. ls] then return base .. su .. ls5 .. ls, pp, '' end
+        if parts == 1 and pp ~= '' and gregalltab[kind][base .. pp .. ls5 .. ls] then return base .. pp .. ls5 .. ls, '', su end
         -- Prefer subpunctis over significative letters.
-        if parts == 0 and su ~= '' and ls ~= '' and gregalltab[kind][base .. su] then return nil, pp, su end
-        if parts == 0 and gregalltab[kind][base .. ls] then return base .. ls, pp, su end
+        if parts == 0 and su ~= '' and ls ~= '' and gregalltab[kind][base .. su .. ls5] then return nil, pp, su end
+        if parts == 0 and gregalltab[kind][base .. ls5 .. ls] then return base .. ls5 .. ls, pp, su end
         return nil, pp, su
       end
       local r = nil
       local ppsuparts = 0
       if pp ~= '' then ppsuparts = 1 end
       if su ~= '' then ppsuparts = ppsuparts + 1 end
-      -- We assume here no character in the font has more than two
-      -- significative letters.
+      -- We assume here no character in the font has more than three
+      -- significative letters.  Significative letters with position 5
+      -- are always required to be in font and have preference over
+      -- pre/subpunctis and other significative letters.
       local allparts = ppsuparts + lscount
-      if lscount >= 2 then allparts = ppsuparts + 2 end
+      if lscount >= 3 then allparts = ppsuparts + 3 end
       -- Try to match as many parts (ls sequences, pp string, su string) as possible
       -- except that for ls accept any of ls sequences only if we have all of them.
       for parts = allparts, 0, -1 do
+        if lscount == 3 and parts >= 3 and parts <= 3 + ppsuparts then
+          r, pp, su = l.try(kind, base, parts - 3, pp, su, ls5, ls[0] .. ls[1] .. ls[2])
+          if (not r) and ls[0] ~= '' and ls[1] ~= '' and ls[2] ~= '' then
+            local p0 = tonumber(ls[0]:sub(-1, -1))
+            local p1 = tonumber(ls[1]:sub(-1, -1))
+            local p2 = tonumber(ls[2]:sub(-1, -1))
+            if (p0 ~= p1) and (p0 ~= p2) and (p1 ~= p2) then
+              r, pp, su = l.try(kind, base, parts - 3, pp, su, ls5, ls[1] .. ls[0] .. ls[2])
+              if not r then r, pp, su = l.try(kind, base, parts - 3, pp, su, ls5, ls[0] .. ls[2] .. ls[1]) end
+              if not r then r, pp, su = l.try(kind, base, parts - 3, pp, su, ls5, ls[1] .. ls[2] .. ls[0]) end
+              if not r then r, pp, su = l.try(kind, base, parts - 3, pp, su, ls5, ls[2] .. ls[0] .. ls[1]) end
+              if not r then r, pp, su = l.try(kind, base, parts - 3, pp, su, ls5, ls[2] .. ls[1] .. ls[0]) end
+            end
+          end
+          if r then
+            ls[0] = ''
+            ls[1] = ''
+            ls[2] = ''
+            break
+          end
+          if r then break end
+        end
         if lscount == 2 and parts >= 2 and parts <= 2 + ppsuparts then
-          r, pp, su = l.try(kind, base, parts - 2, pp, su, ls[0] .. ls[1])
-          if not r then
-            r, pp, su = l.try(kind, base, parts - 2, pp, su, ls[1] .. ls[0])
+          r, pp, su = l.try(kind, base, parts - 2, pp, su, ls5, ls[0] .. ls[1])
+          if (not r) and ls[0] ~= '' and ls[1] ~= '' and (tonumber(ls[0]:sub(-1, -1)) ~= tonumber(ls[1]:sub(-1, -1))) then
+            r, pp, su = l.try(kind, base, parts - 2, pp, su, ls5, ls[1] .. ls[0])
           end
           if r then
             ls[0] = ''
@@ -356,13 +385,13 @@ local gregallparse_neumes = function(str, kind, scale)
           if r then break end
         end
         if lscount == 1 and parts >= 1 and parts <= 1 + ppsuparts then
-          r, pp, su = l.try(kind, base, parts - 1, pp, su, ls[0])
+          r, pp, su = l.try(kind, base, parts - 1, pp, su, ls5, ls[0])
           if r then
             ls[0] = ''
             break
           end
         end
-        r, pp, su = l.try(kind, base, parts, pp, su, '')
+        r, pp, su = l.try(kind, base, parts, pp, su, ls5, '')
         if r then break end
       end
       if not r or (pp ~= '' and not gregalltab[kind][pp]) or (su ~= '' and not gregalltab[kind][su]) then
@@ -406,15 +435,16 @@ local gregallparse_neumes = function(str, kind, scale)
         lwidths[11] = math.max (lwidths[2], lwidths[8])
         lwidths[12] = math.max (lwidths[3], lwidths[6], lwidths[9])
         local pre = ''
+        local post = ''
         for i = 0, lscount - 1 do
           if ls[i] ~= '' then
             local p = tonumber(ls[i]:sub(-1, -1))
             local l = ls[i]:sub(1, -2)
             local lstr = gregalltab[kind][l]
-            base, pre = add_ls(base, pre, lstr, p, rmetrics, gregallmetrics[kind][l], baseraise, lwidths, curlwidths, scale)
+            base, pre, post = add_ls(base, pre, post, lstr, p, rmetrics, gregallmetrics[kind][l], baseraise, lwidths, curlwidths, scale)
           end
         end
-        base = pre..base
+        base = pre..base..post
       end
     end
     ret = ret .. base
