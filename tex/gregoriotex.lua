@@ -927,13 +927,18 @@ local function init_variant_font(font_name, for_score, gre_factor)
       font_table[font_name] = font_csname
       log("Registering variant font %s as %s.", font_name, font_csname)
       if for_score then
+        local _, name, factor
+        _, _, name, factor = string.find(font_name, '^([^@]*)@(%d*)$')
+        name = name or font_name
+        factor = factor or '100000'
+        local size = gre_factor * tonumber(factor)
         tex.print(catcode_at_letter, string.format(
-            [[\global\font\%s = {name:%s} at 10 sp\relax ]],
-            font_csname, font_name))
+            [[\global\font\%s = {name:%s} at %s sp\relax ]],
+            font_csname, name, size))
         -- loaded_font_sizes will only be given a value if the font is for_score
-        loaded_font_sizes[font_name] = {size = '10', gre_factor = gre_factor}
+        loaded_font_sizes[font_name] = {size = size, gre_factor = gre_factor}
         if font_factors[font_name] == nil then
-          font_factors[font_name] = '100000'
+          font_factors[font_name] = factor
         end
       else
         -- is there a nice way to make this string readable?
@@ -1065,12 +1070,17 @@ local function set_font_factor(font_name, font_factor)
   font_factors[font_name] = font_factor
 end
 
-local function scale_score_fonts(size, gre_factor)
+local function scale_score_fonts(gre_factor)
   for font_name, font_csname in pairs(score_fonts) do
     if loaded_font_sizes[font_name] and font_factors[font_name] and loaded_font_sizes[font_name].size ~= gre_factor * font_factors[font_name] then
+      local _, name
+      _, _, name, _ = string.find(font_name, '^([^@]*)@(%d*)$')
+      name = name or font_name
+      local size = gre_factor * font_factors[font_name]
+      log("%s : %s : rescaling %s to %s", font_name, font_csname, name, size)
       tex.print(catcode_at_letter, string.format(
           [[\global\font\%s = {name:%s} at %s sp\relax ]],
-          font_csname, font_name, gre_factor * font_factors[font_name]))
+          font_csname, name, size))
       loaded_font_sizes[font_name] = {size = size, gre_factor = gre_factor}
     end
   end

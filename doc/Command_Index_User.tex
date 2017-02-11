@@ -453,6 +453,14 @@ This function is the same as above, with a third argument to scale the font. The
 
 The two first arguments are the same as \texttt{\textbackslash gresetgregoriofont}. The third argument is an integer representing the scaling factor, where the one used by \texttt{\textbackslash gresetgregoriofont} is 100000.
 
+\macroname{\textbackslash greloadholehollowfonts}{\{\#1\}}{gregoriotex-main.tex}
+
+If set to false, will not load the \texttt{hollow} and \texttt{hole} variants of the next font to load. Use it before loading third party fonts not having these variants (rare case).
+
+\begin{argtable}
+  \#1 & string & \texttt{true} or \texttt{false}.\\
+\end{argtable}
+
 \subsubsection{Glyph Alteration}
 In addition to the normal glyphs loaded by the choice of font, Gregorio\TeX\ also supports several methods for fine tuning the choice of glyphs.  Using the below functions, you can choose from alternative glyphs which are already built into Gregorio\TeX\ or import custom glyphs you have designed yourself.
 

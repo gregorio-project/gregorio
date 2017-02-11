@@ -1742,15 +1742,28 @@
   \relax %
 }%
 
+\newif\ifgre@loadholehollowfonts%
+\gre@loadholehollowfontstrue%
+
+\def\greloadholehollowfonts#1{%
+  \IfStrEq{#1}{true}{%
+    \gre@loadholehollowfontstrue %
+  }{%
+    \gre@loadholehollowfontsfalse %
+  }%
+}
+
 \def\gre@loadgregoriofont{%
   \gre@count@temp@three = \the\gre@factor %
   \gre@count@temp@two = \expandafter\csname gre@fontfactor@\gre@gregoriofontname\endcsname\relax %
   \directlua{gregoriotex.set_font_factor([[\gre@gregoriofontname]], [[\the\gre@count@temp@two]])}%
   \multiply\gre@count@temp@three by \gre@count@temp@two %
   \global\font\gre@font@music={name:\gre@gregoriofontname} at \the\gre@count@temp@three sp\relax %
-  \global\font\gre@font@music@hollow={name:\gre@gregoriofontname-hollow} at \the\gre@count@temp@three sp\relax %
-  \global\font\gre@font@music@hole={name:\gre@gregoriofontname-hole} at \the\gre@count@temp@three sp\relax %
-  \directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]], [[\the\gre@factor]])}%
+  \ifgre@loadholehollowfonts %
+    \global\font\gre@font@music@hollow={name:\gre@gregoriofontname-hollow} at \the\gre@count@temp@three sp\relax %
+    \global\font\gre@font@music@hole={name:\gre@gregoriofontname-hole} at \the\gre@count@temp@three sp\relax %
+  \fi %
+  \directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@factor]])}%
   \relax%
 }%
 
@@ -1764,7 +1777,7 @@
 \def\gre@setstylefont{%
   \gre@count@temp@three = \numexpr(\gre@factor * 100000)\relax %
   \global\font\gre@font@style={name:greextra} at \the\gre@count@temp@three sp%
-  {\gre@font@music\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@count@temp@three]], [[\the\gre@factor]])}}%
+  {\gre@font@music\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@factor]])}}%
   \relax%
 }%
 
