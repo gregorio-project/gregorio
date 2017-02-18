@@ -43,7 +43,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Some counts can now be adjusted for a particular line in a score.  Use `\grechangenextscorelinecount` prior to including the score to set the desired values.  The various spacing thresholds may be changed with this command.  See GregorioRef for details.
 
 ### Deprecated
-- '\gresethyphenprotrusion{percentage}`, supplanted by `\gresetprotrusionfactor{eolhyphen}{factor}`.  Note that the value the new command takes is a factor rather than a percentage.
+- `\gresethyphenprotrusion{percentage}`, supplanted by `\gresetprotrusionfactor{eolhyphen}{factor}`.  Note that the value the new command takes is a factor rather than a percentage.
 
 ### Removed
 - `initial-style` gabc header, supplanted by the `\gresetinitiallines` TeX command.
