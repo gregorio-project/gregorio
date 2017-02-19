@@ -143,21 +143,21 @@ end
 
 if not lfs.isdir(font_directory) then
   print("making "..font_directory)
-  if not lfs.isdir(install_dir.."/fonts/truetype/public/") then
-    if not lfs.isdir(install_dir.."/fonts/truetype/" ) then
-      if not lfs.isdir(install_dir.."/fonts/") then
-        lfs.mkdir(install_dir.."/fonts/")
+  if not lfs.isdir(fixpath(install_dir.."/fonts/truetype/public/")) then
+    if not lfs.isdir(fixpath(install_dir.."/fonts/truetype/")) then
+      if not lfs.isdir(fixpath(install_dir.."/fonts/")) then
+        lfs.mkdir(fixpath(install_dir.."/fonts/"))
       end
-      lfs.mkdir(install_dir.."/fonts/truetype/")
+      lfs.mkdir(fixpath(install_dir.."/fonts/truetype/"))
     end
-    lfs.mkdir(install_dir.."/fonts/truetype/public/")
+    lfs.mkdir(fixpath(install_dir.."/fonts/truetype/public/"))
   end
   lfs.mkdir(font_directory)
 end
 if not lfs.isdir(source_directory) then
   print("making "..source_directory)
-  if not lfs.isdir(install_dir.."/fonts/source/") then
-    lfs.mkdir(install_dir.."/fonts/source/")
+  if not lfs.isdir(fixpath(install_dir.."/fonts/source/")) then
+    lfs.mkdir(fixpath(install_dir.."/fonts/source/"))
   end
   lfs.mkdir(source_directory)
 end
