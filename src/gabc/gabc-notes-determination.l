@@ -575,13 +575,25 @@ static void right_bracket(void)
 
 static void parse_hepisema_adjustment(void)
 {
-    /* [xh:yz{]
-     * - x indicates o(ver) or u(nder) episema
-     * - y (optional) for l(ow), m(iddle), or h(igh) vertical position in space
-     * - z (optional) nudge dimension that starts with + or -
-     * - { (optional) starts a group
-     * - at least one of y, z, or w must be provided
-     * - if y and z are omitted, : may be omitted
+    /* See https://github.com/gregorio-project/gregorio/issues/872
+     *
+     * [xh:yzw]
+     *
+     * - x is o(ver) or u(under)
+     * - y is optional and is
+     *   - l for low in the space (chooses ol or ul depending on x)
+     *   - m for middle of the space
+     *   - h for high in the space (chooses oh or uh depending on x)
+     *   - ol for low in the space as if the episema were over the note
+     *   - oh for high in the space as if the episema were over the note
+     *   - ul for low in the space as if the episema were under the note
+     *   - uh for high in the space as if the episema were under the note
+     * - z is an optional nudge and must start with + or -
+     * - w is optional and may be { to start a range or } to end a range.
+     *
+     * at least one of y, z, or w must be provided
+     * if y and z are omitted, the : may be omitted
+     * y and z are not permitted when w is }
      */
 
     const gregorio_sign_orientation index = letter_to_sign_orientation(
