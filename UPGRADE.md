@@ -35,7 +35,7 @@ As of version 5.0, the `\gresethyphenprotrusion{percentage}` command is deprecat
 
 ### Oriscus orientation at the unison
 
-As of version 4.2, when the note after the oriscus is at the same pitch as the oriscus, the oriscus will point towards the first non-unison note after the oriscus or downwards if at the end of the score.  Use the `0` (for downwards) `1` (for upwards) modifiers to force a different orientation.
+As of version 5.0, when the note after the oriscus is at the same pitch as the oriscus, the oriscus will point towards the first non-unison note after the oriscus or downwards if at the end of the score.  Use the `0` (for downwards) `1` (for upwards) modifiers to force a different orientation.
 
 ## 4.2
 
