@@ -32,6 +32,8 @@
 
 #include "struct.h"
 
+/* This enum defines bitfields selecting the node types that should be passed
+ * to end_item in gregorio_from_note_to_note */
 typedef enum {
     GRESTRUCT_NONE = 0,
     GRESTRUCT_NOTE = 1 << 0,
@@ -49,12 +51,14 @@ typedef struct {
 
 static __inline void gregorio_from_note_to_note(
         const gregorio_note_iter_position *const start,
-        const gregorio_note_iter_position *const end,
+        const gregorio_note_iter_position *const end, bool include_end,
         void (*const visit)(const gregorio_note_iter_position *, void *),
         void (*const end_item)(const gregorio_note_iter_position *,
             gregorio_note_iter_item_type, void *),
         const gregorio_note_iter_item_type desired_iter_items, void *data)
 {
+    /* Note: include_end is effectively ignored if end is NULL */
+
     gregorio_note_iter_position p = *start;
 
     while (p.syllable) {
@@ -72,11 +76,14 @@ static __inline void gregorio_from_note_to_note(
                             p.note = p.glyph->u.notes.first_note;
                         }
                         while (p.note) {
-                            if (p.note->type == GRE_NOTE) {
+                            bool at_end = (end && p.note == end->note);
+
+                            if (p.note->type == GRE_NOTE
+                                    && (!at_end || include_end)) {
                                 visit(&p, data);
                             }
 
-                            if (end && p.note == end->note) {
+                            if (at_end) {
                                 if (end_item) {
                                     /* in 4.2.0, this code is never hit, as
                                      * end_item will only be supplied from
@@ -171,8 +178,8 @@ static __inline void gregorio_for_each_note(const gregorio_score *score,
 
     p.syllable = score->first_syllable;
 
-    gregorio_from_note_to_note(&p, NULL, visit, end_item, desired_iter_items,
-            data);
+    gregorio_from_note_to_note(&p, NULL, true, visit, end_item,
+            desired_iter_items, data);
 }
 
 #endif

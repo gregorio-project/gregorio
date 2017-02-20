@@ -33,6 +33,10 @@ Note: You may need to use a construct such as `/!` to keep notes that are separa
 
 As of version 5.0, the `\gresethyphenprotrusion{percentage}` command is deprecated.  To set this protrusion factor, use `\gresetprotrusionfactor{eolhyphen}{factor}` instead.  Note that the `factor` taken by the new command is a factor rather than the percentage taken by the deprecated command, so for example, use `\gresetprotrusionfactor{eolhyphen}{0.5}` instead of `\gresethyphenprotrusion{50}`.
 
+### Oriscus orientation at the unison
+
+As of version 4.2, when the note after the oriscus is at the same pitch as the oriscus, the oriscus will point towards the first non-unison note after the oriscus or downwards if at the end of the score.  Use the `0` (for downwards) `1` (for upwards) modifiers to force a different orientation.
+
 ## 4.2
 
 ### Executable file name
@@ -46,10 +50,6 @@ Unfortunately, there appears to be no easier way to let a user-installed Gregori
 ### Stemmed oriscus flexus orientation
 
 As of version 4.2, the orientation of the stemmed oriscus flexus `(gOe)` is consistent with the unstemmed oriscus flexus `(goe)` in that the oriscus points downwards (since the note which follows is of lower pitch).  If you prefer the oriscus to point upwards, you will need to use the `1` modifier (as in `(gO1e)`), which will force an upward orientation of the oriscus.
-
-### Oriscus orientation at the unision
-
-As of version 4.2, when the note after the oriscus is at the same pitch as the oriscus, the oriscus will point downwards by default.  If you prefer it to point upwards, append the `1` modifier to force the upward orientation.
 
 ### Podatus followed by a virga
 
