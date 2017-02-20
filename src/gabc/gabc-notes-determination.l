@@ -576,7 +576,7 @@ static void right_bracket(void)
 static void parse_hepisema_adjustment(void)
 {
     /* [xh:yz{]
-     * - x indicates l(ow) or h(igh) episema
+     * - x indicates o(ver) or u(nder) episema
      * - y (optional) for l(ow), m(iddle), or h(igh) vertical position in space
      * - z (optional) nudge dimension that starts with + or -
      * - { (optional) starts a group
