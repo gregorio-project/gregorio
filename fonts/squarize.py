@@ -1254,6 +1254,14 @@ def pes_quadratum():
             S_PES_QUADRATUM_LONGQUEUE, stemshape=S_PES_QUADRATUM, qtype='long')
     write_pes_quadratum(1, "PunctumLineTR", "VirgaBaseLineBL",
             S_PES_QUADRATUM_OPENQUEUE, stemshape=S_PES_QUADRATUM, qtype='open')
+    write_all_pes_quadratum("idebilis", "VirgaBaseLineBL", S_PES_QUADRATUM,
+            lique=L_INITIO_DEBILIS, stemshape=S_PES_QUADRATUM, qtype='short')
+    write_all_pes_quadratum("idebilis", "VirgaBaseLineBL",
+            S_PES_QUADRATUM_LONGQUEUE, lique=L_INITIO_DEBILIS,
+            stemshape=S_PES_QUADRATUM, qtype='long')
+    write_pes_quadratum(1, "idebilis", "VirgaBaseLineBL",
+            S_PES_QUADRATUM_OPENQUEUE, lique=L_INITIO_DEBILIS,
+            stemshape=S_PES_QUADRATUM, qtype='open')
     precise_message("pes quassus")
     write_all_pes_quadratum("AscendensOriscusLineTR", "VirgaBaseLineBL",
             S_PES_QUASSUS, stemshape=S_PES_QUASSUS, qtype='short')
