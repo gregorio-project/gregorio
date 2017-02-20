@@ -117,7 +117,7 @@ fonts: greciliae-all extra
 all: $(GREGORIO_FONTS)
 
 supp-fonts-dist: gregorio-all granapadano-all
-	zip supp_fonts.zip $(TTF_GREGORIO) $(TTF_GREGORIO_OP) \
+	zip supp_fonts-$(FILENAME_VERSION).zip $(TTF_GREGORIO) $(TTF_GREGORIO_OP) \
 		$(TTF_GRANAPADANO) $(TTF_GRANDAPADANO_OP) \
 		$(SOURCEFILES_GREGORIO) $(SOURCEFILES_GRANAPADANO) \
 		install_supp_fonts.lua
