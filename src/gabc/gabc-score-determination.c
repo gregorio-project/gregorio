@@ -207,109 +207,97 @@ bool gabc_check_infos_integrity(gregorio_score *score_to_check)
     return true;
 }
 
-typedef struct {
-    gregorio_note *note;
-    gregorio_glyph *glyph;
-} oriscus_orientation_vars;
-
-/* data must be (oriscus_orientation_vars *) */
-static void oriscus_orientation_visit(
-        const gregorio_note_iter_position *const p, void *const data)
+static void set_oriscus_descending(const gregorio_note_iter_position *const p,
+        void *const ignored __attribute__((unused)))
 {
-    gregorio_note *const note = p->note;
-    oriscus_orientation_vars *const oriscus =
-        (oriscus_orientation_vars *const)data;
-
-    if (oriscus->note && oriscus->glyph) {
-        if (note->u.note.pitch <= oriscus->note->u.note.pitch) {
-            /* descending or unison */
-            switch(oriscus->note->u.note.shape) {
-            case S_ORISCUS_UNDETERMINED:
-                oriscus->note->u.note.shape = S_ORISCUS_DESCENDENS;
-                break;
-            case S_ORISCUS_SCAPUS_UNDETERMINED:
-                oriscus->note->u.note.shape = S_ORISCUS_SCAPUS_DESCENDENS;
-                gregorio_assert_only(oriscus->glyph->u.notes.glyph_type
-                        != G_PES_DESCENDENS_ORISCUS, oriscus_orientation_visit,
-                        "glyph type should not be G_PES_DESCENDENS_ORISCUS");
-                if (oriscus->glyph->u.notes.glyph_type == G_PES_ASCENDENS_ORISCUS) {
-                    oriscus->glyph->u.notes.glyph_type = G_PES_DESCENDENS_ORISCUS;
-                }
-                break;
-            default:
-                /* not reachable unless there's a
-                 * programming error */
-                /* LCOV_EXCL_START */
-                gregorio_fail(oriscus_orientation_visit, "bad_shape");
-                break;
-                /* LCOV_EXCL_STOP */
-            }
-        } else { /* ascending */
-            switch(oriscus->note->u.note.shape) {
-            case S_ORISCUS_UNDETERMINED:
-                oriscus->note->u.note.shape = S_ORISCUS_ASCENDENS;
-                break;
-            case S_ORISCUS_SCAPUS_UNDETERMINED:
-                oriscus->note->u.note.shape = S_ORISCUS_SCAPUS_ASCENDENS;
-                gregorio_assert_only(oriscus->glyph->u.notes.glyph_type
-                        != G_PES_DESCENDENS_ORISCUS, oriscus_orientation_visit,
-                        "glyph type should not be G_PES_DESCENDENS_ORISCUS");
-                break;
-            default:
-                /* not reachable unless there's a
-                 * programming error */
-                /* LCOV_EXCL_START */
-                gregorio_fail(oriscus_orientation_visit, "bad_shape");
-                break;
-                /* LCOV_EXCL_STOP */
-            }
-        }
-        oriscus->note = NULL;
-        oriscus->glyph = NULL;
-    }
-
-    switch (note->u.note.shape) {
+    switch(p->note->u.note.shape) {
     case S_ORISCUS_UNDETERMINED:
-    case S_ORISCUS_SCAPUS_UNDETERMINED:
-        oriscus->note = note;
-        oriscus->glyph = p->glyph;
+        p->note->u.note.shape = S_ORISCUS_DESCENDENS;
         break;
-
+    case S_ORISCUS_SCAPUS_UNDETERMINED:
+        p->note->u.note.shape = S_ORISCUS_SCAPUS_DESCENDENS;
+        gregorio_assert_only(p->glyph->u.notes.glyph_type
+                != G_PES_DESCENDENS_ORISCUS, set_oriscus_descending,
+                "glyph type should not be G_PES_DESCENDENS_ORISCUS");
+        if (p->glyph->u.notes.glyph_type == G_PES_ASCENDENS_ORISCUS) {
+            p->glyph->u.notes.glyph_type = G_PES_DESCENDENS_ORISCUS;
+        }
+        break;
     default:
         break;
     }
 }
 
+static void set_oriscus_ascending(const gregorio_note_iter_position *const p,
+        void *const ignored __attribute__((unused)))
+{
+    switch(p->note->u.note.shape) {
+    case S_ORISCUS_UNDETERMINED:
+        p->note->u.note.shape = S_ORISCUS_ASCENDENS;
+        break;
+    case S_ORISCUS_SCAPUS_UNDETERMINED:
+        p->note->u.note.shape = S_ORISCUS_SCAPUS_ASCENDENS;
+        gregorio_assert_only(p->glyph->u.notes.glyph_type
+                != G_PES_DESCENDENS_ORISCUS, set_oriscus_ascending,
+                "glyph type should not be G_PES_DESCENDENS_ORISCUS");
+        break;
+    default:
+        break;
+    }
+}
+
+/* data must be (gregorio_note_iter_position *) */
+static void oriscus_orientation_visit(
+        const gregorio_note_iter_position *const p, void *const data)
+{
+    gregorio_note *const note = p->note;
+    gregorio_note_iter_position *const oriscus =
+        (gregorio_note_iter_position *const)data;
+
+    if (oriscus->note && note->u.note.pitch != oriscus->note->u.note.pitch) {
+        if (note->u.note.pitch <= oriscus->note->u.note.pitch) {
+            /* descending (or undetermined oriscus in unison) */
+            gregorio_from_note_to_note(oriscus, p, false,
+                    set_oriscus_descending, NULL, GRESTRUCT_NONE, NULL);
+        } else {
+            /* ascending */
+            gregorio_from_note_to_note(oriscus, p, false,
+                    set_oriscus_ascending, NULL, GRESTRUCT_NONE, NULL);
+        }
+        oriscus->syllable = NULL,
+        oriscus->element = NULL,
+        oriscus->note = NULL;
+        oriscus->glyph = NULL;
+    }
+
+    if (!oriscus->note) {
+        switch (note->u.note.shape) {
+        case S_ORISCUS_UNDETERMINED:
+        case S_ORISCUS_SCAPUS_UNDETERMINED:
+            *oriscus = *p;
+            break;
+
+        default:
+            break;
+        }
+    }
+}
+
 void gabc_determine_oriscus_orientation(const gregorio_score *const score)
 {
-    oriscus_orientation_vars oriscus = { NULL, NULL };
+    gregorio_note_iter_position oriscus = {
+        /* .syllable = */ NULL,
+        /* .element = */ NULL,
+        /* .glyph = */ NULL,
+        /* .note = */ NULL
+    };
 
     gregorio_for_each_note(score, oriscus_orientation_visit, NULL,
             GRESTRUCT_NONE, &oriscus);
 
-    if (oriscus.note && oriscus.glyph) {
-        /* oriscus at the end of the score */
-        switch(oriscus.note->u.note.shape) {
-        case S_ORISCUS_UNDETERMINED:
-            oriscus.note->u.note.shape = S_ORISCUS_DESCENDENS;
-            break;
-        case S_ORISCUS_SCAPUS_UNDETERMINED:
-            oriscus.note->u.note.shape = S_ORISCUS_SCAPUS_DESCENDENS;
-            gregorio_assert_only(oriscus.glyph->u.notes.glyph_type
-                    != G_PES_DESCENDENS_ORISCUS,
-                    gabc_determine_oriscus_orientation,
-                    "glyph type should not be G_PES_DESCENDENS_ORISCUS");
-            if (oriscus.glyph->u.notes.glyph_type == G_PES_ASCENDENS_ORISCUS) {
-                oriscus.glyph->u.notes.glyph_type = G_PES_DESCENDENS_ORISCUS;
-            }
-            break;
-        default:
-            /* not reachable unless there's a programming error */
-            /* LCOV_EXCL_START */
-            gregorio_fail(determine_oriscus_orientation, "bad_shape");
-            break;
-            /* LCOV_EXCL_STOP */
-        }
+    if (oriscus.note) {
+        gregorio_from_note_to_note(&oriscus, NULL, true,
+                set_oriscus_descending, NULL, GRESTRUCT_NONE, NULL);
     }
 }
 
@@ -387,8 +375,8 @@ static void punctum_inclinatum_orientation_visit(
                     ? S_PUNCTUM_INCLINATUM_ASCENDENS
                     : S_PUNCTUM_INCLINATUM_DESCENDENS;
             }
-            gregorio_from_note_to_note(&v->first, &v->previous, set_shape, NULL,
-                    GRESTRUCT_NONE, &v->orientation);
+            gregorio_from_note_to_note(&v->first, &v->previous, true, set_shape,
+                    NULL, GRESTRUCT_NONE, &v->orientation);
             v->first.syllable = NULL;
             v->first.element = NULL;
             v->first.glyph = NULL;
@@ -431,7 +419,7 @@ void gabc_determine_punctum_inclinatum_orientation(
         v.orientation = (v.running > 0)
             ? S_PUNCTUM_INCLINATUM_ASCENDENS
             : S_PUNCTUM_INCLINATUM_DESCENDENS;
-        gregorio_from_note_to_note(&v.first, &v.previous, set_shape, NULL,
+        gregorio_from_note_to_note(&v.first, &v.previous, true, set_shape, NULL,
                 GRESTRUCT_NONE, &v.orientation);
     }
 }
