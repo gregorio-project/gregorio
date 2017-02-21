@@ -8,11 +8,11 @@ This file contains instructions to upgrade to a new release of Gregorio.
 
 The `autocompile` option is now the default option for the behavior of `\gregorioscore`.  If you want to go back to the old, manual behavior, then you should pass the `nevercompile` option when loading `gregoriotex`.
 
-### Gregorio and Grana Padano fonts
+### Additional fonts
 
-The Gregorio and Grana Padano fonts, as well as their "-op" Dominican variants, will now be available as a separate download.  If you were using these fonts, either download `supp_fonts-5_0_0.zip` and install them or switch to Greciliae, which continues to be distributed (with its "-op" Dominican variants) along with Gregorio by default.
+With the addition of more cavum shapes, the number of font options which come with Gregorio (the package) by default has been reduced in order to control the download size.  From now on only Greciliae will be installed by default.  The Gregorio and Grana Padano fonts, as well as their "-op" Dominican variants, will now be available as a separate download.  If you were using these fonts, either download `supp_fonts-5_0_0.zip` and install them or switch to Greciliae.
 
-To install the new versions of Gregorio and Grana Padano, unzip `supp_fonts-5_0_0.zip`, navigate to the uncompressed folder in Terminal (or Command Prompt on Windows) and execute `texlua install_supp_fonts.lua` after you have installed the main Gregorio distribution.  This script will look for the location of Greciliae and copy the other fonts to that location.  If you wish to control the installation of the fonts manually, the script takes an optional argument with one of the following values:
+To install the new versions of Gregorio (the font) and Grana Padano, unzip `supp_fonts-5_0_0.zip`, navigate to the uncompressed folder in Terminal (or Command Prompt on Windows) and execute `texlua install_supp_fonts.lua` after you have installed the main Gregorio distribution.  This script will look for the location of Greciliae and copy the other fonts to that location.  If you wish to control the installation of the fonts manually, the script takes an optional argument with one of the following values:
 
  * `auto` (optional): the same folder as Greciliae
  * `system`: the appropriate font folder in `$TEXMFLOCAL`
