@@ -10,9 +10,19 @@ The `autocompile` option is now the default option for the behavior of `\gregori
 
 ### Gregorio and Grana Padano fonts
 
-The gregorio and granapadano fonts, as well as their "-op" Dominican variants, will now be available as separate downloads.  If you were using these fonts, either download and install them or switch to greciliae, which continues to be distributed along with Gregorio by default.
+The Gregorio and Grana Padano fonts, as well as their "-op" Dominican variants, will now be available as a separate download.  If you were using these fonts, either download `supp_fonts-5_0_0.zip` and install them or switch to Greciliae, which continues to be distributed (with its "-op" Dominican variants) along with Gregorio by default.
 
-*** NOTE: put the logistics of these downloads here once they've been determined ***
+To install the new versions of Gregorio and Grana Padano, unzip `supp_fonts-5_0_0.zip`, navigate to the uncompressed folder in Terminal (or Command Prompt on Windows) and execute `texlua install_supp_fonts.lua` after you have installed the main Gregorio distribution.  This script will look for the location of Greciliae and copy the other fonts to that location.  If you wish to control the installation of the fonts manually, the script takes an optional argument with one of the following values:
+
+ * `auto` (optional): the same folder as Greciliae
+ * `system`: the appropriate font folder in `$TEXMFLOCAL`
+ * `user`: the appropriate font folder in `$TEXMFHOME`
+ * `<dir>`: the name of an alternate texmf root directory you want to use
+ 
+Additionally, if you are building the fonts yourself from a git clone, `install-gtex.sh` and `install_supp_fonts.lua` will install all the fonts you have built, not just the ones they are normally distributed with.
+
+**Note:** All the above methods assume you only need to access the fonts from within a TeX document (and thus are designed to put them into the correct folder in a texmf tree).  If you want to use the fonts in other programs, then you will need to consult the documentation appropriate to your platform and/or the program and manually move, copy, or link the fonts to the necessary location.
+
 
 ### Ledger lines
 
