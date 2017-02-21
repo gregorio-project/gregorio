@@ -51,25 +51,21 @@ if os.type == "windows" or os.type == "msdos" then
   end
 end
 
-local font_files = {
-    "gregorio.ttf",
-    "gregorio-hollow.ttf",
-    "gregorio-hole.ttf",
-    "gregorio-op.ttf",
-    "gregorio-op-hollow.ttf",
-    "gregorio-op-hole.ttf",
-    "granapadano.ttf",
-    "granapadano-hollow.ttf",
-    "granapadano-hole.ttf",
-    "granapadano-op.ttf",
-    "granapadano-op-hollow.ttf",
-    "granapadano-op-hole.ttf",
-}
-
-local source_files = {
-    "gregorio-base.sfd",
-    "granapadano-base.sfd",
-}
+local source_files = {}
+for file in lfs.dir(lfs.currentdir()) do
+  if file:match('-base.sfd$') then
+    table.insert(source_files,1,file)
+  end
+end
+local font_files = {}
+for _, file in pairs(source_files) do
+  local temp = file:match('.*-'):sub(1,-2)
+  for file in lfs.dir(lfs.currentdir()) do
+    if file:match('^'..temp..'.*%.ttf$') then
+      table.insert(font_files,1,file)
+    end
+  end
+end
 
 function io.loaddata(filename,textmode)
   local f = io.open(filename,(textmode and 'r') or 'rb')
