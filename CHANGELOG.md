@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+
+
+## [5.0.0-beta2] - 2017-02-24
 ### Fixed
 - Glyphs for pes quadratum shapes with initio debilis are no longer missing. Use `-fqg` to engrave them.  See [#1310](https://github.com/gregorio-project/gregorio/issues/1310).
 
