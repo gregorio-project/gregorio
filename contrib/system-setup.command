@@ -158,12 +158,24 @@ done
 
 # Font Files
 files="greciliae.ttf
+greciliae-hollow.ttf
+greciliae-hole.ttf
 greciliae-op.ttf
+greciliae-op-hollow.ttf
+greciliae-op-hole.ttf
 greextra.ttf
 gregorio.ttf
+gregorio-hollow.ttf
+gregorio-hole.ttf
 gregorio-op.ttf
+gregorio-op-hollow.ttf
+gregorio-op-hole.ttf
 granapadano.ttf
+granapadano-hollow.ttf
+granapadano-hole.ttf
 granapadano-op.ttf
+granapadano-op-hollow.ttf
+granapadano-op-hole.ttf
 gregall.ttf"
 
 for f in $files

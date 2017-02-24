@@ -25,15 +25,23 @@ TTF_GRECILIAE_OP = greciliae-op.ttf greciliae-op-hollow.ttf greciliae-op-hole.tt
 TTF_GREGORIO = gregorio.ttf gregorio-hollow.ttf gregorio-hole.ttf
 TTF_GREGORIO_OP = gregorio-op.ttf gregorio-op-hollow.ttf gregorio-op-hole.ttf
 TTF_GRANAPADANO = granapadano.ttf granapadano-hollow.ttf granapadano-hole.ttf
-TTF_GRANAPADANO_OP = granapadano-op.ttf granapadano-op-hollow.ttf granapadano-op-hole.ttf
+TTF_GRANAPADANO_OP = granapadano-op.ttf granapadano-op-hollow.ttf \
+	granapadano-op-hole.ttf
 TTF_EXTRA = greextra.ttf gregall.ttf gresgmodern.ttf grelaon.ttf
-TTF_ALL = $(TTF_GRECILIAE) $(TTF_GRECILIAE_OP) $(TTF_GREGORIO) \
-		  $(TTF_GREGORIO_OP) $(TTF_GRANAPADANO) $(TTF_GRANAPADANO_OP)
-SOURCEFILES = gregorio-base.sfd granapadano-base.sfd greciliae-base.sfd \
-			  greextra.sfd gregall.sfd gresgmodern.sfd grelaon.sfd
+TTF_ALL = $(TTF_GRECILIAE) $(TTF_GRECILIAE_OP) \
+	$(TTF_GREGORIO) $(TTF_GREGORIO_OP) \
+	$(TTF_GRANAPADANO) $(TTF_GRANAPADANO_OP)
+SOURCEFILES_GRECILIAE = greciliae-base.sfd
+SOURCEFILES_GREGORIO = gregorio-base.sfd
+SOURCEFILES_GRANAPADANO = granapadano-base.sfd
+SOURCEFILES_EXTRA = greextra.sfd gregall.sfd gresgmodern.sfd grelaon.sfd
+SOURCEFILES_TOOLS = squarize.py stemsschemas.py convertsfdtottf.py README.md \
+	simplify.py
+SOURCEFILES_ALL = $(SOURCEFILES_GREGORIO) $(SOURCEFILES_GRANAPADANO) \
+	$(SOURCEFILES_GRECILIAE)
 
-EXTRA_DIST = $(TTF_GRECILIAE) $(TTF_GRECILIAE_OP) $(TTF_EXTRA) $(SOURCEFILES) \
-			 squarize.py stemsschemas.py convertsfdtottf.py README.md simplify.py
+EXTRA_DIST = $(TTF_GRECILIAE) $(TTF_GRECILIAE_OP) $(TTF_EXTRA) \
+	$(SOURCEFILES_GRECILIAE) $(SOURCEFILES_EXTRA) $(SOURCEFILES_TOOLS)
 
 FONTFORGE = fontforge
 RM = rm
@@ -107,3 +115,9 @@ really-all-fonts: greciliae-all gregorio-all granapadano-all extra
 fonts: greciliae-all extra
 
 all: $(GREGORIO_FONTS)
+
+supp-fonts-dist: gregorio-all granapadano-all
+	zip supp_fonts-$(FILENAME_VERSION).zip $(TTF_GREGORIO) $(TTF_GREGORIO_OP) \
+		$(TTF_GRANAPADANO) $(TTF_GRANDAPADANO_OP) \
+		$(SOURCEFILES_GREGORIO) $(SOURCEFILES_GRANAPADANO) \
+		install_supp_fonts.lua README_supp.md

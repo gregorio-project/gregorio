@@ -53,7 +53,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - `initial-style` gabc header, supplanted by the `\gresetinitiallines` TeX command.
 - `biginitial` style, consolidated into the `initial` style.
 - `\grescorereference`
-- The gregorio and granapadano fonts are no longer distributed with the Gregorio distribution archive.  They will now be available for download separately (along with optional Dominican "-op" variants).  ***If there are other logistics, put them here or delete this statement before release.***  See [UPGRADE.md](UPGRADE.md) and [#844](https://github.com/gregorio-project/gregorio/issues/844) for details.
+- The Gregorio and Grana Padano fonts are no longer distributed with the Gregorio distribution archive.  They will now be available for download separately (along with their Dominican "-op" variants) in `supp_fonts-5_0_0.zip` (the version number will change to match future releases).  See [UPGRADE.md](UPGRADE.md) and [#844](https://github.com/gregorio-project/gregorio/issues/844) for details.
 
 
 ## [4.2.1][Unreleased]

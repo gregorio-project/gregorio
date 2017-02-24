@@ -75,9 +75,10 @@ TTFFILES=(fonts/*.ttf)
 DOCFILES=(doc/*.tex doc/*.lua doc/*.gabc doc/*.pdf doc/README.md)
 EXAMPLEFILES=(examples/FactusEst.gabc examples/PopulusSion.gabc
               examples/main-lualatex.tex examples/debugging.tex)
-FONTSRCFILES=(gregorio-base.sfd granapadano-base.sfd greciliae-base.sfd
-              greextra.sfd squarize.py convertsfdtottf.py gregall.sfd
+FONTSRCFILES=(greextra.sfd squarize.py convertsfdtottf.py gregall.sfd
               gresgmodern.sfd README.md)
+FONTSRCFILES=("${FONTSRCFILES[@]/#/fonts/}")
+FONTSRCFILES+=(fonts/*-base.sfd)
 # Files which have been eliminated, or whose installation location have been
 # changed.  We will remove existing versions of these files in the target texmf
 # tree before installing.
@@ -86,7 +87,14 @@ LEGACYFILES=(tex/luatex/gregoriotex/gregoriotex.sty
              tex/luatex/gregoriotex/gregoriotex-ictus.tex
              fonts/truetype/public/gregoriotex/parmesan.ttf
              fonts/truetype/public/gregoriotex/parmesan-op.ttf
-             fonts/source/gregoriotex/parmesan-base.sfd)
+             fonts/source/gregoriotex/parmesan-base.sfd
+             fonts/truetype/public/gregoriotex/gresym.ttf
+             fonts/truetype/public/gregoriotex/gregorio.ttf
+             fonts/truetype/public/gregoriotex/gregorio-op.ttf
+             fonts/source/gregoriotex/gregorio-base.sfd
+             fonts/truetype/public/gregoriotex/granapadano.ttf
+             fonts/truetype/public/gregoriotex/granapadano-op.ttf
+             fonts/source/gregoriotex/granapadano-base.sfd)
 
 NAME=${NAME:-gregoriotex}
 FORMAT=${FORMAT:-luatex}
@@ -96,7 +104,6 @@ KPSEWHICH=${KPSEWHICH:-kpsewhich}
 CP=${CP:-cp}
 RM=${RM:-rm}
 
-FONTSRCFILES=("${FONTSRCFILES[@]/#/fonts/}")
 
 GENERATE_UNINSTALL=${GENERATE_UNINSTALL:-true}
 AUTO_UNINSTALL=${AUTO_UNINSTALL:-false}
