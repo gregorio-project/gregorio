@@ -12,6 +12,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Changed
 - The default behaviour of `\gregorioscore` has been changed to autocompile.
 - When the note after an oriscus is at the same pitch, the oriscus direction now depends on the first non-unison, non-oriscus note after the oriscus (see [#1179](https://github.com/gregorio-project/gregorio/issues/1179)).
+- 6 new St. Gall neume glyphs have been added to the `gregall` font and glyph for nabc `to!ciG` has been changed (see [#1303](https://github.com/gregorio-project/gregorio/issues/1303), [#1305](https://github.com/gregorio-project/gregorio/issues/1305), [#1313](https://github.com/gregorio-project/gregorio/issues/1313), [#1314](https://github.com/gregorio-project/gregorio/issues/1314), [#1315](https://github.com/gregorio-project/gregorio/issues/1315)).
 
 ## [5.0.0-beta1] - 2017-01-31
 ### Fixed
