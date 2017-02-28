@@ -182,6 +182,14 @@ static __inline int for_each_centerable_character(
                  * protrusion factor first */
                 break;
             }
+            if (ch->cos.s.type == ST_T_BEGIN && ch->cos.s.style == ST_ELISION) {
+                /* put in a special character at the beginning of an elision
+                 * that represents the elision */
+                if (capture) {
+                    capture(buffer, count, GREVOWEL_ELISION_MARK);
+                }
+                ++count;
+            }
             if (!handle_elision(ch, &in_elision)) {
                 ch = skip_verbatim_or_special(ch);
             }
@@ -926,6 +934,12 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
                         /* something else; don't do anything */
                         break;
                     }
+                }
+
+                if (style == ST_ELISION) {
+                    /* skip over the elision marker in the vowel determination
+                     * buffer */
+                    ++index;
                 }
 
                 switch (style) {

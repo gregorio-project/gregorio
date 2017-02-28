@@ -23,7 +23,6 @@ Additionally, if you are building the fonts yourself from a git clone, `install-
 
 **Note:** All the above methods assume you only need to access the fonts from within a TeX document (and thus are designed to put them into the correct folder in a texmf tree).  If you want to use the fonts in other programs, then you will need to consult the documentation appropriate to your platform and/or the program and manually move, copy, or link the fonts to the necessary location.
 
-
 ### Ledger lines
 
 As of version 5.0, ledger lines are extended through notes on either side of a ledger line that crosses a stem, as long as the notes are within the same element.
@@ -46,6 +45,10 @@ As of version 5.0, the `\gresethyphenprotrusion{percentage}` command is deprecat
 ### Oriscus orientation at the unison
 
 As of version 5.0, when the note after the oriscus is at the same pitch as the oriscus, the oriscus will point towards the first non-unison note after the oriscus or downwards if at the end of the score.  Use the `0` (for downwards) `1` (for upwards) modifiers to force a different orientation.
+
+### Elisions in vowel centering
+
+As of version 5.0, elisions after a vowel centering prefix will not cause the center to be placed on the vowel at the end of the prefix.  Since elisions are unvoiced vowels, this makes more sense than the previous behavior.  However, if this change does not produce your desired output, you may surround the center manually with `{` and `}` in gabc.
 
 ## 4.2
 

@@ -8,6 +8,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## [5.0.0-beta2] - 2017-02-24
 ### Fixed
 - Glyphs for pes quadratum shapes with initio debilis are no longer missing. Use `-fqg` to engrave them.  See [#1310](https://github.com/gregorio-project/gregorio/issues/1310).
+- Elisions after a vowel centering prefix will no longer cause the center to be placed on the vowel in the prefix.  Since prefixes are unvoiced vowels, this makes more sense than the previous behavior.  As usual, you may use the manual centering features to force the centering where you want if this does not produce what you want.  See [#1320](https://github.com/gregorio-project/gregorio/issues/1320).
 
 ### Changed
 - The default behaviour of `\gregorioscore` has been changed to autocompile.

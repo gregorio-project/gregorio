@@ -27,6 +27,9 @@
 #include "bool.h"
 #include "unicode.h"
 
+/* Use unicode 0xfffe, which is guaranteed not to be a character */
+#define GREVOWEL_ELISION_MARK ((grewchar)0xfffe)
+
 typedef enum rulefile_parse_status {
     RFPS_NOT_FOUND = 0,
     RFPS_FOUND,
