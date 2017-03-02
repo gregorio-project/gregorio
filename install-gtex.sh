@@ -277,6 +277,7 @@ if [ "$arg" = 'tds' ]
 then
     echo "Making TDS-ready archive ${TDS_ZIP}."
     rm -f ${TDS_ZIP}
+    (rm ${TEXMFROOT}/fonts/source/gregoriotex/gregorio-base.sfd ${TEXMFROOT}/fonts/source/gregoriotex/granapadano-base.sfd ) || die
     (cd ${TEXMFROOT} && zip -9 ../${TDS_ZIP} -q -r .) || die
     rm -r ${TEXMFROOT} || die
 else

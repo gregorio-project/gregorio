@@ -60,6 +60,11 @@ else
     fi
     make DESTDIR=$BUILDDIR install
     ./install-gtex.sh dir:$BUILDDIR/tmp/gregorio
+    # Since install-gtex.sh will pick-up all the source files, we need
+    # to delete the ones corresponding to the fonts not included in the
+    # basic distribution
+    rm $BUILDDIR/tmp/gregorio/fonts/source/gregoirotex/gregorio-base.sfd
+    rm $BUILDDIR/tmp/gregorio/fonts/source/gregoirotex/granapadano-base.sfd
 fi
 
 # Documentation and other extras
