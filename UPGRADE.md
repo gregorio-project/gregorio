@@ -10,7 +10,7 @@ The `autocompile` option is now the default option for the behavior of `\gregori
 
 ### Additional fonts
 
-With the addition of more cavum shapes, the number of font options which come with Gregorio (the package) by default has been reduced in order to control the download size.  From now on only Greciliae will be installed by default.  The Gregorio and Grana Padano fonts, as well as their "-op" Dominican variants, will now be available as a separate download.  If you were using these fonts, either download `supp_fonts-5_0_0.zip` and install them or switch to Greciliae.
+With the addition of more cavum shapes, the number of font options which come with Gregorio (the package) by default has been reduced in order to control the download size.  From now on only Greciliae (and its "-op" Dominican variant) will be installed by default.  The Gregorio and Grana Padano fonts, as well as their "-op" Dominican variants, will now be available as a separate download.  If you were using these fonts, either download `supp_fonts-5_0_0.zip` and install them or switch to Greciliae.
 
 To install the new versions of Gregorio (the font) and Grana Padano, unzip `supp_fonts-5_0_0.zip`, navigate to the uncompressed folder in Terminal (or Command Prompt on Windows) and execute `texlua install_supp_fonts.lua` after you have installed the main Gregorio distribution.  This script will look for the location of Greciliae and copy the other fonts to that location.  If you wish to control the installation of the fonts manually, the script takes an optional argument with one of the following values:
 
@@ -22,7 +22,6 @@ To install the new versions of Gregorio (the font) and Grana Padano, unzip `supp
 Additionally, if you are building the fonts yourself from a git clone, `install-gtex.sh` and `install_supp_fonts.lua` will install all the fonts you have built, not just the ones they are normally distributed with.
 
 **Note:** All the above methods assume you only need to access the fonts from within a TeX document (and thus are designed to put them into the correct folder in a texmf tree).  If you want to use the fonts in other programs, then you will need to consult the documentation appropriate to your platform and/or the program and manually move, copy, or link the fonts to the necessary location.
-
 
 ### Ledger lines
 
@@ -46,6 +45,10 @@ As of version 5.0, the `\gresethyphenprotrusion{percentage}` command is deprecat
 ### Oriscus orientation at the unison
 
 As of version 5.0, when the note after the oriscus is at the same pitch as the oriscus, the oriscus will point towards the first non-unison note after the oriscus or downwards if at the end of the score.  Use the `0` (for downwards) `1` (for upwards) modifiers to force a different orientation.
+
+### Elisions in vowel centering
+
+As of version 5.0, elisions after a vowel centering prefix will not cause the center to be placed on the vowel at the end of the prefix.  Since elisions are unvoiced vowels, this makes more sense than the previous behavior.  However, if this change does not produce your desired output, you may surround the center manually with `{` and `}` in gabc.
 
 ## 4.2
 
