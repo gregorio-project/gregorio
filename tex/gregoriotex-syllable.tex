@@ -1556,6 +1556,7 @@
 %% #5 - Three syllable parts where there is no separated initial
 %% #6 - Extra macros to run if there is an initial
 \def\GreSetFirstSyllableText#1#2#3#4#5#6{%
+  \gre@printcommentary%
   \ifcase\gre@initiallines\relax % no initial
     \gre@noinitial %
     \gre@setfirstsyllabletext#5{#1}{#2#3}{}%
