@@ -419,7 +419,7 @@
   \setbox\gre@box@initial=\hbox{#1}%
 }%
 
-\def\gre@setinitial#1{%
+\def\gre@printcommentary{%
   % see comments on this function to see what it does
   \gre@debugmsg{commentary}{Time to calculate the true raise.}%
   \gre@calculate@commentarytrueraise%
@@ -430,6 +430,9 @@
     \gre@debugmsg{commentary}{I am printing a commentary box}%
     \raise\gre@dimen@commentarytrueraise\hbox to 0pt{\hbox to \gre@dimen@linewidth{\hfill\box\gre@box@commentary}\hss}%
   \fi%
+}
+
+\def\gre@setinitial#1{%
   \gre@debugmsg{annotation}{Time to calculate the true raise.}%
   \gre@calculate@annotationtrueraise %
   % we print the initial always at the same place, and then we print the gre@box@annotation, centered
