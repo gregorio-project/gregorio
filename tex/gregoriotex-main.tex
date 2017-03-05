@@ -743,7 +743,6 @@
 \def\gre@addspaceabove{%
   \gre@style@abovelinestext%
   \global\gre@dimen@currentabovelinestextheight=\gre@space@dimen@abovelinestextheight\relax%
-  \gre@generatelines %
   \endgre@style@abovelinestext%
   \relax %
 }%
@@ -751,7 +750,6 @@
 % we don't need space above any more
 \def\gre@removespaceabove{%
   \global\gre@dimen@currentabovelinestextheight=0 sp%
-  \gre@generatelines %
   \relax %
 }%
 
