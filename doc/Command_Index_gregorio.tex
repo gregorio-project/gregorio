@@ -69,14 +69,14 @@ Macro for typesetting an accentus.
 
 \begin{argtable}
   \#1 & integer & height number of episema\\
-  \#2 & string  & Type of glyph the episema is attached to. See \nameref{EpisemaSpecial} argument for description of options.\\
+  \#2 & string  & Type of glyph the episema is attached to. See \Nameref{NoteOffset} for a description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash GreAdditionalLine}{\#1\#2\#3}{gregoriotex-signs.tex}
 Macro to typeset the additional line above or below the staff.
 
 \begin{argtable}
-  \#1 & string  & See \nameref{EpisemaSpecial}.\\
+  \#1 & string  & See \Nameref{NoteOffset}.\\
   \#2 & integer & The ambitus of the porrectus or porrectus flexus if the first references these glyph types; ignored otherwise.\\
   \#3 & integer & Set horizontal episema (0), horizontal episema under a note (1), line at top of staff (2), line at bottom of staff (3), choral sign (4).\\
 \end{argtable}
@@ -104,7 +104,7 @@ Macro for typesetting an augmentum duplex (a pair of punctum mora)
 Macro for typesetting a bar brace.
 
 \begin{argtable}
-  \#1 & string & Type of glyph the episema is attached to.  See \nameref{EpisemaSpecial} argument for description of options.\\
+  \#1 & string & Type of glyph the episema is attached to.  See \Nameref{NoteOffset} for a description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash GreBarSyllable}{\#1\#2\#3\#4\#5\#6\#7\#8\#9}{gregoriotex-syllable.tex}
@@ -127,7 +127,7 @@ Macro for typesetting a bar syllable.
 Macro to typeset a vertical episema on a bar.
 
 \begin{argtable}
-  \#1 & string & Type of glyph the episema is attached to.  See \nameref{EpisemaSpecial} argument for description of options.\\
+  \#1 & string & Type of glyph the episema is attached to.  See \Nameref{NoteOffset} for a description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash GreBeginEUOUAE}{\#1}{gregoriotex-main.tex}
@@ -185,7 +185,7 @@ Macro for typesetting a circulus.
 
 \begin{argtable}
   \#1 & integer & Height number of circulus.\\
-  \#2 & string  & Type of glyph the circulus is attached to.  See \nameref{EpisemaSpecial} argument for description of options.\\
+  \#2 & string  & Type of glyph the circulus is attached to.  See \Nameref{NoteOffset} for a description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash GreClearSyllableText}{\#1\#2}{gregoriotex-syllable.tex}
@@ -519,7 +519,7 @@ Macro to typeset an horizontal episema.
 
 \begin{argtable}
   \#1 & integer & Height number of the episema.\\
-  \#2 & string  & See \nameref{EpisemaSpecial}.\\
+  \#2 & string  & See \Nameref{NoteOffset}.\\
   \#3 & integer & The ambitus for a two note episema at the diagonal stroke of a
     porrectus, porrectus flexus, orculus resupinus, or torculus resupinus
     flexus.\\
@@ -664,7 +664,7 @@ Macro for typesetting a musica ficta flat.
 
 \begin{argtable}
   \#1 & integer & Height number of the musica ficta flat.\\
-  \#2 & string  & Type of glyph the musica ficta flat is attached to. See \nameref{EpisemaSpecial} argument for description of options.\\
+  \#2 & string  & Type of glyph the musica ficta flat is attached to. See \Nameref{NoteOffset} for a description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash GreMusicaFictaNatural}{\#1\#2}{gregoriotex-signs.tex}
@@ -672,7 +672,7 @@ Macro for typesetting a musica ficta natural.
 
 \begin{argtable}
   \#1 & integer & Height number of the musica ficta natural.\\
-  \#2 & string  & Type of glyph the musica ficta natural is attached to. See \nameref{EpisemaSpecial} argument for description of options.\\
+  \#2 & string  & Type of glyph the musica ficta natural is attached to. See \Nameref{NoteOffset} for a description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash GreMusicaFictaSharp}{\#1\#2}{gregoriotex-signs.tex}
@@ -680,7 +680,7 @@ Macro for typesetting a musica ficta sharp.
 
 \begin{argtable}
   \#1 & integer & Height number of the musica ficta sharp.\\
-  \#2 & string  & Type of glyph the musica ficta sharp is attached to. See \nameref{EpisemaSpecial} argument for description of options.\\
+  \#2 & string  & Type of glyph the musica ficta sharp is attached to. See \Nameref{NoteOffset} for a description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash GreNatural}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
@@ -832,7 +832,7 @@ Macro for typesetting a reversed accentus.
 
 \begin{argtable}
   \#1 & integer & Height number of accentus.\\
-  \#2 & string  & Type of glyph the accentus is attached to. See \nameref{EpisemaSpecial} argument for description of options.\\
+  \#2 & string  & Type of glyph the accentus is attached to. See \Nameref{NoteOffset} for a description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash GreReversedSemicirculus}{\#1\#2}{gregoriotex-signs.tex}
@@ -840,7 +840,7 @@ Macro for typesetting a reversed semicirculus.
 
 \begin{argtable}
   \#1 & integer & Height number of semicirculus.\\
-  \#2 & string  & Type of glyph the semicirculus is attached to. See \nameref{EpisemaSpecial} argument for description of options.\\
+  \#2 & string  & Type of glyph the semicirculus is attached to. See \Nameref{NoteOffset} for a description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash GreScoreOpening}{\#1\#2\#3\#4\#5}{gregoriotex-syllable.tex}
@@ -859,7 +859,7 @@ Macro for typesetting a semicirculus.
 
 \begin{argtable}
   \#1 & integer & Height number of semicirculus.\\
-  \#2 & string  & Type of glyph the semicirculus is attached to. See \nameref{EpisemaSpecial} argument for description of options.\\
+  \#2 & string  & Type of glyph the semicirculus is attached to. See \Nameref{NoteOffset} for a description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash GreSetFirstSyllableText}{\#1\#2\#3\#4\#5\#6}{gregoriotex-syllable.tex}
@@ -1122,7 +1122,7 @@ Macro for typesetting the vertical episema.
 
 \begin{argtable}
   \#1 & integer & Height number of episema.\\
-  \#2 & string  & Type of glyph the episema is attached to. See \nameref{EpisemaSpecial} argument for description of options.\\
+  \#2 & string  & Type of glyph the episema is attached to. See \Nameref{NoteOffset} for a description of options.\\
 \end{argtable}
 
 \macroname{\textbackslash GreVirgula}{\#1\#2\#3}{gregoriotex-signs.tex}
