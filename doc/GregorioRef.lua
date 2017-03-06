@@ -43,6 +43,7 @@ end
 local EXCLUDE = {
   ['.notdef'] = true,
   ['.null'] = true,
+  notdef = true,
   nonmarkingreturn = true,
   AscendensOriscusLineBLTR = true,
   AscendensOriscusLineTR = true,

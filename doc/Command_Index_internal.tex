@@ -201,7 +201,7 @@ The formula used is \verb=#1 - #2 + #3 - #4= or (more sensibly) \verb=(#1 - #4) 
 Change the scale of a single distance from one factor to another.
 
 \begin{argtable}
-  \#1 & string & name of the distance to be scaled.  See \nameref{distances}.\\
+  \#1 & string & name of the distance to be scaled.  See \Nameref{distances}.\\
   \#2 & integer & the factor the distance is currently in\\
   \#3 & integer & the factor the distance is to be put into\\
 \end{argtable}
@@ -222,7 +222,7 @@ Macro to calculate \texttt{nextbegindifference}.
   \#2 & string & the first letters of the next syllable\\
   \#3 & string & the middle letters of the next syllable (the vowel in Latin, the whole syllable in English)\\
   \#4 & string & the end letters of the next syllable\\
-  \#5 & $0 \le$ integer $\le 19$ & the type of notes alignment.  See \nameref{notesalign}.\\
+  \#5 & $0 \le$ integer $\le 19$ & the type of notes alignment.  See \Nameref{notesalign}.\\
   & $20 \le$ integer $\le 39$ & Same as below 20 except there is a flat before the notes.  Subtract 20 to get the type of notes alignment.\\
   & $40 \le$ integer $\le 59$ & Same as below 20 except there is a natural before the notes.  Subtract 40 to get the type of notes alignment.
 \end{argtable}
@@ -720,7 +720,7 @@ Macro to typeset a vertical episema or a rare accent (like accentus, circulus, e
 
 \begin{argtable}
   \#1 & character & the letter of the height of the episema (not the height of the note it corresponds to.\\
-  \#2 & integer & See \nameref{EpisemaSpecial}\\
+  \#2 & string & See \Nameref{NoteOffset}.\\
   \#3 & Gregorio\TeX\ glyph & the sign glyph\\
   \#4 & \texttt{1} & vertical episema\\
   & \texttt{2} & rare sign\\
@@ -927,13 +927,13 @@ Macro computing the skip at the end of the syllable.
 Macro to hold the original distance which is to be scaled by \verb=\gre@changeonedimenfactor=
 
 \macroname{\textbackslash gre@debug}{}{gregoriotex.sty \textup{and} gregoriotex.tex}
-Macro to hold the list of debug messages which should be designated as printing.
+Macro to hold the list of debug messages which should be designated as printing.  Contains comma-separated values from \Nameref{DebugCategory}, set via the \texttt{debug} package keyword parameter.
 
 \macroname{\textbackslash gre@debugmsg}{\#1\#2}{gregoriotex-main.tex}
 Macro to print debugging messages.
 
 \begin{argtable}
-  \#1 & string & The category of the message (used in conjunction with \verb=\gre@debug= to determine whether to print the message or not\\
+  \#1 & string & The category of the message (used in conjunction with \verb=\gre@debug= to determine whether to print the message or not; see \Nameref{DebugCategory}\\
   \#2 & string & The debug message\\
 \end{argtable}
 
@@ -1014,6 +1014,9 @@ Macro which stores the first part of the next syllable (that which comes before 
 
 \macroname{\textbackslash gre@nextmiddlesyllablepart}{}{gregoriotex-syllable.tex}
 Macro which stores the middle part of the next syllable (the part which aligns with the notes).
+
+\macroname{\textbackslash gre@fixdebug}{}{gregoriotex-main.tex}
+Fixes the raw \verb=\gre@debug= value for use with \verb=\gre@debugmsg=.
 
 \macroname{\textbackslash gre@fixedtextformat}{\#1}{gregoriotex-syllable.tex}
 A macro which applies formatting that needs to apply to the whole syllable (rather than the parts individually) for the current syllable.  Necessary to preserve ligatures across parts within a syllable.
@@ -1320,7 +1323,7 @@ Macro for calculating the position of the elements of a bar syllable using the n
 \begin{argtable}
   \#1 & 0 & bar is not the end of a word\\
   & 1 & bar is the end of a word\\
-  \#2 & integer & alignment type of the first glyph in the next syllable.  See \nameref{notesalign}\\
+  \#2 & integer & alignment type of the first glyph in the next syllable.  See \Nameref{notesalign}\\
 \end{argtable}
 
 \macroname{\textbackslash gre@newlinearg}{}{gregoriotex-syllable.tex}
@@ -2250,7 +2253,7 @@ rather than have multiple definitions.
   \texttt{16} & no note
  \end{tabulary}
 
-\subsection{Episema Special}\label{EpisemaSpecial}
+\subsection{Note Offset Specifier}\label{NoteOffset}
 \definecolor{shadecolor}{named}{lightgray}%
 \begin{shaded*}%
 \vspace{-1.4\baselineskip}
@@ -2315,6 +2318,38 @@ rather than have multiple definitions.
   \item[FinalVirgaAuctus] virga aucta as last note
   \item[FinalConnectedVirga] “virga” as last note, connected to prior lower note
   \item[InitialVirga] “virga” as first note, disconnected from next note
+\end{description}
+\end{shaded*}
+
+\subsection{Debug Category}\label{DebugCategory}
+\definecolor{shadecolor}{named}{lightgray}%
+\begin{shaded*}%
+\vspace{-1.4\baselineskip}
+\begin{center}String with the following possibilities:\end{center}
+\vspace{-0.8\baselineskip}
+\hrule
+\vspace{-0.8\baselineskip}
+\begin{description}
+  \item[annotation] Annotation-related (text above the score initial) messages.
+  \item[barspacing] Bar spacing computations.
+  \item[bolshift] Beginning-of-line shift computations.
+  \item[clear] Syllable clearing messages.  Generated when handling the \texttt{<clear>} gabc directive.
+  \item[changeglyph] Glyph changes.  Generated when glyph substitutions are made.
+  \item[commentary] Commentary-related messages.
+  \item[compile] Auto-compile messages.  Generating when handing \verb=\gregorioscore=
+  \item[custos] Custos-related messages.  Generating when computing and handling custodes.
+  \item[eolshift] End-of-line shift computations.
+  \item[general] Non-specific messages.
+  \item[hyphen] Hyphen-related messages.  Generated when computing and handling automatic hyphens.
+  \item[ifdim] Dimension comparisons.
+  \item[initial] Score-initial-related messages.
+  \item[lineheight] Line height events.  Generated when line heights are computed or exercised.
+  \item[linesglue] Messages about line glue.  Generated during line break processing in Lua.
+  \item[mapfont] Font mapping messages.  Generated when analyzing score fonts.
+  \item[offsetcase] Offset case messages.  Generated when the offset cases (for \Nameref{NoteOffset}) are generated in Lua.
+  \item[spacing] Random spacing-related messages.
+  \item[syllablerewriting] Syllable rewrite messages.  Generated when rewriting syllables for better kerning and ligaturing.
+  \item[syllablespacing] Syllable spacing computations.
 \end{description}
 \end{shaded*}
 

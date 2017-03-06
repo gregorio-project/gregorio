@@ -25,6 +25,7 @@ local err = gregoriotex.module.err
 local warn = gregoriotex.module.warn
 local info = gregoriotex.module.info
 local log = gregoriotex.module.log
+local debugmessage = gregoriotex.module.debugmessage
 
 -- Note offset cases:
 -- here are the common values for both hepisema (and consequently also for
@@ -457,7 +458,7 @@ local offset_cases = {
 local function emit_offset_macros()
   local i, item
   for i, item in ipairs(offset_cases) do
-    log([[\def\GreOCase%s{%d}]], item.case, i)
+    debugmessage('offsetcase', [[\def\GreOCase%s{%d}]], item.case, i)
     tex.sprint(string.format([[\def\GreOCase%s{%d}]], item.case, i))
   end
   tex.sprint([[\def\gre@v@case#1#2#3#4{]])

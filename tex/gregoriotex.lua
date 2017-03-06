@@ -444,11 +444,13 @@ end
 
 local glue_sign_name = {[0] = 'normal', [1] = 'stretching', [2] = 'shrinking'}
 
-local function debugmessage(type, message)
+local function debugmessage(type, ...)
   if (debug_types_activated[type] or debug_types_activated['all']) then
-    texio.write_nl('GregorioTeX debug: ('..type..'): '..message)
+    texio.write_nl('GregorioTeX debug: ('..type..'): '..format(...))
   end
 end
+
+gregoriotex.module.debugmessage = debugmessage
 
 -- in each function we check if we really are inside a score,
 -- which we can see with the dash_attr being set or not
@@ -482,7 +484,7 @@ local function post_linebreak(h, groupcode, glyphes)
         h, line = remove(h, line)
       else
         linenum = linenum + 1
-        debugmessage('linesglues', format('line %d: %s factor %d%%', linenum, glue_sign_name[line.glue_sign], line.glue_set*100))
+        debugmessage('linesglues', 'line %d: %s factor %d%%', linenum, glue_sign_name[line.glue_sign], line.glue_set*100)
         centerstartnode = nil
         line_id = nil
         line_top = nil
@@ -912,7 +914,7 @@ local function map_font(name, prefix)
   local glyph, unicode
   for glyph, unicode in get_score_font_unicode_pairs(name) do
     if unicode >= 0 and not string.match(glyph, '%.') then
-      log("Setting \\Gre%s%s to \\char%d", prefix, glyph, unicode)
+      debugmessage("mapfont", "Setting \\Gre%s%s to \\char%d", prefix, glyph, unicode)
       tex.sprint(catcode_at_letter, string.format(
           [[\xdef\Gre%s%s{\char%d}]], prefix, glyph, unicode))
     end
@@ -953,14 +955,14 @@ local function init_variant_font(font_name, for_score, gre_factor)
 end
 
 local function set_score_glyph(csname, font_csname, char)
-  log([[Setting \%s to \%s\char%d]], csname, font_csname, char)
+  debugmessage('changeglyph', [[Setting \%s to \%s\char%d]], csname, font_csname, char)
   tex.print(catcode_at_letter, string.format(
       [[\edef\%s{{\noexpand\%s\char%d}}]], csname, font_csname, char))
 end
 
 local function set_common_score_glyph(csname, font_csname, char)
   -- font_csname is ignored
-  log([[Setting \%s to \char%d]], csname, char)
+  debugmessage('changeglyph', [[Setting \%s to \char%d]], csname, char)
   tex.print(catcode_at_letter, string.format(
       [[\edef\%s{{\char%d}}]], csname, char))
 end
