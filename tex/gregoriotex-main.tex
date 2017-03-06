@@ -607,7 +607,7 @@
     \gre@debugmsg{annotation}{We're on the first line of the annotation.}%
     \setbox\gre@box@annotation = \hbox to \gre@dimen@temp@three{\gre@leftfill\gre@style@annotation#2\endgre@style@annotation\gre@rightfill}%
     % We set the initial value for annotationtrueraise based on the annotationvalign setting.  We always do this because if there is only one line in the annotation, then the topline is the bottomline.
-    \gre@debugmsg{annnotation}{Initial set point.}%
+    \gre@debugmsg{annotation}{Initial set point.}%
     \ifcase\gre@count@annotationvalign\relax%
     %case 0 = top of first line
       \global\gre@dimen@annotationtrueraise=-\ht\gre@box@annotation\relax%
