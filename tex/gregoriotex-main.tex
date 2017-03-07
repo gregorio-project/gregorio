@@ -501,7 +501,7 @@
     \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax%
     \endgre@style@initial%
   \fi %
-  \hskip\gre@dimen@temp@four %
+  \gre@hskip\gre@dimen@temp@four %
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four %
   \gre@debugmsg{annotation}{Ready to place initial.}%
   \ifgre@showlyrics%
@@ -518,7 +518,7 @@
     \global\gre@dimen@temp@four = \gre@space@dimen@afterinitialshift\relax%
     \endgre@style@initial%
   \fi%
-  \hskip\gre@dimen@temp@four %
+  \gre@hskip\gre@dimen@temp@four %
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four%
   % then we center the annotation box above the initial, if there is one
   \gre@debugmsg{annotation}{Time to set the annotation.}%
@@ -528,7 +528,7 @@
     \gre@debugmsg{annotation}{Calculate horizontal position.}%
     \gre@dimen@temp@five=\dimexpr((\gre@dimen@initialwidth - \wd\gre@box@annotation) / 2)\relax %
     \gre@skip@temp@four = -\gre@dimen@initialwidth\relax%
-    \hskip\gre@skip@temp@four %
+    \gre@hskip\gre@skip@temp@four %
     \kern\gre@dimen@temp@five %
     \gre@debugmsg{annotation}{And place the annotation.}%
     \raise\gre@dimen@annotationtrueraise\box\gre@box@annotation%
