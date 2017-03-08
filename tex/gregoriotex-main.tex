@@ -60,7 +60,34 @@
   }%
 }%
 
-\gre@debugmsg{general}{Loading gregoriotex-main.tex}%
+%%%%%%%%%%%%%
+% Internal function tracing
+%%%%%%%%%%%%%
+
+% Each function in the internal name space (\gre@...) should have an invocation of
+% \gre@trace as its first line with the argument being the name of the function (without
+% the backslash) and the list of arguments.
+% The last line of these functions should be \gre@trace@end.
+% Macros which merely store a value are not considered to be functions and thus not
+% included in the trace stack.
+% We also exempt the internal aliases for functions defined elsewhere.
+% The tracing messages are turned on via the debug interface, keyword: trace.
+
+\def\gre@trace@prefix{GreTrace: }
+\def\gre@trace#1{%
+  \IfSubStr{\gre@debug}{,trace,}%
+    {%print tracing messages and increase indent
+      \gre@typeout{\gre@trace@prefix #1}%
+      \edef\gre@trace@prefix{\gre@trace@prefix| }%
+    }{}%do nothing if not tracing
+}%
+\def\gre@trace@end{%
+  \IfSubStr{\gre@debug}{,trace,}%
+    {%dedent trace messages and mark end
+      \StrGobbleRight{\gre@trace@prefix}{2}[\gre@trace@prefix]%
+      \gre@typeout{\gre@trace@prefix -----}%
+    }{}%do nothing if not tracing
+}
 
 % Macro to handle deprecated macros.
 % #1 - the deprecated macro
@@ -289,6 +316,7 @@
 % #1 is 0 in case of gabc z, 1 for Z
 % #2 is 0 in the normal case, 1 after a bar in the new spacing algorithm
 \def\gre@newlinecommon#1#2{%
+  \gre@trace{gre@newlinecommon{#1}{#2}}%
   \ifgre@blockeolcustos\ifnum\gre@insidediscretionary=0\relax %
      \gre@localrightbox{}%
   \fi\fi %
@@ -329,10 +357,19 @@
   \gre@adjustlineifnecessary\relax %
   %%
   \GreResetEolCustos\relax %
+  \gre@trace@end%
 }%
 
-\def\gre@mark@translation{\directlua{gregoriotex.mark_translation()}}%
-\def\gre@mark@abovelinestext{\directlua{gregoriotex.mark_abovelinestext()}}%
+\def\gre@mark@translation{%
+  \gre@trace{gre@mark@translation}%
+  \directlua{gregoriotex.mark_translation()}%
+  \gre@trace@end%
+}%
+\def\gre@mark@abovelinestext{%
+  \gre@trace{gre@mark@abovelinestext}%
+  \directlua{gregoriotex.mark_abovelinestext()}%
+  \gre@trace@end%
+}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting of text
@@ -343,9 +380,14 @@
 \newbox\gre@box@temp@width%
 
 \def\gre@widthof#1{%
+  % we don't trace this function's arguments because they often don't take
+  % well to appearing in the log when expanded and aren't useful when
+  % unexpanded
+  \gre@trace{gre@widthof}%
   \setbox\gre@box@temp@width=\hbox{#1}%
   \global\gre@dimen@temp@three=\wd\gre@box@temp@width%
   \relax%
+  \gre@trace@end%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -364,46 +406,57 @@
 
 % macro to call before the call of \initial
 \def\gre@setbiginitial{%
-  \gre@debugmsg{general}{setting BIG initial}%
+  \gre@trace{gre@setbiginitial}%
   \global\gre@biginitial=1\relax %
   \relax %
+  \gre@trace@end%
 }%
 
 % macro to cancel before the call of \initial
 \def\gre@normalinitial{%
-  \gre@debugmsg{general}{setting normal initial}%
+  \gre@trace{gre@normalinitial}%
   \global\gre@biginitial=0\relax %
   \relax %
+  \gre@trace@end%
 }%
 
 % macro to call before the first syllable, but after setinitialclef
 \def\gre@adjustsecondline{%
+  \gre@trace{gre@adjustsecondline}%
   \gre@dimen@additionalleftspace=\gre@dimen@initialwidth\relax%
   \gre@updateleftbox %
   \relax %
+  \gre@trace@end%
 }%
 
 % macro to call during the second line
 \def\gre@adjustthirdline{%
+  \gre@trace{gre@adjustthirdline}%
   \gre@dimen@additionalleftspace= 0 pt\relax%
   \gre@updateleftbox %
   \relax %
+  \gre@trace@end%
 }%
 
 \newif\ifgre@thirdlineadjustmentnecessary %
 \def\gre@adjustlineifnecessary{%
+  \gre@trace{gre@adjustlineifnecessary}%
   \ifgre@thirdlineadjustmentnecessary %
     \gre@adjustthirdline %
     \gre@thirdlineadjustmentnecessaryfalse %
   \fi %
+  \gre@trace@end%
 }%
 
 \def\gre@updateleftbox{%
+  \gre@trace{gre@updateleftbox}%
   \gre@updatelinewidth %
   \gre@updatelinesclef %
+  \gre@trace@end%
 }%
 
 \def\gre@updatelinewidth{%
+  \gre@trace{gre@updatelinewidth}%
   \gre@debugmsg{ifdim}{ additionalleftspace = 0pt}%
   \ifdim\gre@dimen@additionalleftspace=0pt\relax%
     \gre@generatelines %
@@ -413,6 +466,7 @@
     \gre@generatelines %
     \global\gre@dimen@stafflinewidth=\gre@dimen@temp@five %
   \fi %
+  \gre@trace@end%
 }%
 
 \def\greillumination#1{%
@@ -420,6 +474,7 @@
 }%
 
 \def\gre@printcommentary{%
+  \gre@trace{gre@printcommentary}%
   % see comments on this function to see what it does
   \gre@debugmsg{commentary}{Time to calculate the true raise.}%
   \gre@calculate@commentarytrueraise%
@@ -430,9 +485,11 @@
     \gre@debugmsg{commentary}{I am printing a commentary box}%
     \raise\gre@dimen@commentarytrueraise\hbox to 0pt{\hbox to \gre@dimen@linewidth{\hfill\box\gre@box@commentary}\hss}%
   \fi%
+  \gre@trace@end%
 }
 
 \def\gre@setinitial#1{%
+  \gre@trace{gre@setinitial{#1}}%
   \gre@debugmsg{annotation}{Time to calculate the true raise.}%
   \gre@calculate@annotationtrueraise %
   % we print the initial always at the same place, and then we print the gre@box@annotation, centered
@@ -537,12 +594,15 @@
     \kern\gre@dimen@temp@five %
   \fi %
   \relax %
+  \gre@trace@end%
 }%
 
 \def\gre@noinitial{%
+  \gre@trace{gre@noinitial}%
   \setbox\gre@box@initial=\box\voidb@x%
   \global\gre@dimen@initialwidth=0pt\relax%
   \relax %
+  \gre@trace@end%
 }%
 
 
@@ -586,6 +646,7 @@
 }%
 
 \def\gre@annotation[#1]#2{%
+  \gre@trace{gre@annotation[#1]{#2}}%
   \ifx l#1\relax%
     \let\gre@rightfill\hfil%
     \let\gre@leftfill\relax%
@@ -645,6 +706,7 @@
     \endgre@style@annotation%
     \setbox\gre@box@annotation = \vtop spread \gre@space@dimen@annotationseparation\relax {\offinterlineskip\box\gre@box@old\vss\box\gre@box@add}%
   \fi%
+  \gre@trace@end%
 }%
 
 
@@ -663,6 +725,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\gre@writemode#1#2#3{%
+  \gre@trace{gre@writemode{#1}{#2}{#3}}%
   \greannotation{%
     \gre@style@modeline #1\endgre@style@modeline %
     \gre@style@modemodifier \directlua{gregoriotex.mode_part("\luatexluaescapestring{#2}")}\endgre@style@modemodifier %
@@ -670,6 +733,7 @@
     \relax %
   }%
   \relax %
+  \gre@trace@end%
 }%
 
 \def\GreMode#1#2#3{%
@@ -706,12 +770,14 @@
 %% macro that draws the lines : starts by the first and then draws the lines of every line.
 %% has to be called before drawing the key, after drawing the initial
 \def\gre@beginnotes{%
+  \gre@trace{gre@beginnotes}%
   \gre@drawfirstlines %
   %%localeleftbox is a primitive of Omega, it draws the same box at the beginning of new lines (here after the first)
   \gre@localleftbox{%
     \copy\gre@box@lines %
   }%
   \relax %
+  \gre@trace@end%
 }%
 
 \newbox\gre@box@commentary
@@ -719,6 +785,7 @@
 \def\grecommentary{\@ifnextchar[{\gre@commentary}{\gre@commentary[0pt]}}%
 
 \def\gre@commentary[#1]#2{%
+  \gre@trace{gre@commentary[#1]{#2}}%
   % we initialize commentarytrueraise here, but will only calculate it's final value just before placing the commentary so that we make sure we have the correct values for the distances which go into it
   \gre@style@commentary% to make sure font relative units on the argument translate correctly
   \global\gre@dimen@commentarytrueraise=#1\relax%
@@ -734,6 +801,7 @@
     \setbox\gre@box@add = \hbox to \gre@dimen@temp@three{\hfill\gre@style@commentary#2\endgre@style@commentary}%
     \setbox\gre@box@commentary = \vbox spread \gre@space@dimen@commentaryseparation{\offinterlineskip\box\gre@box@old\vss\box\gre@box@add}%
   \fi%
+  \gre@trace@end%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -742,18 +810,22 @@
 
 % set space above the text lines - almost the same as for the translation
 \def\gre@addspaceabove{%
+  \gre@trace{gre@addspaceabove}%
   \gre@style@abovelinestext%
   \global\gre@dimen@currentabovelinestextheight=\gre@space@dimen@abovelinestextheight\relax%
   \gre@generatelines %
   \endgre@style@abovelinestext%
   \relax %
+  \gre@trace@end%
 }%
 
 % we don't need space above any more
 \def\gre@removespaceabove{%
+  \gre@trace{gre@removespaceabove}%
   \global\gre@dimen@currentabovelinestextheight=0 sp%
   \gre@generatelines %
   \relax %
+  \gre@trace@end%
 }%
 
 % the code is a bit strange here: we always execute \gre@space@skip@spaceabovelines at the beginning of a glyph. This will:
@@ -772,6 +844,7 @@
 
 % typesets the text or nabc neumes above the line
 \def\gre@typesettextabovelines#1#2{%
+  \gre@trace{gre@typesettextabovelines{#1}{#2}}%
   \gre@style@abovelinestext%
   \gre@debugmsg{spacing}{Raise alt text: \gre@space@dimen@abovelinestextraise}%
   \endgre@style@abovelinestext%
@@ -792,6 +865,7 @@
   \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
     \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\gre@style@abovelinestext#1\endgre@style@abovelinestext\hss}%
   \relax %
+  \gre@trace@end%
 }%
 
 % similarly, but for typesetting Nabc neumes above lines
@@ -825,6 +899,7 @@
 
 %% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
 \def\gre@drawfirstlines{%
+  \gre@trace{gre@drawfirstlines}%
   \advance\gre@dimen@stafflinewidth by -\gre@dimen@initialwidth\relax%
   %\advance\gre@dimen@stafflinewidth by -\gre@space@dimen@minimalspaceatlinebeginning
   %\gre@dimen@initialwidth=0pt
@@ -882,6 +957,7 @@
   }%
   \gre@dimen@stafflinewidth=\gre@dimen@linewidth\relax%
   \relax%
+  \gre@trace@end%
 }%
 
 %% box containing the stafflines for other lines than the first
@@ -889,6 +965,7 @@
 
 % macro that must be called at each change of linewidth and gre@factor
 \def\gre@generatelines{%
+  \gre@trace{gre@generatelines}%
   \setbox\gre@box@lines=\hbox to 0pt{%
     \vbox{%
       \gre@style@normalstafflines%
@@ -938,6 +1015,7 @@
     \hss%
   }%
   \relax %
+  \gre@trace@end%
 }%
 
 % Macro for fusion of larger neumes
@@ -970,8 +1048,10 @@
   \@ifnextchar[{\gre@changecavumhole{#1}}{}%
 }%
 \def\gre@changecavumhole#1[#2][#3]{%
+  \gre@trace{gre@changecavumhole{#1}[#2][#3]}%
   \directlua{gregoriotex.init_variant_font([[#2]], true, [[\the\gre@factor]])}%
   \directlua{gregoriotex.change_score_glyph([[#1]],[[#2]],[[#3]], [[Hole]])}%
+  \gre@trace@end%
 }%
 
 % Resets a gregorio code point to its default setting
@@ -1073,6 +1153,7 @@
 }%
 
 \def\gre@dotranslationcenterend{%
+  \gre@trace{gre@dotranslationcenterend}%
   \ifgre@breakintranslation\else%
     \GreEndNLBArea{0}{1}%
   \fi %
@@ -1080,6 +1161,7 @@
   \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{}%
   \unsetluatexattribute{\gre@attr@center}%
   \relax %
+  \gre@trace@end%
 }%
 
 
@@ -1122,6 +1204,7 @@
 \newif\ifgre@haslinefive%
 
 \def\gre@setstafflines#1{%
+  \gre@trace{gre@setstafflines{#1}}%
   \def\gre@stafflines{#1}%
   \ifcase#1% 0
     \gre@error{Invalid number of staff lines}%
@@ -1174,6 +1257,7 @@
   \else %
     \gre@error{Invalid number of staff lines}%
   \fi %
+  \gre@trace@end%
 }%
 
 %macro called at the beginning of a score
@@ -1287,6 +1371,7 @@
 
 % macro called at the end of a bar (old bar spacing algorithm only).
 \def\gre@endafterbar#1{%
+  \gre@trace{gre@endafterbar{#1}}%
   \gre@penalty{\the\gre@space@count@endafterbarpenalty }\relax %
   \ifnum#1=1\relax %
     \gre@debugmsg{ifdim}{ enddifference > 0pt}%
@@ -1313,6 +1398,7 @@
   %\gre@penalty{\the\gre@space@count@endafterbarpenalty }\relax
   %\global\gre@dimen@enddifference=0pt
   \relax %
+  \gre@trace@end%
 }%
 
 \newcount\gre@lastoflinecount%
@@ -1383,7 +1469,9 @@
   \gre@localrightbox{}%
 }%
 \def\gre@useautoeolcustos{%
+  \gre@trace{gre@useautoeolcustos}%
   \gre@blockeolcustosfalse%
+  \gre@trace@end%
 }%
 \def\greseteolcustos#1{%
   \IfStrEqCase{#1}{%
@@ -1510,6 +1598,7 @@
 %% 21: space between a punctum inclinatum and a "no-bar" glyph three or four pitches above
 %% 22: half-space
 \def\gre@get@spaceskip#1{%
+  \gre@trace{gre@get@spaceskip{#1}}%
   \ifcase#1%
     \gre@skip@temp@four = \gre@space@skip@interglyphspace\relax%
   \or% case 1
@@ -1565,6 +1654,7 @@
   \else%
     \gre@error{Unrecognized spaceskip #1}%
   \fi%
+  \gre@trace@end%
 }%
 
 % macro to end a glyph without ending the element
@@ -1721,11 +1811,14 @@
 \def\gresetgregoriofontscaled{\@ifnextchar[{\gre@setgregoriofontscaled}{\gre@setgregoriofontscaled[]}}%
 
 \def\gre@setgregoriofont[#1]#2{%
+  \gre@trace{gre@setgregoriofont[#1]{#2}}%
   \gre@setgregoriofontscaled[#1]{#2}{100000}%
   \relax %
+  \gre@trace@end%
 }%
 
 \def\gre@setgregoriofontscaled[#1]#2#3{%
+  \gre@trace{gre@setgregoriofontscaled[#1]{#2}{#3}}%
   \IfStrEq{#2}{parmesan}{%%% OBSOLETE
     \gre@obsolete{'parmesan' font}{'granapadano' font}%%% OBSOLETE
   }{%%% OBSOLETE
@@ -1743,6 +1836,7 @@
     \fi %
   }%%% OBSOLETE
   \relax %
+  \gre@trace@end%
 }%
 
 \newif\ifgre@loadholehollowfonts%
@@ -1757,6 +1851,7 @@
 }
 
 \def\gre@loadgregoriofont{%
+  \gre@trace{gre@loadgregoriofont}%
   \gre@count@temp@three = \the\gre@factor %
   \gre@count@temp@two = \expandafter\csname gre@fontfactor@\gre@gregoriofontname\endcsname\relax %
   \directlua{gregoriotex.set_font_factor([[\gre@gregoriofontname]], [[\the\gre@count@temp@two]])}%
@@ -1768,6 +1863,7 @@
   \fi %
   \directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@factor]])}%
   \relax%
+  \gre@trace@end%
 }%
 
 % the default gregorio font
@@ -1778,10 +1874,12 @@
 
 % gregoriostylefont is the font used for additional glyphs
 \def\gre@setstylefont{%
+  \gre@trace{gre@setstylefont}%
   \gre@count@temp@three = \numexpr(\gre@factor * 100000)\relax %
   \global\font\gre@font@style={name:greextra} at \the\gre@count@temp@three sp%
   {\gre@font@music\directlua{gregoriotex.check_font_version() gregoriotex.scale_score_fonts([[\the\gre@factor]])}}%
   \relax%
+  \gre@trace@end%
 }%
 
 
