@@ -55,6 +55,7 @@
 %% at the end of a score
 
 \def\gre@cancelpenalties{%
+  \gre@trace{gre@cancelpenalties}%
   \global\gre@hyphenpenaltysave=\hyphenpenalty\relax %
   \global\gre@exhyphenpenaltysave=\exhyphenpenalty\relax %
   \global\gre@doublehyphendemeritssave=\doublehyphendemerits\relax %
@@ -86,9 +87,11 @@
   \lineskip=\gre@space@skip@lineskip%
   \baselineskip=\gre@space@skip@baselineskip%
   \lineskiplimit=\gre@space@skip@lineskiplimit%
+  \gre@trace@end%
 }%
 
 \def\gre@restorepenalties{%
+  \gre@trace{gre@restorepenalties}%
   \hyphenpenalty=\gre@hyphenpenaltysave %
   \exhyphenpenalty=\gre@exhyphenpenaltysave %
   \doublehyphendemerits=\gre@doublehyphendemeritssave %
@@ -104,6 +107,7 @@
   \lineskip=\gre@skip@lineskip@save%
   \baselineskip=\gre@skip@baselineskip@save%
   \lineskiplimit=\gre@skip@lineskiplimit@save%
+  \gre@trace@end%
 }%
 
 
@@ -120,21 +124,27 @@
 % textlower is the height of the separation between the bottom line (which is invisible : for the notes which are very low) and the bottom of the text
 \newdimen\gre@dimen@textlower\relax%
 \def\gre@calculate@textlower{%
+  \gre@trace{gre@calculate@textlower}%
   \gre@dimen@textlower=\gre@space@dimen@spacebeneathtext\relax%
   %\advance\gre@dimen@textlower by \translationheight
+  \gre@trace@end%
 }%
 
 % stafflinewidth is the width of a line of staff, this can vary, for example at the first line
 \newdimen\gre@dimen@stafflinewidth\relax%
 \def\gre@calculate@stafflinewidth{%
+  \gre@trace{gre@calculate@stafflinewidth}%
   \gre@dimen@stafflinewidth=\gre@dimen@linewidth\relax%
+  \gre@trace@end%
 }%
 
 
 % linewidth is the width of a line of a score (including the initial)
 \newdimen\gre@dimen@linewidth\relax%
 \def\gre@calculate@linewidth{%
+  \gre@trace{gre@calculate@linewidth}%
   \gre@dimen@linewidth=\hsize %
+  \gre@trace@end%
 }%
 
 % Messing with the staff line thickness directly is messy, so we provide the following interface to make life easier on the user:
@@ -142,27 +152,33 @@
 % = 1500 * stafflinefactor
 \newdimen\gre@dimen@stafflineheight\relax%
 \def\gre@calculate@stafflineheight{%
+  \gre@trace{gre@calculate@stafflineheight}%
   \global\gre@dimen@stafflineheight=\dimexpr(1500 sp * \gre@stafflinefactor)\relax %
+  \gre@trace@end%
 }%
 
 % interstafflinespace is the space between two lines of staff
 % = (30000 - (stafflineheight/gre@factor - 1500)) * gre@factor = 31500 * gre@factor - stafflineheight
 \newdimen\gre@dimen@interstafflinespace\relax%
 \def\gre@calculate@interstafflinespace{%
+  \gre@trace{gre@calculate@interstafflinespace}%
   \global\gre@dimen@interstafflinespace=\dimexpr((31500sp * \gre@factor) %
     - \gre@dimen@stafflineheight)\relax%
+  \gre@trace@end%
 }%
 
 % a distance to help place glyphs when the lines are not their default thickness
 % = (stafflineheight/gre@factor - 1500sp)/2 * gre@factor
 \newdimen\gre@dimen@stafflinediff\relax%
 \def\gre@calculate@stafflinediff{%
+  \gre@trace{gre@calculate@stafflinediff}%
   \global\gre@dimen@stafflinediff = \dimexpr(%
     ( ( ( \gre@dimen@stafflineheight %
           / \gre@factor)%
         - 1500sp)%
       / 2)%
     * \gre@factor)\relax%
+  \gre@trace@end%
 }%
 
 % the default factor
@@ -183,6 +199,7 @@
 \newdimen\gre@dimen@constantglyphraise\relax%
 % to calculate that, we take the bottom of the third line : it is at 200 in the fonts, and it must be at grespacelinestext + grespacebeneathtext + 2*greinterstafflinespace + 2*grestafflineheight + translationheight
 \def\gre@calculate@constantglyphraise{%
+  \gre@trace{gre@calculate@constantglyphraise}%
   \global\gre@dimen@constantglyphraise = \dimexpr((-22000 sp * \gre@factor) %
     + \gre@dimen@additionalbottomspace %
     + \gre@space@dimen@spacebeneathtext %
@@ -195,16 +212,19 @@
     % an adjustment in the case of big lines
     + \gre@dimen@stafflinediff)\relax%
   \relax %
+  \gre@trace@end%
 }%
 
 %% Here is the function to compute some more vertical spaces from the basic values
 \newdimen\gre@dimen@staffheight\relax%
 \def\gre@calculate@staffheight{%
+  \gre@trace{gre@calculate@staffheight}%
   \global\gre@dimen@staffheight = \dimexpr %
     \gre@stafflines\gre@dimen@stafflineheight %
     + \gre@stafflines\gre@dimen@interstafflinespace %
     - \gre@dimen@interstafflinespace\relax%
   \relax %
+  \gre@trace@end%
 }%
 
 % A routine that simply aggregates the above global space calculating routines so we can easily update all when needed.
@@ -219,6 +239,7 @@
 %% staffheight: stafflineheight & interstafflinespace
 %% constantglyphraise: gre@factor, additionalbottomspace, spacebeneathtext, spacelinestext, interstafflinespace, stafflineheight, currenttranslationheight, stafflinediff
 \def\gre@computespaces{%
+  \gre@trace{gre@computespaces}%
   \gre@calculate@textlower%
   \gre@calculate@linewidth%
   \gre@calculate@stafflinewidth%
@@ -227,6 +248,7 @@
   \gre@calculate@stafflinediff%
   \gre@calculate@staffheight%
   \gre@calculate@constantglyphraise%
+  \gre@trace@end%
 }%
 
 \newskip\gre@skip@syllablefinalskip
@@ -267,6 +289,7 @@
 %%  min_shift_notes = min_dist_notes - cur_dist_notes
 %%  shift = max(min_shift_text, min_shift_notes)
 \def\gre@calculate@syllablefinalskip#1#2{%
+  \gre@trace{gre@calculate@syllablefinalskip{#1}{#2}}%
 %%  min_text_dist = prev_cur_word ? 0 : space_inter_words
   \ifnum#1=1\relax %
     \ifgre@in@euouae %
@@ -372,6 +395,7 @@
   \fi %
   \gre@debugmsg{syllablespacing}{ syllablefinalskip = \the\gre@skip@syllablefinalskip}%
   \relax %
+  \gre@trace@end%
 }
 
 % dimen keeping the shift computed with next function
@@ -386,6 +410,7 @@
 %%
 %% @arg#1 \gre@dimen@begindifference of the first syllable of the line
 \def\gre@calculate@bolshift#1{%
+  \gre@trace{gre@calculate@bolshift{#1}}%
   \gre@skip@temp@three = 0pt\relax%
   % bolextra is the space taken up by a leading alteration (it's 0 if there is no leading alteration)
   % it's allowed to invade spaceafterlineclef, so long as it leaves at least beforealterationspace between itself and the clef
@@ -426,6 +451,7 @@
   \fi%
   \gre@debugmsg{bolshift}{ bolshift = \the\gre@dimen@bolshift}%
   \relax %
+  \gre@trace@end%
 }
 
 % the width of the current
@@ -436,23 +462,29 @@
 \newdimen\gre@dimen@clefwidth@bol\relax%
 
 \def\gre@update@clefwidth@current#1{%
+  \gre@trace{gre@update@clefwidth@current{#1}}%
   \gre@debugmsg{bolshift}{ updating clefwidthcurrent to \the\gre@dimen@clefwidth@current}%
   \global\gre@dimen@clefwidth@current=#1\relax %
   \ifnum\gre@bolshiftcleftypelocal=2\relax %
     \global\gre@dimen@clefwidth@bol=#1\relax %
   \fi %
   \relax %
+  \gre@trace@end%
 }
 
 \def\gre@update@clefwidth@largest#1{%
+  \gre@trace{gre@update@clefwidth@largest{#1}}%
   \global\gre@dimen@clefwidth@largest=#1\relax %
   \ifnum\gre@bolshiftcleftypelocal=1\relax %
     \global\gre@dimen@clefwidth@bol=#1\relax %
   \fi %
+  \gre@trace@end%
 }
 
 \def\gre@update@clefwidth@forced#1{%
+  \gre@trace{gre@update@clefwidth@forced{#1}}%
   \global\gre@dimen@clefwidth@bol=#1\relax %
+  \gre@trace@end%
 }
 
 % 1 for largest, 2 for current and 3 for forced
@@ -546,6 +578,7 @@
 %%
 %% @arg#1 The \gre@dimen@enddifference of the corresponding syllable
 \def\gre@calculate@eolshift#1{%
+  \gre@trace{gre@calculate@eolshift{#1}}%
   \gre@skip@temp@two=0pt\relax%
   % we only need a shift if the lyrics are longer than the notes
   \gre@debugmsg{eolshift}{eolshift called with enddifference: \the #1}%
@@ -591,6 +624,7 @@
   \fi%
   \gre@debugmsg{eolshift}{eolshift: \the\gre@dimen@eolshift}%
   \relax %
+  \gre@trace@end%
 }
 
 %%%%%%%%%%%%%%%%%%%
@@ -624,14 +658,18 @@
   \ifgre@useledgerlineheuristic\gre@ledgerline@belowtrue\fi %
 }%
 \def\gre@resetledgerlineheuristics{%
+  \gre@trace{gre@resetledgerlineheuristics}%
   \gre@ledgerline@abovetrue\gre@ledgerline@belowtrue %
+  \gre@trace@end%
 }%
 \def\gre@prephepisemaledgerlineheuristics{%
+  \gre@trace{gre@prephepisemaledgerlineheuristics}%
   \ifgre@useledgerlineheuristic %
     \gre@ledgerline@abovefalse\gre@ledgerline@belowfalse %
   \else %
     \gre@ledgerline@abovetrue\gre@ledgerline@belowtrue %
   \fi %
+  \gre@trace@end%
 }%
 
 % a very useful macro : it determines the good height of a glyph : the argument is the "number" where the glyph should be : 4 for the first line, 6 for the second, etc.
@@ -661,6 +699,7 @@
 %% 4: low in space below note
 %% 5: high in space below note
 \def\gre@calculate@glyphraisevalue#1#2#3{%
+  \gre@trace{gre@calculate@glyphraisevalue{#1}{#2}{#3}}%
   \global\gre@isonalinefalse%
   \ifcase#1%
   % the first two cases are special cases for episemae on the lowest note
@@ -848,6 +887,7 @@
     \fi %
   \fi%
   \global\advance\gre@dimen@glyphraisevalue by \the\gre@dimen@constantglyphraise\relax%
+  \gre@trace@end%
 }%
 
 % two dimensions for the additionalspaces
@@ -872,18 +912,22 @@
 \gre@space@count@noteadditionalspacelinestextthreshold=2
 
 \def\gre@num@min#1#2{%
+  \gre@trace{gre@num@min{#1}{#2}}%
   \ifnum#1 < #2\relax %
     \gre@count@temp@one=#1\relax %
   \else %
     \gre@count@temp@one=#2\relax %
   \fi %
+  \gre@trace@end%
 }%
 \def\gre@num@max#1#2{%
+  \gre@trace{gre@num@max{#1}{#2}}%
   \ifnum#1 > #2\relax %
     \gre@count@temp@one=#1\relax %
   \else %
     \gre@count@temp@one=#2\relax %
   \fi %
+  \gre@trace@end%
 }%
 
 \let\gre@pitch@cleftop\gre@pitch@dummy %
@@ -894,7 +938,7 @@
 % #3 is 1 if there is a translation somewhere
 % #4 is if 1 if we have space above the staff
 \def\gre@calculate@additionalspaces#1#2#3#4{%
-  \gre@debugmsg{lineheight}{gre@calculate@additional@spaces called with #1 #2 #3 #4}%
+  \gre@trace{gre@calculate@additionalspaces{#1}{#2}{#3}{#4}}%
   \gre@num@max{#1}{\gre@pitch@cleftop}%
   \gre@count@temp@one=\numexpr(\gre@count@temp@one - \gre@pitch@adjust@top - \gre@space@count@additionaltopspacethreshold)\relax %
   \ifnum\gre@count@temp@one>0\relax %
@@ -936,6 +980,7 @@
   \gre@generatelines %
   \gre@calculate@constantglyphraise %
   \relax %
+  \gre@trace@end%
 }%
 
 %% macro that typesets the text of the syllable, and sets textaligncenter to the middle of the middle letters, it is needed because we align the note (often the middle of the note) with the middle of the middle letters
@@ -946,6 +991,9 @@
 \newdimen\gre@dimen@textaligncenter\relax%
 
 \def\gre@calculate@textaligncenter#1#2#3#4{%
+  % we don't trace this function's arguments because they often don't take
+  % well to appearing in the log
+  \gre@trace{gre@calculate@textaligncenter}%
   \ifnum#4=0\relax%
     \gre@widthof{\gre@save@fixedtextformat{#1}\gre@fixedtextformat{#2#3}}%
   \else %
@@ -960,6 +1008,7 @@
   \divide\gre@dimen@temp@three by 2 %
   \global\advance\gre@dimen@textaligncenter by -\the\gre@dimen@temp@three%
   \relax%
+  \gre@trace@end%
 }%
 
 % a dimen that will contain the difference between the end of the text and the end of the notes for the previous syllable (if we are in the same word) : positive if notes go further than text. We will use it for space adjustment between syllables of the same word
@@ -977,11 +1026,13 @@
 % #4: notesaligncenter (defined above too)
 % #5: if we have to set previousenddifference or not
 \def\gre@calculate@enddifference#1#2#3#4#5{%
+  \gre@trace{gre@calculate@enddifference{#1}{#2}{#3}{#4}{#5}}%
   \ifcase#5\or %
     \global\gre@dimen@previousenddifference=\the\gre@dimen@enddifference\relax%
   \fi %
   \global\gre@dimen@enddifference=\dimexpr(#1 - #2 + #3 - #4)\relax%
   \relax%
+  \gre@trace@end%
 }%
 
 % temporary value for space for the translation, beneath the text
@@ -989,6 +1040,7 @@
 
 % macro to tell gregorio to set space for the translation
 \def\gre@addtranslationspace{%
+  \gre@trace{gre@addtranslationspace}%
   \gre@style@translation%
   \global\gre@dimen@currenttranslationheight=\gre@space@dimen@translationheight\relax%
   \global\gre@dimen@textlower=\dimexpr(\gre@space@dimen@spacebeneathtext %
@@ -997,14 +1049,17 @@
   \gre@calculate@constantglyphraise %
   \endgre@style@translation%
   \relax %
+  \gre@trace@end%
 }%
 
 \def\gre@removetranslationspace{%
+  \gre@trace{gre@removetranslationspace}%
   \global\gre@dimen@currenttranslationheight=0 sp%
   \global\gre@dimen@textlower=\gre@space@dimen@spacebeneathtext\relax%
   \gre@generatelines %
   \gre@calculate@constantglyphraise %
   \relax %
+  \gre@trace@end%
 }%
 
 %nextbegindifference is the begindifference of the next syllable
@@ -1017,6 +1072,9 @@
 %% 4 : the end letters of the next syllable
 %% 5 : the type of notes alignment
 \def\gre@calculate@nextbegindifference#1#2#3#4#5{%
+  % we don't trace this function's arguments because they often don't take
+  % well to appearing in the log
+  \gre@trace{gre@calculate@nextbegindifference}%
   \ifnum\gre@lastoflinecount=1\relax %
     \global\gre@skip@nextbegindifference=0pt\relax%
   \else %
@@ -1033,6 +1091,7 @@
     \global\gre@dimen@notesaligncenter=\gre@dimen@temp@four %
   \fi %
   \relax %
+  \gre@trace@end%
 }%
 
 %The distance from the baseline of the line to the baseline of the annotations
@@ -1040,7 +1099,7 @@
 % When text is placed in the annotation boxes these dimensions are initialized with values based on the contents and the user parameters
 %This function sets the true raises of the two lines above the initial (it has to be called just as the boxes are placed in order to make sure that the values are all correct)
 \def\gre@calculate@annotationtrueraise{%
-  \gre@debugmsg{annotation}{Calculating the raise.}%
+  \gre@trace{gre@calculate@annotationtrueraise}%
   \global\advance\gre@dimen@annotationtrueraise by %
     \dimexpr(\gre@dimen@staffheight %
     + \gre@space@dimen@spacebeneathtext %
@@ -1052,12 +1111,14 @@
   \gre@debugmsg{annotation}{Added user raise.}%
   \endgre@style@annotation%
   \relax %
+  \gre@trace@end%
 }%
 
 %The distance from the baseline of the line to the baseline of the commentary
 \newdimen\gre@dimen@commentarytrueraise\relax%
 %This function sets the true raises of the commentary (it has to be called just as the boxes are placed in order to make sure that the values are all correct)
 \def\gre@calculate@commentarytrueraise{%
+  \gre@trace{gre@calculate@commentarytrueraise}%
   \gre@style@commentary%
   \gre@debugmsg{commentary}{Calculating the raise.}%
   \global\advance\gre@dimen@commentarytrueraise by %
@@ -1068,6 +1129,7 @@
     + \gre@dimen@additionalbottomspace %
     + \gre@space@dimen@commentaryraise)\relax%
   \endgre@style@commentary%
+  \gre@trace@end%
 }%
 
 % spaces for new bar positioning algorithm
@@ -1089,6 +1151,7 @@
 % #1 is #4 from \GreBarSyllable (1 if bar is end of word, 0 if not)
 % #2 is #7 from \GreBarSyllable (alignment type of first next glyph)
 \def\gre@calculate@barposition#1#2{%
+  \gre@trace{gre@calculate@barposition{#1}{#2}}%
   % we start by finding the distance between the text and notes of the previous and the next syllable (as if this syllable didn't exist, for the moment)
   \gre@debugmsg{barspacing}{calculate available space}%
   % first, recomputing \gre@dimen@previousenddifference into \gre@dimen@adjustedpreviousenddifference
@@ -1284,10 +1347,12 @@
   \gre@debugmsg{barspacing}{Correcting syllablefinalskip}%
   \gre@calculate@syllablefinalskip{#1}{\gre@count@temp@one}%
   \gre@debugmsg{barspacing}{syllablefinalskip: \the\gre@skip@syllablefinalskip}%
+  \gre@trace@end%
 }%
 
 % alteration adjustment calculations
 \def\gre@alterationadjustment#1{%
+  \gre@trace{gre@alterationadjustment{#1}}%
   % taking into account the punctum mora shift
   \global\gre@skip@adjustednextbegindifference=\gre@skip@nextbegindifference %
   % gre@skip@alterationshift is 0 or the punctum mora shift
@@ -1298,10 +1363,12 @@
     \gre@debugmsg{barspacing}{adjustment for alteration: \gre@space@dimen@alterationadjustmentbar}%
     \gre@debugmsg{barspacing}{adjusted next begindifference (for alteration): \the\gre@skip@adjustednextbegindifference}%
   \fi\fi %
+  \gre@trace@end%
 }
 
 %punctum mora adjustment calculations for bars
 \def\gre@punctummoraadjustment{%
+  \gre@trace{gre@punctummoraadjustment}%
   % taking into account the punctum mora shift
   \global\gre@dimen@adjustedpreviousenddifference=\gre@dimen@previousenddifference %
   % gre@skip@punctummorashift is 0 or the punctum mora shift
@@ -1339,11 +1406,12 @@
       \fi %
     \fi %
   \fi %
+  \gre@trace@end%
 }%
 
 % Clearing a syllable so it doesn't overlap with the previous one
 \def\gre@clearsyllable#1{%
-  \gre@debugmsg{clear}{Clearing syllable}%
+  \gre@trace{gre@clearsyllable{#1}}%
   % because the way mora shifts are implemented is different for bars and
   % notes, we have to use a different set of dimensions depending on which
   % kind of syllable we're dealing with.  We know this by looking at the
@@ -1401,6 +1469,7 @@
       \gre@debugmsg{clear}{Syllable already clear}%
     \fi%
   \fi%
+  \gre@trace@end%
 }%
 
 %%%%%%%%%%%%%%%%%%%
@@ -1538,6 +1607,7 @@
 
 % The common internals for \grecreatedim and \grechangedim.
 \def\gre@dimension#1#2#3{%
+  \gre@trace{gre@dimension{#1}{#2}{#3}}%
   \IfStrEq{#3}{inherited}{%
     \gre@debugmsg{spacing}{setting inherited distance}%
     \gre@rubberpermit{#1}%
@@ -1592,6 +1662,7 @@
     \directlua{gregoriotex.hash_spaces("\luatexluaescapestring{#1}", "\luatexluaescapestring{#2}")}%
     \relax %
   }%
+  \gre@trace@end%
 }
 
 %a macro to use if all you want to do is turn on or off the scaling for a particular distance
@@ -1617,6 +1688,7 @@
 % same arguments as \grechangedim, but used for setting the dimension for a
 % single line
 \def\gre@changedimforline#1#2#3{%
+  \gre@trace{gre@changedimforline{#1}{#2}{#3}}%
   \gre@rubberpermit{#1}%
   \ifgre@rubber%
     \def\gre@prefix{skip}%
@@ -1635,6 +1707,7 @@
     )%
   }%
   \grechangedim{#1}{#2}{#3}%
+  \gre@trace@end%
 }%
 
 % #1 : line number
@@ -1653,6 +1726,7 @@
 % same arguments as \grechangecount, but used for setting the dimension for a
 % single line
 \def\gre@changecountforline#1#2{%
+  \gre@trace{gre@changecountforline{#1}{#2}}%
   \directlua{%
     gregoriotex.save_count(%
       "\luatexluaescapestring{#1}",%
@@ -1664,6 +1738,7 @@
     )%
   }%
   \grechangecount{#1}{#2}%
+  \gre@trace@end%
 }%
 
 % #1 : line number
@@ -1722,6 +1797,7 @@
 % This function checks to see if the length is one of the ones which cannot be a rubber length.  The assumption is that any length not listed here is allowed to be rubber.
 \newif\ifgre@rubber%
 \def\gre@rubberpermit#1{%
+  \gre@trace{gre@rubberpermit{#1}}%
   % is length one that cannot be rubber?
   \IfStrEqCase*{#1}{%
     {additionallineswidth}{\gre@rubberfalse}%
@@ -1784,10 +1860,12 @@
     {bracketdownshift}{\gre@rubberfalse}%
     {noteadditionalspacelinestext}{\gre@rubberfalse}%
   }[\gre@rubbertrue]%
+  \gre@trace@end%
 }%
 
 %% an aux function adapting the value #1 from the factor #2 to the factor #3
 \def\gre@changeonedimenfactor#1#2#3{%
+  \gre@trace{gre@changeonedimenfactor{#1}{#2}{#3}}%
   % Math
   \gre@rubberpermit{#1}%
   \ifgre@rubber%
@@ -1804,21 +1882,24 @@
   \gre@consistentunits{\gre@convert}{\gre@scaledist}%
   \gre@dimension{#1}{\gre@stringdist}%
   \relax %
+  \gre@trace@end%
 }%
 
 
 % This function converts a distance to the units indicated in #1 and returns it as a string.
 \def\gre@convertto#1#2{%
-  \gre@debugmsg{general}{convertto (#1) (#2)}%
+  \gre@trace{gre@convertto{#1}{#2}}%
   % \p@ is equal to 1pt and is used here for a more accurate computation
   \edef\gre@converted{\gre@strip@pt\dimexpr#2*\p@/\dimexpr 1#1\relax\relax #1}%
   \gre@debugmsg{general}{converted value is \gre@converted}%
+  \gre@trace@end%
 }%
 
 % This function takes a distance (#2) and formats it as a string so that its units conform to the pattern set by a string representation of a distance (#1)
 \newif\ifgre@stretch%
 \newif\ifgre@shrink%
 \def\gre@consistentunits#1#2{%
+  \gre@trace{gre@consistentunits{#1}{#2}}%
   \gre@stretchfalse%
   \gre@shrinkfalse%
   \IfSubStr{#1}{plus}{\gre@stretchtrue}{\relax}%
@@ -1864,6 +1945,7 @@
     \gre@convertto{\gre@shrinkunit}{\glueshrink#2}%
     \edef\gre@stringdist{\gre@stringdist minus \gre@converted}%
   \fi%
+  \gre@trace@end%
 }%
 
 
@@ -1871,6 +1953,7 @@
 %% simply by dividing them by the old factor, and multiplying them by the new one.
 % #1 is the old gre@factor, #2 is the new one
 \def\gre@changedimenfactor#1#2{%
+  \gre@trace{gre@changedimenfactor{#1}{#2}}%
   \ifgre@scale@additionallineswidth%
     \gre@changeonedimenfactor{additionallineswidth}{#1}{#2}%
   \fi%
@@ -2212,4 +2295,5 @@
     \gre@changeonedimenfactor{noteadditionalspacelinestext}{#1}{#2}%
   \fi%
   \relax %
+  \gre@trace@end%
 }%
