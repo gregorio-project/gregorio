@@ -859,6 +859,12 @@
 % the one taken into account for above lines nabc height
 \newdimen\gre@dimen@additionaltopspacenabc\relax%
 
+% backup demensions for the previous
+\newdimen\gre@save@dimen@additionalbottomspace\relax%
+\newdimen\gre@save@dimen@additionaltopspace\relax%
+\newdimen\gre@save@dimen@additionaltopspacealt\relax%
+\newdimen\gre@save@dimen@additionaltopspacenabc\relax%
+
 \newcount\gre@space@count@additionaltopspacethreshold\relax%
 \gre@space@count@additionaltopspacethreshold=2
 
@@ -884,6 +890,20 @@
   \else %
     \gre@count@temp@one=#2\relax %
   \fi %
+}%
+
+\def\gre@save@additionalspaces{%
+  \global\gre@save@dimen@additionalbottomspace=\gre@dimen@additionalbottomspace\relax%
+  \global\gre@save@dimen@additionaltopspace=\gre@dimen@additionaltopspace\relax%
+  \global\gre@save@dimen@additionaltopspacealt=\gre@dimen@additionaltopspacealt\relax%
+  \global\gre@save@dimen@additionaltopspacenabc=\gre@dimen@additionaltopspacenabc\relax%
+}%
+
+\def\gre@restore@additionalspaces{%
+  \global\gre@dimen@additionalbottomspace=\gre@save@dimen@additionalbottomspace\relax%
+  \global\gre@dimen@additionaltopspace=\gre@save@dimen@additionaltopspace\relax%
+  \global\gre@dimen@additionaltopspacealt=\gre@save@dimen@additionaltopspacealt\relax%
+  \global\gre@dimen@additionaltopspacenabc=\gre@save@dimen@additionaltopspacenabc\relax%
 }%
 
 \let\gre@pitch@cleftop\gre@pitch@dummy %

@@ -104,9 +104,9 @@ KPSEWHICH=${KPSEWHICH:-kpsewhich}
 CP=${CP:-cp}
 RM=${RM:-rm}
 
-
 GENERATE_UNINSTALL=${GENERATE_UNINSTALL:-true}
 AUTO_UNINSTALL=${AUTO_UNINSTALL:-false}
+REMOVE_OLD_FILES=${REMOVE_OLD_FILES:-true}
 
 arg="$1"
 case "$arg" in
@@ -234,8 +234,11 @@ then
     echo "Not generating "${UNINSTALL_SCRIPT}""
 fi
 
-echo "Removing old files."
-find_and_remove "${LEGACYFILES[@]}"
+if ${REMOVE_OLD_FILES}
+then
+    echo "Removing old files."
+    find_and_remove "${LEGACYFILES[@]}"
+fi
 
 declare -A skip_install
 if [ -n "$SKIP" ]
