@@ -47,7 +47,7 @@ Executes \MP{} commands using luamplib.
   \#1 & \MP{} commands & The \MP{} commands to execute.
 \end{argtable}
 
-\macroname{\textbackslash gre@deprecated}{\#1\#2}{gregoriotex-main.tex}
+\macroname{\textbackslash gre@deprecated}{\#1\#2}{gregoriotex-common.tex}
 Macro that handles deprecation messages. By default, deprecated macros
 are allowed and a warning is printed. If the package option
 \texttt{deprecated=false} is set, then deprecated macros raise a
@@ -58,7 +58,7 @@ package error, halting \TeX.
   \#2 & string & name of the correct macro to use\\
 \end{argtable}
 
-\macroname{\textbackslash gre@obsolete}{\#1\#2}{gregoriotex-main.tex}
+\macroname{\textbackslash gre@obsolete}{\#1\#2}{gregoriotex-common.tex}
 Macro that handles obsolescence errors.
 
 \begin{argtable}
@@ -929,7 +929,7 @@ Macro to hold the original distance which is to be scaled by \verb=\gre@changeon
 \macroname{\textbackslash gre@debug}{}{gregoriotex.sty \textup{and} gregoriotex.tex}
 Macro to hold the list of debug messages which should be designated as printing.  Contains comma-separated values from \Nameref{DebugCategory}, set via the \texttt{debug} package keyword parameter.
 
-\macroname{\textbackslash gre@debugmsg}{\#1\#2}{gregoriotex-main.tex}
+\macroname{\textbackslash gre@debugmsg}{\#1\#2}{gregoriotex-common.tex}
 Macro to print debugging messages.
 
 \begin{argtable}
@@ -1015,7 +1015,7 @@ Macro which stores the first part of the next syllable (that which comes before 
 \macroname{\textbackslash gre@nextmiddlesyllablepart}{}{gregoriotex-syllable.tex}
 Macro which stores the middle part of the next syllable (the part which aligns with the notes).
 
-\macroname{\textbackslash gre@fixdebug}{}{gregoriotex-main.tex}
+\macroname{\textbackslash gre@fixdebug}{}{gregoriotex-common.tex}
 Fixes the raw \verb=\gre@debug= value for use with \verb=\gre@debugmsg=.
 
 \macroname{\textbackslash gre@fixedtextformat}{\#1}{gregoriotex-syllable.tex}

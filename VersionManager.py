@@ -61,6 +61,7 @@ GREGORIO_FILES = ["configure.ac",
                   "tex/gregoriotex-nabc.tex",
                   "tex/gregoriotex-nabc.lua",
                   "tex/gregoriosyms.sty",
+                  "tex/gregoriotex-common.tex",
                   "fonts/squarize.py",
                  ]
 

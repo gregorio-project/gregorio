@@ -130,6 +130,7 @@ gregoriotex-spaces.tex
 gregoriotex-syllable.tex
 gregoriotex-symbols.lua
 gregoriotex-symbols.tex
+gregoriotex-common.tex
 gregoriotex.lua"
 
 for f in $files
