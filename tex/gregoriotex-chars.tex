@@ -31,6 +31,7 @@
 % horizontal episema
 \newbox\gre@box@hep%
 \def\gre@def@char@he#1#2{%
+  \gre@trace{gre@def@char@he{#1}{#2}}%
   \expandafter\def\csname gre@char@he@#1\endcsname##1{%
     \ifx##1f\csname GreCPHEpisema#2\endcsname%
     \else%
@@ -42,8 +43,10 @@
       }%
     \fi%
   }%
+  \gre@trace@end%
 }%
 \def\gre@def@char@he@porr#1#2{%
+  \gre@trace{gre@def@char@he@porr{#1}{#2}}%
   \expandafter\def\csname gre@char@he@#1\endcsname##1##2{%
     \ifcase##1\gre@char@he@punctum{##2}%
     \or\csname GreCPHEpisema#2One\endcsname%
@@ -53,6 +56,7 @@
     \or\csname GreCPHEpisema#2Five\endcsname%
     \fi%
   }%
+  \gre@trace@end%
 }%
 \gre@def@char@he{punctum}{Punctum}%
 \gre@def@char@he{punctum@line@br}{PunctumLineBR}%
