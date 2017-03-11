@@ -991,9 +991,7 @@
 \newdimen\gre@dimen@textaligncenter\relax%
 
 \def\gre@calculate@textaligncenter#1#2#3#4{%
-  % we don't trace this function's arguments because they often don't take
-  % well to appearing in the log
-  \gre@trace{gre@calculate@textaligncenter}%
+  \gre@trace{gre@calculate@textaligncenter{#1}{#2}{#3}{#4}}%
   \ifnum#4=0\relax%
     \gre@widthof{\gre@save@fixedtextformat{#1}\gre@fixedtextformat{#2#3}}%
   \else %
@@ -1072,9 +1070,7 @@
 %% 4 : the end letters of the next syllable
 %% 5 : the type of notes alignment
 \def\gre@calculate@nextbegindifference#1#2#3#4#5{%
-  % we don't trace this function's arguments because they often don't take
-  % well to appearing in the log
-  \gre@trace{gre@calculate@nextbegindifference}%
+  \gre@trace{gre@calculate@nextbegindifference{#1}{#2}{#3}{#4}{#5}}%
   \ifnum\gre@lastoflinecount=1\relax %
     \global\gre@skip@nextbegindifference=0pt\relax%
   \else %

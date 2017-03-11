@@ -97,7 +97,7 @@
 \def\gre@trace#1{%
   \IfSubStr{\gre@debug}{,trace,}%
     {%print tracing messages and increase indent
-      \gre@typeout{\gre@trace@prefix #1}%
+      \gre@typeout{\gre@trace@prefix \unexpanded{#1}}%
       \edef\gre@trace@prefix{\gre@trace@prefix| }%
     }{}%do nothing if not tracing
 }%

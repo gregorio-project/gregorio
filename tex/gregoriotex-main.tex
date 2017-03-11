@@ -299,10 +299,7 @@
 \newbox\gre@box@temp@width%
 
 \def\gre@widthof#1{%
-  % we don't trace this function's arguments because they often don't take
-  % well to appearing in the log when expanded and aren't useful when
-  % unexpanded
-  \gre@trace{gre@widthof}%
+  \gre@trace{gre@widthof{#1}}%
   \setbox\gre@box@temp@width=\hbox{#1}%
   \global\gre@dimen@temp@three=\wd\gre@box@temp@width%
   \relax%
