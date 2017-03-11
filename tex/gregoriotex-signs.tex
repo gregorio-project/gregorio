@@ -755,8 +755,10 @@
     {curlybrace}{\gre@@setbracerendering{#1}{#2}}%
     {barbrace}{\gre@@setbracerendering{#1}{#2}}%
   }[\gre@error{Unrecognized option "#1" for \protect\gresetbracerendering\MessageBreak Possible options are: 'brace', 'underbrace', 'curlybrace', and 'barbrace'}]%
+  \gre@trace@end%
 }%
 \def\gre@@setbracerendering#1#2{%
+  \gre@trace{gre@@setbracerendering{#1}{#2}}%
   \IfStrEqCase{#2}{%
     {font}{\csname gre@metapost@#1false\endcsname}%
     {metapost}{\csname gre@metapost@#1true\endcsname}%
@@ -865,7 +867,7 @@
 % #1 : the width
 % #2 : the brace character
 \def\gre@draw@fontbrace#1#2{%
-  \gre@trace{gre@draw@fontbrac{e#1}{#2}}%
+  \gre@trace{gre@draw@fontbrace{#1}{#2}}%
   \setbox\gre@box@temp@sign=\hbox{#2}%
   \gre@resizebox{#1}{\ht\gre@box@temp@sign}{#2}%
   \gre@trace@end%
