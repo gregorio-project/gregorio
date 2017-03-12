@@ -114,7 +114,9 @@
 
 \gre@iflatex{%
   \def\gre@latex@barredsymbol#1#2#3#4{%
+    \gre@trace{gre@latex@barredsymbol{#1}{#2}{#3}{#4}}%
     \IfStrEq{\f@series/\f@shape}{#1}{\grebarredsymbol{#2}{#3}{\f@size}{#4}{0pt}}%
+    \gre@trace@end%
   }%
 
   %% define a barred symbol that handles italic, slanted, and small cap shapes
