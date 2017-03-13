@@ -228,8 +228,12 @@ local function write_greaux()
       for id, tab in pairs(new_line_heights) do
         aux:write(string.format('  ["%s"]={\n', id))
         for id2, line in pairs(tab) do
-          aux:write(string.format('   [%d]={%d,%d,%d,%d,%d},\n', id2, line[1],
-              line[2], line[3], line[4], line[5]))
+          if id2 == 'last' then
+            aux:write(string.format('   ["%s"]=%d,\n', id2, line))
+          else
+            aux:write(string.format('   [%d]={%d,%d,%d,%d,%d},\n', id2, line[1],
+                line[2], line[3], line[4], line[5]))
+          end
         end
         aux:write('  },\n')
       end
@@ -560,6 +564,7 @@ local function post_linebreak(h, groupcode, glyphes)
           new_score_heights[prev_line_id] = { linenum, line_top, line_bottom,
               line_has_translation and 1 or 0,
               line_has_abovelinestext and 1 or 0 }
+          new_score_heights['last'] = prev_line_id
           prev_line_id = line_id
         end
         if new_score_last_syllables and syl_id then
@@ -1097,45 +1102,80 @@ local function font_size()
   tex.print(string.format('%.2f', (unsafe_get_font_by_id(font.current()).size / 65536.0)))
 end
 
-local function adjust_line_height(inside_discretionary)
-  if score_heights then
-    local heights = score_heights[tex.getattribute(glyph_id_attr)]
-    if heights then
-      -- restore saved dims
-      local name, value
-      for name, value in pairs(saved_dims) do
-        tex.sprint(catcode_at_letter, string.format(
-            [[\grechangedim{%s}{%s}{%s}]], name, value[1], value[2]))
-      end
-      for name, value in pairs(saved_counts) do
-        tex.sprint(catcode_at_letter, string.format(
-            [[\grechangecount{%s}{%s}]], name, value))
-      end
-      -- clear saved dims
-      saved_dims = {}
-      saved_counts = {}
-      -- apply per-line dims
-      local line_dims = per_line_dims[heights[1]]
-      if line_dims ~= nil then
-        for name, value in pairs(line_dims) do
-          tex.sprint(catcode_at_letter, string.format(
-              [[\gre@changedimforline{%s}{%s}{%s}]], name, value[1], value[2]))
-        end
-      end
-      local line_counts = per_line_counts[heights[1]]
-      if line_counts ~= nil then
-        for name, value in pairs(line_counts) do
-          tex.sprint(catcode_at_letter, string.format(
-              [[\gre@changecountforline{%s}{%s}]], name, value))
-        end
-      end
-      -- recalculate spaces
+local function adjust_line_height_internal(heights, inside_discretionary, for_next_line)
+  local backup_dims = saved_dims
+  local backup_counts = saved_counts
+  -- restore saved dims
+  local name, value
+  for name, value in pairs(saved_dims) do
+    tex.sprint(catcode_at_letter, string.format(
+        [[\grechangedim{%s}{%s}{%s}]], name, value[1], value[2]))
+  end
+  for name, value in pairs(saved_counts) do
+    tex.sprint(catcode_at_letter, string.format(
+        [[\grechangecount{%s}{%s}]], name, value))
+  end
+  -- clear saved dims
+  saved_dims = {}
+  saved_counts = {}
+  -- apply per-line dims
+  local line_dims = per_line_dims[heights[1]]
+  if line_dims ~= nil then
+    for name, value in pairs(line_dims) do
       tex.sprint(catcode_at_letter, string.format(
-          [[\gre@calculate@additionalspaces{%d}{%d}{%d}{%d}]],
-          heights[2], heights[3], heights[4], heights[5]))
-      if inside_discretionary == 0 then
-        tex.sprint(catcode_at_letter, [[\gre@updateleftbox ]])
+          [[\gre@changedimforline{%s}{%s}{%s}]], name, value[1], value[2]))
+    end
+  end
+  local line_counts = per_line_counts[heights[1]]
+  if line_counts ~= nil then
+    for name, value in pairs(line_counts) do
+      tex.sprint(catcode_at_letter, string.format(
+          [[\gre@changecountforline{%s}{%s}]], name, value))
+    end
+  end
+  -- recalculate spaces
+  tex.sprint(catcode_at_letter, string.format(
+      [[\gre@calculate@additionalspaces{%d}{%d}{%d}{%d}]],
+      heights[2], heights[3], heights[4], heights[5]))
+  if inside_discretionary == 0 then
+    tex.sprint(catcode_at_letter, [[\gre@updateleftbox ]])
+  end
+  if for_next_line then
+    -- IS THIS GOOD ENOUGH???
+    -- restore saved dims (from current line)
+    local name, value
+    for name, value in pairs(saved_dims) do
+      tex.sprint(catcode_at_letter, string.format(
+          [[\grechangedim{%s}{%s}{%s}]], name, value[1], value[2]))
+    end
+    for name, value in pairs(saved_counts) do
+      tex.sprint(catcode_at_letter, string.format(
+          [[\grechangecount{%s}{%s}]], name, value))
+    end
+    -- put previous saved dims back
+    saved_dims = backup_dims
+    saved_counts = backup_counts
+  end
+end
+
+local function adjust_line_height(inside_discretionary, for_next_line)
+  if score_heights then
+    local heights = nil
+    if for_next_line then
+      local last = score_heights['last']
+      if last then
+        local target_id = tex.getattribute(glyph_id_attr) + 1
+        while target_id <= last do
+          heights = score_heights[target_id]
+          if heights then break end
+          target_id = target_id + 1
+        end
       end
+    else
+      heights = score_heights[tex.getattribute(glyph_id_attr)]
+    end
+    if heights then
+      adjust_line_height_internal(heights, inside_discretionary, for_next_line)
     end
   end
 end
