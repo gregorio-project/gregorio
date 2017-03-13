@@ -937,6 +937,19 @@ Macro to print debugging messages.
   \#2 & string & The debug message\\
 \end{argtable}
 
+\macroname{\textbackslash gre@trace}{\#1}{gregoriotex-common.tex}
+Macro to mark the beginning of a function in the log with a GreTrace message.
+
+\begin{argtable}
+  \#1 & string & name and argument list of the function being identified.
+\end{argtable}
+
+\macroname{\textbackslash gre@trace@end}{\#1}{gregoriotex-common.tex}
+Macro to mark the end of a function in the log with a GreTrace message.
+
+\macroname{\textbackslash gre@trace@prefix}{gregoriotex-common.tex}
+Macro to hold the prefix of GreTrace messages (value is manipulated to control indentation and indicate nesting).
+
 \macroname{\textbackslash gre@declarefileversion}{\#1\#2}{gregoriotex-main.tex}
 Macro which checks for version consistency between Gregorio\TeX\ files.
 
