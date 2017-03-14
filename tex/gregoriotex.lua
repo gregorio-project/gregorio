@@ -1137,9 +1137,6 @@ local function adjust_line_height_internal(heights, inside_discretionary, for_ne
   tex.sprint(catcode_at_letter, string.format(
       [[\gre@calculate@additionalspaces{%d}{%d}{%d}{%d}]],
       heights[2], heights[3], heights[4], heights[5]))
-  if inside_discretionary == 0 then
-    tex.sprint(catcode_at_letter, [[\gre@updateleftbox ]])
-  end
   if for_next_line then
     -- IS THIS GOOD ENOUGH???
     -- restore saved dims (from current line)
@@ -1155,6 +1152,8 @@ local function adjust_line_height_internal(heights, inside_discretionary, for_ne
     -- put previous saved dims back
     saved_dims = backup_dims
     saved_counts = backup_counts
+  elseif inside_discretionary == 0 then
+    tex.sprint(catcode_at_letter, [[\gre@updateleftbox ]])
   end
 end
 
