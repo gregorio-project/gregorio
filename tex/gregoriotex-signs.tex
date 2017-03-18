@@ -103,6 +103,9 @@
 % #1 is the type of discretionary, for penalty assignment. Recognized types:
 %   - 0: clef change
 \def\GreDiscretionary#1#2#3{%
+  \gre@save@additionalspaces %
+  \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary, true)}%
+  \gre@restore@additionalspaces %
   \global\let\gre@hskip\kern %
   \global\let\gre@penalty\gre@falsepenalty %
   \global\xdef\gre@insidediscretionary{\number 1}%
@@ -149,8 +152,6 @@
 %% #4 int: height of the flat of first clef, 3 for no flat
 %% #5, #6, #7 = #1, #2, #3 for second clef
 \def\GreSetLinesClef#1#2#3#4#5#6#7{%
-  \gre@save@additionalspaces %
-  \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary, true)}%
   \gre@save@clef{#1}{#2}{#4}{#5}{#6}{#7}%
   \gre@localleftbox{%
     \gre@skip@temp@four = \gre@dimen@additionalleftspace\relax%
@@ -167,7 +168,6 @@
   }%
   \xdef\gre@clefflatheight{#4}%
   \xdef\gre@cleftwoflatheight{#7}%
-  \gre@restore@additionalspaces %
   \relax%
 }%
 
