@@ -863,6 +863,10 @@
 \newdimen\gre@save@dimen@additionaltopspace\relax%
 \newdimen\gre@save@dimen@additionaltopspacealt\relax%
 \newdimen\gre@save@dimen@additionaltopspacenabc\relax%
+\newdimen\gre@save@dimen@currenttranslationheight\relax%
+\newdimen\gre@save@dimen@textlower\relax%
+\newdimen\gre@save@dimen@currentabovelinestextheight\relax%
+\newdimen\gre@save@dimen@constantglyphraise\relax%
 
 \newcount\gre@space@count@additionaltopspacethreshold\relax%
 \gre@space@count@additionaltopspacethreshold=2
@@ -896,6 +900,10 @@
   \global\gre@save@dimen@additionaltopspace=\gre@dimen@additionaltopspace\relax%
   \global\gre@save@dimen@additionaltopspacealt=\gre@dimen@additionaltopspacealt\relax%
   \global\gre@save@dimen@additionaltopspacenabc=\gre@dimen@additionaltopspacenabc\relax%
+  \global\gre@save@dimen@currenttranslationheight=\gre@dimen@currenttranslationheight\relax%
+  \global\gre@save@dimen@textlower=\gre@dimen@textlower\relax%
+  \global\gre@save@dimen@currentabovelinestextheight=\gre@dimen@currentabovelinestextheight\relax%
+  \global\gre@save@dimen@constantglyphraise=\gre@dimen@constantglyphraise\relax%
 }%
 
 \def\gre@restore@additionalspaces{%
@@ -903,6 +911,10 @@
   \global\gre@dimen@additionaltopspace=\gre@save@dimen@additionaltopspace\relax%
   \global\gre@dimen@additionaltopspacealt=\gre@save@dimen@additionaltopspacealt\relax%
   \global\gre@dimen@additionaltopspacenabc=\gre@save@dimen@additionaltopspacenabc\relax%
+  \global\gre@dimen@currenttranslationheight=\gre@save@dimen@currenttranslationheight\relax%
+  \global\gre@dimen@textlower=\gre@save@dimen@textlower\relax%
+  \global\gre@dimen@currentabovelinestextheight=\gre@save@dimen@currentabovelinestextheight\relax%
+  \global\gre@dimen@constantglyphraise=\gre@save@dimen@constantglyphraise\relax%
 }%
 
 \let\gre@pitch@cleftop\gre@pitch@dummy %
