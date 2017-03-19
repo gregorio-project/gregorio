@@ -82,6 +82,9 @@ sed -i.temp 's:.*dimen@temp@.*::' $CODEFILE
 sed -i.temp 's:.*skip@temp@.*::' $CODEFILE
 sed -i.temp 's:.*count@temp@.*::' $CODEFILE
 
+#registers for saved values
+sed -i.temp 's:\\gre@saved@.*::' $CODEFILE
+
 #block documented items
 sed -i.temp 's:\\gre@pitch.*::' $CODEFILE
 sed -i.temp 's:.*gre@char@he@.*::' $CODEFILE

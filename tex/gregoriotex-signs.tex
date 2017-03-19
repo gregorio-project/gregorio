@@ -1448,11 +1448,11 @@
 \def\GreAdditionalLine#1#2#3{%
   \ifgre@showlines %
     \ifgre@boxing\else %
-      \xdef\gre@dimen@savedglyphraise{\the\gre@dimen@glyphraisevalue}%
+      \xdef\gre@saved@dimen@glyphraise{\the\gre@dimen@glyphraisevalue}%
       \gre@style@additionalstafflines %
       \gre@hepisorline{\gre@pitch@dummy}{#1}{#2}{#3}{f}{}{}%
       \endgre@style@additionalstafflines%
-      \gre@dimen@glyphraisevalue=\gre@dimen@savedglyphraise\relax%
+      \gre@dimen@glyphraisevalue=\gre@saved@dimen@glyphraise\relax%
     \fi %
   \fi %
   \relax %
@@ -1471,11 +1471,11 @@
 % #6 custom space after, used if #4 is 2
 \def\GreDrawAdditionalLine#1#2#3#4#5#6{%
   \ifgre@showlines %
-    \xdef\gre@dimen@savedglyphraise{\the\gre@dimen@glyphraisevalue}%
+    \xdef\gre@saved@dimen@glyphraise{\the\gre@dimen@glyphraisevalue}%
     \gre@style@additionalstafflines %
     \gre@drawadditionalline{#1}{#2}{#3}{#4}{#5}{#6}%
     \endgre@style@additionalstafflines%
-    \gre@dimen@glyphraisevalue=\gre@dimen@savedglyphraise\relax%
+    \gre@dimen@glyphraisevalue=\gre@saved@dimen@glyphraise\relax%
   \fi %
   \relax %
 }

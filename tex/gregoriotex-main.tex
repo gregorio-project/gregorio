@@ -1196,7 +1196,7 @@
   \xdef\gre@gabcname{#6}%
   \gre@setstafflines{#7}%
   \ifgre@justifylastline%
-    \xdef\gre@save@parfillskip{\the\parfillskip}%
+    \xdef\gre@saved@parfillskip{\the\parfillskip}%
     \parfillskip=0pt plus 0pt minus 0pt\relax%
   \fi %
   \ifgre@usestylefont%
@@ -1276,7 +1276,7 @@
   \unsetluatexattribute{\gre@attr@dash}%
   \xdef\gre@bolshiftcleftypelocal{\gre@bolshiftcleftypeglobal}%
   \ifgre@justifylastline%
-    \parfillskip=\gre@save@parfillskip\relax%
+    \parfillskip=\gre@saved@parfillskip\relax%
   \fi %
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \relax%
