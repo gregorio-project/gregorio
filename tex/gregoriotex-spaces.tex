@@ -19,7 +19,6 @@
 
 % this file contains definitions of spaces
 
-\gre@debugmsg{general}{Loading gregoriotex-spaces.tex}%
 \gre@declarefileversion{gregoriotex-spaces.tex}{5.0.0-beta2}% GREGORIO_VERSION
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -47,10 +46,10 @@
 \newskip\gre@emergencystretchsave%
 \newcount\gre@widowpenaltysave%
 \newcount\gre@clubpenaltysave%
-\newskip\gre@skip@parskip@save%
-\newskip\gre@skip@lineskip@save%
-\newskip\gre@skip@baselineskip@save%
-\newskip\gre@skip@lineskiplimit@save%
+\newskip\gre@saved@parskip%
+\newskip\gre@saved@lineskip%
+\newskip\gre@saved@baselineskip%
+\newskip\gre@saved@lineskiplimit%
 %% The following macros cancel some useless penalties, and reinstates them
 %% at the end of a score
 
@@ -67,10 +66,10 @@
   \global\gre@widowpenaltysave=\widowpenalty\relax %
   \global\gre@clubpenaltysave=\clubpenalty\relax %
   %
-  \global\gre@skip@parskip@save=\parskip%
-  \global\gre@skip@lineskip@save=\lineskip%
-  \global\gre@skip@baselineskip@save=\baselineskip%
-  \global\gre@skip@lineskiplimit@save=\lineskiplimit%
+  \global\gre@saved@parskip=\parskip%
+  \global\gre@saved@lineskip=\lineskip%
+  \global\gre@saved@baselineskip=\baselineskip%
+  \global\gre@saved@lineskiplimit=\lineskiplimit%
   \hyphenpenalty=\gre@space@count@hyphenpenalty %
   \exhyphenpenalty=\gre@space@count@hyphenpenalty %
   \doublehyphendemerits=0\relax %
@@ -100,10 +99,10 @@
   \emergencystretch=\gre@emergencystretchsave %
   \widowpenalty=\gre@widowpenaltysave %
   \clubpenalty=\gre@clubpenaltysave %
-  \parskip=\gre@skip@parskip@save%
-  \lineskip=\gre@skip@lineskip@save%
-  \baselineskip=\gre@skip@baselineskip@save%
-  \lineskiplimit=\gre@skip@lineskiplimit@save%
+  \parskip=\gre@saved@parskip%
+  \lineskip=\gre@saved@lineskip%
+  \baselineskip=\gre@saved@baselineskip%
+  \lineskiplimit=\gre@saved@lineskiplimit%
 }%
 
 
@@ -859,6 +858,16 @@
 % the one taken into account for above lines nabc height
 \newdimen\gre@dimen@additionaltopspacenabc\relax%
 
+% backup demensions for the previous
+\newdimen\gre@saved@dimen@additionalbottomspace\relax%
+\newdimen\gre@saved@dimen@additionaltopspace\relax%
+\newdimen\gre@saved@dimen@additionaltopspacealt\relax%
+\newdimen\gre@saved@dimen@additionaltopspacenabc\relax%
+\newdimen\gre@saved@dimen@currenttranslationheight\relax%
+\newdimen\gre@saved@dimen@textlower\relax%
+\newdimen\gre@saved@dimen@currentabovelinestextheight\relax%
+\newdimen\gre@saved@dimen@constantglyphraise\relax%
+
 \newcount\gre@space@count@additionaltopspacethreshold\relax%
 \gre@space@count@additionaltopspacethreshold=2
 
@@ -884,6 +893,28 @@
   \else %
     \gre@count@temp@one=#2\relax %
   \fi %
+}%
+
+\def\gre@save@additionalspaces{%
+  \global\gre@saved@dimen@additionalbottomspace=\gre@dimen@additionalbottomspace\relax%
+  \global\gre@saved@dimen@additionaltopspace=\gre@dimen@additionaltopspace\relax%
+  \global\gre@saved@dimen@additionaltopspacealt=\gre@dimen@additionaltopspacealt\relax%
+  \global\gre@saved@dimen@additionaltopspacenabc=\gre@dimen@additionaltopspacenabc\relax%
+  \global\gre@saved@dimen@currenttranslationheight=\gre@dimen@currenttranslationheight\relax%
+  \global\gre@saved@dimen@textlower=\gre@dimen@textlower\relax%
+  \global\gre@saved@dimen@currentabovelinestextheight=\gre@dimen@currentabovelinestextheight\relax%
+  \global\gre@saved@dimen@constantglyphraise=\gre@dimen@constantglyphraise\relax%
+}%
+
+\def\gre@restore@additionalspaces{%
+  \global\gre@dimen@additionalbottomspace=\gre@saved@dimen@additionalbottomspace\relax%
+  \global\gre@dimen@additionaltopspace=\gre@saved@dimen@additionaltopspace\relax%
+  \global\gre@dimen@additionaltopspacealt=\gre@saved@dimen@additionaltopspacealt\relax%
+  \global\gre@dimen@additionaltopspacenabc=\gre@saved@dimen@additionaltopspacenabc\relax%
+  \global\gre@dimen@currenttranslationheight=\gre@saved@dimen@currenttranslationheight\relax%
+  \global\gre@dimen@textlower=\gre@saved@dimen@textlower\relax%
+  \global\gre@dimen@currentabovelinestextheight=\gre@saved@dimen@currentabovelinestextheight\relax%
+  \global\gre@dimen@constantglyphraise=\gre@saved@dimen@constantglyphraise\relax%
 }%
 
 \let\gre@pitch@cleftop\gre@pitch@dummy %
@@ -993,8 +1024,6 @@
   \global\gre@dimen@currenttranslationheight=\gre@space@dimen@translationheight\relax%
   \global\gre@dimen@textlower=\dimexpr(\gre@space@dimen@spacebeneathtext %
     + \gre@space@dimen@translationheight)\relax%
-  \gre@generatelines %
-  \gre@calculate@constantglyphraise %
   \endgre@style@translation%
   \relax %
 }%
@@ -1002,8 +1031,6 @@
 \def\gre@removetranslationspace{%
   \global\gre@dimen@currenttranslationheight=0 sp%
   \global\gre@dimen@textlower=\gre@space@dimen@spacebeneathtext\relax%
-  \gre@generatelines %
-  \gre@calculate@constantglyphraise %
   \relax %
 }%
 

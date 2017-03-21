@@ -1378,6 +1378,12 @@ Puts the greater of its two integer arguments into \verb=\gre@count@temp@one=.
 \macroname{\textbackslash gre@evaluatenextsyllable}{\#1}{gregoriotex-syllable.tex}
 Evaluates its first argument as an advance computation against the next syllable.  Twiddles the \verb=ifgre@evaluatingnextsyllable= flag around evaluation of the macro argument.
 
+\macroname{\textbackslash gre@save@additionalspaces}{}{gregoriotex-spaces.tex}
+Macro to save the additional vertical spaces associated with the line (\texttt{additionalbottomspace}, \texttt{additionaltopspace}, \texttt{additionaltopspacealt}, \texttt{additionaltopspacenabc}, \texttt{currenttranslationheight}, \texttt{textlower}, \texttt{currentabovelinestextheight}, and \texttt{constantglyphraise}) so that they can be restored later.
+
+\macroname{\textbackslash gre@restore@additionalspaces}{}{gregoriotex-spaces.tex}
+Macro to restore the additional vertical spaces associated with the line from their saved values.
+
 \subsection{Auxiliary File}
 Gregorio\TeX\ creates its own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.
 
@@ -1900,6 +1906,10 @@ second is the name of the distance.
 
 These additional distances are calculated by Gregorio based on the values for the user customizable distances and what may be going on in the score at the time of their use.
 
+In some cases it is necessary to temporarily manipulate some of these distances for the purpose of some particular operation and then restore them to their previous values.  In that case the distance will have a \verb=\gre@saved@...= register associated with it (\eg \verb=\gre@dimen@constantglyphraise= is saved to and restored from \verb=\gre@saved@dimen@constantglyphraise=).
+
+We also have save registries for \verb=\baselineskip=, \verb=\lineskip=, \verb=\lineskiplimit=, \verb=\parskip=, and \verb=\parfillskip= so that we can modify the way line breaking decisions are handled inside a score without affecting the rest of the document.
+
 \macroname{\textbackslash gre@dimen@morawidth}{}{gregoriotex-spaces.tex}
 Width of a punctum mora (reinitialized at each score, lazily recomputed).
 
@@ -2006,9 +2016,6 @@ Temporary dimensions used in calculations.  There are currently five of these.
 \macroname{\textbackslash gre@skip@temp@...}{}{gregoriotex-spaces.tex}
 Temporary skips used in calculations.  There are currently four of these.
 
-\macroname{\textbackslash gre@dimen@savedglyphraise}{}{gregoriotex-signs.tex}
-Macro to hold the value of the glyph raise so that it can be restored after some calculations which may change it are performed.
-
 \macroname{\textbackslash gre@dimen@eolshift}{}{gregoriotex-spaces.tex}
 The left kern that should appear before an end of line.
 
@@ -2041,9 +2048,6 @@ Minimum shift required for the text.
 
 \macroname{\textbackslash gre@skip@minShiftNotes}{}{gregoriotex-spaces.tex}
 Minimum shift required for the notes.
-
-\macroname{\textbackslash gre@save@parfillskip}{}{gregoriotex-main.tex}
-Macro to store \verb=\parfillskip= value so that we can restore it at the end of the score (needed to force the last line of a score to be justified).
 
 \macroname{\textbackslash gre@scaledist}{}{gregoriotex-spaces.tex}
 Working alias for \verb=\gre@skip@temp@one= or \verb=\gre@dimen@temp@one=, as appropriate, used when rescaling a distance due to a change in \verb=\gre@factor=.
@@ -2082,17 +2086,6 @@ Displacement of whole syllable to account for the presence of a punctum mora at 
 \macroname{\textbackslash gre@skip@alterationshift}{}{gregoriotex-spaces.tex}
 Displacement of whole syllable to account for the presence of an alteration at the beginning of the next syllable.
 
-\macroname{\textbackslash gre@skip@baselineskip@save}{}{gregoriotex-spaces.tex}
-Saved value of \verb=\baselineskip= from before a score so that it can be restored when the score ends.
-
-\macroname{\textbackslash gre@skip@lineskip@save}{}{gregoriotex-spaces.tex}
-Saved value of \verb=\lineskip= from before a score so that it can be restored when the score ends.
-
-\macroname{\textbackslash gre@skip@lineskiplimit@save}{}{gregoriotex-spaces.tex}
-Saved value of \verb=\lineskiplimit= from before a score so that it can be restored when the score ends.
-
-\macroname{\textbackslash gre@skip@parskip@save}{}{gregoriotex-spaces.tex}
-Saved value of \verb=\parskip= from before a score so that it can be restored when the score ends.
 
 
 \subsection{Penalties}

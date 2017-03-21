@@ -22,7 +22,6 @@
 
 \def\grebarbracewidth{.58879}%
 
-\gre@debugmsg{general}{Loading gregoriotex-signs.tex}%
 \gre@declarefileversion{gregoriotex-signs.tex}{5.0.0-beta2}% GREGORIO_VERSION
 
 \def\gre@usestylecommon{%
@@ -103,6 +102,9 @@
 % #1 is the type of discretionary, for penalty assignment. Recognized types:
 %   - 0: clef change
 \def\GreDiscretionary#1#2#3{%
+  \gre@save@additionalspaces %
+  \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary, true)}%
+  \gre@restore@additionalspaces %
   \global\let\gre@hskip\kern %
   \global\let\gre@penalty\gre@falsepenalty %
   \global\xdef\gre@insidediscretionary{\number 1}%
@@ -157,7 +159,7 @@
     \unkern %
     \ifgre@showclef%
       \gre@skip@temp@four = \gre@space@skip@afterclefnospace\relax%
-      \hbox{\gre@typeclef{#1}{#2}{0}{#3}{#4}{#5}{#6}{#7}\hskip\gre@skip@temp@four}%
+      \hbox{\gre@typeclef{#1}{#2}{0}{#3}{#4}{#5}{#6}{#7}\gre@hskip\gre@skip@temp@four}%
     \else %
       \gre@skip@temp@four = \gre@space@dimen@noclefspace\relax%
       \hbox{\kern\gre@skip@temp@four}%
@@ -1088,7 +1090,7 @@
   \GreNoBreak %
   \ifcase#2\relax %
     \gre@skip@temp@four = \gre@space@skip@spacebeforesigns\relax%
-    \hskip\gre@skip@temp@four%
+    \gre@hskip\gre@skip@temp@four%
   \or %
     \gre@skip@temp@four = \gre@space@skip@spacebeforesigns\relax%
     \kern\gre@skip@temp@four %
@@ -1179,7 +1181,7 @@
 \def\GreLowChoralSign#1#2#3{%
   \GreNoBreak %
   \gre@skip@temp@four = \gre@space@skip@beforelowchoralsignspace\relax%
-  \hskip\gre@skip@temp@four %
+  \gre@hskip\gre@skip@temp@four %
   \GreNoBreak %
   \ifnum#3=1\relax %
     \gre@calculate@glyphraisevalue{#1}{12}{}%
@@ -1446,11 +1448,11 @@
 \def\GreAdditionalLine#1#2#3{%
   \ifgre@showlines %
     \ifgre@boxing\else %
-      \xdef\gre@dimen@savedglyphraise{\the\gre@dimen@glyphraisevalue}%
+      \xdef\gre@saved@dimen@glyphraise{\the\gre@dimen@glyphraisevalue}%
       \gre@style@additionalstafflines %
       \gre@hepisorline{\gre@pitch@dummy}{#1}{#2}{#3}{f}{}{}%
       \endgre@style@additionalstafflines%
-      \gre@dimen@glyphraisevalue=\gre@dimen@savedglyphraise\relax%
+      \gre@dimen@glyphraisevalue=\gre@saved@dimen@glyphraise\relax%
     \fi %
   \fi %
   \relax %
@@ -1469,11 +1471,11 @@
 % #6 custom space after, used if #4 is 2
 \def\GreDrawAdditionalLine#1#2#3#4#5#6{%
   \ifgre@showlines %
-    \xdef\gre@dimen@savedglyphraise{\the\gre@dimen@glyphraisevalue}%
+    \xdef\gre@saved@dimen@glyphraise{\the\gre@dimen@glyphraisevalue}%
     \gre@style@additionalstafflines %
     \gre@drawadditionalline{#1}{#2}{#3}{#4}{#5}{#6}%
     \endgre@style@additionalstafflines%
-    \gre@dimen@glyphraisevalue=\gre@dimen@savedglyphraise\relax%
+    \gre@dimen@glyphraisevalue=\gre@saved@dimen@glyphraise\relax%
   \fi %
   \relax %
 }
