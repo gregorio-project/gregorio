@@ -19,6 +19,10 @@
 
 % this file contains definitions for lines, initial, fonts, etc.
 
+% The version of gregorio. All gregoriotex*.tex files must have the same.
+% All gtex files must also have the same version.
+\xdef\gre@gregoriotexversion{5.0.0-beta2}% GREGORIO_VERSION - VersionManager.py
+
 \ifluatex%
   \ifnum\luatexversion<76%
     \gre@error{Error: this document must be compiled with LuaTeX (lualatex) 0.76 or later}%
@@ -28,9 +32,6 @@
 \fi%
 
 
-% The version of gregorio. All gregoriotex*.tex files must have the same.
-% All gtex files must also have the same version.
-\xdef\gre@gregoriotexversion{5.0.0-beta2}% GREGORIO_VERSION - VersionManager.py
 
 % first some macros to allow checks for version:
 % Tests that all gregoriotex files are of the same version.
@@ -475,7 +476,7 @@
     \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax%
     \endgre@style@initial%
   \fi %
-  \hskip\gre@dimen@temp@four %
+  \gre@hskip\gre@dimen@temp@four %
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four %
   \gre@debugmsg{annotation}{Ready to place initial.}%
   \ifgre@showlyrics%
@@ -492,7 +493,7 @@
     \global\gre@dimen@temp@four = \gre@space@dimen@afterinitialshift\relax%
     \endgre@style@initial%
   \fi%
-  \hskip\gre@dimen@temp@four %
+  \gre@hskip\gre@dimen@temp@four %
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four%
   % then we center the annotation box above the initial, if there is one
   \gre@debugmsg{annotation}{Time to set the annotation.}%
@@ -502,7 +503,7 @@
     \gre@debugmsg{annotation}{Calculate horizontal position.}%
     \gre@dimen@temp@five=\dimexpr((\gre@dimen@initialwidth - \wd\gre@box@annotation) / 2)\relax %
     \gre@skip@temp@four = -\gre@dimen@initialwidth\relax%
-    \hskip\gre@skip@temp@four %
+    \gre@hskip\gre@skip@temp@four %
     \kern\gre@dimen@temp@five %
     \gre@debugmsg{annotation}{And place the annotation.}%
     \raise\gre@dimen@annotationtrueraise\box\gre@box@annotation%
@@ -729,7 +730,6 @@
   \gre@trace{gre@addspaceabove}%
   \gre@style@abovelinestext%
   \global\gre@dimen@currentabovelinestextheight=\gre@space@dimen@abovelinestextheight\relax%
-  \gre@generatelines %
   \endgre@style@abovelinestext%
   \relax %
   \gre@trace@end%
@@ -739,7 +739,6 @@
 \def\gre@removespaceabove{%
   \gre@trace{gre@removespaceabove}%
   \global\gre@dimen@currentabovelinestextheight=0 sp%
-  \gre@generatelines %
   \relax %
   \gre@trace@end%
 }%
@@ -1199,7 +1198,7 @@
   \xdef\gre@gabcname{#6}%
   \gre@setstafflines{#7}%
   \ifgre@justifylastline%
-    \xdef\gre@save@parfillskip{\the\parfillskip}%
+    \xdef\gre@saved@parfillskip{\the\parfillskip}%
     \parfillskip=0pt plus 0pt minus 0pt\relax%
   \fi %
   \ifgre@usestylefont%
@@ -1279,7 +1278,7 @@
   \unsetluatexattribute{\gre@attr@dash}%
   \xdef\gre@bolshiftcleftypelocal{\gre@bolshiftcleftypeglobal}%
   \ifgre@justifylastline%
-    \parfillskip=\gre@save@parfillskip\relax%
+    \parfillskip=\gre@saved@parfillskip\relax%
   \fi %
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \relax%
