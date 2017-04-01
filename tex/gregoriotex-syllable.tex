@@ -64,6 +64,7 @@
 }%
 
 \def\gre@pointandclick#1#2{%
+  \gre@trace{gre@pointandclick{#1}{#2}}%
   \def\gre@@arg{#2}%
   \ifx\gre@@arg\gre@nothing %
     #1%
@@ -84,9 +85,11 @@
       \fi %
     \fi %
   \fi %
+  \gre@trace@end%
 }%
 
 \def\gre@newglyphcommon{%
+  \gre@trace{gre@newglyphcommon}%
   \global\advance\gre@attr@glyph@id by 1\relax %
   % first there is something we must do: setting \gre@lastoflinecount to 0 if its value is 2. The reason of this is that in ab(abzcd), we cannot let \grelastoflinecount set to 2 after the end of line... the only way I found to achieve it is to reset \grelastoflinecount to 0 after each glyph or bar.
   \ifnum\gre@lastoflinecount=2\relax %
@@ -107,14 +110,17 @@
     \gre@firstin@euouaefalse %
   \fi\fi %
   \relax %
+  \gre@trace@end%
 }%
 
 \def\gre@endofglyphcommon{%
+  \gre@trace{gre@endofglyphcommon}%
   \ifgre@endofscore %
     \gre@penalty{\the\gre@space@count@finalpenalty}%
     \gre@localleftbox{}%
     \gre@localrightbox{}%
   \fi %
+  \gre@trace@end%
 }
 
 % passes the glyph height limits:
@@ -194,6 +200,7 @@
 % there is a tricky here : if notesaligncenter is not 0, it means that there is a flat before, so we simply add notes aligncenter
 % #2 is 0 if we are in the context of current syllable, 1 if we are in the context of next syllable
 \def\gre@calculate@simplenotesaligncenter#1#2{%
+  \gre@trace{gre@calculate@simplenotesaligncenter{#1}{#2}}%
   \ifcase#1%
     %case of punctum
     \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPPunctum}%
@@ -252,6 +259,7 @@
     \fi%
   \fi%
   \relax%
+  \gre@trace@end%
 }%
 
 % aux function to previous one: sets \gre@box@temp@width to \hbox{#1} or \hbox{#2}
@@ -269,6 +277,7 @@
 %
 % #3 is the same as #2 of previous function
 \def\gre@handleclivisspecialalignment#1#2#3{%
+  \gre@trace{gre@handleclivisspecialalignment{#1}{#2}{#3}}%
   \ifcase\gre@clivisalignment%
     \global\setbox\gre@box@temp@width=\hbox{#1}%
   \or%
@@ -304,18 +313,22 @@
       \fi%
     \fi%
   \fi%
+  \gre@trace@end%
 }%
 
 % the "hat" function, that calls the simple function with the good argument, according to the fact that it's a flat, natural, etc.
 % warning: the behaviour of all this is quite difficult to understand: this function is called with simple arguments (between 0 and 20) by the glyph function. In this case we add the align center of the argument to notesaligncenter ; and notesaligncenter can be already set to something by flat and natural.
 \def\gre@calculate@notesaligncenter#1{%
+  \gre@trace{gre@calculate@notesaligncenter{#1}}%
   \gre@calculate@simplenotesaligncenter{#1}{0}%
   \global\advance\gre@dimen@notesaligncenter by \dimexpr(\wd\gre@box@temp@width / 2)\relax %
   \relax %
+  \gre@trace@end%
 }%
 
 % this is the function that we call when we try to determine the next aligncenter of the notes. In this case we call this function with normal arguments if there is no flat nor natural ; we call it with argument + 20 if there is a flat and argument + 40 if there is a natural, +60 with a sharp
 \def\gre@calculate@nextnotesaligncenter#1{%
+  \gre@trace{gre@calculate@nextnotesaligncenter{#1}}%
   \ifnum#1<20\relax %
     \gre@calculate@simplenotesaligncenter{#1}{1}%
     \gre@dimen@temp@five=\dimexpr(\wd\gre@box@temp@width / 2)\relax %
@@ -344,6 +357,7 @@
     \global\gre@dimen@notesaligncenter=\gre@dimen@temp@five %
   \fi %
   \relax %
+  \gre@trace@end%
 }%
 
 % box that we will use to determine the width of the notes, to determine wether we typeset a - or not after the letters
@@ -377,6 +391,7 @@
 % saves and restores a few values so that when really typesetting #1 in \GreSyllable,
 % the result is identical.
 \def\gre@syllablenotes#1{%
+  \gre@trace{gre@syllablenotes{#1}}%
   % \gre@count@lastglyphiscavum is reinitialized at each syllable...
   % so there's a bug on g(bx)g(b)
   \global\gre@count@lastglyphiscavum=0\relax %
@@ -409,6 +424,7 @@
   \global\gre@skip@bar@lastskip=0pt\relax %
   \global\gre@endofscorefalse %
   \relax %
+  \gre@trace@end%
 }%
 
 
@@ -481,7 +497,9 @@
 
 % a function to cancel the previous one
 \def\gre@unsetfixedtextformat{%
+  \gre@trace{gre@unsetfixedtextformat}%
   \global\let\gre@fixedtextformat\gre@textnormal %
+  \gre@trace@end%
 }%
 
 \let\gre@fixedtextformat\gre@textnormal %
@@ -508,7 +526,9 @@
 
 % a function to cancel the previous one
 \def\gre@unsetfixednexttextformat{%
+  \gre@trace{gre@unsetfixednexttextformat}%
   \global\let\gre@fixednexttextformat\gre@textnormal %
+  \gre@trace@end%
 }%
 
 \let\gre@fixednexttextformat\gre@textnormal %
@@ -666,9 +686,11 @@
 \newif\ifgre@evaluatingnextsyllable%
 \gre@evaluatingnextsyllablefalse%
 \def\gre@evaluatenextsyllable#1{%
+  \gre@trace{gre@evaluatenextsyllable{#1}}%
   \gre@evaluatingnextsyllabletrue%
   #1%
   \gre@evaluatingnextsyllablefalse%
+  \gre@trace@end%
 }%
 
 \newif\ifgre@showhyphenafterthissyllable%
@@ -721,6 +743,7 @@
 % Performs #1 if the syllable should be rewitten, else #2
 \newif\ifgre@rewritethissyllable %
 \def\gre@if@rewritesyllable#1#2{%
+  \gre@trace{gre@if@rewritesyllable{#1}{#2}}%
   \gre@rewritethissyllablefalse %
   \ifgre@rewritesyllables\relax %
     \gre@debugmsg{syllablerewriting}{1}%
@@ -747,12 +770,14 @@
   \else %
     #2%
   \fi %
+  \gre@trace@end%
 }%
 
 \let\gre@save@endsyllablepart\gre@nothing\relax %
 \let\gre@save@fixedtextformat\gre@textnormal\relax %
 \let\gre@save@pointandclick\gre@nothing\relax %
 \def\gre@push@endsyllable#1{%
+  \gre@trace{gre@push@endsyllable{#1}}%
   \let\gre@save@endsyllablepart\gre@nothing\relax %
   \let\gre@save@fixedtextformat\gre@textnormal\relax %
   \let\gre@save@pointandclick\gre@nothing\relax %
@@ -762,10 +787,11 @@
     \xdef\gre@save@pointandclick{#1}%
   }{}%
   \relax %
+  \gre@trace@end%
 }%
 
 \def\gre@emit@syllabletext#1{%
-  \gre@debugmsg{syllablerewriting}{start emit}%
+  \gre@trace{gre@emit@syllabletext{#1}}%
   \ifx\gre@save@endsyllablepart\gre@nothing %
     \gre@fixedtextformat{#1}%
   \else %
@@ -778,23 +804,27 @@
       \gre@fixedtextformat{#1}%
     \fi %
   \fi %
-  \gre@debugmsg{syllablerewriting}{end emit}%
   \relax %
+  \gre@trace@end%
 }%
 
 \def\gre@emit@endsyllablepart{%
+  \gre@trace{gre@emit@endsyllablepart}%
   \gre@if@rewritesyllable{}{%
     \gre@debugmsg{syllablerewriting}{not rewriting syllable}%
     \gre@endsyllablepart %
   }%
   \relax %
+  \gre@trace@end%
 }%
 
 \def\gre@emit@endsyllablepartfornextsyllable{%
+  \gre@trace{gre@emit@endsyllablepartfornextsyllable}%
   \gre@if@rewritesyllable{%
     \gre@endsyllablepart %
   }{}%
   \relax %
+  \gre@trace@end%
 }%
 
 \newif\ifgre@textcleared%
@@ -823,9 +853,12 @@
   \futurelet\gre@syllable@next\gre@syllable@expand%
 }%
 \def\gre@syllable@expand{%
+  \gre@trace{gre@syllable@expand}%
   \expandafter\gre@syllable@act\gre@syllable@args%
+  \gre@trace@end%
 }%
 \def\gre@syllable@act#1#2#3#4#5#6#7#8#9{%
+  \gre@trace{gre@syllable@act{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}{#9}}%
   \gre@debugmsg{general}{}%
   \gre@debugmsg{general}{New syllable: \expandafter\unexpanded{#1}}%
   \gre@debugmsg{general}{}%
@@ -1059,6 +1092,7 @@
      \gre@localrightbox{}%
   \fi\fi %
   \relax %
+  \gre@trace@end%
 }%
 
 % #1 is the id of the euouae block (assigned by the C code)
@@ -1093,7 +1127,7 @@
 %% @arg#2 next syllable text
 %% @arg#3 end of word or not (#4 of \GreSyllable)
 \def\gre@syllable@end#1#2#3{%
-  \gre@debugmsg{syllablespacing}{ syllable@end with #1}%
+  \gre@trace{gre@syllable@end{#1}{#2}{#3}}%
   % gre@count@temp@one holds 0 if next is a not bar, 1 if it is
   \gre@count@temp@one=0%
   \ifnum#1>9\relax %
@@ -1121,6 +1155,7 @@
     \gre@debugmsg{syllablespacing}{ calling endofsyllable with #3}%
     \gre@endofsyllable{1}{#3}{0}%
   \fi %
+  \gre@trace@end%
 }
 
 %% @desc Macro called at end of a syllable, adds a penalty and a space
@@ -1129,7 +1164,7 @@
 %% @arg#3 1 if next syllable is a bar, 0 otherwise
 %%
 \def\gre@endofsyllable#1#2#3{%
-  \gre@debugmsg{syllablespacing}{ endofsyllable with #2}%
+  \gre@trace{gre@endofsyllable{#1}{#2}{#3}}%
   \ifgre@eolshiftsenabled%
     %this shift will shorten the line somewhat to allow the lyrics to extend under the custos should TeX decide to insert a line break after the syllable being ended
     \GreNoBreak%
@@ -1176,6 +1211,7 @@
     \fi %
   \fi %
   \relax%
+  \gre@trace@end%
 }%
 
 \def\gresetbarspacing#1{%
@@ -1200,7 +1236,9 @@
 % end of line for later.
 \xdef\gre@newlinearg{-1}
 \gdef\gre@newlinecommondelayed#1#2{%
+  \gre@trace{gre@newlinecommondelayed{#1}{#2}}%
   \xdef\gre@newlinearg{#1}%
+  \gre@trace@end%
 }
 
 %a macro to typeset a syllable with only a bar inside
@@ -1521,12 +1559,14 @@
 %% #5 - Everything after the first letter of the syllable
 %% #6 - Macros to run after the text is emitted
 \def\gre@setfirstsyllabletext#1#2#3#4#5#6{%
+  \gre@trace{gre@setfirstsyllabletext{#1}{#2}{#3}{#4}{#5}{#6}}%
   \def\gre@opening@syllabletext{%
     \GreSetThisSyllable{#1}{#2}{#3}%
     {\GreFirstWord{\GreFirstSyllable{\GreFirstSyllableInitial{#4}}}}%
     {\GreFirstWord{\GreFirstSyllable{#5}}}%
     #6\relax %
   }%
+  \gre@trace@end%
 }%
 
 % TODO: Change \gre@initiallines to \gre@count@initiallines in 5.0

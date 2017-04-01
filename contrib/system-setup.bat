@@ -96,6 +96,7 @@ gregoriotex-nabc.tex ^
 gregoriotex-signs.tex ^
 gregoriotex-spaces.tex ^
 gregoriotex-syllable.tex ^
+gregoriotex-common.tex ^
 gregoriotex-symbols.tex
 
 for %%G in (%files%) do (

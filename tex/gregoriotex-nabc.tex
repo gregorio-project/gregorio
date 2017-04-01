@@ -36,9 +36,11 @@
   \gre@nabcfontloadedtrue%
 }
 
-\def\gre@nabccharno#1#2#3{{\directlua{
-  gregoriotex.print_nabc(gregoriotex.parse_nabc("#1", "\luatexluaescapestring{#2}", #3))
-}}}
+\def\gre@nabccharno#1#2#3{%
+  \gre@trace{gre@nabccharno{#1}{#2}{#3}}%
+  {\directlua{gregoriotex.print_nabc(gregoriotex.parse_nabc("#1", "\luatexluaescapestring{#2}", #3))}}%
+  \gre@trace@end%
+}
 
 \def\GreNABCChar#1{{%
   %\catcode`\~=12{}%

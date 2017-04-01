@@ -25,11 +25,13 @@
 \gre@declarefileversion{gregoriotex-signs.tex}{5.0.0-beta2}% GREGORIO_VERSION
 
 \def\gre@usestylecommon{%
+  \gre@trace{gre@usestylecommon}%
   \ifgre@usestylefont\else %
     \gre@usestylefonttrue%
     \gre@setstylefont %
   \fi %
   \relax %
+  \gre@trace@end%
 }%
 
 \gresetglyphstyle{default}%
@@ -43,6 +45,7 @@
 \gre@disablemorafalse
 
 \def\greprintsigns#1#2{%
+  \gre@trace{greprintsigns{#1}{#2}}%
   \IfStrEqCase{#2}{%
     {enable}%
       {%
@@ -77,6 +80,7 @@
     }[% all other cases
       \gre@error{Unrecognized second argument for \protect\greprintsigns}%
     ]%
+  \gre@trace@end%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -102,6 +106,7 @@
 % #1 is the type of discretionary, for penalty assignment. Recognized types:
 %   - 0: clef change
 \def\GreDiscretionary#1#2#3{%
+  \gre@trace{GreDiscretionary{#1}{#2}{#3}}%
   \gre@save@additionalspaces %
   \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary, true)}%
   \gre@restore@additionalspaces %
@@ -123,6 +128,7 @@
   \global\let\gre@hskip\hskip %
   \global\let\gre@penalty\gre@truepenalty %
   \relax %
+  \gre@trace@end%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -134,6 +140,7 @@
 \gre@showcleftrue
 
 \def\gresetclef#1{%
+  \gre@trace{gresetclef{#1}}%
   \IfStrEqCase{#1}{%
     {visible}%
       {\gre@showcleftrue}%
@@ -142,6 +149,7 @@
     }[% all other cases
       \gre@error{Unrecognized option "#1" for \protect\gresetclef\MessageBreak Possible options are: 'visible' and 'invisible'}%
     ]%
+  \gre@trace@end%
 }%
 
 %% macro to define the clef that will appear at the beginning of the lines
@@ -151,6 +159,7 @@
 %% #4 int: height of the flat of first clef, 3 for no flat
 %% #5, #6, #7 = #1, #2, #3 for second clef
 \def\GreSetLinesClef#1#2#3#4#5#6#7{%
+  \gre@trace{GreSetLinesClef{#1}{#2}{#3}{#4}{#5}{#6}{#7}}%
   \gre@save@clef{#1}{#2}{#4}{#5}{#6}{#7}%
   \gre@localleftbox{%
     \gre@skip@temp@four = \gre@dimen@additionalleftspace\relax%
@@ -168,30 +177,36 @@
   \xdef\gre@clefflatheight{#4}%
   \xdef\gre@cleftwoflatheight{#7}%
   \relax%
+  \gre@trace@end%
 }%
 
 % defines the largest clef of the score
 % arguments are the same as \GreSetLinesClef except that the #3 of
 % \GreSetLineClef is removed (always 1)
 \def\GreSetLargestClef#1#2#3#4#5#6{%
+  \gre@trace{GreSetLargestClef{#1}{#2}{#3}{#4}{#5}{#6}}%
   \gre@boxclef{#1}{#2}{0}{1}{#3}{#4}{#5}{#6}%
   \gre@update@clefwidth@largest{\wd\gre@box@temp@width}%
   \relax%
 }%
 
 \def\gre@save@clef#1#2#3#4#5#6{%
+  \gre@trace{gre@save@clef{#1}{#2}{#3}{#4}{#5}{#6}}%
   \global\let\gre@clef=#1\relax%
   \xdef\gre@clefheight{#2}%
   \xdef\gre@clefflatheight{#3}%
   \global\let\gre@cleftwo=#4\relax%
   \xdef\gre@cleftwoheight{#5}%
   \xdef\gre@cleftwoflatheight{#6}%
+  \gre@trace@end%
 }%
 
 %% macro redrawing a key from clefnum, useful for vertical space changes
 \def\gre@updatelinesclef{%
+  \gre@trace{gre@updatelinesclef}%
   \GreSetLinesClef{\gre@clef}{\gre@clefheight}{1}{\gre@clefflatheight}%
   {\gre@cleftwo}{\gre@cleftwoheight}{\gre@cleftwoflatheight}\relax %
+  \gre@trace@end%
 }%
 
 \newbox\gre@box@temp@clef%
@@ -199,6 +214,7 @@
 
 % sets \gre@box@temp@width with the clef, the arguments are the same as \gre@typeclef
 \def\gre@boxclef#1#2#3#4#5#6#7#8{%
+  \gre@trace{gre@boxclef{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}}%
   \global\setbox\gre@box@temp@width=\hbox{%
     \ifcase#7%
       \gre@typesingleclef{#1}{#2}{#3}{#5}%
@@ -219,9 +235,11 @@
       \fi %
     \fi %
   }%
+  \gre@trace@end%
 }
 
 \def\gre@saveclefextrema#1#2{%
+  \gre@trace{gre@saveclefextrema{#1}{#2}}%
   % compute the clef extrema
   \ifcase#1\or % first@1
     \global\let\gre@pitch@cleftop\gre@pitch@e %
@@ -284,12 +302,15 @@
       \global\let\gre@pitch@clefbottom\gre@pitch@i %
     \fi %
   \fi %
+  \gre@trace@end%
 }%
 
 \def\GreInitialClefPosition#1#2{%
+  \gre@trace{GreInitialClefPosition{#1}{#2}}%
   \ifgre@showclef %
     \gre@saveclefextrema{#1}{#2}%
   \fi %
+  \gre@trace@end%
 }%
 
 % macro that typesets the clef
@@ -303,6 +324,7 @@
 %% #7: the line of the secondary clef (1 is the lowest)
 %% #8: if 3, it means that we must not put a flat after the secondary clef, otherwise it's the height of the flat
 \def\gre@typeclef#1#2#3#4#5#6#7#8{%
+  \gre@trace{gre@typeclef{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}}%
   \gre@saveclefextrema{#2}{#7}%
   \gre@boxclef{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}%
   \ifcase#3%
@@ -317,6 +339,7 @@
     \gre@skip@temp@two=\gre@space@skip@shortspaceafterlineclef\relax%
   \fi %
   \gre@hskip\gre@skip@temp@two %
+  \gre@trace@end%
 }%
 
 % macro that typesets one clef
@@ -326,6 +349,7 @@
 %% #3: if we must use small key characters (inside a line) or not 0: if not inside, 1 if inside
 %% #4: if 3, it means that we must not put a flat after the key, otherwise it's the height of the flat
 \def\gre@typesingleclef#1#2#3#4{%
+  \gre@trace{gre@typesingleclef{#1}{#2}{#3}{#4}}%
   \ifcase#2 %
   \or%
     \gre@calculate@glyphraisevalue{\gre@pitch@c}{0}{}%
@@ -358,12 +382,14 @@
     \GreFlat{#4}{1}{}{}{}%
   \fi %
   \relax %
+  \gre@trace@end%
 }%
 
 % macro that writes the initial key, and sets the next keys to the same value
 % if #3 is 3, it means that we must not put a flat after the key, otherwise it's the height
 % of the flat
 \def\GreSetInitialClef#1#2#3#4#5#6#7{%
+  \gre@trace{GreSetInitialClef{#1}{#2}{#3}{#4}{#5}{#6}{#7}}%
   \gre@save@clef{#1}{#2}{#3}{#4}{#5}{#6}%
   \ifgre@showclef%
     \ifnum\gre@initiallines=1\relax %
@@ -386,6 +412,7 @@
     \gre@adjustsecondline %
   \fi %
   \relax%
+  \gre@trace@end%
 }%
 
 % macro called when the key changes
@@ -394,6 +421,7 @@
 % if #4 is 3, it means that we must not put a flat after the key, otherwise it's the height
 % of the flat
 \def\GreChangeClef#1#2#3#4#5#6#7{%
+  \gre@trace{GreChangeClef{#1}{#2}{#3}{#4}{#5}{#6}{#7}}%
   % it makes no sense to change the clef when there is no clef...
   \gresetclef{visible}%
   \gre@save@clef{#1}{#2}{#4}{#5}{#6}{#7}%
@@ -420,11 +448,13 @@
   \gre@hskip\gre@skip@temp@four %
   \GreNoBreak %
   \relax%
+  \gre@trace@end%
 }%
 
 % custos just typesets a custos, useful for before the key changes for example
 % #1 is the height
 \def\GreCustos#1#2{%
+  \gre@trace{GreCustos{#1}{#2}}%
   \GreNoBreak %
   \ifdim\gre@skip@bar@lastskip=0pt\else % we're after a bar:
     \kern-\gre@skip@bar@lastskip %
@@ -475,19 +505,23 @@
   \fi %
   \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
   \relax %
+  \gre@trace@end%
 }%
 
 % typesets a custos for the end of the score
 \def\GreFinalCustos#1#2{%
+  \gre@trace{GreFinalCustos{#1}{#2}}%
   \GreNoBreak%
   \GreCustos{#1}{#2}%
   \gre@endofglyphcommon %
+  \gre@trace@end%
 }
 
 % the argument is the height
 \edef\gre@nextcustospitch{\gre@pitch@dummy}%
 \edef\gre@nextcustosalteration{}%
 \def\GreNextCustos#1#2{%
+  \gre@trace{GreNextCustos{#1}{#2}}%
   \gre@debugmsg{custos}{nextcustos = #1,#2}%
   \ifnum\gre@insidediscretionary=0\relax %
     \gre@debugmsg{custos}{not discretionary}%
@@ -527,11 +561,13 @@
     \fi %
   \fi %
   \relax%
+  \gre@trace@end%
 }%
 
 % macro that typesets an additional line at the top for custos at end of line
 
 \def\gre@additionaltopcustoslineend{%
+  \gre@trace{gre@additionalaltopcustoslineend}%
   \gre@dimen@temp@five=\dimexpr(\gre@dimen@staffheight %
     + \gre@space@dimen@spacebeneathtext %
     + \gre@space@dimen@spacelinestext %
@@ -549,9 +585,11 @@
     \endgre@style@additionalstafflines%
   }%
   \relax %
+  \gre@trace@end%
 }%
 
 \def\gre@additionalbottomcustoslineend{%
+  \gre@trace{gre@additionalbottomcustoslineend}%
   \gre@dimen@temp@five=\dimexpr(\gre@space@dimen@spacebeneathtext %
     + \gre@space@dimen@spacelinestext %
     + \gre@dimen@additionalbottomspace %
@@ -569,11 +607,13 @@
     \endgre@style@additionalstafflines%
   }%
   \relax %
+  \gre@trace@end%
 }%
 
 % same macros, but for a custos in the middle
 
 \def\gre@additionaltopcustoslinemiddle{%
+  \gre@trace{gre@additionaltopcustoslinemiddle}%
   \gre@dimen@temp@five=\dimexpr(\gre@dimen@staffheight %
     + \gre@space@dimen@spacebeneathtext %
     + \gre@space@dimen@spacelinestext %
@@ -591,9 +631,11 @@
     \endgre@style@additionalstafflines%
   }%
   \relax %
+  \gre@trace@end%
 }%
 
 \def\gre@additionalbottomcustoslinemiddle{%
+  \gre@trace{gre@additionalbottomcustoslinemiddle}%
   \gre@dimen@temp@five=\dimexpr(\gre@space@dimen@spacebeneathtext %
     + \gre@space@dimen@spacelinestext %
     + \gre@dimen@additionalbottomspace %
@@ -611,26 +653,32 @@
     \endgre@style@additionalstafflines%
   }%
   \relax %
+  \gre@trace@end%
 }%
 
 \newif\ifgre@usecustosalteration%
 \gre@usecustosalterationtrue%
 \def\gresetcustosalteration#1{%
+  \gre@trace{gresetcustosalteration{#1}}%
   \IfStrEqCase{#1}{%
     {visible}{\gre@usecustosalterationtrue}%
     {invisible}{\gre@usecustosalterationfalse}%
   }[% all other cases
     \gre@error{Unrecognized option "#1" for \protect\gresetcustosalteration\MessageBreak Possible options are: 'visible' and 'invisible'}%
   ]%
+  \gre@trace@end%
 }%
 \def\gre@custosalteration#1#2{%
+  \gre@trace{gre@custosalteration{#1}{#2}}%
   \ifgre@usecustosalteration %
     \IfStrEq{#2}{}{}{\csname Gre#2\endcsname{#1}{0}{}{}{}}%
   \fi %
+  \gre@trace@end%
 }%
 
 % #2 is 0 for measurement only, 1 in the normal case, 2 for the right box
 \def\gre@pickcustos#1#2{%
+  \gre@trace{gre@pickcustos{#1}{#2}}%
   % set attributes to adjust the line height for the pitch of the custos
   \ifcase#2% 0
   \or % 1
@@ -702,6 +750,7 @@
   \or\gre@fontchar@custosbottomlong %
   \or\gre@fontchar@custosbottommiddle %
   \fi%
+  \gre@trace@end%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -716,24 +765,30 @@
   \@ifnextchar[{\gre@setbracerendering}{\gre@setallbracerendering}%
 }%
 \def\gre@setallbracerendering#1{%
+  \gre@trace{gre@setallbracerendering{#1}}%
   \gre@@setbracerendering{brace}{#1}%
   \gre@@setbracerendering{underbrace}{#1}%
   \gre@@setbracerendering{curlybrace}{#1}%
   \gre@@setbracerendering{barbrace}{#1}%
+  \gre@trace@end%
 }%
 \def\gre@setbracerendering[#1]#2{%
+  \gre@trace{gre@setbracerendering[#1]{#2}}%
   \IfStrEqCase{#1}{%
     {brace}{\gre@@setbracerendering{#1}{#2}}%
     {underbrace}{\gre@@setbracerendering{#1}{#2}}%
     {curlybrace}{\gre@@setbracerendering{#1}{#2}}%
     {barbrace}{\gre@@setbracerendering{#1}{#2}}%
   }[\gre@error{Unrecognized option "#1" for \protect\gresetbracerendering\MessageBreak Possible options are: 'brace', 'underbrace', 'curlybrace', and 'barbrace'}]%
+  \gre@trace@end%
 }%
 \def\gre@@setbracerendering#1#2{%
+  \gre@trace{gre@@setbracerendering{#1}{#2}}%
   \IfStrEqCase{#2}{%
     {font}{\csname gre@metapost@#1false\endcsname}%
     {metapost}{\csname gre@metapost@#1true\endcsname}%
   }[\gre@error{Unrecognized option "#2" for \protect\gresetbracerendering\MessageBreak Possible options are: 'font' and 'metapost'}]%
+  \gre@trace@end%
 }%
 
 \gdef\gre@fontchar@curlybrace{\gre@font@music\GreCPCurlyBrace}%
@@ -749,9 +804,11 @@
 % #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
 % #5: 1 if we put an accentus above or not
 \def\GreOverCurlyBrace#1#2#3#4#5{%
+  \gre@trace{GreOverCurlyBrace{#1}{#2}{#3}{#4}{#5}}%
   \ifgre@boxing\else %
     \gre@brace@common{#1}{#2}{#3}{#4}{#5}{\gre@pitch@overbraceglyph}{\gre@fontchar@curlybrace}%
   \fi %
+  \gre@trace@end%
 }%
 
 % #1: the width
@@ -759,9 +816,11 @@
 % #3: a horizontal shift
 % #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
 \def\GreOverBrace#1#2#3#4{%
+  \gre@trace{GreOverBrace{#1}{#2}{#3}{#4}}%
   \ifgre@boxing\else %
     \gre@brace@common{#1}{#2}{#3}{#4}{0}{\gre@pitch@overbraceglyph}{\gre@fontchar@brace}%
   \fi %
+  \gre@trace@end%
 }%
 
 % #1: the width
@@ -769,9 +828,11 @@
 % #3: a horizontal shift
 % #4: 1 if we shift to the beginning of the last glyph, 0 otherwise
 \def\GreUnderBrace#1#2#3#4{%
+  \gre@trace{GreUnderBrace{#1}{#2}{#3}{#4}}%
   \ifgre@boxing\else %
     \gre@brace@common{#1}{#2}{#3}{#4}{0}{\gre@pitch@underbrace}{\gre@fontchar@underbrace}%
   \fi %
+  \gre@trace@end%
 }%
 
 % #1: the width
@@ -782,6 +843,7 @@
 % #6: the pitch at which to compute the height
 % #7: the brace character
 \def\gre@brace@common#1#2#3#4#5#6#7{%
+  \gre@trace{gre@brace@common{#1}{#2}{#3}{#4}{#5}{#6}{#7}}%
   \ifnum#4=1\relax %
     \setbox\gre@box@temp@sign=\hbox{\gre@fontchar@punctum}%
     \gre@dimen@temp@five=\wd\gre@box@temp@sign %
@@ -831,12 +893,15 @@
     \kern\gre@dimen@temp@five %
   \fi %
   \relax %
+  \gre@trace@end%
 }%
 % #1 : the width
 % #2 : the brace character
 \def\gre@draw@fontbrace#1#2{%
+  \gre@trace{gre@draw@fontbrace{#1}{#2}}%
   \setbox\gre@box@temp@sign=\hbox{#2}%
   \gre@resizebox{#1}{\ht\gre@box@temp@sign}{#2}%
+  \gre@trace@end%
 }%
 
 % #1: the width, or * for the bar brace width
@@ -853,7 +918,7 @@
 
 % #1: the width
 \def\gre@draw@curlybrace#1{%
-  \gre@debugmsg{general}{curly brace width = #1}%
+  \gre@trace{gre@draw@curlybrace{#1}}%
   \gre@metapost{
     \grebracemetapostpreamble{#1}
     transform t;
@@ -901,10 +966,12 @@
       transformed t;
     endfig;
   }%
+  \gre@trace@end%
 }%
 
 % #1: the width
 \def\gre@draw@brace#1{%
+  \gre@trace{gre@draw@brace{#1}}%
   \gre@draw@roundbrace{#1}{.89500}{
        (-.00192,.70347) % start the top
     .. controls (-.00192,.70525) and (-.00134,.70740)
@@ -924,10 +991,12 @@
     .. controls (.01103,.69500) and (-.00192,.69508)
     .. (-.00192,.70347) -- cycle
   }%
+  \gre@trace@end%
 }%
 
 % #1: the width
 \def\gre@draw@underbrace#1{%
+  \gre@trace{gre@draw@underbrace{#1}}%
   \gre@draw@roundbrace{#1}{.25500}{
        (-.00192,.24653) % start the bottom
     .. controls (-.00192,.24475) and (-.00134,.24260)
@@ -947,12 +1016,14 @@
     .. controls (.01103,.25500) and (-.00192,.25492)
     .. (-.00192,.24653) -- cycle
   }%
+  \gre@trace@end%
 }%
 
 % #1: the width
 % #2: height of the bounding box
 % #3: metapost commands to draw the outline
 \def\gre@draw@roundbrace#1#2#3{%
+  \gre@trace{gre@draw@roundbrace{#1}{#2}{#3}}%
   \gre@debugmsg{general}{round brace width = #1}%
   \gre@metapost{
     \grebracemetapostpreamble{#1}
@@ -974,12 +1045,14 @@
       transformed t;
     endfig;
   }%
+  \gre@trace@end%
 }%
 
 % #1 : x-distance
 % #2 : y-distance
 % #3 : -1 for below, 1 for above
 \def\gre@draw@slur#1#2#3{%
+  \gre@trace{gre@draw@slur{#1}{#2}{#3}}%
   \gre@metapost{
     \grebracemetapostpreamble{\directlua{gregoriotex.hypotenuse([[#1]],[[#2]])}}
     transform t;
@@ -998,6 +1071,7 @@
       ) transformed t withpen pencircle scaled 0.3;
     endfig;
   }%
+  \gre@trace@end%
 }%
 
 \newdimen\greslurheight
@@ -1008,6 +1082,7 @@
 % #5 : y-distance
 % #6 : end height if #6 not given
 \def\GreSlur#1#2#3#4#5#6{%
+  \gre@trace{GreSlur{#1}{#2}{#3}{#4}{#5}{#6}}%
   \ifgre@boxing\else %
     \ifnum\number#2 > 0\relax %
       \gre@calculate@glyphraisevalue{#1}{15}{}%
@@ -1038,9 +1113,11 @@
     }}%
   \fi %
   \relax %
+  \gre@trace@end%
 }%
 
 % #1: id of the variable length brace within the score
+% this function cannot be traced because doing so interferes with it producing something which TeX recognizes as a number
 \def\GreVarBraceLength#1{%
   \ifgre@boxing\else %
     \directlua{gregoriotex.var_brace_len(#1)}%
@@ -1051,6 +1128,7 @@
 % #2: 0 = no left-shift, 1 = left-shift 1 punctum, 2 = left shift 1/2 punctum
 % #3: 1 if the start, 2 if the end
 \def\GreVarBraceSavePos#1#2#3{%
+  \gre@trace{GreVarBraceSavePos{#1}{#2}{#3}}%
   \ifgre@boxing\else %
     \ifcase#2 % 0
       \gre@debugmsg{general}{save case 0}%
@@ -1071,6 +1149,7 @@
     \directlua{gregoriotex.save_length(#1, #3)}%
   \fi %
   \relax %
+  \gre@trace@end%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1087,6 +1166,7 @@
 % #3 is 1 in case of a punctommora in the note before the last note of a podatus, porrectus or torculus resupinus, 0 otherwise.
 % #4 is 1 if we are at a punctum inclinatum, 0 otherwise
 \def\gre@punctum@mora#1#2#3#4{%
+  \gre@trace{gre@punctum@mora{#1}{#2}{#3}{#4}}%
   \GreNoBreak %
   \ifcase#2\relax %
     \gre@skip@temp@four = \gre@space@skip@spacebeforesigns\relax%
@@ -1158,27 +1238,33 @@
   \fi %
   \GreNoBreak %
   \relax%
+  \gre@trace@end%
 }%
 
 \def\GrePunctumMora#1#2#3#4{%
+  \gre@trace{GrePunctumMora{#1}{#2}{#3}{#4}}%
   \ifgre@disablemora\else %
     \gre@punctum@mora{#1}{#2}{#3}{#4}%
   \fi %
   \relax %
+  \gre@trace@end%
 }
 
 % a function to typeset an augmentum duplex, easy enough to be understood...
 \def\GreAugmentumDuplex#1#2#3{%
+  \gre@trace{GreAugmentumDuplex{#1}{#2}{#3}}%
   \ifgre@boxing\else %
     \GrePunctumMora{#1}{1}{#3}{0}%
   \fi %
   \GrePunctumMora{#2}{0}{0}{0}%
   \relax %
+  \gre@trace@end%
 }%
 
 % quite simple function: #1 is the height, #2 is the string, #3 is #2 of punctum mora, #4 is #3 of punctum mora
 % #3 is 1 if it must be a bit higher
 \def\GreLowChoralSign#1#2#3{%
+  \gre@trace{GreLowChoralSign{#1}{#2}{#3}}%
   \GreNoBreak %
   \gre@skip@temp@four = \gre@space@skip@beforelowchoralsignspace\relax%
   \gre@hskip\gre@skip@temp@four %
@@ -1190,12 +1276,15 @@
   \fi %
   \raise\gre@dimen@glyphraisevalue\hbox{\gre@style@lowchoralsign#2\endgre@style@lowchoralsign}%
   \relax %
+  \gre@trace@end%
 }%
 
 \def\GreHighChoralSign#1#2#3{%
+  \gre@trace{GreHighChoralSign{#1}{#2}{#3}}%
   \GreNoBreak %
   \gre@vepisemaorrare{#1}{#3}{}{3}{\gre@style@highchoralsign#2\endgre@style@highchoralsign}%
   \relax %
+  \gre@trace@end%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1224,6 +1313,7 @@
 % #6 is the type of sign (1: vertical episema, 2: rare sign, 3: choral sign)
 % #7 is the choral sign if relevant
 \def\gre@vepisemaorrareaux#1#2#3#4#5#6#7{%
+  \gre@trace{gre@vepisemaorrareaux{#1}{#2}{#3}{#4}{#5}{#6}{#7}}%
   % first we set \gre@dimen@temp@three to the width of the last glyph
   \gre@dimen@temp@three=\gre@dimen@lastglyphwidth\relax%
   \setbox\gre@box@temp@sign=\hbox{\gre@font@music #2}%
@@ -1264,6 +1354,7 @@
   \advance\gre@dimen@temp@three by -2\gre@dimen@temp@two %
   \kern\gre@dimen@temp@three%
   \relax%
+  \gre@trace@end%
 }%
 
 \directlua{gregoriotex.emit_offset_macros()}%
@@ -1277,6 +1368,7 @@
 % #4 is type (1: vertical episema, 2: rare sign, 3: choral sign, 4: brace above the bar)
 % #5 is the choral sign if relevant
 \def\gre@vepisemaorrare#1#2#3#4#5{%
+  \gre@trace{gre@vepisemaorrare{#1}{#2}{#3}{#4}{#5}}%
   \ifgre@boxing\else %
     \ifcase#4\or %
       % if it is a vertical episema, we call the normal calculateglyphvalue
@@ -1299,22 +1391,28 @@
     \gre@v@case{#2}{#3}{#4}{#5}%
   \fi %
   \relax%
+  \gre@trace@end%
 }%
 
 \def\GreVEpisema#1#2{%
+  \gre@trace{GreVEpisema{#1}{#2}}%
   \ifgre@disablevepisema\else %
     \gre@vepisemaorrare{#1}{#2}{\GreCPVEpisema}{1}{}%
   \fi %
   \relax %
+  \gre@trace@end%
 }%
 
 \def\GreBarBrace#1{%
+  \gre@trace{GreBarBrace{#1}}%
   \gre@vepisemaorrare{\gre@pitch@overbraceglyph}{#1}{%
     \gre@render@barbrace%
   }{4}{}%
   \relax %
+  \gre@trace@end%
 }%
 \def\gre@render@barbrace{%
+  \gre@trace{gre@render@barbrace}%
   \hbox{%
     \ifgre@metapost@barbrace %
       \gre@draw@brace{*}%
@@ -1322,51 +1420,70 @@
       \gre@fontchar@abovebarbrace %
     \fi %
   }%
+  \gre@trace@end%
 }%
 
 \def\GreBarVEpisema#1{%
+  \gre@trace{GreBarVEpisema{#1}}%
   \gre@vepisemaorrare{\gre@pitch@barvepisema}{#1}{\GreCPVEpisema}{1}{}%
   \relax %
+  \gre@trace@end%
 }%
 
 \def\GreAccentus#1#2{%
+  \gre@trace{GreAccentus{#1}{#2}}%
   \gre@vepisemaorrare{#1}{#2}{\GreCPAccentus}{2}{}%
   \relax %
+  \gre@trace@end%
 }%
 
 \def\GreSemicirculus#1#2{%
+  \gre@trace{GreSemicirculus{#1}{#2}}%
   \gre@vepisemaorrare{#1}{#2}{\GreCPSemicirculus}{2}{}%
   \relax %
+  \gre@trace@end%
 }%
 
 \def\GreCirculus#1#2{%
+  \gre@trace{GreCirculus{#1}{#2}}%
   \gre@vepisemaorrare{#1}{#2}{\GreCPCirculus}{2}{}%
   \relax %
+  \gre@trace@end%
 }%
 
 \def\GreReversedAccentus#1#2{%
+  \gre@trace{GreReversedAccentus{#1}{#2}}%
   \gre@vepisemaorrare{#1}{#2}{\GreCPAccentusReversus}{2}{}%
   \relax %
+  \gre@trace@end%
 }%
 
 \def\GreReversedSemicirculus#1#2{%
+  \gre@trace{GreReversedSemicirculus{#1}{#2}}%
   \gre@vepisemaorrare{#1}{#2}{\GreCPSemicirculusReversus}{2}{}%
   \relax %
+  \gre@trace@end%
 }%
 
 \def\GreMusicaFictaFlat#1#2{%
+  \gre@trace{GreMusicaFictaFlat{#1}{#2}}%
   \gre@vepisemaorrare{#1}{#2}{\GreCPFlat}{2}{}%
   \relax %
+  \gre@trace@end%
 }%
 
 \def\GreMusicaFictaNatural#1#2{%
+  \gre@trace{GreMusicaFictaNatural{#1}{#2}}%
   \gre@vepisemaorrare{#1}{#2}{\GreCPNatural}{2}{}%
   \relax %
+  \gre@trace@end%
 }%
 
 \def\GreMusicaFictaSharp#1#2{%
+  \gre@trace{GreMusicaFictaSharp{#1}{#2}}%
   \gre@vepisemaorrare{#1}{#2}{\GreCPSharp}{2}{}%
   \relax %
+  \gre@trace@end%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1391,6 +1508,7 @@
 %        end of #1
 % #4 argument is the same as in hepisorline
 \def\gre@hepisorlineaux#1#2#3#4{%
+  \gre@trace{gre@hepisorlineaux{#1}{#2}{#3}{#4}}%
   \ifcase#3% case 0
   % first we set \gre@dimen@temp@three to the width of the last glyph
     \gre@dimen@temp@three=\gre@dimen@lastglyphwidth\relax%
@@ -1442,10 +1560,12 @@
   \advance\gre@dimen@temp@three by -\gre@dimen@temp@two %
   \kern\gre@dimen@temp@three %
   \relax%
+  \gre@trace@end%
 }%
 
 % another dumb top function
 \def\GreAdditionalLine#1#2#3{%
+  \gre@trace{GreAdditionalLine{#1}{#2}{#3}}%
   \ifgre@showlines %
     \ifgre@boxing\else %
       \xdef\gre@saved@dimen@glyphraise{\the\gre@dimen@glyphraisevalue}%
@@ -1456,6 +1576,7 @@
     \fi %
   \fi %
   \relax %
+  \gre@trace@end%
 }%
 
 % #1 0 for over staff,
@@ -1470,6 +1591,7 @@
 %    2 for #6 space after
 % #6 custom space after, used if #4 is 2
 \def\GreDrawAdditionalLine#1#2#3#4#5#6{%
+  \gre@trace{GreDrawAdditionalLine{#1}{#2}{#3}{#4}{#5}{#6}}%
   \ifgre@showlines %
     \xdef\gre@saved@dimen@glyphraise{\the\gre@dimen@glyphraisevalue}%
     \gre@style@additionalstafflines %
@@ -1478,8 +1600,10 @@
     \gre@dimen@glyphraisevalue=\gre@saved@dimen@glyphraise\relax%
   \fi %
   \relax %
+  \gre@trace@end%
 }
 \def\gre@drawadditionalline#1#2#3#4#5#6{%
+  \gre@trace{gre@drawadditionalline{#1}{#2}{#3}{#4}{#5}{#6}}%
   \ifcase#3 % 0
     \gre@dimen@temp@five=0pt\relax %
   \or % 1
@@ -1520,6 +1644,7 @@
     \vrule height \gre@dimen@stafflineheight %
            width \gre@dimen@temp@two %
   }%
+  \gre@trace@end%
 }
 
 % a function to typeset a horizontal line (additional line or episema).
@@ -1544,6 +1669,7 @@
 %%   4 : low in space below note
 %%   5 : high in space below note
 \def\gre@hepisorline#1#2#3#4#5#6#7{{%
+  \gre@trace{gre@hepisorline{#1}{#2}{#3}{#4}{#5}{#6}{#7}}%
   \ifcase#4 % 0
     \gre@calculate@glyphraisevalue{#1}{9}{#7}%
   \or % 1
@@ -1557,6 +1683,7 @@
   \global\gre@dimen@glyphraisevalue=\dimexpr\gre@dimen@glyphraisevalue#6\relax %
   \gre@h@case{#2}{#3}{#4}{#5}%
   \relax%
+  \gre@trace@end%
 }}%
 
 % dumb top function
@@ -1572,6 +1699,7 @@
 %%   4 : low in space below note
 %%   5 : high in space below note
 \def\GreHEpisema#1#2#3#4#5#6#7#8#9{%
+  \gre@trace{GreHEpisema{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}{#9}}%
   \ifgre@boxing\else\ifgre@disablehepisema\else %
     \gre@prephepisemaledgerlineheuristics%
     #7%
@@ -1583,12 +1711,14 @@
     \gre@resetledgerlineheuristics%
   \fi\fi %
   \relax %
+  \gre@trace@end%
 }%
 
 \newif\ifgre@hepisemabridge
 \gre@hepisemabridgetrue
 
 \def\gresethepisema#1{%
+  \gre@trace{gresethepisema{#1}}%
   \IfStrEqCase{#1}{%
     {bridge}%
       {\gre@hepisemabridgetrue}%
@@ -1597,6 +1727,7 @@
     }[% all other cases
       \gre@error{Unrecognized option, #1, for \protect\gresethepisema\MessageBreak Possible options are: 'bridge' and 'break'}%
     ]%
+  \gre@trace@end%
 }%
 
 % same but for a "bridge episema" after the last note of a glyph (element, syllable) if the next episema is at the same height
@@ -1613,6 +1744,7 @@
 %%   4 : low in space below note
 %%   5 : high in space below note
 \def\GreHEpisemaBridge#1#2#3#4#5#6{%
+  \gre@trace{GreHEpisemaBridge{#1}{#2}{#3}{#4}{#5}{#6}}%
   \ifgre@hepisemabridge%
     \ifgre@boxing\else %
       \gre@prephepisemaledgerlineheuristics%
@@ -1645,6 +1777,7 @@
     \fi %
   \fi %
   \relax %
+  \gre@trace@end%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1654,46 +1787,63 @@
 % we define two types of macro for each four bar : when it is inside a syllable, and when it is not
 
 \def\GreInVirgula#1#2#3{%
+  \gre@trace{GreInVirgula{#1}{#2}{#3}}%
   \gre@writebar{0}{1}{#1}{#2}{#3}%
   \relax%
+  \gre@trace@end%
 }%
 
 \def\GreVirgula#1#2#3{%
+  \gre@trace{GreVirgula{#1}{#2}{#3}}%
   \gre@writebar{0}{0}{#1}{#2}{#3}%
   \relax%
+  \gre@trace@end%
 }%
 
 \def\GreInDivisioMinima#1#2#3{%
+  \gre@trace{GreInDivisioMinima{#1}{#2}{#3}}%
   \gre@writebar{1}{1}{#1}{#2}{#3}%
   \relax%
+  \gre@trace@end%
 }%
 
 \def\GreDivisioMinima#1#2#3{%
+  \gre@trace{GreDivisioMinima{#1}{#2}{#3}}%
   \gre@writebar{1}{0}{#1}{#2}{#3}%
   \relax%
+  \gre@trace@end%
 }%
 
 \def\GreInDivisioMinor#1#2{%
+  \gre@trace{GreInDivisioMinor{#1}{#2}}%
   \gre@writebar{2}{1}{#1}{#2}{0}%
   \relax%
+  \gre@trace@end%
 }%
 
 \def\GreDivisioMinor#1#2{%
+  \gre@trace{GreDivisioMinor{#1}{#2}}%
   \gre@writebar{2}{0}{#1}{#2}{0}%
   \relax%
+  \gre@trace@end%
 }%
 
 \def\GreInDivisioMaior#1#2{%
+  \gre@trace{GreInDivisioMaior{#1}{#2}}%
   \gre@writebar{3}{1}{#1}{#2}{0}%
   \relax%
+  \gre@trace@end%
 }%
 
 \def\GreDivisioMaior#1#2{%
+  \gre@trace{GreDivisioMaior{#1}{#2}}%
   \gre@writebar{3}{0}{#1}{#2}{0}%
   \relax%
+  \gre@trace@end%
 }%
 
 \def\GreDominica#1#2#3{%
+  \gre@trace{GreDominica{#1}{#2}{#3}}%
   \ifcase#1\or %
     \gre@writebar{6}{0}{#2}{#3}{0}%
   \or %
@@ -1712,9 +1862,11 @@
     \gre@writebar{13}{0}{#2}{#3}{0}%
   \fi %
   \relax%
+  \gre@trace@end%
 }%
 
 \def\GreInDominica#1#2#3{%
+  \gre@trace{GreInDominica{#1}{#2}{#3}}%
   \ifcase#1\or %
     \gre@writebar{6}{1}{#2}{#3}{0}%
   \or %
@@ -1733,30 +1885,36 @@
     \gre@writebar{13}{1}{#2}{#3}{0}%
   \fi %
   \relax%
+  \gre@trace@end%
 }%
 
 \def\GreInDivisioFinalis#1#2{%
+  \gre@trace{GreInDivisioFinalis{#1}{#2}}%
   \ifgre@endofscore %
     \gre@writebar{5}{1}{#1}{#2}{0}%
   \else %
     \gre@writebar{4}{1}{#1}{#2}{0}%
   \fi %
   \relax%
+  \gre@trace@end%
 }%
 
 \def\GreDivisioFinalis#1#2{%
+  \gre@trace{GreDivisioFinalis{#1}{#2}}%
   \ifgre@endofscore %
     \gre@writebar{5}{0}{#1}{#2}{0}%
   \else %
     \gre@writebar{4}{0}{#1}{#2}{0}%
   \fi %
   \relax%
+  \gre@trace@end%
 }%
 
 % #1 is #2 of gre@writebar (@standalone or nothing)
 % #2 is #3 of gre@writebar (@text or @notext, only if standalone)
 % #3 is #5 of gre@writebar (@short or nothing)
 % emits the suffix of the space
+% this function cannot be traced because it appears inside \csname constructs
 \def\gre@bar@space@suffix#1#2#3{%
   \ifgre@newbarspacing %
     \ifcase#1 %
@@ -1777,6 +1935,7 @@
 \gre@count@shiftaftermora=5
 
 \def\gresetshiftaftermora#1{%
+  \gre@trace{gresetshiftaftermora{#1}}%
   \IfStrEqCase{#1}{%
     {always}%
       {\gre@count@shiftaftermora=5}%
@@ -1793,6 +1952,7 @@
     }[% all other cases
       \gre@error{Unrecognized option "#1" in gresetshiftaftermora\MessageBreak Possible options are: 'always', 'barsonly', 'notesonly', 'barsnotextonly', 'barsinsideonly' and 'never'}%
     ]%
+  \gre@trace@end%
 }%
 
 % width of a punctum mora, reinitalized at each score
@@ -1805,6 +1965,7 @@
 %   - 1 for the general case
 %   - 2 when the punctum mora is before a bar
 \def\gre@get@unkern@aftermora#1{%
+  \gre@trace{gre@get@unkern@aftermora{#1}}%
   \ifdim\gre@dimen@morawidth=0pt\relax %
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@fontchar@punctummora}%
     \global\gre@dimen@morawidth=\wd\gre@box@temp@width %
@@ -1815,9 +1976,11 @@
     \global\gre@skip@punctummorashift=\glueexpr - \gre@dimen@morawidth - \gre@space@skip@spacebeforesigns + \gre@space@skip@moraadjustmentbar\relax %
   \fi %
   \relax %
+  \gre@trace@end%
 }
 
 \def\gre@unkern@bar@aftermora{%
+  \gre@trace{gre@unkern@bar@aftermora}%
   \ifgre@newbarspacing%
     % don't apply a negative kern on the first glyph
     % while boxing, otherwise the box width will be wrong
@@ -1835,6 +1998,7 @@
     \kern\gre@skip@punctummorashift %
   \fi%
   \relax %
+  \gre@trace@end%
 }
 
 \newskip\gre@skip@bar@lastskip% skip after last bar
@@ -1846,6 +2010,7 @@
 %% 4: macros that may happen before the skip after the bar (typically GreVEpisema)
 %% 5: 0 for the normal version of spaces, 1 for the short one (virgula and minima only)
 \def\gre@writebar#1#2#3#4#5{%
+  \gre@trace{gre@writebar{#1}{#2}{#3}{#4}{#5}}%
   % first, for the bar to be really centered, if the last glyph has a punctum
   % mora, we kern of the corresponding space. We do it only in the case
   % of a bar in the middle of other notes.
@@ -2090,6 +2255,7 @@
   \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
   \global\gre@firstglyphfalse %
   \relax%
+  \gre@trace@end%
 }%
 
 \def\gre@fontchar@divisiomaior{%
@@ -2122,6 +2288,7 @@
 
 %macro to end a line with a divisio finalis
 \def\GreFinalDivisioFinalis#1{%
+  \gre@trace{GreFinalDivisioFinalis{#1}}%
   \GreBarSyllable{\GreSetThisSyllable{}{}{}{}{}}{}{}{1}{\GreSetNextSyllable{}{}{}{}{}\GreLastOfLine}{}{16}{}{%
     \ifgre@newbarspacing\else %
       \gre@hskip\gre@space@skip@bar@finalfinalis %
@@ -2132,16 +2299,19 @@
     #1%
   }%
   \relax%
+  \gre@trace@end%
 }%
 
 %macro to end a line with a divisio maior
 \def\GreFinalDivisioMaior#1{%
+  \gre@trace{GreFinalDivisioMaior{#1}}%
   \GreBarSyllable{\GreSetThisSyllable{}{}{}{}{}}{}{}{1}{\GreSetNextSyllable{}{}{}{}{}\GreLastOfLine}{}{16}{}{%
     \GreLastOfScore %
     \GreDivisioMaior{0}{}%
     #1%
   }%
   \relax%
+  \gre@trace@end%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2155,6 +2325,7 @@
 
 % macro for manipulating above flag
 \def\gresetlinesbehindpunctumcavum#1{%
+  \gre@trace{gresetlinesbehindpunctumcavum{#1}}%
   \IfStrEqCase{#1}{%
     {visible}%
       {\gre@hidepclinesfalse}%
@@ -2163,6 +2334,7 @@
     }[% all other cases
       \gre@error{Unrecognized option "#1" for \protect\gresetlinesbehindpunctumcavum\MessageBreak Possible options are: 'visible' and 'invisible'}%
     ]%
+  \gre@trace@end%
 }%
 
 % flag to indicate that lines behind an alteration should be hidden
@@ -2172,6 +2344,7 @@
 
 % macro for manipulating above flag
 \def\gresetlinesbehindalteration#1{%
+  \gre@trace{gresetlinesbehindalteration{#1}}%
   \IfStrEqCase{#1}{%
     {visible}%
       {\gre@hidealtlinesfalse}%
@@ -2180,6 +2353,7 @@
     }[% all other cases
       \gre@error{Unrecognized option "#1" for \protect\gresetlinesbehindalteration\MessageBreak Possible options are: 'visible' and 'invisible'}%
     ]%
+  \gre@trace@end%
 }%
 
 % is last glyph a cavum?
@@ -2193,6 +2367,7 @@
 % isonaline and glyphraisevalue are correctly set.
 % #2 is 0 for alteration or 1 for normal cavum
 \def\gre@fillhole#1#2{%
+  \gre@trace{gre@fillhole{#1}{#2}}%
   \ifgre@boxing\else %
     \global\gre@count@lastglyphiscavum=1\relax %
     \setbox\gre@box@temp@sign=\hbox{#1}%
@@ -2208,6 +2383,7 @@
     \GreNoBreak %
   \fi %
   \relax %
+  \gre@trace@end%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2223,6 +2399,7 @@
 % #6 are the signs to typeset after the glyph (almost all signs)
 % #7 is the line:char:column for a textedit link
 \def\gre@alteration#1#2#3#4#5#6#7{%
+  \gre@trace{gre@alteration{#1}{#2}{#3}{#4}{#5}{#6}{#7}}%
   \setbox\gre@box@temp@width=\hbox{\gre@pointandclick{#2}{#7}}%
   \ifnum#4=0\relax %
     \gre@newglyphcommon %
@@ -2258,28 +2435,35 @@
     \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
   \fi %
   \relax %
+  \gre@trace@end%
 }%
 
 % This macro typesets a flat on the height provided by #1.
 % #2 is 1 if the flat is part of a clef.
 
 \def\GreFlat#1#2#3#4#5{%
+  \gre@trace{GreFlat{#1}{#2}{#3}{#4}{#5}}%
   \gre@alteration{#1}{\gre@fontchar@flat}{\gre@fontchar@flathole}{#2}{#3}{#4}{#5}%
   \relax%
+  \gre@trace@end%
 }%
 
 % Same as the one before, but for naturals.
 
 \def\GreNatural#1#2#3#4#5{%
+  \gre@trace{GreNatural{#1}{#2}{#3}{#4}{#5}}%
   \gre@alteration{#1}{\gre@fontchar@natural}{\gre@fontchar@naturalhole}{#2}{#3}{#4}{#5}%
   \relax%
+  \gre@trace@end%
 }%
 
 % Same as the one before, but for sharps.
 
 \def\GreSharp#1#2#3#4#5{%
+  \gre@trace{GreSharp{#1}{#2}{#3}{#4}{#5}}%
   \gre@alteration{#1}{\gre@fontchar@sharp}{\gre@fontchar@sharphole}{#2}{#3}{#4}{#5}%
   \relax%
+  \gre@trace@end%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2287,6 +2471,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\gresetpunctumcavum#1{%
+  \gre@trace{gresetpunctumcavum{#1}}%
   \IfStrEqCase{#1}{%
     {alternate}%
       {%
@@ -2301,13 +2486,16 @@
     }[% all other cases
       \gre@error{Unrecognized option "#1" for \protect\gresetpunctumcavum\MessageBreak Possible options are: 'alternate' and 'normal'}%
     ]%
+  \gre@trace@end%
 }%
 
 \def\GreCavum#1{%
+  \gre@trace{GreCavum{#1}}%
   \ifgre@hidepclines%
     \gre@fillhole{{\gre@font@music@hole\csname GreHoleCP#1\endcsname}}{1}%
   \fi %
   {\gre@font@music@hollow\csname GreHollowCP#1\endcsname}%
+  \gre@trace@end%
 }%
 
 % #1 is 0 for left or 1 for right bracket
@@ -2315,6 +2503,7 @@
 % #3 is the height of the highest note within the brackets
 % #4 is the point-and-click string
 \def\GreBracket#1#2#3#4{%
+  \gre@trace{GreBracket{#1}{#2}{#3}{#4}}%
   \gre@newglyphcommon %
   \ifcase\numexpr#1\relax\else\GreNoBreak\fi% no break before right bracket
   \setbox\gre@box@temp@width=\hbox{\gre@pointandclick{\gre@font@music %
@@ -2394,4 +2583,5 @@
   \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
   \gre@endofglyphcommon %
   \relax%
+  \gre@trace@end%
 }%
