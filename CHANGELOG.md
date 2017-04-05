@@ -7,7 +7,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - The printing of the commentary box is no longer tied to the printing of the inital.  As a result it is now possible to have a score which has a commentary but not an initial.  See [this thread on the user list](http://www.mail-archive.com/gregorio-users@gna.org/msg03911.html).
 - Elisions after a vowel centering prefix will no longer cause the center to be placed on the vowel in the prefix.  Since prefixes are unvoiced vowels, this makes more sense than the previous behavior.  As usual, you may use the manual centering features to force the centering where you want if this does not produce what you want.  See [#1320](https://github.com/gregorio-project/gregorio/issues/1320).
 - Dynmanic line spacing when a clef change occurs at the end of a line is fixed so that the line after the clef change is spaced appropriately.  See [#1285](https://github.com/gregorio-project/gregorio/issues/1285).
-
+- Spaces in the filename of a score no longer cause Gregoriotex to fail. See [#1224](https://github.com/gregorio-project/gregorio/issues/1224).
 
 ## [5.0.0-beta2] - 2017-02-24
 ### Fixed
