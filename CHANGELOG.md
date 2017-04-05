@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
+
+
+## [5.0.0-rc1] - 2017-04-04
 ### Fixed
 - The printing of the commentary box is no longer tied to the printing of the inital.  As a result it is now possible to have a score which has a commentary but not an initial.  See [this thread on the user list](http://www.mail-archive.com/gregorio-users@gna.org/msg03911.html).
 - Elisions after a vowel centering prefix will no longer cause the center to be placed on the vowel in the prefix.  Since prefixes are unvoiced vowels, this makes more sense than the previous behavior.  As usual, you may use the manual centering features to force the centering where you want if this does not produce what you want.  See [#1320](https://github.com/gregorio-project/gregorio/issues/1320).
