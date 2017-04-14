@@ -44,6 +44,9 @@ gsed -i.temp 's/^[ \t]*//;s/[ \t]*$//' $CODEFILE
 #remove new and trailing code
 sed -i.temp 's:.*\\new[a-z]*{*\(\\*[a-zA-Z@]*\)[\\}]*.*:\1:' $CODEFILE
 
+#get rid of work around def
+sed -i.temp -E 's:\\def\\x{::' $CODEFILE
+
 #accept only first def on line
 sed -i.temp -E 's:\\[gex]?def:special:' $CODEFILE
 #remove def and definition
@@ -55,8 +58,8 @@ sed -i.temp 's:.*\\let[a-z]*\(\\[a-zA-Z@]*\)[\\=].*:\1:' $CODEFILE
 #remove gredefsymbol and definition
 sed -i.temp 's:.*\\gredefsymbol{\([A-Za-z]*\)}.*:\\\1:' $CODEFILE
 
-#unwrap csname
-sed -i.temp 's:.*\(\\csname.*\\endcsname\).*:\1:' $CODEFILE
+#remove csname
+sed -i.temp 's:.*\(\\csname.*\\endcsname\).*::' $CODEFILE
 
 #colors
 grep -hE '\\definecolor.*' *.sty >> $CODEFILE
@@ -85,9 +88,15 @@ sed -i.temp 's:.*count@temp@.*::' $CODEFILE
 #registers for saved values
 sed -i.temp 's:\\gre@saved@.*::' $CODEFILE
 
+#macros used to process options
+sed -i.temp 's:\\gre@autocompile::' $CODEFILE
+sed -i.temp 's:\\gre@forcecompile::' $CODEFILE
+sed -i.temp 's:\\gre@nevercompile::' $CODEFILE
+
 #block documented items
 sed -i.temp 's:\\gre@pitch.*::' $CODEFILE
 sed -i.temp 's:.*gre@char@he@.*::' $CODEFILE
+sed -i.temp 's:\\gre@protrusionfactor@.*::' $CODEFILE
 
 #label file
 echo "00 Macros Defined in TeX" >> $CODEFILE
