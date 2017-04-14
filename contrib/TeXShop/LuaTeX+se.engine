@@ -1,6 +1,7 @@
 #!/bin/bash
 
-if [ -z ${2+x} ]; then
+if [[ -n ${2:+x} ]]; then
+    echo "I will add $2 to the input path"
     export TEXINPUTS="$2//:"
     export LUAINPUTS="$2//:"
 fi
