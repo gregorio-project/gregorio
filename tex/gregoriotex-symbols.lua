@@ -19,7 +19,7 @@
 
 -- this file contains lua functions to support signs used by GregorioTeX.
 
--- GREGORIO_VERSION 5.0.0-rc1
+-- GREGORIO_VERSION 5.0.0
 
 local err = gregoriotex.module.err
 local warn = gregoriotex.module.warn

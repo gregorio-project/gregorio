@@ -24,13 +24,13 @@ local hpack, traverse, traverse_id, has_attribute, count, remove, insert_after, 
 gregoriotex = gregoriotex or {}
 local gregoriotex = gregoriotex
 
-local internalversion = '5.0.0-rc1' -- GREGORIO_VERSION (comment used by VersionManager.py)
+local internalversion = '5.0.0' -- GREGORIO_VERSION (comment used by VersionManager.py)
 
 local err, warn, info, log = luatexbase.provides_module({
     name               = "gregoriotex",
-    version            = '5.0.0-rc1', -- GREGORIO_VERSION
+    version            = '5.0.0', -- GREGORIO_VERSION
     greinternalversion = internalversion,
-    date               = "2017/04/04", -- GREGORIO_DATE_LTX
+    date               = "2017/04/15", -- GREGORIO_DATE_LTX
     description        = "GregorioTeX module.",
     author             = "The Gregorio Project (see CONTRIBUTORS.md)",
     copyright          = "2008-2017 - The Gregorio Project",
@@ -125,7 +125,7 @@ local function gregorio_exe()
     local exe_version
 
     -- first look for one with the exact version
-    real_gregorio_exe = 'gregorio-5_0_0-rc1' -- FILENAME_VERSION
+    real_gregorio_exe = 'gregorio-5_0_0' -- FILENAME_VERSION
     exe_version = io.popen(real_gregorio_exe..' --version', 'r')
     exe_version = exe_version:read("*line")
     if not exe_version then
