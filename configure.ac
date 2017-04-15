@@ -104,6 +104,17 @@ AC_ARG_ENABLE([debug], AS_HELP_STRING([--enable-debug@<:@=sanitize,coverage@:>@]
     CPPFLAGS+=" -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 "
 ])
 
+AC_ARG_ENABLE([texlive], AS_HELP_STRING([--enable-texlive], [Enable TeX Live executable name.]), [
+    AS_IF([test "x$enableval" != "xno"], [
+        GREGORIO_EXE_SUFFIX=""
+    ], [
+        GREGORIO_EXE_SUFFIX="-$FILENAME_VERSION"
+    ])
+], [
+    GREGORIO_EXE_SUFFIX="-$FILENAME_VERSION"
+])
+AC_SUBST(GREGORIO_EXE_SUFFIX)
+
 AC_CONFIG_HEADERS([src/config_.h])
 AC_CONFIG_FILES([
     Makefile
