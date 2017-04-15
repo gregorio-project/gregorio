@@ -37,7 +37,7 @@ local err, warn, info, log = luatexbase.provides_module({
     license            = "GPLv3+",
 })
 
-local gregorio_exe = 'gregorio-5_0_0-rc1' -- FILENAME_VERSION
+local real_gregorio_exe = nil
 
 gregoriotex.module = { err = err, warn = warn, info = info, log = log }
 
@@ -119,6 +119,37 @@ local marker_whatsit_id = luatexbase.get_user_whatsit_id('marker', 'gregoriotex'
 local translation_mark = 1
 local abovelinestext_mark = 2
 log("marker whatsit id is %d", marker_whatsit_id)
+
+local function gregorio_exe()
+  if real_gregorio_exe == nil then
+    local exe_version
+
+    -- first look for one with the exact version
+    real_gregorio_exe = 'gregorio-5_0_0-rc1' -- FILENAME_VERSION
+    exe_version = io.popen(real_gregorio_exe..' --version', 'r')
+    exe_version = exe_version:read("*line")
+    if not exe_version then
+      -- look for suffix-less executable
+      real_gregorio_exe = 'gregorio'
+      exe_version = io.popen(real_gregorio_exe..' --version', 'r')
+      exe_version = exe_version:read("*line")
+      if not exe_version or string.match(exe_version,"%d+%.%d+%.")
+          ~= string.match(internalversion,"%d+%.%d+%.") then
+        real_gregorio_exe = nil
+        err("Unable to find gregorio executable.\n"..
+            "shell-escape mode may not be activated. Try\n\n"..
+            "%s --shell-escape %s.tex\n\n"..
+            "See the documentation of Gregorio or your TeX\n"..
+            "distribution to automatize it.",
+            tex.formatname, tex.jobname)
+      end
+    end
+
+    log("will use %s", real_gregorio_exe)
+  end
+
+  return real_gregorio_exe
+end
 
 local function mark(value)
   local marker = create_marker()
@@ -740,8 +771,8 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
     extra_args = extra_args..' -D'
   end
 
-  local cmd = string.format("%s %s -W -o %s -l %s '%s'", gregorio_exe, extra_args,
-      gtex_file, glog_file, gabc_file)
+  local cmd = string.format("%s %s -W -o %s -l %s '%s'", gregorio_exe(),
+      extra_args, gtex_file, glog_file, gabc_file)
   res = os.execute(cmd)
   if res == nil then
     err("\nSomething went wrong when executing\n    '%s'.\n"
@@ -766,7 +797,8 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
       glog:close()
     end
     err("\nAn error occured when compiling the score file\n"
-        .."'%s' with %s.\nPlease check your score file.", gabc_file, gregorio_exe)
+        .."'%s' with %s.\nPlease check your score file.", gabc_file,
+        gregorio_exe())
   else
     -- open the gtex file for writing so that LuaTeX records output to it
     -- when the -recorder option is used
@@ -797,7 +829,7 @@ end
 local function include_score(input_file, force_gabccompile, allow_deprecated)
   if string.match(input_file, "[#%%]") then
     err("GABC filename contains invalid character(s): # %%\n"
-	  .."Rename the file and retry: %s", input_file)
+        .."Rename the file and retry: %s", input_file)
   end
   local has_extention = false
   local file_dir,input_name
@@ -806,8 +838,7 @@ local function include_score(input_file, force_gabccompile, allow_deprecated)
     has_extention = true
   end
   if has_extention then
-    file_dir,input_name = string.match(input_file,
-				       "(.-)([^\\/]-)%.?[^%.\\/]*$")
+    file_dir,input_name = string.match(input_file, "(.-)([^\\/]-)%.?[^%.\\/]*$")
   else
     file_dir,input_name = string.match(input_file, "(.-)([^\\/]*)$")
   end
@@ -815,9 +846,9 @@ local function include_score(input_file, force_gabccompile, allow_deprecated)
   local cleaned_filename = input_name:gsub("[%s%+%&%*%?$@:;!\"\'`]", "-")
   local gabc_file = string.format("%s%s.gabc", file_dir, input_name)
   local gtex_file = string.format("%s%s-%s.gtex", file_dir, cleaned_filename,
-				  internalversion:gsub("%.", "_"))
+      internalversion:gsub("%.", "_"))
   local glog_file = string.format("%s%s-%s.glog", file_dir, cleaned_filename,
-				  internalversion:gsub("%.", "_"))
+      internalversion:gsub("%.", "_"))
   if not lfs.isfile(gtex_file) then
     clean_old_gtex_files(file_dir..cleaned_filename)
     log("The file %s does not exist. Searching for a gabc file", gtex_file)
@@ -871,7 +902,7 @@ local function direct_gabc(gabc, header, allow_deprecated)
   gabc = gabc:match('^()%s*$') and '' or gabc:match('^%s*(.*%S)')
   f:write('name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par ', '\n'))
   f:close()
-  local cmd = string.format('%s -W %s-S -l %s %s', gregorio_exe, deprecated,
+  local cmd = string.format('%s -W %s-S -l %s %s', gregorio_exe(), deprecated,
       snippet_logname, snippet_filename)
   local p = io.popen(cmd, 'r')
   if p == nil then
