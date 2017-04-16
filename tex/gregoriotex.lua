@@ -127,7 +127,9 @@ local function gregorio_exe()
     -- first look for one with the exact version
     real_gregorio_exe = 'gregorio-5_0_0' -- FILENAME_VERSION
     exe_version = io.popen(real_gregorio_exe..' --version', 'r')
-    exe_version = exe_version:read("*line")
+    if exe_version then
+      exe_version = exe_version:read("*line")
+    end
     if not exe_version then
       -- look for suffix-less executable
       real_gregorio_exe = 'gregorio'
@@ -771,7 +773,7 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
     extra_args = extra_args..' -D'
   end
 
-  local cmd = string.format("%s %s -W -o %s -l %s '%s'", gregorio_exe(),
+  local cmd = string.format('%s %s -W -o %s -l %s "%s"', gregorio_exe(),
       extra_args, gtex_file, glog_file, gabc_file)
   res = os.execute(cmd)
   if res == nil then
