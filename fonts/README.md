@@ -1,10 +1,10 @@
 # Gregorian Chant Fonts
 
-Gregorio uses .ttf fonts to represent the various glyphs in Gregorian chant.  While there are hundreds of unique glyphs when you look at the entire body of Gregorian chant, these glyphs are usually composites of a relitively small number of components.  Rather than manage the huge number of glyphs, therefore, this project maintains the smaller component set for its fonts and then assembles these components into the various glyphs as part of the build process.  This minimizes the work load for the developers while still enabling customization at the glyph (rather than the component) level within documents created with Gregorio.
+Gregorio uses .ttf fonts to represent the various glyphs in Gregorian chant.  While there are hundreds of unique glyphs when you look at the entire body of Gregorian chant, these glyphs are usually composites of a relatively small number of components.  Rather than manage the huge number of glyphs, therefore, this project maintains the smaller component set for its fonts and then assembles these components into the various glyphs as part of the build process.  This minimizes the work load for the developers while still enabling customization at the glyph (rather than the component) level within documents created with Gregorio.
 
 Currently there are three fonts maintained as part of this project:
 
- * Greciliae, an adaptation of [Caeciliae](http://marello.org/caeciliae/) for use with Gregoiro
+ * Greciliae, an adaptation of [Caeciliae](http://marello.org/caeciliae/) for use with Gregorio
  * Gregorio, the original font produced as part of this project
  * Grana Padano, an adaptation of Parmesan from [Lilypond](http://www.lilypond.org/index.html)
 
@@ -21,7 +21,7 @@ Gregorio and Grana Padano (in all their varieties) are distributed separately in
 ## Font generation
 
  The fonts are distributed pre-built, but if you really need to compile them:
- 
+
  * install [fontforge](http://fontforge.github.io) with python extension
  * run `make fonts` (Greciliae only) or `make really-all-fonts` (all three fonts) in this directory (using the `-j` argument can save you some time here)
  * then you can test them directly, or install them (see next section)
@@ -36,7 +36,7 @@ Greciliae is installed automatically by all the normal installation methods (see
  * `system`: the appropriate font folder in `$TEXMFLOCAL`
  * `user`: the appropriate font folder in `$TEXMFHOME`
  * `<dir>`: the name of an alternate texmf root directory you want to use
- 
+
 Additionally, if you are building from a git clone, `install-gtex.sh` and `install_supp_fonts.lua` will install all the fonts you have built, not just the ones they are normally distributed with.
 
 **Note:** All the above methods assume you only need to access the fonts from within a TeX document.  If you want to use the fonts in other programs, then you will need to consult the documentation appropriate to your platform and manually move, copy, or link the fonts to the necessary location.
@@ -72,4 +72,4 @@ and are published here with the consent of these two institutions, which we than
 
 Support for Gregoria has been dropped.
 
-[Gregoria](http://www.anatoletype.net/projects/gregoria) cannot be used by Gregorio directly (although it was the primary goal of Gregorio when it was created). As the font is not free, it's not possible to use the same process as [caeciliae](http://marello.org/caeciliae/), because it would require to distribute a modified version.
+[Gregoria](http://www.anatoletype.net/projects/gregoria) cannot be used by Gregorio directly (although it was the primary goal of Gregorio when it was created). As the font is not free, it's not possible to use the same process as [Caeciliae](http://marello.org/caeciliae/), because it would require the distribution of a modified version.
