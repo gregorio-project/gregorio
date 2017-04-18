@@ -1,0 +1,55 @@
+# Maintainer: Br Anthony VanBerkum <anthonyvbop AT gmail DOT com>
+# Contributor: Br. Elijah Schwab (github - eschwab)
+_pkgbase=gregorio
+pkgbase=$_pkgbase-git
+pkgname=$pkgbase
+pkgver=3.0.0beta.r1398.7c5aa0a
+pkgrel=1
+pkgdesc="Command-line tool to typeset Gregorian chant"
+url=http://gregorio-project.github.io
+arch=("i686" "x86_64")
+license=("GPL")
+makedepends=("git" "python" "fontforge")
+depends=("texlive-fontsextra" "texlive-bin" "texlive-formatsextra" "texlive-latexextra")
+conflicts=("gregorio-svn" "gregorio" "gregoriotex")
+provides=("gregorio")
+install=gregorio.install
+_gitdir=$pkgbase
+source=("$_gitdir::git+https://github.com/gregorio-project/gregorio.git#branch=develop")
+sha256sums=("SKIP")
+
+
+pkgver() {
+  cd "$srcdir/$_gitdir"
+  _version=$(python2 VersionManager.py -c | sed -e "s/-/_/g")
+  echo $_version.r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+prepare() {
+  msg "Configuring..."
+  cd "$srcdir/$_gitdir"
+  autoreconf -f -i
+  ./configure --prefix=/usr || return 1
+}
+
+build() {
+  msg "Compiling gregorio..."
+  cd "$srcdir/$_gitdir"
+  make -j || return 1
+  msg "Building fonts..."
+  cd "$srcdir/$_gitdir/fonts"
+  fontforge -script squarize.py gregorio || return 1
+  fontforge -script squarize.py parmesan || return 1
+  fontforge -script squarize.py greciliae || return 1
+  make -j PYTHON=python gresym.ttf || return 1
+  make -j PYTHON=python greextra.ttf || return 1
+}
+
+package() {
+  cd "$srcdir/$_gitdir"
+  msg "Installing gregorio..."
+  make -j DESTDIR="$pkgdir/" install
+  msg "Installing fonts and TeX files..."
+  cd "$srcdir/$_gitdir/"
+  ./install-gtex.sh dir:$pkgdir/usr/share/texmf-dist
+}

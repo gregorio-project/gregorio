@@ -1,0 +1,44 @@
+# Maintainer: Br Anthony VanBerkum <anthonyvbop AT gmail DOT com>
+# Contributor: Laércio de Sousa <lbsousajr AT gmail DOT com>
+# Contributor: David Gippner davidgippner at googlemail dot com
+pkgbase=gregorio
+pkgname=$pkgbase
+pkgver=2.4.2
+pkgrel=1
+pkgdesc="Command-line tool to typeset Gregorian chant"
+url=http://home.gna.org/gregorio
+arch=("i686" "x86_64")
+license=("GPL")
+depends=("texlive-fontsextra" "texlive-bin" "texlive-formatsextra" "texlive-latexextra")
+conflicts=("gregorio-svn" "gregorio-git" "gregoriotex")
+provides=("gregorio-git")
+install=gregorio.install
+# Release tarball extracts to gregorio-x.y.z = $pkgbase-$pkgver.
+source=("http://github.com/gregorio-project/gregorio/archive/v$pkgver.tar.gz")
+sha256sums=("aa40ad963aa7eec828ba614f1dd4b01e01f60333638b961d68700ead13cff71a")
+
+
+prepare() {
+  cd "$srcdir/$pkgbase-$pkgver"
+  msg "Configuring..."
+  autoreconf -f -i
+  ./configure --prefix=/usr || return 1
+  cd "$srcdir/$pkgbase-$pkgver/fonts"
+  mv Makefile Makefile.old
+  grep -v texhash Makefile.old > Makefile
+}
+
+build() {
+  msg "Compiling gregorio..."
+  cd "$srcdir/$pkgbase-$pkgver"
+  make -j || return 1
+}
+
+package() {
+  cd "$srcdir/$pkgbase-$pkgver"
+  msg "Installing gregorio..."
+  make -j DESTDIR="$pkgdir/" install
+  msg "Installing fonts and TeX files..."
+  cd "$srcdir/$pkgbase-$pkgver/fonts"
+  make -j TEXMFROOT=$pkgdir/usr/share/texmf-dist install
+}
