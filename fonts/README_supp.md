@@ -1,6 +1,6 @@
-# Supplamental Fonts
+# Supplemental Fonts
 
-In addition to the default font, Greciliae, there are two fully featured supplamental fonts:
+In addition to the default font, Greciliae, there are two fully featured supplemental fonts:
 
  * Gregorio, the original font produced as part of this project
  * Grana Padano, an adaptation of Parmesan from [Lilypond](http://www.lilypond.org/index.html)
@@ -17,6 +17,6 @@ The Lua script `install_supp_fonts.lua` can be used to install Gregorio and Gran
  * `system`: the appropriate font folder in `$TEXMFLOCAL`
  * `user`: the appropriate font folder in `$TEXMFHOME`
  * `<dir>`: the name of an alternate texmf root directory you want to use
- 
+
 **Note:** The script assumes you only need to access the fonts from within a TeX document.  If you want to use the fonts in other programs, then you will need to consult the documentation appropriate to your platform and manually move, copy, or link the fonts to the necessary location.
 
