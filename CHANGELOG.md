@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][unreleased]
-
+- Worked around an issue discovered during the TeX Live 2017 pre-test.  See [#1362](https://github.com/gregorio-project/gregorio/issues/1362).
 
 ## [5.0.1] - 2017-04-16
 - Fixed a bug in the TeXLive compatibility code for Windows users.  Thanks to Akira Kakuto for the catch.
