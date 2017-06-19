@@ -901,6 +901,8 @@ local function include_score(input_file, force_gabccompile, allow_deprecated)
   -- open the gabc file for reading so that LuaTeX records input from it
   -- when the -recorder option is used; do this here so that this happens
   -- on every run
+  tex.print(catcode_at_letter, string.format(
+      [[\openin\gre@read@temp=%s\relax\closein\gre@read@temp]], gabc_file))
   local gabc = io.open(gabc_file, 'r')
   if gabc == nil then
     err("\n Unable to open %s", gabc_file)
