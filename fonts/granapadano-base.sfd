@@ -4,7 +4,7 @@ FullName: granapadano
 FamilyName: granapadano
 Weight: Medium
 Copyright: LilyPond's pretty-but-neat music font, adapted to the Gregorio Project.\nCopyright (C) 2002-2006 Juergen Reuter <reuter@ipd.uka.de>\nCopyright (C) 2007-2017 The Gregorio Project (see CONTRIBUTORS.md)\nThis file is part of Gregorio.\n\n<<GPLV3>>
-UComments: "2007-4-12: Created."
+UComments: "2007-4-12: Created." 
 Version: 1.0
 ItalicAngle: 0
 UnderlinePosition: -204
@@ -19,7 +19,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1475444509
+ModificationTime: 1502068966
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -42,7 +42,7 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 0
-WinInfo: 184 8 2
+WinInfo: 144 16 4
 BeginPrivate: 0
 EndPrivate
 Grid
@@ -58,7 +58,7 @@ Grid
  22 -700 l 0
 EndSplineSet
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 197 197
+BeginChars: 199 199
 
 StartChar: Accentus
 Encoding: 0 -1 0
@@ -1448,8 +1448,25 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: DivisioMinor
+StartChar: DivisioMinima.6
 Encoding: 62 -1 62
+Width: 19
+VWidth: 2678
+Flags: HW
+HStem: 221 15 536 15 851 15 1166 15
+LayerCount: 2
+Fore
+SplineSet
+0 989.128 m 9
+ 0.00292969 1349.98 l 25
+ 18.999 1350.02 l 25
+ 19 982.431 l 17
+ 6.04395 982.565 2.43457 985.609 0 989.128 c 9
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinor
+Encoding: 63 -1 63
 Width: 19
 VWidth: 2048
 Flags: HW
@@ -1467,7 +1484,7 @@ Validated: 1
 EndChar
 
 StartChar: DivisioMinor.2
-Encoding: 63 -1 63
+Encoding: 64 -1 64
 Width: 19
 VWidth: 2048
 Flags: HW
@@ -1484,7 +1501,7 @@ EndSplineSet
 EndChar
 
 StartChar: DivisioMinor.3
-Encoding: 64 -1 64
+Encoding: 65 -1 65
 Width: 19
 VWidth: 2048
 Flags: HW
@@ -1501,7 +1518,7 @@ EndSplineSet
 EndChar
 
 StartChar: DivisioMinor.5
-Encoding: 65 -1 65
+Encoding: 66 -1 66
 Width: 19
 VWidth: 2048
 Flags: HW
@@ -1518,7 +1535,7 @@ EndSplineSet
 EndChar
 
 StartChar: FClef
-Encoding: 66 -1 66
+Encoding: 67 -1 67
 Width: 299
 VWidth: 1119
 Flags: HW
@@ -1559,7 +1576,7 @@ Validated: 33
 EndChar
 
 StartChar: FClefChange
-Encoding: 67 -1 67
+Encoding: 68 -1 68
 Width: 299
 VWidth: 1119
 Flags: W
@@ -1600,7 +1617,7 @@ Validated: 33
 EndChar
 
 StartChar: Flat
-Encoding: 68 -1 68
+Encoding: 69 -1 69
 Width: 159
 VWidth: 1120
 Flags: HW
@@ -1630,7 +1647,7 @@ Validated: 1
 EndChar
 
 StartChar: FlatHole
-Encoding: 69 -1 69
+Encoding: 70 -1 70
 Width: 159
 VWidth: 1120
 Flags: HW
@@ -1650,7 +1667,7 @@ Validated: 1
 EndChar
 
 StartChar: hepisemaleft
-Encoding: 70 -1 70
+Encoding: 71 -1 71
 Width: 1
 VWidth: 1968
 Flags: HW
@@ -1667,7 +1684,7 @@ EndSplineSet
 EndChar
 
 StartChar: hepisemaright
-Encoding: 71 -1 71
+Encoding: 72 -1 72
 Width: 2
 VWidth: 1968
 Flags: HW
@@ -1684,7 +1701,7 @@ EndSplineSet
 EndChar
 
 StartChar: hepisema_base
-Encoding: 72 -1 72
+Encoding: 73 -1 73
 Width: 1
 VWidth: 1972
 Flags: HW
@@ -1701,7 +1718,7 @@ EndSplineSet
 EndChar
 
 StartChar: idebilis
-Encoding: 73 -1 73
+Encoding: 74 -1 74
 Width: 97
 VWidth: 2048
 Flags: HW
@@ -1724,7 +1741,7 @@ EndSplineSet
 EndChar
 
 StartChar: idebilis#Cavum
-Encoding: 74 -1 74
+Encoding: 75 -1 75
 Width: 97
 VWidth: 2048
 Flags: HW
@@ -1745,7 +1762,7 @@ EndSplineSet
 EndChar
 
 StartChar: line2
-Encoding: 75 -1 75
+Encoding: 76 -1 76
 Width: 22
 VWidth: 2048
 Flags: HW
@@ -1763,7 +1780,7 @@ Validated: 1
 EndChar
 
 StartChar: line3
-Encoding: 76 -1 76
+Encoding: 77 -1 77
 Width: 22
 VWidth: 2048
 Flags: HW
@@ -1781,7 +1798,7 @@ Validated: 1
 EndChar
 
 StartChar: line4
-Encoding: 77 -1 77
+Encoding: 78 -1 78
 Width: 22
 VWidth: 2048
 Flags: W
@@ -1798,7 +1815,7 @@ EndSplineSet
 EndChar
 
 StartChar: line5
-Encoding: 78 -1 78
+Encoding: 79 -1 79
 Width: 22
 VWidth: 2048
 Flags: HW
@@ -1816,7 +1833,7 @@ Validated: 1
 EndChar
 
 StartChar: Linea
-Encoding: 79 -1 79
+Encoding: 80 -1 80
 Width: 431
 VWidth: 2612
 Flags: W
@@ -1844,7 +1861,7 @@ Validated: 1
 EndChar
 
 StartChar: Linea#Cavum
-Encoding: 80 -1 80
+Encoding: 81 -1 81
 Width: 431
 VWidth: 2612
 Flags: HW
@@ -1863,7 +1880,7 @@ EndSplineSet
 EndChar
 
 StartChar: LineaPunctum
-Encoding: 81 -1 81
+Encoding: 82 -1 82
 Width: 258
 VWidth: 1139
 Flags: HW
@@ -1899,7 +1916,7 @@ Validated: 1
 EndChar
 
 StartChar: LineaPunctum#Cavum
-Encoding: 82 -1 82
+Encoding: 83 -1 83
 Width: 258
 VWidth: 1139
 Flags: HW
@@ -1920,7 +1937,7 @@ EndSplineSet
 EndChar
 
 StartChar: mademinutus
-Encoding: 83 -1 83
+Encoding: 84 -1 84
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -1942,7 +1959,7 @@ EndSplineSet
 EndChar
 
 StartChar: mdeminutus
-Encoding: 84 -1 84
+Encoding: 85 -1 85
 Width: 161
 Flags: HW
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -1963,7 +1980,7 @@ Validated: 1
 EndChar
 
 StartChar: mnbdeminutus
-Encoding: 85 -1 85
+Encoding: 86 -1 86
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -1984,7 +2001,7 @@ Validated: 1
 EndChar
 
 StartChar: mnbpdeminutus
-Encoding: 86 -1 86
+Encoding: 87 -1 87
 Width: 161
 Flags: HW
 HStem: 536.058 15 221.058 15 -93.9416 15 -408.942 15
@@ -2005,7 +2022,7 @@ Validated: 1
 EndChar
 
 StartChar: mpdeminutus
-Encoding: 87 -1 87
+Encoding: 88 -1 88
 Width: 161
 Flags: HW
 HStem: 536.497 15 221.497 15 -93.503 15 -408.503 15
@@ -2025,7 +2042,7 @@ EndSplineSet
 EndChar
 
 StartChar: mpdeminutus#Cavum
-Encoding: 88 -1 88
+Encoding: 89 -1 89
 Width: 161
 Flags: HW
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -2045,7 +2062,7 @@ EndSplineSet
 EndChar
 
 StartChar: msdeminutus
-Encoding: 89 -1 89
+Encoding: 90 -1 90
 Width: 161
 Flags: HW
 HStem: 536.058 15 221.058 15 -93.9416 15 -408.942 15
@@ -2067,7 +2084,7 @@ EndSplineSet
 EndChar
 
 StartChar: Natural
-Encoding: 90 -1 90
+Encoding: 91 -1 91
 Width: 141
 VWidth: 1129
 Flags: HW
@@ -2100,7 +2117,7 @@ Validated: 1
 EndChar
 
 StartChar: NaturalHole
-Encoding: 91 -1 91
+Encoding: 92 -1 92
 Width: 141
 VWidth: 1129
 Flags: HW
@@ -2118,7 +2135,7 @@ Validated: 1
 EndChar
 
 StartChar: OriscusDeminutus
-Encoding: 92 -1 92
+Encoding: 93 -1 93
 Width: 192
 Flags: HW
 HStem: -473.822 17.1 -114.722 17.1 244.378 17.1 603.478 17.1
@@ -2143,7 +2160,7 @@ Validated: 33
 EndChar
 
 StartChar: OriscusDeminutus#Cavum
-Encoding: 93 -1 93
+Encoding: 94 -1 94
 Width: 192
 Flags: HW
 LayerCount: 2
@@ -2164,7 +2181,7 @@ EndSplineSet
 EndChar
 
 StartChar: p2base
-Encoding: 94 -1 94
+Encoding: 95 -1 95
 Width: 161
 Flags: W
 HStem: 536.228 15 221.228 15 -93.7716 15 -408.772 15
@@ -2185,7 +2202,7 @@ Validated: 1
 EndChar
 
 StartChar: p2base#Cavum
-Encoding: 95 -1 95
+Encoding: 96 -1 96
 Width: 161
 Flags: HW
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -2205,7 +2222,7 @@ EndSplineSet
 EndChar
 
 StartChar: pesdeminutus
-Encoding: 96 -1 96
+Encoding: 97 -1 97
 Width: 161
 Flags: HW
 HStem: 536.228 15 221.228 15 -93.7716 15 -408.772 15
@@ -2225,7 +2242,7 @@ EndSplineSet
 EndChar
 
 StartChar: pesdeminutus_op
-Encoding: 97 -1 97
+Encoding: 98 -1 98
 Width: 161
 Flags: HW
 HStem: 536.228 15 221.228 15 -93.7716 15 -408.772 15
@@ -2248,7 +2265,7 @@ Validated: 1
 EndChar
 
 StartChar: PesOneNothing
-Encoding: 98 -1 98
+Encoding: 99 -1 99
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -2276,7 +2293,7 @@ Validated: 1
 EndChar
 
 StartChar: PesOneNothing#Cavum
-Encoding: 99 -1 99
+Encoding: 100 -1 100
 Width: 161
 Flags: HW
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -2304,8 +2321,1315 @@ SplineSet
 EndSplineSet
 EndChar
 
+StartChar: porrectus1
+Encoding: 101 -1 101
+Width: 490
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 -16 m 1
+ 0 155 l 2
+ 0 159.739 3.67916 157.34 7 154.75 c 0
+ 143.49 48.2977 249.871 -40.1758 468 -51.875 c 1
+ 468 -8.875 468 -51.875 468 -9 c 1
+ 478.125 -9 485.281 -8.90039 490 -9 c 1
+ 490 -189 l 2
+ 490 -191.229 489.69 -190.612 487.76 -190.591 c 0
+ 254 -188 136.5 -110 0 -16 c 1
+EndSplineSet
+EndChar
+
+StartChar: porrectus1#Cavum
+Encoding: 102 -1 102
+Width: 490
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+460.843 -79.373 m 1
+ 460.85 -161.774 l 2
+ 460.85 -163.402 460.624 -162.928 459.215 -162.937 c 0
+ 288.57 -164.045 140.795 -88.1045 29.1504 -1.48438 c 1
+ 29.1504 101.346 l 2
+ 29.1504 104.805 31.8851 103.115 34.2598 101.163 c 0
+ 134.897 18.4521 245.608 -67.832 460.843 -79.373 c 1
+EndSplineSet
+EndChar
+
+StartChar: porrectus2
+Encoding: 103 -1 103
+Width: 575
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 -16 m 1
+ 0 155 l 2
+ 0 159.739 4.39911 158.063 7 154.75 c 0
+ 181.5 -67.5 330 -189 553 -219.875 c 5
+ 553 -176.875 553 -174.875 553 -132 c 5
+ 563.125 -132 570.281 -131.9 575 -132 c 5
+ 575 -357 l 6
+ 575 -359.229 574.68 -358.787 572.76 -358.591 c 4
+ 322.5 -333 154.5 -201 0 -16 c 1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: porrectus2#Cavum
+Encoding: 104 -1 104
+Width: 575
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+545.375 -248.844 m 1
+ 545.375 -325.095 l 2
+ 545.375 -326.722 545.142 -326.4 543.74 -326.256 c 0
+ 324.05 -303.575 143.41 -154.215 28.625 -10.165 c 1
+ 28.625 84.665 l 2
+ 28.625 88.125 31.848 86.9096 33.7354 84.4824 c 0
+ 138.12 -49.7598 305.585 -221.307 545.375 -248.844 c 1
+EndSplineSet
+EndChar
+
+StartChar: porrectus3
+Encoding: 105 -1 105
+Width: 650
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 -16 m 1
+ 0 155 l 2
+ 0 159.739 5.08372 158.501 7 154.75 c 0
+ 130 -86 270 -314 628 -362 c 1
+ 628 -319 628 -292.875 628 -250 c 1
+ 638.125 -250 645.281 -249.9 650 -250 c 1
+ 650 -479 l 2
+ 650 -481.229 649.661 -480.926 647.76 -480.591 c 0
+ 202 -402 116 -240 0 -16 c 1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: porrectus3#Cavum
+Encoding: 106 -1 106
+Width: 650
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+621.25 -388.455 m 1
+ 621.25 -446.625 l 2
+ 621.25 -448.252 621.003 -448.023 619.615 -447.786 c 4
+ 236.21 -382.415 129.43 -221.154 28.75 -17.6348 c 1
+ 28.75 59.1953 l 2
+ 28.75 62.6543 32.5513 61.7955 33.8604 59.0127 c 0
+ 122.65 -129.734 296.909 -348.415 621.25 -388.455 c 1
+EndSplineSet
+EndChar
+
+StartChar: porrectus4
+Encoding: 107 -1 107
+Width: 740
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 -25 m 1
+ 0 172.5 l 2
+ 0 177.239 5.27441 176.092 7 172.25 c 0
+ 134 -110.5 367.502 -459.831 718.002 -536.331 c 5
+ 718.002 -493.331 718 -492.875 718 -450 c 1
+ 728.125 -450 735.281 -449.9 740 -450 c 1
+ 740 -679 l 2
+ 740 -681.229 739.615 -681.119 737.76 -680.591 c 0
+ 270 -547.5 75 -217.5 0 -25 c 1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: porrectus4#Cavum
+Encoding: 108 -1 108
+Width: 740
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+712.7 -561.173 m 1
+ 712.7 -644.764 l 2
+ 712.7 -646.346 712.421 -646.286 711.109 -645.893 c 0
+ 279 -516.398 87.5498 -184.099 28.2998 -26.4229 c 5
+ 28.2998 74.8018 l 2
+ 28.2998 78.166 32.0844 77.3698 33.2695 74.624 c 0
+ 113.44 -111.128 342.846 -483.858 712.7 -561.173 c 1
+EndSplineSet
+EndChar
+
+StartChar: porrectus5
+Encoding: 109 -1 109
+Width: 931
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 -16 m 1
+ 0 155 l 2
+ 0 159.739 5.3553 158.627 7 154.75 c 0
+ 122.5 -117.5 382.5 -591 909 -711 c 1
+ 909 -668 909 -654.875 909 -612 c 1
+ 919.125 -612 926.281 -611.9 931 -612 c 1
+ 931 -841 l 2
+ 931 -843.229 930.646 -842.992 928.76 -842.591 c 0
+ 315 -712 70 -240 0 -16 c 1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: porrectus5#Cavum
+Encoding: 110 -1 110
+Width: 931
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+902.005 -735.221 m 1
+ 902.005 -806.811 l 2
+ 902.005 -808.394 901.746 -808.26 900.415 -807.94 c 0
+ 293.645 -662.221 83.6953 -186.101 27.9951 -28.0605 c 1
+ 27.9951 50.3496 l 2
+ 27.9951 53.7139 31.7588 52.9082 32.9648 50.1719 c 0
+ 115.97 -138.126 374.19 -621.021 902.005 -735.221 c 1
+EndSplineSet
+EndChar
+
+StartChar: porrectusflexus1
+Encoding: 111 -1 111
+Width: 340
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 -16 m 1
+ 0 155 l 2
+ 0 159.739 3.67916 157.34 7 154.75 c 0
+ 143.49 48.2977 204 -6.125 318 -10 c 1
+ 318 33 318 -33.875 318 9 c 1
+ 328.125 9 335.281 9.09961 340 9 c 1
+ 340 -147.125 l 2
+ 340 -149.354 339.69 -148.775 337.76 -148.716 c 0
+ 187.5 -144.125 136.5 -110 0 -16 c 1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: porrectusflexus1#Cavum
+Encoding: 112 -1 112
+Width: 340
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+311.1 -34.582 m 1
+ 311.1 -119.553 l 2
+ 311.1 -121.18 310.874 -120.749 309.465 -120.714 c 0
+ 174.775 -117.363 129.545 -72.4512 29.9004 -3.83203 c 1
+ 29.9004 102.998 l 2
+ 29.9004 106.458 32.6045 104.73 35.0098 102.815 c 0
+ 132.647 25.1055 192.88 -31.7529 311.1 -34.582 c 1
+EndSplineSet
+EndChar
+
+StartChar: porrectusflexus2
+Encoding: 113 -1 113
+Width: 428
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 -16 m 1
+ 0 155 l 2
+ 0 159.739 4.76959 158.322 7 154.75 c 0
+ 98 9 278 -160.625 406 -166 c 1
+ 406 -123 406 -188.375 406 -145.5 c 5
+ 416.125 -145.5 423.281 -145.4 428 -145.5 c 5
+ 428 -295.5 l 2
+ 428 -297.729 427.688 -297.188 425.76 -297.091 c 0
+ 265 -289 107 -166 0 -16 c 1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: porrectusflexus2#Cavum
+Encoding: 114 -1 114
+Width: 428
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+399.067 -193.65 m 1
+ 399.08 -266.652 l 2
+ 399.08 -268.258 398.847 -267.966 397.467 -267.798 c 0
+ 250.72 -249.973 100.96 -115.413 28.9199 -8.41309 c 1
+ 28.9199 78.707 l 2
+ 28.9199 82.1191 32.2503 81.0307 33.96 78.5273 c 0
+ 99.4805 -17.4131 262.907 -183.78 399.067 -193.65 c 1
+EndSplineSet
+EndChar
+
+StartChar: porrectusflexus3
+Encoding: 115 -1 115
+Width: 586
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 -16 m 1
+ 0 155 l 2
+ 0 159.739 5.05344 158.485 7 154.75 c 0
+ 96 -16 328 -284 564 -328.5 c 1
+ 564 -285.5 564 -350.875 564 -308 c 1
+ 574.125 -308 581.281 -307.9 586 -308 c 1
+ 586 -458 l 2
+ 586 -460.229 585.679 -459.792 583.76 -459.591 c 0
+ 282 -428 86 -170 0 -16 c 1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: porrectusflexus3#Cavum
+Encoding: 116 -1 116
+Width: 586
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+557.03 -353.846 m 1
+ 557.03 -426.346 l 2
+ 557.03 -427.929 556.795 -427.677 555.439 -427.476 c 0
+ 269.19 -385.046 97.0303 -127.865 28.9697 -15.5254 c 1
+ 28.9697 66.8848 l 2
+ 28.9697 70.249 32.4818 69.3172 33.9404 66.707 c 0
+ 82.1299 -19.5254 307.47 -308.251 557.03 -353.846 c 1
+EndSplineSet
+EndChar
+
+StartChar: porrectusflexus4
+Encoding: 117 -1 117
+Width: 670
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 -16 m 1
+ 0 155 l 2
+ 0 159.739 5.13671 158.527 7 154.75 c 0
+ 109 -52 374 -402 648 -447.5 c 1
+ 648 -404.5 648 -469.875 648 -427 c 1
+ 658.125 -427 665.281 -426.9 670 -427 c 1
+ 670 -577 l 2
+ 670 -579.229 669.666 -578.888 667.76 -578.591 c 4
+ 305 -522 98 -214 0 -16 c 1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: porrectusflexus4#Cavum
+Encoding: 118 -1 118
+Width: 670
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+640.5 -474.438 m 1
+ 640.5 -542.438 l 2
+ 640.5 -543.999 640.26 -543.792 638.932 -543.553 c 0
+ 291 -480.938 96.0996 -152.339 28.5 -17.7383 c 1
+ 28.5 58.9609 l 2
+ 28.5 62.2783 31.9731 61.3662 33.4004 58.7861 c 0
+ 111.8 -82.9385 352.7 -424.588 640.5 -474.438 c 1
+EndSplineSet
+EndChar
+
+StartChar: porrectusflexus5
+Encoding: 119 -1 119
+Width: 931
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 -16 m 1
+ 0 155 l 2
+ 0 159.739 5.3553 158.627 7 154.75 c 0
+ 122.5 -117.5 382.5 -525 909 -645 c 5
+ 909 -602 909 -634.875 909 -592 c 5
+ 919.125 -592 926.281 -591.9 931 -592 c 5
+ 931 -775 l 6
+ 931 -777.229 930.646 -776.992 928.76 -776.591 c 4
+ 315 -646 70 -240 0 -16 c 1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: porrectusflexus5#Cavum
+Encoding: 120 -1 120
+Width: 931
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+902.35 -670.639 m 1
+ 902.35 -738.738 l 2
+ 902.35 -740.299 902.099 -740.146 900.782 -739.854 c 0
+ 301.15 -606.438 70.6504 -178.238 27.6504 -28.4385 c 1
+ 27.6504 48.2617 l 2
+ 27.6504 51.5791 31.3348 46.7719 32.5498 44.0859 c 0
+ 117.4 -143.488 388.8 -563.639 902.35 -670.639 c 1
+EndSplineSet
+EndChar
+
+StartChar: porrectusflexusnb1
+Encoding: 121 -1 121
+Width: 340
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+340 3.25 m 5
+ 340 -143.125 l 6
+ 340 -145.354 339.69 -144.775 337.76 -144.716 c 4
+ 187.5 -140.125 136.5 -110 0 -16 c 5
+ 0 155 l 6
+ 0 159.739 3.67916 157.34 7 154.75 c 4
+ 143.49 48.2977 204 -2.125 318 -6 c 5
+ 334.25 -3.75 336.5 -0.5 340 3.25 c 5
+EndSplineSet
+EndChar
+
+StartChar: porrectusflexusnb1#Cavum
+Encoding: 122 -1 122
+Width: 340
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+311.1 -35.582 m 1
+ 311.1 -116.553 l 2
+ 311.1 -118.18 310.874 -117.759 309.465 -117.714 c 0
+ 174.775 -113.363 129.545 -69.4512 29.9004 -0.832031 c 1
+ 29.9004 97.998 l 2
+ 29.9004 101.458 32.5801 99.6994 35.0098 97.8154 c 0
+ 132.647 22.1055 192.88 -31.7529 311.1 -35.582 c 1
+EndSplineSet
+EndChar
+
+StartChar: porrectusflexusnb2
+Encoding: 123 -1 123
+Width: 428
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+428 -149 m 5
+ 428 -283.5 l 6
+ 428 -285.729 427.688 -285.188 425.76 -285.091 c 4
+ 265 -277 107 -166 0 -16 c 5
+ 0 155 l 6
+ 0 159.739 4.76959 158.322 7 154.75 c 4
+ 98 9 278 -148.625 406 -154 c 5
+ 422.75 -154.25 424.75 -152.5 428 -149 c 5
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: porrectusflexusnb2#Cavum
+Encoding: 124 -1 124
+Width: 428
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+399.067 -183.65 m 1
+ 399.08 -252.652 l 2
+ 399.08 -254.258 398.846 -253.975 397.467 -253.798 c 0
+ 250.72 -234.973 101.96 -112.413 28.9199 -6.41309 c 1
+ 28.9199 73.707 l 2
+ 28.9199 77.1191 32.2625 76.0388 33.96 73.5273 c 0
+ 99.4805 -23.4131 262.907 -172.78 399.067 -183.65 c 1
+EndSplineSet
+EndChar
+
+StartChar: porrectusflexusnb3
+Encoding: 125 -1 125
+Width: 586
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+586 -306.5 m 5
+ 586 -445 l 6
+ 586 -447.229 585.679 -446.792 583.76 -446.591 c 4
+ 282 -415 86 -170 0 -16 c 5
+ 0 155 l 6
+ 0 159.739 5.05344 158.485 7 154.75 c 4
+ 96 -16 328 -271 564 -315.5 c 5
+ 582 -317.75 584.25 -310.25 586 -306.5 c 5
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: porrectusflexusnb3#Cavum
+Encoding: 126 -1 126
+Width: 586
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+557.03 -345.846 m 1
+ 557.03 -412.346 l 2
+ 557.03 -413.929 556.795 -413.672 555.439 -413.476 c 0
+ 269.19 -372.046 92.0303 -125.865 28.9697 -18.5254 c 1
+ 28.9697 63.8848 l 2
+ 28.9697 67.249 32.4189 66.2812 33.9404 63.707 c 0
+ 83.1299 -19.5254 302.47 -294.251 557.03 -345.846 c 1
+EndSplineSet
+EndChar
+
+StartChar: porrectusflexusnb4
+Encoding: 127 -1 127
+Width: 670
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+670 -434 m 5
+ 670 -570 l 6
+ 670 -572.229 669.666 -571.888 667.76 -571.591 c 4
+ 305 -515 98 -214 0 -16 c 5
+ 0 155 l 6
+ 0 159.739 5.13671 158.527 7 154.75 c 4
+ 109 -52 374 -395 648 -440.5 c 5
+ 661.75 -442.75 668 -437.75 670 -434 c 5
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: porrectusflexusnb4#Cavum
+Encoding: 128 -1 128
+Width: 670
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+640.5 -469.438 m 1
+ 640.5 -536.438 l 2
+ 640.5 -537.999 640.256 -537.814 638.932 -537.553 c 0
+ 291 -468.938 101.1 -148.339 28.5 -21.7383 c 1
+ 28.5 57.9609 l 2
+ 28.5 61.2783 31.9336 60.3438 33.4004 57.7861 c 0
+ 111.8 -78.9385 351.7 -415.588 640.5 -469.438 c 1
+EndSplineSet
+EndChar
+
+StartChar: porrectusflexusnb5
+Encoding: 129 -1 129
+Width: 931
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+931 -620.326 m 5
+ 931 -761 l 6
+ 931 -763.229 930.646 -762.992 928.76 -762.591 c 4
+ 315 -632 70 -240 0 -16 c 5
+ 0 155 l 6
+ 0 159.739 5.3553 158.627 7 154.75 c 4
+ 122.5 -117.5 382.5 -511 909 -631 c 5
+ 919 -633.333 929 -626.667 931 -620.326 c 5
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: porrectusflexusnb5#Cavum
+Encoding: 130 -1 130
+Width: 931
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+902.35 -658.639 m 1
+ 902.35 -725.738 l 2
+ 902.35 -727.299 902.098 -727.148 900.782 -726.854 c 0
+ 301.15 -592.438 88.6504 -179.238 27.6504 -30.4385 c 1
+ 27.6504 47.2617 l 2
+ 27.6504 50.5791 31.2481 45.7314 32.5498 43.0859 c 0
+ 121.4 -137.488 365.8 -536.639 902.35 -658.639 c 1
+EndSplineSet
+EndChar
+
+StartChar: Punctum
+Encoding: 131 -1 131
+Width: 161
+Flags: HW
+HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
+LayerCount: 2
+Fore
+SplineSet
+17.0254 -21.7686 m 1
+ 7.86523 -21.7686 0.384766 -13.7842 0 -4.66504 c 1
+ 0 130.972 l 1
+ 0 157.191 69.7402 163.997 80 163.997 c 4
+ 91.4004 163.997 161 157.157 161 130.938 c 2
+ 161 -4.66895 l 2
+ 161 -13.7881 152.685 -21.7686 143.564 -21.7686 c 0
+ 134.445 -21.7686 118.485 -5.80859 79.7246 -5.80859 c 0
+ 44.3848 -5.80859 23.8652 -21.7686 17.0254 -21.7686 c 1
+EndSplineSet
+EndChar
+
+StartChar: Punctum#Cavum
+Encoding: 132 -1 132
+Width: 161
+Flags: HW
+HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
+LayerCount: 2
+Fore
+SplineSet
+38.6064 17.8115 m 1
+ 32.5615 17.8115 27.624 23.0811 27.3701 29.0996 c 1
+ 27.3701 111.62 l 1
+ 27.3701 128.925 73.3984 133.417 80.1699 133.417 c 0
+ 87.6943 133.417 133.63 128.902 133.63 111.598 c 2
+ 133.63 29.0977 l 2
+ 133.63 23.0791 128.143 17.8115 122.122 17.8115 c 0
+ 116.104 17.8115 105.57 22.3447 79.9883 22.3447 c 0
+ 56.6641 22.3447 43.1211 17.8115 38.6064 17.8115 c 1
+EndSplineSet
+EndChar
+
+StartChar: PunctumAscendens
+Encoding: 133 -1 133
+Width: 161
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 150.708 m 1x80
+ 6.5 145.208 17.5 139.25 21.5 138.25 c 1
+ 32.75 133.75 49.4831 133.569 79.7998 133.569 c 0
+ 111.72 133.569 127.68 170.05 127.68 206.529 c 0
+ 127.68 214.51 134.521 222.49 143.64 222.49 c 0x40
+ 152.76 222.49 161 214.46 161 206.479 c 2x40
+ 161 56 l 2
+ 161 2.41992 129.96 -49.9707 79.7998 -49.9707 c 0
+ 59.2803 -49.9707 13.6797 -44.2705 4.56055 -35.1504 c 0
+ 2.28027 -31.7305 0 -27.1699 0 -23.75 c 2
+ 0 150.708 l 1x80
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: PunctumAscendens#Cavum
+Encoding: 134 -1 134
+Width: 161
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+131.215 116.998 m 0
+ 131.215 49.1963 l 2
+ 131.215 22.4404 111.66 -17.5654 80.0586 -17.5654 c 0
+ 67.1318 -17.5654 38.4033 -13.9746 32.6582 -8.22852 c 0
+ 31.2217 -6.07422 29.7852 -3.20117 29.7852 -1.04688 c 2
+ 29.7852 98.8623 l 0x80
+ 30 106.783 39.8096 100.644 44.3301 100.014 c 0
+ 51.3984 99.0283 60.959 98.0645 80.0586 98.0645 c 0
+ 115.169 98.0645 124.8 130.383 131.215 116.998 c 0
+EndSplineSet
+EndChar
+
+StartChar: PunctumAscendens_op
+Encoding: 135 -1 135
+Width: 161
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+160.992 359.499 m 1
+ 161 56 l 2
+ 161 2.41992 129.96 -49.9707 79.7998 -49.9707 c 0
+ 59.2803 -49.9707 13.6797 -44.2705 4.56055 -35.1504 c 0
+ 2.28027 -31.7305 0 -27.1699 0 -23.75 c 2
+ 0 150.708 l 1x80
+ 6.5 145.208 17.5 139.25 21.5 138.25 c 1
+ 32.75 133.75 49.4831 133.569 79.7998 133.569 c 0
+ 111.72 133.569 139 179.771 139 216.25 c 0
+ 138.875 356.372 l 1
+ 142.5 358.872 160.992 359.499 160.992 359.499 c 1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: PunctumAuctusLineBL
+Encoding: 136 -1 136
+Width: 141
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+22 14.8174 m 1x40
+ 22 -13.3333 21.334 -4.66699 21.998 -19.541 c 1
+ 10 -20 10 -20.6667 0 -19.333 c 1
+ 0 160.681 l 1
+ 0 168.681 6 172.681 10 174.681 c 0
+ 30 180.681 50 183.681 70 183.681 c 0
+ 114 183.681 141 137.681 141 90.6807 c 2x80
+ 141 -41.3193 l 2
+ 141 -48.3193 134 -55.3193 126 -55.3193 c 0
+ 118 -55.3193 112 -48.3193 112 -41.3193 c 0
+ 112 -9.31934 98 22.6807 70 22.6807 c 0
+ 37 22.6807 34.6667 19.3333 22 14.8174 c 1x40
+EndSplineSet
+Validated: 33
+EndChar
+
+StartChar: PunctumAuctusLineBL#Cavum
+Encoding: 137 -1 137
+Width: 141
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+112.215 45.4346 m 0
+ 105.8 32.0498 96.1689 51.3682 61.0586 51.3682 c 0
+ 51.959 51.3682 51.7998 51.1807 44.3301 49.4189 c 0
+ 39.8877 48.3711 30 42.6494 29.7852 50.5703 c 0x80
+ 29.7852 138.479 l 2
+ 29.7852 140.634 30.687 144.982 32.6582 146.661 c 0
+ 39.4033 152.407 48.1318 154.998 61.0586 154.998 c 0
+ 99.6602 154.998 112.215 115.992 112.215 89.2363 c 2
+ 112.215 45.4346 l 0
+EndSplineSet
+EndChar
+
+StartChar: PunctumAuctusLineBL_op
+Encoding: 138 -1 138
+Width: 141
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+141 90.6807 m 2x80
+ 141 -224.002 l 1
+ 141 -224.002 122.508 -223.375 118.883 -220.875 c 1
+ 118.833 -64.1787 l 0
+ 118.833 -32.1787 98 22.6807 70 22.6807 c 0
+ 37 22.6807 34.6667 19.3333 22 14.8174 c 1x40
+ 22 -13.3333 21.334 -4.66699 21.998 -19.541 c 1
+ 10 -20 10 -20.6667 0 -19.333 c 1
+ 0 160.681 l 1
+ 0 168.681 6 172.681 10 174.681 c 0
+ 30 180.681 50 183.681 70 183.681 c 0
+ 114 183.681 141 137.681 141 90.6807 c 2x80
+EndSplineSet
+Validated: 33
+EndChar
+
+StartChar: PunctumDeminutus
+Encoding: 139 -1 139
+Width: 97
+VWidth: 2048
+Flags: HW
+HStem: -466.54 17.1 -107.44 17.1 251.66 17.1 610.76 17.1
+LayerCount: 2
+Fore
+SplineSet
+17.1504 -3.12012 m 4
+ 8.03027 -3.12012 0.0498047 4.86035 0.0498047 13.9805 c 6
+ 0.0498047 102.9 l 6
+ 0.0498047 118.86 27.4102 129.12 47.9297 129.12 c 4
+ 69.5898 129.12 96.9502 118.86 96.9502 102.9 c 6
+ 96.9502 13.9805 l 6
+ 96.9502 4.86035 88.9697 -3.12012 79.8496 -3.12012 c 4
+ 68.4502 -3.12012 66.1699 6 47.9297 6 c 4
+ 29.6904 6 27.4102 -3.12012 17.1504 -3.12012 c 4
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: PunctumDeminutus#Cavum
+Encoding: 140 -1 140
+Width: 97
+VWidth: 2048
+Flags: HW
+HStem: -466.54 17.1 -107.44 17.1 251.66 17.1 610.76 17.1
+LayerCount: 2
+Fore
+SplineSet
+34.6064 25.8115 m 1
+ 28.5615 25.8115 23.624 29.0811 23.3701 35.0996 c 1
+ 23.3701 84.6201 l 1
+ 23.3701 101.925 41.3984 106.417 48.1699 106.417 c 0
+ 55.6943 106.417 74.6299 101.902 74.6299 84.5977 c 2
+ 74.6299 35.0977 l 2
+ 74.6299 29.0791 69.1426 25.8115 63.1221 25.8115 c 0
+ 57.1035 25.8115 57.5703 28.3447 47.9883 28.3447 c 0
+ 42.6641 28.3447 39.1211 25.8115 34.6064 25.8115 c 1
+EndSplineSet
+EndChar
+
+StartChar: PunctumDescendens
+Encoding: 141 -1 141
+Width: 161
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+17.0967 -4.60059 m 0x40
+ 7.97656 -4.60059 -0.00390625 2.23926 -0.00390625 11.3594 c 2
+ 0 171.672 l 5
+ 22 179.001 l 1
+ 44.7998 185.841 56.9961 188.06 79.7959 188.06 c 0
+ 129.956 188.06 161 136.18 161 82.5996 c 2x80
+ 161 -67.8799 l 2
+ 161 -75.8604 152.756 -84.4014 143.636 -84.4014 c 0
+ 134.517 -84.4014 127.676 -76.4209 127.676 -68.4404 c 0
+ 127.676 -31.9609 111.716 4.51953 79.7959 4.51953 c 0
+ 42.1758 4.51953 22.7959 -4.60059 17.0967 -4.60059 c 0x40
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: PunctumDescendens#Cavum
+Encoding: 142 -1 142
+Width: 161
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+131.215 21.4346 m 0
+ 124.8 8.0498 115.169 40.3682 80.0586 40.3682 c 0
+ 60.959 40.3682 51.3988 39.4039 44.3301 38.4189 c 0
+ 39.8096 37.7891 30 31.6494 29.7852 39.5703 c 0x80
+ 29.7852 139.479 l 2
+ 29.7852 141.634 30.9578 142.708 32.6582 144.661 c 0
+ 39.4033 152.407 67.1318 155.998 80.0586 155.998 c 0
+ 111.66 155.998 131.215 115.992 131.215 89.2363 c 2
+ 131.215 21.4346 l 0
+EndSplineSet
+EndChar
+
+StartChar: PunctumDescendens_op
+Encoding: 143 -1 143
+Width: 161
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+160.992 -224.002 m 1
+ 160.992 -224.002 142.5 -223.375 138.875 -220.875 c 1
+ 139 -74.5 l 0
+ 139 -38.0205 111.716 4.51953 79.7959 4.51953 c 0
+ 42.1758 4.51953 22.7959 -4.60059 17.0967 -4.60059 c 0x40
+ 7.97656 -4.60059 -0.00390625 2.23926 -0.00390625 11.3594 c 2
+ 0 171.672 l 1
+ 22 179.001 l 1
+ 44.7998 185.841 56.9961 188.06 79.7959 188.06 c 0
+ 129.956 188.06 161 136.18 161 82.5996 c 2x80
+ 161 -67.8799 l 2
+ 160.992 -224.002 l 1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: PunctumInclinatumAuctus
+Encoding: 144 -1 144
+Width: 178
+Flags: HW
+HStem: -472.63 17.1 -113.53 17.1 245.57 17.1 604.67 17.1
+LayerCount: 2
+Fore
+SplineSet
+6.64551 -32.4863 m 0
+ 22.5449 -31.0957 30.8066 -60.126 62.6055 -57.3438 c 0
+ 67.1475 -56.9463 71.5908 -55.4131 74.8984 -53.9805 c 1
+ 2.85645 36.9873 l 2
+ 0.1875 41.3311 -1.54395 48.0469 1.46484 52.8867 c 2
+ 66.583 171.875 l 2
+ 68.4561 176.616 72.8008 179.285 77.3428 179.683 c 0
+ 81.8857 180.08 86.627 178.206 90.4316 173.961 c 2
+ 174.086 67.9893 l 1
+ 176.556 65.916 176.854 62.5098 177.053 60.2393 c 0
+ 177.251 57.9668 177.55 54.5605 175.477 52.0898 c 1
+ 111.495 -66.7988 l 2
+ 106.413 -74.1094 88.1992 -88.291 65.4863 -90.2783 c 0
+ 29.1455 -93.458 -7.60742 -65.7754 -8.99805 -49.876 c 0
+ -9.69336 -41.9258 -2.43945 -33.2812 6.64551 -32.4863 c 0
+EndSplineSet
+Validated: 33
+EndChar
+
+StartChar: PunctumInclinatumAuctus#Cavum
+Encoding: 145 -1 145
+Width: 178
+Flags: HW
+HStem: -476.247 17.1 -117.147 17.1 241.953 17.1 601.053 17.1
+LayerCount: 2
+Fore
+SplineSet
+26.6982 42.4824 m 2
+ 25.791 44.0195 24.8271 46.3516 24.7168 47.9443 c 0
+ 24.6055 49.5371 25.2334 51.9805 25.9189 53.6289 c 2
+ 72.9473 136.11 l 2
+ 74.3164 139.407 77.3906 141.222 80.5742 141.443 c 0
+ 83.7578 141.667 87.0547 140.298 89.665 137.28 c 2
+ 146.766 61.9941 l 1
+ 148.47 60.5127 148.636 58.125 148.747 56.5322 c 0
+ 148.858 54.9395 149.167 52.5615 147.686 50.8584 c 1
+ 101.466 -31.4834 l 2
+ 99.2998 -34.835 96.2275 -36.6494 93.043 -36.8721 c 0
+ 89.8594 -37.0947 86.5635 -35.7256 84.748 -32.6523 c 2
+ 26.6982 42.4824 l 2
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: PunctumInclinatumDeminutus
+Encoding: 146 -1 146
+Width: 112
+VWidth: 1131
+Flags: HW
+HStem: -474.94 17.1 -115.84 17.1 243.26 17.1 602.36 17.1
+LayerCount: 2
+Fore
+SplineSet
+3.21289 50.1885 m 5
+ 1.78027 53.4971 0.445312 55.6689 0.246094 57.9404 c 4
+ 0.0478516 60.2119 0.885742 63.7178 1.82227 66.0889 c 6
+ 37.043 134.397 l 6
+ 40.0527 139.238 44.3965 141.907 48.9395 142.305 c 4
+ 53.4814 142.702 58.2236 140.828 62.0273 136.584 c 6
+ 108.819 75.459 l 6
+ 110.152 73.2861 111.488 71.1143 111.786 67.707 c 4
+ 111.985 65.4355 111.146 61.9297 110.21 59.5586 c 6
+ 74.7451 -8.78027 l 6
+ 71.7354 -13.6211 67.3916 -16.29 62.8486 -16.6875 c 4
+ 58.3066 -17.085 53.5645 -15.2109 49.7607 -10.9668 c 6
+ 3.21289 50.1885 l 5
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: PunctumInclinatumDeminutus#Cavum
+Encoding: 147 -1 147
+Width: 112
+VWidth: 1131
+Flags: HW
+HStem: -474.94 17.1 -115.84 17.1 243.26 17.1 602.36 17.1
+LayerCount: 2
+Fore
+SplineSet
+27.502 55.9941 m 1
+ 26.7285 57.7803 26.0078 58.9531 25.9004 60.1797 c 0
+ 25.793 61.4062 26.2461 63.2998 26.751 64.5801 c 2
+ 45.7705 101.467 l 2
+ 47.3955 104.081 49.7412 105.521 52.1943 105.737 c 0
+ 54.6475 105.951 57.208 104.939 59.2617 102.647 c 2
+ 84.5293 69.6396 l 2
+ 85.249 68.4668 85.9707 67.2939 86.1318 65.4541 c 0
+ 86.2393 64.2275 85.7861 62.334 85.2812 61.0537 c 2
+ 66.1299 24.1504 l 2
+ 64.5049 21.5371 62.1592 20.0957 59.7061 19.8809 c 0
+ 57.2529 19.666 54.6924 20.6787 52.6387 22.9697 c 2
+ 27.502 55.9941 l 1
+EndSplineSet
+EndChar
+
+StartChar: PunctumLineBL
+Encoding: 148 -1 148
+Width: 161
+Flags: HW
+HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
+LayerCount: 2
+Fore
+SplineSet
+0 -21.5 m 1
+ 0 130.938 l 2
+ 0 157.157 69.5996 163.997 81 163.997 c 0
+ 91.2598 163.997 161 157.191 161 130.972 c 1
+ 161 -4.66504 l 1
+ 160.615 -13.7842 153.135 -21.7686 143.975 -21.7686 c 1
+ 137.135 -21.7686 116.615 -5.80859 81.2754 -5.80859 c 0
+ 42.5146 -5.80859 32.5 -13.5 22 -21.5 c 0
+ 20.4743 -22.6624 0 -21.5 0 -21.5 c 1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: PunctumLineBLBR
+Encoding: 149 -1 149
+Width: 161
+Flags: HW
+HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
+LayerCount: 2
+Fore
+SplineSet
+161 -21.5 m 1
+ 161 -21.5 140.534 -22.6509 139 -21.5 c 0
+ 131 -15.5 118.485 -5.80859 79.7246 -5.80859 c 0
+ 44.3848 -5.80859 33.5 -16.5 22 -21.2949 c 5
+ 12.8398 -21.2949 15.5449 -21.2949 0 -21.2949 c 1
+ 0 130.972 l 1
+ 0 157.191 69.7402 163.997 80 163.997 c 0
+ 91.4004 163.997 161 157.157 161 130.938 c 2
+ 161 -21.5 l 1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: PunctumLineBR
+Encoding: 150 -1 150
+Width: 161
+Flags: HW
+HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
+LayerCount: 2
+Fore
+SplineSet
+161 -21.5 m 5
+ 161 -21.5 140.645 -22.4869 139 -21.5 c 4
+ 129 -15.5 118.485 -5.80859 79.7246 -5.80859 c 4
+ 44.3848 -5.80859 23.8652 -21.7686 17.0254 -21.7686 c 5
+ 7.86523 -21.7686 0.384766 -13.7842 0 -4.66504 c 5
+ 0 130.972 l 5
+ 0 157.191 69.7402 163.997 80 163.997 c 4
+ 91.4004 163.997 161 157.157 161 130.938 c 6
+ 161 -21.5 l 5
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: PunctumLineTL
+Encoding: 151 -1 151
+Width: 161
+Flags: HW
+HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
+LayerCount: 2
+Fore
+SplineSet
+17.0254 -21.7686 m 1
+ 7.86523 -21.7686 0.384766 -13.7842 0 -4.66504 c 1
+ 0 152.5 l 5
+ 22 152.636 0 152.5 22 152.702 c 5
+ 43.3739 161.288 73.5266 163.997 80 163.997 c 0
+ 91.4004 163.997 161 157.157 161 130.938 c 2
+ 161 -4.66895 l 2
+ 161 -13.7881 152.685 -21.7686 143.564 -21.7686 c 0
+ 134.445 -21.7686 118.485 -5.80859 79.7246 -5.80859 c 0
+ 44.3848 -5.80859 23.8652 -21.7686 17.0254 -21.7686 c 1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: PunctumLineTLTR
+Encoding: 152 -1 152
+Width: 161
+Flags: HW
+HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
+LayerCount: 2
+Fore
+SplineSet
+17.0254 -21.7686 m 1
+ 7.86523 -21.7686 0.384766 -13.7842 0 -4.66504 c 1
+ 0 152.5 l 1
+ 22 152.636 0 152.5 22 152.702 c 1
+ 43.3739 161.288 73.5266 163.997 80 163.997 c 0
+ 87.1947 163.997 117.569 161.1 139 152.5 c 1
+ 161 152.455 139 152.455 161 152.5 c 1
+ 161 -4.66895 l 2
+ 161 -13.7881 152.685 -21.7686 143.564 -21.7686 c 0
+ 134.445 -21.7686 118.485 -5.80859 79.7246 -5.80859 c 0
+ 44.3848 -5.80859 23.8652 -21.7686 17.0254 -21.7686 c 1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: PunctumLineTR
+Encoding: 153 -1 153
+Width: 161
+Flags: HW
+HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
+LayerCount: 2
+Fore
+SplineSet
+143.975 -21.7686 m 5
+ 137.135 -21.7686 116.615 -5.80859 81.2754 -5.80859 c 4
+ 42.5146 -5.80859 26.5547 -21.7686 17.4355 -21.7686 c 4
+ 8.31543 -21.7686 0 -13.7881 0 -4.66895 c 6
+ 0 130.938 l 6
+ 0 157.157 69.5996 163.997 81 163.997 c 4
+ 87.4736 163.997 117.626 161.288 139 152.702 c 5
+ 161 152.5 139 152.637 161 152.5 c 5
+ 161 -4.66504 l 5
+ 160.615 -13.7842 153.135 -21.7686 143.975 -21.7686 c 5
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: PunctumSmall
+Encoding: 154 -1 154
+Width: 151
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+151 -22 m 5
+ 151 -22 132 -22 130 -22 c 4
+ 121 -16 111 -6 75 -6 c 4
+ 42 -6 22 -22 16 -22 c 5
+ 7 -22 0 -14 0 -5 c 5
+ 0 131 l 5
+ 0 157 65 164 75 164 c 4
+ 86 164 151 157 151 131 c 6
+ 151 -22 l 5
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: PunctumSmall#Cavum
+Encoding: 155 -1 155
+Width: 151
+Flags: HW
+HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
+LayerCount: 2
+Fore
+SplineSet
+40.6064 17.8115 m 1
+ 34.5615 17.8115 29.624 23.0811 29.3701 29.0996 c 1
+ 29.3701 111.62 l 1
+ 29.3701 128.925 68.3984 133.417 75.1699 133.417 c 0
+ 82.6943 133.417 121.63 128.902 121.63 111.598 c 2
+ 121.63 29.0977 l 2
+ 121.63 23.0791 116.143 17.8115 110.122 17.8115 c 0
+ 104.104 17.8115 98.5703 22.3447 74.9883 22.3447 c 0
+ 53.6641 22.3447 45.1211 17.8115 40.6064 17.8115 c 1
+EndSplineSet
+EndChar
+
+StartChar: queue
+Encoding: 156 -1 156
+Width: 22
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 -14.5 m 13
+ 0 3 l 25
+ 22 3 l 25
+ 22 -6.5 l 17
+ 17.5928 -12.2783 8.15723 -12.709 0 -14.5 c 13
+EndSplineSet
+EndChar
+
+StartChar: queuebase
+Encoding: 157 -1 157
+Width: 22
+VWidth: 2048
+Flags: HW
+HStem: 64 32<0 1>
+VStem: 0 1<64 96>
+LayerCount: 2
+Fore
+SplineSet
+0 0 m 25
+ 0 1 l 25
+ 22 1 l 29
+ 22 0 l 29
+ 0 0 l 25
+EndSplineSet
+EndChar
+
+StartChar: Quilisma
+Encoding: 158 -1 158
+Width: 161
+Flags: HW
+HStem: -477.6 17.1 -118.5 17.1 240.6 17.1 599.7 17.1
+LayerCount: 2
+Fore
+SplineSet
+57 11.0342 m 1
+ 54.7197 -17.4658 47.8799 -33.4258 42.1797 -33.4258 c 0
+ 41.04 -33.4258 39.9004 -32.2861 37.6201 -31.1465 c 1
+ 12.54 -6.06641 l 2
+ 4.56055 3.05371 0 34.9736 0 62.334 c 0
+ 0 78.2939 3.41992 133.014 17.1006 133.014 c 0
+ 18.2402 133.014 19.3799 131.874 20.5205 130.734 c 2
+ 30.7803 120.474 l 1
+ 34.2002 146.694 39.9004 161.514 45.6006 161.514 c 0
+ 46.7402 161.514 47.8799 160.374 49.0205 160.374 c 1
+ 80.9404 136.434 l 1
+ 83.2197 162.654 90.0605 177.474 95.7598 177.474 c 0
+ 96.9004 177.474 98.04 176.334 99.1797 176.334 c 1
+ 120.84 158.094 l 1
+ 124.26 183.174 129.96 196.854 136.8 196.854 c 0
+ 142.5 196.854 148.2 183.174 150.48 160.374 c 2
+ 158.46 103.374 l 2
+ 159.601 93.1143 161 80.5254 161 69.125 c 4
+ 161 53.165 157.32 -1.50586 143.64 -1.50586 c 0
+ 142.5 -1.50586 141.36 -0.366211 141.36 -0.366211 c 1
+ 110.58 23.5742 l 1
+ 108.3 -2.64648 101.46 -17.4658 95.7598 -17.4658 c 0
+ 94.6201 -17.4658 93.4805 -16.3262 92.3398 -16.3262 c 1
+ 57 11.0342 l 1
+EndSplineSet
+EndChar
+
+StartChar: Quilisma#Cavum
+Encoding: 159 -1 159
+Width: 161
+Flags: HW
+HStem: -477.6 17.1 -118.5 17.1 240.6 17.1 599.7 17.1
+LayerCount: 2
+Fore
+SplineSet
+49.875 39.7041 m 1
+ 43.4004 22.5459 43.0293 14.5781 37.7598 9.35938 c 0
+ 34.7998 6.42773 33.2051 9.94043 30.6035 11.7432 c 1
+ 24.7959 30.1553 l 2
+ 22.5703 35.4043 22.125 43.6592 22.125 64.1787 c 0
+ 22.125 76.1494 21.6895 100.189 29.9502 100.189 c 0
+ 30.8047 100.189 33.2139 99.7812 34.5156 98.4795 c 2
+ 40.21 93.7842 l 1
+ 43.7754 113.449 50.0508 131.564 54.3252 131.564 c 0
+ 55.1797 131.564 60.0352 130.709 62.8906 128.709 c 1
+ 88.8301 108.754 l 1
+ 93.54 128.419 96.6699 142.534 100.945 147.534 c 0
+ 101.502 148.185 105.655 146.679 107.51 144.679 c 1
+ 122.755 130.999 l 1
+ 125.8 142.146 125.215 138.67 125.725 140.069 c 0
+ 126.31 141.676 132.971 151.774 134.985 134.709 c 2
+ 138.97 100.959 l 2
+ 139.742 93.2568 139.593 93.876 139.875 85.2725 c 0
+ 140.266 73.3838 140.115 34.2988 129.855 34.2988 c 0
+ 129 34.2988 128.145 35.1543 128.145 35.1543 c 1
+ 100.06 53.1094 l 1
+ 95.3496 33.4434 94.2197 15.3291 84.9453 15.3291 c 0
+ 84.0898 15.3291 80.2354 18.1836 79.3799 18.1836 c 1
+ 49.875 39.7041 l 1
+EndSplineSet
+EndChar
+
+StartChar: QuilismaLineTR
+Encoding: 160 -1 160
+Width: 161
+Flags: HW
+HStem: -477.6 17.1 -118.5 17.1 240.6 17.1 599.7 17.1
+LayerCount: 2
+Fore
+SplineSet
+57 11.0342 m 1
+ 54.7197 -17.4658 47.8799 -33.4258 42.1797 -33.4258 c 0
+ 41.04 -33.4258 39.9004 -32.2861 37.6201 -31.1465 c 1
+ 12.54 -6.06641 l 2
+ 4.56055 3.05371 0 34.9736 0 62.334 c 0
+ 0 78.2939 3.41992 133.014 17.1006 133.014 c 0
+ 18.2402 133.014 19.3799 131.874 20.5205 130.734 c 2
+ 30.7803 120.474 l 1
+ 34.2002 146.694 39.9004 161.514 45.6006 161.514 c 0
+ 46.7402 161.514 47.8799 160.374 49.0205 160.374 c 1
+ 80.9404 136.434 l 1
+ 83.2197 162.654 90.0605 177.474 95.7598 177.474 c 0
+ 96.9004 177.474 98.04 176.334 99.1797 176.334 c 1
+ 123.04 158.573 l 1
+ 136 159 137 174 139 183.023 c 1
+ 144.699 183.023 148 183 161 182.333 c 1
+ 161 103.333 l 2
+ 162.141 93.0732 161 80.5254 161 69.125 c 0
+ 161 53.165 157.32 -1.50586 143.64 -1.50586 c 0
+ 142.5 -1.50586 141.36 -0.366211 141.36 -0.366211 c 1
+ 110.58 23.5742 l 1
+ 108.3 -2.64648 101.46 -17.4658 95.7598 -17.4658 c 0
+ 94.6201 -17.4658 93.4805 -16.3262 92.3398 -16.3262 c 1
+ 57 11.0342 l 1
+EndSplineSet
+Validated: 33
+EndChar
+
 StartChar: QuilismaPesOneNothing
-Encoding: 100 -1 100
+Encoding: 161 -1 161
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -2347,7 +3671,7 @@ Validated: 1
 EndChar
 
 StartChar: QuilismaPesOneNothing#Cavum
-Encoding: 101 -1 101
+Encoding: 162 -1 162
 Width: 161
 Flags: HW
 HStem: -477.6 17.1 -118.5 17.1 240.6 17.1 599.7 17.1
@@ -2390,1315 +3714,8 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: porrectus1
-Encoding: 102 -1 102
-Width: 490
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-0 -16 m 1
- 0 155 l 2
- 0 159.739 3.67916 157.34 7 154.75 c 0
- 143.49 48.2977 249.871 -40.1758 468 -51.875 c 1
- 468 -8.875 468 -51.875 468 -9 c 1
- 478.125 -9 485.281 -8.90039 490 -9 c 1
- 490 -189 l 2
- 490 -191.229 489.69 -190.612 487.76 -190.591 c 0
- 254 -188 136.5 -110 0 -16 c 1
-EndSplineSet
-EndChar
-
-StartChar: porrectus1#Cavum
-Encoding: 103 -1 103
-Width: 490
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-460.843 -79.373 m 1
- 460.85 -161.774 l 2
- 460.85 -163.402 460.624 -162.928 459.215 -162.937 c 0
- 288.57 -164.045 140.795 -88.1045 29.1504 -1.48438 c 1
- 29.1504 101.346 l 2
- 29.1504 104.805 31.8851 103.115 34.2598 101.163 c 0
- 134.897 18.4521 245.608 -67.832 460.843 -79.373 c 1
-EndSplineSet
-EndChar
-
-StartChar: porrectus2
-Encoding: 104 -1 104
-Width: 575
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-0 -16 m 1
- 0 155 l 2
- 0 159.739 4.39911 158.063 7 154.75 c 0
- 181.5 -67.5 330 -189 553 -219.875 c 5
- 553 -176.875 553 -174.875 553 -132 c 5
- 563.125 -132 570.281 -131.9 575 -132 c 5
- 575 -357 l 6
- 575 -359.229 574.68 -358.787 572.76 -358.591 c 4
- 322.5 -333 154.5 -201 0 -16 c 1
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: porrectus2#Cavum
-Encoding: 105 -1 105
-Width: 575
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-545.375 -248.844 m 1
- 545.375 -325.095 l 2
- 545.375 -326.722 545.142 -326.4 543.74 -326.256 c 0
- 324.05 -303.575 143.41 -154.215 28.625 -10.165 c 1
- 28.625 84.665 l 2
- 28.625 88.125 31.848 86.9096 33.7354 84.4824 c 0
- 138.12 -49.7598 305.585 -221.307 545.375 -248.844 c 1
-EndSplineSet
-EndChar
-
-StartChar: porrectus3
-Encoding: 106 -1 106
-Width: 650
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-0 -16 m 1
- 0 155 l 2
- 0 159.739 5.08372 158.501 7 154.75 c 0
- 130 -86 270 -314 628 -362 c 1
- 628 -319 628 -292.875 628 -250 c 1
- 638.125 -250 645.281 -249.9 650 -250 c 1
- 650 -479 l 2
- 650 -481.229 649.661 -480.926 647.76 -480.591 c 0
- 202 -402 116 -240 0 -16 c 1
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: porrectus3#Cavum
-Encoding: 107 -1 107
-Width: 650
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-621.25 -388.455 m 1
- 621.25 -446.625 l 2
- 621.25 -448.252 621.003 -448.023 619.615 -447.786 c 4
- 236.21 -382.415 129.43 -221.154 28.75 -17.6348 c 1
- 28.75 59.1953 l 2
- 28.75 62.6543 32.5513 61.7955 33.8604 59.0127 c 0
- 122.65 -129.734 296.909 -348.415 621.25 -388.455 c 1
-EndSplineSet
-EndChar
-
-StartChar: porrectus4
-Encoding: 108 -1 108
-Width: 740
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-0 -25 m 1
- 0 172.5 l 2
- 0 177.239 5.27441 176.092 7 172.25 c 0
- 134 -110.5 367.502 -459.831 718.002 -536.331 c 5
- 718.002 -493.331 718 -492.875 718 -450 c 1
- 728.125 -450 735.281 -449.9 740 -450 c 1
- 740 -679 l 2
- 740 -681.229 739.615 -681.119 737.76 -680.591 c 0
- 270 -547.5 75 -217.5 0 -25 c 1
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: porrectus4#Cavum
-Encoding: 109 -1 109
-Width: 740
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-712.7 -561.173 m 1
- 712.7 -644.764 l 2
- 712.7 -646.346 712.421 -646.286 711.109 -645.893 c 0
- 279 -516.398 87.5498 -184.099 28.2998 -26.4229 c 5
- 28.2998 74.8018 l 2
- 28.2998 78.166 32.0844 77.3698 33.2695 74.624 c 0
- 113.44 -111.128 342.846 -483.858 712.7 -561.173 c 1
-EndSplineSet
-EndChar
-
-StartChar: porrectus5
-Encoding: 110 -1 110
-Width: 931
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-0 -16 m 1
- 0 155 l 2
- 0 159.739 5.3553 158.627 7 154.75 c 0
- 122.5 -117.5 382.5 -591 909 -711 c 1
- 909 -668 909 -654.875 909 -612 c 1
- 919.125 -612 926.281 -611.9 931 -612 c 1
- 931 -841 l 2
- 931 -843.229 930.646 -842.992 928.76 -842.591 c 0
- 315 -712 70 -240 0 -16 c 1
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: porrectus5#Cavum
-Encoding: 111 -1 111
-Width: 931
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-902.005 -735.221 m 1
- 902.005 -806.811 l 2
- 902.005 -808.394 901.746 -808.26 900.415 -807.94 c 0
- 293.645 -662.221 83.6953 -186.101 27.9951 -28.0605 c 1
- 27.9951 50.3496 l 2
- 27.9951 53.7139 31.7588 52.9082 32.9648 50.1719 c 0
- 115.97 -138.126 374.19 -621.021 902.005 -735.221 c 1
-EndSplineSet
-EndChar
-
-StartChar: porrectusflexus1
-Encoding: 112 -1 112
-Width: 340
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-0 -16 m 1
- 0 155 l 2
- 0 159.739 3.67916 157.34 7 154.75 c 0
- 143.49 48.2977 204 -6.125 318 -10 c 1
- 318 33 318 -33.875 318 9 c 1
- 328.125 9 335.281 9.09961 340 9 c 1
- 340 -147.125 l 2
- 340 -149.354 339.69 -148.775 337.76 -148.716 c 0
- 187.5 -144.125 136.5 -110 0 -16 c 1
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: porrectusflexus1#Cavum
-Encoding: 113 -1 113
-Width: 340
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-311.1 -34.582 m 1
- 311.1 -119.553 l 2
- 311.1 -121.18 310.874 -120.749 309.465 -120.714 c 0
- 174.775 -117.363 129.545 -72.4512 29.9004 -3.83203 c 1
- 29.9004 102.998 l 2
- 29.9004 106.458 32.6045 104.73 35.0098 102.815 c 0
- 132.647 25.1055 192.88 -31.7529 311.1 -34.582 c 1
-EndSplineSet
-EndChar
-
-StartChar: porrectusflexus2
-Encoding: 114 -1 114
-Width: 428
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-0 -16 m 1
- 0 155 l 2
- 0 159.739 4.76959 158.322 7 154.75 c 0
- 98 9 278 -160.625 406 -166 c 1
- 406 -123 406 -188.375 406 -145.5 c 5
- 416.125 -145.5 423.281 -145.4 428 -145.5 c 5
- 428 -295.5 l 2
- 428 -297.729 427.688 -297.188 425.76 -297.091 c 0
- 265 -289 107 -166 0 -16 c 1
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: porrectusflexus2#Cavum
-Encoding: 115 -1 115
-Width: 428
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-399.067 -193.65 m 1
- 399.08 -266.652 l 2
- 399.08 -268.258 398.847 -267.966 397.467 -267.798 c 0
- 250.72 -249.973 100.96 -115.413 28.9199 -8.41309 c 1
- 28.9199 78.707 l 2
- 28.9199 82.1191 32.2503 81.0307 33.96 78.5273 c 0
- 99.4805 -17.4131 262.907 -183.78 399.067 -193.65 c 1
-EndSplineSet
-EndChar
-
-StartChar: porrectusflexus3
-Encoding: 116 -1 116
-Width: 586
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-0 -16 m 1
- 0 155 l 2
- 0 159.739 5.05344 158.485 7 154.75 c 0
- 96 -16 328 -284 564 -328.5 c 1
- 564 -285.5 564 -350.875 564 -308 c 1
- 574.125 -308 581.281 -307.9 586 -308 c 1
- 586 -458 l 2
- 586 -460.229 585.679 -459.792 583.76 -459.591 c 0
- 282 -428 86 -170 0 -16 c 1
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: porrectusflexus3#Cavum
-Encoding: 117 -1 117
-Width: 586
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-557.03 -353.846 m 1
- 557.03 -426.346 l 2
- 557.03 -427.929 556.795 -427.677 555.439 -427.476 c 0
- 269.19 -385.046 97.0303 -127.865 28.9697 -15.5254 c 1
- 28.9697 66.8848 l 2
- 28.9697 70.249 32.4818 69.3172 33.9404 66.707 c 0
- 82.1299 -19.5254 307.47 -308.251 557.03 -353.846 c 1
-EndSplineSet
-EndChar
-
-StartChar: porrectusflexus4
-Encoding: 118 -1 118
-Width: 670
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-0 -16 m 1
- 0 155 l 2
- 0 159.739 5.13671 158.527 7 154.75 c 0
- 109 -52 374 -402 648 -447.5 c 1
- 648 -404.5 648 -469.875 648 -427 c 1
- 658.125 -427 665.281 -426.9 670 -427 c 1
- 670 -577 l 2
- 670 -579.229 669.666 -578.888 667.76 -578.591 c 4
- 305 -522 98 -214 0 -16 c 1
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: porrectusflexus4#Cavum
-Encoding: 119 -1 119
-Width: 670
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-640.5 -474.438 m 1
- 640.5 -542.438 l 2
- 640.5 -543.999 640.26 -543.792 638.932 -543.553 c 0
- 291 -480.938 96.0996 -152.339 28.5 -17.7383 c 1
- 28.5 58.9609 l 2
- 28.5 62.2783 31.9731 61.3662 33.4004 58.7861 c 0
- 111.8 -82.9385 352.7 -424.588 640.5 -474.438 c 1
-EndSplineSet
-EndChar
-
-StartChar: porrectusflexus5
-Encoding: 120 -1 120
-Width: 931
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-0 -16 m 1
- 0 155 l 2
- 0 159.739 5.3553 158.627 7 154.75 c 0
- 122.5 -117.5 382.5 -525 909 -645 c 5
- 909 -602 909 -634.875 909 -592 c 5
- 919.125 -592 926.281 -591.9 931 -592 c 5
- 931 -775 l 6
- 931 -777.229 930.646 -776.992 928.76 -776.591 c 4
- 315 -646 70 -240 0 -16 c 1
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: porrectusflexus5#Cavum
-Encoding: 121 -1 121
-Width: 931
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-902.35 -670.639 m 1
- 902.35 -738.738 l 2
- 902.35 -740.299 902.099 -740.146 900.782 -739.854 c 0
- 301.15 -606.438 70.6504 -178.238 27.6504 -28.4385 c 1
- 27.6504 48.2617 l 2
- 27.6504 51.5791 31.3348 46.7719 32.5498 44.0859 c 0
- 117.4 -143.488 388.8 -563.639 902.35 -670.639 c 1
-EndSplineSet
-EndChar
-
-StartChar: porrectusflexusnb1
-Encoding: 122 -1 122
-Width: 340
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-340 3.25 m 5
- 340 -143.125 l 6
- 340 -145.354 339.69 -144.775 337.76 -144.716 c 4
- 187.5 -140.125 136.5 -110 0 -16 c 5
- 0 155 l 6
- 0 159.739 3.67916 157.34 7 154.75 c 4
- 143.49 48.2977 204 -2.125 318 -6 c 5
- 334.25 -3.75 336.5 -0.5 340 3.25 c 5
-EndSplineSet
-EndChar
-
-StartChar: porrectusflexusnb1#Cavum
-Encoding: 123 -1 123
-Width: 340
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-311.1 -35.582 m 1
- 311.1 -116.553 l 2
- 311.1 -118.18 310.874 -117.759 309.465 -117.714 c 0
- 174.775 -113.363 129.545 -69.4512 29.9004 -0.832031 c 1
- 29.9004 97.998 l 2
- 29.9004 101.458 32.5801 99.6994 35.0098 97.8154 c 0
- 132.647 22.1055 192.88 -31.7529 311.1 -35.582 c 1
-EndSplineSet
-EndChar
-
-StartChar: porrectusflexusnb2
-Encoding: 124 -1 124
-Width: 428
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-428 -149 m 5
- 428 -283.5 l 6
- 428 -285.729 427.688 -285.188 425.76 -285.091 c 4
- 265 -277 107 -166 0 -16 c 5
- 0 155 l 6
- 0 159.739 4.76959 158.322 7 154.75 c 4
- 98 9 278 -148.625 406 -154 c 5
- 422.75 -154.25 424.75 -152.5 428 -149 c 5
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: porrectusflexusnb2#Cavum
-Encoding: 125 -1 125
-Width: 428
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-399.067 -183.65 m 1
- 399.08 -252.652 l 2
- 399.08 -254.258 398.846 -253.975 397.467 -253.798 c 0
- 250.72 -234.973 101.96 -112.413 28.9199 -6.41309 c 1
- 28.9199 73.707 l 2
- 28.9199 77.1191 32.2625 76.0388 33.96 73.5273 c 0
- 99.4805 -23.4131 262.907 -172.78 399.067 -183.65 c 1
-EndSplineSet
-EndChar
-
-StartChar: porrectusflexusnb3
-Encoding: 126 -1 126
-Width: 586
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-586 -306.5 m 5
- 586 -445 l 6
- 586 -447.229 585.679 -446.792 583.76 -446.591 c 4
- 282 -415 86 -170 0 -16 c 5
- 0 155 l 6
- 0 159.739 5.05344 158.485 7 154.75 c 4
- 96 -16 328 -271 564 -315.5 c 5
- 582 -317.75 584.25 -310.25 586 -306.5 c 5
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: porrectusflexusnb3#Cavum
-Encoding: 127 -1 127
-Width: 586
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-557.03 -345.846 m 1
- 557.03 -412.346 l 2
- 557.03 -413.929 556.795 -413.672 555.439 -413.476 c 0
- 269.19 -372.046 92.0303 -125.865 28.9697 -18.5254 c 1
- 28.9697 63.8848 l 2
- 28.9697 67.249 32.4189 66.2812 33.9404 63.707 c 0
- 83.1299 -19.5254 302.47 -294.251 557.03 -345.846 c 1
-EndSplineSet
-EndChar
-
-StartChar: porrectusflexusnb4
-Encoding: 128 -1 128
-Width: 670
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-670 -434 m 5
- 670 -570 l 6
- 670 -572.229 669.666 -571.888 667.76 -571.591 c 4
- 305 -515 98 -214 0 -16 c 5
- 0 155 l 6
- 0 159.739 5.13671 158.527 7 154.75 c 4
- 109 -52 374 -395 648 -440.5 c 5
- 661.75 -442.75 668 -437.75 670 -434 c 5
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: porrectusflexusnb4#Cavum
-Encoding: 129 -1 129
-Width: 670
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-640.5 -469.438 m 1
- 640.5 -536.438 l 2
- 640.5 -537.999 640.256 -537.814 638.932 -537.553 c 0
- 291 -468.938 101.1 -148.339 28.5 -21.7383 c 1
- 28.5 57.9609 l 2
- 28.5 61.2783 31.9336 60.3438 33.4004 57.7861 c 0
- 111.8 -78.9385 351.7 -415.588 640.5 -469.438 c 1
-EndSplineSet
-EndChar
-
-StartChar: porrectusflexusnb5
-Encoding: 130 -1 130
-Width: 931
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-931 -620.326 m 5
- 931 -761 l 6
- 931 -763.229 930.646 -762.992 928.76 -762.591 c 4
- 315 -632 70 -240 0 -16 c 5
- 0 155 l 6
- 0 159.739 5.3553 158.627 7 154.75 c 4
- 122.5 -117.5 382.5 -511 909 -631 c 5
- 919 -633.333 929 -626.667 931 -620.326 c 5
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: porrectusflexusnb5#Cavum
-Encoding: 131 -1 131
-Width: 931
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-902.35 -658.639 m 1
- 902.35 -725.738 l 2
- 902.35 -727.299 902.098 -727.148 900.782 -726.854 c 0
- 301.15 -592.438 88.6504 -179.238 27.6504 -30.4385 c 1
- 27.6504 47.2617 l 2
- 27.6504 50.5791 31.2481 45.7314 32.5498 43.0859 c 0
- 121.4 -137.488 365.8 -536.639 902.35 -658.639 c 1
-EndSplineSet
-EndChar
-
-StartChar: Punctum
-Encoding: 132 -1 132
-Width: 161
-Flags: HW
-HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
-LayerCount: 2
-Fore
-SplineSet
-17.0254 -21.7686 m 1
- 7.86523 -21.7686 0.384766 -13.7842 0 -4.66504 c 1
- 0 130.972 l 1
- 0 157.191 69.7402 163.997 80 163.997 c 4
- 91.4004 163.997 161 157.157 161 130.938 c 2
- 161 -4.66895 l 2
- 161 -13.7881 152.685 -21.7686 143.564 -21.7686 c 0
- 134.445 -21.7686 118.485 -5.80859 79.7246 -5.80859 c 0
- 44.3848 -5.80859 23.8652 -21.7686 17.0254 -21.7686 c 1
-EndSplineSet
-EndChar
-
-StartChar: Punctum#Cavum
-Encoding: 133 -1 133
-Width: 161
-Flags: HW
-HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
-LayerCount: 2
-Fore
-SplineSet
-38.6064 17.8115 m 1
- 32.5615 17.8115 27.624 23.0811 27.3701 29.0996 c 1
- 27.3701 111.62 l 1
- 27.3701 128.925 73.3984 133.417 80.1699 133.417 c 0
- 87.6943 133.417 133.63 128.902 133.63 111.598 c 2
- 133.63 29.0977 l 2
- 133.63 23.0791 128.143 17.8115 122.122 17.8115 c 0
- 116.104 17.8115 105.57 22.3447 79.9883 22.3447 c 0
- 56.6641 22.3447 43.1211 17.8115 38.6064 17.8115 c 1
-EndSplineSet
-EndChar
-
-StartChar: PunctumAscendens
-Encoding: 134 -1 134
-Width: 161
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-0 150.708 m 1x80
- 6.5 145.208 17.5 139.25 21.5 138.25 c 1
- 32.75 133.75 49.4831 133.569 79.7998 133.569 c 0
- 111.72 133.569 127.68 170.05 127.68 206.529 c 0
- 127.68 214.51 134.521 222.49 143.64 222.49 c 0x40
- 152.76 222.49 161 214.46 161 206.479 c 2x40
- 161 56 l 2
- 161 2.41992 129.96 -49.9707 79.7998 -49.9707 c 0
- 59.2803 -49.9707 13.6797 -44.2705 4.56055 -35.1504 c 0
- 2.28027 -31.7305 0 -27.1699 0 -23.75 c 2
- 0 150.708 l 1x80
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: PunctumAscendens#Cavum
-Encoding: 135 -1 135
-Width: 161
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-131.215 116.998 m 0
- 131.215 49.1963 l 2
- 131.215 22.4404 111.66 -17.5654 80.0586 -17.5654 c 0
- 67.1318 -17.5654 38.4033 -13.9746 32.6582 -8.22852 c 0
- 31.2217 -6.07422 29.7852 -3.20117 29.7852 -1.04688 c 2
- 29.7852 98.8623 l 0x80
- 30 106.783 39.8096 100.644 44.3301 100.014 c 0
- 51.3984 99.0283 60.959 98.0645 80.0586 98.0645 c 0
- 115.169 98.0645 124.8 130.383 131.215 116.998 c 0
-EndSplineSet
-EndChar
-
-StartChar: PunctumAscendens_op
-Encoding: 136 -1 136
-Width: 161
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-160.992 359.499 m 1
- 161 56 l 2
- 161 2.41992 129.96 -49.9707 79.7998 -49.9707 c 0
- 59.2803 -49.9707 13.6797 -44.2705 4.56055 -35.1504 c 0
- 2.28027 -31.7305 0 -27.1699 0 -23.75 c 2
- 0 150.708 l 1x80
- 6.5 145.208 17.5 139.25 21.5 138.25 c 1
- 32.75 133.75 49.4831 133.569 79.7998 133.569 c 0
- 111.72 133.569 139 179.771 139 216.25 c 0
- 138.875 356.372 l 1
- 142.5 358.872 160.992 359.499 160.992 359.499 c 1
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: PunctumAuctusLineBL
-Encoding: 137 -1 137
-Width: 141
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-22 14.8174 m 1x40
- 22 -13.3333 21.334 -4.66699 21.998 -19.541 c 1
- 10 -20 10 -20.6667 0 -19.333 c 1
- 0 160.681 l 1
- 0 168.681 6 172.681 10 174.681 c 0
- 30 180.681 50 183.681 70 183.681 c 0
- 114 183.681 141 137.681 141 90.6807 c 2x80
- 141 -41.3193 l 2
- 141 -48.3193 134 -55.3193 126 -55.3193 c 0
- 118 -55.3193 112 -48.3193 112 -41.3193 c 0
- 112 -9.31934 98 22.6807 70 22.6807 c 0
- 37 22.6807 34.6667 19.3333 22 14.8174 c 1x40
-EndSplineSet
-Validated: 33
-EndChar
-
-StartChar: PunctumAuctusLineBL#Cavum
-Encoding: 138 -1 138
-Width: 141
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-112.215 45.4346 m 0
- 105.8 32.0498 96.1689 51.3682 61.0586 51.3682 c 0
- 51.959 51.3682 51.7998 51.1807 44.3301 49.4189 c 0
- 39.8877 48.3711 30 42.6494 29.7852 50.5703 c 0x80
- 29.7852 138.479 l 2
- 29.7852 140.634 30.687 144.982 32.6582 146.661 c 0
- 39.4033 152.407 48.1318 154.998 61.0586 154.998 c 0
- 99.6602 154.998 112.215 115.992 112.215 89.2363 c 2
- 112.215 45.4346 l 0
-EndSplineSet
-EndChar
-
-StartChar: PunctumAuctusLineBL_op
-Encoding: 139 -1 139
-Width: 141
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-141 90.6807 m 2x80
- 141 -224.002 l 1
- 141 -224.002 122.508 -223.375 118.883 -220.875 c 1
- 118.833 -64.1787 l 0
- 118.833 -32.1787 98 22.6807 70 22.6807 c 0
- 37 22.6807 34.6667 19.3333 22 14.8174 c 1x40
- 22 -13.3333 21.334 -4.66699 21.998 -19.541 c 1
- 10 -20 10 -20.6667 0 -19.333 c 1
- 0 160.681 l 1
- 0 168.681 6 172.681 10 174.681 c 0
- 30 180.681 50 183.681 70 183.681 c 0
- 114 183.681 141 137.681 141 90.6807 c 2x80
-EndSplineSet
-Validated: 33
-EndChar
-
-StartChar: PunctumDeminutus
-Encoding: 140 -1 140
-Width: 97
-VWidth: 2048
-Flags: HW
-HStem: -466.54 17.1 -107.44 17.1 251.66 17.1 610.76 17.1
-LayerCount: 2
-Fore
-SplineSet
-17.1504 -3.12012 m 4
- 8.03027 -3.12012 0.0498047 4.86035 0.0498047 13.9805 c 6
- 0.0498047 102.9 l 6
- 0.0498047 118.86 27.4102 129.12 47.9297 129.12 c 4
- 69.5898 129.12 96.9502 118.86 96.9502 102.9 c 6
- 96.9502 13.9805 l 6
- 96.9502 4.86035 88.9697 -3.12012 79.8496 -3.12012 c 4
- 68.4502 -3.12012 66.1699 6 47.9297 6 c 4
- 29.6904 6 27.4102 -3.12012 17.1504 -3.12012 c 4
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: PunctumDeminutus#Cavum
-Encoding: 141 -1 141
-Width: 97
-VWidth: 2048
-Flags: HW
-HStem: -466.54 17.1 -107.44 17.1 251.66 17.1 610.76 17.1
-LayerCount: 2
-Fore
-SplineSet
-34.6064 25.8115 m 1
- 28.5615 25.8115 23.624 29.0811 23.3701 35.0996 c 1
- 23.3701 84.6201 l 1
- 23.3701 101.925 41.3984 106.417 48.1699 106.417 c 0
- 55.6943 106.417 74.6299 101.902 74.6299 84.5977 c 2
- 74.6299 35.0977 l 2
- 74.6299 29.0791 69.1426 25.8115 63.1221 25.8115 c 0
- 57.1035 25.8115 57.5703 28.3447 47.9883 28.3447 c 0
- 42.6641 28.3447 39.1211 25.8115 34.6064 25.8115 c 1
-EndSplineSet
-EndChar
-
-StartChar: PunctumDescendens
-Encoding: 142 -1 142
-Width: 161
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-17.0967 -4.60059 m 0x40
- 7.97656 -4.60059 -0.00390625 2.23926 -0.00390625 11.3594 c 2
- 0 171.672 l 5
- 22 179.001 l 1
- 44.7998 185.841 56.9961 188.06 79.7959 188.06 c 0
- 129.956 188.06 161 136.18 161 82.5996 c 2x80
- 161 -67.8799 l 2
- 161 -75.8604 152.756 -84.4014 143.636 -84.4014 c 0
- 134.517 -84.4014 127.676 -76.4209 127.676 -68.4404 c 0
- 127.676 -31.9609 111.716 4.51953 79.7959 4.51953 c 0
- 42.1758 4.51953 22.7959 -4.60059 17.0967 -4.60059 c 0x40
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: PunctumDescendens#Cavum
-Encoding: 143 -1 143
-Width: 161
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-131.215 21.4346 m 0
- 124.8 8.0498 115.169 40.3682 80.0586 40.3682 c 0
- 60.959 40.3682 51.3988 39.4039 44.3301 38.4189 c 0
- 39.8096 37.7891 30 31.6494 29.7852 39.5703 c 0x80
- 29.7852 139.479 l 2
- 29.7852 141.634 30.9578 142.708 32.6582 144.661 c 0
- 39.4033 152.407 67.1318 155.998 80.0586 155.998 c 0
- 111.66 155.998 131.215 115.992 131.215 89.2363 c 2
- 131.215 21.4346 l 0
-EndSplineSet
-EndChar
-
-StartChar: PunctumDescendens_op
-Encoding: 144 -1 144
-Width: 161
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-160.992 -224.002 m 1
- 160.992 -224.002 142.5 -223.375 138.875 -220.875 c 1
- 139 -74.5 l 0
- 139 -38.0205 111.716 4.51953 79.7959 4.51953 c 0
- 42.1758 4.51953 22.7959 -4.60059 17.0967 -4.60059 c 0x40
- 7.97656 -4.60059 -0.00390625 2.23926 -0.00390625 11.3594 c 2
- 0 171.672 l 1
- 22 179.001 l 1
- 44.7998 185.841 56.9961 188.06 79.7959 188.06 c 0
- 129.956 188.06 161 136.18 161 82.5996 c 2x80
- 161 -67.8799 l 2
- 160.992 -224.002 l 1
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: PunctumInclinatumAuctus
-Encoding: 145 -1 145
-Width: 178
-Flags: HW
-HStem: -472.63 17.1 -113.53 17.1 245.57 17.1 604.67 17.1
-LayerCount: 2
-Fore
-SplineSet
-6.64551 -32.4863 m 0
- 22.5449 -31.0957 30.8066 -60.126 62.6055 -57.3438 c 0
- 67.1475 -56.9463 71.5908 -55.4131 74.8984 -53.9805 c 1
- 2.85645 36.9873 l 2
- 0.1875 41.3311 -1.54395 48.0469 1.46484 52.8867 c 2
- 66.583 171.875 l 2
- 68.4561 176.616 72.8008 179.285 77.3428 179.683 c 0
- 81.8857 180.08 86.627 178.206 90.4316 173.961 c 2
- 174.086 67.9893 l 1
- 176.556 65.916 176.854 62.5098 177.053 60.2393 c 0
- 177.251 57.9668 177.55 54.5605 175.477 52.0898 c 1
- 111.495 -66.7988 l 2
- 106.413 -74.1094 88.1992 -88.291 65.4863 -90.2783 c 0
- 29.1455 -93.458 -7.60742 -65.7754 -8.99805 -49.876 c 0
- -9.69336 -41.9258 -2.43945 -33.2812 6.64551 -32.4863 c 0
-EndSplineSet
-Validated: 33
-EndChar
-
-StartChar: PunctumInclinatumAuctus#Cavum
-Encoding: 146 -1 146
-Width: 178
-Flags: HW
-HStem: -476.247 17.1 -117.147 17.1 241.953 17.1 601.053 17.1
-LayerCount: 2
-Fore
-SplineSet
-26.6982 42.4824 m 2
- 25.791 44.0195 24.8271 46.3516 24.7168 47.9443 c 0
- 24.6055 49.5371 25.2334 51.9805 25.9189 53.6289 c 2
- 72.9473 136.11 l 2
- 74.3164 139.407 77.3906 141.222 80.5742 141.443 c 0
- 83.7578 141.667 87.0547 140.298 89.665 137.28 c 2
- 146.766 61.9941 l 1
- 148.47 60.5127 148.636 58.125 148.747 56.5322 c 0
- 148.858 54.9395 149.167 52.5615 147.686 50.8584 c 1
- 101.466 -31.4834 l 2
- 99.2998 -34.835 96.2275 -36.6494 93.043 -36.8721 c 0
- 89.8594 -37.0947 86.5635 -35.7256 84.748 -32.6523 c 2
- 26.6982 42.4824 l 2
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: PunctumInclinatumDeminutus
-Encoding: 147 -1 147
-Width: 112
-VWidth: 1131
-Flags: HW
-HStem: -474.94 17.1 -115.84 17.1 243.26 17.1 602.36 17.1
-LayerCount: 2
-Fore
-SplineSet
-3.21289 50.1885 m 5
- 1.78027 53.4971 0.445312 55.6689 0.246094 57.9404 c 4
- 0.0478516 60.2119 0.885742 63.7178 1.82227 66.0889 c 6
- 37.043 134.397 l 6
- 40.0527 139.238 44.3965 141.907 48.9395 142.305 c 4
- 53.4814 142.702 58.2236 140.828 62.0273 136.584 c 6
- 108.819 75.459 l 6
- 110.152 73.2861 111.488 71.1143 111.786 67.707 c 4
- 111.985 65.4355 111.146 61.9297 110.21 59.5586 c 6
- 74.7451 -8.78027 l 6
- 71.7354 -13.6211 67.3916 -16.29 62.8486 -16.6875 c 4
- 58.3066 -17.085 53.5645 -15.2109 49.7607 -10.9668 c 6
- 3.21289 50.1885 l 5
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: PunctumInclinatumDeminutus#Cavum
-Encoding: 148 -1 148
-Width: 112
-VWidth: 1131
-Flags: HW
-HStem: -474.94 17.1 -115.84 17.1 243.26 17.1 602.36 17.1
-LayerCount: 2
-Fore
-SplineSet
-27.502 55.9941 m 1
- 26.7285 57.7803 26.0078 58.9531 25.9004 60.1797 c 0
- 25.793 61.4062 26.2461 63.2998 26.751 64.5801 c 2
- 45.7705 101.467 l 2
- 47.3955 104.081 49.7412 105.521 52.1943 105.737 c 0
- 54.6475 105.951 57.208 104.939 59.2617 102.647 c 2
- 84.5293 69.6396 l 2
- 85.249 68.4668 85.9707 67.2939 86.1318 65.4541 c 0
- 86.2393 64.2275 85.7861 62.334 85.2812 61.0537 c 2
- 66.1299 24.1504 l 2
- 64.5049 21.5371 62.1592 20.0957 59.7061 19.8809 c 0
- 57.2529 19.666 54.6924 20.6787 52.6387 22.9697 c 2
- 27.502 55.9941 l 1
-EndSplineSet
-EndChar
-
-StartChar: PunctumLineBL
-Encoding: 149 -1 149
-Width: 161
-Flags: HW
-HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
-LayerCount: 2
-Fore
-SplineSet
-0 -21.5 m 1
- 0 130.938 l 2
- 0 157.157 69.5996 163.997 81 163.997 c 0
- 91.2598 163.997 161 157.191 161 130.972 c 1
- 161 -4.66504 l 1
- 160.615 -13.7842 153.135 -21.7686 143.975 -21.7686 c 1
- 137.135 -21.7686 116.615 -5.80859 81.2754 -5.80859 c 0
- 42.5146 -5.80859 32.5 -13.5 22 -21.5 c 0
- 20.4743 -22.6624 0 -21.5 0 -21.5 c 1
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: PunctumLineBLBR
-Encoding: 150 -1 150
-Width: 161
-Flags: HW
-HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
-LayerCount: 2
-Fore
-SplineSet
-161 -21.5 m 1
- 161 -21.5 140.534 -22.6509 139 -21.5 c 0
- 131 -15.5 118.485 -5.80859 79.7246 -5.80859 c 0
- 44.3848 -5.80859 33.5 -16.5 22 -21.2949 c 5
- 12.8398 -21.2949 15.5449 -21.2949 0 -21.2949 c 1
- 0 130.972 l 1
- 0 157.191 69.7402 163.997 80 163.997 c 0
- 91.4004 163.997 161 157.157 161 130.938 c 2
- 161 -21.5 l 1
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: PunctumLineBR
-Encoding: 151 -1 151
-Width: 161
-Flags: HW
-HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
-LayerCount: 2
-Fore
-SplineSet
-161 -21.5 m 5
- 161 -21.5 140.645 -22.4869 139 -21.5 c 4
- 129 -15.5 118.485 -5.80859 79.7246 -5.80859 c 4
- 44.3848 -5.80859 23.8652 -21.7686 17.0254 -21.7686 c 5
- 7.86523 -21.7686 0.384766 -13.7842 0 -4.66504 c 5
- 0 130.972 l 5
- 0 157.191 69.7402 163.997 80 163.997 c 4
- 91.4004 163.997 161 157.157 161 130.938 c 6
- 161 -21.5 l 5
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: PunctumLineTL
-Encoding: 152 -1 152
-Width: 161
-Flags: HW
-HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
-LayerCount: 2
-Fore
-SplineSet
-17.0254 -21.7686 m 1
- 7.86523 -21.7686 0.384766 -13.7842 0 -4.66504 c 1
- 0 152.5 l 5
- 22 152.636 0 152.5 22 152.702 c 5
- 43.3739 161.288 73.5266 163.997 80 163.997 c 0
- 91.4004 163.997 161 157.157 161 130.938 c 2
- 161 -4.66895 l 2
- 161 -13.7881 152.685 -21.7686 143.564 -21.7686 c 0
- 134.445 -21.7686 118.485 -5.80859 79.7246 -5.80859 c 0
- 44.3848 -5.80859 23.8652 -21.7686 17.0254 -21.7686 c 1
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: PunctumLineTLTR
-Encoding: 153 -1 153
-Width: 161
-Flags: HW
-HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
-LayerCount: 2
-Fore
-SplineSet
-17.0254 -21.7686 m 1
- 7.86523 -21.7686 0.384766 -13.7842 0 -4.66504 c 1
- 0 152.5 l 1
- 22 152.636 0 152.5 22 152.702 c 1
- 43.3739 161.288 73.5266 163.997 80 163.997 c 0
- 87.1947 163.997 117.569 161.1 139 152.5 c 1
- 161 152.455 139 152.455 161 152.5 c 1
- 161 -4.66895 l 2
- 161 -13.7881 152.685 -21.7686 143.564 -21.7686 c 0
- 134.445 -21.7686 118.485 -5.80859 79.7246 -5.80859 c 0
- 44.3848 -5.80859 23.8652 -21.7686 17.0254 -21.7686 c 1
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: PunctumLineTR
-Encoding: 154 -1 154
-Width: 161
-Flags: HW
-HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
-LayerCount: 2
-Fore
-SplineSet
-143.975 -21.7686 m 5
- 137.135 -21.7686 116.615 -5.80859 81.2754 -5.80859 c 4
- 42.5146 -5.80859 26.5547 -21.7686 17.4355 -21.7686 c 4
- 8.31543 -21.7686 0 -13.7881 0 -4.66895 c 6
- 0 130.938 l 6
- 0 157.157 69.5996 163.997 81 163.997 c 4
- 87.4736 163.997 117.626 161.288 139 152.702 c 5
- 161 152.5 139 152.637 161 152.5 c 5
- 161 -4.66504 l 5
- 160.615 -13.7842 153.135 -21.7686 143.975 -21.7686 c 5
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: PunctumSmall
-Encoding: 155 -1 155
-Width: 151
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-151 -22 m 5
- 151 -22 132 -22 130 -22 c 4
- 121 -16 111 -6 75 -6 c 4
- 42 -6 22 -22 16 -22 c 5
- 7 -22 0 -14 0 -5 c 5
- 0 131 l 5
- 0 157 65 164 75 164 c 4
- 86 164 151 157 151 131 c 6
- 151 -22 l 5
-EndSplineSet
-Validated: 1
-EndChar
-
-StartChar: PunctumSmall#Cavum
-Encoding: 156 -1 156
-Width: 151
-Flags: HW
-HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
-LayerCount: 2
-Fore
-SplineSet
-40.6064 17.8115 m 1
- 34.5615 17.8115 29.624 23.0811 29.3701 29.0996 c 1
- 29.3701 111.62 l 1
- 29.3701 128.925 68.3984 133.417 75.1699 133.417 c 0
- 82.6943 133.417 121.63 128.902 121.63 111.598 c 2
- 121.63 29.0977 l 2
- 121.63 23.0791 116.143 17.8115 110.122 17.8115 c 0
- 104.104 17.8115 98.5703 22.3447 74.9883 22.3447 c 0
- 53.6641 22.3447 45.1211 17.8115 40.6064 17.8115 c 1
-EndSplineSet
-EndChar
-
-StartChar: queue
-Encoding: 157 -1 157
-Width: 22
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-0 -14.5 m 13
- 0 3 l 25
- 22 3 l 25
- 22 -6.5 l 17
- 17.5928 -12.2783 8.15723 -12.709 0 -14.5 c 13
-EndSplineSet
-EndChar
-
-StartChar: queuebase
-Encoding: 158 -1 158
-Width: 22
-VWidth: 2048
-Flags: HW
-HStem: 64 32<0 1>
-VStem: 0 1<64 96>
-LayerCount: 2
-Fore
-SplineSet
-0 0 m 25
- 0 1 l 25
- 22 1 l 29
- 22 0 l 29
- 0 0 l 25
-EndSplineSet
-EndChar
-
-StartChar: Quilisma
-Encoding: 159 -1 159
-Width: 161
-Flags: HW
-HStem: -477.6 17.1 -118.5 17.1 240.6 17.1 599.7 17.1
-LayerCount: 2
-Fore
-SplineSet
-57 11.0342 m 1
- 54.7197 -17.4658 47.8799 -33.4258 42.1797 -33.4258 c 0
- 41.04 -33.4258 39.9004 -32.2861 37.6201 -31.1465 c 1
- 12.54 -6.06641 l 2
- 4.56055 3.05371 0 34.9736 0 62.334 c 0
- 0 78.2939 3.41992 133.014 17.1006 133.014 c 0
- 18.2402 133.014 19.3799 131.874 20.5205 130.734 c 2
- 30.7803 120.474 l 1
- 34.2002 146.694 39.9004 161.514 45.6006 161.514 c 0
- 46.7402 161.514 47.8799 160.374 49.0205 160.374 c 1
- 80.9404 136.434 l 1
- 83.2197 162.654 90.0605 177.474 95.7598 177.474 c 0
- 96.9004 177.474 98.04 176.334 99.1797 176.334 c 1
- 120.84 158.094 l 1
- 124.26 183.174 129.96 196.854 136.8 196.854 c 0
- 142.5 196.854 148.2 183.174 150.48 160.374 c 2
- 158.46 103.374 l 2
- 159.601 93.1143 161 80.5254 161 69.125 c 4
- 161 53.165 157.32 -1.50586 143.64 -1.50586 c 0
- 142.5 -1.50586 141.36 -0.366211 141.36 -0.366211 c 1
- 110.58 23.5742 l 1
- 108.3 -2.64648 101.46 -17.4658 95.7598 -17.4658 c 0
- 94.6201 -17.4658 93.4805 -16.3262 92.3398 -16.3262 c 1
- 57 11.0342 l 1
-EndSplineSet
-EndChar
-
-StartChar: Quilisma#Cavum
-Encoding: 160 -1 160
-Width: 161
-Flags: HW
-HStem: -477.6 17.1 -118.5 17.1 240.6 17.1 599.7 17.1
-LayerCount: 2
-Fore
-SplineSet
-49.875 39.7041 m 1
- 43.4004 22.5459 43.0293 14.5781 37.7598 9.35938 c 0
- 34.7998 6.42773 33.2051 9.94043 30.6035 11.7432 c 1
- 24.7959 30.1553 l 2
- 22.5703 35.4043 22.125 43.6592 22.125 64.1787 c 0
- 22.125 76.1494 21.6895 100.189 29.9502 100.189 c 0
- 30.8047 100.189 33.2139 99.7812 34.5156 98.4795 c 2
- 40.21 93.7842 l 1
- 43.7754 113.449 50.0508 131.564 54.3252 131.564 c 0
- 55.1797 131.564 60.0352 130.709 62.8906 128.709 c 1
- 88.8301 108.754 l 1
- 93.54 128.419 96.6699 142.534 100.945 147.534 c 0
- 101.502 148.185 105.655 146.679 107.51 144.679 c 1
- 122.755 130.999 l 1
- 125.8 142.146 125.215 138.67 125.725 140.069 c 0
- 126.31 141.676 132.971 151.774 134.985 134.709 c 2
- 138.97 100.959 l 2
- 139.742 93.2568 139.593 93.876 139.875 85.2725 c 0
- 140.266 73.3838 140.115 34.2988 129.855 34.2988 c 0
- 129 34.2988 128.145 35.1543 128.145 35.1543 c 1
- 100.06 53.1094 l 1
- 95.3496 33.4434 94.2197 15.3291 84.9453 15.3291 c 0
- 84.0898 15.3291 80.2354 18.1836 79.3799 18.1836 c 1
- 49.875 39.7041 l 1
-EndSplineSet
-EndChar
-
-StartChar: QuilismaLineTR
-Encoding: 161 -1 161
-Width: 161
-Flags: HW
-HStem: -477.6 17.1 -118.5 17.1 240.6 17.1 599.7 17.1
-LayerCount: 2
-Fore
-SplineSet
-57 11.0342 m 1
- 54.7197 -17.4658 47.8799 -33.4258 42.1797 -33.4258 c 0
- 41.04 -33.4258 39.9004 -32.2861 37.6201 -31.1465 c 1
- 12.54 -6.06641 l 2
- 4.56055 3.05371 0 34.9736 0 62.334 c 0
- 0 78.2939 3.41992 133.014 17.1006 133.014 c 0
- 18.2402 133.014 19.3799 131.874 20.5205 130.734 c 2
- 30.7803 120.474 l 1
- 34.2002 146.694 39.9004 161.514 45.6006 161.514 c 0
- 46.7402 161.514 47.8799 160.374 49.0205 160.374 c 1
- 80.9404 136.434 l 1
- 83.2197 162.654 90.0605 177.474 95.7598 177.474 c 0
- 96.9004 177.474 98.04 176.334 99.1797 176.334 c 1
- 123.04 158.573 l 1
- 136 159 137 174 139 183.023 c 1
- 144.699 183.023 148 183 161 182.333 c 1
- 161 103.333 l 2
- 162.141 93.0732 161 80.5254 161 69.125 c 0
- 161 53.165 157.32 -1.50586 143.64 -1.50586 c 0
- 142.5 -1.50586 141.36 -0.366211 141.36 -0.366211 c 1
- 110.58 23.5742 l 1
- 108.3 -2.64648 101.46 -17.4658 95.7598 -17.4658 c 0
- 94.6201 -17.4658 93.4805 -16.3262 92.3398 -16.3262 c 1
- 57 11.0342 l 1
-EndSplineSet
-Validated: 33
-EndChar
-
 StartChar: rdeminutus
-Encoding: 162 -1 162
+Encoding: 163 -1 163
 Width: 97
 VWidth: 2048
 Flags: HW
@@ -3721,7 +3738,7 @@ Validated: 1
 EndChar
 
 StartChar: rdeminutus#Cavum
-Encoding: 163 -1 163
+Encoding: 164 -1 164
 Width: 97
 VWidth: 2048
 Flags: HW
@@ -3742,7 +3759,7 @@ EndSplineSet
 EndChar
 
 StartChar: RoundBrace
-Encoding: 164 -1 164
+Encoding: 165 -1 165
 Width: 937
 VWidth: 2048
 Flags: W
@@ -3768,7 +3785,7 @@ Validated: 1
 EndChar
 
 StartChar: RoundBraceDown
-Encoding: 165 -1 165
+Encoding: 166 -1 166
 Width: 937
 Flags: HW
 LayerCount: 2
@@ -3792,7 +3809,7 @@ Validated: 1
 EndChar
 
 StartChar: rqueue
-Encoding: 166 -1 166
+Encoding: 167 -1 167
 Width: 22
 VWidth: 2048
 Flags: HW
@@ -3809,7 +3826,7 @@ EndSplineSet
 EndChar
 
 StartChar: rvbase
-Encoding: 167 -1 167
+Encoding: 168 -1 168
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -3831,7 +3848,7 @@ EndSplineSet
 EndChar
 
 StartChar: rvirgabase
-Encoding: 168 -1 168
+Encoding: 169 -1 169
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -3852,7 +3869,7 @@ EndSplineSet
 EndChar
 
 StartChar: Semicirculus
-Encoding: 169 -1 169
+Encoding: 170 -1 170
 Width: 124
 VWidth: 1606
 Flags: HW
@@ -3872,7 +3889,7 @@ Validated: 1
 EndChar
 
 StartChar: SemicirculusReversus
-Encoding: 170 -1 170
+Encoding: 171 -1 171
 Width: 125
 VWidth: 1583
 Flags: HW
@@ -3892,7 +3909,7 @@ Validated: 1
 EndChar
 
 StartChar: Sharp
-Encoding: 171 -1 171
+Encoding: 172 -1 172
 Width: 258
 VWidth: 2048
 Flags: W
@@ -3955,7 +3972,7 @@ Validated: 1
 EndChar
 
 StartChar: SharpHole
-Encoding: 172 -1 172
+Encoding: 173 -1 173
 Width: 258
 VWidth: 2048
 Flags: W
@@ -3973,7 +3990,7 @@ Validated: 1
 EndChar
 
 StartChar: Stropha
-Encoding: 173 -1 173
+Encoding: 174 -1 174
 Width: 169
 Flags: HW
 HStem: -466.26 17.1 -107.16 17.1 251.94 17.1 611.04 17.1
@@ -4003,7 +4020,7 @@ EndSplineSet
 EndChar
 
 StartChar: Stropha#Cavum
-Encoding: 174 -1 174
+Encoding: 175 -1 175
 Width: 169
 Flags: HW
 HStem: -466.26 17.1 -107.16 17.1 251.94 17.1 611.04 17.1
@@ -4029,7 +4046,7 @@ EndSplineSet
 EndChar
 
 StartChar: StrophaAucta
-Encoding: 175 -1 175
+Encoding: 176 -1 176
 Width: 168
 Flags: HW
 HStem: -472.609 17.1 -113.509 17.1 245.591 17.1 604.691 17.1
@@ -4054,7 +4071,7 @@ Validated: 33
 EndChar
 
 StartChar: StrophaAucta#Cavum
-Encoding: 176 -1 176
+Encoding: 177 -1 177
 Width: 168
 Flags: HW
 HStem: -466.26 17.1 -107.16 17.1 251.94 17.1 611.04 17.1
@@ -4080,7 +4097,7 @@ EndSplineSet
 EndChar
 
 StartChar: StrophaAuctaLongtail
-Encoding: 177 -1 177
+Encoding: 178 -1 178
 Width: 168
 Flags: HW
 HStem: -472.609 17.1 -113.509 17.1 245.591 17.1 604.691 17.1
@@ -4104,7 +4121,7 @@ EndSplineSet
 EndChar
 
 StartChar: tmpglyph
-Encoding: 178 -1 178
+Encoding: 179 -1 179
 Width: 22
 VWidth: 2048
 Flags: HW
@@ -4114,7 +4131,7 @@ LayerCount: 2
 EndChar
 
 StartChar: UpperPesOneNothing
-Encoding: 179 -1 179
+Encoding: 180 -1 180
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -4143,7 +4160,7 @@ EndSplineSet
 EndChar
 
 StartChar: UpperPesOneNothing#Cavum
-Encoding: 180 -1 180
+Encoding: 181 -1 181
 Width: 161
 Flags: W
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -4172,7 +4189,7 @@ EndSplineSet
 EndChar
 
 StartChar: VEpisema
-Encoding: 181 -1 181
+Encoding: 182 -1 182
 Width: 36
 VWidth: 1384
 Flags: HW
@@ -4192,7 +4209,7 @@ Validated: 1
 EndChar
 
 StartChar: VEpisema.circumflexus
-Encoding: 182 -1 182
+Encoding: 183 -1 183
 Width: 108
 VWidth: 2048
 Flags: HW
@@ -4216,7 +4233,7 @@ Validated: 1
 EndChar
 
 StartChar: virgabase
-Encoding: 183 -1 183
+Encoding: 184 -1 184
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -4237,7 +4254,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaBaseLineBL
-Encoding: 184 -1 184
+Encoding: 185 -1 185
 Width: 161
 Flags: W
 HStem: -409 15 -94 15 221 15 536 15
@@ -4259,7 +4276,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaAscendens_op
-Encoding: 185 -1 185
+Encoding: 186 -1 186
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -4282,7 +4299,7 @@ Validated: 1
 EndChar
 
 StartChar: VirgaReversaAscendens_op#Cavum
-Encoding: 186 -1 186
+Encoding: 187 -1 187
 Width: 161
 Flags: W
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -4302,7 +4319,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaDescendens_op
-Encoding: 187 -1 187
+Encoding: 188 -1 188
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -4325,7 +4342,7 @@ Validated: 1
 EndChar
 
 StartChar: VirgaReversaDescendens_op#Cavum
-Encoding: 188 -1 188
+Encoding: 189 -1 189
 Width: 161
 Flags: W
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -4345,7 +4362,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaLongqueueAscendens_op
-Encoding: 189 -1 189
+Encoding: 190 -1 190
 Width: 161
 Flags: W
 HStem: -409 15 -94 15 221 15 536 15
@@ -4367,7 +4384,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaLongqueueDescendens_op
-Encoding: 190 -1 190
+Encoding: 191 -1 191
 Width: 161
 Flags: W
 HStem: -409 15 -94 15 221 15 536 15
@@ -4389,7 +4406,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaOpenqueueAscendens_op
-Encoding: 191 -1 191
+Encoding: 192 -1 192
 Width: 161
 Flags: W
 HStem: -409 15 -94 15 221 15 536 15
@@ -4411,7 +4428,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaOpenqueueDescendens_op
-Encoding: 192 -1 192
+Encoding: 193 -1 193
 Width: 161
 Flags: W
 HStem: -409 15 -94 15 221 15 536 15
@@ -4433,7 +4450,7 @@ EndSplineSet
 EndChar
 
 StartChar: Virgula
-Encoding: 193 -1 193
+Encoding: 194 -1 194
 Width: 152
 VWidth: 2048
 Flags: HW
@@ -4452,7 +4469,7 @@ Validated: 33
 EndChar
 
 StartChar: Virgula.2
-Encoding: 194 -1 194
+Encoding: 195 -1 195
 Width: 152
 VWidth: 1418
 Flags: HW
@@ -4470,7 +4487,7 @@ EndSplineSet
 EndChar
 
 StartChar: Virgula.3
-Encoding: 195 -1 195
+Encoding: 196 -1 196
 Width: 152
 VWidth: 1733
 Flags: HW
@@ -4488,7 +4505,7 @@ EndSplineSet
 EndChar
 
 StartChar: Virgula.5
-Encoding: 196 -1 196
+Encoding: 197 -1 197
 Width: 152
 VWidth: 2363
 Flags: HW
@@ -4502,6 +4519,24 @@ SplineSet
  124.5 845.998 17 825.498 17 887.998 c 1
  17 912.998 49 927.998 75 927.998 c 1
  122.5 928.998 152.337 901.678 152.337 868.333 c 1
+EndSplineSet
+EndChar
+
+StartChar: Virgula.6
+Encoding: 198 -1 198
+Width: 152
+VWidth: 2678
+Flags: HW
+HStem: 221 15 536 15 851 15 1166 15
+LayerCount: 2
+Fore
+SplineSet
+152.337 1183.33 m 1
+ 152.337 1127.68 67 1069 0 1049 c 1
+ 46 1088 152.5 1126 120 1192 c 1
+ 124.5 1161 17 1140.5 17 1203 c 1
+ 17 1228 49 1243 75 1243 c 1
+ 122.5 1244 152.337 1216.68 152.337 1183.33 c 1
 EndSplineSet
 EndChar
 EndChars
