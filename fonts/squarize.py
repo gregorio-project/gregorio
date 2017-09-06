@@ -1070,6 +1070,8 @@ HEPISEMA_GLYPHS = {
     'HEpisemaFlat': 'Flat',
     'HEpisemaSharp': 'Sharp',
     'HEpisemaNatural': 'Natural',
+    'HEpisemaBarStandard': 'DivisioMinima',
+    'HEpisemaBarVirgula': 'Virgula',
 }
 
 def hepisema():

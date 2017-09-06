@@ -1800,6 +1800,20 @@
   \gre@trace@end%
 }%
 
+\def\GreInVirgulaHigh#1#2#3{%
+  \gre@trace{GreInVirgulaHigh{#1}{#2}{#3}}%
+  \gre@writebar{14}{1}{#1}{#2}{#3}%
+  \relax%
+  \gre@trace@end%
+}%
+
+\def\GreVirgulaHigh#1#2#3{%
+  \gre@trace{GreVirgulaHigh{#1}{#2}{#3}}%
+  \gre@writebar{14}{0}{#1}{#2}{#3}%
+  \relax%
+  \gre@trace@end%
+}%
+
 \def\GreInDivisioMinima#1#2#3{%
   \gre@trace{GreInDivisioMinima{#1}{#2}{#3}}%
   \gre@writebar{1}{1}{#1}{#2}{#3}%
@@ -1810,6 +1824,20 @@
 \def\GreDivisioMinima#1#2#3{%
   \gre@trace{GreDivisioMinima{#1}{#2}{#3}}%
   \gre@writebar{1}{0}{#1}{#2}{#3}%
+  \relax%
+  \gre@trace@end%
+}%
+
+\def\GreInDivisioMinimaHigh#1#2#3{%
+  \gre@trace{GreInDivisioMinimaHigh{#1}{#2}{#3}}%
+  \gre@writebar{15}{1}{#1}{#2}{#3}%
+  \relax%
+  \gre@trace@end%
+}%
+
+\def\GreDivisioMinimaHigh#1#2#3{%
+  \gre@trace{GreDivisioMinimaHigh{#1}{#2}{#3}}%
+  \gre@writebar{15}{0}{#1}{#2}{#3}%
   \relax%
   \gre@trace@end%
 }%
@@ -2004,7 +2032,7 @@
 \newskip\gre@skip@bar@lastskip% skip after last bar
 
 %a macro to write a bar
-%% 1: the type of the bar : 0 for virgula, 1 for minima 2 for minor, 3 for major, 4 for finalis and 5 for the last finalis, 6 to 13 for dominican bars
+%% 1: the type of the bar : 0 for virgula, 1 for minima 2 for minor, 3 for major, 4 for finalis and 5 for the last finalis, 6 to 13 for dominican bars, 14 for high virgula, 15 for high minima
 %% 2: is 0 if it is in a syllable containing only this bar, 1 otherwise
 %% 3: is 0 if there's no text under the bar or 1 if there is text under the bar
 %% 4: macros that may happen before the skip after the bar (typically GreVEpisema)
@@ -2245,6 +2273,38 @@
     \ifnum\gre@count@temp@one=1\relax %
       \GreNoBreak %
       \gre@skip@temp@four = \csname gre@space@skip@bar@dominican\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
+      \gre@hskip\gre@skip@temp@four %
+    \fi %
+  \or % 14 : high virgula
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@virgula\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
+      \gre@hskip\gre@skip@temp@four %
+      \GreNoBreak %
+    \fi %
+    \GreGlyphHeights{\gre@pitch@ledger@above}{\gre@pitch@ledger@above}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPVirgulaHigh}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPVirgulaHigh}%
+    \GreAdditionalLine{\GreOCaseBarVirgula}{0}{2}%
+    #4\relax %
+    \ifnum\gre@count@temp@one=1\relax %
+      \GreNoBreak %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@virgula\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
+      \gre@hskip\gre@skip@temp@four %
+    \fi %
+  \or % 15 : high minima
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@minima\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
+      \gre@hskip\gre@skip@temp@four %
+      \GreNoBreak %
+    \fi %
+    \GreGlyphHeights{\gre@pitch@ledger@above}{\gre@pitch@ledger@above}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioMinimaHigh}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioMinimaHigh}%
+    \GreAdditionalLine{\GreOCaseBarStandard}{0}{2}%
+    #4\relax %
+    \ifnum\gre@count@temp@one=1\relax %
+      \GreNoBreak %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@minima\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \fi %
