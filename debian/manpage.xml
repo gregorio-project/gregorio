@@ -218,7 +218,7 @@ and docbook-xsl in your Build-Depends control field.
   <refsect1>
     <title>SEE ALSO</title>
 
-    <para>http://home.gna.org/gregorio for a complete description of the formats.</para>
+    <para>http://gregorio-project.github.io/index.html for a complete description of the formats.</para>
 
   </refsect1>
 </refentry>
