@@ -4,7 +4,7 @@
 # it can be useful.
 
 DEBFULLNAME='Gregorio Builder'
-DEBEMAIL='gregorio-devel@gna.org'
+DEBEMAIL='gregorio-devel@googlegroups.com'
 DEBVERSION='UNRELEASED'
 
 until [ -z "$1" ]; do

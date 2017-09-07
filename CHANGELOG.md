@@ -5,6 +5,9 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## [Unreleased][unreleased]
 - Added support for virgula (gabc: `` `0``) and divisio minima (gabc: `,0`) on the ledger line above the staff (see [#1370](https://github.com/gregorio-project/gregorio/issues/1370)).
 
+## [Unreleased][unreleased]
+- Fixed issue with Tex Live 2017 latexmk not detecting auto-compiled gabc files as dependencies (see [#1367](https://github.com/gregorio-project/gregorio/issues/1367)).
+
 ## [5.0.2] - 2017-05-24
 - Worked around an issue discovered during the TeX Live 2017 pre-test.  See [#1362](https://github.com/gregorio-project/gregorio/issues/1362).
 
