@@ -80,6 +80,12 @@ Gregorio\TeX{} two-pass processing is compatible with \texttt{latexmk}.
 
 If you only need the special symbols which Gregorio\TeX\ contains, and not the ability to include scores or musical glyphs, then you can load \texttt{gregoriosyms} instead of \texttt{gregoriotex}.  It supports all of the above options except those specifically related to scores.  \textbf{You should not try to load both packages}.
 
+\subsubsection{Gregorio\TeX{} and \texttt{microtype}}
+
+If you are using the \texttt{microtype} package or a package that itself uses
+\texttt{microtype}, please load it after \texttt{gregoriotex}.  If you load
+\texttt{microtype} before \texttt{gregoriotex}, you may receive an error about
+an ``undefined control sequence'' if you use certain Gregorio\TeX{} features.
 
 \subsection{Commands}
 
