@@ -451,10 +451,14 @@
   \gre@trace@end%
 }%
 
+\newif\ifgre@in@custos %
+\gre@in@custosfalse %
+
 % custos just typesets a custos, useful for before the key changes for example
 % #1 is the height
 \def\GreCustos#1#2{%
   \gre@trace{GreCustos{#1}{#2}}%
+  \gre@in@custostrue %
   \GreNoBreak %
   \ifdim\gre@skip@bar@lastskip=0pt\else % we're after a bar:
     \kern-\gre@skip@bar@lastskip %
@@ -505,6 +509,7 @@
   \fi %
   \directlua{gregoriotex.adjust_line_height(\gre@insidediscretionary)}%
   \relax %
+  \gre@in@custosfalse %
   \gre@trace@end%
 }%
 
@@ -522,6 +527,7 @@
 \edef\gre@nextcustosalteration{}%
 \def\GreNextCustos#1#2{%
   \gre@trace{GreNextCustos{#1}{#2}}%
+  \gre@in@custostrue %
   \gre@debugmsg{custos}{nextcustos = #1,#2}%
   \ifnum\gre@insidediscretionary=0\relax %
     \gre@debugmsg{custos}{not discretionary}%
@@ -561,6 +567,7 @@
     \fi %
   \fi %
   \relax%
+  \gre@in@custosfalse %
   \gre@trace@end%
 }%
 
@@ -2464,7 +2471,9 @@
   \ifnum#4=0\relax %
     \gre@newglyphcommon %
   \fi %
-  \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
+  \ifgre@in@custos\else\relax %
+    \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
+  \fi %
   % the three next lines are a trick to get the additional lines below the glyphs
   \gre@skip@temp@one = \gre@dimen@lastglyphwidth\relax%
   \kern\gre@skip@temp@one %
