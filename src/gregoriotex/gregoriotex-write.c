@@ -1680,6 +1680,9 @@ static void write_bar(FILE *f, const gregorio_score *const score,
     case B_DIVISIO_MINIMA_HIGH:
         fprintf(f, "DivisioMinimaHigh");
         break;
+    case B_DIVISIO_MAIOR_DOTTED:
+        fprintf(f, "DivisioMaiorDotted");
+        break;
     default:
         /* not reachable unless there's a programming error */
         /* LCOV_EXCL_START */
@@ -2593,6 +2596,7 @@ static int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
                 result = 12;
                 break;
             case B_DIVISIO_MAIOR:
+            case B_DIVISIO_MAIOR_DOTTED:
                 result = 13;
                 break;
             case B_DIVISIO_MINOR_D1:

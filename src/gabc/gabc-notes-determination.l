@@ -1226,6 +1226,9 @@ Z-  {
 ::  {
         add_bar_as_note(B_DIVISIO_FINALIS);
     }
+:\? {
+        add_bar_as_note(B_DIVISIO_MAIOR_DOTTED);
+    }
 r   {
         gregorio_add_cavum(current_note);
     }

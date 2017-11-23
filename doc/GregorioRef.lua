@@ -133,6 +133,12 @@ local EXCLUDE = {
   ['DivisioMaior.2'] = true,
   ['DivisioMaior.3'] = true,
   ['DivisioMaior.5'] = true,
+  ['DivisioMaiorDotted.2'] = true,
+  ['DivisioMaiorDotted.3'] = true,
+  ['DivisioMaiorDotted.5'] = true,
+  ['DivisioMaiorDottedBacking.2'] = true,
+  ['DivisioMaiorDottedBacking.3'] = true,
+  ['DivisioMaiorDottedBacking.5'] = true,
   VirgaBaseLineBL = true,
 }
 
@@ -178,6 +184,8 @@ local GABC = {
   DivisioDominican = [[,3]],
   DivisioDominicanAlt = [[,4]],
   DivisioMaior = [[:]],
+  DivisioMaiorDotted = [[:?]],
+  DivisioMaiorDottedBacking = [[\excluded{:?}]],
   DivisioMinima = [[,]],
   DivisioMinor = [[;]],
   FClefChange = [[f3]],

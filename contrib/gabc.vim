@@ -29,7 +29,7 @@ syn match gabcTextOrNoteMarkup "</\?nlba>" contained
 syn match gabcTextCenter "[{}]" contained
 syn match gabcFuse "@" contained
 syn match gabcFuseEnd "\]" contained
-syn match gabcBar ":" contained
+syn match gabcBar ":?\?" contained
 syn match gabcBar ";[1-8]\?" contained
 syn match gabcBar ",[0-8]\?" contained
 syn match gabcBar "`0\?" contained

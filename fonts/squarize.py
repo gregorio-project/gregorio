@@ -259,6 +259,8 @@ DIRECT_GLYPHS = {
     'DivisioMinima' : False,
     'DivisioMinor' : False,
     'DivisioMaior' : False,
+    'DivisioMaiorDotted' : False,
+    'DivisioMaiorDottedBacking' : False,
     'PunctumDeminutus' : False,
     'AuctumMora' : False,
     'Punctum' : True,
