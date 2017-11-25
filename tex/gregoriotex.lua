@@ -1096,8 +1096,8 @@ local function change_score_glyph(glyph_name, font_name, replacement, cavum)
   cavum = cavum or ''
   if string.match(glyph_name, '%*') then
     glyph_name = '^'..glyph_name:gsub('%*', '.*')..'$'
-    if not string.match(replacement, '^%.') then
-      err('If a wildcard is supplied for glyph name, replacement must start with a dot.')
+    if replacement ~= '' and not string.match(replacement, '^%.') then
+      err('If a wildcard is supplied for glyph name, replacement must be blank or start with a dot.')
     end
     local general_font = general_font_for(cavum)
     local other_font

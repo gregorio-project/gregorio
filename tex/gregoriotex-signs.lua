@@ -197,14 +197,14 @@ local offset_cases = {
   -- standard bar
   {
     case = 'BarStandard',
-    v = [[\gre@vepisemaorrareaux{0}{\GreCPDivisioMinima}{1}{0}{#2}{#3}{#4}]],
-    h = [[\gre@hepisorlineaux{\GreCPDivisioMinima}{\gre@char@he@barstandard{#4}}{2}{#3}]],
+    v = [[\gre@vepisemaorrareaux{0}{\gre@char@bar@divisiominima}{1}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\gre@char@bar@divisiominima}{\gre@char@he@barstandard{#4}}{2}{#3}]],
   },
   -- virgula
   {
     case = 'BarVirgula',
-    v = [[\gre@vepisemaorrareaux{0}{\GreCPVirgula}{1}{0}{#2}{#3}{#4}]],
-    h = [[\gre@hepisorlineaux{\GreCPVirgula}{\gre@char@he@barvirgula{#4}}{2}{#3}]],
+    v = [[\gre@vepisemaorrareaux{0}{\gre@char@bar@virgula}{1}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\gre@char@bar@virgula}{\gre@char@he@barvirgula{#4}}{2}{#3}]],
   },
   -- divisio finalis
   {

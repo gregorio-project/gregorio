@@ -119,27 +119,27 @@ local EXCLUDE = {
   QuilismaLineTR = true,
   VirgaLineBR = true,
   SalicusOriscus = true,
-  ['Virgula.2'] = true,
-  ['Virgula.3'] = true,
-  ['Virgula.5'] = true,
-  ['Virgula.6'] = true,
-  ['DivisioMinima.2'] = true,
-  ['DivisioMinima.3'] = true,
-  ['DivisioMinima.5'] = true,
-  ['DivisioMinima.6'] = true,
-  ['DivisioMinor.2'] = true,
-  ['DivisioMinor.3'] = true,
-  ['DivisioMinor.5'] = true,
-  ['DivisioMaior.2'] = true,
-  ['DivisioMaior.3'] = true,
-  ['DivisioMaior.5'] = true,
-  ['DivisioMaiorDotted.2'] = true,
-  ['DivisioMaiorDotted.3'] = true,
-  ['DivisioMaiorDotted.5'] = true,
-  ['DivisioMaiorDottedBacking.2'] = true,
-  ['DivisioMaiorDottedBacking.3'] = true,
-  ['DivisioMaiorDottedBacking.5'] = true,
   VirgaBaseLineBL = true,
+  ['VirgulaTwo'] = true,
+  ['VirgulaThree'] = true,
+  ['VirgulaFive'] = true,
+  ['VirgulaSix'] = true,
+  ['DivisioMinimaTwo'] = true,
+  ['DivisioMinimaThree'] = true,
+  ['DivisioMinimaFive'] = true,
+  ['DivisioMinimaSix'] = true,
+  ['DivisioMinorTwo'] = true,
+  ['DivisioMinorThree'] = true,
+  ['DivisioMinorFive'] = true,
+  ['DivisioMaiorTwo'] = true,
+  ['DivisioMaiorThree'] = true,
+  ['DivisioMaiorFive'] = true,
+  ['DivisioMaiorDottedTwo'] = true,
+  ['DivisioMaiorDottedThree'] = true,
+  ['DivisioMaiorDottedFive'] = true,
+  ['DivisioMaiorDottedBackingTwo'] = true,
+  ['DivisioMaiorDottedBackingThree'] = true,
+  ['DivisioMaiorDottedBackingFive'] = true,
 }
 
 -- &&& in the following two tables is a placeholder for the cavum shape 'r'
@@ -183,11 +183,11 @@ local GABC = {
   DescendensPunctumInclinatum = [[G&&&0]],
   DivisioDominican = [[,3]],
   DivisioDominicanAlt = [[,4]],
-  DivisioMaior = [[:]],
-  DivisioMaiorDotted = [[:?]],
-  DivisioMaiorDottedBacking = [[\excluded{:?}]],
-  DivisioMinima = [[,]],
-  DivisioMinor = [[;]],
+  DivisioMaiorFour = [[:]],
+  DivisioMaiorDottedFour = [[:?]],
+  DivisioMaiorDottedBackingFour = [[\excluded{:?}]],
+  DivisioMinimaFour = [[,]],
+  DivisioMinorFour = [[;]],
   FClefChange = [[f3]],
   FClef = [[f3]],
   Flat = [[gx]],
@@ -266,7 +266,7 @@ local GABC = {
   VirgaReversa = [[g&&&V]],
   VirgaReversaLongqueue = [[h&&&V]],
   VirgaReversaOpenqueue = [[a&&&V]],
-  Virgula = [[^^^^0060]],
+  VirgulaFour = [[^^^^0060]],
 }
 
 local GABC_AMBITUS_ONE = {
@@ -532,15 +532,21 @@ function GregorioRef.emit_score_glyphs(cs_normal, cs_hollow)
   local first = true
   local i, name
   for i, name in ipairs(glyph_names) do
-    if not EXCLUDE[name[2]] then
-      if (name[3] == '' and name[5] == '') or name[3] == '' or only_twos:match(name[3])
-          or (GABC_AMBITUS_ONE[name[2]] and ambitus_one:match(name[3])) then
+    local shape = name[2]
+    local ambitus = name[3]
+    if shape:match('^Virgula') or shape:match('^Divisio') then
+      shape = shape..ambitus
+      ambitus = ''
+    end
+    if not EXCLUDE[shape] then
+      if (ambitus == '' and name[5] == '') or ambitus == '' or only_twos:match(ambitus)
+          or (GABC_AMBITUS_ONE[shape] and ambitus_one:match(ambitus)) then
         if first then
           first = false
         else
           tex.print([[\hline]])
         end
-        emit_score_glyph(name[1], name[2], name[3], name[4], name[5])
+        emit_score_glyph(name[1], shape, ambitus, name[4], name[5])
       end
     end
   end

@@ -2109,8 +2109,8 @@
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
-    \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPVirgula}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPVirgula}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@virgula}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\gre@char@bar@virgula}%
     #4\relax %
     \ifnum\gre@count@temp@one=1\relax %
       \GreNoBreak %
@@ -2123,8 +2123,8 @@
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
-    \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioMinima}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioMinima}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@divisiominima}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\gre@char@bar@divisiominima}%
     #4\relax %
     \ifnum\gre@count@temp@one=1\relax %
       \GreNoBreak %
@@ -2137,8 +2137,8 @@
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
-    \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioMinor}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioMinor}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@divisiominor}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\gre@char@bar@divisiominor}%
     #4\relax %
     \ifnum\gre@count@temp@one=1\relax %
       \GreNoBreak %
@@ -2151,7 +2151,7 @@
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
-    \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioMaior}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@divisiomaior}%
     \gre@fontchar@divisiomaior %
     #4\relax %
     \ifnum\gre@count@temp@one=1\relax %
@@ -2322,8 +2322,8 @@
       \GreNoBreak %
     \fi %
     \GreGlyphHeights{\gre@pitch@ledger@above}{\gre@pitch@ledger@above}%
-    \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPVirgulaHigh}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPVirgulaHigh}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@virgulahigh}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\gre@char@bar@virgulahigh}%
     \GreAdditionalLine{\GreOCaseBarVirgula}{0}{2}%
     #4\relax %
     \ifnum\gre@count@temp@one=1\relax %
@@ -2338,8 +2338,8 @@
       \GreNoBreak %
     \fi %
     \GreGlyphHeights{\gre@pitch@ledger@above}{\gre@pitch@ledger@above}%
-    \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioMinimaHigh}%
-    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioMinimaHigh}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@divisiominimahigh}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\gre@char@bar@divisiominimahigh}%
     \GreAdditionalLine{\GreOCaseBarStandard}{0}{2}%
     #4\relax %
     \ifnum\gre@count@temp@one=1\relax %
@@ -2353,17 +2353,17 @@
       \gre@hskip\gre@skip@temp@four %
       \GreNoBreak %
     \fi %
-    \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioMaiorDotted}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@divisiomaiordotted}%
     \ifgre@hidedottedbarlines %
       \hbox to 0pt{%
         {%
           \color{grebackgroundcolor}%
-          \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioMaiorDottedBacking}%
+          \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\gre@char@bar@divisiomaiordottedbacking}%
         }%
         \hss %
       }%
     \fi %
-    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioMaiorDotted}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\gre@char@bar@divisiomaiordotted}%
     #4\relax %
     \ifnum\gre@count@temp@one=1\relax %
       \GreNoBreak %
@@ -2384,9 +2384,9 @@
 \def\gre@fontchar@divisiomaior{%
   \ifnum\gre@stafflinefactor=17\relax %
     %\gre@calculate@glyphraisevalue{\gre@pitch@bar}{0}{}% bar glyphs are made to be at this height
-    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\GreCPDivisioMaior}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\gre@char@bar@divisiomaior}%
   \else %
-    \setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioMaior}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@divisiomaior}%
     % we calculate the raise of the bar
     \gre@dimen@temp@five=\dimexpr(\gre@dimen@additionalbottomspace %
       + \gre@space@dimen@spacebeneathtext %

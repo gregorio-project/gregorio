@@ -1309,8 +1309,42 @@ EndSplineSet
 Validated: 1
 EndChar
 
-StartChar: DivisioMaior
+StartChar: DivisioMaiorTwo
 Encoding: 54 -1 54
+Width: 19
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 -79.001 m 29
+ 19 -79 l 29
+ 18.9912 -408.997 l 25
+ 0 -409.002 l 25
+ 0 -79.001 l 29
+EndSplineSet
+EndChar
+
+StartChar: DivisioMaiorThree
+Encoding: 55 -1 55
+Width: 19
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 235.999 m 29
+ 19 236 l 29
+ 18.9912 -408.997 l 25
+ 0 -409.002 l 25
+ 0 235.999 l 29
+EndSplineSet
+EndChar
+
+StartChar: DivisioMaiorFour
+Encoding: 56 -1 56
 Width: 19
 VWidth: 2048
 Flags: HW
@@ -1327,41 +1361,7 @@ EndSplineSet
 Validated: 1
 EndChar
 
-StartChar: DivisioMaior.2
-Encoding: 55 -1 55
-Width: 19
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-0 -79.001 m 29
- 19 -79 l 29
- 18.9912 -408.997 l 25
- 0 -409.002 l 25
- 0 -79.001 l 29
-EndSplineSet
-EndChar
-
-StartChar: DivisioMaior.3
-Encoding: 56 -1 56
-Width: 19
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-0 235.999 m 29
- 19 236 l 29
- 18.9912 -408.997 l 25
- 0 -409.002 l 25
- 0 235.999 l 29
-EndSplineSet
-EndChar
-
-StartChar: DivisioMaior.5
+StartChar: DivisioMaiorFive
 Encoding: 57 -1 57
 Width: 19
 VWidth: 2048
@@ -1378,8 +1378,113 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: DivisioMaiorDotted
+StartChar: DivisioMaiorDottedTwo
 Encoding: 58 -1 58
+Width: 19
+VWidth: 2048
+Flags: HW
+HStem: -408.997 329.996
+VStem: 0 19<-408.997 -79.001>
+LayerCount: 2
+Fore
+SplineSet
+0 -424.001 m 29
+ 19 -424 l 29
+ 19 -463.997 l 29
+ 0 -464.002 l 29
+ 0 -424.001 l 29
+0 -344.001 m 25
+ 19 -344 l 25
+ 19 -383.997 l 25
+ 0 -384.002 l 25
+ 0 -344.001 l 25
+0 -264.001 m 25
+ 19 -264 l 25
+ 19 -303.997 l 25
+ 0 -304.002 l 25
+ 0 -264.001 l 25
+0 -184.001 m 25
+ 19 -184 l 25
+ 19 -223.997 l 25
+ 0 -224.002 l 25
+ 0 -184.001 l 25
+0 -104.001 m 25
+ 19 -104 l 25
+ 19 -143.997 l 25
+ 0 -144.002 l 25
+ 0 -104.001 l 25
+0 -24.001 m 25
+ 19 -24 l 25
+ 19 -63.9971 l 25
+ 0 -64.002 l 25
+ 0 -24.001 l 25
+EndSplineSet
+EndChar
+
+StartChar: DivisioMaiorDottedThree
+Encoding: 59 -1 59
+Width: 19
+VWidth: 2048
+Flags: HW
+VStem: 0 19<-408.997 235.999>
+LayerCount: 2
+Fore
+SplineSet
+0 293.499 m 25
+ 19 293.5 l 25
+ 19 253.503 l 25
+ 0 253.498 l 25
+ 0 293.499 l 25
+0 213.499 m 25
+ 19 213.5 l 25
+ 19 173.503 l 25
+ 0 173.498 l 25
+ 0 213.499 l 25
+0 133.499 m 25
+ 19 133.5 l 25
+ 19 93.5029 l 25
+ 0 93.498 l 25
+ 0 133.499 l 25
+0 53.499 m 25
+ 19 53.5 l 25
+ 19 13.5029 l 25
+ 0 13.498 l 25
+ 0 53.499 l 25
+0 -26.501 m 25
+ 19 -26.5 l 25
+ 19 -66.4971 l 25
+ 0 -66.502 l 25
+ 0 -26.501 l 25
+0 -106.501 m 25
+ 19 -106.5 l 25
+ 19 -146.497 l 25
+ 0 -146.502 l 25
+ 0 -106.501 l 25
+0 -186.501 m 25
+ 19 -186.5 l 25
+ 19 -226.497 l 25
+ 0 -226.502 l 25
+ 0 -186.501 l 25
+0 -266.501 m 25
+ 19 -266.5 l 25
+ 19 -306.497 l 25
+ 0 -306.502 l 25
+ 0 -266.501 l 25
+0 -346.501 m 25
+ 19 -346.5 l 25
+ 19 -386.497 l 25
+ 0 -386.502 l 25
+ 0 -346.501 l 25
+0 -426.501 m 25
+ 19 -426.5 l 25
+ 19 -466.497 l 25
+ 0 -466.502 l 25
+ 0 -426.501 l 25
+EndSplineSet
+EndChar
+
+StartChar: DivisioMaiorDottedFour
+Encoding: 60 -1 60
 Width: 19
 VWidth: 2048
 Flags: HW
@@ -1460,112 +1565,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: DivisioMaiorDotted.2
-Encoding: 59 -1 59
-Width: 19
-VWidth: 2048
-Flags: HW
-HStem: -408.997 329.996
-VStem: 0 19<-408.997 -79.001>
-LayerCount: 2
-Fore
-SplineSet
-0 -424.001 m 29
- 19 -424 l 29
- 19 -463.997 l 29
- 0 -464.002 l 29
- 0 -424.001 l 29
-0 -344.001 m 25
- 19 -344 l 25
- 19 -383.997 l 25
- 0 -384.002 l 25
- 0 -344.001 l 25
-0 -264.001 m 25
- 19 -264 l 25
- 19 -303.997 l 25
- 0 -304.002 l 25
- 0 -264.001 l 25
-0 -184.001 m 25
- 19 -184 l 25
- 19 -223.997 l 25
- 0 -224.002 l 25
- 0 -184.001 l 25
-0 -104.001 m 25
- 19 -104 l 25
- 19 -143.997 l 25
- 0 -144.002 l 25
- 0 -104.001 l 25
-0 -24.001 m 25
- 19 -24 l 25
- 19 -63.9971 l 25
- 0 -64.002 l 25
- 0 -24.001 l 25
-EndSplineSet
-EndChar
-
-StartChar: DivisioMaiorDotted.3
-Encoding: 60 -1 60
-Width: 19
-VWidth: 2048
-Flags: HW
-VStem: 0 19<-408.997 235.999>
-LayerCount: 2
-Fore
-SplineSet
-0 293.499 m 25
- 19 293.5 l 25
- 19 253.503 l 25
- 0 253.498 l 25
- 0 293.499 l 25
-0 213.499 m 25
- 19 213.5 l 25
- 19 173.503 l 25
- 0 173.498 l 25
- 0 213.499 l 25
-0 133.499 m 25
- 19 133.5 l 25
- 19 93.5029 l 25
- 0 93.498 l 25
- 0 133.499 l 25
-0 53.499 m 25
- 19 53.5 l 25
- 19 13.5029 l 25
- 0 13.498 l 25
- 0 53.499 l 25
-0 -26.501 m 25
- 19 -26.5 l 25
- 19 -66.4971 l 25
- 0 -66.502 l 25
- 0 -26.501 l 25
-0 -106.501 m 25
- 19 -106.5 l 25
- 19 -146.497 l 25
- 0 -146.502 l 25
- 0 -106.501 l 25
-0 -186.501 m 25
- 19 -186.5 l 25
- 19 -226.497 l 25
- 0 -226.502 l 25
- 0 -186.501 l 25
-0 -266.501 m 25
- 19 -266.5 l 25
- 19 -306.497 l 25
- 0 -306.502 l 25
- 0 -266.501 l 25
-0 -346.501 m 25
- 19 -346.5 l 25
- 19 -386.497 l 25
- 0 -386.502 l 25
- 0 -346.501 l 25
-0 -426.501 m 25
- 19 -426.5 l 25
- 19 -466.497 l 25
- 0 -466.502 l 25
- 0 -426.501 l 25
-EndSplineSet
-EndChar
-
-StartChar: DivisioMaiorDotted.5
+StartChar: DivisioMaiorDottedFive
 Encoding: 61 -1 61
 Width: 19
 VWidth: 2048
@@ -1667,25 +1667,8 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: DivisioMaiorDottedBacking
+StartChar: DivisioMaiorDottedBackingTwo
 Encoding: 62 -1 62
-Width: 19
-VWidth: 2048
-Flags: HW
-VStem: 0 19<-408.997 550.999>
-LayerCount: 2
-Fore
-SplineSet
--30 630.999 m 25
- 49 631 l 25
- 49 -488.997 l 29
- -30 -489.002 l 29
- -30 630.999 l 25
-EndSplineSet
-EndChar
-
-StartChar: DivisioMaiorDottedBacking.2
-Encoding: 63 -1 63
 Width: 19
 VWidth: 2048
 Flags: HW
@@ -1702,8 +1685,8 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: DivisioMaiorDottedBacking.3
-Encoding: 64 -1 64
+StartChar: DivisioMaiorDottedBackingThree
+Encoding: 63 -1 63
 Width: 19
 VWidth: 2048
 Flags: HW
@@ -1719,7 +1702,24 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: DivisioMaiorDottedBacking.5
+StartChar: DivisioMaiorDottedBackingFour
+Encoding: 64 -1 64
+Width: 19
+VWidth: 2048
+Flags: HW
+VStem: 0 19<-408.997 550.999>
+LayerCount: 2
+Fore
+SplineSet
+-30 630.999 m 25
+ 49 631 l 25
+ 49 -488.997 l 29
+ -30 -489.002 l 29
+ -30 630.999 l 25
+EndSplineSet
+EndChar
+
+StartChar: DivisioMaiorDottedBackingFive
 Encoding: 65 -1 65
 Width: 19
 VWidth: 2048
@@ -1736,8 +1736,42 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: DivisioMinima
+StartChar: DivisioMinimaTwo
 Encoding: 66 -1 66
+Width: 19
+VWidth: 1418
+Flags: HW
+HStem: -1039 15 -724 15 -409 15 -94 15
+LayerCount: 2
+Fore
+SplineSet
+0 -270.872 m 9
+ 0.00292969 89.9844 l 25
+ 18.999 90.0215 l 25
+ 19 -277.569 l 17
+ 6.04395 -277.435 2.43457 -274.391 0 -270.872 c 9
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinimaThree
+Encoding: 67 -1 67
+Width: 19
+VWidth: 1733
+Flags: HW
+HStem: -724 15 -409 15 -94 15 221 15
+LayerCount: 2
+Fore
+SplineSet
+0 44.1279 m 9
+ 0.00292969 404.984 l 25
+ 18.999 405.021 l 25
+ 19 37.4307 l 17
+ 6.04395 37.5654 2.43457 40.6094 0 44.1279 c 9
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinimaFour
+Encoding: 68 -1 68
 AltUni2: 000050.ffffffff.0
 Width: 19
 VWidth: 2048
@@ -1755,41 +1789,7 @@ EndSplineSet
 Validated: 1
 EndChar
 
-StartChar: DivisioMinima.2
-Encoding: 67 -1 67
-Width: 19
-VWidth: 1418
-Flags: HW
-HStem: -1039 15 -724 15 -409 15 -94 15
-LayerCount: 2
-Fore
-SplineSet
-0 -270.872 m 9
- 0.00292969 89.9844 l 25
- 18.999 90.0215 l 25
- 19 -277.569 l 17
- 6.04395 -277.435 2.43457 -274.391 0 -270.872 c 9
-EndSplineSet
-EndChar
-
-StartChar: DivisioMinima.3
-Encoding: 68 -1 68
-Width: 19
-VWidth: 1733
-Flags: HW
-HStem: -724 15 -409 15 -94 15 221 15
-LayerCount: 2
-Fore
-SplineSet
-0 44.1279 m 9
- 0.00292969 404.984 l 25
- 18.999 405.021 l 25
- 19 37.4307 l 17
- 6.04395 37.5654 2.43457 40.6094 0 44.1279 c 9
-EndSplineSet
-EndChar
-
-StartChar: DivisioMinima.5
+StartChar: DivisioMinimaFive
 Encoding: 69 -1 69
 Width: 19
 VWidth: 2363
@@ -1806,7 +1806,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: DivisioMinima.6
+StartChar: DivisioMinimaSix
 Encoding: 70 -1 70
 Width: 19
 VWidth: 2678
@@ -1823,8 +1823,42 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: DivisioMinor
+StartChar: DivisioMinorTwo
 Encoding: 71 -1 71
+Width: 19
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 -157.001 m 25
+ 19 -157 l 25
+ 18.9912 -330.997 l 29
+ 0 -331.002 l 29
+ 0 -157.001 l 25
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinorThree
+Encoding: 72 -1 72
+Width: 19
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 78.499 m 25
+ 19 78.5 l 25
+ 18.9912 -251.497 l 29
+ 0 -251.502 l 29
+ 0 78.499 l 25
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinorFour
+Encoding: 73 -1 73
 Width: 19
 VWidth: 2048
 Flags: HW
@@ -1841,41 +1875,7 @@ EndSplineSet
 Validated: 1
 EndChar
 
-StartChar: DivisioMinor.2
-Encoding: 72 -1 72
-Width: 19
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-0 -157.001 m 25
- 19 -157 l 25
- 18.9912 -330.997 l 29
- 0 -331.002 l 29
- 0 -157.001 l 25
-EndSplineSet
-EndChar
-
-StartChar: DivisioMinor.3
-Encoding: 73 -1 73
-Width: 19
-VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
-LayerCount: 2
-Fore
-SplineSet
-0 78.499 m 25
- 19 78.5 l 25
- 18.9912 -251.497 l 29
- 0 -251.502 l 29
- 0 78.499 l 25
-EndSplineSet
-EndChar
-
-StartChar: DivisioMinor.5
+StartChar: DivisioMinorFive
 Encoding: 74 -1 74
 Width: 19
 VWidth: 2048
@@ -4807,8 +4807,44 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: Virgula
+StartChar: VirgulaTwo
 Encoding: 202 -1 202
+Width: 152
+VWidth: 1418
+Flags: HW
+HStem: -1039 15 -724 15 -409 15 -94 15
+LayerCount: 2
+Fore
+SplineSet
+152.337 -76.667 m 1
+ 152.337 -132.322 67 -191 0 -211.002 c 1
+ 46 -172 152.5 -134.002 120 -68.002 c 1
+ 124.5 -99.002 17 -119.502 17 -57.002 c 1
+ 17 -32.002 49 -17.002 75 -17.002 c 1
+ 122.5 -16.002 152.337 -43.3223 152.337 -76.667 c 1
+EndSplineSet
+EndChar
+
+StartChar: VirgulaThree
+Encoding: 203 -1 203
+Width: 152
+VWidth: 1733
+Flags: HW
+HStem: -724 15 -409 15 -94 15 221 15
+LayerCount: 2
+Fore
+SplineSet
+152.337 238.333 m 1
+ 152.337 182.678 67 124 0 103.998 c 1
+ 46 143 152.5 180.998 120 246.998 c 1
+ 124.5 215.998 17 195.498 17 257.998 c 1
+ 17 282.998 49 297.998 75 297.998 c 1
+ 122.5 298.998 152.337 271.678 152.337 238.333 c 1
+EndSplineSet
+EndChar
+
+StartChar: VirgulaFour
+Encoding: 204 -1 204
 Width: 152
 VWidth: 2048
 Flags: HW
@@ -4826,43 +4862,7 @@ EndSplineSet
 Validated: 33
 EndChar
 
-StartChar: Virgula.2
-Encoding: 203 -1 203
-Width: 152
-VWidth: 1418
-Flags: HW
-HStem: -1039 15 -724 15 -409 15 -94 15
-LayerCount: 2
-Fore
-SplineSet
-152.337 -76.667 m 1
- 152.337 -132.322 67 -191 0 -211.002 c 1
- 46 -172 152.5 -134.002 120 -68.002 c 1
- 124.5 -99.002 17 -119.502 17 -57.002 c 1
- 17 -32.002 49 -17.002 75 -17.002 c 1
- 122.5 -16.002 152.337 -43.3223 152.337 -76.667 c 1
-EndSplineSet
-EndChar
-
-StartChar: Virgula.3
-Encoding: 204 -1 204
-Width: 152
-VWidth: 1733
-Flags: HW
-HStem: -724 15 -409 15 -94 15 221 15
-LayerCount: 2
-Fore
-SplineSet
-152.337 238.333 m 1
- 152.337 182.678 67 124 0 103.998 c 1
- 46 143 152.5 180.998 120 246.998 c 1
- 124.5 215.998 17 195.498 17 257.998 c 1
- 17 282.998 49 297.998 75 297.998 c 1
- 122.5 298.998 152.337 271.678 152.337 238.333 c 1
-EndSplineSet
-EndChar
-
-StartChar: Virgula.5
+StartChar: VirgulaFive
 Encoding: 205 -1 205
 Width: 152
 VWidth: 2363
@@ -4880,7 +4880,7 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: Virgula.6
+StartChar: VirgulaSix
 Encoding: 206 -1 206
 Width: 152
 VWidth: 2678
