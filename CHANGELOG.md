@@ -9,6 +9,8 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Fixed issue with Tex Live 2017 latexmk not detecting auto-compiled gabc files as dependencies (see [#1367](https://github.com/gregorio-project/gregorio/issues/1367)).
 - Added note about loading microtype after gregoriotex (see [#1364](https://github.com/gregorio-project/gregorio/issues/1364)).
 - Fixed issue where an altered note (glyph) throws off the position of an episema in the glyph that immediately precedes it (see [#1379](https://github.com/gregorio-project/gregorio/issues/1379)).
+- 10 new St. Gall neume glyphs have been added to the `gregall` font (see [#1328](https://github.com/gregorio-project/gregorio/issues/1328), [#1330](https://github.com/gregorio-project/gregorio/issues/1330), [#1337](https://github.com/gregorio-project/gregorio/issues/1337), [#1340](https://github.com/gregorio-project/gregorio/issues/1340), [#1341](https://github.com/gregorio-project/gregorio/issues/1341), [#1342](https://github.com/gregorio-project/gregorio/issues/1342), [#1343](https://github.com/gregorio-project/gregorio/issues/1343), [#1345](https://github.com/gregorio-project/gregorio/issues/1345)).
+- 4 new Laon neume glyphs have been added to the `grelaon` font.
 
 ## [5.0.2] - 2017-05-24
 - Worked around an issue discovered during the TeX Live 2017 pre-test.  See [#1362](https://github.com/gregorio-project/gregorio/issues/1362).
