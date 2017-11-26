@@ -840,6 +840,7 @@ Macro to write a bar.
   & \texttt{6}--\texttt{13} & Dominican bars\\
   & \texttt{14} & virgula on ledger line above the staff\\
   & \texttt{15} & minima on ledger line above the staff\\
+  & \texttt{16} & dotted major\\
   \#2 & \texttt{0} & in a syllable containing only this bar\\
   & \texttt{1} & in a syllable containing other notes\\
   \#3 & \texttt{0} & if there is no text underneath the bar\\
@@ -1601,6 +1602,38 @@ A fused character consisting of a leading quilisma (of ambitus two) and a regula
 \macroname{\textbackslash gre@char@he@...}{\#1}{gregoriotex-chars.tex}
 A class of macros for the horizontal episema which populates the \verb=\gre@box@hep= box.
 
+\macroname{\textbackslash gre@char@bar@virgula}{}{gregoriotex-main.tex}
+Alias that will hold the character for the virgula for the current number of
+lines for the staff.
+
+\macroname{\textbackslash gre@char@bar@virgulahigh}{}{gregoriotex-main.tex}
+Alias that will hold the character for the high virgula for the current number
+of lines for the staff.
+
+\macroname{\textbackslash gre@char@bar@divisiominima}{}{gregoriotex-main.tex}
+Alias that will hold the character for the divisio minima for the current
+number of lines for the staff.
+
+\macroname{\textbackslash gre@char@bar@divisiominimahigh}{}{gregoriotex-main.tex}
+Alias that will hold the character for the high divisio minima for the current
+number of lines for the staff.
+
+\macroname{\textbackslash gre@char@bar@divisiominor}{}{gregoriotex-main.tex}
+Alias that will hold the character for the divisio minor for the current
+number of lines for the staff.
+
+\macroname{\textbackslash gre@char@bar@divisiomaior}{}{gregoriotex-main.tex}
+Alias that will hold the character for the divisio maior for the current
+number of lines for the staff.
+
+\macroname{\textbackslash gre@char@bar@divisiomaiordotted}{}{gregoriotex-main.tex}
+Alias that will hold the character for the dotted divisio maior for the current
+number of lines for the staff.
+
+\macroname{\textbackslash gre@char@bar@divisiomaiordottedbacking}{}{gregoriotex-main.tex}
+Alias that will hold the character for the dotted divisio maior backing for the
+current number of lines for the staff.
+
 \macroname{\textbackslash gre@nabccharno}{\#1\#2\#3}{gregoriotex-nabc.tex}
 Prints the nabc glyphs for the given nabc string.
 
@@ -1651,6 +1684,9 @@ Boolean used to specify whether the staff lines behind a punctum cavum should be
 
 \macroname{\textbackslash ifgre@hidealtlines}{}{gregoriotex-signs.tex}
 Boolean used to specify whether the staff lines behind an alteration should be hidden.
+
+\macroname{\textbackslash ifgre@hidedottedbarlines}{}{gregoriotex-signs.tex}
+Boolean used to specify whether the staff lines behind a dotted bar should be hidden.
 
 \macroname{\textbackslash ifgre@hepisemabridge}{}{gregoriotex-signs.tex}
 Boolean used to specify whether adjacent horizontal episemata should be joined together.

@@ -434,6 +434,14 @@ Macro for setting whether the staff lines behind an alternation (\ie, an acciden
   & \texttt{invisible} & The staff lines behind an alteration should not be printed (\LaTeX\ default)
 \end{argtable}
 
+\macroname{\textbackslash gresetlinesbehinddottedbar}{\{\#1\}}{gregoriotex-signs.tex}
+Macro for setting whether the staff lines behind a dotted bar should be shown or not.
+
+\begin{argtable}
+  \#1 & \texttt{visible} & The staff lines behind a dotted bar should be printed\\
+  & \texttt{invisible} & The staff lines behind a dotted bar should not be printed (default)
+\end{argtable}
+
 
 \subsubsection{Score Font}
 Gregorio\TeX\ currently supports 3 different fonts for the glyphs in a score (neumes, clefs, alterations, \etc): Greciliae (a customized version of Caeciliae by Fr.\ Matthew Spencer, OSJ), Gregorio, and Grana Padano (née Parmesan, developed for Lilypond by Juergen Reuter).
@@ -482,10 +490,9 @@ from the specified font.
   & string & (any other string) The name of the glyph to use.
 \end{argtable}
 
-\medskip If \texttt{\#1} has a wildcard (a \texttt{*}) in it, then
-\texttt{\#3} must start with a dot and all glyphs matching \texttt{\#1}
-will be replaced with corresponding glyphs whose names have \texttt{\#3}
-appended.
+\medskip If \texttt{\#1} has a wildcard (a \texttt{*}) in it, then \texttt{\#3}
+must be empty or start with a dot, and all glyphs matching \texttt{\#1} will be
+replaced with corresponding glyphs whose names have \texttt{\#3} appended.
 
 \medskip If \texttt{\#2} is \texttt{*}, then the substitution is assumed
 to be available in all score fonts.
@@ -501,6 +508,18 @@ strophicus, use the following:\par\medskip
 versions, use the following:\par\medskip
 \begin{latexcode}
   \grechangeglyph{TorculusResupinus*}{*}{.alt}
+\end{latexcode}
+
+\textbf{Nota Bene:} Because the bar glyphs vary based on number of score lines,
+substituting them is more complicated.  To cover all numbers of score lines,
+you will need to substitute all of the glyphs for the same (like
+\texttt{VirgulaTwo} through \texttt{VirgulaSix} for all available virgula
+glyphs).  For example:
+
+\medskip To replace all "dotted divisio maior" glyphs with their same-named
+variants from the \texttt{gregorio} font, use the following:\par\medskip
+\begin{latexcode}
+  \grechangeglyph{DivisioMaiorDotted*}{gregorio}{}
 \end{latexcode}
 
 \macroname{\textbackslash greresetglyph}{\{\#1\}}{gregoriotex-main.tex}
