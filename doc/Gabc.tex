@@ -182,7 +182,136 @@ Some examples:
   {\scriptsize\verb=t. irregularis=} & & & \writemode{t. irregularis}{}{} \\
 \end{tabularx}
 
-\subsection{General Syntax}
+\subsection{Notation}
+
+The \texttt{\%\%} separator ends the header section and the notation section
+follows.  This section consists of syllable text and notes.  Notes are
+separated from syllable text by parentheses.
+
+Spaces in the notation section are significant, and the end of lines in the
+gabc file are considered spaces.
+
+A \texttt{\%} character marks the beginning of a comment which ends at the end
+of the line.  A comment also suppresses the end-of-line space.
+
+\subsubsection{Syllable Syntax}
+
+Text outside parenthesis is considered syllable text.  In general, this is the
+text that appears below the staff.  Parenthesized note sections separate
+syllables.  Spaces (end end-of-lines) in syllable text mark the end of words
+and should be placed after the parenthesized notes section for the last
+syllable of a given word.
+
+There are several markup-like codes that may be inserted into syllable text:
+
+\begin{description}
+  \item[above lines] Text between \texttt{<alt>} and \texttt{</alt>} is
+    ``above lines text'' and will be typeset above the staff lines.
+  \item[bold] Text between \texttt{<b>} and \texttt{</b>} will be typeset in
+    boldface if supported by the font.
+  \item[clear] The \texttt{<clear>} or \texttt{<clear/>} marker indicates that
+    the given syllable may not extend into the notation of the previous
+    syllable.
+  \item[colored] Text between \texttt{<c>} and \texttt{</c>} will be colored
+    using the \texttt{gregoriocolor} color.
+  \item[elision] Text between \texttt{<e>} and \texttt{</e>} will be
+    considered an elision (by default typeset in italics), with special
+    consideration given when placing the syllable under the notes above.
+  \item[Euouae] Text between \texttt{<eu>} and \texttt{</eu>} is considered
+    ``Euouae'' (\textit{s\ae{}culorem, Amen} of the lesser doxology) for
+    marking tone \textit{differentia}, with special typographic consideration
+    for line breaks.
+  \item[italics] Text between \texttt{<i>} and \texttt{</i>} will be typeset
+    in italics if supported by the font.
+  \item[no linebreak] Text between \texttt{<nlba>} and \texttt{</nlba>} is a
+    ``no linebreak area,'' and line breaks in the output will be
+    suppressed here.
+  \item[protrusion] Text after \texttt{<pr>} or \texttt{<pr/>} in a syllable
+    is considered a protrusion and may push into the margin.  Optionally, the
+    \texttt{pr} may be followed by a colon and a number between 0 (text may
+    not protrude) and 1 (text may protrude in its entirety) indicating how
+    much of the marked text is allowed to push into the margin.  For example:
+    \texttt{<pr:.5>}
+  \item[small capitals] Text between \texttt{<sc>} and \texttt{</sc>} will be
+    typeset with small capitals if supported by the font.
+  \item[special character] Text between \texttt{<sp>} and \texttt{</sp>} is a
+    ``special character,'' as defined by \texttt{\textbackslash
+    gresetspecial}.  There are also several special characters (see
+    \nameref{specialcharacters} below) defined by default.
+  \item[teletype] Text between \texttt{<tt>} and \texttt{</tt>} will be
+    typeset as teletype (typically monospaced).
+  \item[underlined] Text between \texttt{<ul>} and \texttt{</ul>} will be
+    underlined.
+  \item[verbatim] Text between \texttt{<v>} and \texttt{</v>} is passed
+    directly to \TeX, without preprocessing as gabc text.
+\end{description}
+
+Additionally, besides parentheses, there are a few other special characters in
+the syllable text.  Curly braces (\texttt{\{} and \texttt{\}}) are for
+\nameref{lyriccentering}.  Square brackets (\texttt{[} and \texttt{]}) are for
+\nameref{translationtext} that appears below the lyric text.  See immediately
+below for more information.
+
+\subsubsection{Lyric Centering}\label{lyriccentering}
+
+Gregorio centers the text of each syllable around the first note of each
+syllable.  There are three basic modes, selected with the command \verb=\gresetlyriccentering{<mode>}=:
+
+\begin{description}
+\item[syllable] the entire syllable is centered around the first note
+\item[firstletter] the first letter of the syllable is centered around the first note
+\item[vowel] the vowel sound of the syllable is centered around the first note
+\end{description}
+
+The default is \texttt{vowel}, being common in most Gregorian chant
+books with text in Latin.  The definition of how Gregorio\TeX{} interprets
+vowels is described in \nameref{voweldetection}, below.
+
+All modes allow you to force the centering with curly brackets,
+for example \verb=a{b}c= will center the notes around \texttt{b}.
+
+\subsubsection{Translation Text}\label{translationtext}
+
+Translation text, enclosed in square brackets (\texttt{[} and \texttt{]}),
+appears below the lyric text (by default) in italics.  It is aligned to the
+syllable where it appears in the gabc file unless the special sequence
+\texttt{[/]} appears in a later syllable indicating that the translation text
+should be centered between those two points.
+
+\subsubsection{Special Characters}\label{specialcharacters}
+
+Special characters are specified between \texttt{<sp>} and \texttt{</sp>}.
+They may be defined in the \TeX{} file using the \verb=\gresetspecial= command
+and undefined using the \verb=\greunsetspecial= command.  The following
+special characters are defined by default:
+
+\rowcolors{1}{lightgray}{lightgray}
+\begin{tabularx}{\textwidth}{c|X}
+  \textbf{Sequence} & \textbf{Description}\\
+  \hline
+  \texttt{ae} & The \ae{} ligature.\\
+  \texttt{oe} & The \oe{} ligature.\\
+  \texttt{\textquotesingle{}ae}  & An accented \ae{} (\'\ae).\\
+  \texttt{\textquotesingle{}oe}  & An accented \oe{} (\'\oe).\\
+  \texttt{\textquotesingle{}æ}   & An accented \ae{} (\'\ae).\\
+  \texttt{\textquotesingle{}œ}   & An accented \oe{} (\'\oe).\\
+  \texttt{A/} & A with a bar (\Abar), typically used to signify the
+                antiphon.\\
+  \texttt{R/} & R with a bar (\Rbar), typically used to signify the refrain
+                or response.\\
+  \texttt{V/} & V with a bar (\Vbar), typically used to signify the verse.\\
+  \texttt{*}  & The character produced by \verb=\GreStar= (\GreStar).\\
+  \texttt{+}  & The character produced by \verb=\GreDagger= (\GreDagger).\\
+  \texttt{-}  & A zero-width hyphen.\\
+  \texttt{\textbackslash} & A backslash, avoiding \TeX{} interpretation.\\
+  \texttt{\&} & An ampersand, avoiding \TeX{} interpretation.\\
+  \texttt{\#} & A hash mark, avoiding \TeX{} interpretation.\\
+  \texttt{\_} & An underscore, avoiding \TeX{} interpretation.\\
+  \texttt{\textasciitilde} & A centered tilde (a ``math'' tilde, \gretilde).\\
+\end{tabularx}
+
+Note that barred letters may be redefined by the \verb=\gredefbarredsymbol=
+and \verb=\gresimpledefbarredsymbol= commands.
 
 \subsection{Note Syntax}
 
@@ -195,7 +324,7 @@ have no effect.
 \verb=,0= will typeset a divisio minima (quarter bar) on the ledger line above
 the staff.
 
-\subsection{Neume Fusion}
+\subsubsection{Neume Fusion}
 
 Neume fusion allows for the composition of new shapes based on a set of
 primitive neumes.  These primitives are:
@@ -241,7 +370,7 @@ the notes into the above primitives.  Using the same examples as before:
 (;) @<v>[</v>IJkh<v>]</v>(@[IJkh])
 }
 
-\subsection{Stem length for the bottom lines}
+\subsubsection{Stem length for the bottom lines}
 
 Gregorio will determine the length of the stem for most neumes.
 Some manual input might be needed for notes on the bottom staff
@@ -263,7 +392,7 @@ to get its short form, or \texttt{[ll:1]} to force its long form.
 %       b!ed<sp>~</sp><v>[</v>ll:0<v>]</v>(b!ed~[ll:0]) dcd<v>[</v>ll:0<v>]</v>!b(dcd[ll:0]!b)
 %  }
 
-\subsection{Custom Ledger Lines}
+\subsubsection{Custom Ledger Lines}
 
 To specify a custom ledger line, use
 \texttt{[oll:}\textit{left}\texttt{;}\textit{right}\texttt{]} to create an
@@ -293,7 +422,7 @@ ledger line in the middle of two-note primitive shapes.  To work around this,
 either adjust the parameters of the ledger line or use manual fusion to break
 up those two notes.
 
-\subsection{Simple Slurs}
+\subsubsection{Simple Slurs}
 
 To specify a simple slur, use
 \texttt{[oslur:}\textit{shift}\texttt{;}\textit{width}\texttt{,}\textit{height}\texttt{]}
@@ -314,7 +443,7 @@ the same meaning as before, but applies to both ends of the slur.
 Use \texttt{uslur} instead of \texttt{oslur} (with either form) to create an
 under-the-staff slur.
 
-\subsection{Horizontal episema placement for very high and low notes}
+\subsubsection{Horizontal episema placement for very high and low notes}
 
 Gregorio places horizontal episema under c and above k (or the not above upper line when
 staff does not have exactly 4 lines) closer to the notes when no ledger line is present.
@@ -324,7 +453,7 @@ This is done in the exact same way as for stem length: place \texttt{[ll:0]} or
 \texttt{[ll:1]} on the note carrying the episema, to force gregorio to consider the
 absence or presence of a ledger line in episema placement.
 
-\subsection{Horizontal Episema Tuning}
+\subsubsection{Horizontal Episema Tuning}
 
 The horizontal episema position within the space can be adjusted should the
 defaults not be satisfactory.
@@ -378,24 +507,7 @@ after the last note of the block.  When using this syntax, \texttt{\textit{p}}
 is the position specifier as before, but is entirely optional, and when
 completely omitted, allows the \texttt{:} to also be omitted.
 
-\subsection{Lyric Centering}
-
-Gregorio centers the text of each syllable around the first note of each
-syllable.  There are three basic modes, selected with the command \verb=\gresetlyriccentering{<mode>}=:
-
-\begin{description}
-\item[syllable] the entire syllable is centered around the first note
-\item[firstletter] the first letter of the syllable is centered around the first note
-\item[vowel] the vowel sound of the syllable is centered around the first note
-\end{description}
-
-The default is \texttt{vowel}, being common in most Gregorian chant
-books with text in Latin.
-
-All modes allow you to force the centering with curly brackets,
-for example \verb=a{b}c= will center the notes around \texttt{b}.
-
-\subsubsection{Vowel detection}
+\subsection{Vowel Detection}\label{voweldetection}
 
 The default rules built into Gregorio for \texttt{vowel} mode are for
 Ecclesiatical Latin and work fairly well (though not perfectly) for
@@ -513,3 +625,4 @@ suffix we We wE WE;
 
 secondary w W;
 \end{lstlisting}
+
