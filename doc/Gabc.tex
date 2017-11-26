@@ -113,6 +113,7 @@ Some headers have special meaning to Gregorio:
   If the user already defined annotation(s) in the main \TeX\ file via
   \verb=\greannotation= then the \texttt{annotation} header field will not
   overwrite that definition.
+\item[staff-lines]\label{numstafflines} The number of lines on the staff.  You can have as few as 2 lines and as many as 5.  If this header is left out, then the default will be the classic 4 line staff.
 \end{description}
 
 Although gregorio ascribes no special meaning to them, other suggested headers are:
@@ -183,6 +184,44 @@ Some examples:
 \end{tabularx}
 
 \subsection{General Syntax}
+
+\subsection{Clefs}
+The way to notate the clef is using two or three characters:
+
+\makeatletter
+\begin{itemize}
+\item a letter corresponding to the clef symbol: \texttt{c} for the do clef: {\gre@font@music\GreCPCClef}\,; or \texttt{f} for the fa clef: {\gre@font@music\GreCPFClef}
+\item an optional \texttt{b} to indicate if there is a flat ({\gre@font@music\GreCPFlat}) on the clef
+\item a number corresponding to the line on which the clef is written. For this purpose, the lines are numbered from the bottom (\texttt{1}) to the top.  The number must not be greater than the number of lines specified in the \texttt{staff-lines} header (usually 4, but could be as high as 5 or as low as 2; see \ref{numstafflines}).
+\end{itemize}
+\makeatother
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{2.4in}
+\gresetbolshifts{disable}
+\greseteolshifts{disable}
+\gresetlyriccentering{syllable}
+\gresetclef{invisible}
+\gabcsnippet{( ) c1(c1) c2(c2) c3(c3) c4(c4) f3(f3) f4(f4) cb3(cb3) ()}
+\end{minipage}
+\caption{Sample clefs}
+\end{figure}
+
+You can also print two clefs at the same time.  The clefs are linked by a \texttt{@} and will be printed one over the other if there is room, otherwise the second clef (after the \texttt{@} will be pushed to the right to prevent a collision. When determining the position of a custos automatically, Gregorio\TeX\ will always use the first clef.
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{1.3in}
+\gresetbolshifts{disable}
+\greseteolshifts{disable}
+\gresetlyriccentering{syllable}
+\gresetclef{invisible}
+\gresetinitiallines{0}
+\gabcsnippet{( ) c1@c4(c1@c4) f3@f4(f3@f4) ()}
+\end{minipage}
+\caption{Sample double clefs}
+\end{figure}
 
 \subsection{Note Syntax}
 
