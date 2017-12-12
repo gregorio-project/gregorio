@@ -386,109 +386,7 @@ the syllable, Gregorio will consider it as consonant too.
 
 If no vowel is found, the notes are centered around the whole syllable.
 
-\paragraph{Vowel file}
-
-When run, Gregorio will look for a file named
-\texttt{gregorio-vowels.dat} in your working directory or amongst the
-GregorioTeX files.  If it finds the language requested by the header (matched in a
-\emph{case-sensitive} fashion) in one of these files (henceforth called
-vowel files), Gregorio will use the rules contained within for vowel
-centering.  If it cannot find the requested language in any of the vowel
-files or is unable to parse the rules, Gregorio will fall back on the
-Latin rules.  If multiple vowel files have the desired language,
-Gregorio will use the first matching language section in the first
-matching file, according to Kpathsea order.  You may wish to enable
-verbose output (by passing the \texttt{-v} argument to
-\texttt{gregorio}), if there is a problem, for more information.
-
-The vowel file is a list of statements, each starting with a keyword and
-ending with a semicolon (\texttt{;}).  Multiple statements with the same
-keyword are allowed, and all will apply.  Comments start with a hash
-symbol (\texttt{\#}) and end at the end of the line.
-
-In general, Gregorio does no case folding, so the keywords and language
-names are case-sensitive and both upper- and lower-case characters
-should be listed after the keywords if they should both be considered in
-their given categories.
-
-The keywords are:
-
-\begin{description}
-
-\item[alias]
-
-The \texttt{alias} keyword indicates that a given name is an alias for a
-given language.  The \texttt{alias} keyword must be followed by the name
-of the alias (enclosed in square brackets), the \texttt{to} keyword, the
-name of the target language (enclosed in square brackets), and a
-semicolon.  Since gregorio reads the vowel files sequentially, aliases
-should precede the language they are aliasing, for best performance.
-
-\item[language]
-
-The \texttt{language} keyword indicates that the rules which follow are
-for the specified language.  It must be followed by the language name,
-enclosed in square brackets, and a semicolon.  The language specified
-applies until the next language statement.
-
-\item[vowel]
-
-The \texttt{vowel} keyword indicates that the characters which follow,
-until the next semicolon, should be considered vowels.
-
-\item[prefix]
-
-The \texttt{prefix} keyword lists strings of characters which end in a
-vowel, but when followed by a sequence of vowels, \emph{should not} be
-considered part of the vowel sound.  These strings follow the keyword
-and must be separated by space and end with a semicolon.  Examples of
-prefixes include \emph{i} and \emph{u} in Latin and \emph{qu} in
-English.
-
-\item[suffix]
-
-The \texttt{suffix} keyword lists strings of characters which don't
-start with a vowel, but when appearing after a sequence of vowels,
-\emph{should} be considered part of the vowel sound.  These strings
-follow the keyword and must be separated by space and end with a
-semicolon.  Examples of suffixes include \emph{w} and \emph{we} in
-English and \emph{y} in Spanish.
-
-\item[secondary]
-
-The "secondary" keyword lists strings of characters which do not contain
-vowels, but for which, when there are no vowels present in a syllable,
-define the center of the syllable.  These strings follow the keyword and
-must be separated by space and end with a semicolon.  Examples of
-secondary sequences include \emph{w} from Welsh loanwords in English and
-the syllabic consonants \emph{l} and \emph{r} in Czech.
-
-\end{description}
-
-By way of example, here is a vowel file that works for English:
-
-\begin{lstlisting}[autogobble]
-alias [english] to [English];
-
-language [English];
-
-vowel aàáAÀÁ;
-vowel eèéëEÈÉË;
-vowel iìíIÌÍ;
-vowel oòóOÒÓ;
-vowel uùúUÙÚ;
-vowel yỳýYỲÝ;
-vowel æǽÆǼ;
-vowel œŒ;
-
-prefix qu Qu qU QU;
-prefix y Y;
-
-suffix w W;
-suffix we We wE WE;
-
-secondary w W;
-\end{lstlisting}
+If you are using a language for which built-in language rules do not exist and the fallbacks are insufficient, then you may wish to provide your own set of vowel detection rules.  This can be done with a special file:\verb=gregorio-vowels.dat=.  See \nameref{customvowels} for information about how to create and use this file.
 
 
 \subsection{Note Syntax}\label{notesyntax}
@@ -1117,5 +1015,111 @@ macro at the element level.
 
 As before, note, glyph, and element refer to how Gregorio understands the
 score.
+
+
+\subsection{Vowel file}\label{customvowels}
+
+When run, Gregorio will look for a file named
+\texttt{gregorio-vowels.dat} in your working directory or amongst the
+GregorioTeX files.  If it finds the language requested by the header (matched in a
+\emph{case-sensitive} fashion) in one of these files (henceforth called
+vowel files), Gregorio will use the rules contained within for vowel
+centering.  If it cannot find the requested language in any of the vowel
+files or is unable to parse the rules, Gregorio will fall back on the
+Latin rules.  If multiple vowel files have the desired language,
+Gregorio will use the first matching language section in the first
+matching file, according to Kpathsea order.  You may wish to enable
+verbose output (by passing the \texttt{-v} argument to
+\texttt{gregorio}), if there is a problem, for more information.
+
+The vowel file is a list of statements, each starting with a keyword and
+ending with a semicolon (\texttt{;}).  Multiple statements with the same
+keyword are allowed, and all will apply.  Comments start with a hash
+symbol (\texttt{\#}) and end at the end of the line.
+
+In general, Gregorio does no case folding, so the keywords and language
+names are case-sensitive and both upper- and lower-case characters
+should be listed after the keywords if they should both be considered in
+their given categories.
+
+The keywords are:
+
+\begin{description}
+
+\item[alias]
+
+The \texttt{alias} keyword indicates that a given name is an alias for a
+given language.  The \texttt{alias} keyword must be followed by the name
+of the alias (enclosed in square brackets), the \texttt{to} keyword, the
+name of the target language (enclosed in square brackets), and a
+semicolon.  Since gregorio reads the vowel files sequentially, aliases
+should precede the language they are aliasing, for best performance.
+
+\item[language]
+
+The \texttt{language} keyword indicates that the rules which follow are
+for the specified language.  It must be followed by the language name,
+enclosed in square brackets, and a semicolon.  The language specified
+applies until the next language statement.
+
+\item[vowel]
+
+The \texttt{vowel} keyword indicates that the characters which follow,
+until the next semicolon, should be considered vowels.
+
+\item[prefix]
+
+The \texttt{prefix} keyword lists strings of characters which end in a
+vowel, but when followed by a sequence of vowels, \emph{should not} be
+considered part of the vowel sound.  These strings follow the keyword
+and must be separated by space and end with a semicolon.  Examples of
+prefixes include \emph{i} and \emph{u} in Latin and \emph{qu} in
+English.
+
+\item[suffix]
+
+The \texttt{suffix} keyword lists strings of characters which don't
+start with a vowel, but when appearing after a sequence of vowels,
+\emph{should} be considered part of the vowel sound.  These strings
+follow the keyword and must be separated by space and end with a
+semicolon.  Examples of suffixes include \emph{w} and \emph{we} in
+English and \emph{y} in Spanish.
+
+\item[secondary]
+
+The "secondary" keyword lists strings of characters which do not contain
+vowels, but for which, when there are no vowels present in a syllable,
+define the center of the syllable.  These strings follow the keyword and
+must be separated by space and end with a semicolon.  Examples of
+secondary sequences include \emph{w} from Welsh loanwords in English and
+the syllabic consonants \emph{l} and \emph{r} in Czech.
+
+\end{description}
+
+By way of example, here is a vowel file that works for English:
+
+\begin{lstlisting}[autogobble]
+alias [english] to [English];
+
+language [English];
+
+vowel aàáAÀÁ;
+vowel eèéëEÈÉË;
+vowel iìíIÌÍ;
+vowel oòóOÒÓ;
+vowel uùúUÙÚ;
+vowel yỳýYỲÝ;
+vowel æǽÆǼ;
+vowel œŒ;
+
+prefix qu Qu qU QU;
+prefix y Y;
+
+suffix w W;
+suffix we We wE WE;
+
+secondary w W;
+\end{lstlisting}
+
 
 \endinput
