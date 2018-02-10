@@ -679,20 +679,44 @@ Some examples:
   }
 }
 
-\subsubsection{Horizontal Episemata}\label{horizontalepisemata}
+\subsection{Rhythmic signs}
 
-A horizontal episema may be adjusted with the addition of numbers.  Multiple
-numbers may be added to combine their effects.
+\paragraph{\textit{Punctum Mora}}
+
+The \textit{punctum mora} (dots after the note) are denoted by adding a period ( \texttt{.} ) after the note. When there are two \textit{punctum mora} after a neume, the character is simply doubled: ( \texttt{..} ).  You cannot place more than two \textit{punctum mora} after a note.
+
+{
+  \gresetinitiallines{0}\gresetlyriccentering{firstletter}%
+  \gresetclef{invisible}\gresetlastline{justified}%
+  \ttfamily
+  \gabcsnippet{( ) g.(g.) h.(h.) g..(g..) ( )}
+}
+
+\paragraph{\textit{Ictus}}
+
+The \textit{ictus} (also called the vertical \textit{episema}) is denoted by an apostrophe ( \verb='= ) after the note. Gregorio will place the episema above or below the note according to the context, however you can force its position with \verb='0= (for always below) and \verb='1= (for always above).
+
+Of course, the \textit{ictus} can be present more than once in a neume, but only once per note.
+
+{
+  \gresetinitiallines{0}\gresetlyriccentering{firstletter}%
+  \gresetclef{invisible}\gresetlastline{justified}%
+  \ttfamily
+  \gabcsnippet{( ) g<v>\textquotesingle</v>(g') dh<v>\textquotesingle</v>(dh') g<v>\textquotesingle</v>1(g'1) dh<v>\textquotesingle</v>0(dh'0) ( )}
+}
+\paragraph{Horizontal Episemata}\label{horizontalepisemata}
+
+For the horizontal \textit{episema}, type an underscore ( \verb=_= ) after every note that is under an \texttt{episema}.  A horizontal \texttt{episema} may be adjusted with the addition of numbers.  Multiple numbers may be added to combine their effects.
 
 \begin{tabularx}{\textwidth}{l|X}
   Gabc & Description \\
   \hline
-  \texttt{0} & place the episema below the note \\
-  \texttt{1} & place the episema above the note \\
-  \texttt{2} & disable bridging the episema with the following episema \\
-  \texttt{3} & use a small episema, aligned left \\
-  \texttt{4} & use a small episema, aligned center \\
-  \texttt{5} & use a small episema, aligned right \\
+  \texttt{0} & place the \texttt{episema} below the note \\
+  \texttt{1} & place the \texttt{episema} above the note \\
+  \texttt{2} & disable bridging the \texttt{episema} with the following \texttt{episema} \\
+  \texttt{3} & use a small \texttt{episema}, aligned left \\
+  \texttt{4} & use a small \texttt{episema}, aligned center \\
+  \texttt{5} & use a small \texttt{episema}, aligned right \\
 \end{tabularx}
 
 To demonstrate:
