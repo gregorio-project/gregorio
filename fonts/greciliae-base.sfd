@@ -20,7 +20,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1511381860
+ModificationTime: 1518881819
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -43,7 +43,7 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 0
-WinInfo: 39 13 6
+WinInfo: 182 13 6
 BeginPrivate: 0
 EndPrivate
 Grid
@@ -55,10 +55,6 @@ Grid
  18 -700 l 0
 -1000 200 m 0
  2000 200 l 0
-147.812 1300 m 0
- 147.812 -700 l 0
-166.375 1300 m 0
- 166.375 -700 l 0
 -1000 302.758 m 0
  2000 302.758 l 0
 -1000 -57 m 0
@@ -67,13 +63,11 @@ Grid
  2000 -173 l 0
 -1000 -166 m 0
  2000 -166 l 0
-148 1300 m 0
- 148 -700 l 0
 17.75 1300 m 0
  17.75 -700 l 0
 EndSplineSet
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 257 257
+BeginChars: 259 259
 
 StartChar: Accentus
 Encoding: 0 -1 0
@@ -5331,8 +5325,66 @@ EndSplineSet
 Validated: 1
 EndChar
 
-StartChar: SharpHole
+StartChar: Sharp.modern
 Encoding: 224 -1 224
+Width: 162
+Flags: W
+VStem: 38.5 25.667<-193.491 -47.9297 9.49219 116.571 173.699 319.097> 98 25.5<-182.085 -38.8672 18.4727 125.112 182.473 330.499>
+LayerCount: 2
+Fore
+SplineSet
+98 179.006 m 0
+ 98.2998 307.7 l 1
+ 98.2998 328.101 l 1
+ 102.3 329.7 106.499 330.5 110.899 330.5 c 0
+ 115.3 330.5 119.5 329.7 123.5 328.101 c 1
+ 123.5 182.473 l 0
+ 152 186.301 l 1
+ 157 182.25 160.5 181.69 162 174.19 c 1
+ 163 159.19 158.5 143.69 152.5 132.434 c 1
+ 123.5 128.192 l 0
+ 123.5 18.4727 l 0
+ 152 23.0508 l 1
+ 157 19 160.5 18.9404 162 11.4404 c 1
+ 163 -3.55957 158.5 -19.5596 152.5 -30.8164 c 1
+ 123.5 -34.8076 l 0
+ 123.501 -179.7 l 1
+ 119.501 -181.3 114.301 -182.1 109.9 -182.1 c 0
+ 105.5 -182.1 102.301 -181.3 98.3008 -179.7 c 1
+ 98.3008 -159.3 l 1
+ 98.5 -38.8672 l 0
+ 63.5 -43.8506 l 0
+ 63.2002 -107.3 l 1
+ 63.2002 -191.101 l 1
+ 59.2002 -192.7 55 -193.5 50.5996 -193.5 c 0
+ 46.1992 -193.5 42 -192.7 38 -191.101 c 1
+ 38.5 -47.9297 l 0
+ 10 -53.0078 l 1
+ 5 -48.957 1.5 -47.3975 0 -39.8975 c 1
+ -1 -24.8975 3.5 -9.39746 9.5 1.85938 c 1
+ 38.5 5.85059 l 0
+ 38.5 116.571 l 0
+ 10 111.992 l 1
+ 5 116.043 1.5 116.603 0 124.103 c 1
+ -1 139.103 3.5 154.603 9.5 165.859 c 1
+ 38.5 169.851 l 0
+ 39 316.7 l 1
+ 43 318.3 47.1992 319.1 51.5996 319.1 c 0
+ 56 319.1 60.2002 318.3 64.2002 316.7 c 1
+ 64.2002 232.899 l 1
+ 64 173.699 l 1
+ 98 179.006 l 0
+38.5 5.85059 m 0
+64.167 9.49219 m 0
+ 98.167 14.6846 l 0
+ 98.167 125.112 l 0
+ 64.25 119.892 l 0
+ 64.167 9.49219 l 0
+EndSplineSet
+EndChar
+
+StartChar: SharpHole
+Encoding: 225 -1 225
 Width: 258
 VWidth: 2048
 Flags: W
@@ -5350,8 +5402,24 @@ EndSplineSet
 Validated: 1
 EndChar
 
+StartChar: SharpHole.modern
+Encoding: 226 -1 226
+Width: 162
+Flags: HW
+VStem: 38.5 25.667<-193.491 -47.9297 9.49219 116.571 173.699 319.097> 98 25.5<-182.085 -38.8672 18.4727 125.112 182.473 330.499>
+LayerCount: 2
+Fore
+SplineSet
+64.167 9.49219 m 0
+ 64.25 119.892 l 0
+ 98.167 125.112 l 0
+ 98.167 14.6846 l 0
+ 64.167 9.49219 l 0
+EndSplineSet
+EndChar
+
 StartChar: Stropha
-Encoding: 225 -1 225
+Encoding: 227 -1 227
 Width: 172
 VWidth: 2048
 Flags: HW
@@ -5375,7 +5443,7 @@ EndSplineSet
 EndChar
 
 StartChar: Stropha#Cavum
-Encoding: 226 -1 226
+Encoding: 228 -1 228
 Width: 172
 VWidth: 2048
 Flags: HW
@@ -5396,7 +5464,7 @@ EndSplineSet
 EndChar
 
 StartChar: Stropha#Cavum.caeciliae
-Encoding: 227 -1 227
+Encoding: 229 -1 229
 Width: 151
 VWidth: 2686
 Flags: HW
@@ -5417,7 +5485,7 @@ EndSplineSet
 EndChar
 
 StartChar: Stropha.caeciliae
-Encoding: 228 -1 228
+Encoding: 230 -1 230
 Width: 151
 VWidth: 2686
 Flags: W
@@ -5440,7 +5508,7 @@ Validated: 1
 EndChar
 
 StartChar: StrophaAucta
-Encoding: 229 -1 229
+Encoding: 231 -1 231
 Width: 172
 VWidth: 2048
 Flags: HW
@@ -5462,7 +5530,7 @@ EndSplineSet
 EndChar
 
 StartChar: StrophaAucta#Cavum
-Encoding: 230 -1 230
+Encoding: 232 -1 232
 Width: 172
 VWidth: 2048
 Flags: HW
@@ -5483,7 +5551,7 @@ EndSplineSet
 EndChar
 
 StartChar: StrophaAucta#Cavum.caeciliae
-Encoding: 231 -1 231
+Encoding: 233 -1 233
 Width: 151
 VWidth: 2686
 Flags: HW
@@ -5505,7 +5573,7 @@ EndSplineSet
 EndChar
 
 StartChar: StrophaAucta.caeciliae
-Encoding: 232 -1 232
+Encoding: 234 -1 234
 Width: 151
 VWidth: 2686
 Flags: W
@@ -5528,7 +5596,7 @@ Validated: 33
 EndChar
 
 StartChar: StrophaAuctaLongtail
-Encoding: 233 -1 233
+Encoding: 235 -1 235
 Width: 172
 VWidth: 2048
 Flags: HW
@@ -5550,7 +5618,7 @@ EndSplineSet
 EndChar
 
 StartChar: StrophaAuctaLongtail#Cavum
-Encoding: 234 -1 234
+Encoding: 236 -1 236
 Width: 172
 VWidth: 2048
 Flags: HW
@@ -5571,7 +5639,7 @@ EndSplineSet
 EndChar
 
 StartChar: tmpglyph
-Encoding: 235 -1 235
+Encoding: 237 -1 237
 Width: 18
 VWidth: 2048
 Flags: HW
@@ -5581,7 +5649,7 @@ LayerCount: 2
 EndChar
 
 StartChar: UpperPesOneNothing
-Encoding: 236 -1 236
+Encoding: 238 -1 238
 Width: 166
 VWidth: 2613
 Flags: W
@@ -5613,7 +5681,7 @@ EndSplineSet
 EndChar
 
 StartChar: UpperPesOneNothing#Cavum
-Encoding: 237 -1 237
+Encoding: 239 -1 239
 Width: 166
 VWidth: 2613
 Flags: W
@@ -5645,7 +5713,7 @@ EndSplineSet
 EndChar
 
 StartChar: VEpisema
-Encoding: 238 -1 238
+Encoding: 240 -1 240
 Width: 34
 VWidth: 2048
 Flags: W
@@ -5666,7 +5734,7 @@ Validated: 1
 EndChar
 
 StartChar: VEpisema.circumflexus
-Encoding: 239 -1 239
+Encoding: 241 -1 241
 Width: 108
 VWidth: 2048
 Flags: W
@@ -5690,7 +5758,7 @@ Validated: 33
 EndChar
 
 StartChar: virgabase
-Encoding: 240 -1 240
+Encoding: 242 -1 242
 Width: 166
 VWidth: 2637
 Flags: HW
@@ -5712,7 +5780,7 @@ EndSplineSet
 EndChar
 
 StartChar: virgabase#Cavum
-Encoding: 241 -1 241
+Encoding: 243 -1 243
 Width: 166
 VWidth: 2637
 Flags: HW
@@ -5732,7 +5800,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaBaseLineBL
-Encoding: 242 -1 242
+Encoding: 244 -1 244
 Width: 166
 VWidth: 2637
 Flags: HW
@@ -5756,7 +5824,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaBaseLineBL#Cavum
-Encoding: 243 -1 243
+Encoding: 245 -1 245
 Width: 166
 VWidth: 2637
 Flags: HW
@@ -5776,7 +5844,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaAscendens_op
-Encoding: 244 -1 244
+Encoding: 246 -1 246
 Width: 166
 VWidth: 2684
 Flags: HW
@@ -5803,7 +5871,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaAscendens_op#Cavum
-Encoding: 245 -1 245
+Encoding: 247 -1 247
 Width: 166
 VWidth: 2684
 Flags: W
@@ -5824,7 +5892,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaDescendens_op
-Encoding: 246 -1 246
+Encoding: 248 -1 248
 Width: 168
 VWidth: 2048
 Flags: HW
@@ -5852,7 +5920,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaDescendens_op#Cavum
-Encoding: 247 -1 247
+Encoding: 249 -1 249
 Width: 168
 VWidth: 2048
 Flags: HW
@@ -5873,7 +5941,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaLongqueueAscendens_op
-Encoding: 248 -1 248
+Encoding: 250 -1 250
 Width: 166
 VWidth: 2684
 Flags: HW
@@ -5900,7 +5968,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaLongqueueDescendens_op
-Encoding: 249 -1 249
+Encoding: 251 -1 251
 Width: 168
 VWidth: 2048
 Flags: HW
@@ -5929,7 +5997,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaOpenqueueAscendens_op
-Encoding: 250 -1 250
+Encoding: 252 -1 252
 Width: 166
 VWidth: 2684
 Flags: HW
@@ -5956,7 +6024,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaOpenqueueDescendens_op
-Encoding: 251 -1 251
+Encoding: 253 -1 253
 Width: 168
 VWidth: 2048
 Flags: W
@@ -5985,7 +6053,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgulaTwo
-Encoding: 252 -1 252
+Encoding: 254 -1 254
 Width: 143
 VWidth: 1788
 Flags: HW
@@ -6007,7 +6075,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgulaThree
-Encoding: 253 -1 253
+Encoding: 255 -1 255
 Width: 143
 VWidth: 2103
 Flags: HW
@@ -6029,7 +6097,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgulaFour
-Encoding: 254 -1 254
+Encoding: 256 -1 256
 Width: 143
 VWidth: 2418
 Flags: W
@@ -6052,7 +6120,7 @@ Validated: 1
 EndChar
 
 StartChar: VirgulaFive
-Encoding: 255 -1 255
+Encoding: 257 -1 257
 Width: 143
 VWidth: 2733
 Flags: HW
@@ -6074,7 +6142,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgulaSix
-Encoding: 256 -1 256
+Encoding: 258 -1 258
 Width: 143
 VWidth: 3048
 Flags: HW
