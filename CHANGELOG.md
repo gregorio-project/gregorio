@@ -16,7 +16,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Fixed issue where an altered note (glyph) throws off the position of an episema in the glyph that immediately precedes it (see [#1379](https://github.com/gregorio-project/gregorio/issues/1379)).
 
 ### Added
-- Added note about loading microtype after gregoriotex (see [#1364](https://github.com/gregorio-project/gregorio/issues/1364)).
+- Added documentation note about loading microtype after gregoriotex (see [#1364](https://github.com/gregorio-project/gregorio/issues/1364)).
 
 ## [5.0.2] - 2017-05-24
 ### Fixed
