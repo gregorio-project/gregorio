@@ -20,7 +20,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1518881377
+ModificationTime: 1518881819
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -5405,17 +5405,16 @@ EndChar
 StartChar: SharpHole.modern
 Encoding: 226 -1 226
 Width: 162
-Flags: W
-HStem: 9.5459 115.661
-VStem: 65.25 32.75<14.7773 120.092>
+Flags: HW
+VStem: 38.5 25.667<-193.491 -47.9297 9.49219 116.571 173.699 319.097> 98 25.5<-182.085 -38.8672 18.4727 125.112 182.473 330.499>
 LayerCount: 2
 Fore
 SplineSet
-98 125.207 m 0
- 98 14.7773 l 0
- 65.25 9.5459 l 0
- 66.25 120.092 l 0
- 98 125.207 l 0
+64.167 9.49219 m 0
+ 64.25 119.892 l 0
+ 98.167 125.112 l 0
+ 98.167 14.6846 l 0
+ 64.167 9.49219 l 0
 EndSplineSet
 EndChar
 
