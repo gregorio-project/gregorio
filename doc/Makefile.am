@@ -18,7 +18,8 @@
 # GregorioRef.tex must be the first source file
 SRCFILES = GregorioRef.tex Command_Index_gregorio.tex \
 		   Command_Index_internal.tex Command_Index_User.tex \
-		   Gabc.tex Appendix_Font_Tables.tex GregorioRef.lua factus.gabc
+		   Gabc.tex Appendix_Font_Tables.tex GregorioRef.lua factus.gabc \
+		   pitches2.gabc pitches3.gabc pitches4.gabc pitches5.gabc
 NABCSRCFILES = GregorioNabcRef.tex veni.gabc omnes.gabc
 
 GREGORIO=gregorio-$(FILENAME_VERSION)
