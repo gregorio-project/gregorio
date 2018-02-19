@@ -1,6 +1,6 @@
 [Setup]
 AppName=gregorio
-AppVersion=5.0.2
+AppVersion=5.1.0-rc1
 DefaultDirName={pf}\gregorio
 DefaultGroupName=gregorio
 SetupIconFile=gregorio.ico
@@ -49,7 +49,7 @@ Name: "{app}\texmf\doc\luatex\gregoriotex\examples"
 
 [Files]
 ; PARSE_VERSION_FILE_NEXTLINE
-Source: "../src/gregorio-5_0_2.exe"; DestDir: "{app}\bin";
+Source: "../src/gregorio-5_1_0-rc1.exe"; DestDir: "{app}\bin";
 Source: "gregorio.ico"; DestDir: "{app}";
 Source: "install.lua"; DestDir: "{app}";
 Source: "uninstall.lua"; DestDir: "{app}";
