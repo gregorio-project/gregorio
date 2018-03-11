@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
+## [Unreleased][CTAN]
+
 ## [5.1.0] - 2018-03-11
 ### Added
 - Added support for virgula (gabc: `` `0``) and divisio minima (gabc: `,0`) on the ledger line above the staff (see [#1370](https://github.com/gregorio-project/gregorio/issues/1370)).
