@@ -42,6 +42,7 @@ os.chdir(sys.path[0])
 
 VERSION_FILE = '.gregorio-version'
 GREGORIO_FILES = ["configure.ac",
+                  "ctan-o-mat.config",
                   "windows/gregorio-resources.rc",
                   "macosx/Gregorio.pkgproj",
                   "macosx/douninstall.sh",
