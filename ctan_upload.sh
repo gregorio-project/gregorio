@@ -41,6 +41,11 @@ if [[ ! -e "gregoriotex.ctan.zip" ]]; then
   exit 1
 fi
 
+if ! perl < /dev/null > /dev/null 2>&1  ; then
+  echo "This script requires perl to run."
+  echo "Please install perl or upload to CTAN manually."
+fi
+
 VERSION=`./VersionManager.py --get-current`
 FILE_VERSION=`echo $VERSION | sed s:[.]:_:g`
 pkgfile="gregorio-$FILE_VERSION.pkg"
