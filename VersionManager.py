@@ -68,6 +68,8 @@ GREGORIO_FILES = ["configure.ac",
                   "fonts/squarize.py",
                  ]
 COPYRIGHT_FILES = ["install-gtex.sh",
+                   "build-ctan.sh",
+                   "ctan_upload.sh",
                    "tex/gregoriotex-signs.tex",
                    "tex/gregorio-vowels.dat",
                    "tex/gsp-default.tex",
