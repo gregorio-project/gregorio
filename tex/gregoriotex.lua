@@ -1,6 +1,6 @@
 --GregorioTeX Lua file.
 --
---Copyright (C) 2008-2017 The Gregorio Project (see CONTRIBUTORS.md)
+--Copyright (C) 2008-2018 The Gregorio Project (see CONTRIBUTORS.md)
 --
 --This file is part of Gregorio.
 --
@@ -30,10 +30,10 @@ local err, warn, info, log = luatexbase.provides_module({
     name               = "gregoriotex",
     version            = '5.1.0', -- GREGORIO_VERSION
     greinternalversion = internalversion,
-    date               = "2018/03/11", -- GREGORIO_DATE_LTX
+    date               = "2018/03/16", -- GREGORIO_DATE_LTX
     description        = "GregorioTeX module.",
     author             = "The Gregorio Project (see CONTRIBUTORS.md)",
-    copyright          = "2008-2017 - The Gregorio Project",
+    copyright          = "2008-2018 - The Gregorio Project",
     license            = "GPLv3+",
 })
 

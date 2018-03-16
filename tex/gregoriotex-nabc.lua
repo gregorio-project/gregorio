@@ -1,6 +1,6 @@
 --GregorioTeX Nabc Lua file.
 --
---Copyright (C) 2014-2017 The Gregorio Project (see CONTRIBUTORS.md)
+--Copyright (C) 2014-2018 The Gregorio Project (see CONTRIBUTORS.md)
 --
 --This file is part of Gregorio.
 --
