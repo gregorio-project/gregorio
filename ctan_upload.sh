@@ -1,6 +1,6 @@
 # !/usr/bin/env bash
 
-# Copyright (C) 2016-2018 The Gregorio Project (see CONTRIBUTORS.md)
+# Copyright (C) 2018 The Gregorio Project (see CONTRIBUTORS.md)
 #
 # This file is part of Gregorio.
 #
