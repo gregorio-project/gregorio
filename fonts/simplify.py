@@ -8,7 +8,7 @@
     because simplification doesn't work in squarize.py due to bugs
     in fontforge.
 
-    Copyright (C) 2016-2017 The Gregorio Project (see CONTRIBUTORS.md)
+    Copyright (C) 2016-2018 The Gregorio Project (see CONTRIBUTORS.md)
 
     This file is part of Gregorio.
 
