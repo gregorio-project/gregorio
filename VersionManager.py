@@ -5,7 +5,7 @@
 
     See VersionUpdate.py -h for help
 
-    Copyright (C) 2015-2017 The Gregorio Project (see CONTRIBUTORS.md)
+    Copyright (C) 2015-2018 The Gregorio Project (see CONTRIBUTORS.md)
 
     This file is part of Gregorio.
 
@@ -32,6 +32,7 @@ import subprocess
 import time
 import os
 import locale
+import linecache
 from datetime import date
 
 from distutils.util import strtobool
@@ -41,6 +42,7 @@ locale.setlocale(locale.LC_TIME, 'C')
 os.chdir(sys.path[0])
 
 VERSION_FILE = '.gregorio-version'
+CURRENTYEAR = str(date.today().year)
 GREGORIO_FILES = ["configure.ac",
                   "windows/gregorio-resources.rc",
                   "macosx/Gregorio.pkgproj",
@@ -64,6 +66,103 @@ GREGORIO_FILES = ["configure.ac",
                   "tex/gregoriotex-common.tex",
                   "fonts/squarize.py",
                  ]
+COPYRIGHT_FILES = ["install-gtex.sh",
+                   "tex/gregoriotex-signs.tex",
+                   "tex/gregorio-vowels.dat",
+                   "tex/gsp-default.tex",
+                   "tex/gregoriotex-nabc.lua",
+                   "tex/gregoriotex-symbols.lua",
+                   "tex/gregoriotex-chars.tex",
+                   "tex/gregoriotex-main.tex",
+                   "tex/gregoriotex-spaces.tex",
+                   "tex/Makefile.am",
+                   "tex/gregoriotex-common.tex",
+                   "tex/gregoriotex-syllable.tex",
+                   "tex/gregoriotex.lua",
+                   "tex/gregoriotex.sty",
+                   "tex/gregoriosyms.sty",
+                   "tex/gregoriotex-nabc.tex",
+                   "tex/gregoriotex.tex",
+                   "tex/gregoriotex-signs.lua",
+                   "tex/gregoriotex-symbols.tex",
+                   "contrib/TeXShop/Makefile.am",
+                   "contrib/900_gregorio.xml",
+                   "contrib/Makefile.am",
+                   "contrib/gabc.lang",
+                   "contrib/gprocess",
+                   "contrib/checkSyllabation.py",
+                   "configure.ac",
+                   "examples/Makefile.am",
+                   "Makefile.am",
+                   "install.sh",
+                   "debian/copyright",
+                   "debian/copyright",
+                   "doc/Command_Index_User.tex",
+                   "doc/Makefile.am",
+                   "doc/GregorioRef.tex",
+                   "doc/Command_Index_gregorio.tex",
+                   "doc/Command_Index_internal.tex",
+                   "doc/GregorioNabcRef.tex",
+                   "doc/Gabc.tex",
+                   "doc/GregorioRef.lua",
+                   "doc/Appendix_Font_Tables.tex",
+                   "VersionManager.py",
+                   "coverage.sh",
+                   "src/characters.h",
+                   "src/plugins.h",
+                   "src/gregoriotex/gregoriotex-write.c",
+                   "src/gregoriotex/gregoriotex.h",
+                   "src/gregoriotex/gregoriotex-position.c",
+                   "src/unicode.c",
+                   "src/unicode.h",
+                   "src/messages.h",
+                   "src/support.c",
+                   "src/sha1.h",
+                   "src/messages.c",
+                   "src/support.h",
+                   "src/sha1.c",
+                   "src/struct.h",
+                   "src/bool.h",
+                   "src/struct_iter.h",
+                   "src/Makefile.am",
+                   "src/dump/dump.c",
+                   "src/encode_utf8strings.c",
+                   "src/enum_generator.h",
+                   "src/gabc/gabc-score-determination.c",
+                   "src/gabc/gabc-elements-determination.c",
+                   "src/gabc/gabc-write.c",
+                   "src/gabc/gabc-notes-determination.l",
+                   "src/gabc/gabc.h",
+                   "src/gabc/gabc-score-determination.l",
+                   "src/gabc/gabc-score-determination.y",
+                   "src/gabc/gabc-score-determination.h",
+                   "src/gabc/gabc-glyphs-determination.c",
+                   "src/utf8strings.h.in",
+                   "src/config.h",
+                   "src/characters.c",
+                   "src/vowel/vowel-rules.y",
+                   "src/vowel/vowel.h",
+                   "src/vowel/vowel-rules.h",
+                   "src/vowel/vowel-rules.l",
+                   "src/vowel/vowel.c",
+                   "src/gregorio-utils.c",
+                   "src/struct.c",
+                   "fonts/gregorio-base.sfd",
+                   "fonts/granapadano-base.sfd",
+                   "fonts/squarize.py",
+                   "fonts/convertsfdtottf.py",
+                   "fonts/Makefile.am",
+                   "fonts/simplify.py",
+                   "fonts/stemsschemas.py",
+                   "fonts/greciliae-base.sfd",
+                   "fonts/gregall.sfd",
+                   "fonts/grelaon.sfd",
+                   "fonts/gresgmodern.sfd",
+                   "fonts/install_supp_fonts.lua",
+                   "windows/gregorio.iss",
+                   "windows/install.lua",
+                   "windows/uninstall.lua",
+                  ]
 
 def get_parser():
     "Return command line parser"
@@ -118,7 +217,7 @@ class Version(object):
 
     def __init__(self, versionfile):
         self.versionfile = versionfile
-        self.version = self.read_version()
+        self.version = linecache.getline(self.versionfile, 1).strip('\n')
         self.filename_version = self.filename_version_from_version(self.version)
         self.short_tag = None
         self.date = None
@@ -130,19 +229,13 @@ class Version(object):
 
     def binary_version_from_version(self, version):
         "Return binary version number for Windows FILEVERSION"
-        bin = version.replace('.',',')
-        if '-' in bin:
-            bin = bin.replace('-beta',',1')
-            bin = bin.replace('-rc',',2')
+        binary = version.replace('.', ',')
+        if '-' in binary:
+            binary = binary.replace('-beta', ',1')
+            binary = binary.replace('-rc', ',2')
         else:
-            bin += ',30'
-        return bin
-
-    def read_version(self):
-        "Return version for instance variable"
-        with open(self.versionfile, 'r') as verfile:
-            self.grever = verfile.readline()
-        return self.grever.strip('\n')
+            binary += ',30'
+        return binary
 
     def fetch_version(self):
         "Prints version"
@@ -172,7 +265,7 @@ class Version(object):
         print('Updating {0} with the new version: {1}\n'.format(
             self.versionfile, self.version))
         with open(self.versionfile, 'w') as verfile:
-            verfile.write(self.version)
+            verfile.write('{0}\n{1}'.format(self.version, CURRENTYEAR))
             verfile.write('\n\n*** Do not modify this file. ***\n')
             verfile.write('Use VersionManager.py to change the version.\n')
 
@@ -331,6 +424,28 @@ def do_release(version_obj, not_interactive):
     version_obj.update_version(newversion)
     replace_version(version_obj)
 
+def copyright_year():
+    "Check and update copyright year as needed"
+    fileyear = linecache.getline(VERSION_FILE, 2).strip()
+    if int(fileyear) != int(CURRENTYEAR):
+        print('Updating copyright year.')
+        for myfile in COPYRIGHT_FILES:
+            result = []
+            with open(myfile, 'r') as infile:
+                for line in infile:
+                    if re.search(r'[C|c]opyright.*Gregorio Project', line):
+                        result.append(re.sub(fileyear, CURRENTYEAR, line))
+                    elif re.search(r'[C|c]opyright.*Elie Roux', line):
+                        result.append(re.sub(fileyear, CURRENTYEAR, line))
+                    elif re.search(r'[C|c]opyright.*Richard Chonak', line):
+                        result.append(re.sub(fileyear, CURRENTYEAR, line))
+                    elif re.search(r'[C|c]opyright.*Jakub Jelinek', line):
+                        result.append(re.sub(fileyear, CURRENTYEAR, line))
+                    else:
+                        result.append(line)
+            with open(myfile, 'w') as outfile:
+                outfile.write(''.join(result))
+
 def main():
     "Main function"
     parser = get_parser()
@@ -348,7 +463,8 @@ def main():
         gregorio_version.fetch_version_debian_stable()
     elif args.get_debian_git:
         gregorio_version.fetch_version_debian_git()
-    elif args.beta:
+    copyright_year()
+    if args.beta:
         beta(gregorio_version, not_interactive)
     elif args.major:
         bump_major(gregorio_version, not_interactive)
