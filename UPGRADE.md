@@ -4,7 +4,9 @@ This file contains instructions to upgrade to a new release of Gregorio.  These 
 
 ## 5.1
 
-No additional steps are needed to upgrade from 5.0 to 5.1.
+### TeX Live 2017 no longer supported
+
+There is a bug in the implementation of `io.popen` in the version of LuaTeX which shipped with TeX Live 2017 (1.0.4).  We introduced a work around in 5.0.0 which allowed us to silently avoid the bug.  As the bug has been fixed in the version of LuaTeX shipping with TeX Live 2018 (1.07.0), we've reversed the work around.  As a result, this version of Gregorio will **not** work with TeX Live 2017.  If you are interested in using Gregorio 5.1 and currently use TeX Live 2017, please *upgrade to TeX Live 2018 first*.  If you use TeX Live 2016 or earlier, you should be able to use Gregorio 5.1 without upgrading TeX Live.
 
 ## 5.0
 

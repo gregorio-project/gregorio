@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][CTAN]
+### Changed
+- Reverse the work around for the bug in TL2017 as that bug has been fixed in TL2018.  See [#1362](https://github.com/gregorio-project/gregorio/issues/1362).
+
 
 ## [5.1.0] - 2018-03-11
 ### Added

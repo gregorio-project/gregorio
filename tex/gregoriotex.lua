@@ -84,8 +84,6 @@ local new_score_last_syllables = nil
 local state_hashes = nil
 local new_state_hashes = nil
 local auxname = nil
-local tmpname = nil
-local test_snippet_filename = nil
 local snippet_filename = nil
 local snippet_logname = nil
 
@@ -122,40 +120,19 @@ local translation_mark = 1
 local abovelinestext_mark = 2
 log("marker whatsit id is %d", marker_whatsit_id)
 
-local function get_prog_output(cmd, fmt)
-  cmd = string.format(cmd, tmpname)
-  local rc = os.execute(cmd)
-  local content = nil
-  if rc == 0 then
-    local f = io.open(tmpname, 'r');
-    if f then
-      content = f:read(fmt)
-      f:close()
-    end
-  end
-  os.remove(tmpname)
-  return content
-end
-
 local function gregorio_exe()
   if real_gregorio_exe == nil then
-    local tmp_gabcfile = io.open(test_snippet_filename, 'w')
-    tmp_gabcfile:write("name:test;\n%%\n(c4)(g)\n")
-    tmp_gabcfile:close()
-
     local exe_version
 
     -- first look for one with the exact version
     real_gregorio_exe = 'gregorio-5_1_0' -- FILENAME_VERSION
-    local cmd = string.format("%s -o %%s %s", real_gregorio_exe,
-        test_snippet_filename)
-    exe_version = get_prog_output(cmd, '*line')
+    exe_version = io.popen(real_gregorio_exe..' --version', 'r')
+    exe_version = exe_version:read("*line")
     if not exe_version then
       -- look for suffix-less executable
       real_gregorio_exe = 'gregorio'
-      cmd = string.format("%s -o %%s %s", real_gregorio_exe,
-          test_snippet_filename)
-      exe_version = get_prog_output(cmd, '*line')
+      exe_version = io.popen(real_gregorio_exe..' --version', 'r')
+      exe_version = exe_version:read("*line")
     end
     if not exe_version or string.match(exe_version,"%d+%.%d+%.")
         ~= string.match(internalversion,"%d+%.%d+%.") then
@@ -168,7 +145,6 @@ local function gregorio_exe()
           tex.formatname, tex.jobname)
     end
 
-    os.remove(test_snippet_filename)
     log("will use %s", real_gregorio_exe)
   end
 
@@ -356,14 +332,10 @@ local function init(arg, enable_height_computation)
   end
   if outputdir and lfs.isdir(outputdir) then
     auxname = outputdir..'/'..tex.jobname..'.gaux'
-    tmpname = outputdir..'/'..tex.jobname..'.gtmp'
-    test_snippet_filename = outputdir..'/'..tex.jobname..'.test.gsnippet'
     snippet_filename = outputdir..'/'..tex.jobname..'.gsnippet'
     snippet_logname = outputdir..'/'..tex.jobname..'.gsniplog'
   else
     auxname = tex.jobname..'.gaux'
-    tmpname = tex.jobname..'.gtmp'
-    test_snippet_filename = tex.jobname..'.test.gsnippet'
     snippet_filename = tex.jobname..'.gsnippet'
     snippet_logname = tex.jobname..'.gsniplog'
   end
@@ -932,9 +904,9 @@ local function direct_gabc(gabc, header, allow_deprecated)
   gabc = gabc:match('^()%s*$') and '' or gabc:match('^%s*(.*%S)')
   f:write('name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par ', '\n'))
   f:close()
-  local cmd = string.format('%s -W %s-o %%s -l %s %s', gregorio_exe(),
+  local cmd = string.format('%s -W %s-S -l %s %s', gregorio_exe(),
       deprecated, snippet_logname, snippet_filename)
-  local content = get_prog_output(cmd, '*a')
+  local content = io.popen(cmd, 'r')
   if content == nil then
     err("\nSomething went wrong when executing\n    %s\n"
         .."shell-escape mode may not be activated. Try\n\n"
@@ -942,7 +914,8 @@ local function direct_gabc(gabc, header, allow_deprecated)
         .."See the documentation of Gregorio or your TeX\n"
         .."distribution to automatize it.", cmd, tex.formatname, tex.jobname)
   else
-    tex.print(content:explode('\n'))
+    tex.print(content:read("*a"):explode('\n'))
+    content:close()
   end
   local glog = io.open(snippet_logname, 'a+')
   if glog == nil then
