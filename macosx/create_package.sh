@@ -131,7 +131,7 @@ mv $BUILDDIR/Uninstall-Gregorio.pkg ../Uninstall-Gregorio-$VERSION.pkg
 
 # Now we clean up
 if $clean; then
-    cd ..
+    cd $TOP
     make maintainer-clean
     cd $HERE
     rm -rf build/
