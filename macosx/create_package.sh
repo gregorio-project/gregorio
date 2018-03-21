@@ -126,8 +126,8 @@ packagesbuild Uninstall-Gregorio.pkgproj
 # The uninstall pacakge doesn't need the version number because it doesn't
 # care about the version of gregorio.
 VERSION=`echo $VERSION | sed s:[.]:_:g`
-mv $BUILDDIR/Gregorio.pkg ../Gregorio-$VERSION.pkg
-mv $BUILDDIR/Uninstall-Gregorio.pkg ../Uninstall-Gregorio-$VERSION.pkg
+mv $BUILDDIR/Gregorio.pkg $TOP/Gregorio-$VERSION.pkg
+mv $BUILDDIR/Uninstall-Gregorio.pkg $TOP/Uninstall-Gregorio-$VERSION.pkg
 
 # Now we clean up
 if $clean; then
