@@ -72,7 +72,7 @@ TEXFILES=(tex/gregoriotex*.tex tex/gsp-default.tex tex/gregoriotex*.lua
           tex/*.dat)
 LATEXFILES=(tex/gregorio*.sty)
 TTFFILES=(fonts/*.ttf)
-DOCFILES=(doc/*.tex doc/*.lua doc/*.gabc doc/*.pdf doc/README.md)
+DOCFILES=(doc/*.tex doc/*.lua doc/*.gabc doc/*.pdf doc/doc_README.md)
 EXAMPLEFILES=(examples/FactusEst.gabc examples/PopulusSion.gabc
               examples/main-lualatex.tex examples/debugging.tex)
 FONTSRCFILES=(greextra.sfd squarize.py convertsfdtottf.py gregall.sfd

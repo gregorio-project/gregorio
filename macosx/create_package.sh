@@ -82,7 +82,7 @@ else
     cp doc/*.lua $EXTRASDIR/doc/
     cp doc/*.gabc $EXTRASDIR/doc/
     cp doc/*.pdf $EXTRASDIR/doc/
-    cp doc/README.md $EXTRASDIR/doc/
+    cp doc/doc_README.md $EXTRASDIR/doc/
     cp -r contrib/ $EXTRASDIR/contrib
     find $EXTRASDIR/contrib -name 'Makefile*' -delete
     cp examples/*.tex $EXTRASDIR/examples/
