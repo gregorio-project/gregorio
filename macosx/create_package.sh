@@ -41,6 +41,7 @@ done
 
 HERE=`pwd`
 cd ..
+TOP=`pwd`
 VERSION=`./VersionManager.py --get-current`
 
 # First we compile Gregorio and build all the necessary pacakge components.
@@ -50,7 +51,7 @@ BUILDDIR=$HERE/build
 if [ -d "$BUILDDIR" ]; then
     echo "Using existing build"
 else
-    cd $HERE/..
+    cd $TOP
     ./build.sh --arch=x86_64
     # If the build process fails we halt this script here, since we can't build the
     # package without a properly compiled version of Gregorio.
@@ -75,9 +76,9 @@ else
     mkdir $EXTRASDIR
     mkdir $EXTRASDIR/doc
     mkdir $EXTRASDIR/examples
-    cd $HERE/../doc
+    cd $TOP/doc
     make doc
-    cd ..
+    cd $TOP
     cp doc/*.tex $EXTRASDIR/doc/
     cp doc/*.lua $EXTRASDIR/doc/
     cp doc/*.gabc $EXTRASDIR/doc/
@@ -96,7 +97,7 @@ if [ -d "$RESOURCEDIR" ]; then
     echo "Using existing installer resources"
 else
     mkdir $RESOURCEDIR
-    cd $HERE/..
+    cd $TOP
     pandoc -s ./README.md -f markdown -t html -o $RESOURCEDIR/README.html
     pandoc -s ./COPYING.md -f markdown -t html -o $RESOURCEDIR/COPYING.html
     # We redirect the relative links in the above files to point to particular
