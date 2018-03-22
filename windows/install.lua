@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 This texlua script is called in Windows automatic installer (see gregorio.iss),
-it configures Gregorio under windows to work with TeXLive or MiKTeX.
+it configures Gregorio under windows to work with TeX Live or MiKTeX.
 --]]
 
 require("lfs")
@@ -88,7 +88,7 @@ function copy_files()
   end
   print("Copying files into texmf tree...")
   if string.find(string.lower(texmfdist), "texlive") then
-    print("Distribution is TeXLive")
+    print("Distribution is TeX Live")
     print("GregorioTeX files...")
     os.spawn("xcopy texmf "..texmflocal.." /e /f /y")
   elseif string.find(string.lower(texmfdist), "miktex") then

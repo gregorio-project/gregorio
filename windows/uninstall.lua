@@ -129,7 +129,7 @@ function remove_texmf_install()
   end
   if install_was_present then
     --[[Since we removed some fonts, we need to rebuild the font databases.
-    Since this function is only used when extracting files from a TeXLive
+    Since this function is only used when extracting files from a TeX Live
     texmf tree, we don't need to go through the distribution check.
     ]]--
     os.spawn("luaotfload-tool -u")

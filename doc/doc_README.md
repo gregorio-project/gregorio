@@ -12,8 +12,8 @@ internal workings of gregorio.
 ## Building
 
 To compile the pdf you must have
- * an up-to-date [TeXLive](https://www.tug.org/texlive/) system, with at least the `luatex` bundle and `latexmk`
- * the [Linux Libertine](http://www.linuxlibertine.org/index.php?id=1&L=1) and [Inconsolata](http://www.levien.com/type/myfonts/inconsolata.html) fonts (distributed by TeXLive too)
+ * an up-to-date [TeX Live](https://www.tug.org/texlive/) system, with at least the `luatex` bundle and `latexmk`
+ * the [Linux Libertine](http://www.linuxlibertine.org/index.php?id=1&L=1) and [Inconsolata](http://www.levien.com/type/myfonts/inconsolata.html) fonts (distributed by TeX Live too)
  * the [`pygments` library](http://pygments.org/)
 
 Once you have run `./configure` in the main directory, run `make doc` in this directory.

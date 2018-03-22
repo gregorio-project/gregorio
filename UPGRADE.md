@@ -117,7 +117,7 @@ Prior to version 4.2, Gregorio inconsistenly indicated style errors.  Now, error
 
 ### Changes to texmf tree
 
-To better comply with the TeXLive directory structure, the location of `gregoriotex.sty` and `gregoriosyms.sty` have changed.
+To better comply with the TeX Live directory structure, the location of `gregoriotex.sty` and `gregoriosyms.sty` have changed.
 
 *Linux and other users installing from source:* `install-gtex.sh` should remove the old versions before installing the new one.
 
