@@ -96,7 +96,7 @@ COPYRIGHT_FILES = ["install-gtex.sh",
                    "Makefile.am",
                    "install.sh",
                    "debian/copyright",
-                   "debian/copyright",
+                   "debian/manpage.xml",
                    "doc/Command_Index_User.tex",
                    "doc/Makefile.am",
                    "doc/GregorioRef.tex",
@@ -327,7 +327,7 @@ def replace_version(version_obj):
                 result.append(newline)
             else:
                 result.append(line)
-    with open('CHANGELOG.md','w') as outfile:
+    with open('CHANGELOG.md', 'w') as outfile:
         outfile.write(''.join(result))
     sys.exit(0)
 
@@ -428,6 +428,12 @@ def do_release(version_obj, not_interactive):
 def copyright_year():
     "Check and update copyright year as needed"
     fileyear = linecache.getline(VERSION_FILE, 2).strip()
+    def year_range(matchobj):
+        "Check and add a year range to the copyright"
+        if matchobj.group(1) is not None:
+            return re.sub(fileyear, CURRENTYEAR, matchobj.group(0))
+        return re.sub(fileyear, fileyear+'-'+CURRENTYEAR, matchobj.group(0))
+
     if int(fileyear) != int(CURRENTYEAR):
         print('Updating copyright year.')
         for myfile in COPYRIGHT_FILES:
@@ -435,13 +441,13 @@ def copyright_year():
             with open(myfile, 'r') as infile:
                 for line in infile:
                     if re.search(r'[C|c]opyright.*Gregorio Project', line):
-                        result.append(re.sub(fileyear, CURRENTYEAR, line))
+                        result.append(re.sub(r'(\d{4}-)?(\d{4})', year_range, line))
                     elif re.search(r'[C|c]opyright.*Elie Roux', line):
-                        result.append(re.sub(fileyear, CURRENTYEAR, line))
+                        result.append(re.sub(r'(\d{4}-)?(\d{4})', year_range, line))
                     elif re.search(r'[C|c]opyright.*Richard Chonak', line):
-                        result.append(re.sub(fileyear, CURRENTYEAR, line))
+                        result.append(re.sub(r'(\d{4}-)?(\d{4})', year_range, line))
                     elif re.search(r'[C|c]opyright.*Jakub Jelinek', line):
-                        result.append(re.sub(fileyear, CURRENTYEAR, line))
+                        result.append(re.sub(r'(\d{4}-)?(\d{4})', year_range, line))
                     else:
                         result.append(line)
             with open(myfile, 'w') as outfile:
