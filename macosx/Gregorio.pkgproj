@@ -884,7 +884,7 @@ If you have a TeX distribution installed in a non-standard location, then either
 						</dict>
 					</array>
 					<key>NAME</key>
-					<string>TeXLive Check</string>
+					<string>TeX Live Check</string>
 					<key>STATE</key>
 					<true/>
 				</dict>

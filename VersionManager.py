@@ -222,20 +222,48 @@ def replace_version(version_obj):
                     result.append(line)
         with open(myfile, 'w') as outfile:
             outfile.write(''.join(result))
+    sys.exit(0)
+
+def update_changelog(newver,upgradetype):
+    today = date.today()
     with open('CHANGELOG.md', 'r') as infile:
         result = []
+        develop = False
         for line in infile:
-            if '[Unreleased][unreleased]' in line:
-                result.append(line)
-                result.append('\n')
-                result.append('\n')
-                newline = '## [' + newver + '] - ' + today.strftime("%Y-%m-%d") + '\n'
-                result.append(newline)
+            if upgradetype == "patch":
+                if '[Unreleased][develop]' in line:
+                    print("Found an unreleased develop section.")
+                    print("Patch releases should be based on ctan branch.")
+                    sys.exit(1)
+                if '[Unreleased][CTAN]' in line:
+                    result.append(line)
+                    result.append('\n')
+                    result.append('\n')
+                    newline = '## [' + newver + '] - ' + today.strftime("%Y-%m-%d") + '\n'
+                    result.append(newline)
+                else:
+                    result.append(line)
             else:
-                result.append(line)
+                if '[Unreleased][develop]' in line:
+                    develop = True
+                    result.append(line)
+                    result.append('\n')
+                    result.append('\n')
+                    result.append('## [Unreleased][CTAN]\n')
+                    result.append('\n')
+                    result.append('\n')
+                    newline = '## [' + newver + '] - ' + today.strftime("%Y-%m-%d") + '\n'
+                    result.append(newline)
+                elif '[Unreleased][CTAN]' in line and develop:
+                    continue
+                else:
+                    result.append(line)
+        if not develop and upgradetype != "patch":
+            print("I didn't find a unreleased develop section.")
+            print("Non-patch releases should be based on develop branch.")
+            sys.exit(1)
     with open('CHANGELOG.md','w') as outfile:
         outfile.write(''.join(result))
-    sys.exit(0)
 
 def confirm_replace(oldver, newver):
     "Query the user to confirm action"
@@ -262,6 +290,7 @@ def release_candidate(version_obj, not_interactive):
         newversion = re.sub(r'-.*', '-rc1', oldversion)
     if (not not_interactive):
         confirm_replace(oldversion, newversion)
+    update_changelog(newversion,"releasecandidate")
     version_obj.update_version(newversion)
     replace_version(version_obj)
 
@@ -277,6 +306,7 @@ def beta(version_obj, not_interactive):
         sys.exit(1)
     if (not not_interactive):
         confirm_replace(oldversion, newversion)
+    update_changelog(newversion,"beta")
     version_obj.update_version(newversion)
     replace_version(version_obj)
 
@@ -287,6 +317,7 @@ def bump_major(version_obj, not_interactive):
     newversion = str(int(nums.group(1)) +1) + '.0.0-beta1'
     if (not not_interactive):
         confirm_replace(oldversion, newversion)
+    update_changelog(newversion,"major")
     version_obj.update_version(newversion)
     replace_version(version_obj)
 
@@ -297,6 +328,7 @@ def bump_minor(version_obj, not_interactive):
     newversion = nums.group(1) + str(int(nums.group(2)) +1) + '.0-beta1'
     if (not not_interactive):
         confirm_replace(oldversion, newversion)
+    update_changelog(newversion,"minor")
     version_obj.update_version(newversion)
     replace_version(version_obj)
 
@@ -307,6 +339,7 @@ def bump_patch(version_obj, not_interactive):
     newversion = nums.group(1) + str(int(nums.group(2)) +1)
     if (not not_interactive):
         confirm_replace(oldversion, newversion)
+    update_changelog(newversion,"patch")
     version_obj.update_version(newversion)
     replace_version(version_obj)
 
@@ -319,6 +352,7 @@ def set_manual_version(version_obj, user_version, not_interactive):
     newversion = user_version
     if (not not_interactive):
         confirm_replace(oldversion, newversion)
+    update_changelog(newversion,"manual")
     version_obj.update_version(newversion)
     replace_version(version_obj)
 
@@ -328,6 +362,7 @@ def do_release(version_obj, not_interactive):
     newversion = re.sub(r'([\d.]+)-?.*', r'\1', oldversion)
     if (not not_interactive):
         confirm_replace(oldversion, newversion)
+    update_changelog(newversion,"release")
     version_obj.update_version(newversion)
     replace_version(version_obj)
 
