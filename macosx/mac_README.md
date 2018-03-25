@@ -12,7 +12,7 @@ It will also build an Uninstall package which has an empty payload.  This packag
 
 ## Limitations
 
-It is problematic (to say the least) for a package installer to place files in a user's home directory on a Mac.  As a result, this installer will always target a systme-wide installation for both the command-line tool and TeXLive.
+It is problematic (to say the least) for a package installer to place files in a user's home directory on a Mac.  As a result, this installer will always target a systme-wide installation for both the command-line tool and TeX Live.
 
 This installer is only targeted at Intel based Macs.
 

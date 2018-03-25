@@ -1,13 +1,13 @@
 [Setup]
 AppName=gregorio
-AppVersion=5.1.0
+AppVersion=5.1.1
 DefaultDirName={pf}\gregorio
 DefaultGroupName=gregorio
 SetupIconFile=gregorio.ico
 Compression=lzma2
 SolidCompression=yes
 LicenseFile=../COPYING.md
-AppCopyright=Copyright (C) 2006-2017 The Gregorio Project
+AppCopyright=Copyright (C) 2006-2018 The Gregorio Project
 AppComments=Software for engraving Gregorian Chant scores.
 AppContact=gregorio-devel@googlegroups.com
 AppPublisher=The Gregorio Project
@@ -49,7 +49,7 @@ Name: "{app}\texmf\doc\luatex\gregoriotex\examples"
 
 [Files]
 ; PARSE_VERSION_FILE_NEXTLINE
-Source: "../src/gregorio-5_1_0.exe"; DestDir: "{app}\bin";
+Source: "../src/gregorio-5_1_1.exe"; DestDir: "{app}\bin";
 Source: "gregorio.ico"; DestDir: "{app}";
 Source: "install.lua"; DestDir: "{app}";
 Source: "uninstall.lua"; DestDir: "{app}";
@@ -82,11 +82,11 @@ Source: "../fonts/gregall.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/grelaon.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/gresgmodern.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/*.py"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
-Source: "../fonts/README.md"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
+Source: "../fonts/fonts_README.md"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../doc/*.tex"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
 Source: "../doc/*.lua"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
 Source: "../doc/*.gabc"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
-Source: "../doc/README.md"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
+Source: "../doc/doc_README.md"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
 
 [InstallDelete]
 Type: files; Name: "{app}\gregorio.exe"
@@ -141,7 +141,7 @@ begin
 
   StaticText := TNewStaticText.Create(Page);
   StaticText.Top := ScaleY(60);;
-  StaticText.Caption := 'The best way to install LuaTeX is to install the TeXLive distribution.';
+  StaticText.Caption := 'The best way to install LuaTeX is to install the TeX Live distribution.';
   StaticText.Parent := Page.Surface;
 
   StaticText := TNewStaticText.Create(Page);
@@ -151,7 +151,7 @@ begin
 
   StaticText := TNewStaticText.Create(Page);
   StaticText.Top := ScaleY(100);;
-  StaticText.Caption := 'Note that you have to reboot your computer after having installed TeXLive';
+  StaticText.Caption := 'Note that you have to reboot your computer after having installed TeX Live';
   StaticText.Parent := Page.Surface;
 
   StaticText := TNewStaticText.Create(Page);

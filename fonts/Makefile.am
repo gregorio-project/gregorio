@@ -1,7 +1,7 @@
 ## This makefile is made to build to fonts from the sfd, it won't be useful for
 ## the average user.
 
-# Copyright (C) 2006-2017 The Gregorio Project (see CONTRIBUTORS.md)
+# Copyright (C) 2006-2018 The Gregorio Project (see CONTRIBUTORS.md)
 #
 # This file is part of Gregorio.
 #
@@ -35,7 +35,7 @@ SOURCEFILES_GRECILIAE = greciliae-base.sfd
 SOURCEFILES_GREGORIO = gregorio-base.sfd
 SOURCEFILES_GRANAPADANO = granapadano-base.sfd
 SOURCEFILES_EXTRA = greextra.sfd gregall.sfd gresgmodern.sfd grelaon.sfd
-SOURCEFILES_TOOLS = squarize.py stemsschemas.py convertsfdtottf.py README.md \
+SOURCEFILES_TOOLS = squarize.py stemsschemas.py convertsfdtottf.py fonts_README.md \
 	simplify.py
 SOURCEFILES_ALL = $(SOURCEFILES_GREGORIO) $(SOURCEFILES_GRANAPADANO) \
 	$(SOURCEFILES_GRECILIAE)

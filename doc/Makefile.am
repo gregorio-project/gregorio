@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2017 The Gregorio Project (see CONTRIBUTORS.md)
+# Copyright (C) 2006-2018 The Gregorio Project (see CONTRIBUTORS.md)
 #
 # This file is part of Gregorio.
 #
@@ -68,4 +68,4 @@ maintainer-clean-local: clean-doc
 EXTRA_DIST = $(SRCFILES) $(NABCSRCFILES) \
 	     GregorioRef.pdf \
 	     GregorioNabcRef.pdf \
-	     README.md
+	     doc_README.md
