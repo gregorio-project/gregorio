@@ -1,6 +1,6 @@
 [Setup]
 AppName=gregorio
-AppVersion=5.1.0
+AppVersion=5.1.1
 DefaultDirName={pf}\gregorio
 DefaultGroupName=gregorio
 SetupIconFile=gregorio.ico
@@ -49,7 +49,7 @@ Name: "{app}\texmf\doc\luatex\gregoriotex\examples"
 
 [Files]
 ; PARSE_VERSION_FILE_NEXTLINE
-Source: "../src/gregorio-5_1_0.exe"; DestDir: "{app}\bin";
+Source: "../src/gregorio-5_1_1.exe"; DestDir: "{app}\bin";
 Source: "gregorio.ico"; DestDir: "{app}";
 Source: "install.lua"; DestDir: "{app}";
 Source: "uninstall.lua"; DestDir: "{app}";
@@ -141,7 +141,7 @@ begin
 
   StaticText := TNewStaticText.Create(Page);
   StaticText.Top := ScaleY(60);;
-  StaticText.Caption := 'The best way to install LuaTeX is to install the TeXLive distribution.';
+  StaticText.Caption := 'The best way to install LuaTeX is to install the TeX Live distribution.';
   StaticText.Parent := Page.Surface;
 
   StaticText := TNewStaticText.Create(Page);
@@ -151,7 +151,7 @@ begin
 
   StaticText := TNewStaticText.Create(Page);
   StaticText.Top := ScaleY(100);;
-  StaticText.Caption := 'Note that you have to reboot your computer after having installed TeXLive';
+  StaticText.Caption := 'Note that you have to reboot your computer after having installed TeX Live';
   StaticText.Parent := Page.Surface;
 
   StaticText := TNewStaticText.Create(Page);

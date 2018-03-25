@@ -53,7 +53,7 @@ and docbook-xsl in your Build-Depends control field.
       &dhsurname;
     </author>
     <copyright>
-      <year>2007</year>
+      <year>2007-2018</year> <!--Copyright Elie Roux-->
       <holder>&dhusername;</holder>
     </copyright>
     &dhdate;
