@@ -1,7 +1,7 @@
 #!/usr/bin/env texlua
 --[[
 Gregorio Windows automatic installation script.
-Copyright (C) 2010-2017 Gregorio Project authors
+Copyright (C) 2010-2018 Gregorio Project authors
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -129,7 +129,7 @@ function remove_texmf_install()
   end
   if install_was_present then
     --[[Since we removed some fonts, we need to rebuild the font databases.
-    Since this function is only used when extracting files from a TeXLive
+    Since this function is only used when extracting files from a TeX Live
     texmf tree, we don't need to go through the distribution check.
     ]]--
     os.spawn("luaotfload-tool -u")
