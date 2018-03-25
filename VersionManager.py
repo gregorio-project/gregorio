@@ -44,6 +44,7 @@ os.chdir(sys.path[0])
 VERSION_FILE = '.gregorio-version'
 CURRENTYEAR = str(date.today().year)
 GREGORIO_FILES = ["configure.ac",
+                  "ctan-o-mat.config",
                   "windows/gregorio-resources.rc",
                   "macosx/Gregorio.pkgproj",
                   "macosx/douninstall.sh",
@@ -67,6 +68,8 @@ GREGORIO_FILES = ["configure.ac",
                   "fonts/squarize.py",
                  ]
 COPYRIGHT_FILES = ["install-gtex.sh",
+                   "build-ctan.sh",
+                   "ctan_upload.sh",
                    "tex/gregoriotex-signs.tex",
                    "tex/gregorio-vowels.dat",
                    "tex/gsp-default.tex",
