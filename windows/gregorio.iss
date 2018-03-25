@@ -82,11 +82,11 @@ Source: "../fonts/gregall.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/grelaon.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/gresgmodern.sfd"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../fonts/*.py"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
-Source: "../fonts/README.md"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
+Source: "../fonts/fonts_README.md"; DestDir: "{app}\texmf\fonts\source\gregoriotex";
 Source: "../doc/*.tex"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
 Source: "../doc/*.lua"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
 Source: "../doc/*.gabc"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
-Source: "../doc/README.md"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
+Source: "../doc/doc_README.md"; DestDir: "{app}\texmf\doc\luatex\gregoriotex";
 
 [InstallDelete]
 Type: files; Name: "{app}\gregorio.exe"
