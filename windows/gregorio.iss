@@ -141,7 +141,7 @@ begin
 
   StaticText := TNewStaticText.Create(Page);
   StaticText.Top := ScaleY(60);;
-  StaticText.Caption := 'The best way to install LuaTeX is to install the TeXLive distribution.';
+  StaticText.Caption := 'The best way to install LuaTeX is to install the TeX Live distribution.';
   StaticText.Parent := Page.Surface;
 
   StaticText := TNewStaticText.Create(Page);
@@ -151,7 +151,7 @@ begin
 
   StaticText := TNewStaticText.Create(Page);
   StaticText.Top := ScaleY(100);;
-  StaticText.Caption := 'Note that you have to reboot your computer after having installed TeXLive';
+  StaticText.Caption := 'Note that you have to reboot your computer after having installed TeX Live';
   StaticText.Parent := Page.Surface;
 
   StaticText := TNewStaticText.Create(Page);

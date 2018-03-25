@@ -23,6 +23,8 @@ EXTRA_DIST = README.md CHANGELOG.md CONTRIBUTING.md CONTRIBUTORS.md \
 			 UPGRADE.md COPYING.md .gregorio-version VersionManager.py \
 			 build.sh install.sh install-gtex.sh
 
+MAINTAINERCLEANFILES = gregoriotex.ctan.zip
+
 export TOP_LEVEL_MAKE = true
 
 gregorio:
