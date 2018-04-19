@@ -39,5 +39,9 @@ else
     exit 1
 fi
 
+#double check the execution bits
+chmod +x "$ENGINEDIR/LuaLaTeX+se.engine"
+chmod +x "$ENGINEDIR/LuaTeX+se.engine"
+
 echo "Configuration complete"
 exit 0
