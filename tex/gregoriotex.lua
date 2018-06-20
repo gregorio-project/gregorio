@@ -342,6 +342,14 @@ local function write_greaux()
   end
 end
 
+local function clean_filename(filename)
+  local cleaned_name = filename:gsub("[%s%+%&%*%?$@:;!\"\'`]", "-")
+  if cleaned_name ~= filename then
+    warn(filename.." was renamed to "..cleaned_name)
+  end
+  return cleaned_name
+end
+
 local function init(arg, enable_height_computation)
   -- is there a better way to get the output directory?
   local outputdir = nil
@@ -367,6 +375,10 @@ local function init(arg, enable_height_computation)
     snippet_filename = tex.jobname..'.gsnippet'
     snippet_logname = tex.jobname..'.gsniplog'
   end
+  tmpname = clean_filename(tmpname)
+  test_snippet_filename = clean_filename(test_snippet_filename)
+  snippet_filename = clean_filename(snippet_filename)
+  snippet_logname = clean_filename(snippet_logname)
 
   -- to get latexmk to realize the aux file is a dependency
   texio.write_nl('('..auxname..')')
@@ -871,7 +883,7 @@ local function include_score(input_file, force_gabccompile, allow_deprecated)
     file_dir,input_name = string.match(input_file, "(.-)([^\\/]*)$")
   end
 
-  local cleaned_filename = input_name:gsub("[%s%+%&%*%?$@:;!\"\'`]", "-")
+  local cleaned_filename = clean_filename(input_name)
   local gabc_file = string.format("%s%s.gabc", file_dir, input_name)
   local gtex_file = string.format("%s%s-%s.gtex", file_dir, cleaned_filename,
       internalversion:gsub("%.", "_"))
@@ -1519,6 +1531,7 @@ gregoriotex.save_dim                     = save_dim
 gregoriotex.save_count                   = save_count
 gregoriotex.change_next_score_line_dim   = change_next_score_line_dim
 gregoriotex.change_next_score_line_count = change_next_score_line_count
+gregoriotex.clean_filename               = clean_filename
 
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))
