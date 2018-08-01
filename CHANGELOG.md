@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][develop]
+### Fixed
+- `latin` is now supported as a valid language name.  This brings Latin into line with other languages where both titlecased and lowercased version of the language name (e.g. `English` and `english`) are both allowed.
+
+### Added
+- Add support for two and three letter language codes for supported languages. I used [this list](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) for list of codes (and language names).  No new languages are supported as a result of this change, just different ways of specifying the existing names.
 
 
 ## [Unreleased][CTAN]
