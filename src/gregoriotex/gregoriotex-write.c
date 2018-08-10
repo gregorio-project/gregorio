@@ -136,6 +136,7 @@ SHAPE(QuilismaPes);
 SHAPE(QuilismaPesQuadratum);
 SHAPE(QuilismaPesQuadratumLongqueue);
 SHAPE(QuilismaPesQuadratumOpenqueue);
+SHAPE(StansPunctumInclinatum);
 SHAPE(Salicus);
 SHAPE(SalicusFlexus);
 SHAPE(SalicusLongqueue);
@@ -599,6 +600,9 @@ static const char *determine_note_glyph_name(const gregorio_note *const note,
     case S_PUNCTUM_INCLINATUM_ASCENDENS:
         *type = AT_PUNCTUM_INCLINATUM;
         return SHAPE_AscendensPunctumInclinatum;
+    case S_PUNCTUM_INCLINATUM_STANS:
+        *type = AT_PUNCTUM_INCLINATUM;
+        return SHAPE_StansPunctumInclinatum;
     case S_PUNCTUM_INCLINATUM_DESCENDENS:
         *type = AT_PUNCTUM_INCLINATUM;
         return SHAPE_DescendensPunctumInclinatum;
@@ -1967,6 +1971,7 @@ static void write_punctum_mora(FILE *f, const gregorio_glyph *glyph,
     }
     switch (current_note->u.note.shape) {
     case S_PUNCTUM_INCLINATUM_ASCENDENS:
+    case S_PUNCTUM_INCLINATUM_STANS:
     case S_PUNCTUM_INCLINATUM_DESCENDENS:
     case S_PUNCTUM_INCLINATUM_DEMINUTUS:
         punctum_inclinatum = 1;
@@ -2057,7 +2062,7 @@ static __inline int get_punctum_inclinatum_space_case(
     switch (note->u.note.shape) {
     case S_PUNCTUM_INCLINATUM_ASCENDENS:
         if (note->previous) {
-            /* means that it is the first note of the puncta inclinata
+            /* means that it is not the first note of the puncta inclinata
              * sequence */
             temp = note->previous->u.note.pitch - note->u.note.pitch;
             /* negative values = ascending ambitus */
@@ -2079,9 +2084,16 @@ static __inline int get_punctum_inclinatum_space_case(
             }
         }
         break;
+    case S_PUNCTUM_INCLINATUM_STANS:
+        if (note->previous) {
+            /* means that it is not the first note of the puncta inclinata
+             * sequence */
+            return 26;
+        }
+        break;
     case S_PUNCTUM_INCLINATUM_DESCENDENS:
         if (note->previous) {
-            /* means that it is the first note of the puncta inclinata
+            /* means that it is not the first note of the puncta inclinata
              * sequence */
             temp = note->previous->u.note.pitch - note->u.note.pitch;
             /* negative values = ascending ambitus */
@@ -2105,7 +2117,7 @@ static __inline int get_punctum_inclinatum_space_case(
         break;
     case S_PUNCTUM_INCLINATUM_DEMINUTUS:
         if (note->previous) {
-            /* means that it is the first note of the puncta inclinata
+            /* means that it is not the first note of the puncta inclinata
              * sequence */
             temp = note->previous->u.note.pitch - note->u.note.pitch;
             if (temp < -2) {

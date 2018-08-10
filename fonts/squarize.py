@@ -286,6 +286,7 @@ DIRECT_GLYPHS = {
     'Punctum' : True,
     'AscendensPunctumInclinatum' : True,
     'DescendensPunctumInclinatum' : True,
+    'StansPunctumInclinatum' : True,
     'Stropha' : True,
     'StrophaAucta' : True,
     'StrophaAuctaLongtail' : True,
