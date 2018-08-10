@@ -127,6 +127,9 @@ static gregorio_shape punctum_inclinatum(const char orientation)
     case '0':
         return S_PUNCTUM_INCLINATUM_DESCENDENS;
 
+    case '2':
+        return S_PUNCTUM_INCLINATUM_STANS;
+
     case '1':
         return S_PUNCTUM_INCLINATUM_ASCENDENS;
     }
@@ -1357,15 +1360,15 @@ y   {
 @[a-np] {
         lex_add_note(1, S_PUNCTUM, _NO_SIGN, L_FUSED);
     }
-[A-NP][01]? {
+[A-NP][012]? {
         lex_add_note(0, punctum_inclinatum(gabc_notes_determination_text[1]),
                 _NO_SIGN, L_NO_LIQUESCENTIA);
     }
--[A-NP][01]? {
+-[A-NP][012]? {
         lex_add_note(1, punctum_inclinatum(gabc_notes_determination_text[2]),
                 _NO_SIGN, L_INITIO_DEBILIS);
     }
-@[A-NP][01]? {
+@[A-NP][012]? {
         lex_add_note(1, punctum_inclinatum(gabc_notes_determination_text[2]),
                 _NO_SIGN, L_FUSED);
     }

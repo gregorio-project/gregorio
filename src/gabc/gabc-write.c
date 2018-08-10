@@ -542,6 +542,9 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     case S_PUNCTUM_INCLINATUM_DESCENDENS:
         fprintf(f, "%c0", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
         break;
+    case S_PUNCTUM_INCLINATUM_STANS:
+        fprintf(f, "%c2", toupper((unsigned char)pitch_letter(note->u.note.pitch)));
+        break;
     case S_PUNCTUM_INCLINATUM_DEMINUTUS:
         if (note->next) {
             fprintf(f, "%c~", toupper((unsigned char)pitch_letter(note->u.note.pitch)));

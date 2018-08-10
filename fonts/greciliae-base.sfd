@@ -20,7 +20,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1518881819
+ModificationTime: 1531856498
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -43,10 +43,14 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 0
-WinInfo: 182 13 6
+WinInfo: 195 13 6
 BeginPrivate: 0
 EndPrivate
 Grid
+-1000 67.5576 m 0
+ 2000 67.5576 l 0
+93.3101 1300 m 0
+ 93.3101 -700 l 0
 -1000 159 m 0
  2000 159 l 0
 -1000 194 m 0
@@ -67,7 +71,7 @@ Grid
  17.75 -700 l 0
 EndSplineSet
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 259 259
+BeginChars: 261 261
 
 StartChar: Accentus
 Encoding: 0 -1 0
@@ -6160,6 +6164,42 @@ SplineSet
  51.1826 1037.52 87.1504 1075.65 87.1504 1119.85 c 4
  87.1504 1181.21 49.4326 1190.82 16.9502 1196.55 c 4
  1.34961 1198.28 -6.4502 1207.82 -6.4502 1225.15 c 4
+EndSplineSet
+EndChar
+
+StartChar: StansPunctumInclinatum
+Encoding: 259 -1 259
+Width: 185
+VWidth: 2612
+Flags: HW
+HStem: -59.373 255.694
+VStem: -0.0930023 185.306
+LayerCount: 2
+Fore
+SplineSet
+185.568 68 m 1
+ 93 -59.918 l 1
+ -0.31543 68 l 1
+ 93 196.93 l 1
+ 185.568 68 l 1
+EndSplineSet
+EndChar
+
+StartChar: StansPunctumInclinatum#Cavum
+Encoding: 260 -1 260
+Width: 185
+VWidth: 2612
+Flags: HW
+HStem: -21.0186 178.986
+VStem: 27.7031 129.714
+LayerCount: 2
+Fore
+SplineSet
+157.664 68 m 5
+ 93 -21.3965 l 1
+ 27.5449 68 l 5
+ 93 158.397 l 1
+ 157.664 68 l 5
 EndSplineSet
 EndChar
 EndChars
