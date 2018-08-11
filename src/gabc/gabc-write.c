@@ -386,6 +386,12 @@ static void gabc_write_bar(FILE *f, gregorio_bar type)
     case B_DIVISIO_MAIOR_DOTTED:
         fprintf(f, ":?");
         break;
+    case B_DIVISIO_MINIMIS:
+        fprintf(f, "^");
+        break;
+    case B_DIVISIO_MINIMIS_HIGH:
+        fprintf(f, "^0");
+        break;
     default:
         /* not reachable unless there's a programming error */
         /* LCOV_EXCL_START */
