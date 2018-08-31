@@ -1211,6 +1211,12 @@ Z-  {
 `0  {
         add_bar_as_note(B_VIRGULA_HIGH);
     }
+\^  {
+        add_bar_as_note(B_DIVISIO_MINIMIS);
+    }
+\^0 {
+        add_bar_as_note(B_DIVISIO_MINIMIS_HIGH);
+    }
 ,   {
         add_bar_as_note(B_DIVISIO_MINIMA);
     }

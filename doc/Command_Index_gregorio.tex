@@ -291,6 +291,28 @@ Macro to typeset a divisio minima on the ledger line above the staff.
   & \texttt{1} & The notes around the bar are far, \verb=@short= versions of spaces will be used.\\
 \end{argtable}
 
+\macroname{\textbackslash GreDivisioMinimis}{\#1\#2\#3}{gregoriotex-signs.tex}
+Macro to typeset a divisio ``minimis'' (eighth bar).
+
+\begin{argtable}
+  \#1 & \texttt{0} & There is no text under the bar.\\
+  & \texttt{1} & There is text under the bar.\\
+  \#2 & \TeX\ code & Macros which may happen before the skip but after the divisio ``minimis'' (typically \verb=\grevepisema=).\\
+  \#3 & \texttt{0} & The notes around the bar are vertically close to the bar.\\
+  & \texttt{1} & The notes around the bar are far, \verb=@short= versions of spaces will be used.\\
+\end{argtable}
+
+\macroname{\textbackslash GreDivisioMinimaHigh}{\#1\#2\#3}{gregoriotex-signs.tex}
+Macro to typeset a divisio ``minimis'' (eighth bar) on the ledger line above the staff.
+
+\begin{argtable}
+  \#1 & \texttt{0} & There is no text under the bar.\\
+  & \texttt{1} & There is text under the bar.\\
+  \#2 & \TeX\ code & Macros which may happen before the skip but after the divisio ``minimis'' (typically \verb=\grevepisema=).\\
+  \#3 & \texttt{0} & The notes around the bar are vertically close to the bar.\\
+  & \texttt{1} & The notes around the bar are far, \verb=@short= versions of spaces will be used.\\
+\end{argtable}
+
 \macroname{\textbackslash GreDivisioMinor}{\#1\#2}{gregoriotex-signs.tex}
 Macro to typeset a divisio minor.
 

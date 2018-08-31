@@ -1840,6 +1840,34 @@
   \gre@trace@end%
 }%
 
+\def\GreInDivisioMinimis#1#2#3{%
+  \gre@trace{GreInDivisioMinimis{#1}{#2}{#3}}%
+  \gre@writebar{17}{1}{#1}{#2}{#3}%
+  \relax%
+  \gre@trace@end%
+}%
+
+\def\GreDivisioMinimis#1#2#3{%
+  \gre@trace{GreDivisioMinimis{#1}{#2}{#3}}%
+  \gre@writebar{17}{0}{#1}{#2}{#3}%
+  \relax%
+  \gre@trace@end%
+}%
+
+\def\GreInDivisioMinimisHigh#1#2#3{%
+  \gre@trace{GreInDivisioMinimisHigh{#1}{#2}{#3}}%
+  \gre@writebar{18}{1}{#1}{#2}{#3}%
+  \relax%
+  \gre@trace@end%
+}%
+
+\def\GreDivisioMinimisHigh#1#2#3{%
+  \gre@trace{GreDivisioMinimisHigh{#1}{#2}{#3}}%
+  \gre@writebar{18}{0}{#1}{#2}{#3}%
+  \relax%
+  \gre@trace@end%
+}%
+
 \def\GreInDivisioMinima#1#2#3{%
   \gre@trace{GreInDivisioMinima{#1}{#2}{#3}}%
   \gre@writebar{1}{1}{#1}{#2}{#3}%
@@ -2072,7 +2100,7 @@
 \newskip\gre@skip@bar@lastskip% skip after last bar
 
 %a macro to write a bar
-%% 1: the type of the bar : 0 for virgula, 1 for minima 2 for minor, 3 for major, 4 for finalis and 5 for the last finalis, 6 to 13 for dominican bars, 14 for high virgula, 15 for high minima
+%% 1: the type of the bar : 0 for virgula, 1 for minima 2 for minor, 3 for major, 4 for finalis and 5 for the last finalis, 6 to 13 for dominican bars, 14 for high virgula, 15 for high minima, 16 for dotted maior, 17 for minimis, 18 for high minimis
 %% 2: is 0 if it is in a syllable containing only this bar, 1 otherwise
 %% 3: is 0 if there's no text under the bar or 1 if there is text under the bar
 %% 4: macros that may happen before the skip after the bar (typically GreVEpisema)
@@ -2368,6 +2396,36 @@
     \ifnum\gre@count@temp@one=1\relax %
       \GreNoBreak %
       \gre@skip@temp@four = \csname gre@space@skip@bar@maior\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
+      \gre@hskip\gre@skip@temp@four %
+    \fi %
+  \or % 17 : minimis
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@minimis\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
+      \gre@hskip\gre@skip@temp@four %
+      \GreNoBreak %
+    \fi %
+    \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@divisiominimis}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\gre@char@bar@divisiominimis}%
+    #4\relax %
+    \ifnum\gre@count@temp@one=1\relax %
+      \GreNoBreak %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@minimis\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
+      \gre@hskip\gre@skip@temp@four %
+    \fi %
+  \or % 18 : high minimis
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@minimis\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
+      \gre@hskip\gre@skip@temp@four %
+      \GreNoBreak %
+    \fi %
+    \GreGlyphHeights{\gre@pitch@ledger@above}{\gre@pitch@ledger@above}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@divisiominimishigh}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\gre@char@bar@divisiominimishigh}%
+    \GreAdditionalLine{\GreOCaseBarStandard}{0}{2}%
+    #4\relax %
+    \ifnum\gre@count@temp@one=1\relax %
+      \GreNoBreak %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@minimis\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \fi %

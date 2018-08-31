@@ -124,6 +124,10 @@ local EXCLUDE = {
   ['VirgulaThree'] = true,
   ['VirgulaFive'] = true,
   ['VirgulaSix'] = true,
+  ['DivisioMinimisTwo'] = true,
+  ['DivisioMinimisThree'] = true,
+  ['DivisioMinimisFive'] = true,
+  ['DivisioMinimisSix'] = true,
   ['DivisioMinimaTwo'] = true,
   ['DivisioMinimaThree'] = true,
   ['DivisioMinimaFive'] = true,
@@ -155,7 +159,7 @@ local GABC = {
   AscendensOriscusScapus = [[g&&&O1]],
   AscendensOriscusScapusLongqueue = [[h&&&O1]],
   AscendensOriscusScapusOpenqueue = [[a&&&O1]],
-  AscendensPunctumInclinatum = [[G&&&1]],
+  AscendensPunctumInclinatum = [[G1&&&]],
   AuctumMora = [[\excluded{g}.]],
   BarBrace = [[\excluded{,}\_]],
   BracketLeft = [=[[[\excluded{ce]]}]=],
@@ -180,13 +184,14 @@ local GABC = {
   DescendensOriscusScapus = [[g&&&O0]],
   DescendensOriscusScapusLongqueue = [[h&&&O0]],
   DescendensOriscusScapusOpenqueue = [[a&&&O0]],
-  DescendensPunctumInclinatum = [[G&&&0]],
+  DescendensPunctumInclinatum = [[G0&&&]],
   DivisioDominican = [[,3]],
   DivisioDominicanAlt = [[,4]],
   DivisioMaiorFour = [[:]],
   DivisioMaiorDottedFour = [[:?]],
   DivisioMaiorDottedBackingFour = [[\excluded{:?}]],
   DivisioMinimaFour = [[,]],
+  DivisioMinimisFour = [[\textasciicircum{}]],
   DivisioMinorFour = [[;]],
   FClefChange = [[f3]],
   FClef = [[f3]],
@@ -250,6 +255,7 @@ local GABC = {
   SemicirculusReversus = [[\excluded{g}r5]],
   Sharp = [[g\#{}]],
   SharpHole = [[\excluded{g\#{}}]],
+  StansPunctumInclinatum = [[G2&&&]],
   StrophaAucta = [[g&&&s>]],
   StrophaAuctaLongtail = [[h&&&s>]],
   Stropha = [[g&&&s]],
@@ -454,8 +460,10 @@ function GregorioRef.emit_score_glyphs(cs_normal, cs_hollow)
         tex.sprint([[\nopagebreak&&&]])
       else
         tex.sprint(string.format(
-            [[{\scriptsize %s{\bfseries %s}{\itshape %s}%s%s}&{\ttfamily\small %s}&{\%s\char%d}&]],
-            fusion, shape, ambitus, debilis, liquescence, gabc and gabc:gsub('&&&', '') or '', cs_normal, char
+            [[{%s\scriptsize %s{\bfseries %s}{\itshape %s}%s%s}&{\ttfamily\small %s}&{\%s\char%d}&]],
+            gabc and [[]] or [[\color{red}]],
+            fusion, shape, ambitus, debilis, liquescence,
+            gabc and gabc:gsub('&&&', '') or '', cs_normal, char
         ))
       end
       variant = sorted_normal[i]
