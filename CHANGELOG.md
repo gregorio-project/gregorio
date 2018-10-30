@@ -10,6 +10,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Added support for two and three letter language codes for supported languages. [This list of codes](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) (and language names) was used for this support.  No new languages are supported as a result of this change, just different ways of specifying the existing names.
 - A non-rotated diamond-shaped variant of the punctum inclinatum.  Append a `2` in gabc to the capitalized note pitch letter to force gregorio to use this shape.  Otherwise, gregorio will try to use it when a string of these notes is at the unison within a syllable.  See [#1425](https://github.com/gregorio-project/gregorio/issues/1425).
 - Support for an eighth bar (nicknamed divisio "minimis") by using `^` in gabc (see [#1424](https://github.com/gregorio-project/gregorio/issues/1424)).
+- 8 new St. Gall neume glyphs have been added to the `gregall` font.
 
 
 ## [Unreleased][CTAN]
