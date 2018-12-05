@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][CTAN]
+### Added
+- GregorioTeX will now look for scores using kpse if it does not find them directly.  See [#1395](https://github.com/gregorio-project/gregorio/issues/1395).
 
 
 ## [5.1.1] - 2018-03-25

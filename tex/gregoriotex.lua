@@ -854,6 +854,22 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
   end
 end
 
+local function locate_file(filename)
+  local result
+  if lfs.isfile(filename) then
+    result = filename
+    log("Found %s directly", filename)
+  else
+    result = kpse.find_file(filename)
+    if result then
+      log("Found %s using kpsewhich", filename)
+    else
+      log("Cannot find %s", filename)
+    end
+  end
+  return result
+end
+
 local function include_score(input_file, force_gabccompile, allow_deprecated)
   if string.match(input_file, "[#%%]") then
     err("GABC filename contains invalid character(s): # %%\n"
@@ -872,15 +888,17 @@ local function include_score(input_file, force_gabccompile, allow_deprecated)
   end
 
   local cleaned_filename = input_name:gsub("[%s%+%&%*%?$@:;!\"\'`]", "-")
-  local gabc_file = string.format("%s%s.gabc", file_dir, input_name)
-  local gtex_file = string.format("%s%s-%s.gtex", file_dir, cleaned_filename,
+  local gabc_filename = string.format("%s%s.gabc", file_dir, input_name)
+  local gabc_file = locate_file(gabc_filename)
+  local gtex_filename = string.format("%s%s-%s.gtex", file_dir, cleaned_filename,
       internalversion:gsub("%.", "_"))
+  local gtex_file = locate_file(gtex_filename)
   local glog_file = string.format("%s%s-%s.glog", file_dir, cleaned_filename,
       internalversion:gsub("%.", "_"))
-  if not lfs.isfile(gtex_file) then
+  if not gtex_file then
     clean_old_gtex_files(file_dir..cleaned_filename)
-    log("The file %s does not exist. Searching for a gabc file", gtex_file)
-    if lfs.isfile(gabc_file) then
+    log("The file %s does not exist. Will use gabc file", gtex_filename)
+    if gabc_file then
       local gabc = io.open(gabc_file, 'r')
       if gabc == nil then
         err("\n Unable to open %s", gabc_file)
@@ -888,11 +906,11 @@ local function include_score(input_file, force_gabccompile, allow_deprecated)
       else
         gabc:close()
       end
-      compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
-      tex.print(string.format([[\input %s\relax]], gtex_file))
+      compile_gabc(gabc_file, gtex_filename, glog_file, allow_deprecated)
+      tex.print(string.format([[\input %s\relax]], gtex_filename))
       return
     else
-      err("The file %s does not exist.", gabc_file)
+      err("The file %s does not exist", gabc_filename)
       return
     end
   end
