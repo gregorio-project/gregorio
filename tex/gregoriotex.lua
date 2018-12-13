@@ -889,6 +889,13 @@ local function include_score(input_file, force_gabccompile, allow_deprecated)
   local cleaned_filename = input_name:gsub("[%s%+%&%*%?$@:;!\"\'`]", "-")
   local gabc_filename = string.format("%s%s.gabc", file_dir, input_name)
   local gabc_file = locate_file(gabc_filename)
+  -- If kpse was used to find the file, then our gtex and glog files will not
+  -- in the same directory as the gabc file (since we're not allowed to write to
+  -- that directory).  Instead we'll locate them in the main project directory.
+  if gabc_filename and gabc_file ~= gabc_filename then
+    warn("kpse initiated reset of %s", file_dir)
+    file_dir = ""
+  end
   local gtex_filename = string.format("%s%s-%s.gtex", file_dir, cleaned_filename,
       internalversion:gsub("%.", "_"))
   local gtex_file = locate_file(gtex_filename)
