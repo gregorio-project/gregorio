@@ -769,11 +769,10 @@ local function clean_old_gtex_files(file_withdir)
     string.find(os.getenv("PATH"),";",1,true)
   if onwindows then
     sep = "\\"
-    dirpath = string.match(file_withdir, "(.*)"..sep)
   else
     sep = "/"
-    dirpath = string.match(file_withdir, "(.*)"..sep)
   end
+  dirpath = string.match(file_withdir, "(.*)"..sep)
   if dirpath then -- dirpath is nil if current directory
     filename = "^"..file_withdir:match(".*/".."(.*)").."%-%d+_%d+_%d+[-%a%d]*%.gtex$"
     for a in lfs.dir(dirpath) do
