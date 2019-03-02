@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][develop]
+
+
+## [Unreleased][CTAN]
+
+
+## [5.2.0-beta1] - 2019-03-02
 ### Fixed
 - `latin` is now supported as a valid language name.  This brings Latin into line with other languages where both titlecased and lowercased version of the language name (e.g. `English` and `english`) are both allowed.
 
@@ -13,7 +19,6 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - 8 new St. Gall neume glyphs have been added to the `gregall` font.
 
 
-## [Unreleased][CTAN]
 
 
 ## [5.1.1] - 2018-03-25
