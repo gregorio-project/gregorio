@@ -18,14 +18,6 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Support for an eighth bar (nicknamed divisio "minimis") by using `^` in gabc (see [#1424](https://github.com/gregorio-project/gregorio/issues/1424)).
 - 8 new St. Gall neume glyphs have been added to the `gregall` font.
 
-
-
-
-## [5.1.1] - 2018-03-25
-### Fixed
-- Various issues with the documentation.
-
-
 ## [5.1.1] - 2018-03-25
 ### Fixed
 - Various issues with the documentation.
