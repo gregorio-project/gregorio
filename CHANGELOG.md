@@ -8,7 +8,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## [Unreleased][CTAN]
 
 
-## [5.2.0-beta1] - 2019-03-02
+## [5.2.0] - 2019-03-10
 ### Fixed
 - `latin` is now supported as a valid language name.  This brings Latin into line with other languages where both titlecased and lowercased version of the language name (e.g. `English` and `english`) are both allowed.
 
