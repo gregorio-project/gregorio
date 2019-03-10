@@ -1,5 +1,5 @@
 # Vowel rule file for Gregorio
-# Copyright (C) 2015-2018 The Gregorio Project (see CONTRIBUTORS.md)
+# Copyright (C) 2015-2019 The Gregorio Project (see CONTRIBUTORS.md)
 #
 # This file is part of Gregorio.
 #
@@ -27,13 +27,15 @@
 # brackets, the "to" keyword, the name of the target language in square
 # brackets, and a semicolon.  For best performance, aliases should precede the
 # language they are aliasing.
-alias [english] to [English];
+alias [english] to [en];
+alias [English] to [en];
+alias [eng] to [en];
 
 # The "language" keyword indicates that the rules which follow are for the
 # specified language.  It must be followed by the language name enclosed in
 # square brackets and a semicolon.  The language specified applies until the
 # next language statement.
-language [English];
+language [en];
 
 # The "vowel" keyword indicates that the characters which follow, until the
 # next semicolon, should be considered vowels.  There may be multiple "vowel"
@@ -75,14 +77,38 @@ suffix we We wE WE;
 # and "r" in Czech.
 secondary w W;
 
-alias [polish] to [Polish];
-alias [Polish] to [Slavic];
-alias [czech] to [Czech];
-alias [Czech] to [Slavic];
-alias [slovak] to [Slovak];
-alias [Slovak] to [Slavic];
+alias [polish] to [pl];
+alias [Polish] to [pl];
+alias [pol] to [pl];
+alias [pl] to [cu];
 
-language [Slavic];
+alias [czech] to [cs];
+alias [Czech] to [cs];
+alias [ces] to [cs];
+alias [cze] to [cs];
+alias [cs] to [cu];
+
+alias [slovak] to [sk];
+alias [Slovak] to [sk];
+alias [slk] to [sk];
+alias [slo] to [sk];
+alias [sk] to [cu];
+
+alias [Slavic] to [cu];
+alias [slavic] to [cu];
+alias [Church Slavic] to [cu];
+alias [church slavic] to [cu];
+alias [Church Slavonic] to [cu];
+alias [church slavonic] to [cu];
+alias [Old Church Slavonic] to [cu];
+alias [old church slavonic] to [cu];
+alias [Old Slavonic] to [cu];
+alias [old slavonic] to [cu];
+alias [Old Bulgarian] to [cu];
+alias [old bulgarian] to [cu];
+alias [chu] to [cu];
+
+language [cu];
 
 vowel aàáâąAÀÁÂĄ;
 vowel eèéêëěęEÈÉÊËĚĘ;
@@ -97,9 +123,11 @@ secondary l L ĺ Ĺ;
 secondary r R ŕ Ŕ;
 secondary m M;
 
-alias [hungarian] to [Hungarian];
+alias [hungarian] to [hu];
+alias [Hungarian] to [hu];
+alias [hun] to [hu];
 
-language [Hungarian];
+language [hu];
 
 vowel aáAÁ;
 vowel éeëÉEË;

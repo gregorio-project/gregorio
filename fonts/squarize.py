@@ -6,7 +6,7 @@
 """
     Python fontforge script to build a square notation font.
 
-    Copyright (C) 2013-2018 The Gregorio Project (see CONTRIBUTORS.md)
+    Copyright (C) 2013-2019 The Gregorio Project (see CONTRIBUTORS.md)
 
     This file is part of Gregorio.
 
@@ -90,7 +90,7 @@ AMBITUS = {
     14 : 'Fourteen',
 }
 
-GREGORIO_VERSION = '5.1.1'
+GREGORIO_VERSION = '5.2.0'
 
 # The unicode character at which we start our numbering:
 # U+E000 is the start of the BMP Private Use Area
@@ -260,6 +260,11 @@ DIRECT_GLYPHS = {
     'VirgulaFour' : False,
     'VirgulaFive' : False,
     'VirgulaSix' : False,
+    'DivisioMinimisTwo' : False,
+    'DivisioMinimisThree' : False,
+    'DivisioMinimisFour' : False,
+    'DivisioMinimisFive' : False,
+    'DivisioMinimisSix' : False,
     'DivisioMinimaTwo' : False,
     'DivisioMinimaThree' : False,
     'DivisioMinimaFour' : False,
@@ -286,6 +291,7 @@ DIRECT_GLYPHS = {
     'Punctum' : True,
     'AscendensPunctumInclinatum' : True,
     'DescendensPunctumInclinatum' : True,
+    'StansPunctumInclinatum' : True,
     'Stropha' : True,
     'StrophaAucta' : True,
     'StrophaAuctaLongtail' : True,

@@ -3,7 +3,7 @@ FontName: granapadano
 FullName: granapadano
 FamilyName: granapadano
 Weight: Medium
-Copyright: LilyPond's pretty-but-neat music font, adapted to the Gregorio Project.\nCopyright (C) 2002-2006 Juergen Reuter <reuter@ipd.uka.de>\nCopyright (C) 2007-2018 The Gregorio Project (see CONTRIBUTORS.md)\nThis file is part of Gregorio.\n\n<<GPLV3>>
+Copyright: LilyPond's pretty-but-neat music font, adapted to the Gregorio Project.\nCopyright (C) 2002-2006 Juergen Reuter <reuter@ipd.uka.de>\nCopyright (C) 2007-2019 The Gregorio Project (see CONTRIBUTORS.md)\nThis file is part of Gregorio.\n\n<<GPLV3>>
 UComments: "2007-4-12: Created." 
 Version: 1.0
 ItalicAngle: 0
@@ -19,7 +19,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1502068966
+ModificationTime: 1533939115
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -42,7 +42,7 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 0
-WinInfo: 144 16 4
+WinInfo: 126 18 5
 BeginPrivate: 0
 EndPrivate
 Grid
@@ -58,7 +58,7 @@ Grid
  22 -700 l 0
 EndSplineSet
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 207 207
+BeginChars: 214 214
 
 StartChar: Accentus
 Encoding: 0 -1 0
@@ -3298,7 +3298,7 @@ SplineSet
 17.0254 -21.7686 m 1
  7.86523 -21.7686 0.384766 -13.7842 0 -4.66504 c 1
  0 130.972 l 1
- 0 157.191 69.7402 163.997 80 163.997 c 4
+ 0 157.191 69.7402 163.997 80 163.997 c 0
  91.4004 163.997 161 157.157 161 130.938 c 2
  161 -4.66895 l 2
  161 -13.7881 152.685 -21.7686 143.564 -21.7686 c 0
@@ -4895,6 +4895,139 @@ SplineSet
  124.5 1161 17 1140.5 17 1203 c 1
  17 1228 49 1243 75 1243 c 1
  122.5 1244 152.337 1216.68 152.337 1183.33 c 1
+EndSplineSet
+EndChar
+
+StartChar: StansPunctumInclinatum
+Encoding: 207 -1 207
+Width: 178
+Flags: HW
+HStem: -476.247 17.1 -117.147 17.1 241.953 17.1 601.053 17.1
+LayerCount: 2
+Fore
+SplineSet
+2.66895 64.7109 m 2
+ 1.52832 66.9912 0.387695 70.4111 0.388672 72.6914 c 0
+ 0.388672 74.9717 1.52734 78.3916 2.66895 80.6719 c 2
+ 77.9082 193.53 l 2
+ 80.1885 198.092 84.749 200.371 89.3076 200.37 c 0
+ 93.8682 200.371 98.4287 198.092 101.849 193.53 c 2
+ 175.72 80.5508 l 1
+ 178 78.2705 178 74.8506 178 72.5703 c 0
+ 177.999 70.29 178.202 66.8701 175.921 64.5898 c 1
+ 101.848 -48.1484 l 2
+ 98.4277 -52.709 93.8682 -54.9883 89.3086 -54.9883 c 0
+ 84.748 -54.9883 80.1885 -52.71 77.9082 -48.1484 c 2
+ 2.66895 64.7109 l 2
+EndSplineSet
+EndChar
+
+StartChar: StansPunctumInclinatum#Cavum
+Encoding: 208 -1 208
+Width: 178
+Flags: HW
+HStem: -476.247 17.1 -117.147 17.1 241.953 17.1 601.053 17.1
+LayerCount: 2
+Fore
+SplineSet
+28.6279 67.1055 m 2
+ 27.8301 68.7021 27.0312 71.0957 27.0322 72.6924 c 0
+ 27.0322 74.2891 27.8291 76.6826 28.6279 78.2793 c 2
+ 81.2949 157.279 l 2
+ 82.8906 160.472 86.084 162.068 89.2754 162.067 c 0
+ 92.4668 162.068 95.6602 160.473 98.0537 157.279 c 2
+ 149.763 78.1943 l 1
+ 151.36 76.5977 151.359 74.2041 151.359 72.6074 c 0
+ 151.359 71.0107 151.501 68.6172 149.904 67.0215 c 1
+ 98.0537 -11.8955 l 2
+ 95.6592 -15.0879 92.4678 -16.6836 89.2754 -16.6836 c 0
+ 86.084 -16.6836 82.8916 -15.0879 81.2949 -11.8955 c 2
+ 28.6279 67.1055 l 2
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinimisTwo
+Encoding: 209 -1 209
+Width: 19
+VWidth: 1418
+Flags: HW
+HStem: -1039 15 -724 15 -409 15 -94 15
+LayerCount: 2
+Fore
+SplineSet
+0 -20.8721 m 13
+ 0.00292969 169.984 l 25
+ 18.999 170.021 l 25
+ 19 -27.5693 l 21
+ 6.04395 -27.4346 2.43457 -24.3906 0 -20.8721 c 13
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinimisThree
+Encoding: 210 -1 210
+Width: 19
+VWidth: 1733
+Flags: HW
+HStem: -724 15 -409 15 -94 15 221 15
+LayerCount: 2
+Fore
+SplineSet
+0 294.128 m 13
+ 0.00292969 484.984 l 25
+ 18.999 485.021 l 25
+ 19 287.431 l 21
+ 6.04395 287.565 2.43457 290.609 0 294.128 c 13
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinimisFour
+Encoding: 211 -1 211
+Width: 19
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 609.128 m 13
+ 0.00292969 799.984 l 25
+ 18.999 800.021 l 25
+ 19 602.431 l 21
+ 6.04395 602.565 2.43457 605.609 0 609.128 c 13
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinimisFive
+Encoding: 212 -1 212
+Width: 19
+VWidth: 2363
+Flags: HW
+HStem: -94 15 221 15 536 15 851 15
+LayerCount: 2
+Fore
+SplineSet
+0 924.128 m 13
+ 0.00292969 1114.98 l 25
+ 18.999 1115.02 l 25
+ 19 917.431 l 21
+ 6.04395 917.565 2.43457 920.609 0 924.128 c 13
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinimisSix
+Encoding: 213 -1 213
+Width: 19
+VWidth: 2678
+Flags: HW
+HStem: 221 15 536 15 851 15 1166 15
+LayerCount: 2
+Fore
+SplineSet
+0 1239.13 m 13
+ 0.00292969 1429.98 l 25
+ 18.999 1430.02 l 25
+ 19 1232.43 l 21
+ 6.04395 1232.56 2.43457 1235.61 0 1239.13 c 13
 EndSplineSet
 EndChar
 EndChars
