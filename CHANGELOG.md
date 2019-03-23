@@ -3,7 +3,8 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][CTAN]
-
+### Fixed
+- Eliminated implicit casting from float to integer in string formatting (something no longer allowed in Lua 5.3)
 
 ## [5.2.0] - 2019-03-10
 ### Fixed
