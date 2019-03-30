@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][CTAN]
+### Fixed
+- Project names with quotes in them no longer cause GregorioTeX to not be able to find the executable.  See [#1416](https://github.com/gregorio-project/gregorio/issues/1416).
 
 
 ## [5.2.0] - 2019-03-10
