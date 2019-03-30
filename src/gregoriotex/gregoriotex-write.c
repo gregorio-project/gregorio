@@ -2,7 +2,7 @@
  * Gregorio is a program that translates gabc files to GregorioTeX
  * This file contains functions for writing GregorioTeX from Gregorio structures.
  *
- * Copyright (C) 2008-2018 The Gregorio Project (see CONTRIBUTORS.md)
+ * Copyright (C) 2008-2019 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
  *
@@ -1687,6 +1687,12 @@ static void write_bar(FILE *f, const gregorio_score *const score,
     case B_DIVISIO_MAIOR_DOTTED:
         fprintf(f, "DivisioMaiorDotted");
         break;
+    case B_DIVISIO_MINIMIS:
+        fprintf(f, "DivisioMinimis");
+        break;
+    case B_DIVISIO_MINIMIS_HIGH:
+        fprintf(f, "DivisioMinimisHigh");
+        break;
     default:
         /* not reachable unless there's a programming error */
         /* LCOV_EXCL_START */
@@ -1712,9 +1718,17 @@ static void write_bar(FILE *f, const gregorio_score *const score,
         break;
     }
     switch (type) {
+    case B_DIVISIO_MINIMIS_HIGH:
+        ++ far_pitch_adjustment;
+        /* fall through */
+
     case B_VIRGULA_HIGH:
     case B_DIVISIO_MINIMA_HIGH:
-        far_pitch_adjustment = 2;
+        ++ far_pitch_adjustment;
+        /* fall through */
+
+    case B_DIVISIO_MINIMIS:
+        ++ far_pitch_adjustment;
         /* fall through */
 
     case B_VIRGULA:
@@ -2600,6 +2614,8 @@ static int gregoriotex_syllable_first_type(gregorio_syllable *syllable)
             case B_VIRGULA_HIGH:
                 result = 10;
                 break;
+            case B_DIVISIO_MINIMIS:
+            case B_DIVISIO_MINIMIS_HIGH:
             case B_DIVISIO_MINIMA:
             case B_DIVISIO_MINIMA_HIGH:
                 result = 11;

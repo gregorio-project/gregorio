@@ -1,7 +1,7 @@
 ## This makefile is made to build to fonts from the sfd, it won't be useful for
 ## the average user.
 
-# Copyright (C) 2006-2018 The Gregorio Project (see CONTRIBUTORS.md)
+# Copyright (C) 2006-2019 The Gregorio Project (see CONTRIBUTORS.md)
 #
 # This file is part of Gregorio.
 #
@@ -30,7 +30,7 @@ TTF_GRANAPADANO_OP = granapadano-op.ttf granapadano-op-hollow.ttf \
 TTF_EXTRA = greextra.ttf gregall.ttf gresgmodern.ttf grelaon.ttf
 TTF_ALL = $(TTF_GRECILIAE) $(TTF_GRECILIAE_OP) \
 	$(TTF_GREGORIO) $(TTF_GREGORIO_OP) \
-	$(TTF_GRANAPADANO) $(TTF_GRANAPADANO_OP)
+	$(TTF_GRANAPADANO) $(TTF_GRANAPADANO_OP) $(TTF_EXTRA)
 SOURCEFILES_GRECILIAE = greciliae-base.sfd
 SOURCEFILES_GREGORIO = gregorio-base.sfd
 SOURCEFILES_GRANAPADANO = granapadano-base.sfd
@@ -43,7 +43,7 @@ SOURCEFILES_ALL = $(SOURCEFILES_GREGORIO) $(SOURCEFILES_GRANAPADANO) \
 EXTRA_DIST = $(TTF_GRECILIAE) $(TTF_GRECILIAE_OP) $(TTF_EXTRA) \
 	$(SOURCEFILES_GRECILIAE) $(SOURCEFILES_EXTRA) $(SOURCEFILES_TOOLS)
 
-MAINTAINERCLEANFILES = supp_fonts-$(FILENAME_VERSION).zip *.pyc
+MAINTAINERCLEANFILES = supp_fonts-$(FILENAME_VERSION).zip *.pyc $(TTF_ALL)
 
 FONTFORGE = fontforge
 RM = rm
@@ -98,8 +98,6 @@ granapadano-op: $(TTF_GRANAPADANO_OP)
 granapadano-all: granapadano granapadano-op
 
 extra: $(TTF_EXTRA)
-
-MAINTAINERCLEANFILES = $(TTF_ALL)
 
 install-data-local:
 	@$(TOP_LEVEL_MAKE) echo 'The Makefile in the fonts directory is no longer used for installing'

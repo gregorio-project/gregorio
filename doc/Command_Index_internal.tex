@@ -1,7 +1,7 @@
 % !TEX root = GregorioRef.tex
 % !TEX program = LuaLaTeX+se
 %
-% Copyright (C) 2006-2018 The Gregorio Project (see CONTRIBUTORS.md)
+% Copyright (C) 2006-2019 The Gregorio Project (see CONTRIBUTORS.md)
 %
 % This file is part of Gregorio.
 %
@@ -666,6 +666,7 @@ Macro for aligning clivis syllables according to the flag \verb=\gre@clivisalign
 \macroname{\textbackslash gre@hepisorline}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-signs.tex}
 Macro to typeset a horizontal line (either an additional staff line or an episema).
 
+{\small
 \begin{argtable}
   \#1 & character & The letter of the height of the episema (not the height of the note it corresponds to).\\
   \#2 & \texttt{0} & go back to the beginning of the previous glyph; this starts the episema at the beginning of the previous glyph\\
@@ -690,6 +691,7 @@ Macro to typeset a horizontal line (either an additional staff line or an episem
   & \texttt{4} & for horizontal episema cases, position low within the space as if the episema is over the note\\
   & \texttt{5} & for horizontal episema cases, position high within the space as if the episema is under the note\\
 \end{argtable}
+}
 
 \macroname{\textbackslash gre@hepisorlineaux}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
 Macro that will help in the typesetting of a horizontal episema and additional lines.
@@ -841,6 +843,8 @@ Macro to write a bar.
   & \texttt{14} & virgula on ledger line above the staff\\
   & \texttt{15} & minima on ledger line above the staff\\
   & \texttt{16} & dotted major\\
+  & \texttt{17} & minimis (eighth bar)\\
+  & \texttt{18} & minimis (eighth bar) on ledger line above the staff\\
   \#2 & \texttt{0} & in a syllable containing only this bar\\
   & \texttt{1} & in a syllable containing other notes\\
   \#3 & \texttt{0} & if there is no text underneath the bar\\
@@ -1073,14 +1077,14 @@ Fixes the raw \verb=\gre@debug= value for use with \verb=\gre@debugmsg=.
 A macro which applies formatting that needs to apply to the whole syllable (rather than the parts individually) for the current syllable.  Necessary to preserve ligatures across parts within a syllable.
 
 \begin{argtable}
-  \#1 & string & The syllable (usually built as \verb=\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart=\\
+  \#1 & string & The syllable (usually built as \texttt{\small\pmac{gre@firstsyllablepart}\linebreak[1]\pmac{gre@middlesyllablepart}\linebreak[1]\pmac{gre@endsyllablepart}})\\
 \end{argtable}
 
 \macroname{\textbackslash gre@fixednexttextformat}{\#1}{gregoriotex-syllable.tex}
 A macro which applies formatting that needs to apply to the whole syllable (rather than the parts individually) for the next syllable.  Necessary to preserve ligatures across parts within a syllable.
 
 \begin{argtable}
-  \#1 & string & The syllable (usually built as \verb=\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart=\\
+  \#1 & string & The syllable (usually built as \texttt{\small\pmac{gre@nextfirstsyllablepart}\linebreak[1]\pmac{gre@nextmiddlesyllablepart}\linebreak[1]\pmac{gre@nextendsyllablepart}})\\
 \end{argtable}
 
 \macroname{\textbackslash gre@if@rewritesyllable}{\#1\#2}{gregoriotex-syllable.tex}
@@ -1251,7 +1255,7 @@ Workhorse function behind \verb=\gresetgregoriofont=.
 \end{argtable}
 
 \macroname{\textbackslash gre@syllable@end}{\#1\#2\#3}{gregoriotex-syllable.tex}
-Macro to make a few checks and call the right macros between \verb=\endbeforebar, \endofword, \endofsyllable=.
+Macro to make a few checks and call the right macros between \verb=\endbeforebar=, \verb=\endofword=, \verb=\endofsyllable=.
 
 \begin{argtable}
   \#1 & & next syllable type (\#7 of \verb=\GreSyllable=)\\
@@ -1326,11 +1330,11 @@ Macro used to select the corresct suffix of the \verb=bar@x= spaces.
 
 \begin{argtable}
   \#1 & \texttt{0} & emits nothing\\
-  & \texttt{1} emits \verb=@standalone=\\
+  & \texttt{1} & emits \verb=@standalone=\\
   \#2 & \texttt{0} & emits \verb=@notext= (only if standalone)\\
-  & \texttt{1} emits \verb=@text= (only if standalone)\\
+  & \texttt{1} & emits \verb=@text= (only if standalone)\\
   \#3 & \texttt{0} & emits nothing\\
-  & \texttt{1} emits \verb=@short=\\
+  & \texttt{1} & emits \verb=@short=\\
 \end{argtable}
 
 \macroname{\textbackslash gre@drawadditionalline}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
@@ -1609,6 +1613,14 @@ lines for the staff.
 \macroname{\textbackslash gre@char@bar@virgulahigh}{}{gregoriotex-main.tex}
 Alias that will hold the character for the high virgula for the current number
 of lines for the staff.
+
+\macroname{\textbackslash gre@char@bar@divisiominimis}{}{gregoriotex-main.tex}
+Alias that will hold the character for the divisio ``minimis'' (eighth bar) for
+the current number of lines for the staff.
+
+\macroname{\textbackslash gre@char@bar@divisiominimishigh}{}{gregoriotex-main.tex}
+Alias that will hold the character for the high divisio ``minimis'' (eighth bar)
+for the current number of lines for the staff.
 
 \macroname{\textbackslash gre@char@bar@divisiominima}{}{gregoriotex-main.tex}
 Alias that will hold the character for the divisio minima for the current
@@ -2086,7 +2098,7 @@ The value that a particular glyph must be raised to be set in the correct positi
 \macroname{\textbackslash gre@dimen@enddifference}{}{gregoriotex-spaces.tex}
 Distance from the end of the notes to the end of the text for the previous syllable.  Positive values when notes go further than text, negative in the other case.  This means that \verb=\kern\gre@dimen@enddifference= will take you from the end of the text to the end of the notes.
 
-For regular syllables and bar syllables using the old bar spacing algorithm this is calculated using \verb=\gre@calculate@enddifference=.  For bar syllables using the new bar spacing algorithm the calculation is \verb=-\wd\gre@box@syllabletext - \gre@dimen@begindifference + \wd\gre@box@syllablenotes=
+For regular syllables and bar syllables using the old bar spacing algorithm this is calculated using \verb=\gre@calculate@enddifference=.  For bar syllables using the new bar spacing algorithm the calculation is \texttt{\small-\pmac{wd}\pmac{gre@box@syllabletext} - \pmac{gre@dimen@begindifference} + \pmac{wd}\pmac{gre@box@syllablenotes}}
 
 \macroname{\textbackslash gre@dimen@previousenddifference}{}{gregoriotex-spaces.tex}
 Stored value of enddifference prior to the current one.
@@ -2103,7 +2115,7 @@ Only used in new bar spacing algorithm. It is \verb=grebegindifference= adjusted
 \macroname{\textbackslash gre@dimen@begindifference}{}{gregoriotex-spaces.tex}
 The difference between the start of the notes and the start of the text for the current syllable.  Positive when when text begins first, negative in other case.  This means that \verb=\kern\gre@dimen@begindifference= will take you from the start of the notes to the start of the text.
 
-For regular syllables and bar syllables using the old bar spacing algorithm this is calculated as \verb=\gre@dimen@notesaligncenter - \gre@dimen@textaligncenter=.  For bar syllables using the new bar spacing algorithm the calculation is \verb= -\wd\gre@box@syllablenotes/2 - \gre@dimen@bar@shift - \gre@skip@bar@allocation - \gre@dimen@adjustedpreviousenddifference + \gre@skip@text@allocation + \gre@dimen@text@shift -\wd\gre@box@syllabletext/2=.
+For regular syllables and bar syllables using the old bar spacing algorithm this is calculated as \texttt{\small\pmac{gre@dimen@notesaligncenter} - \pmac{gre@dimen@textaligncenter}}.  For bar syllables using the new bar spacing algorithm the calculation is \linebreak\texttt{\small-\pmac{wd}\pmac{gre@box@syllablenotes}/2 - \pmac{gre@dimen@bar@shift} - \pmac{gre@skip@bar@allocation} - \pmac{gre@dimen@adjustedpreviousenddifference} + \pmac{gre@skip@text@allocation} + \pmac{gre@dimen@text@shift} - \pmac{wd}\pmac{gre@box@syllabletext}/2}.
 
 \macroname{\textbackslash gre@dimen@lastglyphwidth}{}{gregoriotex-spaces.tex}
 The width of the last glyph.
@@ -2339,7 +2351,7 @@ rather than have multiple definitions.
   \texttt{8} & flexus with an ambitus of one\\
   \texttt{9} & flexus deminutus\\
   \texttt{10} & virgula\\
-  \texttt{11} & divisio minima\\
+  \texttt{11} & divisio minima/minimis\\
   \texttt{12} & divisio minor\\
   \texttt{13} & divisio maior\\
   \texttt{14} & dominican bar\\
