@@ -147,13 +147,13 @@ local function gregorio_exe()
 
     -- first look for one with the exact version
     real_gregorio_exe = 'gregorio-5_2_0' -- FILENAME_VERSION
-    local cmd = string.format([["%s" -o "%%s" "%s"]], real_gregorio_exe,
+    local cmd = string.format([[%s -o "%%s" "%s"]], real_gregorio_exe,
         test_snippet_filename)
     exe_version = get_prog_output(cmd, '*line')
     if not exe_version then
       -- look for suffix-less executable
       real_gregorio_exe = 'gregorio'
-      cmd = string.format([["%s" -o "%%s" "%s"]], real_gregorio_exe,
+      cmd = string.format([[%s -o "%%s" "%s"]], real_gregorio_exe,
           test_snippet_filename)
       exe_version = get_prog_output(cmd, '*line')
     end
@@ -932,7 +932,7 @@ local function direct_gabc(gabc, header, allow_deprecated)
   gabc = gabc:match('^()%s*$') and '' or gabc:match('^%s*(.*%S)')
   f:write('name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par ', '\n'))
   f:close()
-  local cmd = string.format([["%s" -W %s-o "%%s" -l "%s" "%s"]], gregorio_exe(),
+  local cmd = string.format([[%s -W %s-o "%%s" -l "%s" "%s"]], gregorio_exe(),
       deprecated, snippet_logname, snippet_filename)
   local content = get_prog_output(cmd, '*a')
   if content == nil then
