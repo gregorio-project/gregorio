@@ -4,7 +4,9 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 
 ## [Unreleased][CTAN]
 ### Fixed
+- Project names with quotes in them no longer cause GregorioTeX to not be able to find the executable.  See [#1416](https://github.com/gregorio-project/gregorio/issues/1416).
 - Eliminated implicit casting from float to integer in string formatting (something no longer allowed in Lua 5.3)
+
 
 ## [5.2.0] - 2019-03-10
 ### Fixed
