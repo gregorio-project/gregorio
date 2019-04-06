@@ -938,9 +938,9 @@ Macro to set how the text of the lyrics aligns with the alignment point of its r
   & \texttt{firstletter} & The center of the first letter/character of the syllable will align with the alignment point of the neumes\\
 \end{argtable}
 
-\textbf{Nota Bene:} What constitutes the ``vowel'' of the syllable is determined by the language the lyric text is written in, as specified by the use of the \texttt{language} header in the gabc file.  Out of the box, Gregorio\TeX\ explicitly supports only Latin and English, but the rules for Latin have a high degree of overlap with many Romance languages, allowing them to fall back on the Latin rules with acceptable results.
+\textbf{Nota Bene:} What constitutes the ``vowel'' of the syllable is determined by the language the lyric text is written in, as specified by the use of the \texttt{language} header in the gabc file.  Out of the box, Gregorio\TeX\ explicitly supports Latin, English, Church Slavonic and Hungarian.  Polish, Czech, and Slovak are supported as aliases for Church Slavonic.  Furthermore the rules for Latin have a high degree of overlap with many Romance languages, allowing them to fall back on the Latin rules with acceptable results.
 
-You can also define your own languages in \texttt{gregorio-vowels.dat}.  If you do define a language, please consider sharing your work by submitting it to the project (see CONTRIBUTING.md for instructions).
+You can also define your own languages in \texttt{gregorio-vowels.dat} (see \nameref{customvowels} for details).  If you do define a language, please consider sharing your work by submitting it to the project (see CONTRIBUTING.md for instructions).
 
 Finally, in cases where you want some sort of exceptional alignment, you can force Gregorio to consider a particular part of the syllable to be the ``vowel'' by enclosing it in curly braces (``\{'' and ``\}'') in your gabc file.  Curly braces only affect alignment when using vowel centering.  Syllable centering will always use the entire syllable, and firstletter centering will always use the first character of the syllable --- regardless of curly braces in the gabc file.
 
@@ -1366,7 +1366,7 @@ For a full description of how to make use of the ancient notation capabilities o
 Macro to set the font to be used for the ancient notation.
 
 \begin{argtable}
-  \#1 & string & the name of the font\\
+  \#1 & string & the name of the font, either \texttt{gregall}, \texttt{grelaon}, or \texttt{gresgmodern}\\
   \#2 & integer & point size at which the font should be loaded\\
 \end{argtable}
 
