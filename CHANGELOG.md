@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][CTAN]
+### Fixed
+- Staff line thickness is now set in gsp-default.tex.  This corrects a problem with the staff lines changing thickness when the default spacing configuration is loaded while the staff size is something other than the default (17).  See [#1461](https://github.com/gregorio-project/gregorio/issues/1461).
 
 
 ## [5.2.1] - 2019-04-06
