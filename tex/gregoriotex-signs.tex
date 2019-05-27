@@ -2551,12 +2551,11 @@
   \gre@trace{gre@fillhole{#1}{#2}}%
   \ifgre@boxing\else %
     \global\gre@count@lastglyphiscavum=1\relax %
-    \setbox\gre@box@temp@sign=\hbox{#1}%
     \ifcase#2\raise \gre@dimen@glyphraisevalue\fi%
     \hbox to 0pt{%
       {%
       \color{grebackgroundcolor}%
-      \copy\gre@box@temp@sign %
+      #1 %
       }%
       %\pdfliteral{}% this is a ugly hack for old versions of LuaTeX to work
       \hss %
