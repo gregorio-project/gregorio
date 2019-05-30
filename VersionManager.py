@@ -65,6 +65,7 @@ GREGORIO_FILES = ["configure.ac",
                   "tex/gregoriotex-nabc.lua",
                   "tex/gregoriosyms.sty",
                   "tex/gregoriotex-common.tex",
+                  "tex/gsp-default.tex",
                   "fonts/squarize.py",
                  ]
 COPYRIGHT_FILES = ["install-gtex.sh",
