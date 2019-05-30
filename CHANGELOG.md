@@ -4,6 +4,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 
 ## [Unreleased][CTAN]
 ### Fixed
+- Staff line thickness is now set in gsp-default.tex.  This corrects a problem with the staff lines changing thickness when the default spacing configuration is loaded while the staff size is something other than the default (17).  See [#1461](https://github.com/gregorio-project/gregorio/issues/1461).
 - Corrected interaction issues between text styles and ligatures.  The LaTeX commands like `\textit` insert italics correction, preventing ligatures being formed between their arguments if two occur sequentially.  On the other hand the switches like `\itshape` do not.  Since gregorio breaks up syllables around the vowel and then applies the formating commands to each part, this behavior showed up.  We switch to using the switches to avoid this (except for underlining, for which a switch does not exist).  We also fix this for color tags by loading `luacolor` which changes how the `\color` tag is implemented to allow ligatures to span groups.  See [#1444](https://github.com/gregorio-project/gregorio/issues/1444).
 
 
