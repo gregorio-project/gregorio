@@ -7,6 +7,8 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Fixed some problem in 900_gregorio.xml (Scribus render frame tool).  First, the use of `filecontents` rather than `filecontents*` was leading to a comment header that made it impossible for Gregorio to find the gabc headers in the temporary score file.  Further, some of the indenting (which makes the file more human readable) was leading to errors in the formatting of the created files because they are processed in a way which handles whitespace differently from XML.  See [#1457](https://github.com/gregorio-project/gregorio/issues/1457).
 
 ## [Unreleased][CTAN]
+### Fixed
+- Staff line thickness is now set in gsp-default.tex.  This corrects a problem with the staff lines changing thickness when the default spacing configuration is loaded while the staff size is something other than the default (17).  See [#1461](https://github.com/gregorio-project/gregorio/issues/1461).
 
 
 ## [5.2.1] - 2019-04-06

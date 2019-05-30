@@ -187,7 +187,7 @@
 \newif\ifgre@scale@stafflinefactor%
 \gre@scale@stafflinefactortrue
 
-% a macro for setting the thickness of the staff lines.  This changes the stafflinefactor and then adjusts the spaces that are affected by the thicker staff lines.
+% a macro for setting the thickness of the staff lines.  The changes to stafflinefactor will be automatically picked up when the staff lines are redrawn
 \def\grechangestafflinethickness#1{%
   \xdef\gre@stafflinefactor{#1}%
   \relax %
