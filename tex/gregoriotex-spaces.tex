@@ -1548,7 +1548,7 @@
 %% This macro creates one dim (#1), setting its value to #2 and sets whether it should scale when the \gre@factor changes (#3, scalable or fixed).  Checks that #1 can accept the kind of distance given in #2.
 %% Note: the distances created by this function are stored as strings, not skip or dimension registers.  This allows the user to specify a distance in em or ex units even though the font parameters may not be the same at the time the distance is specified and the time the distance is used.
 \newif\ifgre@checklength%
-\def\grecreatedim#1#2#3{%
+\def\gre@createdim#1#2#3{%
   \csname newif\expandafter\endcsname\csname ifgre@scale@#1\endcsname%
   \IfStrEqCase{#3}{%
     {scalable}%
@@ -1599,6 +1599,12 @@
       % all other cases
       }[\gre@error{Unrecognized option "#3" for \protect\grechangedim\MessageBreak Possible options are: 'scalable', 'fixed', and 'inherited'}]%
     \gre@dimension{#1}{#2}{#3}%
+    %If we are calling grechangedim from a space configuration file and the space 
+                 %configuration file is designed for a \gre@factor other than the current one, then we 
+                 %need to rescale the distance being changed.
+    \ifnum\the\gre@factor=\greconffactor\else 
+      \gre@changeonedimenfactor{#1}{\greconffactor}{\gre@factor} %
+    \fi%
   \else%
     \gre@error{#1 is not a recognized distance.}
   \fi%
@@ -1783,9 +1789,6 @@
   \ifnum\greconffactor=0\relax%
     \gre@error{gsp-#1.tex does not have an assigned staff size.\MessageBreak Please edit it to define \protect\greconffactor}%
   \fi %
-  \ifnum\the\gre@factor=\greconffactor\else %If the space configuration file is designed for a \gre@factor other than the current one, then we need to rescale the distances.
-    \gre@changedimenfactor{\greconffactor}{\gre@factor} %
-  \fi%
   \greconffactor=0%
   \relax %
 }%
