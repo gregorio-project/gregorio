@@ -1600,30 +1600,7 @@
       }[\gre@error{Unrecognized option "#3" for \protect\grechangedim\MessageBreak Possible options are: 'scalable', 'fixed', and 'inherited'}]%
     \gre@dimension{#1}{#2}{#3}%
   \else%
-    \IfStrEqCase{#1}{% OBSOLETE
-      {spacearoundsmallbars}% OBSOLETE
-        {% OBSOLETE
-          \gre@obsolete{spacearoundsmallbars}{bar@virgula or bar@minima}% OBSOLETE
-        }% OBSOLETE
-      {spacearoundminor}% OBSOLETE
-        {% OBSOLETE
-          \gre@obsolete{spacearoundminor}{bar@minor}% OBSOLETE
-        }% OBSOLETE
-      {spacearoundmaior}% OBSOLETE
-        {% OBSOLETE
-          \gre@obsolete{spacearoundmaior}{bar@maior}% OBSOLETE
-        }% OBSOLETE
-      {spacearoundfinalis}% OBSOLETE
-        {% OBSOLETE
-          \gre@obsolete{spacearoundfinalis}{bar@finalis}% OBSOLETE
-        }% OBSOLETE
-      {spacebeforefinalfinalis}% OBSOLETE
-        {% OBSOLETE
-          \gre@obsolete{spacebeforfinalfinalis}{bar@finalfinalis}% OBSOLETE
-        }% OBSOLETE
-      }[% OBSOLETE
-        \gre@error{#1 is not a recognized distance.}% keep this line
-      ]% OBSOLETE
+    \gre@error{#1 is not a recognized distance.}
   \fi%
 }%
 
