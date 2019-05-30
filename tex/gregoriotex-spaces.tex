@@ -1876,11 +1876,13 @@
   % Math
   \gre@rubberpermit{#1}%
   \ifgre@rubber%
+    \gre@debugmsg{gsp}{scaling a rubber}%
     % if we have a rubber allowed length we create a temporary skip
     \let\gre@scaledist\gre@skip@temp@one%
     \edef\gre@convert{\csname gre@space@skip@#1\endcsname}%
     \gre@scaledist=\glueexpr(\gre@convert * \number#3 / \number#2)\relax %
   \else%
+    \gre@debugmsg{gsp}{scaling a fixed distance}%
     % otherwise we create a temporary dimen
     \let\gre@scaledist\gre@dimen@temp@one%
     \edef\gre@convert{\csname gre@space@dimen@#1\endcsname}%
