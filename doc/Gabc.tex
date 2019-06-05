@@ -1,7 +1,7 @@
 % !TEX root = GregorioRef.tex
 % !TEX program = LuaLaTeX+se
 %
-% Copyright (C) 2006-2018 The Gregorio Project (see CONTRIBUTORS.md)
+% Copyright (C) 2006-2019 The Gregorio Project (see CONTRIBUTORS.md)
 %
 % This file is part of Gregorio.
 %
@@ -388,6 +388,8 @@ If no vowel is found, the notes are centered around the whole syllable.
 
 If you are using a language for which built-in language rules do not exist and the fallbacks are insufficient, then you may wish to provide your own set of vowel detection rules.  This can be done with a special file:\verb=gregorio-vowels.dat=.  See \nameref{customvowels} for information about how to create and use this file.
 
+Languages which are currently supported are Latin, English, Church Slavonic and Hungarian.  Polish, Czech, and Slovak are supported as aliases for Church Slavonic.  All of these languages can be specified by name (in which case both titlecase and lowercase names are recognized) and by using their ISO 639 (-1 two-letter, -2/T three-letter, or -2/B three-letter) standard abbreviations.
+
 
 \subsection{Notation --- Note Syntax}\label{notesyntax}
 
@@ -456,8 +458,9 @@ appending characters to pitch letters.
   \pitchchar & punctum quadratum \\
   \Pitchchar{} & punctum inclinatum (automatic leaning based on surrounding
                  pitches) \\
-  \Pitchchar0 & left-leaning punctum inclinatum \\
-  \Pitchchar1 & right-leaning punctum inclinatum \\
+  \Pitchchar0 & left-leaning (descending) punctum inclinatum \\
+  \Pitchchar1 & right-leaning (ascending) punctum inclinatum \\
+  \Pitchchar2 & non-leaning (unison) punctum inclinatum \\
   \pitchchar\texttt{o} & oriscus \\
   \pitchchar\texttt{w} & quilisma \\
   \pitchchar\texttt{v} & virga (stem on right) \\
@@ -745,6 +748,8 @@ Bars separate sections of the chant.
   \hline
   \texttt{`} & virgula \\
   \texttt{`0} & virgula on the ledger line above the staff \\
+  \texttt{\textasciicircum} & divisio ``minimis'' (eighth bar) \\
+  \texttt{\textasciicircum0} & divisio ``minimis'' (eighth bar) \\
   \texttt{,} & divisio minima (quarter bar) \\
   \texttt{,0} & divisio minima on the ledger line above the staff \\
   \texttt{;} & divisio minor (half bar) \\
@@ -1098,6 +1103,8 @@ for the specified language.  It must be followed by the language name,
 enclosed in square brackets, and a semicolon.  The language specified
 applies until the next language statement.
 
+When choosing the name for your language, it is preferable that you use the ISO 639-1 standard (two-letter) code.  All other names should be listed as aliases (see above).  If you plan to submit your vowel detection rules for inclusion in the Gregorio source, then this will be required.
+
 \item[vowel]
 
 The \texttt{vowel} keyword indicates that the characters which follow,
@@ -1135,9 +1142,11 @@ the syllabic consonants \emph{l} and \emph{r} in Czech.
 By way of example, here is a vowel file that works for English:
 
 \begin{lstlisting}[autogobble]
-alias [english] to [English];
+alias [english] to [en];
+alias [English] to [en];
+alias [eng] to [en];
 
-language [English];
+language [en];
 
 vowel aàáAÀÁ;
 vowel eèéëEÈÉË;

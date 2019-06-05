@@ -1,6 +1,6 @@
 --GregorioTeX Symbols Lua support file.
 --
---Copyright (C) 2016-2018 The Gregorio Project (see CONTRIBUTORS.md)
+--Copyright (C) 2016-2019 The Gregorio Project (see CONTRIBUTORS.md)
 --
 --This file is part of Gregorio.
 --
@@ -19,7 +19,7 @@
 
 -- this file contains lua functions to support signs used by GregorioTeX.
 
--- GREGORIO_VERSION 5.1.1
+-- GREGORIO_VERSION 5.2.1
 
 local err = gregoriotex.module.err
 local warn = gregoriotex.module.warn

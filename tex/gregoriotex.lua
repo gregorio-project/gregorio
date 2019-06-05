@@ -1,6 +1,6 @@
 --GregorioTeX Lua file.
 --
---Copyright (C) 2008-2018 The Gregorio Project (see CONTRIBUTORS.md)
+--Copyright (C) 2008-2019 The Gregorio Project (see CONTRIBUTORS.md)
 --
 --This file is part of Gregorio.
 --
@@ -24,16 +24,16 @@ local hpack, traverse, traverse_id, has_attribute, count, remove, insert_after, 
 gregoriotex = gregoriotex or {}
 local gregoriotex = gregoriotex
 
-local internalversion = '5.1.1' -- GREGORIO_VERSION (comment used by VersionManager.py)
+local internalversion = '5.2.1' -- GREGORIO_VERSION (comment used by VersionManager.py)
 
 local err, warn, info, log = luatexbase.provides_module({
     name               = "gregoriotex",
-    version            = '5.1.1', -- GREGORIO_VERSION
+    version            = '5.2.1', -- GREGORIO_VERSION
     greinternalversion = internalversion,
-    date               = "2018/03/25", -- GREGORIO_DATE_LTX
+    date               = "2019/04/06", -- GREGORIO_DATE_LTX
     description        = "GregorioTeX module.",
     author             = "The Gregorio Project (see CONTRIBUTORS.md)",
-    copyright          = "2008-2018 - The Gregorio Project",
+    copyright          = "2008-2019 - The Gregorio Project",
     license            = "GPLv3+",
 })
 
@@ -146,14 +146,14 @@ local function gregorio_exe()
     local exe_version
 
     -- first look for one with the exact version
-    real_gregorio_exe = 'gregorio-5_1_1' -- FILENAME_VERSION
-    local cmd = string.format("%s -o %%s %s", real_gregorio_exe,
+    real_gregorio_exe = 'gregorio-5_2_1' -- FILENAME_VERSION
+    local cmd = string.format([[%s -o "%%s" "%s"]], real_gregorio_exe,
         test_snippet_filename)
     exe_version = get_prog_output(cmd, '*line')
     if not exe_version then
       -- look for suffix-less executable
       real_gregorio_exe = 'gregorio'
-      cmd = string.format("%s -o %%s %s", real_gregorio_exe,
+      cmd = string.format([[%s -o "%%s" "%s"]], real_gregorio_exe,
           test_snippet_filename)
       exe_version = get_prog_output(cmd, '*line')
     end
@@ -547,7 +547,7 @@ local function post_linebreak(h, groupcode, glyphes)
         h, line = remove(h, line)
       else
         linenum = linenum + 1
-        debugmessage('linesglues', 'line %d: %s factor %d%%', linenum, glue_sign_name[line.glue_sign], line.glue_set*100)
+        debugmessage('linesglues', 'line %d: %s factor %.0f%%', linenum, glue_sign_name[line.glue_sign], line.glue_set*100)
         centerstartnode = nil
         line_id = nil
         line_top = nil
@@ -956,7 +956,7 @@ local function direct_gabc(gabc, header, allow_deprecated)
   gabc = gabc:match('^()%s*$') and '' or gabc:match('^%s*(.*%S)')
   f:write('name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par ', '\n'))
   f:close()
-  local cmd = string.format('%s -W %s-o %%s -l %s %s', gregorio_exe(),
+  local cmd = string.format([[%s -W %s-o "%%s" -l "%s" "%s"]], gregorio_exe(),
       deprecated, snippet_logname, snippet_filename)
   local content = get_prog_output(cmd, '*a')
   if content == nil then

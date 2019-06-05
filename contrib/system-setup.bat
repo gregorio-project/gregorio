@@ -105,7 +105,7 @@ for %%G in (%files%) do (
 		set loc=%%H
 		set loc=!loc:/=\!
 		echo !loc! >> %output%
-		for /f "delims=" %%I in ('findstr /r "GREGORIO_VERSION" !loc!') do set ver=%%I
+		for /f "delims=" %%I in ('findstr /r "GREGORIO_VERSION" "!loc!"') do set ver=%%I
 		set ver=!ver:*{=!
 		set ver=!ver:*{=!
 		set trash=}!ver:*}=!
@@ -126,7 +126,7 @@ for %%G in (%files%) do (
 		set loc=%%H
 		set loc=!loc:/=\!
 		echo !loc! >> %output%
-		for /f "delims=" %%I in ('findstr /r "GREGORIO_VERSION" !loc!') do set ver=%%I
+		for /f "delims=" %%I in ('findstr /r "GREGORIO_VERSION" "!loc!"') do set ver=%%I
 		set ver=!ver:*N =!
 		echo !ver! >> %output% 2>&1
 		set ver=
@@ -142,7 +142,7 @@ for %%G in (%files%) do (
 		set loc=%%H
 		set loc=!loc:/=\!
 		echo !loc! >> %output%
-		for /f "delims=" %%I in ('findstr /r "GREGORIO_VERSION" !loc!') do set ver=%%I
+		for /f "delims=" %%I in ('findstr /r "GREGORIO_VERSION" "!loc!"') do set ver=%%I
 		set ver=!ver:*'=!
 		set trash='!ver:*'=!
 		call set ver=%%ver:!trash!=%%
@@ -161,7 +161,7 @@ for %%G in (%files%) do (
 		set loc=%%H
 		set loc=!loc:/=\!
 		echo !loc! >> %output%
-		for /f "delims=" %%I in ('findstr /r "PARSE_VERSION_DATE_LTX" !loc!') do set ver=%%I
+		for /f "delims=" %%I in ('findstr /r "PARSE_VERSION_DATE_LTX" "!loc!"') do set ver=%%I
 		set ver=!ver:*v=!
 		set trash=G!ver:*G=!
 		call set ver=%%ver:!trash!=%%
@@ -198,7 +198,7 @@ for %%G in (%files%) do (
 		set loc=%%H
 		set loc=!loc:/=\!
 		echo !loc! >> %output%
-		otfinfo --font-version !loc! >> %output% 2>&1
+		otfinfo --font-version "!loc!" >> %output% 2>&1
 	)
 )
 

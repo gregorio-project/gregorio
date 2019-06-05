@@ -1,6 +1,6 @@
 %GregorioTeX file.
 %
-% Copyright (C) 2007-2018 The Gregorio Project (see CONTRIBUTORS.md)
+% Copyright (C) 2007-2019 The Gregorio Project (see CONTRIBUTORS.md)
 %
 % This file is part of Gregorio.
 %
@@ -19,7 +19,7 @@
 
 % this file contains definitions of spaces
 
-\gre@declarefileversion{gregoriotex-spaces.tex}{5.1.1}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-spaces.tex}{5.2.1}% GREGORIO_VERSION
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for tuning penalties
@@ -187,7 +187,7 @@
 \newif\ifgre@scale@stafflinefactor%
 \gre@scale@stafflinefactortrue
 
-% a macro for setting the thickness of the staff lines.  This changes the stafflinefactor and then adjusts the spaces that are affected by the thicker staff lines.
+% a macro for setting the thickness of the staff lines.  The changes to stafflinefactor will be automatically picked up when the staff lines are redrawn
 \def\grechangestafflinethickness#1{%
   \xdef\gre@stafflinefactor{#1}%
   \relax %
@@ -2137,6 +2137,12 @@
   \ifgre@scale@bar@virgula@short%
     \gre@changeonedimenfactor{bar@virgula@short}{#1}{#2}%
   \fi%
+  \ifgre@scale@bar@minimis%
+    \gre@changeonedimenfactor{bar@minimis}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minimis@short%
+    \gre@changeonedimenfactor{bar@minimis@short}{#1}{#2}%
+  \fi%
   \ifgre@scale@bar@minima%
     \gre@changeonedimenfactor{bar@minima}{#1}{#2}%
   \fi%
@@ -2164,6 +2170,12 @@
   \ifgre@scale@bar@virgula@standalone@text@short%
     \gre@changeonedimenfactor{bar@virgula@standalone@text@short}{#1}{#2}%
   \fi%
+  \ifgre@scale@bar@minimis@standalone@text%
+    \gre@changeonedimenfactor{bar@minimis@standalone@text}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minimis@standalone@text@short%
+    \gre@changeonedimenfactor{bar@minimis@standalone@text@short}{#1}{#2}%
+  \fi%
   \ifgre@scale@bar@minima@standalone@text%
     \gre@changeonedimenfactor{bar@minima@standalone@text}{#1}{#2}%
   \fi%
@@ -2187,6 +2199,12 @@
   \fi%
   \ifgre@scale@bar@virgula@standalone@notext@short%
     \gre@changeonedimenfactor{bar@virgula@standalone@notext@short}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minimis@standalone@notext%
+    \gre@changeonedimenfactor{bar@minimis@standalone@notext}{#1}{#2}%
+  \fi%
+  \ifgre@scale@bar@minimis@standalone@notext@short%
+    \gre@changeonedimenfactor{bar@minimis@standalone@notext@short}{#1}{#2}%
   \fi%
   \ifgre@scale@bar@minima@standalone@notext%
     \gre@changeonedimenfactor{bar@minima@standalone@notext}{#1}{#2}%
