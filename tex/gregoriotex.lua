@@ -862,6 +862,9 @@ local function locate_file(filename)
     result = kpse.find_file(filename)
     if result then
       log("Found %s at\n%s using kpsewhich", filename, result)
+      if string.match(result," ") then
+        warn("%s contains a space in the path\nTeX will likely complain about this", filename)
+      end
     else
       log("Cannot find %s", filename)
     end
