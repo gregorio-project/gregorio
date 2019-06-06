@@ -861,7 +861,7 @@ local function locate_file(filename)
   else
     result = kpse.find_file(filename)
     if result then
-      log("Found %s using kpsewhich", filename)
+      log("Found %s at\n%s using kpsewhich", filename, result)
     else
       log("Cannot find %s", filename)
     end
@@ -893,7 +893,7 @@ local function include_score(input_file, force_gabccompile, allow_deprecated)
   -- in the same directory as the gabc file (since we're not allowed to write to
   -- that directory).  Instead we'll locate them in the main project directory.
   if gabc_filename and gabc_file ~= gabc_filename then
-    warn("kpse initiated reset of %s", file_dir)
+    warn("kpse initiated reset of location of %s", gabc_filename)
     file_dir = ""
   end
   local gtex_filename = string.format("%s%s-%s.gtex", file_dir, cleaned_filename,
