@@ -166,16 +166,16 @@ without doing anything else.
 \medskip This macro can be combined in the same document with different arguments to
 switch between different behaviors: \par\medskip
 \begin{latexcode}
-  \usepackage{gregoriotex} % [nevercompile] is the default.
+  \usepackage{gregoriotex} % [autocompile] is the default.
   ----
-  \gregorioscore{TecumPrincipium} % gabc never compiled.
-  \gregorioscore[f]{TecumPrincipium} % gabc always compiled.
-  \gregorioscore[a]{TecumPrincipium} % gabc auto compiled.
-
-  \gresetcompilegabc{auto}
   \gregorioscore{TecumPrincipium} % gabc auto compiled.
   \gregorioscore[n]{TecumPrincipium} % gabc never compiled.
   \gregorioscore[f]{TecumPrincipium} % gabc always compiled.
+
+  \gresetcompilegabc{never}
+  \gregorioscore{TecumPrincipium} % gabc never compiled.
+  \gregorioscore[f]{TecumPrincipium} % gabc always compiled.
+  \gregorioscore[a]{TecumPrincipium} % gabc auto compiled.
 
   \gresetcompilegabc{force}
   \gregorioscore{TecumPrincipium} % gabc always compiled.
