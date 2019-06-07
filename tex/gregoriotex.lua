@@ -855,10 +855,22 @@ end
 
 local function locate_file(filename)
   local result
-  if lfs.isfile(filename) then
-    result = filename
-    log("Found %s directly", filename)
-  else
+  if not gre_input_path then
+    gre_input_path = {""}
+  end
+  for i,k in pairs(gre_input_path) do
+    log("Looking in %s", k)
+    if lfs.isfile(k .. filename) then
+      result = k..filename
+      if result == filename then
+        log("Found %s directly", filename)
+      else
+        log("Found %s in %s", filename, k)
+      end
+      break
+    end
+  end
+  if not result then
     result = kpse.find_file(filename)
     if result then
       log("Found %s at\n%s using kpsewhich", filename, result)
@@ -892,13 +904,6 @@ local function include_score(input_file, force_gabccompile, allow_deprecated)
   local cleaned_filename = input_name:gsub("[%s%+%&%*%?$@:;!\"\'`]", "-")
   local gabc_filename = string.format("%s%s.gabc", file_dir, input_name)
   local gabc_file = locate_file(gabc_filename)
-  -- If kpse was used to find the file, then our gtex and glog files will not be
-  -- in the same directory as the gabc file (since we're not allowed to write to
-  -- that directory).  Instead we'll locate them in the main project directory.
-  if gabc_filename and gabc_file ~= gabc_filename then
-    warn("kpse initiated reset of location of %s", gabc_filename)
-    file_dir = ""
-  end
   local gtex_filename = string.format("%s%s-%s.gtex", file_dir, cleaned_filename,
       internalversion:gsub("%.", "_"))
   local gtex_file = locate_file(gtex_filename)
