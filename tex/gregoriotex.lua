@@ -923,6 +923,10 @@ local function include_score(input_file, force_gabccompile, allow_deprecated)
       return
     end
   end
+  if not gabc_file then
+    tex.print(string.format([[\input %s\relax]], gtex_file))
+    return
+  end
   local gtex_timestamp = lfs.attributes(gtex_file).modification
   local gabc_timestamp = lfs.attributes(gabc_file).modification
   -- open the gabc file for reading so that LuaTeX records input from it
