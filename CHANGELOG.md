@@ -7,7 +7,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Staff line thickness is now set in gsp-default.tex.  This corrects a problem with the staff lines changing thickness when the default spacing configuration is loaded while the staff size is something other than the default (17).  See [#1461](https://github.com/gregorio-project/gregorio/issues/1461).
 
 ### Added
-- GregorioTeX will now look for scores using kpse if it does not find them directly.  See [#1395](https://github.com/gregorio-project/gregorio/issues/1395).
+- GregorioTeX will now look in additional places for scores using.  Users can specify paths to look in using `\gresetgregpath`.  If scores are not found in the current working directory or the list of provided paths, we fall back on kpse to try and find them.  See [#1395](https://github.com/gregorio-project/gregorio/issues/1395).
 
 
 ## [5.2.1] - 2019-04-06

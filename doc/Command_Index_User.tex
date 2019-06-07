@@ -150,6 +150,16 @@ When called with the optional argument \texttt{[f]} Gregorio\TeX\ will
 compile the gabc file into a gtex file. This is similar to
 \texttt{[a]} except the gabc is compiled every time.
 
+\macroname{\textbackslash gregetgregpath}{\{\#1\}}{gregoriotex-main.tex}
+Set a list of additional directories which should be searched for scores.  Directories may be absolute or relative, but must end with a slash (\verb=/=) and enclosed in braces (\verb={}=), even if there is only one additional directory.  For example, to look in a directory called “Scores” which is alongside the main project directory, one could use the following:
+
+\begin{latexcode}
+  \gresetgregpath{{../Scores/}}
+\end{latexcode}
+
+Note that these directories are not searched recursively.  If you want to include subdirectories, then each subdirectory must be included individually.
+
+
 \macroname{\textbackslash gresetcompilegabc}{\{\#1\}}{gregoriotex-main.tex}
 A macro to change the behavior of the way Gregorio\TeX\ includes scores.  This is similar to using the package options \verb=[forcecompile]=, \verb=[autocompile]=, and \verb=[nevercompile]=, but does not necessarly apply to the entire document.
 
