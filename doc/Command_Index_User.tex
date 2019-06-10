@@ -461,6 +461,8 @@ Note that the font will be looked up by name through luaotfload, see the documen
   & \texttt{granapadano} & Use the Grana Padano font.\\
 \end{argtable}
 
+\textbf{Nota Bene:} The Gregorio and Grana Padano fonts are not included by default in a basic installation.  To get them you need to download and install them from the \verb=supp-fonts-##.zip= file (where \#\# is the version number of your release).  See \url{https://github.com/gregorio-project/gregorio/releases} for the list of releases.
+
 \macroname{\textbackslash gresetgregoriofontscaled}{[\optional{\#1}]\{\#2\}\{\#3\}}{gregoriotex-main.tex}
 
 This function is the same as above, with a third argument to scale the font. The fonts shipped with Gregorio do not need to use this function, but some custom fonts do. Note that you cannot use this to scale glyphs up or down, as they would not be placed correctly on the staff.
