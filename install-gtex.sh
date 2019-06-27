@@ -170,9 +170,12 @@ function die {
     echo 'Failed.'
     if $install_start
     then
-        echo "Cleaning up partial install"
-        source "${UNINSTALL_SCRIPT}"
-        rm "${UNINSTALL_SCRIPT}"
+        if [ -f ${UNINSTALL_SCRIPT} ]
+        then
+            echo "Cleaning up partial install"
+            source "${UNINSTALL_SCRIPT}"
+            rm "${UNINSTALL_SCRIPT}"
+        fi
     fi
     exit 1
 }
