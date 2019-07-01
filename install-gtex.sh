@@ -107,6 +107,7 @@ RM=${RM:-rm}
 GENERATE_UNINSTALL=${GENERATE_UNINSTALL:-true}
 AUTO_UNINSTALL=${AUTO_UNINSTALL:-false}
 REMOVE_OLD_FILES=${REMOVE_OLD_FILES:-true}
+install_start=false
 
 arg="$1"
 case "$arg" in
@@ -167,6 +168,15 @@ UNINSTALL_SCRIPT="${TEXMFROOT}/${UNINSTALL_SCRIPT_DIR}/${UNINSTALL_SCRIPT_FILE}"
 
 function die {
     echo 'Failed.'
+    if $install_start
+    then
+        if [ -f ${UNINSTALL_SCRIPT} ]
+        then
+            echo "Cleaning up partial install"
+            source "${UNINSTALL_SCRIPT}"
+            rm "${UNINSTALL_SCRIPT}"
+        fi
+    fi
     exit 1
 }
 
@@ -175,6 +185,8 @@ function install_to {
     shift
     mkdir -p "${TEXMFROOT}/$dir" || die
     $CP "$@" "${TEXMFROOT}/$dir" || die
+
+    install_start=true
 
     if ${GENERATE_UNINSTALL}
     then
