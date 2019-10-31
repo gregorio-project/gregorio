@@ -1211,6 +1211,12 @@ Z-  {
 `0  {
         add_bar_as_note(B_VIRGULA_HIGH);
     }
+`\? {
+        add_bar_as_note(B_VIRGULA_PAREN);
+    }
+`0\?|`\?0 {
+        add_bar_as_note(B_VIRGULA_PAREN_HIGH);
+    }
 \^  {
         add_bar_as_note(B_DIVISIO_MINIMIS);
     }
@@ -1222,6 +1228,12 @@ Z-  {
     }
 ,0  {
         add_bar_as_note(B_DIVISIO_MINIMA_HIGH);
+    }
+,\? {
+        add_bar_as_note(B_DIVISIO_MINIMA_PAREN);
+    }
+,0\?|,\?0 {
+        add_bar_as_note(B_DIVISIO_MINIMA_PAREN_HIGH);
     }
 [,;][1-8] {
         add_bar_as_note(parse_dominican_bar(gabc_notes_determination_text[1]));
@@ -1275,14 +1287,27 @@ r8  {
         gregorio_add_special_sign(current_note, _MUSICA_FICTA_SHARP);
     }
 x   {
-        gregorio_change_shape(current_note, S_FLAT, legacy_oriscus_orientation);
+        gregorio_change_shape(current_note, S_FLAT,
+                legacy_oriscus_orientation);
+    }
+x\? {
+        gregorio_change_shape(current_note, S_FLAT_PAREN,
+                legacy_oriscus_orientation);
     }
 #   {
         gregorio_change_shape(current_note, S_SHARP,
                 legacy_oriscus_orientation);
     }
+#\? {
+        gregorio_change_shape(current_note, S_SHARP_PAREN,
+                legacy_oriscus_orientation);
+    }
 y   {
         gregorio_change_shape(current_note, S_NATURAL,
+                legacy_oriscus_orientation);
+    }
+y\? {
+        gregorio_change_shape(current_note, S_NATURAL_PAREN,
                 legacy_oriscus_orientation);
     }
 !?\/0 {

@@ -1538,6 +1538,7 @@
   \setbox\gre@box@temp@sign=\hbox{\gre@font@music#2}%
   % we set tempwidth to half a punctum malus half the sign width, so that the centers are aligned
   \gre@dimen@temp@two=\wd\gre@box@temp@sign %
+  \gre@debugmsg{general}{gre@dimen@temp@two = \the\gre@dimen@temp@two}%
   \ifcase#4%
     %case of hepisema
     \raise \gre@dimen@glyphraisevalue \copy\gre@box@temp@sign %
@@ -1840,6 +1841,34 @@
   \gre@trace@end%
 }%
 
+\def\GreInVirgulaParen#1#2#3{%
+  \gre@trace{GreInVirgulaParen{#1}{#2}{#3}}%
+  \gre@writebar{19}{1}{#1}{#2}{#3}%
+  \relax%
+  \gre@trace@end%
+}%
+
+\def\GreVirgulaParen#1#2#3{%
+  \gre@trace{GreVirgulaParen{#1}{#2}{#3}}%
+  \gre@writebar{19}{0}{#1}{#2}{#3}%
+  \relax%
+  \gre@trace@end%
+}%
+
+\def\GreInVirgulaParenHigh#1#2#3{%
+  \gre@trace{GreInVirgulaParenHigh{#1}{#2}{#3}}%
+  \gre@writebar{21}{1}{#1}{#2}{#3}%
+  \relax%
+  \gre@trace@end%
+}%
+
+\def\GreVirgulaParenHigh#1#2#3{%
+  \gre@trace{GreVirgulaParenHigh{#1}{#2}{#3}}%
+  \gre@writebar{21}{0}{#1}{#2}{#3}%
+  \relax%
+  \gre@trace@end%
+}%
+
 \def\GreInDivisioMinimis#1#2#3{%
   \gre@trace{GreInDivisioMinimis{#1}{#2}{#3}}%
   \gre@writebar{17}{1}{#1}{#2}{#3}%
@@ -1892,6 +1921,34 @@
 \def\GreDivisioMinimaHigh#1#2#3{%
   \gre@trace{GreDivisioMinimaHigh{#1}{#2}{#3}}%
   \gre@writebar{15}{0}{#1}{#2}{#3}%
+  \relax%
+  \gre@trace@end%
+}%
+
+\def\GreInDivisioMinimaParen#1#2#3{%
+  \gre@trace{GreInDivisioMinimaParen{#1}{#2}{#3}}%
+  \gre@writebar{20}{1}{#1}{#2}{#3}%
+  \relax%
+  \gre@trace@end%
+}%
+
+\def\GreDivisioMinimaParen#1#2#3{%
+  \gre@trace{GreDivisioMinimaParen{#1}{#2}{#3}}%
+  \gre@writebar{20}{0}{#1}{#2}{#3}%
+  \relax%
+  \gre@trace@end%
+}%
+
+\def\GreInDivisioMinimaParenHigh#1#2#3{%
+  \gre@trace{GreInDivisioMinimaHigh{#1}{#2}{#3}}%
+  \gre@writebar{22}{1}{#1}{#2}{#3}%
+  \relax%
+  \gre@trace@end%
+}%
+
+\def\GreDivisioMinimaParenHigh#1#2#3{%
+  \gre@trace{GreDivisioMinimaHigh{#1}{#2}{#3}}%
+  \gre@writebar{22}{0}{#1}{#2}{#3}%
   \relax%
   \gre@trace@end%
 }%
@@ -2100,7 +2157,15 @@
 \newskip\gre@skip@bar@lastskip% skip after last bar
 
 %a macro to write a bar
-%% 1: the type of the bar : 0 for virgula, 1 for minima 2 for minor, 3 for major, 4 for finalis and 5 for the last finalis, 6 to 13 for dominican bars, 14 for high virgula, 15 for high minima, 16 for dotted maior, 17 for minimis, 18 for high minimis
+%% 1: the type of the bar : 0 for virgula, 1 for minima, 2 for minor,
+%%                          3 for major, 4 for finalis, 5 for the last finalis,
+%%                          6 to 13 for dominican bars, 14 for high virgula,
+%%                          15 for high minima, 16 for dotted maior,
+%%                          17 for minimis, 18 for high minimis,
+%%                          19 for parenthesized virgula,
+%%                          20 for parenthesized minima,
+%%                          21 for high parenthesized virgula,
+%%                          22 for high parenthesized minima,
 %% 2: is 0 if it is in a syllable containing only this bar, 1 otherwise
 %% 3: is 0 if there's no text under the bar or 1 if there is text under the bar
 %% 4: macros that may happen before the skip after the bar (typically GreVEpisema)
@@ -2428,6 +2493,66 @@
       \gre@skip@temp@four = \csname gre@space@skip@bar@minimis\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
       \gre@hskip\gre@skip@temp@four %
     \fi %
+  \or % 19 : parenthesized virgula
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@virgulaparen\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
+      \gre@hskip\gre@skip@temp@four %
+      \GreNoBreak %
+    \fi %
+    \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@virgulaparen}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\gre@char@bar@virgulaparen}%
+    #4\relax %
+    \ifnum\gre@count@temp@one=1\relax %
+      \GreNoBreak %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@virgulaparen\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
+      \gre@hskip\gre@skip@temp@four %
+    \fi %
+  \or % 20 : parenthesized minima
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@minimaparen\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
+      \gre@hskip\gre@skip@temp@four %
+      \GreNoBreak %
+    \fi %
+    \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@divisiominimaparen}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\gre@char@bar@divisiominimaparen}%
+    #4\relax %
+    \ifnum\gre@count@temp@one=1\relax %
+      \GreNoBreak %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@minimaparen\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
+      \gre@hskip\gre@skip@temp@four %
+    \fi %
+  \or % 21 : parenthesized high virgula
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@virgulaparen\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
+      \gre@hskip\gre@skip@temp@four %
+      \GreNoBreak %
+    \fi %
+    \GreGlyphHeights{\gre@pitch@ledger@above}{\gre@pitch@ledger@above}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@virgulaparenhigh}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\gre@char@bar@virgulaparenhigh}%
+    \GreAdditionalLine{\GreOCaseBarVirgulaParen}{0}{2}%
+    #4\relax %
+    \ifnum\gre@count@temp@one=1\relax %
+      \GreNoBreak %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@virgulaparen\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
+      \gre@hskip\gre@skip@temp@four %
+    \fi %
+  \or % 22 : parenthesized high minima
+    \ifnum\gre@count@temp@one=1\relax %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@minimaparen\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
+      \gre@hskip\gre@skip@temp@four %
+      \GreNoBreak %
+    \fi %
+    \GreGlyphHeights{\gre@pitch@ledger@above}{\gre@pitch@ledger@above}%
+    \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@divisiominimaparenhigh}%
+    \raise\gre@dimen@glyphraisevalue\hbox{\gre@font@music\gre@char@bar@divisiominimaparenhigh}%
+    \GreAdditionalLine{\GreOCaseBarParen}{0}{2}%
+    #4\relax %
+    \ifnum\gre@count@temp@one=1\relax %
+      \GreNoBreak %
+      \gre@skip@temp@four = \csname gre@space@skip@bar@minimaparen\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
+      \gre@hskip\gre@skip@temp@four %
+    \fi %
   \fi %
   \global\gre@skip@bar@lastskip=\gre@skip@temp@four %
   \gre@debugmsg{spacing}{Width of bar just printed: \the\wd\gre@box@temp@width}%
@@ -2470,7 +2595,7 @@
 %macro to end a line with a divisio finalis
 \def\GreFinalDivisioFinalis#1{%
   \gre@trace{GreFinalDivisioFinalis{#1}}%
-  \GreBarSyllable{\GreSetThisSyllable{}{}{}{}{}}{}{}{1}{\GreSetNextSyllable{}{}{}{}{}\GreLastOfLine}{}{16}{}{%
+  \GreBarSyllable{\GreSetThisSyllable{}{}{}{}{}}{}{}{1}{\GreSetNextSyllable{}{}{}{}{}\GreLastOfLine}{}{{16}{0}}{}{%
     \ifgre@newbarspacing\else %
       \gre@hskip\gre@space@skip@bar@finalfinalis %
       \GreNoBreak %
@@ -2486,7 +2611,7 @@
 %macro to end a line with a divisio maior
 \def\GreFinalDivisioMaior#1{%
   \gre@trace{GreFinalDivisioMaior{#1}}%
-  \GreBarSyllable{\GreSetThisSyllable{}{}{}{}{}}{}{}{1}{\GreSetNextSyllable{}{}{}{}{}\GreLastOfLine}{}{16}{}{%
+  \GreBarSyllable{\GreSetThisSyllable{}{}{}{}{}}{}{}{1}{\GreSetNextSyllable{}{}{}{}{}\GreLastOfLine}{}{{16}{0}}{}{%
     \GreLastOfScore %
     \GreDivisioMaior{0}{}%
     #1%
@@ -2631,6 +2756,15 @@
   \gre@trace@end%
 }%
 
+% Same as the one before, but for parenthesized flats.
+
+\def\GreFlatParen#1#2#3#4#5{%
+  \gre@trace{GreFlatParen{#1}{#2}{#3}{#4}{#5}}%
+  \gre@alteration{#1}{\gre@fontchar@flatparen}{\gre@fontchar@flatparenhole}{#2}{#3}{#4}{#5}%
+  \relax%
+  \gre@trace@end%
+}%
+
 % Same as the one before, but for naturals.
 
 \def\GreNatural#1#2#3#4#5{%
@@ -2640,11 +2774,29 @@
   \gre@trace@end%
 }%
 
+% Same as the one before, but for parenthesized naturals.
+
+\def\GreNaturalParen#1#2#3#4#5{%
+  \gre@trace{GreNaturalParen{#1}{#2}{#3}{#4}{#5}}%
+  \gre@alteration{#1}{\gre@fontchar@naturalparen}{\gre@fontchar@naturalparenhole}{#2}{#3}{#4}{#5}%
+  \relax%
+  \gre@trace@end%
+}%
+
 % Same as the one before, but for sharps.
 
 \def\GreSharp#1#2#3#4#5{%
   \gre@trace{GreSharp{#1}{#2}{#3}{#4}{#5}}%
   \gre@alteration{#1}{\gre@fontchar@sharp}{\gre@fontchar@sharphole}{#2}{#3}{#4}{#5}%
+  \relax%
+  \gre@trace@end%
+}%
+
+% Same as the one before, but for sharps.
+
+\def\GreSharpParen#1#2#3#4#5{%
+  \gre@trace{GreSharpParem{#1}{#2}{#3}{#4}{#5}}%
+  \gre@alteration{#1}{\gre@fontchar@sharpparen}{\gre@fontchar@sharpparenhole}{#2}{#3}{#4}{#5}%
   \relax%
   \gre@trace@end%
 }%

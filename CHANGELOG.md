@@ -5,6 +5,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## [Unreleased][develop]
 ### Fixed
 - Fixed some problem in 900_gregorio.xml (Scribus render frame tool).  First, the use of `filecontents` rather than `filecontents*` was leading to a comment header that made it impossible for Gregorio to find the gabc headers in the temporary score file.  Further, some of the indenting (which makes the file more human readable) was leading to errors in the formatting of the created files because they are processed in a way which handles whitespace differently from XML.  See [#1457](https://github.com/gregorio-project/gregorio/issues/1457).
+- Added parenthesized figures for virgula (gabc: `` `?``), divisio minima (gabc: ` ,?`), flat (gabc: `x?`), natural (gabc: `y?`), and sharp (gabc: `#?`).  See [#1475](https://github.com/gregorio-project/gregorio/issues/1475).
 
 ## [Unreleased][CTAN]
 ### Fixed

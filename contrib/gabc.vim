@@ -12,7 +12,8 @@ syn match gabcAttributeEnd ";"
 syn match gabcNoteError "." contained
 syn match gabcBasicNote "[a-np]" contained
 syn match gabcBasicNote "[A-NP][012]\?" contained
-syn match gabcNoteShape "[\<\>~xy#vVwWqQR\-Ss\.+]" contained
+syn match gabcNoteShape "[\<\>~vVwWqQR\-Ss\.+]" contained
+syn match gabcNoteShape "[xy#]?\?" contained
 syn match gabcNoteShape "_[0-5]*" contained
 syn match gabcNoteShape "[oO'\.][01]\?" contained
 syn match gabcNoteShape "r[0-8]\?" contained
@@ -32,7 +33,9 @@ syn match gabcFuseEnd "\]" contained
 syn match gabcBar ":?\?" contained
 syn match gabcBar ";[1-8]\?" contained
 syn match gabcBar ",[0-8]\?" contained
-syn match gabcBar "[`^]0\?" contained
+syn match gabcBar "[,`]?\?0\?" contained
+syn match gabcBar "[,`]0?" contained
+syn match gabcBar "\^0\?" contained
 syn match gabcSpace "[! ]" contained
 syn match gabcSpace "/0\?" contained
 syn match gabcSpace "z[-+0]\?" contained

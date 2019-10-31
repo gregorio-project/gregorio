@@ -19,7 +19,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1176402534
-ModificationTime: 1533939115
+ModificationTime: 1572481823
 OS2TypoAscent: 0
 OS2TypoAOffset: 1
 OS2TypoDescent: 0
@@ -42,7 +42,7 @@ NameList: Adobe Glyph List
 DisplaySize: -96
 AntiAlias: 1
 FitToEm: 0
-WinInfo: 126 18 5
+WinInfo: 144 18 5
 BeginPrivate: 0
 EndPrivate
 Grid
@@ -58,7 +58,7 @@ Grid
  22 -700 l 0
 EndSplineSet
 TeXData: 1 0 0 346030 173015 115343 0 1048576 115343 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 214 214
+BeginChars: 230 230
 
 StartChar: Accentus
 Encoding: 0 -1 0
@@ -1823,8 +1823,268 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: DivisioMinorTwo
+StartChar: DivisioMinimaParenTwo
 Encoding: 71 -1 71
+Width: 259
+VWidth: 1418
+Flags: W
+VStem: 0 18<-149.059 -37.513> 120 19<-276.028 89.9844> 241 18<-149.059 -37.513>
+LayerCount: 2
+Fore
+SplineSet
+181 -262.569 m 5
+ 181 -262.569 241 -178.333 241 -93.29 c 4
+ 241 -8.23535 181.001 76.0215 181.001 76.0215 c 5
+ 181.001 76.0215 182.476 78.5684 184 79.5215 c 28
+ 185.727 80.6006 189.001 81.0215 189.001 81.0215 c 5
+ 189.001 81.0215 259 -5.03223 259 -93.29 c 4
+ 259 -181.537 189 -267.569 189 -267.569 c 5
+ 189 -267.569 185.727 -267.148 184 -266.069 c 28
+ 182.476 -265.116 181 -262.569 181 -262.569 c 5
+78 -262.569 m 5
+ 78 -262.569 76.5244 -265.116 75 -266.069 c 28
+ 73.2734 -267.148 70 -267.569 70 -267.569 c 5
+ 70 -267.569 0 -181.537 0 -93.29 c 4
+ 0 -5.03223 69.999 81.0215 69.999 81.0215 c 5
+ 69.999 81.0215 73.2734 80.6006 75 79.5215 c 28
+ 76.5244 78.5684 77.999 76.0215 77.999 76.0215 c 5
+ 77.999 76.0215 18 -8.23535 18 -93.29 c 4
+ 18 -178.333 78 -262.569 78 -262.569 c 5
+120 -270.872 m 13
+ 120 89.9844 l 29
+ 138.999 90.0215 l 29
+ 139 -277.569 l 21
+ 126.044 -277.435 122.435 -274.391 120 -270.872 c 13
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinimaParenThree
+Encoding: 72 -1 72
+Width: 259
+VWidth: 1733
+Flags: W
+VStem: 0 18<165.941 277.487> 120 19<38.9717 404.984> 241 18<165.941 277.487>
+LayerCount: 2
+Fore
+SplineSet
+181 52.4307 m 1
+ 181 52.4307 241 136.667 241 221.71 c 0
+ 241 306.765 181.001 391.021 181.001 391.021 c 1
+ 181.001 391.021 182.476 393.568 184 394.521 c 24
+ 185.727 395.601 189.001 396.021 189.001 396.021 c 1
+ 189.001 396.021 259 309.968 259 221.71 c 0
+ 259 133.463 189 47.4307 189 47.4307 c 1
+ 189 47.4307 185.727 47.8516 184 48.9307 c 24
+ 182.476 49.8838 181 52.4307 181 52.4307 c 1
+78 52.4307 m 1
+ 78 52.4307 76.5244 49.8838 75 48.9307 c 24
+ 73.2734 47.8516 70 47.4307 70 47.4307 c 1
+ 70 47.4307 0 133.463 0 221.71 c 0
+ 0 309.968 69.999 396.021 69.999 396.021 c 1
+ 69.999 396.021 73.2734 395.601 75 394.521 c 24
+ 76.5244 393.568 77.999 391.021 77.999 391.021 c 1
+ 77.999 391.021 18 306.765 18 221.71 c 0
+ 18 136.667 78 52.4307 78 52.4307 c 1
+120 44.1279 m 13
+ 120 404.984 l 25
+ 138.999 405.021 l 25
+ 139 37.4307 l 17
+ 126.044 37.5654 122.435 40.6094 120 44.1279 c 13
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinimaParenFour
+Encoding: 73 -1 73
+Width: 259
+VWidth: 2048
+Flags: W
+VStem: 0 18<480.941 592.487> 120 19<353.972 719.984> 241 18<480.941 592.487>
+LayerCount: 2
+Fore
+SplineSet
+181 367.431 m 1
+ 181 367.431 241 451.667 241 536.71 c 0
+ 241 621.765 181.001 706.021 181.001 706.021 c 1
+ 181.001 706.021 182.476 708.568 184 709.521 c 24
+ 185.727 710.601 189.001 711.021 189.001 711.021 c 1
+ 189.001 711.021 259 624.968 259 536.71 c 0
+ 259 448.463 189 362.431 189 362.431 c 1
+ 189 362.431 185.727 362.852 184 363.931 c 24
+ 182.476 364.884 181 367.431 181 367.431 c 1
+78 367.431 m 1
+ 78 367.431 76.5244 364.884 75 363.931 c 24
+ 73.2734 362.852 70 362.431 70 362.431 c 1
+ 70 362.431 0 448.463 0 536.71 c 0
+ 0 624.968 69.999 711.021 69.999 711.021 c 1
+ 69.999 711.021 73.2734 710.601 75 709.521 c 24
+ 76.5244 708.568 77.999 706.021 77.999 706.021 c 1
+ 77.999 706.021 18 621.765 18 536.71 c 0
+ 18 451.667 78 367.431 78 367.431 c 1
+120 359.128 m 9
+ 120 719.984 l 25
+ 138.999 720.021 l 25
+ 139 352.431 l 17
+ 126.044 352.565 122.435 355.609 120 359.128 c 9
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinimaParenFive
+Encoding: 74 -1 74
+Width: 259
+VWidth: 2363
+Flags: W
+VStem: 0 18<795.941 907.487> 120 19<668.972 1034.98> 241 18<795.941 907.487>
+LayerCount: 2
+Fore
+SplineSet
+181 682.431 m 1
+ 181 682.431 241 766.667 241 851.71 c 0
+ 241 936.765 181.001 1021.02 181.001 1021.02 c 1
+ 181.001 1021.02 182.476 1023.57 184 1024.52 c 24
+ 185.727 1025.6 189.001 1026.02 189.001 1026.02 c 1
+ 189.001 1026.02 259 939.968 259 851.71 c 0
+ 259 763.463 189 677.431 189 677.431 c 1
+ 189 677.431 185.727 677.852 184 678.931 c 24
+ 182.476 679.884 181 682.431 181 682.431 c 1
+78 682.431 m 1
+ 78 682.431 76.5244 679.884 75 678.931 c 24
+ 73.2734 677.852 70 677.431 70 677.431 c 1
+ 70 677.431 0 763.463 0 851.71 c 0
+ 0 939.968 69.999 1026.02 69.999 1026.02 c 1
+ 69.999 1026.02 73.2734 1025.6 75 1024.52 c 24
+ 76.5244 1023.57 77.999 1021.02 77.999 1021.02 c 1
+ 77.999 1021.02 18 936.765 18 851.71 c 0
+ 18 766.667 78 682.431 78 682.431 c 1
+120 674.128 m 9
+ 120 1034.98 l 25
+ 138.999 1035.02 l 25
+ 139 667.431 l 17
+ 126.044 667.565 122.435 670.609 120 674.128 c 9
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinimaParenSix
+Encoding: 75 -1 75
+Width: 259
+VWidth: 2678
+Flags: W
+VStem: 0 18<1110.94 1222.49> 120 19<983.972 1349.98> 241 18<1110.94 1222.49>
+LayerCount: 2
+Fore
+SplineSet
+181 997.431 m 1
+ 181 997.431 241 1081.67 241 1166.71 c 0
+ 241 1251.76 181.001 1336.02 181.001 1336.02 c 1
+ 181.001 1336.02 182.476 1338.57 184 1339.52 c 24
+ 185.727 1340.6 189.001 1341.02 189.001 1341.02 c 1
+ 189.001 1341.02 259 1254.97 259 1166.71 c 0
+ 259 1078.46 189 992.431 189 992.431 c 1
+ 189 992.431 185.727 992.852 184 993.931 c 24
+ 182.476 994.884 181 997.431 181 997.431 c 1
+78 997.431 m 1
+ 78 997.431 76.5244 994.884 75 993.931 c 24
+ 73.2734 992.852 70 992.431 70 992.431 c 1
+ 70 992.431 0 1078.46 0 1166.71 c 0
+ 0 1254.97 69.999 1341.02 69.999 1341.02 c 1
+ 69.999 1341.02 73.2734 1340.6 75 1339.52 c 24
+ 76.5244 1338.57 77.999 1336.02 77.999 1336.02 c 1
+ 77.999 1336.02 18 1251.76 18 1166.71 c 0
+ 18 1081.67 78 997.431 78 997.431 c 1
+120 989.128 m 9
+ 120 1349.98 l 25
+ 138.999 1350.02 l 25
+ 139 982.431 l 17
+ 126.044 982.565 122.435 985.609 120 989.128 c 9
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinimisTwo
+Encoding: 76 -1 76
+Width: 19
+VWidth: 1418
+Flags: HW
+HStem: -1039 15 -724 15 -409 15 -94 15
+LayerCount: 2
+Fore
+SplineSet
+0 -20.8721 m 13
+ 0.00292969 169.984 l 25
+ 18.999 170.021 l 25
+ 19 -27.5693 l 21
+ 6.04395 -27.4346 2.43457 -24.3906 0 -20.8721 c 13
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinimisThree
+Encoding: 77 -1 77
+Width: 19
+VWidth: 1733
+Flags: HW
+HStem: -724 15 -409 15 -94 15 221 15
+LayerCount: 2
+Fore
+SplineSet
+0 294.128 m 13
+ 0.00292969 484.984 l 25
+ 18.999 485.021 l 25
+ 19 287.431 l 21
+ 6.04395 287.565 2.43457 290.609 0 294.128 c 13
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinimisFour
+Encoding: 78 -1 78
+Width: 19
+VWidth: 2048
+Flags: HW
+HStem: -409 15 -94 15 221 15 536 15
+LayerCount: 2
+Fore
+SplineSet
+0 609.128 m 13
+ 0.00292969 799.984 l 25
+ 18.999 800.021 l 25
+ 19 602.431 l 21
+ 6.04395 602.565 2.43457 605.609 0 609.128 c 13
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinimisFive
+Encoding: 79 -1 79
+Width: 19
+VWidth: 2363
+Flags: HW
+HStem: -94 15 221 15 536 15 851 15
+LayerCount: 2
+Fore
+SplineSet
+0 924.128 m 13
+ 0.00292969 1114.98 l 25
+ 18.999 1115.02 l 25
+ 19 917.431 l 21
+ 6.04395 917.565 2.43457 920.609 0 924.128 c 13
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinimisSix
+Encoding: 80 -1 80
+Width: 19
+VWidth: 2678
+Flags: HW
+HStem: 221 15 536 15 851 15 1166 15
+LayerCount: 2
+Fore
+SplineSet
+0 1239.13 m 13
+ 0.00292969 1429.98 l 25
+ 18.999 1430.02 l 25
+ 19 1232.43 l 21
+ 6.04395 1232.56 2.43457 1235.61 0 1239.13 c 13
+EndSplineSet
+EndChar
+
+StartChar: DivisioMinorTwo
+Encoding: 81 -1 81
 Width: 19
 VWidth: 2048
 Flags: HW
@@ -1841,7 +2101,7 @@ EndSplineSet
 EndChar
 
 StartChar: DivisioMinorThree
-Encoding: 72 -1 72
+Encoding: 82 -1 82
 Width: 19
 VWidth: 2048
 Flags: HW
@@ -1858,7 +2118,7 @@ EndSplineSet
 EndChar
 
 StartChar: DivisioMinorFour
-Encoding: 73 -1 73
+Encoding: 83 -1 83
 Width: 19
 VWidth: 2048
 Flags: HW
@@ -1876,7 +2136,7 @@ Validated: 1
 EndChar
 
 StartChar: DivisioMinorFive
-Encoding: 74 -1 74
+Encoding: 84 -1 84
 Width: 19
 VWidth: 2048
 Flags: HW
@@ -1893,7 +2153,7 @@ EndSplineSet
 EndChar
 
 StartChar: FClef
-Encoding: 75 -1 75
+Encoding: 85 -1 85
 Width: 299
 VWidth: 1119
 Flags: HW
@@ -1934,7 +2194,7 @@ Validated: 33
 EndChar
 
 StartChar: FClefChange
-Encoding: 76 -1 76
+Encoding: 86 -1 86
 Width: 299
 VWidth: 1119
 Flags: W
@@ -1975,7 +2235,7 @@ Validated: 33
 EndChar
 
 StartChar: Flat
-Encoding: 77 -1 77
+Encoding: 87 -1 87
 Width: 159
 VWidth: 1120
 Flags: HW
@@ -2005,7 +2265,7 @@ Validated: 1
 EndChar
 
 StartChar: FlatHole
-Encoding: 78 -1 78
+Encoding: 88 -1 88
 Width: 159
 VWidth: 1120
 Flags: HW
@@ -2024,8 +2284,69 @@ EndSplineSet
 Validated: 1
 EndChar
 
+StartChar: FlatParen
+Encoding: 89 -1 89
+Width: 364
+VWidth: 2048
+Flags: W
+HStem: 94 75.3037<132 207.253>
+VStem: 0 18<11.9414 123.487> 100 22<39.2837 380.008> 242.5 21.5<-6 47.9532> 346 18<11.9414 123.487>
+LayerCount: 2
+Fore
+SplineSet
+286 -101.569 m 5
+ 286 -101.569 346 -17.333 346 67.71 c 4
+ 346 152.765 286.001 237.021 286.001 237.021 c 5
+ 286.001 237.021 287.476 239.568 289 240.521 c 28
+ 290.727 241.601 294.001 242.021 294.001 242.021 c 5
+ 294.001 242.021 364 155.968 364 67.71 c 4
+ 364 -20.5371 294 -106.569 294 -106.569 c 5
+ 294 -106.569 290.727 -106.148 289 -105.069 c 28
+ 287.476 -104.116 286 -101.569 286 -101.569 c 5
+78 -101.569 m 5
+ 78 -101.569 76.5244 -104.116 75 -105.069 c 28
+ 73.2734 -106.148 70 -106.569 70 -106.569 c 5
+ 70 -106.569 0 -20.5371 0 67.71 c 4
+ 0 155.968 69.999 242.021 69.999 242.021 c 5
+ 69.999 242.021 73.2734 241.601 75 240.521 c 28
+ 76.5244 239.568 77.999 237.021 77.999 237.021 c 5
+ 77.999 237.021 18 152.765 18 67.71 c 4
+ 18 -17.333 78 -101.569 78 -101.569 c 5
+100 371 m 17
+ 110.5 385.5 115 389.5 122.5 389.5 c 9
+ 122 52 l 17
+ 146.737 15.5322 185.5 0 242.5 -6 c 1
+ 242 20 243.333 26.667 229 54 c 1
+ 208.845 73.7666 187.901 93.7178 131.5 94 c 9
+ 132 169 l 17
+ 135.615 169.205 139.186 169.304 142.705 169.304 c 0
+ 213.414 169.304 264 129.353 264 109.667 c 9
+ 264 -63 l 17
+ 201 -55 133 -39 100 1 c 9
+ 100 371 l 17
+EndSplineSet
+EndChar
+
+StartChar: FlatParenHole
+Encoding: 90 -1 90
+Width: 364
+VWidth: 2048
+Flags: W
+HStem: -8.52539 106.052
+VStem: 118.979 126.534
+LayerCount: 2
+Fore
+SplineSet
+118.979 97.5264 m 17
+ 157.787 92.7969 210.287 75.2158 231.338 54.4746 c 1
+ 246.388 25.7754 244.987 18.7754 245.513 -8.52539 c 1
+ 185.663 -2.22461 144.962 14.084 118.987 52.375 c 9
+ 118.979 97.5264 l 17
+EndSplineSet
+EndChar
+
 StartChar: hepisemaleft
-Encoding: 79 -1 79
+Encoding: 91 -1 91
 Width: 1
 VWidth: 1968
 Flags: HW
@@ -2042,7 +2363,7 @@ EndSplineSet
 EndChar
 
 StartChar: hepisemaright
-Encoding: 80 -1 80
+Encoding: 92 -1 92
 Width: 2
 VWidth: 1968
 Flags: HW
@@ -2059,7 +2380,7 @@ EndSplineSet
 EndChar
 
 StartChar: hepisema_base
-Encoding: 81 -1 81
+Encoding: 93 -1 93
 Width: 1
 VWidth: 1972
 Flags: HW
@@ -2076,7 +2397,7 @@ EndSplineSet
 EndChar
 
 StartChar: idebilis
-Encoding: 82 -1 82
+Encoding: 94 -1 94
 Width: 97
 VWidth: 2048
 Flags: HW
@@ -2099,7 +2420,7 @@ EndSplineSet
 EndChar
 
 StartChar: idebilis#Cavum
-Encoding: 83 -1 83
+Encoding: 95 -1 95
 Width: 97
 VWidth: 2048
 Flags: HW
@@ -2120,7 +2441,7 @@ EndSplineSet
 EndChar
 
 StartChar: line2
-Encoding: 84 -1 84
+Encoding: 96 -1 96
 Width: 22
 VWidth: 2048
 Flags: HW
@@ -2138,7 +2459,7 @@ Validated: 1
 EndChar
 
 StartChar: line3
-Encoding: 85 -1 85
+Encoding: 97 -1 97
 Width: 22
 VWidth: 2048
 Flags: HW
@@ -2156,7 +2477,7 @@ Validated: 1
 EndChar
 
 StartChar: line4
-Encoding: 86 -1 86
+Encoding: 98 -1 98
 Width: 22
 VWidth: 2048
 Flags: W
@@ -2173,7 +2494,7 @@ EndSplineSet
 EndChar
 
 StartChar: line5
-Encoding: 87 -1 87
+Encoding: 99 -1 99
 Width: 22
 VWidth: 2048
 Flags: HW
@@ -2191,7 +2512,7 @@ Validated: 1
 EndChar
 
 StartChar: Linea
-Encoding: 88 -1 88
+Encoding: 100 -1 100
 Width: 431
 VWidth: 2612
 Flags: W
@@ -2219,7 +2540,7 @@ Validated: 1
 EndChar
 
 StartChar: Linea#Cavum
-Encoding: 89 -1 89
+Encoding: 101 -1 101
 Width: 431
 VWidth: 2612
 Flags: HW
@@ -2238,7 +2559,7 @@ EndSplineSet
 EndChar
 
 StartChar: LineaPunctum
-Encoding: 90 -1 90
+Encoding: 102 -1 102
 Width: 258
 VWidth: 1139
 Flags: HW
@@ -2274,7 +2595,7 @@ Validated: 1
 EndChar
 
 StartChar: LineaPunctum#Cavum
-Encoding: 91 -1 91
+Encoding: 103 -1 103
 Width: 258
 VWidth: 1139
 Flags: HW
@@ -2295,7 +2616,7 @@ EndSplineSet
 EndChar
 
 StartChar: mademinutus
-Encoding: 92 -1 92
+Encoding: 104 -1 104
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -2317,7 +2638,7 @@ EndSplineSet
 EndChar
 
 StartChar: mdeminutus
-Encoding: 93 -1 93
+Encoding: 105 -1 105
 Width: 161
 Flags: HW
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -2338,7 +2659,7 @@ Validated: 1
 EndChar
 
 StartChar: mnbdeminutus
-Encoding: 94 -1 94
+Encoding: 106 -1 106
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -2359,7 +2680,7 @@ Validated: 1
 EndChar
 
 StartChar: mnbpdeminutus
-Encoding: 95 -1 95
+Encoding: 107 -1 107
 Width: 161
 Flags: HW
 HStem: 536.058 15 221.058 15 -93.9416 15 -408.942 15
@@ -2380,7 +2701,7 @@ Validated: 1
 EndChar
 
 StartChar: mpdeminutus
-Encoding: 96 -1 96
+Encoding: 108 -1 108
 Width: 161
 Flags: HW
 HStem: 536.497 15 221.497 15 -93.503 15 -408.503 15
@@ -2400,7 +2721,7 @@ EndSplineSet
 EndChar
 
 StartChar: mpdeminutus#Cavum
-Encoding: 97 -1 97
+Encoding: 109 -1 109
 Width: 161
 Flags: HW
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -2420,7 +2741,7 @@ EndSplineSet
 EndChar
 
 StartChar: msdeminutus
-Encoding: 98 -1 98
+Encoding: 110 -1 110
 Width: 161
 Flags: HW
 HStem: 536.058 15 221.058 15 -93.9416 15 -408.942 15
@@ -2442,7 +2763,7 @@ EndSplineSet
 EndChar
 
 StartChar: Natural
-Encoding: 99 -1 99
+Encoding: 111 -1 111
 Width: 141
 VWidth: 1129
 Flags: HW
@@ -2475,7 +2796,7 @@ Validated: 1
 EndChar
 
 StartChar: NaturalHole
-Encoding: 100 -1 100
+Encoding: 112 -1 112
 Width: 141
 VWidth: 1129
 Flags: HW
@@ -2492,8 +2813,69 @@ EndSplineSet
 Validated: 1
 EndChar
 
+StartChar: NaturalParen
+Encoding: 113 -1 113
+Width: 401
+VWidth: 2048
+Flags: W
+VStem: 0 18<11.9414 123.487> 100 22<5 86.4152 140 387.921> 279 22<-241.35 126> 383 18<11.9414 123.487>
+LayerCount: 2
+Fore
+SplineSet
+323 -101.569 m 5
+ 323 -101.569 383 -17.333 383 67.71 c 4
+ 383 152.765 323.001 237.021 323.001 237.021 c 5
+ 323.001 237.021 324.476 239.568 326 240.521 c 28
+ 327.727 241.601 331.001 242.021 331.001 242.021 c 5
+ 331.001 242.021 401 155.968 401 67.71 c 4
+ 401 -20.5371 331 -106.569 331 -106.569 c 5
+ 331 -106.569 327.727 -106.148 326 -105.069 c 28
+ 324.476 -104.116 323 -101.569 323 -101.569 c 5
+78 -101.569 m 1
+ 78 -101.569 76.5244 -104.116 75 -105.069 c 24
+ 73.2734 -106.148 70 -106.569 70 -106.569 c 1
+ 70 -106.569 0 -20.5371 0 67.71 c 0
+ 0 155.968 69.999 242.021 69.999 242.021 c 1
+ 69.999 242.021 73.2734 241.601 75 240.521 c 24
+ 76.5244 239.568 77.999 237.021 77.999 237.021 c 1
+ 77.999 237.021 18 152.765 18 67.71 c 0
+ 18 -17.333 78 -101.569 78 -101.569 c 1
+100 382 m 17
+ 107.333 390.885 114.667 390.185 122 393 c 9
+ 122 140 l 17
+ 181 177 217 177 301 185 c 9
+ 301 -236 l 17
+ 295.761 -243.79 286.675 -242.17 279 -244 c 9
+ 279 126 l 17
+ 206.103 115.761 168 113 122 79 c 9
+ 122 5 l 17
+ 170 12 211 12 269 59 c 1
+ 269 19 270 13 270 0 c 1
+ 216 -45 151 -47 100 -53 c 9
+ 100 382 l 17
+EndSplineSet
+EndChar
+
+StartChar: NaturalParenHole
+Encoding: 114 -1 114
+Width: 401
+VWidth: 2048
+Flags: W
+HStem: 1.97461 127.051
+VStem: 118.075 164.85
+LayerCount: 2
+Fore
+SplineSet
+282.925 129.025 m 9
+ 282.925 129.025 283.625 73.0254 282.919 57.626 c 1
+ 222.019 8.27637 168.475 9.3252 118.075 1.97461 c 9
+ 118.075 79.6748 l 17
+ 166.375 115.375 282.925 129.025 282.925 129.025 c 9
+EndSplineSet
+EndChar
+
 StartChar: OriscusDeminutus
-Encoding: 101 -1 101
+Encoding: 115 -1 115
 Width: 192
 Flags: HW
 HStem: -473.822 17.1 -114.722 17.1 244.378 17.1 603.478 17.1
@@ -2518,7 +2900,7 @@ Validated: 33
 EndChar
 
 StartChar: OriscusDeminutus#Cavum
-Encoding: 102 -1 102
+Encoding: 116 -1 116
 Width: 192
 Flags: HW
 LayerCount: 2
@@ -2539,7 +2921,7 @@ EndSplineSet
 EndChar
 
 StartChar: p2base
-Encoding: 103 -1 103
+Encoding: 117 -1 117
 Width: 161
 Flags: W
 HStem: 536.228 15 221.228 15 -93.7716 15 -408.772 15
@@ -2560,7 +2942,7 @@ Validated: 1
 EndChar
 
 StartChar: p2base#Cavum
-Encoding: 104 -1 104
+Encoding: 118 -1 118
 Width: 161
 Flags: HW
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -2580,7 +2962,7 @@ EndSplineSet
 EndChar
 
 StartChar: pesdeminutus
-Encoding: 105 -1 105
+Encoding: 119 -1 119
 Width: 161
 Flags: HW
 HStem: 536.228 15 221.228 15 -93.7716 15 -408.772 15
@@ -2600,7 +2982,7 @@ EndSplineSet
 EndChar
 
 StartChar: pesdeminutus_op
-Encoding: 106 -1 106
+Encoding: 120 -1 120
 Width: 161
 Flags: HW
 HStem: 536.228 15 221.228 15 -93.7716 15 -408.772 15
@@ -2623,7 +3005,7 @@ Validated: 1
 EndChar
 
 StartChar: PesOneNothing
-Encoding: 107 -1 107
+Encoding: 121 -1 121
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -2651,7 +3033,7 @@ Validated: 1
 EndChar
 
 StartChar: PesOneNothing#Cavum
-Encoding: 108 -1 108
+Encoding: 122 -1 122
 Width: 161
 Flags: HW
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -2680,7 +3062,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectus1
-Encoding: 109 -1 109
+Encoding: 123 -1 123
 Width: 490
 VWidth: 2048
 Flags: HW
@@ -2701,7 +3083,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectus1#Cavum
-Encoding: 110 -1 110
+Encoding: 124 -1 124
 Width: 490
 VWidth: 2048
 Flags: HW
@@ -2720,7 +3102,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectus2
-Encoding: 111 -1 111
+Encoding: 125 -1 125
 Width: 575
 VWidth: 2048
 Flags: HW
@@ -2742,7 +3124,7 @@ Validated: 1
 EndChar
 
 StartChar: porrectus2#Cavum
-Encoding: 112 -1 112
+Encoding: 126 -1 126
 Width: 575
 VWidth: 2048
 Flags: HW
@@ -2761,7 +3143,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectus3
-Encoding: 113 -1 113
+Encoding: 127 -1 127
 Width: 650
 VWidth: 2048
 Flags: HW
@@ -2783,7 +3165,7 @@ Validated: 1
 EndChar
 
 StartChar: porrectus3#Cavum
-Encoding: 114 -1 114
+Encoding: 128 -1 128
 Width: 650
 VWidth: 2048
 Flags: HW
@@ -2802,7 +3184,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectus4
-Encoding: 115 -1 115
+Encoding: 129 -1 129
 Width: 740
 VWidth: 2048
 Flags: HW
@@ -2824,7 +3206,7 @@ Validated: 1
 EndChar
 
 StartChar: porrectus4#Cavum
-Encoding: 116 -1 116
+Encoding: 130 -1 130
 Width: 740
 VWidth: 2048
 Flags: HW
@@ -2843,7 +3225,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectus5
-Encoding: 117 -1 117
+Encoding: 131 -1 131
 Width: 931
 VWidth: 2048
 Flags: HW
@@ -2865,7 +3247,7 @@ Validated: 1
 EndChar
 
 StartChar: porrectus5#Cavum
-Encoding: 118 -1 118
+Encoding: 132 -1 132
 Width: 931
 VWidth: 2048
 Flags: HW
@@ -2884,7 +3266,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexus1
-Encoding: 119 -1 119
+Encoding: 133 -1 133
 Width: 340
 VWidth: 2048
 Flags: HW
@@ -2906,7 +3288,7 @@ Validated: 1
 EndChar
 
 StartChar: porrectusflexus1#Cavum
-Encoding: 120 -1 120
+Encoding: 134 -1 134
 Width: 340
 VWidth: 2048
 Flags: HW
@@ -2925,7 +3307,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexus2
-Encoding: 121 -1 121
+Encoding: 135 -1 135
 Width: 428
 VWidth: 2048
 Flags: HW
@@ -2947,7 +3329,7 @@ Validated: 1
 EndChar
 
 StartChar: porrectusflexus2#Cavum
-Encoding: 122 -1 122
+Encoding: 136 -1 136
 Width: 428
 VWidth: 2048
 Flags: HW
@@ -2966,7 +3348,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexus3
-Encoding: 123 -1 123
+Encoding: 137 -1 137
 Width: 586
 VWidth: 2048
 Flags: HW
@@ -2988,7 +3370,7 @@ Validated: 1
 EndChar
 
 StartChar: porrectusflexus3#Cavum
-Encoding: 124 -1 124
+Encoding: 138 -1 138
 Width: 586
 VWidth: 2048
 Flags: HW
@@ -3007,7 +3389,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexus4
-Encoding: 125 -1 125
+Encoding: 139 -1 139
 Width: 670
 VWidth: 2048
 Flags: HW
@@ -3029,7 +3411,7 @@ Validated: 1
 EndChar
 
 StartChar: porrectusflexus4#Cavum
-Encoding: 126 -1 126
+Encoding: 140 -1 140
 Width: 670
 VWidth: 2048
 Flags: HW
@@ -3048,7 +3430,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexus5
-Encoding: 127 -1 127
+Encoding: 141 -1 141
 Width: 931
 VWidth: 2048
 Flags: HW
@@ -3070,7 +3452,7 @@ Validated: 1
 EndChar
 
 StartChar: porrectusflexus5#Cavum
-Encoding: 128 -1 128
+Encoding: 142 -1 142
 Width: 931
 VWidth: 2048
 Flags: HW
@@ -3089,7 +3471,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb1
-Encoding: 129 -1 129
+Encoding: 143 -1 143
 Width: 340
 VWidth: 2048
 Flags: HW
@@ -3109,7 +3491,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb1#Cavum
-Encoding: 130 -1 130
+Encoding: 144 -1 144
 Width: 340
 VWidth: 2048
 Flags: HW
@@ -3128,7 +3510,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb2
-Encoding: 131 -1 131
+Encoding: 145 -1 145
 Width: 428
 VWidth: 2048
 Flags: HW
@@ -3149,7 +3531,7 @@ Validated: 1
 EndChar
 
 StartChar: porrectusflexusnb2#Cavum
-Encoding: 132 -1 132
+Encoding: 146 -1 146
 Width: 428
 VWidth: 2048
 Flags: HW
@@ -3168,7 +3550,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb3
-Encoding: 133 -1 133
+Encoding: 147 -1 147
 Width: 586
 VWidth: 2048
 Flags: HW
@@ -3189,7 +3571,7 @@ Validated: 1
 EndChar
 
 StartChar: porrectusflexusnb3#Cavum
-Encoding: 134 -1 134
+Encoding: 148 -1 148
 Width: 586
 VWidth: 2048
 Flags: HW
@@ -3208,7 +3590,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb4
-Encoding: 135 -1 135
+Encoding: 149 -1 149
 Width: 670
 VWidth: 2048
 Flags: HW
@@ -3229,7 +3611,7 @@ Validated: 1
 EndChar
 
 StartChar: porrectusflexusnb4#Cavum
-Encoding: 136 -1 136
+Encoding: 150 -1 150
 Width: 670
 VWidth: 2048
 Flags: HW
@@ -3248,7 +3630,7 @@ EndSplineSet
 EndChar
 
 StartChar: porrectusflexusnb5
-Encoding: 137 -1 137
+Encoding: 151 -1 151
 Width: 931
 VWidth: 2048
 Flags: HW
@@ -3269,7 +3651,7 @@ Validated: 1
 EndChar
 
 StartChar: porrectusflexusnb5#Cavum
-Encoding: 138 -1 138
+Encoding: 152 -1 152
 Width: 931
 VWidth: 2048
 Flags: HW
@@ -3288,7 +3670,7 @@ EndSplineSet
 EndChar
 
 StartChar: Punctum
-Encoding: 139 -1 139
+Encoding: 153 -1 153
 Width: 161
 Flags: HW
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -3308,7 +3690,7 @@ EndSplineSet
 EndChar
 
 StartChar: Punctum#Cavum
-Encoding: 140 -1 140
+Encoding: 154 -1 154
 Width: 161
 Flags: HW
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -3328,7 +3710,7 @@ EndSplineSet
 EndChar
 
 StartChar: PunctumAscendens
-Encoding: 141 -1 141
+Encoding: 155 -1 155
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -3351,7 +3733,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumAscendens#Cavum
-Encoding: 142 -1 142
+Encoding: 156 -1 156
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -3371,7 +3753,7 @@ EndSplineSet
 EndChar
 
 StartChar: PunctumAscendens_op
-Encoding: 143 -1 143
+Encoding: 157 -1 157
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -3394,7 +3776,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumAuctusLineBL
-Encoding: 144 -1 144
+Encoding: 158 -1 158
 Width: 141
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -3418,7 +3800,7 @@ Validated: 33
 EndChar
 
 StartChar: PunctumAuctusLineBL#Cavum
-Encoding: 145 -1 145
+Encoding: 159 -1 159
 Width: 141
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -3438,7 +3820,7 @@ EndSplineSet
 EndChar
 
 StartChar: PunctumAuctusLineBL_op
-Encoding: 146 -1 146
+Encoding: 160 -1 160
 Width: 141
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -3462,7 +3844,7 @@ Validated: 33
 EndChar
 
 StartChar: PunctumDeminutus
-Encoding: 147 -1 147
+Encoding: 161 -1 161
 Width: 97
 VWidth: 2048
 Flags: HW
@@ -3484,7 +3866,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumDeminutus#Cavum
-Encoding: 148 -1 148
+Encoding: 162 -1 162
 Width: 97
 VWidth: 2048
 Flags: HW
@@ -3505,7 +3887,7 @@ EndSplineSet
 EndChar
 
 StartChar: PunctumDescendens
-Encoding: 149 -1 149
+Encoding: 163 -1 163
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -3528,7 +3910,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumDescendens#Cavum
-Encoding: 150 -1 150
+Encoding: 164 -1 164
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -3548,7 +3930,7 @@ EndSplineSet
 EndChar
 
 StartChar: PunctumDescendens_op
-Encoding: 151 -1 151
+Encoding: 165 -1 165
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -3572,7 +3954,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumInclinatumAuctus
-Encoding: 152 -1 152
+Encoding: 166 -1 166
 Width: 178
 Flags: HW
 HStem: -472.63 17.1 -113.53 17.1 245.57 17.1 604.67 17.1
@@ -3599,7 +3981,7 @@ Validated: 33
 EndChar
 
 StartChar: PunctumInclinatumAuctus#Cavum
-Encoding: 153 -1 153
+Encoding: 167 -1 167
 Width: 178
 Flags: HW
 HStem: -476.247 17.1 -117.147 17.1 241.953 17.1 601.053 17.1
@@ -3624,7 +4006,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumInclinatumDeminutus
-Encoding: 154 -1 154
+Encoding: 168 -1 168
 Width: 112
 VWidth: 1131
 Flags: HW
@@ -3650,7 +4032,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumInclinatumDeminutus#Cavum
-Encoding: 155 -1 155
+Encoding: 169 -1 169
 Width: 112
 VWidth: 1131
 Flags: HW
@@ -3675,7 +4057,7 @@ EndSplineSet
 EndChar
 
 StartChar: PunctumLineBL
-Encoding: 156 -1 156
+Encoding: 170 -1 170
 Width: 161
 Flags: HW
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -3696,7 +4078,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumLineBLBR
-Encoding: 157 -1 157
+Encoding: 171 -1 171
 Width: 161
 Flags: HW
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -3717,7 +4099,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumLineBR
-Encoding: 158 -1 158
+Encoding: 172 -1 172
 Width: 161
 Flags: HW
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -3738,7 +4120,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumLineTL
-Encoding: 159 -1 159
+Encoding: 173 -1 173
 Width: 161
 Flags: HW
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -3760,7 +4142,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumLineTLTR
-Encoding: 160 -1 160
+Encoding: 174 -1 174
 Width: 161
 Flags: HW
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -3783,7 +4165,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumLineTR
-Encoding: 161 -1 161
+Encoding: 175 -1 175
 Width: 161
 Flags: HW
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -3805,7 +4187,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumSmall
-Encoding: 162 -1 162
+Encoding: 176 -1 176
 Width: 151
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -3826,7 +4208,7 @@ Validated: 1
 EndChar
 
 StartChar: PunctumSmall#Cavum
-Encoding: 163 -1 163
+Encoding: 177 -1 177
 Width: 151
 Flags: HW
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -3846,7 +4228,7 @@ EndSplineSet
 EndChar
 
 StartChar: queue
-Encoding: 164 -1 164
+Encoding: 178 -1 178
 Width: 22
 VWidth: 2048
 Flags: HW
@@ -3863,7 +4245,7 @@ EndSplineSet
 EndChar
 
 StartChar: queuebase
-Encoding: 165 -1 165
+Encoding: 179 -1 179
 Width: 22
 VWidth: 2048
 Flags: HW
@@ -3881,7 +4263,7 @@ EndSplineSet
 EndChar
 
 StartChar: Quilisma
-Encoding: 166 -1 166
+Encoding: 180 -1 180
 Width: 161
 Flags: HW
 HStem: -477.6 17.1 -118.5 17.1 240.6 17.1 599.7 17.1
@@ -3916,7 +4298,7 @@ EndSplineSet
 EndChar
 
 StartChar: Quilisma#Cavum
-Encoding: 167 -1 167
+Encoding: 181 -1 181
 Width: 161
 Flags: HW
 HStem: -477.6 17.1 -118.5 17.1 240.6 17.1 599.7 17.1
@@ -3951,7 +4333,7 @@ EndSplineSet
 EndChar
 
 StartChar: QuilismaLineTR
-Encoding: 168 -1 168
+Encoding: 182 -1 182
 Width: 161
 Flags: HW
 HStem: -477.6 17.1 -118.5 17.1 240.6 17.1 599.7 17.1
@@ -3987,7 +4369,7 @@ Validated: 33
 EndChar
 
 StartChar: QuilismaPesOneNothing
-Encoding: 169 -1 169
+Encoding: 183 -1 183
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -4029,7 +4411,7 @@ Validated: 1
 EndChar
 
 StartChar: QuilismaPesOneNothing#Cavum
-Encoding: 170 -1 170
+Encoding: 184 -1 184
 Width: 161
 Flags: HW
 HStem: -477.6 17.1 -118.5 17.1 240.6 17.1 599.7 17.1
@@ -4073,7 +4455,7 @@ EndSplineSet
 EndChar
 
 StartChar: rdeminutus
-Encoding: 171 -1 171
+Encoding: 185 -1 185
 Width: 97
 VWidth: 2048
 Flags: HW
@@ -4096,7 +4478,7 @@ Validated: 1
 EndChar
 
 StartChar: rdeminutus#Cavum
-Encoding: 172 -1 172
+Encoding: 186 -1 186
 Width: 97
 VWidth: 2048
 Flags: HW
@@ -4117,7 +4499,7 @@ EndSplineSet
 EndChar
 
 StartChar: RoundBrace
-Encoding: 173 -1 173
+Encoding: 187 -1 187
 Width: 937
 VWidth: 2048
 Flags: W
@@ -4143,7 +4525,7 @@ Validated: 1
 EndChar
 
 StartChar: RoundBraceDown
-Encoding: 174 -1 174
+Encoding: 188 -1 188
 Width: 937
 Flags: HW
 LayerCount: 2
@@ -4167,7 +4549,7 @@ Validated: 1
 EndChar
 
 StartChar: rqueue
-Encoding: 175 -1 175
+Encoding: 189 -1 189
 Width: 22
 VWidth: 2048
 Flags: HW
@@ -4184,7 +4566,7 @@ EndSplineSet
 EndChar
 
 StartChar: rvbase
-Encoding: 176 -1 176
+Encoding: 190 -1 190
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -4206,7 +4588,7 @@ EndSplineSet
 EndChar
 
 StartChar: rvirgabase
-Encoding: 177 -1 177
+Encoding: 191 -1 191
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -4227,7 +4609,7 @@ EndSplineSet
 EndChar
 
 StartChar: Semicirculus
-Encoding: 178 -1 178
+Encoding: 192 -1 192
 Width: 124
 VWidth: 1606
 Flags: HW
@@ -4247,7 +4629,7 @@ Validated: 1
 EndChar
 
 StartChar: SemicirculusReversus
-Encoding: 179 -1 179
+Encoding: 193 -1 193
 Width: 125
 VWidth: 1583
 Flags: HW
@@ -4267,7 +4649,7 @@ Validated: 1
 EndChar
 
 StartChar: Sharp
-Encoding: 180 -1 180
+Encoding: 194 -1 194
 Width: 258
 VWidth: 2048
 Flags: W
@@ -4330,7 +4712,7 @@ Validated: 1
 EndChar
 
 StartChar: SharpHole
-Encoding: 181 -1 181
+Encoding: 195 -1 195
 Width: 258
 VWidth: 2048
 Flags: W
@@ -4347,8 +4729,154 @@ EndSplineSet
 Validated: 1
 EndChar
 
+StartChar: SharpParen
+Encoding: 196 -1 196
+Width: 428
+VWidth: 2048
+Flags: W
+VStem: 0 18<11.9414 123.487> 410 18<11.9414 123.487>
+LayerCount: 2
+Fore
+SplineSet
+350 -101.569 m 5
+ 350 -101.569 410 -17.333 410 67.71 c 4
+ 410 152.765 350.001 237.021 350.001 237.021 c 5
+ 350.001 237.021 351.476 239.568 353 240.521 c 28
+ 354.727 241.601 358.001 242.021 358.001 242.021 c 5
+ 358.001 242.021 428 155.968 428 67.71 c 4
+ 428 -20.5371 358 -106.569 358 -106.569 c 5
+ 358 -106.569 354.727 -106.148 353 -105.069 c 28
+ 351.476 -104.116 350 -101.569 350 -101.569 c 5
+78 -101.569 m 5
+ 78 -101.569 76.5244 -104.116 75 -105.069 c 28
+ 73.2734 -106.148 70 -106.569 70 -106.569 c 5
+ 70 -106.569 0 -20.5371 0 67.71 c 4
+ 0 155.968 69.999 242.021 69.999 242.021 c 5
+ 69.999 242.021 73.2734 241.601 75 240.521 c 28
+ 76.5244 239.568 77.999 237.021 77.999 237.021 c 5
+ 77.999 237.021 18 152.765 18 67.71 c 4
+ 18 -17.333 78 -101.569 78 -101.569 c 5
+85.2998 183 m 0
+ 85.2998 189.6 91.9004 196.2 98.5 196.2 c 0
+ 99.5996 196.2 105.1 195.1 108.4 190.7 c 2
+ 186.5 93.9004 l 1
+ 197.5 107.1 l 1
+ 143.6 175.3 l 2
+ 141.4 177.5 140.3 179.7 140.3 183 c 0
+ 140.3 189.6 146.9 196.2 153.5 196.2 c 0
+ 154.6 196.2 160.1 195.1 163.4 190.7 c 2
+ 214 128 l 1
+ 264.6 190.7 l 2
+ 267.9 195.1 273.4 196.2 274.5 196.2 c 0
+ 281.1 196.2 287.7 189.6 287.7 183 c 0
+ 287.7 179.7 286.6 177.5 284.4 175.3 c 2
+ 230.5 107.1 l 1
+ 241.5 93.9004 l 1
+ 319.6 190.7 l 2
+ 322.9 195.1 328.4 196.2 329.5 196.2 c 0
+ 336.1 196.2 342.7 189.6 342.7 183 c 0
+ 342.7 179.7 341.6 177.5 339.4 175.3 c 2
+ 258 73 l 1
+ 339.4 -29.2998 l 2
+ 341.6 -31.5 342.7 -33.7002 342.7 -37 c 0
+ 342.7 -43.5996 336.1 -50.2002 329.5 -50.2002 c 0
+ 328.4 -50.2002 322.9 -49.0996 319.6 -44.7002 c 2
+ 241.5 52.0996 l 1
+ 230.5 38.9004 l 1
+ 284.4 -29.2998 l 2
+ 286.6 -31.5 287.7 -33.7002 287.7 -37 c 0
+ 287.7 -43.5996 281.1 -50.2002 274.5 -50.2002 c 0
+ 273.4 -50.2002 267.9 -49.0996 264.6 -44.7002 c 2
+ 214 18 l 1
+ 163.4 -44.7002 l 2
+ 160.1 -49.0996 154.6 -50.2002 153.5 -50.2002 c 0
+ 146.9 -50.2002 140.3 -43.5996 140.3 -37 c 0
+ 140.3 -33.7002 141.4 -31.5 143.6 -29.2998 c 2
+ 197.5 38.9004 l 1
+ 186.5 52.0996 l 1
+ 108.4 -44.7002 l 2
+ 105.1 -49.0996 99.5996 -50.2002 98.5 -50.2002 c 0
+ 91.9004 -50.2002 85.2998 -43.5996 85.2998 -37 c 0
+ 85.2998 -33.7002 86.4004 -31.5 88.5996 -29.2998 c 2
+ 170 73 l 1
+ 88.5996 175.3 l 2
+ 86.4004 177.5 85.2998 179.7 85.2998 183 c 0
+214 58.7002 m 1
+ 225 73 l 1
+ 214 87.2998 l 1
+ 203 73 l 1
+ 214 58.7002 l 1
+EndSplineSet
+EndChar
+
+StartChar: SharpParenHole
+Encoding: 197 -1 197
+Width: 428
+VWidth: 2048
+Flags: W
+HStem: 57.2705 31.459
+VStem: 201.9 24.1992
+LayerCount: 2
+Fore
+SplineSet
+214 57.2705 m 5
+ 201.9 73 l 5
+ 214 88.7295 l 5
+ 226.1 73 l 5
+ 214 57.2705 l 5
+EndSplineSet
+EndChar
+
+StartChar: StansPunctumInclinatum
+Encoding: 198 -1 198
+Width: 178
+Flags: HW
+HStem: -476.247 17.1 -117.147 17.1 241.953 17.1 601.053 17.1
+LayerCount: 2
+Fore
+SplineSet
+2.66895 64.7109 m 2
+ 1.52832 66.9912 0.387695 70.4111 0.388672 72.6914 c 0
+ 0.388672 74.9717 1.52734 78.3916 2.66895 80.6719 c 2
+ 77.9082 193.53 l 2
+ 80.1885 198.092 84.749 200.371 89.3076 200.37 c 0
+ 93.8682 200.371 98.4287 198.092 101.849 193.53 c 2
+ 175.72 80.5508 l 1
+ 178 78.2705 178 74.8506 178 72.5703 c 0
+ 177.999 70.29 178.202 66.8701 175.921 64.5898 c 1
+ 101.848 -48.1484 l 2
+ 98.4277 -52.709 93.8682 -54.9883 89.3086 -54.9883 c 0
+ 84.748 -54.9883 80.1885 -52.71 77.9082 -48.1484 c 2
+ 2.66895 64.7109 l 2
+EndSplineSet
+EndChar
+
+StartChar: StansPunctumInclinatum#Cavum
+Encoding: 199 -1 199
+Width: 178
+Flags: HW
+HStem: -476.247 17.1 -117.147 17.1 241.953 17.1 601.053 17.1
+LayerCount: 2
+Fore
+SplineSet
+28.6279 67.1055 m 2
+ 27.8301 68.7021 27.0312 71.0957 27.0322 72.6924 c 0
+ 27.0322 74.2891 27.8291 76.6826 28.6279 78.2793 c 2
+ 81.2949 157.279 l 2
+ 82.8906 160.472 86.084 162.068 89.2754 162.067 c 0
+ 92.4668 162.068 95.6602 160.473 98.0537 157.279 c 2
+ 149.763 78.1943 l 1
+ 151.36 76.5977 151.359 74.2041 151.359 72.6074 c 0
+ 151.359 71.0107 151.501 68.6172 149.904 67.0215 c 1
+ 98.0537 -11.8955 l 2
+ 95.6592 -15.0879 92.4678 -16.6836 89.2754 -16.6836 c 0
+ 86.084 -16.6836 82.8916 -15.0879 81.2949 -11.8955 c 2
+ 28.6279 67.1055 l 2
+EndSplineSet
+EndChar
+
 StartChar: Stropha
-Encoding: 182 -1 182
+Encoding: 200 -1 200
 Width: 169
 Flags: HW
 HStem: -466.26 17.1 -107.16 17.1 251.94 17.1 611.04 17.1
@@ -4378,7 +4906,7 @@ EndSplineSet
 EndChar
 
 StartChar: Stropha#Cavum
-Encoding: 183 -1 183
+Encoding: 201 -1 201
 Width: 169
 Flags: HW
 HStem: -466.26 17.1 -107.16 17.1 251.94 17.1 611.04 17.1
@@ -4404,7 +4932,7 @@ EndSplineSet
 EndChar
 
 StartChar: StrophaAucta
-Encoding: 184 -1 184
+Encoding: 202 -1 202
 Width: 168
 Flags: HW
 HStem: -472.609 17.1 -113.509 17.1 245.591 17.1 604.691 17.1
@@ -4429,7 +4957,7 @@ Validated: 33
 EndChar
 
 StartChar: StrophaAucta#Cavum
-Encoding: 185 -1 185
+Encoding: 203 -1 203
 Width: 168
 Flags: HW
 HStem: -466.26 17.1 -107.16 17.1 251.94 17.1 611.04 17.1
@@ -4455,7 +4983,7 @@ EndSplineSet
 EndChar
 
 StartChar: StrophaAuctaLongtail
-Encoding: 186 -1 186
+Encoding: 204 -1 204
 Width: 168
 Flags: HW
 HStem: -472.609 17.1 -113.509 17.1 245.591 17.1 604.691 17.1
@@ -4479,7 +5007,7 @@ EndSplineSet
 EndChar
 
 StartChar: tmpglyph
-Encoding: 187 -1 187
+Encoding: 205 -1 205
 Width: 22
 VWidth: 2048
 Flags: HW
@@ -4489,7 +5017,7 @@ LayerCount: 2
 EndChar
 
 StartChar: UpperPesOneNothing
-Encoding: 188 -1 188
+Encoding: 206 -1 206
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -4518,7 +5046,7 @@ EndSplineSet
 EndChar
 
 StartChar: UpperPesOneNothing#Cavum
-Encoding: 189 -1 189
+Encoding: 207 -1 207
 Width: 161
 Flags: W
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -4547,7 +5075,7 @@ EndSplineSet
 EndChar
 
 StartChar: VEpisema
-Encoding: 190 -1 190
+Encoding: 208 -1 208
 Width: 36
 VWidth: 1384
 Flags: HW
@@ -4567,7 +5095,7 @@ Validated: 1
 EndChar
 
 StartChar: VEpisema.circumflexus
-Encoding: 191 -1 191
+Encoding: 209 -1 209
 Width: 108
 VWidth: 2048
 Flags: HW
@@ -4591,7 +5119,7 @@ Validated: 1
 EndChar
 
 StartChar: virgabase
-Encoding: 192 -1 192
+Encoding: 210 -1 210
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -4612,7 +5140,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaBaseLineBL
-Encoding: 193 -1 193
+Encoding: 211 -1 211
 Width: 161
 Flags: W
 HStem: -409 15 -94 15 221 15 536 15
@@ -4634,7 +5162,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaAscendens_op
-Encoding: 194 -1 194
+Encoding: 212 -1 212
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -4657,7 +5185,7 @@ Validated: 1
 EndChar
 
 StartChar: VirgaReversaAscendens_op#Cavum
-Encoding: 195 -1 195
+Encoding: 213 -1 213
 Width: 161
 Flags: W
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -4677,7 +5205,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaDescendens_op
-Encoding: 196 -1 196
+Encoding: 214 -1 214
 Width: 161
 Flags: HW
 HStem: -409 15 -94 15 221 15 536 15
@@ -4700,7 +5228,7 @@ Validated: 1
 EndChar
 
 StartChar: VirgaReversaDescendens_op#Cavum
-Encoding: 197 -1 197
+Encoding: 215 -1 215
 Width: 161
 Flags: W
 HStem: -476.55 17.1 -117.45 17.1 241.65 17.1 600.75 17.1
@@ -4720,7 +5248,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaLongqueueAscendens_op
-Encoding: 198 -1 198
+Encoding: 216 -1 216
 Width: 161
 Flags: W
 HStem: -409 15 -94 15 221 15 536 15
@@ -4742,7 +5270,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaLongqueueDescendens_op
-Encoding: 199 -1 199
+Encoding: 217 -1 217
 Width: 161
 Flags: W
 HStem: -409 15 -94 15 221 15 536 15
@@ -4764,7 +5292,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaOpenqueueAscendens_op
-Encoding: 200 -1 200
+Encoding: 218 -1 218
 Width: 161
 Flags: W
 HStem: -409 15 -94 15 221 15 536 15
@@ -4786,7 +5314,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgaReversaOpenqueueDescendens_op
-Encoding: 201 -1 201
+Encoding: 219 -1 219
 Width: 161
 Flags: W
 HStem: -409 15 -94 15 221 15 536 15
@@ -4808,7 +5336,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgulaTwo
-Encoding: 202 -1 202
+Encoding: 220 -1 220
 Width: 152
 VWidth: 1418
 Flags: HW
@@ -4826,7 +5354,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgulaThree
-Encoding: 203 -1 203
+Encoding: 221 -1 221
 Width: 152
 VWidth: 1733
 Flags: HW
@@ -4844,7 +5372,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgulaFour
-Encoding: 204 -1 204
+Encoding: 222 -1 222
 Width: 152
 VWidth: 2048
 Flags: HW
@@ -4863,7 +5391,7 @@ Validated: 33
 EndChar
 
 StartChar: VirgulaFive
-Encoding: 205 -1 205
+Encoding: 223 -1 223
 Width: 152
 VWidth: 2363
 Flags: HW
@@ -4881,7 +5409,7 @@ EndSplineSet
 EndChar
 
 StartChar: VirgulaSix
-Encoding: 206 -1 206
+Encoding: 224 -1 224
 Width: 152
 VWidth: 2678
 Flags: HW
@@ -4898,136 +5426,183 @@ SplineSet
 EndSplineSet
 EndChar
 
-StartChar: StansPunctumInclinatum
-Encoding: 207 -1 207
-Width: 178
-Flags: HW
-HStem: -476.247 17.1 -117.147 17.1 241.953 17.1 601.053 17.1
-LayerCount: 2
-Fore
-SplineSet
-2.66895 64.7109 m 2
- 1.52832 66.9912 0.387695 70.4111 0.388672 72.6914 c 0
- 0.388672 74.9717 1.52734 78.3916 2.66895 80.6719 c 2
- 77.9082 193.53 l 2
- 80.1885 198.092 84.749 200.371 89.3076 200.37 c 0
- 93.8682 200.371 98.4287 198.092 101.849 193.53 c 2
- 175.72 80.5508 l 1
- 178 78.2705 178 74.8506 178 72.5703 c 0
- 177.999 70.29 178.202 66.8701 175.921 64.5898 c 1
- 101.848 -48.1484 l 2
- 98.4277 -52.709 93.8682 -54.9883 89.3086 -54.9883 c 0
- 84.748 -54.9883 80.1885 -52.71 77.9082 -48.1484 c 2
- 2.66895 64.7109 l 2
-EndSplineSet
-EndChar
-
-StartChar: StansPunctumInclinatum#Cavum
-Encoding: 208 -1 208
-Width: 178
-Flags: HW
-HStem: -476.247 17.1 -117.147 17.1 241.953 17.1 601.053 17.1
-LayerCount: 2
-Fore
-SplineSet
-28.6279 67.1055 m 2
- 27.8301 68.7021 27.0312 71.0957 27.0322 72.6924 c 0
- 27.0322 74.2891 27.8291 76.6826 28.6279 78.2793 c 2
- 81.2949 157.279 l 2
- 82.8906 160.472 86.084 162.068 89.2754 162.067 c 0
- 92.4668 162.068 95.6602 160.473 98.0537 157.279 c 2
- 149.763 78.1943 l 1
- 151.36 76.5977 151.359 74.2041 151.359 72.6074 c 0
- 151.359 71.0107 151.501 68.6172 149.904 67.0215 c 1
- 98.0537 -11.8955 l 2
- 95.6592 -15.0879 92.4678 -16.6836 89.2754 -16.6836 c 0
- 86.084 -16.6836 82.8916 -15.0879 81.2949 -11.8955 c 2
- 28.6279 67.1055 l 2
-EndSplineSet
-EndChar
-
-StartChar: DivisioMinimisTwo
-Encoding: 209 -1 209
-Width: 19
+StartChar: VirgulaParenTwo
+Encoding: 225 -1 225
+Width: 315
 VWidth: 1418
-Flags: HW
-HStem: -1039 15 -724 15 -409 15 -94 15
+Flags: W
+VStem: 0 18<-149.059 -37.513> 297 18<-149.059 -37.513>
 LayerCount: 2
 Fore
 SplineSet
-0 -20.8721 m 13
- 0.00292969 169.984 l 25
- 18.999 170.021 l 25
- 19 -27.5693 l 21
- 6.04395 -27.4346 2.43457 -24.3906 0 -20.8721 c 13
+237 -262.569 m 5
+ 237 -262.569 297 -178.333 297 -93.29 c 4
+ 297 -8.23535 237.001 76.0215 237.001 76.0215 c 5
+ 237.001 76.0215 238.476 78.5684 240 79.5215 c 28
+ 241.727 80.6006 245.001 81.0215 245.001 81.0215 c 5
+ 245.001 81.0215 315 -5.03223 315 -93.29 c 4
+ 315 -181.537 245 -267.569 245 -267.569 c 5
+ 245 -267.569 241.727 -267.148 240 -266.069 c 28
+ 238.476 -265.116 237 -262.569 237 -262.569 c 5
+78 -262.569 m 5
+ 78 -262.569 76.5244 -265.116 75 -266.069 c 28
+ 73.2734 -267.148 70 -267.569 70 -267.569 c 5
+ 70 -267.569 0 -181.537 0 -93.29 c 4
+ 0 -5.03223 69.999 81.0215 69.999 81.0215 c 5
+ 69.999 81.0215 73.2734 80.6006 75 79.5215 c 28
+ 76.5244 78.5684 77.999 76.0215 77.999 76.0215 c 5
+ 77.999 76.0215 18 -8.23535 18 -93.29 c 4
+ 18 -178.333 78 -262.569 78 -262.569 c 5
+230 -76.667 m 1
+ 230 -132.322 145 -191 78 -211.002 c 1
+ 124 -172 230.5 -134.002 198 -68.002 c 1
+ 202.5 -99.002 95 -119.502 95 -57.002 c 1
+ 95 -32.002 127 -17.002 153 -17.002 c 1
+ 200.5 -16.002 230 -43.3223 230 -76.667 c 1
 EndSplineSet
 EndChar
 
-StartChar: DivisioMinimisThree
-Encoding: 210 -1 210
-Width: 19
+StartChar: VirgulaParenThree
+Encoding: 226 -1 226
+Width: 315
 VWidth: 1733
-Flags: HW
-HStem: -724 15 -409 15 -94 15 221 15
+Flags: W
+VStem: 0 18<165.941 277.487> 297 18<165.941 277.487>
 LayerCount: 2
 Fore
 SplineSet
-0 294.128 m 13
- 0.00292969 484.984 l 25
- 18.999 485.021 l 25
- 19 287.431 l 21
- 6.04395 287.565 2.43457 290.609 0 294.128 c 13
+237 52.4307 m 5
+ 237 52.4307 297 136.667 297 221.71 c 4
+ 297 306.765 237.001 391.021 237.001 391.021 c 5
+ 237.001 391.021 238.476 393.568 240 394.521 c 28
+ 241.727 395.601 245.001 396.021 245.001 396.021 c 5
+ 245.001 396.021 315 309.968 315 221.71 c 4
+ 315 133.463 245 47.4307 245 47.4307 c 5
+ 245 47.4307 241.727 47.8516 240 48.9307 c 28
+ 238.476 49.8838 237 52.4307 237 52.4307 c 5
+78 52.4307 m 5
+ 78 52.4307 76.5244 49.8838 75 48.9307 c 28
+ 73.2734 47.8516 70 47.4307 70 47.4307 c 5
+ 70 47.4307 0 133.463 0 221.71 c 4
+ 0 309.968 69.999 396.021 69.999 396.021 c 5
+ 69.999 396.021 73.2734 395.601 75 394.521 c 28
+ 76.5244 393.568 77.999 391.021 77.999 391.021 c 5
+ 77.999 391.021 18 306.765 18 221.71 c 4
+ 18 136.667 78 52.4307 78 52.4307 c 5
+230 238.333 m 1
+ 230 182.678 145 124 78 103.998 c 1
+ 124 143 230.5 180.998 198 246.998 c 1
+ 202.5 215.998 95 195.498 95 257.998 c 1
+ 95 282.998 127 297.998 153 297.998 c 1
+ 200.5 298.998 230 271.678 230 238.333 c 1
 EndSplineSet
 EndChar
 
-StartChar: DivisioMinimisFour
-Encoding: 211 -1 211
-Width: 19
+StartChar: VirgulaParenFour
+Encoding: 227 -1 227
+Width: 315
 VWidth: 2048
-Flags: HW
-HStem: -409 15 -94 15 221 15 536 15
+Flags: W
+VStem: 0 18<480.941 592.487> 297 18<480.941 592.487>
 LayerCount: 2
 Fore
 SplineSet
-0 609.128 m 13
- 0.00292969 799.984 l 25
- 18.999 800.021 l 25
- 19 602.431 l 21
- 6.04395 602.565 2.43457 605.609 0 609.128 c 13
+237 367.431 m 5
+ 237 367.431 297 451.667 297 536.71 c 4
+ 297 621.765 237.001 706.021 237.001 706.021 c 5
+ 237.001 706.021 238.476 708.568 240 709.521 c 28
+ 241.727 710.601 245.001 711.021 245.001 711.021 c 5
+ 245.001 711.021 315 624.968 315 536.71 c 4
+ 315 448.463 245 362.431 245 362.431 c 5
+ 245 362.431 241.727 362.852 240 363.931 c 28
+ 238.476 364.884 237 367.431 237 367.431 c 5
+78 367.431 m 5
+ 78 367.431 76.5244 364.884 75 363.931 c 28
+ 73.2734 362.852 70 362.431 70 362.431 c 5
+ 70 362.431 0 448.463 0 536.71 c 4
+ 0 624.968 69.999 711.021 69.999 711.021 c 5
+ 69.999 711.021 73.2734 710.601 75 709.521 c 28
+ 76.5244 708.568 77.999 706.021 77.999 706.021 c 5
+ 77.999 706.021 18 621.765 18 536.71 c 4
+ 18 451.667 78 367.431 78 367.431 c 5
+230 553.333 m 1
+ 230 497.678 145 439 78 418.998 c 1
+ 124 458 230.5 495.998 198 561.998 c 1
+ 202.5 530.998 95 510.498 95 572.998 c 1
+ 95 597.998 127 612.998 153 612.998 c 1
+ 200.5 613.998 230 586.678 230 553.333 c 1
 EndSplineSet
 EndChar
 
-StartChar: DivisioMinimisFive
-Encoding: 212 -1 212
-Width: 19
+StartChar: VirgulaParenFive
+Encoding: 228 -1 228
+Width: 315
 VWidth: 2363
-Flags: HW
-HStem: -94 15 221 15 536 15 851 15
+Flags: W
+VStem: 0 18<795.941 907.487> 297 18<795.941 907.487>
 LayerCount: 2
 Fore
 SplineSet
-0 924.128 m 13
- 0.00292969 1114.98 l 25
- 18.999 1115.02 l 25
- 19 917.431 l 21
- 6.04395 917.565 2.43457 920.609 0 924.128 c 13
+237 682.431 m 5
+ 237 682.431 297 766.667 297 851.71 c 4
+ 297 936.765 237.001 1021.02 237.001 1021.02 c 5
+ 237.001 1021.02 238.476 1023.57 240 1024.52 c 28
+ 241.727 1025.6 245.001 1026.02 245.001 1026.02 c 5
+ 245.001 1026.02 315 939.968 315 851.71 c 4
+ 315 763.463 245 677.431 245 677.431 c 5
+ 245 677.431 241.727 677.852 240 678.931 c 28
+ 238.476 679.884 237 682.431 237 682.431 c 5
+78 682.431 m 5
+ 78 682.431 76.5244 679.884 75 678.931 c 28
+ 73.2734 677.852 70 677.431 70 677.431 c 5
+ 70 677.431 0 763.463 0 851.71 c 4
+ 0 939.968 69.999 1026.02 69.999 1026.02 c 5
+ 69.999 1026.02 73.2734 1025.6 75 1024.52 c 28
+ 76.5244 1023.57 77.999 1021.02 77.999 1021.02 c 5
+ 77.999 1021.02 18 936.765 18 851.71 c 4
+ 18 766.667 78 682.431 78 682.431 c 5
+230 868.333 m 1
+ 230 812.678 145 754 78 733.998 c 1
+ 124 773 230.5 810.998 198 876.998 c 1
+ 202.5 845.998 95 825.498 95 887.998 c 1
+ 95 912.998 127 927.998 153 927.998 c 1
+ 200.5 928.998 230 901.678 230 868.333 c 1
 EndSplineSet
 EndChar
 
-StartChar: DivisioMinimisSix
-Encoding: 213 -1 213
-Width: 19
+StartChar: VirgulaParenSix
+Encoding: 229 -1 229
+Width: 315
 VWidth: 2678
-Flags: HW
-HStem: 221 15 536 15 851 15 1166 15
+Flags: W
+VStem: 0 18<1110.94 1222.49> 297 18<1110.94 1222.49>
 LayerCount: 2
 Fore
 SplineSet
-0 1239.13 m 13
- 0.00292969 1429.98 l 25
- 18.999 1430.02 l 25
- 19 1232.43 l 21
- 6.04395 1232.56 2.43457 1235.61 0 1239.13 c 13
+237 997.431 m 5
+ 237 997.431 297 1081.67 297 1166.71 c 4
+ 297 1251.76 237.001 1336.02 237.001 1336.02 c 5
+ 237.001 1336.02 238.476 1338.57 240 1339.52 c 28
+ 241.727 1340.6 245.001 1341.02 245.001 1341.02 c 5
+ 245.001 1341.02 315 1254.97 315 1166.71 c 4
+ 315 1078.46 245 992.431 245 992.431 c 5
+ 245 992.431 241.727 992.852 240 993.931 c 28
+ 238.476 994.884 237 997.431 237 997.431 c 5
+78 997.431 m 5
+ 78 997.431 76.5244 994.884 75 993.931 c 28
+ 73.2734 992.852 70 992.431 70 992.431 c 5
+ 70 992.431 0 1078.46 0 1166.71 c 4
+ 0 1254.97 69.999 1341.02 69.999 1341.02 c 5
+ 69.999 1341.02 73.2734 1340.6 75 1339.52 c 28
+ 76.5244 1338.57 77.999 1336.02 77.999 1336.02 c 5
+ 77.999 1336.02 18 1251.76 18 1166.71 c 4
+ 18 1081.67 78 997.431 78 997.431 c 5
+230 1183.33 m 1
+ 230 1127.68 145 1069 78 1049 c 1
+ 124 1088 230.5 1126 198 1192 c 1
+ 202.5 1161 95 1140.5 95 1203 c 1
+ 95 1228 127 1256 153 1256 c 5
+ 200.5 1257 230 1216.68 230 1183.33 c 1
 EndSplineSet
 EndChar
 EndChars

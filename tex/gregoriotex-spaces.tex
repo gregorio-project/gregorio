@@ -1100,8 +1100,9 @@
 %% 3 : the middle letters of the next syllable
 %% 4 : the end letters of the next syllable
 %% 5 : the type of notes alignment
-\def\gre@calculate@nextbegindifference#1#2#3#4#5{%
-  \gre@trace{gre@calculate@nextbegindifference{#1}{#2}{#3}{#4}{#5}}%
+%% 6 : alteration type (see gre@calculate@nextnotesaligncenter)
+\def\gre@calculate@nextbegindifference#1#2#3#4#5#6{%
+  \gre@trace{gre@calculate@nextbegindifference{#1}{#2}{#3}{#4}{#5}{#6}}%
   \ifnum\gre@lastoflinecount=1\relax %
     \global\gre@skip@nextbegindifference=0pt\relax%
   \else %
@@ -1112,7 +1113,7 @@
     \global\gre@skip@nextbegindifference=-\gre@dimen@textaligncenter\relax%
     % caution: calculate@nextnotesaligncenter needs a properly set \gre@dimen@textaligncenter
     % (corresponding to the text align center of the next syllable)
-    \gre@calculate@nextnotesaligncenter{#5}% idem
+    \gre@calculate@nextnotesaligncenter{#5}{#6}% idem
     \global\advance\gre@skip@nextbegindifference by \the\gre@dimen@notesaligncenter\relax%
     \global\gre@dimen@textaligncenter=\gre@dimen@temp@two %
     \global\gre@dimen@notesaligncenter=\gre@dimen@temp@four %
@@ -1176,7 +1177,7 @@
 %
 %In the new algorithm the bar and the text are set independently of each other based purely on the positions of the corresponding element in the previous and next syllable
 % #1 is #4 from \GreBarSyllable (1 if bar is end of word, 0 if not)
-% #2 is #7 from \GreBarSyllable (alignment type of first next glyph)
+% #2 is #7:2 from \GreBarSyllable (alteration type of first next glyph)
 \def\gre@calculate@barposition#1#2{%
   \gre@trace{gre@calculate@barposition{#1}{#2}}%
   % we start by finding the distance between the text and notes of the previous and the next syllable (as if this syllable didn't exist, for the moment)
@@ -1384,7 +1385,7 @@
   \global\gre@skip@adjustednextbegindifference=\gre@skip@nextbegindifference %
   % gre@skip@alterationshift is 0 or the punctum mora shift
   \global\gre@skip@alterationshift=0pt\relax %
-  \ifnum#1>19\ifnum\gre@insidediscretionary=0\relax % next is a flat, we're not in a clef change
+  \ifnum#1>0\ifnum\gre@insidediscretionary=0\relax % next is a flat, we're not in a clef change
     \advance\gre@skip@adjustednextbegindifference by -\gre@space@dimen@alterationadjustmentbar %
     \global\gre@skip@alterationshift=\gre@space@dimen@alterationadjustmentbar\relax %
     \gre@debugmsg{barspacing}{adjustment for alteration: \gre@space@dimen@alterationadjustmentbar}%

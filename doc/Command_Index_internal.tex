@@ -214,7 +214,7 @@ Rescales all the distances (and \texttt{stafflinefactor}) which are supposed to 
   \#2 & integer & the factor the distances are to be put into\\
 \end{argtable}
 
-\macroname{\textbackslash gre@calculate@nextbegindifference}{\#1\#2\#3\#4\#5}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@nextbegindifference}{\#1\#2\#3\#4\#5\#6}{gregoriotex-spaces.tex}
 Macro to calculate \texttt{nextbegindifference}.
 
 \begin{argtable}
@@ -222,9 +222,8 @@ Macro to calculate \texttt{nextbegindifference}.
   \#2 & string & the first letters of the next syllable\\
   \#3 & string & the middle letters of the next syllable (the vowel in Latin, the whole syllable in English)\\
   \#4 & string & the end letters of the next syllable\\
-  \#5 & $0 \le$ integer $\le 19$ & the type of notes alignment.  See \Nameref{notesalign}.\\
-  & $20 \le$ integer $\le 39$ & Same as below 20 except there is a flat before the notes.  Subtract 20 to get the type of notes alignment.\\
-  & $40 \le$ integer $\le 59$ & Same as below 20 except there is a natural before the notes.  Subtract 40 to get the type of notes alignment.
+  \#5 & integer & the type of notes alignment.  See \Nameref{notesalign}.\\
+  \#6 & integer & the type of alteration.  See \Nameref{alterationtype}.\\
 \end{argtable}
 
 \macroname{\textbackslash gre@strip@pt}{\#1}{gregoriotex.sty \textup{and} gregoriotex.tex}
@@ -634,11 +633,12 @@ Macro to find the alignment center for a group of notes.  The value is the dista
   \#1 & Note alignment type & See \ref{notesalign}\\
 \end{argtable}
 
-\macroname{\textbackslash gre@calculate@nextnotesaligncenter}{\#1}{gregoriotex-syllable.tex}
+\macroname{\textbackslash gre@calculate@nextnotesaligncenter}{\#1\#2}{gregoriotex-syllable.tex}
 Same as previous, but for the next syllable.
 
 \begin{argtable}
   \#1 & Note alignment type & See \ref{notesalign}\\
+  \#1 & Alteration type & See \ref{alterationtype}\\
 \end{argtable}
 
 \macroname{\textbackslash gre@calculate@simplenotesaligncenter}{\#1\#2}{gregoriotex-syllable.tex}
@@ -845,6 +845,10 @@ Macro to write a bar.
   & \texttt{16} & dotted major\\
   & \texttt{17} & minimis (eighth bar)\\
   & \texttt{18} & minimis (eighth bar) on ledger line above the staff\\
+  & \texttt{19} & parenthesized virgula\\
+  & \texttt{20} & parenthesized minima\\
+  & \texttt{21} & parenthesized virgula on ledger line above the staff\\
+  & \texttt{22} & parenthesized minima on ledger line above the staff\\
   \#2 & \texttt{0} & in a syllable containing only this bar\\
   & \texttt{1} & in a syllable containing other notes\\
   \#3 & \texttt{0} & if there is no text underneath the bar\\
@@ -1254,13 +1258,14 @@ Workhorse function behind \verb=\gresetgregoriofont=.
   & \texttt{granapadano} & Use the Grana Padano font.\\
 \end{argtable}
 
-\macroname{\textbackslash gre@syllable@end}{\#1\#2\#3}{gregoriotex-syllable.tex}
+\macroname{\textbackslash gre@syllable@end}{\#1\#2\#3\#4}{gregoriotex-syllable.tex}
 Macro to make a few checks and call the right macros between \verb=\endbeforebar=, \verb=\endofword=, \verb=\endofsyllable=.
 
 \begin{argtable}
-  \#1 & & next syllable type (\#7 of \verb=\GreSyllable=)\\
-  \#2 & string & next syllable text\\
-  \#3 & \texttt{0} & this syllable is not the end of a word\\
+  \#1 & integer & the type of notes alignment of next syllable, from \#7 of \verb=\GreSyllable=.  See \Nameref{notesalign}.\\
+  \#2 & integer & the type of alteration of next syllable, from \#7 of \verb=\GreSyllable=.  See \Nameref{alterationtype}.\\
+  \#3 & string & next syllable text\\
+  \#4 & \texttt{0} & this syllable is not the end of a word\\
   & \texttt{1} & this syllable is the end of a word\\
 \end{argtable}
 
@@ -1378,7 +1383,7 @@ Macro for calculating the position of the elements of a bar syllable using the n
 \begin{argtable}
   \#1 & 0 & bar is not the end of a word\\
   & 1 & bar is the end of a word\\
-  \#2 & integer & alignment type of the first glyph in the next syllable.  See \Nameref{notesalign}\\
+  \#2 & integer & alteration type of the first glyph in the next syllable.  See \Nameref{alterationtype}\\
 \end{argtable}
 
 \macroname{\textbackslash gre@newlinearg}{}{gregoriotex-syllable.tex}
@@ -1451,6 +1456,22 @@ Prevents the current syllable from overlapping with the previous syllable.
 File handle used to mark auto-compiled gabc files as dependencies for tools
 like latexmk.
 
+\macroname{\textbackslash gre@arg@oftwo@first}{\#1\#2}{gregoriotex-syllable.tex}
+Evaluates to the first of its arguments.
+
+\begin{argtable}
+  \#1 & any & the first argument\\
+  \#2 & any & the second argument\\
+\end{argtable}
+
+\macroname{\textbackslash gre@arg@oftwo@second}{\#1\#2}{gregoriotex-syllable.tex}
+Evaluates to the second of its arguments.
+
+\begin{argtable}
+  \#1 & any & the first argument\\
+  \#2 & any & the second argument\\
+\end{argtable}
+
 \subsection{Auxiliary File}
 Gregorio\TeX\ creates its own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.
 
@@ -1508,17 +1529,35 @@ The flat character.
 \macroname{\textbackslash gre@fontchar@flathole}{}{gregoriotex-chars.tex}
 The flat hole character (\ie, the character needed to prevent lines from showing through the center of the flat).
 
+\macroname{\textbackslash gre@fontchar@flatparen}{}{gregoriotex-chars.tex}
+The parenthesized flat character.
+
+\macroname{\textbackslash gre@fontchar@flatparenhole}{}{gregoriotex-chars.tex}
+The parenthesized flat hole character (\ie, the character needed to prevent lines from showing through the center of the flat).
+
 \macroname{\textbackslash gre@fontchar@natural}{}{gregoriotex-chars.tex}
 The natural character.
 
 \macroname{\textbackslash gre@fontchar@naturalhole}{}{gregoriotex-chars.tex}
 The natural hole character (\ie, the character needed to prevent lines from showing through the center of the natural).
 
+\macroname{\textbackslash gre@fontchar@naturalparen}{}{gregoriotex-chars.tex}
+The parenthesized natural character.
+
+\macroname{\textbackslash gre@fontchar@naturalparenhole}{}{gregoriotex-chars.tex}
+The parenthesized natural hole character (\ie, the character needed to prevent lines from showing through the center of the natural).
+
 \macroname{\textbackslash gre@fontchar@sharp}{}{gregoriotex-chars.tex}
 The sharp character.
 
 \macroname{\textbackslash gre@fontchar@sharphole}{}{gregoriotex-chars.tex}
 The sharp hole character (\ie, the character needed to prevent lines from showing through the center of the sharp).
+
+\macroname{\textbackslash gre@fontchar@sharpparen}{}{gregoriotex-chars.tex}
+The parenthesized sharp character.
+
+\macroname{\textbackslash gre@fontchar@sharpparenhole}{}{gregoriotex-chars.tex}
+The parenthesized sharp hole character (\ie, the character needed to prevent lines from showing through the center of the sharp).
 
 \macroname{\textbackslash gre@fontchar@incclef}{}{gregoriotex-chars.tex}
 The \texttt{c}-clef which appears in the middle of a line.
@@ -1614,6 +1653,14 @@ lines for the staff.
 Alias that will hold the character for the high virgula for the current number
 of lines for the staff.
 
+\macroname{\textbackslash gre@char@bar@virgulaparen}{}{gregoriotex-main.tex}
+Alias that will hold the character for the parenthesized virgula for the current
+number of lines for the staff.
+
+\macroname{\textbackslash gre@char@bar@virgulaparenhigh}{}{gregoriotex-main.tex}
+Alias that will hold the character for the parenthesized high virgula for the
+current number of lines for the staff.
+
 \macroname{\textbackslash gre@char@bar@divisiominimis}{}{gregoriotex-main.tex}
 Alias that will hold the character for the divisio ``minimis'' (eighth bar) for
 the current number of lines for the staff.
@@ -1629,6 +1676,14 @@ number of lines for the staff.
 \macroname{\textbackslash gre@char@bar@divisiominimahigh}{}{gregoriotex-main.tex}
 Alias that will hold the character for the high divisio minima for the current
 number of lines for the staff.
+
+\macroname{\textbackslash gre@char@bar@divisiominimaparen}{}{gregoriotex-main.tex}
+Alias that will hold the character for the parenthesized divisio minima for the
+current number of lines for the staff.
+
+\macroname{\textbackslash gre@char@bar@divisiominimaparenhigh}{}{gregoriotex-main.tex}
+Alias that will hold the character for the parenthesized high divisio minima for
+the current number of lines for the staff.
 
 \macroname{\textbackslash gre@char@bar@divisiominor}{}{gregoriotex-main.tex}
 Alias that will hold the character for the divisio minor for the current
@@ -2355,8 +2410,24 @@ rather than have multiple definitions.
   \texttt{12} & divisio minor\\
   \texttt{13} & divisio maior\\
   \texttt{14} & dominican bar\\
-  \texttt{15} & divisio finalis\\
-  \texttt{16} & no note
+  \texttt{15} & parenthesized virgula\\
+  \texttt{16} & parenthesized divisio minima\\
+  \texttt{17} & divisio finalis\\
+  \texttt{18} & no note
+ \end{tabulary}
+
+\subsection{Alteration Type}\label{alterationtype}
+\rowcolors{1}{lightgray}{lightgray}
+\begin{tabulary}{\textwidth}{cL}
+  \multicolumn{2}{c}{Integer with the following possibilities:} \\
+  \hline
+  \texttt{0} & no alteration\\
+  \texttt{1} & flat\\
+  \texttt{2} & natural\\
+  \texttt{3} & sharp\\
+  \texttt{4} & parenthesized flat\\
+  \texttt{5} & parenthesized natural\\
+  \texttt{6} & parenthesized sharp
  \end{tabulary}
 
 \subsection{Note Offset Specifier}\label{NoteOffset}
@@ -2393,7 +2464,9 @@ rather than have multiple definitions.
   \item[TorcResDebilisNonAuctusSecondAnyWide] second note of a non-auctus torculus resupinus initio debilis with any first ambitus and a second ambitus of at least two
   \item[FinalLineaPunctum] linea punctum (cavum) as last note
   \item[BarStandard] standard bar
+  \item[BarParen] parenthesized bar
   \item[BarVirgula] virgula
+  \item[BarVirgulaParen] parenthesized virgula
   \item[BarDivisioFinalis] divisio finalis
   \item[TorcResQuilismaNonAuctusSecondWideWide] second note of a non-auctus torculus resupinus starting with a quilisma, with a first and second ambitus of at least two
   \item[TorcResOriscusNonAuctusSecondWideWide] second note of a non-auctus torculus resupinus starting with an oriscus, with a first and second ambitus of at least two

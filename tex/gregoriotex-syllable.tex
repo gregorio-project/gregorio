@@ -180,77 +180,54 @@
 % this function is quite simple, it just sets \gre@box@temp@width with a box of the good width, watch the next function for the complete thing
 % we define the different alignments possible, of course they depend on the font
 % the first 10 (0-9) possible values are the same as in glyph
-%% 0: one-note glyph or more than two notes glyph except porrectus : here we must put the aligncenter in the middle of the first note
-%% 1: two notes glyph (podatus is considered as a one-note glyph) : here we put the aligncenter in the middle of the glyph
-%% 2: porrectus : has a special align center
-%% 3: initio-debilis : same as 1 but the first note is much smaller
-%% 4: case of a glyph starting with a quilisma
-%% 5: case of a glyph starting with an oriscus
-%% 6: case of a punctum inclinatum
-%% 7: case of a stropha
-%% 8: flexus with an ambitus of one
-%% 9: flexus deminutus
-%% 10: virgula
-%% 11: divisio minima
-%% 12: divisio minor
-%% 13: divisio maior
-%% 14: dominican bar
-%% 15 : divisio finalis
-%% 16 : no note
+% see the cases below
 % there is a tricky here : if notesaligncenter is not 0, it means that there is a flat before, so we simply add notes aligncenter
 % #2 is 0 if we are in the context of current syllable, 1 if we are in the context of next syllable
 \def\gre@calculate@simplenotesaligncenter#1#2{%
   \gre@trace{gre@calculate@simplenotesaligncenter{#1}{#2}}%
-  \ifcase#1%
-    %case of punctum
+  \ifcase#1% 0: punctum
+    % one-note glyph or more than two notes glyph except porrectus : here
+    % we must put the aligncenter in the middle of the first note
     \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPPunctum}%
-  \or%
-    %case of flexus
+  \or% 1: flexus
+    % two notes glyph (podatus is considered as a one-note glyph) : here
+    % we put the aligncenter in the middle of the glyph
     \gre@handleclivisspecialalignment{\gre@font@music\GreCPPesQuadratumLongqueueThreeNothing}{\gre@font@music\GreCPPunctum}{#2}%
-  \or%
-    %case of porrectus (we consider it to have the same alignment as punctum)
+  \or% 2: porrectus
+    % we consider it to have the same alignment as punctum
     \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPPunctum}%
-  \or%
-    %case of a initio debilis
+  \or% 3: initio debilis
+    % same as 1 but the first note is much smaller
     \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPPunctumDeminutus}%
-  \or %
-    %case of a quilisma
+  \or% 4: glyph starting with a quilisma
     \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPQuilisma}%
-  \or %
-    %case of an oriscus
+  \or% 5: glyph starting with an oriscus
     \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPAscendensOriscus}%
-  \or %
-    %case of a punctum inclinatum
+  \or% 6: punctum inclinatum
     \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDescendensPunctumInclinatum}%
-  \or %
-    %case of a stropha
+  \or% 7: stropha
     \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPStropha}%
-  \or %
-    % case of flexus with ambitus of one
+  \or% 8: flexus with ambitus of one
     \gre@handleclivisspecialalignment{\gre@font@music\GreCPPesQuadratumLongqueueOneNothing}{\gre@font@music\GreCPPunctum}{#2}%
-  \or %
-    % case of flexus deminutus
+  \or% 9: flexus deminutus
     \gre@handleclivisspecialalignment{\gre@font@music\GreCPFlexusTwoDeminutus}{\gre@font@music\GreCPPunctum}{#2}%
-  \or %
-    % case of virgula
+  \or% 10: virgula
     \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@virgula}%
-  \or %
-    % case of divisio minima
+  \or% 11: divisio minima
     \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@divisiominima}%
-  \or %
-    % case of divisio minor
+  \or% 12: divisio minor
     \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@divisiominor}%
-  \or %
-    % case of divisio maior
+  \or% 13: divisio maior
     \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@divisiomaior}%
-  \or %
-    % case of dominican bar
+  \or% 14: dominican bar
     \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPDivisioDominican}%
-  \or %
-    % case of divisiofinalis
+  \or% 15: parenthesized virgula
+    \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@virgulaparen}%
+  \or% 16: parenthesized divisio minima
+    \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@divisiominimaparen}%
+  \or% 17: divisio finalis
     \global\setbox\gre@box@temp@width=\hbox{\gre@fontchar@divisiofinalis}%
-  \or %
-    % case of no note
+  \or% 18: no note
     \ifgre@newbarspacing%
       \global\setbox\gre@box@temp@width=\hbox{}%
     \else%
@@ -326,36 +303,33 @@
   \gre@trace@end%
 }%
 
-% this is the function that we call when we try to determine the next aligncenter of the notes. In this case we call this function with normal arguments if there is no flat nor natural ; we call it with argument + 20 if there is a flat and argument + 40 if there is a natural, +60 with a sharp
-\def\gre@calculate@nextnotesaligncenter#1{%
-  \gre@trace{gre@calculate@nextnotesaligncenter{#1}}%
-  \ifnum#1<20\relax %
-    \gre@calculate@simplenotesaligncenter{#1}{1}%
-    \gre@dimen@temp@five=\dimexpr(\wd\gre@box@temp@width / 2)\relax %
-    \global\gre@dimen@notesaligncenter=\gre@dimen@temp@five %
-  \else %\ifnum#1<20
-    \gre@count@temp@three=#1 %
-    \ifnum#1<40\relax%
-      \advance\gre@count@temp@three by -20\relax %
-      \gre@calculate@simplenotesaligncenter{\gre@count@temp@three}{1}%
-      \gre@dimen@temp@five=\dimexpr(\wd\gre@box@temp@width / 2)\relax %
-      \setbox\gre@box@temp@width=\hbox{\gre@fontchar@flat}%
-    \else%\ifnum#1<40
-      \ifnum#1<60\relax%
-        \advance\gre@count@temp@three by -40\relax %
-        \gre@calculate@simplenotesaligncenter{\gre@count@temp@three}{1}%
-        \gre@dimen@temp@five=\dimexpr(\wd\gre@box@temp@width / 2)\relax %
-        \setbox\gre@box@temp@width=\hbox{\gre@fontchar@natural}%
-      \else%\ifnum#1<60
-        \advance\gre@count@temp@three by -60\relax %
-        \gre@calculate@simplenotesaligncenter{\gre@count@temp@three}{1}%
-        \gre@dimen@temp@five=\dimexpr(\wd\gre@box@temp@width / 2)\relax %
-        \setbox\gre@box@temp@width=\hbox{\gre@fontchar@sharp}%
-      \fi%
-    \fi %
-    \advance\gre@dimen@temp@five by \dimexpr(\wd\gre@box@temp@width+\gre@space@dimen@alterationspace)\relax %
-    \global\gre@dimen@notesaligncenter=\gre@dimen@temp@five %
+% this is the function that we call when we try to determine the next aligncenter of the notes.
+% #1 is the note type
+% #2 is the alteration style : 0 = none, 1 = flat, 2 = natural, 3 = sharp,
+%                              4 = parenthesized flat, 5 = parenthesized natural,
+%                              6 = parenthesized flat
+\def\gre@calculate@nextnotesaligncenter#1#2{%
+  \gre@trace{gre@calculate@nextnotesaligncenter{#1}{#2}}%
+  \gre@calculate@simplenotesaligncenter{#1}{1}%
+  \gre@dimen@temp@five=\dimexpr(\wd\gre@box@temp@width / 2)\relax %
+  \ifcase#2\relax% 0 - none
+  \or % 1 - flat
+    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@flat}%
+  \or % 2 - natural
+    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@natural}%
+  \or % 3 - sharp
+    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@sharp}%
+  \or % 4 - parenthesized flat
+    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@flatparen}%
+  \or % 5 - parenthesized natural
+    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@naturalparen}%
+  \or % 6 - parenthesized sharp
+    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@sharpparen}%
   \fi %
+  \ifnum#2>0\relax %
+    \advance\gre@dimen@temp@five by \dimexpr(\wd\gre@box@temp@width+\gre@space@dimen@alterationspace)\relax %
+  \fi %
+  \global\gre@dimen@notesaligncenter=\gre@dimen@temp@five %
   \relax %
   \gre@trace@end%
 }%
@@ -833,6 +807,9 @@
   \gre@textclearedtrue%
 }%
 
+\def\gre@arg@oftwo@first#1#2{#1}%
+\def\gre@arg@oftwo@second#1#2{#2}%
+
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : macro setting the letters of this syllable
 % #2 : reserved (unused)
@@ -843,7 +820,7 @@
 % the three next parameters are to put an hyphen if necessary, they can be empty for end of words
 % #5 : macros setting next syllable letters of the next syllable
 % #6 : the line:char:column for a textedit link
-% #7 : alignment type of the first next glyph
+% #7 : alignment type of the first next glyph (this is a pair: alignment type and alteration type)
 % #8 : other macros (translation, double text, etc.) that don't fit in the limitation of the number of arguments
 %% with a special option for #7 : if it is a bar, we don't put a space at the end
 %% at the end we wall \greendofword or \gre@endofsyllable with #7, to reduce the space in case of a flat or natural
@@ -927,7 +904,7 @@
   % by default, gre@attr@dash will be 2
   \gre@attr@dash=2\relax %
   #5%
-  \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{#7}%
+  \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}#7%
   \gre@unsetfixednexttextformat %
   \ifgre@showlyrics%
     \setbox\gre@box@syllabletext=\hbox{%
@@ -947,13 +924,14 @@
   \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
   % gre@count@temp@one holds 0 if next is a not bar, 1 if it is
   \gre@count@temp@one=0%
-  \ifnum#7>9\relax %
-    \ifnum#7<20\relax %
+  \ifnum\gre@arg@oftwo@second#7=0\relax %
+    \ifnum\gre@arg@oftwo@first#7>9\relax %
       \gre@count@temp@one=1\relax %
-    \else %
-      \gre@count@temp@one=2\relax %
     \fi %
+  \else %
+    \gre@count@temp@one=2\relax %
   \fi %
+  \gre@debugmsg{spacing}{ gre@count@temp@one = \the\gre@count@temp@one}%
   \gre@calculate@syllablefinalskip{#4}{\gre@count@temp@one}%
   \ifcase#4 %
     % we enter here if the end of word is 0, so we must determine if we need to type a dash here
@@ -1013,7 +991,7 @@
       \fi%
     \fi %
     % recomputing end difference and final skip with the final hyphen
-    \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{#7}%
+    \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}#7%
     \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{0}%
     \gre@calculate@syllablefinalskip{#4}{\gre@count@temp@one}%
   \else %
@@ -1084,7 +1062,7 @@
     \GreNoBreak %
   \fi%
   % we call end of syllable
-  \gre@syllable@end{#7}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart}}{#4}%
+  \gre@syllable@end#7{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart}}{#4}%
   \gre@push@endsyllable{#6}\relax %
   \global\gre@dimen@notesaligncenter=0pt\relax% very important, see flat and natural
   \gre@unsetfixedtextformat %
@@ -1123,15 +1101,16 @@
 
 %% @desc Macro to make a few checks and call the right macros between
 %%       \endbeforebar, \endofword, \endofsyllable
-%% @arg#1 next syllable type (#7 of \GreSyllable)
-%% @arg#2 next syllable text
-%% @arg#3 end of word or not (#4 of \GreSyllable)
-\def\gre@syllable@end#1#2#3{%
-  \gre@trace{gre@syllable@end{#1}{#2}{#3}}%
+%% @arg#1 next syllable alignment type (#7:1 of \GreSyllable)
+%% @arg#2 next syllable alteration type (#7:2 of \GreSyllable)
+%% @arg#3 next syllable text
+%% @arg#4 end of word or not (#4 of \GreSyllable)
+\def\gre@syllable@end#1#2#3#4{%
+  \gre@trace{gre@syllable@end{#1}{#2}{#3}{#4}}%
   % gre@count@temp@one holds 0 if next is a not bar, 1 if it is
   \gre@count@temp@one=0%
-  \ifnum#1>9\relax %
-    \ifnum#1<20\relax %
+  \ifnum#2=0\relax %
+    \ifnum#1>9\relax %
       \gre@count@temp@one=1%
     \fi %
   \fi %
@@ -1141,7 +1120,7 @@
       \gre@endofsyllable{0}{1}{1}%
     \else %
       % otherwise we call it with 1 only if there is no letters after (we can see it with nextbegindifference)
-      \setbox\gre@box@temp@width=\hbox{#2}%
+      \setbox\gre@box@temp@width=\hbox{#3}%
       \ifdim\wd\gre@box@temp@width=0pt\relax%
         \gre@endofsyllable{0}{1}{1}%
       \else %
@@ -1152,8 +1131,8 @@
     \ifnum\gre@lastoflinecount=1\relax %
       \global\gre@lastoflinecount=2\relax %
     \fi %
-    \gre@debugmsg{syllablespacing}{ calling endofsyllable with #3}%
-    \gre@endofsyllable{1}{#3}{0}%
+    \gre@debugmsg{syllablespacing}{ calling endofsyllable with #4}%
+    \gre@endofsyllable{1}{#4}{0}%
   \fi %
   \gre@trace@end%
 }
@@ -1243,6 +1222,7 @@
 
 %a macro to typeset a syllable with only a bar inside
 \def\GreBarSyllable#1#2#3#4#5#6#7#8#9{%
+  \gre@trace{GreBarSyllable{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}{#9}}%
   \gre@textclearedfalse%
   \gre@debugmsg{general}{}%
   \gre@debugmsg{general}{New bar syllable}%
@@ -1281,7 +1261,7 @@
   \gre@dimen@begindifference=\dimexpr(\gre@dimen@notesaligncenter - \gre@dimen@textaligncenter)\relax%
   \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
   #5%
-  \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{#7}%
+  \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}#7%
   \gre@unsetfixednexttextformat %
   \gre@debugmsg{barspacing}{previousenddifference: \the\gre@dimen@previousenddifference}%
   \gre@debugmsg{barspacing}{begindifference: \the\gre@dimen@begindifference}%
@@ -1291,7 +1271,7 @@
     %
     % New bar spacing algorithm
     %
-    \gre@calculate@barposition{#4}{#7}%
+    \gre@calculate@barposition{#4}{\gre@arg@oftwo@second#7}%
     \ifgre@textcleared%
       \gre@clearsyllable{bar}%
     \fi%
@@ -1544,6 +1524,7 @@
      \gre@localrightbox{}%
   \fi\fi %
   \relax%
+  \gre@trace@end%
 }
 
 \newif\ifgre@newbarspacing%
