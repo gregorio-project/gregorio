@@ -6,6 +6,9 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Fixed
 - Fixed some problem in 900_gregorio.xml (Scribus render frame tool).  First, the use of `filecontents` rather than `filecontents*` was leading to a comment header that made it impossible for Gregorio to find the gabc headers in the temporary score file.  Further, some of the indenting (which makes the file more human readable) was leading to errors in the formatting of the created files because they are processed in a way which handles whitespace differently from XML.  See [#1457](https://github.com/gregorio-project/gregorio/issues/1457).
 
+### Added
+- Default spacings are now designated internal and thus always loaded.  `gsp-sample.tex` is added to the `doc` folder to show users how to create their own custom spacing configuration.  As part of this change, spacing configuration files no longer need to be complete.  Since the default configuration is always loaded at package startup, all needed penalties and spacings will be defined and the user's configuration file need only specify those whose value they wish to customize.  Addresses issues raised in [#1460](https://github.com/gregorio-project/gregorio/issues/1460).  **This is a change to the user interface and warrants a major release.**
+
 ## [Unreleased][CTAN]
 ### Fixed
 - Staff line thickness is now set in gsp-default.tex.  This corrects a problem with the staff lines changing thickness when the default spacing configuration is loaded while the staff size is something other than the default (17).  See [#1461](https://github.com/gregorio-project/gregorio/issues/1461).

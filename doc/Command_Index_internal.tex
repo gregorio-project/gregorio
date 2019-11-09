@@ -2011,6 +2011,20 @@ Macros that store the protrusion factors created by
 
 
 \subsection{Distances}
+
+\macroname{\textbackslash gre@createdim}{\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-spaces.tex}
+Macro to create one of Gregorio\TeX’s distances.  Used to initialize distances in \textit{gsp-default.tex}.
+
+\begin{argtable}
+  \#1 & string & The name of the distance to be changed.  See \nameref{distances} below.\\
+  \#2 & string & The distance in string format.  \textbf{Note:} You cannot use a length register for this argument.  You \emph{must} use a string because of the way that Gregorio\TeX\ handles spaces.\\
+  \#3 & \texttt{fixed} & Distance will not scale when staff size is changed.\\
+  & \texttt{scalable} & Distance will scale when staff size is changed.\\
+  & \texttt{inherited} & Distance will inherit its value from another distance.  When this argument is used, then \#2 should be the name of another Gregorio\TeX\ distance.
+\end{argtable}
+
+
+
 All of the distances listed in \nameref{distances} have an internal associated
 with them, of the form of \verb=\gre@space@*@*=, which stores the value of the
 distance (in string representation).  The first wildcard is either
