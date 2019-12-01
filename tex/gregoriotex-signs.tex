@@ -2551,16 +2551,13 @@
   \gre@trace{gre@fillhole{#1}{#2}}%
   \ifgre@boxing\else %
     \global\gre@count@lastglyphiscavum=1\relax %
-    \setbox\gre@box@temp@sign=\hbox{#1}%
+    \setbox\gre@box@temp@sign=\hbox to 0pt {%
+      {\color{grebackgroundcolor}#1}%
+      \rule{0pt}{0pt}% this trick prevents the color from leaking out of this box
+      \hss}%
+    \luacolorProcessBox\gre@box@temp@sign%
     \ifcase#2\raise \gre@dimen@glyphraisevalue\fi%
-    \hbox to 0pt{%
-      {%
-      \color{grebackgroundcolor}%
-      \copy\gre@box@temp@sign %
-      }%
-      %\pdfliteral{}% this is a ugly hack for old versions of LuaTeX to work
-      \hss %
-    }%
+    \copy\gre@box@temp@sign%
     \GreNoBreak %
   \fi %
   \relax %

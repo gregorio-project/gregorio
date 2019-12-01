@@ -74,6 +74,12 @@ deprecated usage is allowed.  This is used to pass the value of
 \macroname{\textbackslash gre@loadgregoriofont}{}{gregoriotex-main.tex}
 Loads the chosen font for the neumes at the correct size.
 
+\macroname{\textbackslash gre@maketable}{\#1}{gregoriotex-main.tex}
+Helper to convert a \TeX\ list into a Lua table.  Used to pass \verb=\gre@input@path= to Lua.
+
+\macroname{\textbackslash gre@input@path}{}{gregoriotex-main.tex}
+Macro holding the list of directories to be searched for scores.  \verb=\input@path= gets aliased to this list when inside \verb=\gregorioscore=.
+
 \macroname{\textbackslash gre@calculate@constantglyphraise}{}{gregoriotex-spaces.tex}
 Macro to calculate \verb=\gre@constantglyphraise=
 
