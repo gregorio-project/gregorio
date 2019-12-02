@@ -1788,10 +1788,17 @@
 \newcount\greconffactor%
 \def\greloadspaceconf#1{%
   \IfStrEq{#1}{default}{% load default spacings
-    \makeatletter%
+    \ifx\@onlypreamble\@notprerr%
+      \gre@debugmsg{preamble}{Not in preamble}%
+      \makeatletter%
+    \else%
+      \gre@debugmsg{preamble}{In preamble}%
+    \fi%
     \input gregoriotex-gsp-default.tex%
     \gre@changedimenfactor{\greconffactor}{\gre@factor}%
-    \makeatother%
+    \ifx\@onlypreamble\@notprerr%
+      \makeatother%
+    \fi%
   }{% load a custom spacing
     \input gsp-#1.tex\relax %
     \ifnum\greconffactor=0\relax%
