@@ -285,7 +285,7 @@ The `gregorio` executable now uses the `.gtex` extension by default (instead of 
 
 ### Custom spacings
 
-If you are using custom spacings, please update the values of `interwordspacetext`, `intersyllablespacenotes` and `interwordspacenotes` to match their new definitions (in the comments in `gsp-default.tex`). Also note that `alterationspace` is now fixed and cannot take `plus` or `minus` values.
+If you are using custom spacings, please update the values of `interwordspacetext`, `intersyllablespacenotes` and `interwordspacenotes` to match their new definitions (in the comments in `gsp-sample.tex`). Also note that `alterationspace` is now fixed and cannot take `plus` or `minus` values.
 
 ### Euouae blocks
 
@@ -447,7 +447,7 @@ In version 2.4.2, an early version of the feature to auto-compile gabc score was
 
 ### Custom dimension changes
 
-If you use custom space definitions (`gsp-foo.tex`), the format have changed, and you must rewrite it completely. See the new `gsp-default.tex` for an example, and GregorioRef.pdf for documentation.
+If you use custom space definitions (`gsp-foo.tex`), the format have changed, and you must rewrite it completely. See the new `gsp-sample.tex` for an example, and GregorioRef.pdf for documentation.
 
 ### Color definition
 
