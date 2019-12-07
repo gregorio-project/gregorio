@@ -68,7 +68,7 @@
 VERSION=`head -1 .gregorio-version`
 FILEVERSION=`echo $VERSION | sed 's/\./_/g'`
 
-TEXFILES=(tex/gregoriotex*.tex tex/gsp-default.tex tex/gregoriotex*.lua
+TEXFILES=(tex/gregoriotex*.tex tex/gregoriotex*.lua
           tex/*.dat)
 LATEXFILES=(tex/gregorio*.sty)
 TTFFILES=(fonts/*.ttf)
@@ -85,6 +85,7 @@ FONTSRCFILES+=(fonts/*-base.sfd)
 LEGACYFILES=(tex/luatex/gregoriotex/gregoriotex.sty
              tex/luatex/gregoriotex/gregoriosyms.sty
              tex/luatex/gregoriotex/gregoriotex-ictus.tex
+             tex/luatex/gregoriotex/gsp-default.tex
              fonts/truetype/public/gregoriotex/parmesan.ttf
              fonts/truetype/public/gregoriotex/parmesan-op.ttf
              fonts/source/gregoriotex/parmesan-base.sfd

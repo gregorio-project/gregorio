@@ -25,6 +25,7 @@
 \ifcsname gregoriotex@symbols@loaded\endcsname\gre@error{Loading gregoriotex after\MessageBreak gregoriosyms is not supported.  Please remove the\MessageBreak loading of gregoriosyms (its contents are loaded\MessageBreak by gregoriotex)}\fi%
 
 \RequirePackage{xcolor}%
+\RequirePackage{luacolor}%
 \RequirePackage{kvoptions}%
 \RequirePackage{ifluatex}%
 \RequirePackage{graphicx}% for \resizebox
@@ -102,22 +103,22 @@
 %%%%%%%%%
 
 \def\GreItalic#1{%
-  \textit{#1}%
+  {\itshape #1}%
   \relax %
 }
 
 \def\GreSmallCaps#1{%
-  \textsc{#1}%
+  {\scshape #1}%
   \relax %
 }
 
 \def\GreBold#1{%
-  \textbf{#1}%
+  {\bfseries #1}%
   \relax %
 }
 
 \def\GreTypewriter#1{%
-  \texttt{#1}%
+  {\ttfamily #1}%
   \relax %
 }
 

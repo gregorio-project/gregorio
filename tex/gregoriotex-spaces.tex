@@ -114,7 +114,7 @@
 %% macros for the typesetting of spaces
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Independent default distances are defined in gsp-default.tex.  The distances defined here are calculated from those distances.
+% Independent default distances are defined in gregoriotex-gsp-default.tex.  The distances defined here are calculated from those distances.
 
 %%%%%%%%%%%%%%%%%
 %% Global distances
@@ -1788,10 +1788,24 @@
 
 \newcount\greconffactor%
 \def\greloadspaceconf#1{%
-  \input gsp-#1.tex\relax %
-  \ifnum\greconffactor=0\relax%
-    \gre@error{gsp-#1.tex does not have an assigned staff size.\MessageBreak Please edit it to define \protect\greconffactor}%
-  \fi %
+  \IfStrEq{#1}{default}{% load default spacings
+    \ifx\@onlypreamble\@notprerr%
+      \gre@debugmsg{preamble}{Not in preamble}%
+      \makeatletter%
+    \else%
+      \gre@debugmsg{preamble}{In preamble}%
+    \fi%
+    \input gregoriotex-gsp-default.tex%
+    \gre@changedimenfactor{\greconffactor}{\gre@factor}%
+    \ifx\@onlypreamble\@notprerr%
+      \makeatother%
+    \fi%
+  }{% load a custom spacing
+    \input gsp-#1.tex\relax %
+    \ifnum\greconffactor=0\relax%
+      \gre@error{gsp-#1.tex does not have an assigned staff size.\MessageBreak Please edit it to define \protect\greconffactor}%
+    \fi %
+  }
   \greconffactor=0%
   \relax %
 }%

@@ -69,8 +69,8 @@ sed -i.temp 's:\\definecolor{\([a-zA-Z]*\)}.*:\1:' $CODEFILE
 sed -i.temp 's:.*gre@space@count@\([a-z@]*\).*:\1:' $CODEFILE
 
 #distances
-grep -h '\\grecreatedim{.*' gsp-default.tex >> $CODEFILE
-sed -i.temp 's:\\grecreatedim{\([a-z@]*\)}.*:\1:' $CODEFILE
+grep -h '\\gre@createdim{.*' gregoriotex-gsp-default.tex >> $CODEFILE
+sed -i.temp 's:\\gre@createdim{\([a-z@]*\)}.*:\1:' $CODEFILE
 sed -i.temp 's:.*gre@space@.*::' $CODEFILE
 
 #styles
