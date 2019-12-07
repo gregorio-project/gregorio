@@ -30,6 +30,7 @@ GREGORIO=gregorio-$(FILENAME_VERSION)
 # gets generated or make distcheck will fail.
 
 GregorioRef.pdf: $(SRCFILES)
+	luaotfload-tool --update --force
 	$(MAKE) $(AM_MAKEFLAGS) -C ../src $(GREGORIO)
 	../src/$(GREGORIO) -o factus.gtex $(<D)/factus.gabc
 	TEXINPUTS=$(<D):$(<D)/../tex: LUAINPUTS=$(<D):$(<D)/../tex: \
@@ -39,6 +40,7 @@ GregorioRef.pdf: $(SRCFILES)
 		 -jobname=GregorioRef $< || rm $@
 
 GregorioNabcRef.pdf: $(NABCSRCFILES)
+	luaotfload-tool --update --force
 	$(MAKE) $(AM_MAKEFLAGS) -C ../src $(GREGORIO)
 	../src/$(GREGORIO) -o veni.gtex $(<D)/veni.gabc
 	../src/$(GREGORIO) -o omnes.gtex $(<D)/omnes.gabc

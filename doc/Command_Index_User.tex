@@ -94,7 +94,7 @@ Once you've included the package in your document (as explained above) the follo
 \subsubsection{Including scores}
 
 \macroname{\textbackslash gregorioscore}{[\optional{\#1}]\{\#2\}}{gregoriotex-main.tex}
-Macro for including scores.  Works on both gabc and tex files.
+Macro for including scores.  Works on both gabc and gtex files.
 
 \begin{argtable}
   \#1 & \texttt{n} & Optional. \#2 will be included as is. \\
@@ -150,6 +150,16 @@ When called with the optional argument \texttt{[f]} Gregorio\TeX\ will
 compile the gabc file into a gtex file. This is similar to
 \texttt{[a]} except the gabc is compiled every time.
 
+\macroname{\textbackslash gregetgregpath}{\{\#1\}}{gregoriotex-main.tex}
+Set a list of additional directories which should be searched for scores.  Directories may be absolute or relative, but must end with a slash (\verb=/=) and enclosed in braces (\verb={}=), even if there is only one additional directory.  For example, to look in a directory called “Scores” which is alongside the main project directory, one could use the following:
+
+\begin{latexcode}
+  \gresetgregpath{{../Scores/}}
+\end{latexcode}
+
+Note that these directories are not searched recursively.  If you want to include subdirectories, then each subdirectory must be included individually.
+
+
 \macroname{\textbackslash gresetcompilegabc}{\{\#1\}}{gregoriotex-main.tex}
 A macro to change the behavior of the way Gregorio\TeX\ includes scores.  This is similar to using the package options \verb=[forcecompile]=, \verb=[autocompile]=, and \verb=[nevercompile]=, but does not necessarly apply to the entire document.
 
@@ -166,16 +176,16 @@ without doing anything else.
 \medskip This macro can be combined in the same document with different arguments to
 switch between different behaviors: \par\medskip
 \begin{latexcode}
-  \usepackage{gregoriotex} % [nevercompile] is the default.
+  \usepackage{gregoriotex} % [autocompile] is the default.
   ----
-  \gregorioscore{TecumPrincipium} % gabc never compiled.
-  \gregorioscore[f]{TecumPrincipium} % gabc always compiled.
-  \gregorioscore[a]{TecumPrincipium} % gabc auto compiled.
-
-  \gresetcompilegabc{auto}
   \gregorioscore{TecumPrincipium} % gabc auto compiled.
   \gregorioscore[n]{TecumPrincipium} % gabc never compiled.
   \gregorioscore[f]{TecumPrincipium} % gabc always compiled.
+
+  \gresetcompilegabc{never}
+  \gregorioscore{TecumPrincipium} % gabc never compiled.
+  \gregorioscore[f]{TecumPrincipium} % gabc always compiled.
+  \gregorioscore[a]{TecumPrincipium} % gabc auto compiled.
 
   \gresetcompilegabc{force}
   \gregorioscore{TecumPrincipium} % gabc always compiled.
@@ -319,13 +329,13 @@ Macro to load a space configuration file.  Space configuration file names have t
 
 Example:\par\medskip
 \begin{latexcode}
-  % loads gsp-default.tex, the default configuration file
+  % loads gregoriotex-gsp-default.tex, the default configuration file
   \greloadspaceconf{default}
   % loads a custom configuration called gsp-myspaces.tex
   \greloadspaceconf{myspaces}
 \end{latexcode}
 
-\macroname{\textbackslash greconffactor}{}{gsp-default.tex}
+\macroname{\textbackslash greconffactor}{}{gregoriotex-gsp-default.tex}
 A count which indicates the staff size that a space configuration file is designed for.  Each space configuration file must have this value set as Gregorio\TeX\ will compare it to the current staff size to determine if the configuration file being loaded needs to be rescaled.
 
 \macroname{\textbackslash gresetlineheightexpansion}{\{\#1\}}{gregoriotex-main.tex}
@@ -449,6 +459,8 @@ Note that the font will be looked up by name through luaotfload, see the documen
   & \texttt{gregorio} & Use the Gregorio font.\\
   & \texttt{granapadano} & Use the Grana Padano font.\\
 \end{argtable}
+
+\textbf{Nota Bene:} The Gregorio and Grana Padano fonts are not included by default in a basic installation.  To get them you need to download and install them from the \verb=supp-fonts-##.zip= file (where \#\# is the version number of your release).  See \url{https://github.com/gregorio-project/gregorio/releases} for the list of releases.
 
 \macroname{\textbackslash gresetgregoriofontscaled}{[\optional{\#1}]\{\#2\}\{\#3\}}{gregoriotex-main.tex}
 
@@ -953,8 +965,8 @@ Macro to specify how the translation text should be aligned with it respective s
 Macro to specify which line of the annotation should be used to determine its starting placement (i.e. before \texttt{annotationraise} is applied).
 
 \begin{argtable}
-  \#1 & \texttt{firstline} & Annotation placement is determined by the first line (default)\\
-  & \texttt{lastline} & annotation placement is determined by the last line\\
+  \#1 & \texttt{topline} & Annotation placement is determined by the first line (default)\\
+  & \texttt{bottomline} & annotation placement is determined by the last line\\
 \end{argtable}
 
 \macroname{\textbackslash gresetannotationvalign}{\{\#1\}}{gregoriotex-main.tex}
@@ -989,7 +1001,7 @@ protrusion factors will be used for various characters as well as for
 \verb=<pr>= tags with no specified protrusion factor.  A protrusion factor of 0
 means no protrusion and 1 means full protrusion.  Any floating-point value from
 0 to 1 is allowed.  All of these global protrusion factors may be set in
-gsp-default.tex or in your own \TeX\ files.
+a spacing configuration file (gsp-*.tex) or in the project \TeX\ file.
 
 \begin{argtable}
   \#1 & \texttt{,}         & Sets the automatic protrusion factor for a comma at
@@ -1835,7 +1847,7 @@ This space is added before the final divisio final of a score (old bar spacing a
 
 Spaces around bars when they are typeset inside a syllable. The \verb=@short=
 suffix for virgula and divisio minima indicates the space used when the notes
-surrounding the bar are strictly lower than \texttt{g} (in a four-line score). 
+surrounding the bar are strictly lower than \texttt{g} (in a four-line score).
 For divisio minimis, the \verb=@short= suffix is for notes lower than
 \texttt{h}.  When applied to ``high'' positions (on the ledger line above
 the staff), the \verb=@short= distances will be used for up to two pitches
@@ -2018,7 +2030,7 @@ The club penalty (determines how important it is to prevent orphans from occurri
 The widow penalty (determines how important it is to prevent widows from occurring).
 \end{gcount}
 
-\macroname{emergencystretch}{}{gsp-default.tex}
+\macroname{emergencystretch}{}{gregoriotex-gsp-default.tex}
 The value of the last ditch stretch for overfull boxes.  This should be set using \verb=\grechangedim=.
 
 Default: \verb=\emergencystretch=
@@ -2027,27 +2039,27 @@ Default: \verb=\emergencystretch=
 The end after bar penalty.
 \end{gcount}
 
-\begin{gcount}{endafterbaraltpenalty}{}{gsp-default.tex}
+\begin{gcount}{endafterbaraltpenalty}{}{gregoriotex-gsp-default.tex}
 The alternate end after bar penalty (used when there is no text under the bar).
 \end{gcount}
 
-\begin{gcount}{endofelementpenalty}{}{gsp-default.tex}
+\begin{gcount}{endofelementpenalty}{}{gregoriotex-gsp-default.tex}
 The end of element penalty.
 \end{gcount}
 
-\begin{gcount}{endofsyllablepenalty}{}{gsp-default.tex}
+\begin{gcount}{endofsyllablepenalty}{}{gregoriotex-gsp-default.tex}
 The end of element penalty.
 \end{gcount}
 
-\begin{gcount}{endofwordpenalty}{}{gsp-default.tex}
+\begin{gcount}{endofwordpenalty}{}{gregoriotex-gsp-default.tex}
 The end of element penalty.
 \end{gcount}
 
-\begin{gcount}{hyphenpenalty}{}{gsp-default.tex}
+\begin{gcount}{hyphenpenalty}{}{gregoriotex-gsp-default.tex}
 The hyphen penalty.
 \end{gcount}
 
-\begin{gcount}{nobreakpenalty}{}{gsp-default.tex}
+\begin{gcount}{nobreakpenalty}{}{gregoriotex-gsp-default.tex}
 Penalty to prevent a line break.
 \end{gcount}
 
@@ -2059,7 +2071,7 @@ Penalty to force a line break.
 The penalty applied after the final element of a score.
 \end{gcount}
 
-\macroname{looseness}{}{gsp-default.tex}
+\macroname{looseness}{}{gregoriotex-gsp-default.tex}
 The \TeX\ looseness within a score.
 
 Default: \verb=\looseness=
@@ -2068,12 +2080,12 @@ Default: \verb=\looseness=
 The \TeX\ tolerance within a score.  See \url{https://en.wikibooks.org/wiki/TeX/tolerance} for an explanation of what tolerance is.
 \end{gcount}
 
-\macroname{pretolerance}{}{gsp-default.tex}
+\macroname{pretolerance}{}{gregoriotex-gsp-default.tex}
 The \TeX\ pretolerance within a score.  See \url{https://en.wikibooks.org/wiki/TeX/pretolerance} for an explanation of what pretolerance is.
 
 Default: $-1$ (Lua\TeX\ versions prior to 0.80) or \verb=\pretolerance= (versions after, and including, 0.80)]
 
-\textit{Nota bene:} For more details on why this is necessary see the comments in gsp-default.tex.
+\textit{Nota bene:} For more details on why this is necessary see the comments in gregoriotex-gsp-default.tex.
 
 
 

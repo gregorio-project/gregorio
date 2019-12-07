@@ -74,6 +74,12 @@ deprecated usage is allowed.  This is used to pass the value of
 \macroname{\textbackslash gre@loadgregoriofont}{}{gregoriotex-main.tex}
 Loads the chosen font for the neumes at the correct size.
 
+\macroname{\textbackslash gre@maketable}{\#1}{gregoriotex-main.tex}
+Helper to convert a \TeX\ list into a Lua table.  Used to pass \verb=\gre@input@path= to Lua.
+
+\macroname{\textbackslash gre@input@path}{}{gregoriotex-main.tex}
+Macro holding the list of directories to be searched for scores.  \verb=\input@path= gets aliased to this list when inside \verb=\gregorioscore=.
+
 \macroname{\textbackslash gre@calculate@constantglyphraise}{}{gregoriotex-spaces.tex}
 Macro to calculate \verb=\gre@constantglyphraise=
 
@@ -2013,7 +2019,7 @@ Macros that store the protrusion factors created by
 \subsection{Distances}
 
 \macroname{\textbackslash gre@createdim}{\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-spaces.tex}
-Macro to create one of Gregorio\TeX’s distances.  Used to initialize distances in \textit{gsp-default.tex}.
+Macro to create one of Gregorio\TeX’s distances.  Used to initialize distances in \textit{gregoriotex-gsp-default.tex}.
 
 \begin{argtable}
   \#1 & string & The name of the distance to be changed.  See \nameref{distances} below.\\

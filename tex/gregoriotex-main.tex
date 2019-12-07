@@ -631,16 +631,6 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% macros for the score reference (unused)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\def\grescorereference#1{% OBSOLETE
-  \gre@error{\protect\grescorereference\space is obsolete.\MessageBreak It does nothing; stop using it.}%
-  \relax %
-}%
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for the typesetting the things above the initial
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1877,6 +1867,20 @@
 %% score including
 %%%%%%%%%%%%%%%%%%%
 
+
+\def\gre@maketabl#1{\ifx\relax#1\else,"#1"\expandafter\gre@maketabl\fi}
+
+\def\gresetgregpath#1{%
+  \def\gre@input@path{#1}%
+  \directlua{
+    gre_input_path = {""\expandafter\gre@maketabl\gre@input@path\relax}
+  }
+}
+
+\ifx\gre@input@path\@undefined
+  \let\gre@input@path\input@path
+\fi
+
 % Flag to track compilation behavior
 % 0 = never compile (default)
 % 1 = auto compile (compile outdated scores and those lacking a compiled version)
@@ -1910,6 +1914,8 @@
 % This forces gregoriotex to recompile the gabc file.
 
 \def\gre@gregorioscore#1{%
+  \begingroup%
+  \let\input@path\gre@input@path%
   \ifcase\gre@compilegabc% case 0, never compile
     \gre@debugmsg{compile}{Refusing to compile #1}%
     \input #1%
@@ -1921,6 +1927,7 @@
     \directlua{gregoriotex.include_score([[#1]], true, \gre@allowdeprecated@asboolean)}%
   \fi%
   \relax%
+  \endgroup%
 }%
 
 % The internal macro called when \gregorioscore is called with the optional argument.  Behavior is determined by the value of the argument:
@@ -1928,6 +1935,8 @@
 % a - perform the checks to see if the score needs to be recompiled and do so only if necessary
 % f - force the compilation of the score before including it
 \def\gre@gregorioscore@option[#1]#2{%
+  \begingroup%
+  \let\input@path\gre@input@path%
   \ifx #1n\relax%
     \gre@debugmsg{compile}{Override not compiling #2}%
     \input #2%
@@ -1945,6 +1954,7 @@
     \fi%
   \fi%
   \relax%
+  \endgroup%
 }%
 
 % The main macro used by the user to input scores into the document.

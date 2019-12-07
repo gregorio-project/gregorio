@@ -139,7 +139,7 @@
   {\endtabularx\bigskip}
 
 \makeatletter%
-\NewDocumentEnvironment{gdimension}{m}{\macroname{#1}{}{gsp-default.tex}}{%
+\NewDocumentEnvironment{gdimension}{m}{\macroname{#1}{}{gregoriotex-gsp-default.tex}}{%
 
   \gre@rubberpermit{#1}%
   \ifgre@rubber%
@@ -149,7 +149,7 @@
   \fi%
 }
 
-\NewDocumentEnvironment{gcount}{m}{\macroname{#1}{}{gsp-default.tex}}{%
+\NewDocumentEnvironment{gcount}{m}{\macroname{#1}{}{gregoriotex-gsp-default.tex}}{%
 
   Default: \expandafter$\expandafter\the\csname gre@space@count@#1\endcsname$
 }
