@@ -118,7 +118,7 @@ Macro for typesetting a bar syllable.
   & \texttt{1} & this syllable is the end of a word\\
   \#5 & \TeX\ code & macros setting syllable letters for the next syllable\\
   \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
-  \#7 & & alignment type of the first next glyph\\
+  \#7 & pair of integers & a pair containing alignment type and alteration type of the next glyph\\
   \#8 &\TeX\ code & other macros (translation, double text, etc.) that don't fit in the limitation of the number of arguments\\
   \#9 & \TeX\ code & The bar line (usually a \textit{writebar} call).
 \end{argtable}
@@ -282,6 +282,28 @@ Macro to typeset a divisio minima.
 
 \macroname{\textbackslash GreDivisioMinimaHigh}{\#1\#2\#3}{gregoriotex-signs.tex}
 Macro to typeset a divisio minima on the ledger line above the staff.
+
+\begin{argtable}
+  \#1 & \texttt{0} & There is no text under the bar.\\
+  & \texttt{1} & There is text under the bar.\\
+  \#2 & \TeX\ code & Macros which may happen before the skip but after the divisio minima (typically \verb=\grevepisema=).\\
+  \#3 & \texttt{0} & The notes around the bar are vertically close to the bar.\\
+  & \texttt{1} & The notes around the bar are far, \verb=@short= versions of spaces will be used.\\
+\end{argtable}
+
+\macroname{\textbackslash GreDivisioMinimaParen}{\#1\#2\#3}{gregoriotex-signs.tex}
+Macro to typeset a parenthesized divisio minima.
+
+\begin{argtable}
+  \#1 & \texttt{0} & There is no text under the bar.\\
+  & \texttt{1} & There is text under the bar.\\
+  \#2 & \TeX\ code & Macros which may happen before the skip but after the divisio minima (typically \verb=\grevepisema=).\\
+  \#3 & \texttt{0} & The notes around the bar are vertically close to the bar.\\
+  & \texttt{1} & The notes around the bar are far, \verb=@short= versions of spaces will be used.\\
+\end{argtable}
+
+\macroname{\textbackslash GreDivisioMinimaParenHigh}{\#1\#2\#3}{gregoriotex-signs.tex}
+Macro to typeset a parenthesized divisio minima on the ledger line above the staff.
 
 \begin{argtable}
   \#1 & \texttt{0} & There is no text under the bar.\\
@@ -496,6 +518,18 @@ Macro to typeset a flat.
   \#5 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
 \end{argtable}
 
+\macroname{\textbackslash GreFlatParen}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
+Macro to typeset a parenthesized flat.
+
+\begin{argtable}
+  \#1 & integer & Height number of the flat.\\
+  \#2 & \texttt{0} & The flat is not part of the clef.\\
+  & \texttt{1} & The flat is part of the clef.\\
+  \#3 & \TeX\ code & signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)\\
+  \#4 & \TeX\ code & signs to typeset after the glyph (almost all signs)\\
+  \#5 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
+\end{argtable}
+
 \macroname{\textbackslash GreForceHyphen}{}{gregoriotex-syllable.tex}
 Macro that indicates that a hyphen should be forced (if enabled) after the given syllable.
 
@@ -642,6 +676,12 @@ Same as \verb=\GreDivisioMinima= except inside a syllable.
 \macroname{\textbackslash GreInDivisioMinimaHigh}{\#1\#2\#3}{gregoriotex-signs.tex}
 Same as \verb=\GreDivisioMinimaHigh= except inside a syllable.
 
+\macroname{\textbackslash GreInDivisioMinimaParen}{\#1\#2\#3}{gregoriotex-signs.tex}
+Same as \verb=\GreDivisioMinimaParen= except inside a syllable.
+
+\macroname{\textbackslash GreInDivisioMinimaParenHigh}{\#1\#2\#3}{gregoriotex-signs.tex}
+Same as \verb=\GreDivisioMinimaParenHigh= except inside a syllable.
+
 \macroname{\textbackslash GreInDivisioMinor}{\#1\#2}{gregoriotex-signs.tex}
 Same as \verb=\GreDivisioMinor= except inside a syllable.
 
@@ -662,6 +702,12 @@ Same as \verb=\GreVirgula= except inside a syllable.
 
 \macroname{\textbackslash GreInVirgulaHigh}{\#1\#2\#3}{gregoriotex-signs.tex}
 Same as \verb=\GreVirgulaHigh= except inside a syllable.
+
+\macroname{\textbackslash GreInVirgulaParen}{\#1\#2\#3}{gregoriotex-signs.tex}
+Same as \verb=\GreVirgulaParen= except inside a syllable.
+
+\macroname{\textbackslash GreInVirgulaParenHigh}{\#1\#2\#3}{gregoriotex-signs.tex}
+Same as \verb=\GreVirgulaParenHigh= except inside a syllable.
 
 \macroname{\textbackslash GreItalic}{\#1}{gregoriotex.sty or gregoriotex.tex}
 Makes argument (a string) italic.  Accesses \LaTeX\ \verb=\textit= or
@@ -736,6 +782,18 @@ Macro for typesetting a musica ficta sharp.
 
 \macroname{\textbackslash GreNatural}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
 Macro to typeset a natural.
+
+\begin{argtable}
+  \#1 & integer & Height number of the natural.\\
+  \#2 & \texttt{0} & The natural is not part of the clef.\\
+  & \texttt{1} & The natural is part of the clef (doesn't happen).\\
+  \#3 & \TeX\ code & signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)\\
+  \#4 & \TeX\ code & signs to typeset after the glyph (almost all signs)\\
+  \#5 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
+\end{argtable}
+
+\macroname{\textbackslash GreNaturalParen}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
+Macro to typeset a parenthesized natural.
 
 \begin{argtable}
   \#1 & integer & Height number of the natural.\\
@@ -1004,6 +1062,18 @@ Macro to typeset a sharp.
   \#5 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
 \end{argtable}
 
+\macroname{\textbackslash GreSharpParen}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
+Macro to typeset a parenthesized sharp.
+
+\begin{argtable}
+  \#1 & integer & Height number of the sharp.\\
+  \#2 & \texttt{0} & The sharp is not part of the clef.\\
+  & \texttt{1} & The sharp is part of the clef (doesn't happen).\\
+  \#3 & \TeX\ code & signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)\\
+  \#4 & \TeX\ code & signs to typeset after the glyph (almost all signs)\\
+  \#5 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
+\end{argtable}
+
 \macroname{\textbackslash GreSmallCaps}{\#1}{gregoriotex.sty and gregoriotex.tex}
 Makes argument small capitals. Accesses \LaTeX\ \verb=\textsc= or
 Plain \TeX\ \verb=\sc= as appropriate Corresponds to ``<sc></sc>'' tags
@@ -1056,7 +1126,7 @@ Macro to typeset the syllable.
   & \texttt{1} & this syllable is the end of a word\\
   \#5 & \TeX\ code & macros setting syllable letters for the next syllable\\
   \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
-  \#7 & & alignment type of the first next glyph\\
+  \#7 & pair of integers & a pair containing alignment type and alteration type of the next glyph\\
   \#8 &\TeX\ code & other macros (translation, double text, etc.) that don't fit in the limitation of the number of arguments\\
   \#9 & Gregorio\TeX\ glyphs & all the notes
 \end{argtable}
@@ -1153,6 +1223,28 @@ Macro to typeset a virgula.
 
 \macroname{\textbackslash GreVirgulaHigh}{\#1\#2\#3}{gregoriotex-signs.tex}
 Macro to typeset a virgula on the ledger line above the staff.
+
+\begin{argtable}
+  \#1 & \texttt{0} & There is no text under the bar.\\
+  & \texttt{1} & There is text under the bar.\\
+  \#2 & code & Macros which may happen before the skip but after the virgula (typically \verb=\grevepisema=).\\
+  \#3 & \texttt{0} & The notes around the bar are vertically close to the bar.\\
+  & \texttt{1} & The notes around the bar are far, \verb=@short= versions of spaces will be used.\\
+\end{argtable}
+
+\macroname{\textbackslash GreVirgulaParen}{\#1\#2\#3}{gregoriotex-signs.tex}
+Macro to typeset a parenthesized virgula.
+
+\begin{argtable}
+  \#1 & \texttt{0} & There is no text under the bar.\\
+  & \texttt{1} & There is text under the bar.\\
+  \#2 & code & Macros which may happen before the skip but after the virgula (typically \verb=\grevepisema=).\\
+  \#3 & \texttt{0} & The notes around the bar are vertically close to the bar.\\
+  & \texttt{1} & The notes around the bar are far, \verb=@short= versions of spaces will be used.\\
+\end{argtable}
+
+\macroname{\textbackslash GreVirgulaParenHigh}{\#1\#2\#3}{gregoriotex-signs.tex}
+Macro to typeset a parenthesized virgula on the ledger line above the staff.
 
 \begin{argtable}
   \#1 & \texttt{0} & There is no text under the bar.\\

@@ -392,6 +392,18 @@ static void gabc_write_bar(FILE *f, gregorio_bar type)
     case B_DIVISIO_MINIMIS_HIGH:
         fprintf(f, "^0");
         break;
+    case B_VIRGULA_PAREN:
+        fprintf(f, "`?");
+        break;
+    case B_VIRGULA_PAREN_HIGH:
+        fprintf(f, "`0?");
+        break;
+    case B_DIVISIO_MINIMA_PAREN:
+        fprintf(f, ",?");
+        break;
+    case B_DIVISIO_MINIMA_PAREN_HIGH:
+        fprintf(f, ",0?");
+        break;
     default:
         /* not reachable unless there's a programming error */
         /* LCOV_EXCL_START */
@@ -564,11 +576,20 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     case S_FLAT:
         fprintf(f, "%cx", pitch_letter(note->u.note.pitch));
         break;
+    case S_FLAT_PAREN:
+        fprintf(f, "%cx?", pitch_letter(note->u.note.pitch));
+        break;
     case S_NATURAL:
         fprintf(f, "%cy", pitch_letter(note->u.note.pitch));
         break;
+    case S_NATURAL_PAREN:
+        fprintf(f, "%cy?", pitch_letter(note->u.note.pitch));
+        break;
     case S_SHARP:
         fprintf(f, "%c#", pitch_letter(note->u.note.pitch));
+        break;
+    case S_SHARP_PAREN:
+        fprintf(f, "%c#?", pitch_letter(note->u.note.pitch));
         break;
     case S_VIRGA:
         fprintf(f, "%cv", pitch_letter(note->u.note.pitch));
