@@ -1,15 +1,12 @@
 % !TEX program = LuaLaTeX+se
 
-% This is a simple template for a LuaLaTeX document using gregorio scores.
+% Simple template for using Gregorio scores in a LuaLaTeX document.
 
-\documentclass[
-  fontsize=11pt,
-  paper=a4
-]{scrartcl} % document class: manual at https://ctan.org/pkg/koma-script
+\documentclass{scrartcl} % set document class: manual at https://ctan.org/pkg/koma-script
 
-% load packages:
-\usepackage[osf,p]{libertinus} % Decent (free) font, but should be changed if you have high standards
-\usepackage{gregoriotex} % for gregorio score inclusion
+% Load packages:
+\usepackage[osf,p]{libertinus} % set font
+\usepackage{gregoriotex} % enable Gregorio score inclusion
 \usepackage[latin]{babel} % set language
 
 \setkomafont{section}{\normalfont\centering\huge\scshape} % section heading style
@@ -20,26 +17,26 @@
 % The title:
 \section{Populus Sion}
 
-% Here we set the space around the initial.
-% Please report to http://gregorio-project.github.io/gregoriotex/details.html for more details and options
+% Set the space around the initial:
+% See http://gregorio-project.github.io/gregoriotex/details.html for more details and options
 \grechangedim{beforeinitialshift}{2.2mm}{scalable}
 \grechangedim{afterinitialshift}{2.2mm}{scalable}
 
-% Here we set the initial font. Change 43 if you want a bigger initial.
+% Set the initial font (change 43 for a larger size):
 \grechangestyle{initial}{\fontsize{43}{43}\selectfont}%
 
-% We set red lines here, comment it if you want black ones.
+% Make staff lines red; remove for black:
 \gresetlinecolor{gregoriocolor}
 
-% We set VII above the initial manually
+% Add VII above the initial manually:
 \grechangestyle{annotation}{\small\bfseries}
 \greannotation{Intr.}
 \greannotation{\textsc{vii}}
 
-% We use the "commentary" field of the score in the top right corner:
+% Use the "commentary" field of the score in the top right corner:
 \gresetheadercapture{commentary}{grecommentary}{string}
 
-% and finally we include the scores. The file must be in the same directory as this one.
+% Include the scores; the file must be in the same directory:
 \gregorioscore[a]{PopulusSion}
 
 \section{Factus est}
