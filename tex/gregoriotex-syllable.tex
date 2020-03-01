@@ -1569,13 +1569,14 @@
   \gre@trace@end%
 }%
 
-% TODO: Change \gre@initiallines to \gre@count@initiallines in 5.0
+\newcount\gre@count@initiallines%
+\gre@count@initiallines=1\relax% default to one-line initials
 \def\gresetinitiallines#1{%
   \IfInteger{#1}%
     {%
       \ifnum#1>-1\relax%
         \ifnum#1<3\relax%
-          \def\gre@initiallines{#1}%
+          \gre@count@initiallines=#1%
         \else%
           \gre@error{The argument for \protect\gresetinitiallines\space must be 0, 1, or 2}%
         \fi%
@@ -1585,7 +1586,6 @@
     }%
     {\gre@error{\protect\gresetinitiallines\space takes a positive integer argument}}%
 }%
-\gresetinitiallines{1}% default to one-line initials
 
 %% sets the first syllable text
 %% #1 - Initial
@@ -1596,7 +1596,7 @@
 %% #6 - Extra macros to run if there is an initial
 \def\GreSetFirstSyllableText#1#2#3#4#5#6{%
   \gre@printcommentary%
-  \ifcase\gre@initiallines\relax % no initial
+  \ifcase\gre@count@initiallines\relax % no initial
     \gre@noinitial %
     \gre@setfirstsyllabletext#5{#1}{#2#3}{}%
   \or % regular intiial

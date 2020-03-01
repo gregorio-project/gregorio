@@ -423,7 +423,7 @@
   \gre@debugmsg{bolshift}{ clefwidthcurrent = \the\gre@dimen@clefwidth@current}%
   \gre@debugmsg{bolshift}{ clefwidthbol = \the\gre@dimen@clefwidth@bol}%
   % we ignore the current-bol adjustment if the clef is the first of the score and there is an initial on one line:
-  \ifnum\gre@initiallines=1\ifgre@beginningofscore\else %
+  \ifnum\gre@count@initiallines=1\ifgre@beginningofscore\else %
       \global\advance\gre@skip@temp@three by \dimexpr(\gre@dimen@clefwidth@current-\gre@dimen@clefwidth@bol)\relax %
     \fi\else %
       \global\advance\gre@skip@temp@three by \dimexpr(\gre@dimen@clefwidth@current-\gre@dimen@clefwidth@bol)\relax %
