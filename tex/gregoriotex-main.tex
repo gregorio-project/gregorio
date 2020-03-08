@@ -1830,7 +1830,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\grechangestyle#1#2{%
-  \IfStrEq{#1}{biginitial}{\gre@obsolete{biginitial style}{initial style}}{}%%% OBSOLETE
   \@ifnextchar[{\gre@changestyle{#1}{#2}}{\gre@changestyle{#1}{#2}[\relax]}%
 }%
 
