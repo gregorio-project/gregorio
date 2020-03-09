@@ -479,9 +479,6 @@ Macro to draw the staff lines.  Comes after the initial but before the clef.
 \macroname{\textbackslash gre@noinitial}{}{gregoriotex-main.tex}
 Macro called when no initial is being set.
 
-\macroname{\textbackslash gre@setbiginitial}{}{gregoriotex-main.tex}
-Macro which indicates that a 2-line initial is desired.
-
 \macroname{\textbackslash gre@setinitial}{\#1}{gregoriotex-main.tex}
 Macro to set the initial in the score.
 
@@ -750,9 +747,6 @@ Macro to help typesetting vertical episema.
 
 \macroname{\textbackslash gre@newglyphcommon}{}{gregoriotex-syllable.tex}
 Macro called before each glyph.
-
-\macroname{\textbackslash gre@normalinitial}{}{gregoriotex-main.tex}
-Macro called at the end of the score to ensure that a big initial setting doesn’t carry into the next score.
 
 \macroname{\textbackslash greoldcatcode}{}{gregoriotex.tex}
 Macro to store the catcode for ``@'' so that we can use said symbol in function names under Plain \TeX\ and then restore the original catcode after the package is done loading.
@@ -1725,9 +1719,6 @@ opposed to rendered via the score font.
 Boolean used to specify whether divisio braces should be drawn by \MP{} as
 opposed to rendered via the score font.
 
-\macroname{\textbackslash gre@biginitial}{}{gregoriotex-main.tex}
-Count to track whether the initial is big (2-lines) or normal (1-line).
-
 \macroname{\textbackslash ifgre@boxing}{}{gregoriotex-syllable.tex}
 Boolean to track whether we’re placing the contents of syllable notes into their box or actually printing that box (helps prevent spurious spaces from occurring when the box is being filled but not printed).
 
@@ -1949,8 +1940,8 @@ Boolean indicating whether the first nabc voice should be shown.
 \macroname{\textbackslash ifgre@showlyrics}{}{gregoriotex-syllable.tex}
 Boolean indicating whether the lyrics should be shown.
 
-\macroname{\textbackslash gre@initiallines}{}{gregoriotex-syllable.tex}
-Number of lines the initial takes up.  Currently limited to 0, 1, or 2.  Not currently a count, but will be changed to one in 5.0.
+\macroname{\textbackslash gre@count@initiallines}{}{gregoriotex-syllable.tex}
+Number of lines the initial takes up.  Currently limited to 0, 1, or 2.
 
 \macroname{\textbackslash ifgre@rewritethissyllable}{}{gregoriotex-syllable.tex}
 Boolean indicating that a syllable should be rewritten to improve ligature rendering.
