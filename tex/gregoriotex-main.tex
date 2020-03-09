@@ -244,7 +244,7 @@
      \gre@localrightbox{}%
   \fi\fi %
   \ifgre@boxing\else%
-    \ifnum\gre@biginitial=1\relax %
+    \ifnum\gre@count@initiallines>1\relax %
       \ifcase\gre@knownline %
       % 0: should not happend...
       \or % 1
@@ -317,28 +317,8 @@
 %% box containing the initial, and dimen containing its width (and the width of the space after)
 \newbox\gre@box@initial%
 
-
-% gre@biginitial means that the inital takes two lines
-\newcount\gre@biginitial%
-
 % gre@knownline is the line we think we are in
 \newcount\gre@knownline%
-
-% macro to call before the call of \initial
-\def\gre@setbiginitial{%
-  \gre@trace{gre@setbiginitial}%
-  \global\gre@biginitial=1\relax %
-  \relax %
-  \gre@trace@end%
-}%
-
-% macro to cancel before the call of \initial
-\def\gre@normalinitial{%
-  \gre@trace{gre@normalinitial}%
-  \global\gre@biginitial=0\relax %
-  \relax %
-  \gre@trace@end%
-}%
 
 % macro to call before the first syllable, but after setinitialclef
 \def\gre@adjustsecondline{%
@@ -1226,7 +1206,7 @@
 
 %macro called at the end of a score
 \def\GreEndScore{%
-  \ifnum\gre@biginitial=1\relax%
+  \ifnum\gre@count@initiallines>1\relax%
     \ifnum\gre@knownline<3\relax%
       \gre@error{Score ended before finding the end\MessageBreak of the second line of a 2-line initial.  Make sure\MessageBreak you have at least two manual line breaks in \MessageBreak your gabc}%
     \fi%
@@ -1252,7 +1232,6 @@
   \gre@calculate@additionalspaces{\gre@pitch@dummy}{\gre@pitch@dummy}{0}{0}%
   \global\gre@dimen@currentabovelinestextheight=0 sp%
   \gre@removetranslationspace %
-  \gre@normalinitial %
   \gre@restorepenalties %
   \exhyphenchar=\gre@exhyphencharsave %
   \gre@dimen@temp@one=0pt\relax%

@@ -1596,14 +1596,11 @@
 %% #6 - Extra macros to run if there is an initial
 \def\GreSetFirstSyllableText#1#2#3#4#5#6{%
   \gre@printcommentary%
-  \ifcase\gre@count@initiallines\relax % no initial
+  \ifnum\gre@count@initiallines=0\relax % no initial
     \gre@noinitial %
     \gre@setfirstsyllabletext#5{#1}{#2#3}{}%
-  \or % regular intiial
+  \else % initial
     \gre@setinitial{#1}%
-    \gre@setfirstsyllabletext#4{#2}{#3}{#6}%
-  \or % big initial
-    \gre@setbiginitial\gre@setinitial{#1}%
     \gre@setfirstsyllabletext#4{#2}{#3}{#6}%
   \fi %
 }%
@@ -1632,7 +1629,7 @@
 \def\GreScoreOpening#1#2#3#4#5{%
   #3\relax % fixed styles, etc.
   #5\relax % should emit the initial
-  \ifnum\gre@biginitial=1\relax %
+  \ifnum\gre@count@initiallines>1\relax %
     \gre@debugmsg{general}{making adjustment NECESSARY}%
     \gre@thirdlineadjustmentnecessarytrue %
   \else %
