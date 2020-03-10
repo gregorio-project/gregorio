@@ -277,8 +277,6 @@
     \fi %
     \gre@penalty{-10001}%
   \fi %
-  \gre@adjustlineifnecessary\relax %
-  %%
   \GreResetEolCustos\relax %
   \gre@trace@end%
 }%
@@ -335,16 +333,6 @@
   \gre@dimen@additionalleftspace= 0 pt\relax%
   \gre@updateleftbox %
   \relax %
-  \gre@trace@end%
-}%
-
-\newif\ifgre@thirdlineadjustmentnecessary %
-\def\gre@adjustlineifnecessary{%
-  \gre@trace{gre@adjustlineifnecessary}%
-  \ifgre@thirdlineadjustmentnecessary %
-    \gre@adjustthirdline %
-    \gre@thirdlineadjustmentnecessaryfalse %
-  \fi %
   \gre@trace@end%
 }%
 
