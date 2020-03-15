@@ -312,6 +312,21 @@
 %% macros for the typesetting of the initial
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%setting for how many lines of score wrap the initial
+%applies when initialend is manual or auto
+\newcount\gre@count@initiallines%
+\gre@count@initiallines=1\relax% default to one-line initials
+\def\gresetinitiallines#1{%
+  \IfInteger{#1}%
+    {%
+      \ifnum#1>-1\relax%
+        \gre@count@initiallines=#1%
+      \else%
+        \gre@error{The argument for \protect\gresetinitiallines\space must be positive}%
+      \fi%
+    }%
+    {\gre@error{\protect\gresetinitiallines\space takes a positive integer argument}}%
+}%
 %% box containing the initial, and dimen containing its width (and the width of the space after)
 \newbox\gre@box@initial%
 
