@@ -232,10 +232,11 @@
 
 % Eliminates the error for big initials where the second new line is at the end of the score
 \def\GreFinalNewLine{%
-  \global\advance\gre@knownline by 1\relax %
+  \gre@debugmsg{knownline}{Extra end of score increment to knownline}
+  \global\advance\gre@count@knownline by 1\relax %
 }%
 
-% the macro we call each time we force a changing of line, it automatically sets \gre@knownline, and adjusts left spaces
+% the macro we call each time we force a changing of line, it automatically sets \gre@count@knownline, and adjusts left spaces
 % #1 is 0 in case of gabc z, 1 for Z
 % #2 is 0 in the normal case, 1 after a bar in the new spacing algorithm
 \def\gre@newlinecommon#1#2{%
@@ -245,7 +246,7 @@
   \fi\fi %
   \ifgre@boxing\else%
     \ifnum\gre@count@initiallines>1\relax %
-      \ifcase\gre@knownline %
+      \ifcase\gre@count@knownline %
       % 0: should not happend...
       \or % 1
         \gre@adjustsecondline %
@@ -253,7 +254,8 @@
         \gre@adjustthirdline %
       \fi %
     \fi %
-    \global\advance\gre@knownline by 1\relax %
+    \gre@debugmsg{knownline}{I’m manually ending line \the\gre@count@knownline}%
+    \global\advance\gre@count@knownline by 1\relax %
     \global\gre@lastoflinecount=2\relax %
     \ifnum#2=0\relax %
       % we have to repeat the end of syllable shifts here because the manual line breaks will occur before we get to the regular shifting code in \GreSyllable
@@ -330,8 +332,8 @@
 %% box containing the initial, and dimen containing its width (and the width of the space after)
 \newbox\gre@box@initial%
 
-% gre@knownline is the line we think we are in
-\newcount\gre@knownline%
+% gre@count@knownline is the line we think we are in
+\newcount\gre@count@knownline%
 
 % macro to call before the first syllable, but after setinitialclef
 \def\gre@adjustsecondline{%
@@ -1201,7 +1203,8 @@
   \ifdefined\optgabcAtScoreBeginning %
     \optgabcAtScoreBeginning %
   \fi %
-  \global\gre@knownline=1\relax %
+  \gre@debugmsg{knownline}{Initialize knownline as 1}%
+  \global\gre@count@knownline=1\relax %
   \global\gre@lastoflinecount=2\relax %
   \global\gre@endofscorefalse %
   \relax%
@@ -1210,7 +1213,7 @@
 %macro called at the end of a score
 \def\GreEndScore{%
   \ifnum\gre@count@initiallines>1\relax%
-    \ifnum\gre@knownline<3\relax%
+    \ifnum\gre@count@knownline<3\relax%
       \gre@error{Score ended before finding the end\MessageBreak of the second line of a 2-line initial.  Make sure\MessageBreak you have at least two manual line breaks in \MessageBreak your gabc}%
     \fi%
   \fi%

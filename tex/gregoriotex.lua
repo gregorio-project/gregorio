@@ -547,6 +547,7 @@ local function post_linebreak(h, groupcode, glyphes)
         h, line = remove(h, line)
       else
         linenum = linenum + 1
+        debugmessage('knownline','On line %d',linenum)
         debugmessage('linesglues', 'line %d: %s factor %.0f%%', linenum, glue_sign_name[line.glue_sign], line.glue_set*100)
         centerstartnode = nil
         line_id = nil
