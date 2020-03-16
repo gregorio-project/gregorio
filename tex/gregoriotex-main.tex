@@ -422,19 +422,21 @@
     \global\gre@dimen@initialwidth=\wd\gre@box@annotation%
   \fi%
   \gre@debugmsg{annotation}{Width check completed.}%
-  % if it is a big initial we print it on the second line
-  \ifnum\gre@count@initiallines=1\relax % a one line initial
-    \setbox\gre@box@initial=\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}%
-  \else % a multi-line initial
-    \advance\gre@dimen@temp@five by \dimexpr(-\gre@dimen@additionalbottomspace %
+  %calculate the height of a line
+  \gre@dimen@temp@one = \dimexpr(-\gre@dimen@additionalbottomspace %
       - \gre@space@dimen@spacebeneathtext %
       - \gre@space@dimen@spacelinestext %
       - 4\gre@dimen@interstafflinespace %
       - 4\gre@dimen@stafflineheight %
       - \gre@dimen@currenttranslationheight %
       - \f@size pt)\relax%
+  %adjust the initial position based on the number of lines it’s supposed to take up
+  \advance\gre@dimen@temp@five by \dimexpr(\gre@dimen@temp@one * (\gre@count@initiallines - 1))\relax%
+  \ifnum\gre@count@initiallines=1\relax % a one line initial
+    \setbox\gre@box@initial=\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}%
+  \else % a multi-line initial
     \setbox\gre@box@initial=\hbox{\vtop to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}\vss}}%
-  \fi %
+  \fi%
   \gre@debugmsg{annotation}{Initial set.}%
   \gre@style@initial%
   \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax%
