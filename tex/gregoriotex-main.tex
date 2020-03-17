@@ -427,22 +427,9 @@
   \gre@dimen@temp@one = \dimexpr(-\gre@dimen@additionalbottomspace %
       - \gre@space@dimen@spacebeneathtext %
       - \gre@space@dimen@spacelinestext %
-      - 2\gre@dimen@interstafflinespace %
-      - 2\gre@dimen@stafflineheight %
+      - \gre@dimen@staffheight%
       - \gre@dimen@currenttranslationheight %
       - \f@size pt)\relax%
-  \ifgre@haslinethree% if 3-line staff or more add another line and space
-    \advance\gre@dimen@temp@one by \dimexpr(-\gre@dimen@interstafflinespace %
-      - \gre@dimen@stafflineheight)\relax%
-  \fi%
-  \ifgre@haslinefour% if 4-line staff or more add another line and space
-    \advance\gre@dimen@temp@one by \dimexpr(-\gre@dimen@interstafflinespace %
-      - \gre@dimen@stafflineheight)\relax%
-  \fi%
-  \ifgre@haslinefive% if 5-line staff add another line and space
-    \advance\gre@dimen@temp@one by \dimexpr(-\gre@dimen@interstafflinespace %
-      - \gre@dimen@stafflineheight)\relax%
-  \fi%
   %adjust the initial position based on the number of lines it’s supposed to take up
   \advance\gre@dimen@temp@five by \dimexpr(\gre@dimen@temp@one * (\gre@count@initiallines - 1))\relax%
   \ifnum\gre@count@initiallines=1\relax % a one line initial
