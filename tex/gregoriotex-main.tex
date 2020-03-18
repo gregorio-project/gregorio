@@ -245,14 +245,8 @@
      \gre@localrightbox{}%
   \fi\fi %
   \ifgre@boxing\else%
-    \ifnum\gre@count@initiallines>1\relax %
-      \ifcase\gre@count@knownline %
-      % 0: should not happend...
-      \or % 1
-        \gre@adjustsecondline %
-      \or %2
-        \gre@adjustthirdline %
-      \fi %
+    \ifnum\gre@count@initiallines=\gre@count@knownline %
+      \gre@adjustlinesafterinitial %
     \fi %
     \gre@debugmsg{knownline}{I’m manually ending line \the\gre@count@knownline}%
     \global\advance\gre@count@knownline by 1\relax %
@@ -338,15 +332,20 @@
 % macro to call before the first syllable, but after setinitialclef
 \def\gre@adjustsecondline{%
   \gre@trace{gre@adjustsecondline}%
-  \gre@dimen@additionalleftspace=\gre@dimen@initialwidth\relax%
+  \ifnum\gre@count@initiallines=1\relax%
+  %we provide for a special exemption here for 1-line initials so that the most common case can be completely automatic
+    \gre@dimen@additionalleftspace=0pt\relax%
+  \else%
+    \gre@dimen@additionalleftspace=\gre@dimen@initialwidth\relax%
+  \fi%
   \gre@updateleftbox %
   \relax %
   \gre@trace@end%
 }%
 
 % macro to call during the second line
-\def\gre@adjustthirdline{%
-  \gre@trace{gre@adjustthirdline}%
+\def\gre@adjustlinesafterinitial{%
+  \gre@trace{gre@adjustlinesafterinitial}%
   \gre@dimen@additionalleftspace= 0 pt\relax%
   \gre@updateleftbox %
   \relax %
