@@ -12,10 +12,6 @@
 \setkomafont{section}{\normalfont\centering\huge\scshape} % section heading style
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 
-\begin{document}
-
-% The title:
-\section{Populus Sion}
 
 % Set the space around the initial:
 % See http://gregorio-project.github.io/gregoriotex/details.html for more details and options
@@ -28,15 +24,21 @@
 % Make staff lines red; remove for black:
 \gresetlinecolor{gregoriocolor}
 
-% Add VII above the initial manually:
-\grechangestyle{annotation}{\small\bfseries}
-\greannotation{Intr.}
-\greannotation{\textsc{vii}}
-
 % Use the "commentary" field of the score in the top right corner:
 \gresetheadercapture{commentary}{grecommentary}{string}
 
-% Include the scores; the file must be in the same directory:
+% Format annotation above initial
+\grechangestyle{annotation}{\small\bfseries}
+
+\begin{document}
+
+\section{Populus Sion}
+
+% Add VII above the initial manually:
+\greannotation{Intr.} % first line
+\greannotation{\textsc{vii}} % second line
+
+% Include the score; the file must be in the same directory:
 \gregorioscore[a]{PopulusSion}
 
 \section{Factus est}
