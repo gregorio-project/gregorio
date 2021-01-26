@@ -4140,7 +4140,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                                         && element->next->type == GRE_ALT
                                         && element->next->next->type ==
                                         GRE_ELEMENT))) {
-                    fprintf(f, "\\GreEndOfElement{0}{0}{%u}%%\n",
+                    fprintf(f, "\\GreEndOfElement{0}{1}{%u}%%\n",
                             note_unit_count);
                 }
                 break;
