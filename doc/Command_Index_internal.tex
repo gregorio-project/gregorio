@@ -25,6 +25,8 @@ process the commands listed above.  They should not appear in any user
 document and are listed here for programmer documentation purposes
 only.
 
+Sometimes it is necessary to temporarily change some register or macro for the purpose of some particular operation and then restore it to its previous value.  In those case we define a \verb=\gre@saved@<moment>...= register or macro associated with it (\eg \verb=\gre@dimen@constantglyphraise= is saved just before a discretionary to \verb=\gre@saved@prediscretionary@dimen@constantglyphraise= and restored from it afterwards).  These registers/macros are not listed in this documentation.
+
 \macroname{\textbackslash gre@error}{\#1}{gregoriotex.sty \textup{and} gregoriotex.tex}
 Prints an error to the \TeX\ output log.
 
@@ -565,9 +567,6 @@ A count which keeps track of which line of the score we’re on.
 \macroname{\textbackslash gre@lastoflinecount}{}{gregoriotex-main.tex}
 Count to track where on the line we are.  Values are \texttt{0} (we are not near the end of a line), \texttt{1} (we’re at the last syllable of the line), and \texttt{2} (we just set the last syllable of the line and so are at the first syllable of a new line).
 
-\macroname{\textbackslash gre@savedlastoflinecount}{}{gregoriotex-main.tex}
-A spot to save the \verb=\gre@lastoflinecount= so we can change it temporarily and revert to the saved value later.
-
 \macroname{\textbackslash gre@newlinecommon}{\#1\#2}{gregoriotex-main.tex}
 The macro which needs to be called each time a new lines is started.
 
@@ -615,9 +614,6 @@ Internal macro to set the first syllable text after all parts are known.
 
 \macroname{\textbackslash gre@opening@syllabletext}{}{gregoriotex-syllable.tex}
 Macro that stores the computed \TeX\ code for rendering the text of the first syllable.
-
-\macroname{\textbackslash gre@exhyphencharsave}{}{gregoriotex-main.tex}
-Macro for saving the ex hyphen character so that it can be restored at the end of the score.
 
 \macroname{\textbackslash gre@factor}{}{gregoriotex-main.tex}
 Count which stores the current staff size.
@@ -1101,19 +1097,6 @@ Performs \#1 if the syllable should be rewritten, else \#2.
   \#2 & \TeX\ code & Code to perform when \emph{not} rewriting the syllable\\
 \end{argtable}
 
-\macroname{\textbackslash gre@save@endsyllablepart}{}{gregoriotex-syllable.tex}
-Control sequence aliased to the carry-over syllable part to be moved to the next syllable.
-
-\macroname{\textbackslash gre@save@fixedtextformat}{\#1}{gregoriotex-syllable.tex}
-Control sequence aliased to the fixed text format for the carry-over syllable part to be moved to the next syllable.
-
-\begin{argtable}
-  \#1 & string & The carry-over syllable part, as with \verb=\gre@fixednexttextformat=\\
-\end{argtable}
-
-\macroname{\textbackslash gre@save@pointandclick}{}{gregoriotex-syllable.tex}
-Control sequence aliased to the line:char:column of the point-and-click link for the carry-over syllable part to be moved to the next syllable\\
-
 \macroname{\textbackslash gre@push@endsyllable}{\#1}{gregoriotex-syllable.tex}
 Sets the save aliases to push the end-syllable part of the current syllable to the next syllable if necessary.
 
@@ -1392,9 +1375,6 @@ Macro for storing the argument for \verb=\gre@newlinecommon= when the line break
 
 \macroname{\textbackslash gre@newlinecommondelayed}{}{gregoriotex-syllable.tex}
 Macro used in place of \verb=\gre@newlinecommon= when the line break must be delayed.
-
-\macroname{\textbackslash gre@newlinecommonsaved}{}{gregoriotex-syllable.tex}
-Macro for storing original behavior of \verb=\gre@newlinecommon= so that it can be restored after the delayed line break takes effect.
 
 \macroname{\textbackslash gre@punctum@mora}{\#1\#2\#3\#4}{gregoriotex-signs.tex}
 Macro to typeset a punctum mora.
@@ -1904,9 +1884,6 @@ Boolean to disable the printing of punctum morae.
 \macroname{\textbackslash ifgre@disablevepisema}{}{gregoriotex-signs.tex}
 Boolean to disable the printing of vertical episemata.
 
-\macroname{\textbackslash ifgre@lastendswithmorasave}{}{gregoriotex-syllable.tex}
-Boolean for saving \verb=\ifgre@lastendswithmora= for later restoration.
-
 \macroname{\textbackslash gre@lasteuouaeindex}{}{gregoriotex-main.tex}
 Count which keeps track of the most recent euouae area.
 
@@ -2024,10 +2001,6 @@ distance (in string representation).  The first wildcard is either
 second is the name of the distance.
 
 These additional distances are calculated by Gregorio based on the values for the user customizable distances and what may be going on in the score at the time of their use.
-
-In some cases it is necessary to temporarily manipulate some of these distances for the purpose of some particular operation and then restore them to their previous values.  In that case the distance will have a \verb=\gre@saved@...= register associated with it (\eg \verb=\gre@dimen@constantglyphraise= is saved to and restored from \verb=\gre@saved@dimen@constantglyphraise=).
-
-We also have save registries for \verb=\baselineskip=, \verb=\lineskip=, \verb=\lineskiplimit=, \verb=\parskip=, and \verb=\parfillskip= so that we can modify the way line breaking decisions are handled inside a score without affecting the rest of the document.
 
 \macroname{\textbackslash gre@dimen@morawidth}{}{gregoriotex-spaces.tex}
 Width of a punctum mora (reinitialized at each score, lazily recomputed).
@@ -2236,58 +2209,6 @@ Macro called at the beginning of the score to swap text penalties for score pena
 
 \macroname{\textbackslash gre@restorepenalties}{}{gregoriotex-spaces.tex}
 Macro called at the end of the score to restore the text penalties.
-
-\macroname{\textbackslash gre@brokenpenaltysave}{}{gregoriotex-spaces.tex}
-A place to save the current value of the broken penalty so that we can change it temporarily and then restore it later.
-
-\macroname{\textbackslash gre@clubpenaltysave}{}{gregoriotex-spaces.tex}
-A place to save the current value of the club penalty so that we can change it temporarily and then restore it later.
-
-\macroname{\textbackslash gre@widowpenaltysave}{}{gregoriotex-spaces.tex}
-A place to save the current value of the widow penalty so that we can change it temporarily and then restore it later.
-
-\macroname{\textbackslash gre@emergencystretchsave}{}{gregoriotex-spaces.tex}
-A place to save the current value of the emergency stretch so that we can change it temporarily and then restore it later.
-
-\macroname{\textbackslash gre@endafterbarpenaltysave}{}{gregoriotex-main.tex}
-A place to save the current value of the end after bar penalty so that we can change it temporarily and then restore it later.
-
-\macroname{\textbackslash gre@endafterbaraltpenaltysave}{}{gregoriotex-main.tex}
-A place to save the current value of the alternate end after bar penalty so that we can change it temporarily and then restore it later.
-
-\macroname{\textbackslash gre@endofelementpenaltysave}{}{gregoriotex-main.tex}
-A place to save the current value of the end of element penalty so that we can change it temporarily and then restore it later.
-
-\macroname{\textbackslash gre@endofsyllablepenaltysave}{}{gregoriotex-main.tex}
-A place to save the current value of the end of syllable penalty so that we can change it temporarily and then restore it later.
-
-\macroname{\textbackslash gre@endofwordpenaltysave}{}{gregoriotex-main.tex}
-A place to save the current value of the end of word penalty so that we can change it temporarily and then restore it later.
-
-\macroname{\textbackslash gre@exhyphenpenaltysave}{}{gregoriotex-spaces.tex}
-A place to save the current value of the ex hyphen penalty so that we can change it temporarily and then restore it later.
-
-\macroname{\textbackslash gre@hyphenpenaltysave}{}{gregoriotex-main.tex \textup{and} gregoriotex-spaces.tex}
-A place to save the current value of the hyphen penalty so that we can change it temporarily and then restore it later.
-
-\macroname{\textbackslash gre@nobreakpenaltysave}{}{gregoriotex-main.tex}
-A place to save the current value of the no break penalty so that we can change it temporarily and then restore it later.
-
-\macroname{\textbackslash gre@doublehyphendemeritssave}{}{gregoriotex-spaces.tex}
-A place to save the current value of the double hyphen demerits so that we can change it temporarily and then restore it later.
-
-\macroname{\textbackslash gre@finalhyphendemeritssave}{}{gregoriotex-spaces.tex}
-A place to save the current value of the final hyphen demerits so that we can change it temporarily and then restore it later.
-
-\macroname{\textbackslash gre@loosenesssave}{}{gregoriotex-spaces.tex}
-A place to save the current value of the looseness so that we can change it temporarily and then restore it later.
-
-\macroname{\textbackslash gre@tolerancesave}{}{gregoriotex-spaces.tex}
-A place to save the current value of the tolerance so that we can change it temporarily and then restore it later.
-
-\macroname{\textbackslash gre@pretolerancesave}{}{gregoriotex-spaces.tex}
-A place to save the current value of the pretolerance so that we can change it temporarily and then restore it later.
-
 
 \subsection{Backwards compatibility}
 Depending on version of Lua\TeX / \LaTeX, some primitives have different names
