@@ -35,90 +35,90 @@
 
 
 
-\newcount\gre@saved@hyphenpenalty%
-\newcount\gre@saved@exhyphenpenalty%
-\newcount\gre@saved@doublehyphendemerits%
-\newcount\gre@saved@finalhyphendemerits%
-\newcount\gre@saved@brokenpenalty%
-\newcount\gre@saved@looseness%
-\newcount\gre@saved@tolerance%
-\newcount\gre@saved@pretolerance%
-\newskip\gre@saved@emergencystretch%
-\newcount\gre@saved@widowpenalty%
-\newcount\gre@saved@clubpenalty%
-\newskip\gre@saved@parskip%
-\newskip\gre@saved@lineskip%
-\newskip\gre@saved@baselineskip%
-\newskip\gre@saved@lineskiplimit%
+\newcount\gre@saved@prescore@hyphenpenalty%
+\newcount\gre@saved@prescore@exhyphenpenalty%
+\newcount\gre@saved@prescore@doublehyphendemerits%
+\newcount\gre@saved@prescore@finalhyphendemerits%
+\newcount\gre@saved@prescore@brokenpenalty%
+\newcount\gre@saved@prescore@looseness%
+\newcount\gre@saved@prescore@tolerance%
+\newcount\gre@saved@prescore@pretolerance%
+\newskip\gre@saved@prescore@emergencystretch%
+\newcount\gre@saved@prescore@widowpenalty%
+\newcount\gre@saved@prescore@clubpenalty%
+\newskip\gre@saved@prescore@parskip%
+\newskip\gre@saved@prescore@lineskip%
+\newskip\gre@saved@prescore@baselineskip%
+\newskip\gre@saved@prescore@lineskiplimit%
 %% The following macros cancel some useless penalties, and reinstates them
 %% at the end of a score
 
 \def\gre@cancelpenalties{%
   \gre@trace{gre@cancelpenalties}%
-  \global\gre@saved@hyphenpenalty=\hyphenpenalty\relax %
+  \global\gre@saved@prescore@hyphenpenalty=\hyphenpenalty\relax %
   \hyphenpenalty=\gre@space@count@hyphenpenalty %
   %
-  \global\gre@saved@exhyphenpenalty=\exhyphenpenalty\relax %
+  \global\gre@saved@prescore@exhyphenpenalty=\exhyphenpenalty\relax %
   \exhyphenpenalty=\gre@space@count@hyphenpenalty %
   %
-  \global\gre@saved@doublehyphendemerits=\doublehyphendemerits\relax %
+  \global\gre@saved@prescore@doublehyphendemerits=\doublehyphendemerits\relax %
   \doublehyphendemerits=0\relax %
   %
-  \global\gre@saved@finalhyphendemerits=\finalhyphendemerits\relax %
+  \global\gre@saved@prescore@finalhyphendemerits=\finalhyphendemerits\relax %
   \finalhyphendemerits=0\relax %
   %
-  \global\gre@saved@brokenpenalty=\brokenpenalty\relax %
+  \global\gre@saved@prescore@brokenpenalty=\brokenpenalty\relax %
   \brokenpenalty=\gre@space@count@brokenpenalty %
   %
-  \global\gre@saved@looseness=\looseness\relax %
+  \global\gre@saved@prescore@looseness=\looseness\relax %
   \looseness=\gre@space@count@looseness %
   %
-  \global\gre@saved@tolerance=\tolerance\relax %
+  \global\gre@saved@prescore@tolerance=\tolerance\relax %
   \tolerance=\gre@space@count@tolerance %
   %
-  \global\gre@saved@pretolerance=\pretolerance\relax %
+  \global\gre@saved@prescore@pretolerance=\pretolerance\relax %
   \pretolerance=\gre@space@count@pretolerance %
   %
-  \global\gre@saved@emergencystretch=\emergencystretch\relax %
+  \global\gre@saved@prescore@emergencystretch=\emergencystretch\relax %
   \emergencystretch=\gre@space@skip@emergencystretch\relax %
   %
-  \global\gre@saved@widowpenalty=\widowpenalty\relax %
+  \global\gre@saved@prescore@widowpenalty=\widowpenalty\relax %
   \widowpenalty=\gre@space@count@widowpenalty %
   %
-  \global\gre@saved@clubpenalty=\clubpenalty\relax %
+  \global\gre@saved@prescore@clubpenalty=\clubpenalty\relax %
   \clubpenalty=\gre@space@count@clubpenalty %
   %
-  \global\gre@saved@parskip=\parskip%
+  \global\gre@saved@prescore@parskip=\parskip%
   \parskip=\gre@space@skip@parskip%
   %
-  \global\gre@saved@lineskip=\lineskip%
+  \global\gre@saved@prescore@lineskip=\lineskip%
   \lineskip=\gre@space@skip@lineskip%
   %
-  \global\gre@saved@baselineskip=\baselineskip%
+  \global\gre@saved@prescore@baselineskip=\baselineskip%
   \baselineskip=\gre@space@skip@baselineskip%
   %
-  \global\gre@saved@lineskiplimit=\lineskiplimit%
+  \global\gre@saved@prescore@lineskiplimit=\lineskiplimit%
   \lineskiplimit=\gre@space@skip@lineskiplimit%
   \gre@trace@end%
 }%
 
 \def\gre@restorepenalties{%
   \gre@trace{gre@restorepenalties}%
-  \hyphenpenalty=\gre@saved@hyphenpenalty %
-  \exhyphenpenalty=\gre@saved@exhyphenpenalty %
-  \doublehyphendemerits=\gre@saved@doublehyphendemerits %
-  \finalhyphendemerits=\gre@saved@finalhyphendemerits %
-  \brokenpenalty=\gre@saved@brokenpenalty %
-  \looseness=\gre@saved@looseness %
-  \tolerance=\gre@saved@tolerance %
-  \pretolerance=\gre@saved@pretolerance %
-  \emergencystretch=\gre@saved@emergencystretch %
-  \widowpenalty=\gre@saved@widowpenalty %
-  \clubpenalty=\gre@saved@clubpenalty %
-  \parskip=\gre@saved@parskip%
-  \lineskip=\gre@saved@lineskip%
-  \baselineskip=\gre@saved@baselineskip%
-  \lineskiplimit=\gre@saved@lineskiplimit%
+  \hyphenpenalty=\gre@saved@prescore@hyphenpenalty %
+  \exhyphenpenalty=\gre@saved@prescore@exhyphenpenalty %
+  \doublehyphendemerits=\gre@saved@prescore@doublehyphendemerits %
+  \finalhyphendemerits=\gre@saved@prescore@finalhyphendemerits %
+  \brokenpenalty=\gre@saved@prescore@brokenpenalty %
+  \looseness=\gre@saved@prescore@looseness %
+  \tolerance=\gre@saved@prescore@tolerance %
+  \pretolerance=\gre@saved@prescore@pretolerance %
+  \emergencystretch=\gre@saved@prescore@emergencystretch %
+  \widowpenalty=\gre@saved@prescore@widowpenalty %
+  \clubpenalty=\gre@saved@prescore@clubpenalty %
+  \parskip=\gre@saved@prescore@parskip%
+  \lineskip=\gre@saved@prescore@lineskip%
+  \baselineskip=\gre@saved@prescore@baselineskip%
+  \lineskiplimit=\gre@saved@prescore@lineskiplimit%
   \gre@trace@end%
 }%
 
