@@ -916,16 +916,6 @@
 % the one taken into account for above lines nabc height
 \newdimen\gre@dimen@additionaltopspacenabc\relax%
 
-% backup demensions for the previous
-\newdimen\gre@saved@dimen@additionalbottomspace\relax%
-\newdimen\gre@saved@dimen@additionaltopspace\relax%
-\newdimen\gre@saved@dimen@additionaltopspacealt\relax%
-\newdimen\gre@saved@dimen@additionaltopspacenabc\relax%
-\newdimen\gre@saved@dimen@currenttranslationheight\relax%
-\newdimen\gre@saved@dimen@textlower\relax%
-\newdimen\gre@saved@dimen@currentabovelinestextheight\relax%
-\newdimen\gre@saved@dimen@constantglyphraise\relax%
-
 \newcount\gre@space@count@additionaltopspacethreshold\relax%
 \gre@space@count@additionaltopspacethreshold=2
 
@@ -957,29 +947,40 @@
   \gre@trace@end%
 }%
 
+% some backup demensions for use around discretionaries
+\newdimen\gre@saved@prediscretionary@dimen@additionalbottomspace\relax%
+\newdimen\gre@saved@prediscretionary@dimen@additionaltopspace\relax%
+\newdimen\gre@saved@prediscretionary@dimen@additionaltopspacealt\relax%
+\newdimen\gre@saved@prediscretionary@dimen@additionaltopspacenabc\relax%
+\newdimen\gre@saved@prediscretionary@dimen@currenttranslationheight\relax%
+\newdimen\gre@saved@prediscretionary@dimen@textlower\relax%
+\newdimen\gre@saved@prediscretionary@dimen@currentabovelinestextheight\relax%
+\newdimen\gre@saved@prediscretionary@dimen@constantglyphraise\relax%
+
+
 \def\gre@save@additionalspaces{%
   \gre@trace{gre@save@additionalspaces}%
-  \global\gre@saved@dimen@additionalbottomspace=\gre@dimen@additionalbottomspace\relax%
-  \global\gre@saved@dimen@additionaltopspace=\gre@dimen@additionaltopspace\relax%
-  \global\gre@saved@dimen@additionaltopspacealt=\gre@dimen@additionaltopspacealt\relax%
-  \global\gre@saved@dimen@additionaltopspacenabc=\gre@dimen@additionaltopspacenabc\relax%
-  \global\gre@saved@dimen@currenttranslationheight=\gre@dimen@currenttranslationheight\relax%
-  \global\gre@saved@dimen@textlower=\gre@dimen@textlower\relax%
-  \global\gre@saved@dimen@currentabovelinestextheight=\gre@dimen@currentabovelinestextheight\relax%
-  \global\gre@saved@dimen@constantglyphraise=\gre@dimen@constantglyphraise\relax%
+  \global\gre@saved@prediscretionary@dimen@additionalbottomspace=\gre@dimen@additionalbottomspace\relax%
+  \global\gre@saved@prediscretionary@dimen@additionaltopspace=\gre@dimen@additionaltopspace\relax%
+  \global\gre@saved@prediscretionary@dimen@additionaltopspacealt=\gre@dimen@additionaltopspacealt\relax%
+  \global\gre@saved@prediscretionary@dimen@additionaltopspacenabc=\gre@dimen@additionaltopspacenabc\relax%
+  \global\gre@saved@prediscretionary@dimen@currenttranslationheight=\gre@dimen@currenttranslationheight\relax%
+  \global\gre@saved@prediscretionary@dimen@textlower=\gre@dimen@textlower\relax%
+  \global\gre@saved@prediscretionary@dimen@currentabovelinestextheight=\gre@dimen@currentabovelinestextheight\relax%
+  \global\gre@saved@prediscretionary@dimen@constantglyphraise=\gre@dimen@constantglyphraise\relax%
   \gre@trace@end%
 }%
 
 \def\gre@restore@additionalspaces{%
   \gre@trace{gre@restore@additionalspaces}%
-  \global\gre@dimen@additionalbottomspace=\gre@saved@dimen@additionalbottomspace\relax%
-  \global\gre@dimen@additionaltopspace=\gre@saved@dimen@additionaltopspace\relax%
-  \global\gre@dimen@additionaltopspacealt=\gre@saved@dimen@additionaltopspacealt\relax%
-  \global\gre@dimen@additionaltopspacenabc=\gre@saved@dimen@additionaltopspacenabc\relax%
-  \global\gre@dimen@currenttranslationheight=\gre@saved@dimen@currenttranslationheight\relax%
-  \global\gre@dimen@textlower=\gre@saved@dimen@textlower\relax%
-  \global\gre@dimen@currentabovelinestextheight=\gre@saved@dimen@currentabovelinestextheight\relax%
-  \global\gre@dimen@constantglyphraise=\gre@saved@dimen@constantglyphraise\relax%
+  \global\gre@dimen@additionalbottomspace=\gre@saved@prediscretionary@dimen@additionalbottomspace\relax%
+  \global\gre@dimen@additionaltopspace=\gre@saved@prediscretionary@dimen@additionaltopspace\relax%
+  \global\gre@dimen@additionaltopspacealt=\gre@saved@prediscretionary@dimen@additionaltopspacealt\relax%
+  \global\gre@dimen@additionaltopspacenabc=\gre@saved@prediscretionary@dimen@additionaltopspacenabc\relax%
+  \global\gre@dimen@currenttranslationheight=\gre@saved@prediscretionary@dimen@currenttranslationheight\relax%
+  \global\gre@dimen@textlower=\gre@saved@prediscretionary@dimen@textlower\relax%
+  \global\gre@dimen@currentabovelinestextheight=\gre@saved@prediscretionary@dimen@currentabovelinestextheight\relax%
+  \global\gre@dimen@constantglyphraise=\gre@saved@prediscretionary@dimen@constantglyphraise\relax%
   \gre@trace@end%
 }%
 
