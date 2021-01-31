@@ -1272,7 +1272,7 @@
     \setbox\gre@box@syllabletext=\box\voidb@x%
   \fi%
   \gre@debugmsg{barspacing}{Width of bar text: \the\wd\gre@box@syllabletext}%
-  \global\let\gre@newlinecommonsaved\gre@newlinecommon %
+  \global\let\gre@saved@prelinedelay@newlinecommon\gre@newlinecommon %
   \global\let\gre@newlinecommon\gre@newlinecommondelayed %
   \xdef\gre@newlinearg{-1}%
   \gre@syllablenotes{#9}%
@@ -1335,7 +1335,7 @@
         {\raise 12pt\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
         {}% do nothing if not debugging
     \fi%
-    \global\let\gre@newlinecommon\gre@newlinecommonsaved %
+    \global\let\gre@newlinecommon\gre@saved@prelinedelay@newlinecommon %
     \GreNoBreak%
     % get into position to place the penalty
     \ifdim\gre@dimen@enddifference < 0pt\relax%
@@ -1418,7 +1418,7 @@
       \gre@clearsyllable{bar}%
     \fi%
     % then we check if there is something to write
-    \global\let\gre@newlinecommon\gre@newlinecommonsaved %
+    \global\let\gre@newlinecommon\gre@saved@prelinedelay@newlinecommon %
     \gre@debugmsg{ifdim}{ wd(gre@box@syllabletext) = 0pt}%
     \ifdim\wd\gre@box@syllabletext = 0 pt\relax %
       % the most difficult case : when there is nothing to write
