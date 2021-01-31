@@ -238,8 +238,8 @@
   \gre@trace@end%
 }
 
-\def\gre@saveclefextrema#1#2{%
-  \gre@trace{gre@saveclefextrema{#1}{#2}}%
+\def\gre@save@clefextrema#1#2{%
+  \gre@trace{gre@save@clefextrema{#1}{#2}}%
   % compute the clef extrema
   \ifcase#1\or % first@1
     \global\let\gre@pitch@cleftop\gre@pitch@e %
@@ -308,7 +308,7 @@
 \def\GreInitialClefPosition#1#2{%
   \gre@trace{GreInitialClefPosition{#1}{#2}}%
   \ifgre@showclef %
-    \gre@saveclefextrema{#1}{#2}%
+    \gre@save@clefextrema{#1}{#2}%
   \fi %
   \gre@trace@end%
 }%
@@ -325,7 +325,7 @@
 %% #8: if 3, it means that we must not put a flat after the secondary clef, otherwise it's the height of the flat
 \def\gre@typeclef#1#2#3#4#5#6#7#8{%
   \gre@trace{gre@typeclef{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}}%
-  \gre@saveclefextrema{#2}{#7}%
+  \gre@save@clefextrema{#2}{#7}%
   \gre@boxclef{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}%
   \ifcase#3%
     \gre@update@clefwidth@current{\wd\gre@box@temp@width}%
