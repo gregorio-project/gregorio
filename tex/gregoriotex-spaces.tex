@@ -37,6 +37,7 @@
 
 \newcount\gre@saved@prescore@hyphenpenalty%
 \newcount\gre@saved@prescore@exhyphenpenalty%
+\newcount\gre@saved@prescore@exhyphenchar%
 \newcount\gre@saved@prescore@doublehyphendemerits%
 \newcount\gre@saved@prescore@finalhyphendemerits%
 \newcount\gre@saved@prescore@brokenpenalty%
@@ -60,6 +61,9 @@
   %
   \global\gre@saved@prescore@exhyphenpenalty=\exhyphenpenalty\relax %
   \exhyphenpenalty=\gre@space@count@hyphenpenalty %
+  %
+  \global\gre@saved@prescore@exhyphenchar=\exhyphenchar\relax %
+  \exhyphenchar=-1\relax%
   %
   \global\gre@saved@prescore@doublehyphendemerits=\doublehyphendemerits\relax %
   \doublehyphendemerits=0\relax %
@@ -106,6 +110,7 @@
   \gre@trace{gre@restorepenalties}%
   \hyphenpenalty=\gre@saved@prescore@hyphenpenalty %
   \exhyphenpenalty=\gre@saved@prescore@exhyphenpenalty %
+  \exhyphenchar=\gre@saved@prescore@exhyphenchar %
   \doublehyphendemerits=\gre@saved@prescore@doublehyphendemerits %
   \finalhyphendemerits=\gre@saved@prescore@finalhyphendemerits %
   \brokenpenalty=\gre@saved@prescore@brokenpenalty %

@@ -1232,8 +1232,6 @@
   \gre@computespaces%
   \gre@cancelpenalties %
   \gre@attr@dash=0\relax %
-  \xdef\gre@exhyphencharsave{\the\exhyphenchar}%
-  \exhyphenchar=-1\relax %
   \gre@generatelines %
   \noindent%
   \gre@calculate@additionalspaces{#2}{#3}{#4}{#5}%
@@ -1284,7 +1282,6 @@
   \gre@removetranslationspace %
   \gre@normalinitial %
   \gre@restorepenalties %
-  \exhyphenchar=\gre@exhyphencharsave %
   \gre@dimen@temp@one=0pt\relax%
   \gre@dimen@temp@two=0pt\relax%
   \gre@dimen@temp@three=0pt\relax%
