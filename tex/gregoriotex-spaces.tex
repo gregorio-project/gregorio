@@ -1047,7 +1047,7 @@
 \def\gre@calculate@textaligncenter#1#2#3#4{%
   \gre@trace{gre@calculate@textaligncenter{#1}{#2}{#3}{#4}}%
   \ifnum#4=0\relax%
-    \gre@widthof{\gre@save@fixedtextformat{#1}\gre@fixedtextformat{#2#3}}%
+    \gre@widthof{\gre@saved@syllable@fixedtextformat{#1}\gre@fixedtextformat{#2#3}}%
   \else %
     \gre@widthof{\gre@fixedtextformat{#1}\gre@fixednexttextformat{#2#3}}%
   \fi %
