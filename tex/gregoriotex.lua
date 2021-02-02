@@ -995,8 +995,10 @@ local function direct_gabc(gabc, header, allow_deprecated)
     end
     glog:close()
   end
-  os.remove(snippet_filename)
-  os.remove(snippet_logname)
+  if not (debug_types_activated['snippet'] or debug_types_activated['all']) then
+    os.remove(snippet_filename)
+    os.remove(snippet_logname)
+  end
 end
 
 local function get_gregoriotexluaversion()
