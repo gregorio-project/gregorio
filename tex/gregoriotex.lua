@@ -966,7 +966,7 @@ local function direct_gabc(gabc, header, allow_deprecated)
   local f = io.open(snippet_filename, 'w')
   -- trims spaces on both ends (trim6 from http://lua-users.org/wiki/StringTrim)
   gabc = gabc:match('^()%s*$') and '' or gabc:match('^%s*(.*%S)')
-  f:write('name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par ', '\n'))
+  f:write('name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par', '\n'))
   f:close()
   local cmd = string.format([[%s -W %s-o "%%s" -l "%s" "%s"]], gregorio_exe(),
       deprecated, snippet_logname, snippet_filename)
