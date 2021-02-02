@@ -23,11 +23,12 @@
 % This file needs to be marked with the version number.  For now I've done this with the following comment, but we should check to see if PlainTeX has something similar to the version declaration of LaTeX and use that if it does.
 % 		[2019/04/06 v5.2.1 GregorioTeX system.]% PARSE_VERSION_DATE_LTX
 
+\input iftex.sty
+\RequireLuaTeX%
 
 \edef\greoldcatcode{\the\catcode`@}
 \catcode`\@=11
 
-\input ifluatex.sty%
 \input luatexbase.sty%
 \input luamplib.sty%
 \input luaotfload.sty%
@@ -61,32 +62,32 @@
 
 \ifcsname gre@debug\endcsname%
 \else%
-  \def\gre@debug{}%
+	\def\gre@debug{}%
 \fi%
 
 \ifcsname f@size\endcsname%
 \else%
-  \def\f@size{\directlua{gregoriotex.font_size()}}%
+	\def\f@size{\directlua{gregoriotex.font_size()}}%
 \fi%
 
 \newif\ifgre@allowdeprecated%
 \gre@allowdeprecatedtrue%
 
 \long\def\gre@metapost#1{{%
-  \gre@localleftbox{}%
-  \gre@localrightbox{}%
-  \mplibcode
-  #1
-  \endmplibcode%
+	\gre@localleftbox{}%
+	\gre@localrightbox{}%
+	\mplibcode
+	#1
+	\endmplibcode%
 }}%
 
 %% This is \strip@pt from LaTeX
 \begingroup%
-  \catcode`P=12%
-  \catcode`T=12%
-  \lowercase{%
-    \def\x{\def\gre@rem@pt##1.##2PT{##1\ifnum##2>\z@.##2\fi}}}%
-  \expandafter\endgroup\x%
+	\catcode`P=12%
+	\catcode`T=12%
+	\lowercase{%
+		\def\x{\def\gre@rem@pt##1.##2PT{##1\ifnum##2>\z@.##2\fi}}}%
+	\expandafter\endgroup\x%
 \def\gre@strip@pt{\expandafter\gre@rem@pt\the}%
 
 \long\def\gre@iflatex#1{}%
@@ -106,40 +107,40 @@
 %%%%%%%%%
 
 \def\GreBold#1{%
-  {\bf #1}%
-  \relax %
+	{\bf #1}%
+	\relax %
 }%
 
 \def\GreItalic#1{%
-  {\it #1}%
-  %\relax 
+	{\it #1}%
+	%\relax 
 }%
 
 % Since small caps in PlainTeX requires loading another font, it is not defined by default.  This command maintains compatibility by checking to see if \sc has been defined and raising a warning when it hasn’t
 \def\GreSmallCaps#1{%
-  \ifdefined\sc%
-    {\sc #1}%
-  \else%
-    \gre@warning{Small caps (\protect\sc) is not defined}%
-    {#1}%
-  \fi%
-  \relax %
+	\ifdefined\sc%
+		{\sc #1}%
+	\else%
+		\gre@warning{Small caps (\protect\sc) is not defined}%
+		{#1}%
+	\fi%
+	\relax %
 }%
 
 \def\GreTypewriter#1{%
-  {\tt #1}%
-  \relax %
+	{\tt #1}%
+	\relax %
 }%
 
 \def\GreColored#1{%
-  {%
-    \color{gregoriocolor}#1%
-  }%
+	{%
+		\color{gregoriocolor}#1%
+	}%
 }%
 
 \def\GreUnderline#1{%
-  $\underline{\rm #1}$
-  \relax %
+	$\underline{\rm #1}$
+	\relax %
 }%
 
 %%%%%%%%%%%%%%%
@@ -149,7 +150,7 @@
 % Colors don't work in PlainTeX, but we need these functions for interoperability with LaTeX.
 
 \def\gresetlinecolor#1{%
-  \gre@changestyle{normalstafflines}{\color{#1}}[\relax]%
+	\gre@changestyle{normalstafflines}{\color{#1}}[\relax]%
 }
 
 
@@ -160,122 +161,122 @@
 \font\gre@font@initial=pncr at 40pt\relax%
 
 \def\gre@style@initial{%
-  \begingroup%
-  \gre@font@initial%
-  \relax %
+	\begingroup%
+	\gre@font@initial%
+	\relax %
 }%
 \def\endgre@style@initial{\endgroup}%
 
 \def\gre@style@translation{%
-  \begingroup%
-  \it%
+	\begingroup%
+	\it%
 }%
 \def\endgre@style@translation{\endgroup}%
 
 \def\gre@style@abovelinestext{%
-  \begingroup%
-  \it%
+	\begingroup%
+	\it%
 }%
 \def\endgre@style@abovelinestext{\endgroup}%
 
 \def\gre@style@normalstafflines{%
-  \begingroup%
-  \relax%
+	\begingroup%
+	\relax%
 }%
 \def\endgre@style@normalstafflines{\endgroup}%
 
 \def\gre@style@additionalstafflines{%
-  \begingroup%
-  \gre@style@normalstafflines%
+	\begingroup%
+	\gre@style@normalstafflines%
 }%
 \def\endgre@style@additionalstafflines{%
-  \endgre@style@normalstafflines%
-  \endgroup%
+	\endgre@style@normalstafflines%
+	\endgroup%
 }%
 
 \def\gre@style@lowchoralsign{%
-  \begingroup%
-  \relax%
+	\begingroup%
+	\relax%
 }%
 \def\endgre@style@lowchoralsign{\endgroup}%
 
 \def\gre@style@highchoralsign{%
-  \begingroup%
-  \relax%
+	\begingroup%
+	\relax%
 }%
 \def\endgre@style@highchoralsign{\endgroup}%
 
 \def\gre@style@firstsyllableinitial{%
-  \begingroup%
-  \relax%
+	\begingroup%
+	\relax%
 }%
 \def\endgre@style@firstsyllableinitial{\endgroup}%
 
 \def\gre@style@firstsyllable{%
-  \begingroup%
-  \relax%
+	\begingroup%
+	\relax%
 }%
 \def\endgre@style@firstsyllable{\endgroup}%
 
 \def\gre@style@firstword{%
-  \begingroup%
-  \relax%
+	\begingroup%
+	\relax%
 }%
 \def\endgre@style@firstword{\endgroup}%
 
 \def\gre@style@modeline{%
-  \begingroup%
-  \bf%
-  \relax%
+	\begingroup%
+	\bf%
+	\relax%
 }%
 \def\endgre@style@modeline{\endgroup}%
 
 \def\gre@style@modemodifier{%
-  \begingroup%
-  \bf%
-  \it%
-  \relax%
+	\begingroup%
+	\bf%
+	\it%
+	\relax%
 }%
 \def\endgre@style@modemodifier{\endgroup}%
 
 \def\gre@style@modedifferentia{%
-  \begingroup%
-  \bf%
-  \relax%
+	\begingroup%
+	\bf%
+	\relax%
 }%
 \def\endgre@style@modedifferentia{\endgroup}%
 
 \def\gre@style@commentary{%
-  \begingroup%
-  \it%
-  % footnotesize in LaTeX, but nothing here since changing font size is so hard
-  \relax%
+	\begingroup%
+	\it%
+	% footnotesize in LaTeX, but nothing here since changing font size is so hard
+	\relax%
 }%
 \def\endgre@style@commentary{\endgroup}%
 
 \def\gre@style@elision{%
-  \begingroup%
-  \it%
-  % small in LaTeX, but nothing here since changing font size is so hard
-  \relax%
+	\begingroup%
+	\it%
+	% small in LaTeX, but nothing here since changing font size is so hard
+	\relax%
 }%
 \def\endgre@style@elision{\endgroup}%
 
 \def\gre@style@annotation{%
-  \begingroup%
-  \relax%
+	\begingroup%
+	\relax%
 }%
 \def\endgre@style@annotation{\endgroup}%
 
 \def\gre@style@nabc{%
-  \begingroup%
-  \color{gregoriocolor}%
+	\begingroup%
+	\color{gregoriocolor}%
 }
 \def\endgre@style@nabc{\endgroup}%
 
 \def\gre@changestyle#1#2[#3]{%
-  \expandafter\gdef\csname gre@style@#1\endcsname{\begingroup#2}%
-  \expandafter\gdef\csname endgre@style@#1\endcsname{#3\endgroup}%
+	\expandafter\gdef\csname gre@style@#1\endcsname{\begingroup#2}%
+	\expandafter\gdef\csname endgre@style@#1\endcsname{#3\endgroup}%
 }%
 
 %%%%%%%%%%%%%%%
