@@ -1027,37 +1027,55 @@
     ]%
 }%
 
+\newif\ifgre@showtranslation%
+\gre@showtranslationtrue%
+
+\def\gresettranslation#1{%
+  \IfStrEqCase{#1}{%
+    {visible}{\gre@showtranslationtrue}%
+    {invisible}{\gre@showtranslationfalse}%
+    }[% all other cases
+      \gre@error{Unknown option, "#1" for \protect\gresettranslation\MessageBreak Possible options are: 'visible' and 'invisible'}%
+    ]%
+}%
+
 \def\GreWriteTranslation#1{%
-  \ifgre@translationcentering %
-    \setbox\gre@box@temp@width=\hbox{#1}%
-    \gre@dimen@temp@five=\dimexpr((\wd\gre@box@syllabletext - \wd\gre@box@temp@width) / 2)\relax%
-    \gre@mark@translation %
-    \kern\gre@dimen@temp@five %
-    \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}}%
-    \kern-\gre@dimen@temp@five %
-  \else %
-    \gre@mark@translation %
-    \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}}%
-  \fi %
+  \ifgre@showtranslation%
+    \ifgre@translationcentering %
+      \setbox\gre@box@temp@width=\hbox{#1}%
+      \gre@dimen@temp@five=\dimexpr((\wd\gre@box@syllabletext - \wd\gre@box@temp@width) / 2)\relax%
+      \gre@mark@translation %
+      \kern\gre@dimen@temp@five %
+      \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}}%
+      \kern-\gre@dimen@temp@five %
+    \else %
+      \gre@mark@translation %
+      \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}}%
+    \fi %
+  \fi%
 }%
 
 \def\GreWriteTranslationWithCenterBeginning#1{%
-  \ifgre@breakintranslation\else%
-    \GreBeginNLBArea{0}{1}%
-  \fi %
-  \gre@attr@center=1\relax %
-  \gre@mark@translation %
-  \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\kern 0pt\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}\kern 0pt}%
-  \unsetluatexattribute{\gre@attr@center}%
-  \relax %
+  \ifgre@showtranslation%
+    \ifgre@breakintranslation\else%
+      \GreBeginNLBArea{0}{1}%
+    \fi %
+    \gre@attr@center=1\relax %
+    \gre@mark@translation %
+    \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\kern 0pt\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}\kern 0pt}%
+    \unsetluatexattribute{\gre@attr@center}%
+    \relax %
+  \fi%
 }%
 
 \newif\ifgre@mustdotranslationcenterend%
 \gre@mustdotranslationcenterendfalse%
 
 \def\GreTranslationCenterEnd{%
-  \gre@mustdotranslationcenterendtrue%
-  \relax %
+  \ifgre@showtranslation%
+    \gre@mustdotranslationcenterendtrue%
+    \relax %
+  \fi%
 }%
 
 \def\gre@dotranslationcenterend{%
