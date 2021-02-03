@@ -740,14 +740,28 @@
 % - typeset the text above the lines if relevant, and making sure we execute it only once
 % - not do anything else
 
+\newif\ifgre@showabovelinestext%
+\gre@showabovelinestexttrue%
+
+\def\gresetabovelinestext#1{%
+  \IfStrEqCase{#1}{%
+    {visible}{\gre@showabovelinestexttrue}%
+    {invisible}{\gre@showabovelinestextfalse}%
+    }[% all other cases
+      \gre@error{Unknown option, "#1" for \protect\gresetabovelinestext\MessageBreak Possible options are: 'visible' and 'invisible'}%
+    ]%
+}%
+
 \xdef\gre@currenttextabovelines{}%
 
 \def\GreSetTextAboveLines#1{%
-  \gdef\gre@currenttextabovelines{%
-    \gre@typesettextabovelines{#1}{0}%
-    \gdef\gre@currenttextabovelines{}%
-    \relax %
-  }%
+  \ifgre@showabovelinestext%
+    \gdef\gre@currenttextabovelines{%
+      \gre@typesettextabovelines{#1}{0}%
+      \gdef\gre@currenttextabovelines{}%
+      \relax %
+    }%
+  \fi%
 }%
 
 % typesets the text or nabc neumes above the line
