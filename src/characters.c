@@ -85,6 +85,9 @@ static bool read_vowel_rules(char *const lang) {
             break;
         }
     }
+    if ((strcmp(language, "Latin") == 0 || strcmp(language, "latin") == 0 || strcmp(language, "la") == 0 || strcmp(language, "lat") == 0) && status == RFPS_NOT_FOUND) {
+        gregorio_messagef("read_rules", VERBOSITY_INFO, 0, "Falling back on internal Latin");
+    }
     if (status == RFPS_ALIASED) {
         gregorio_messagef("read_rules", VERBOSITY_WARNING, 0,
                 _("Unable to resolve alias for %s"), lang);
