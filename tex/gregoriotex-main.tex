@@ -23,16 +23,6 @@
 % All gtex files must also have the same version.
 \xdef\gre@gregoriotexversion{5.2.1}% GREGORIO_VERSION - VersionManager.py
 
-\ifluatex%
-  \ifnum\luatexversion<76%
-    \gre@error{Error: this document must be compiled with LuaTeX (lualatex) 0.76 or later}%
-  \fi%
-\else%
-  \gre@error{Error: this document must be compiled with LuaTeX (lualatex)}%
-\fi%
-
-
-
 % first some macros to allow checks for version:
 % Tests that all gregoriotex files are of the same version.
 % #1 is the name of the file
