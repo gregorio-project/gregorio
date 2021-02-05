@@ -1537,6 +1537,10 @@
 %% 20: space between a punctum inclinatum and a "no-bar" glyph two pitches above
 %% 21: space between a punctum inclinatum and a "no-bar" glyph three or four pitches above
 %% 22: half-space
+%% 23: Space between two puncta inclinata on a unison
+%% 24: Space before a right-leaning puncta inclinatum when the pitch is ascending (up to 4 pitches away)
+%% 25: Space before a left-leaning puncta inclinatum when the pitch is descending (up to 4 pitches away)
+%% 26: Space after after a non-punctum inclinatum and before the upright punctum inclinatum
 \def\gre@get@spaceskip#1{%
   \gre@trace{gre@get@spaceskip{#1}}%
   \ifcase#1%
@@ -1592,7 +1596,7 @@
   \or% case 25
     \gre@skip@temp@four = \gre@space@skip@ascendingpunctuminclinatumdescendingshift\relax%
   \or% case 26
-    \gre@skip@temp@four = \gre@space@skip@unisonpunctuminclinatumshift\relax%
+    \gre@skip@temp@four = \gre@space@skip@uprightpunctuminclinatumshift\relax%
   \else%
     \gre@error{Unrecognized spaceskip #1}%
   \fi%
