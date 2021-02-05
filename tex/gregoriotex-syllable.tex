@@ -397,8 +397,8 @@
   \global\gre@count@lastglyphiscavum=0\relax %
   \global\gre@firstglyphtrue%
   \global\gre@boxingtrue%
-  \let\ifgre@lastendswithmorasave\ifgre@lastendswithmora%
-  \xdef\gre@savedlastoflinecount{\number\gre@lastoflinecount\relax }%
+  \let\ifgre@saved@prenotes@lastendswithmora\ifgre@lastendswithmora%
+  \xdef\gre@saved@prenotes@lastoflinecount{\number\gre@lastoflinecount\relax }%
   \ifgre@shownotes%
     \setbox\gre@box@syllablenotes=\hbox{#1}%
   \else%
@@ -406,7 +406,6 @@
   \fi%
   \gre@debugmsg{spacing}{Width of notes: \the\wd\gre@box@syllablenotes}%
   \global\gre@boxingfalse%
-  \global\gre@lastoflinecount=\gre@savedlastoflinecount\relax %
   \global\gre@firstglyphtrue%
   % now gre@lastendswithmora is true if this syllable ends with a
   % punctum mora, but we still want to keep gre@lastendswithmora if we
@@ -419,7 +418,8 @@
   \else %
     \gre@thisendswithmorafalse %
   \fi %
-  \let\ifgre@lastendswithmora\ifgre@lastendswithmorasave %
+  \let\ifgre@lastendswithmora\ifgre@saved@prenotes@lastendswithmora%
+  \global\gre@lastoflinecount=\gre@saved@prenotes@lastoflinecount\relax %
   \global\gre@count@lastglyphiscavum=0\relax %
   \global\gre@skip@bar@lastskip=0pt\relax %
   \global\gre@endofscorefalse %
@@ -773,18 +773,18 @@
   \gre@trace@end%
 }%
 
-\let\gre@save@endsyllablepart\gre@nothing\relax %
-\let\gre@save@fixedtextformat\gre@textnormal\relax %
-\let\gre@save@pointandclick\gre@nothing\relax %
+\let\gre@saved@syllable@endsyllablepart\gre@nothing\relax %
+\let\gre@saved@syllable@fixedtextformat\gre@textnormal\relax %
+\let\gre@saved@syllable@pointandclick\gre@nothing\relax %
 \def\gre@push@endsyllable#1{%
   \gre@trace{gre@push@endsyllable{#1}}%
-  \let\gre@save@endsyllablepart\gre@nothing\relax %
-  \let\gre@save@fixedtextformat\gre@textnormal\relax %
-  \let\gre@save@pointandclick\gre@nothing\relax %
+  \let\gre@saved@syllable@endsyllablepart\gre@nothing\relax %
+  \let\gre@saved@syllable@fixedtextformat\gre@textnormal\relax %
+  \let\gre@saved@syllable@pointandclick\gre@nothing\relax %
   \gre@if@rewritesyllable{%
-    \let\gre@save@endsyllablepart\gre@endsyllablepart\relax %
-    \let\gre@save@fixedtextformat\gre@fixedtextformat\relax %
-    \xdef\gre@save@pointandclick{#1}%
+    \let\gre@saved@syllable@endsyllablepart\gre@endsyllablepart\relax %
+    \let\gre@saved@syllable@fixedtextformat\gre@fixedtextformat\relax %
+    \xdef\gre@saved@syllable@pointandclick{#1}%
   }{}%
   \relax %
   \gre@trace@end%
@@ -792,15 +792,15 @@
 
 \def\gre@emit@syllabletext#1{%
   \gre@trace{gre@emit@syllabletext{#1}}%
-  \ifx\gre@save@endsyllablepart\gre@nothing %
+  \ifx\gre@saved@syllable@endsyllablepart\gre@nothing %
     \gre@fixedtextformat{#1}%
   \else %
-    \ifx\gre@save@fixedtextformat\gre@fixedtextformat %
+    \ifx\gre@saved@syllable@fixedtextformat\gre@fixedtextformat %
       \gre@debugmsg{syllablerewriting}{merging format when prepending previous last syllable part}%
-      \gre@fixedtextformat{\gre@pointandclick{\gre@save@endsyllablepart}{\gre@save@pointandclick}#1}%
+      \gre@fixedtextformat{\gre@pointandclick{\gre@saved@syllable@endsyllablepart}{\gre@saved@syllable@pointandclick}#1}%
     \else %
       \gre@debugmsg{syllablerewriting}{prepending previous last syllable part}%
-      \gre@save@fixedtextformat{\gre@pointandclick{\gre@save@endsyllablepart}{\gre@save@pointandclick}}%
+      \gre@saved@syllable@fixedtextformat{\gre@pointandclick{\gre@saved@syllable@endsyllablepart}{\gre@saved@syllable@pointandclick}}%
       \gre@fixedtextformat{#1}%
     \fi %
   \fi %
@@ -878,7 +878,7 @@
   #1%
   \gre@firstglyphtrue%
   \gre@dimen@bolextra = 0pt\relax%
-  \gre@calculate@textaligncenter{\gre@save@endsyllablepart}{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
+  \gre@calculate@textaligncenter{\gre@saved@syllable@endsyllablepart}{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
   \gre@syllablenotes{#9}% we put the notes in a box, so that we have the width of it
   % now we calculate the begin difference, that is to say \gre@dimen@notesaligncenter - \gre@dimen@textaligncenter
   \gre@dimen@begindifference=\dimexpr(\gre@dimen@notesaligncenter - \gre@dimen@textaligncenter)\relax %
@@ -1255,7 +1255,7 @@
   % there are two different cases that have almost nothing in common : the case where there is something written under the bar, and the case where there is nothing.
   % first of all we need to calculate previousenddifference, begindifference, enddifference and nextbegindifference.
   #1%
-  \gre@calculate@textaligncenter{\gre@save@endsyllablepart}{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}%
+  \gre@calculate@textaligncenter{\gre@saved@syllable@endsyllablepart}{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}%
   \ifgre@showlyrics%
     \setbox\gre@box@syllabletext=\hbox{%
       \IfSubStr{\gre@debug}{,barspacing,}%
@@ -1272,7 +1272,7 @@
     \setbox\gre@box@syllabletext=\box\voidb@x%
   \fi%
   \gre@debugmsg{barspacing}{Width of bar text: \the\wd\gre@box@syllabletext}%
-  \global\let\gre@newlinecommonsaved\gre@newlinecommon %
+  \global\let\gre@saved@prelinedelay@newlinecommon\gre@newlinecommon %
   \global\let\gre@newlinecommon\gre@newlinecommondelayed %
   \xdef\gre@newlinearg{-1}%
   \gre@syllablenotes{#9}%
@@ -1335,7 +1335,7 @@
         {\raise 12pt\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
         {}% do nothing if not debugging
     \fi%
-    \global\let\gre@newlinecommon\gre@newlinecommonsaved %
+    \global\let\gre@newlinecommon\gre@saved@prelinedelay@newlinecommon %
     \GreNoBreak%
     % get into position to place the penalty
     \ifdim\gre@dimen@enddifference < 0pt\relax%
@@ -1418,7 +1418,7 @@
       \gre@clearsyllable{bar}%
     \fi%
     % then we check if there is something to write
-    \global\let\gre@newlinecommon\gre@newlinecommonsaved %
+    \global\let\gre@newlinecommon\gre@saved@prelinedelay@newlinecommon %
     \gre@debugmsg{ifdim}{ wd(gre@box@syllabletext) = 0pt}%
     \ifdim\wd\gre@box@syllabletext = 0 pt\relax %
       % the most difficult case : when there is nothing to write

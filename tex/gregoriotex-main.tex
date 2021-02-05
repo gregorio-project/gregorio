@@ -1222,8 +1222,6 @@
   \gre@computespaces%
   \gre@cancelpenalties %
   \gre@attr@dash=0\relax %
-  \xdef\gre@exhyphencharsave{\the\exhyphenchar}%
-  \exhyphenchar=-1\relax %
   \gre@generatelines %
   \noindent%
   \gre@calculate@additionalspaces{#2}{#3}{#4}{#5}%
@@ -1274,7 +1272,6 @@
   \gre@removetranslationspace %
   \gre@normalinitial %
   \gre@restorepenalties %
-  \exhyphenchar=\gre@exhyphencharsave %
   \gre@dimen@temp@one=0pt\relax%
   \gre@dimen@temp@two=0pt\relax%
   \gre@dimen@temp@three=0pt\relax%
@@ -1605,13 +1602,13 @@
 % 2: no line break area due to <nlba> tag
 \xdef\gre@nlbstate{0}%
 
-\newcount\gre@nobreakpenaltysave%
-\newcount\gre@endofwordpenaltysave%
-\newcount\gre@endofsyllablepenaltysave%
-\newcount\gre@endafterbarpenaltysave%
-\newcount\gre@endafterbaraltpenaltysave%
-\newcount\gre@endofelementpenaltysave%
-%\newcount\gre@hyphenpenaltysave% in gregoriotex-spaces.tex
+\newcount\gre@saved@prenlba@nobreakpenalty%
+\newcount\gre@saved@prenlba@endofwordpenalty%
+\newcount\gre@saved@prenlba@endofsyllablepenalty%
+\newcount\gre@saved@prenlba@endafterbarpenalty%
+\newcount\gre@saved@prenlba@endafterbaraltpenalty%
+\newcount\gre@saved@prenlba@endofelementpenalty%
+\newcount\gre@saved@prenlba@hyphenpenalty%
 % first argument is if if the nlba is starting in neumes or not
 % second argument is if it is called from translation centering or not
 \def\GreBeginNLBArea#1#2{%
@@ -1628,20 +1625,25 @@
       \fi %
   \fi %
   \ifnum\gre@nlbinitialstate=0\relax %
-      \global\gre@nobreakpenaltysave=\gre@space@count@nobreakpenalty\relax %
-      \global\gre@endofwordpenaltysave=\gre@space@count@endofwordpenalty\relax %
-      \global\gre@endofsyllablepenaltysave=\gre@space@count@endofsyllablepenalty\relax %
-      \global\gre@endafterbarpenaltysave=\gre@space@count@endafterbarpenalty\relax %
-      \global\gre@endafterbaraltpenaltysave=\gre@space@count@endafterbaraltpenalty\relax %
-      \global\gre@endofelementpenaltysave=\gre@space@count@endofelementpenalty\relax %
-      \global\gre@hyphenpenaltysave=\gre@space@count@hyphenpenalty\relax %
-      %
+      \global\gre@saved@prenlba@nobreakpenalty=\gre@space@count@nobreakpenalty\relax %
       \global\gre@space@count@nobreakpenalty=10001\relax %
+      %
+      \global\gre@saved@prenlba@endofwordpenalty=\gre@space@count@endofwordpenalty\relax %
       \global\gre@space@count@endofwordpenalty=10001\relax %
+      %
+      \global\gre@saved@prenlba@endofsyllablepenalty=\gre@space@count@endofsyllablepenalty\relax %
       \global\gre@space@count@endofsyllablepenalty=10001\relax %
+      %
+      \global\gre@saved@prenlba@endafterbarpenalty=\gre@space@count@endafterbarpenalty\relax %
       \global\gre@space@count@endafterbarpenalty=10001\relax %
+      %
+      \global\gre@saved@prenlba@endafterbaraltpenalty=\gre@space@count@endafterbaraltpenalty\relax %
       \global\gre@space@count@endafterbaraltpenalty=10001\relax %
+      %
+      \global\gre@saved@prenlba@endofelementpenalty=\gre@space@count@endofelementpenalty\relax %
       \global\gre@space@count@endofelementpenalty=10001\relax %
+      %
+      \global\gre@saved@prenlba@hyphenpenalty=\gre@space@count@hyphenpenalty\relax %
       \global\gre@space@count@hyphenpenalty=10001\relax %
   \fi %
 }%
@@ -1662,13 +1664,13 @@
   % if gre@nlbstate is not 0, then nothing should happend
   \ifnum\gre@nlbstate=0\relax %
     \ifnum\gre@nlbinitialstate=0\else %
-      \global\gre@space@count@nobreakpenalty=\gre@nobreakpenaltysave\relax %
-      \global\gre@space@count@endofwordpenalty=\gre@endofwordpenaltysave\relax %
-      \global\gre@space@count@endofsyllablepenalty=\gre@endofsyllablepenaltysave\relax %
-      \global\gre@space@count@endafterbarpenalty=\gre@endafterbarpenaltysave\relax %
-      \global\gre@space@count@endafterbaraltpenalty=\gre@endafterbaraltpenaltysave\relax %
-      \global\gre@space@count@endofelementpenalty=\gre@endofelementpenaltysave\relax %
-      \global\gre@space@count@hyphenpenalty=\gre@hyphenpenaltysave\relax %
+      \global\gre@space@count@nobreakpenalty=\gre@saved@prenlba@nobreakpenalty\relax %
+      \global\gre@space@count@endofwordpenalty=\gre@saved@prenlba@endofwordpenalty\relax %
+      \global\gre@space@count@endofsyllablepenalty=\gre@saved@prenlba@endofsyllablepenalty\relax %
+      \global\gre@space@count@endafterbarpenalty=\gre@saved@prenlba@endafterbarpenalty\relax %
+      \global\gre@space@count@endafterbaraltpenalty=\gre@saved@prenlba@endafterbaraltpenalty\relax %
+      \global\gre@space@count@endofelementpenalty=\gre@saved@prenlba@endofelementpenalty\relax %
+      \global\gre@space@count@hyphenpenalty=\gre@saved@prenlba@hyphenpenalty\relax %
       \ifcase #1\relax % 0
         \gre@penalty{\the\gre@space@count@endofelementpenalty}%
       \or % 1
@@ -1858,12 +1860,12 @@
 %%%%%%%%%%%%%%%%%%%
 
 
-\def\gre@maketabl#1{\ifx\relax#1\else,"#1"\expandafter\gre@maketabl\fi}
+\def\gre@maketable#1{\ifx\relax#1\else,"#1"\expandafter\gre@maketable\fi}
 
 \def\gresetgregpath#1{%
   \def\gre@input@path{#1}%
   \directlua{
-    gre_input_path = {""\expandafter\gre@maketabl\gre@input@path\relax}
+    gre_input_path = {""\expandafter\gre@maketable\gre@input@path\relax}
   }
 }
 
