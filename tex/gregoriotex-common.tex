@@ -19,6 +19,9 @@
 
 \gre@declarefileversion{gregoriotex-commonx.tex}{5.2.1}% GREGORIO_VERSION
 
+\ifnum\luatexversion<76%
+  \gre@error{Error: this document must be compiled with LuaTeX (lualatex) 0.76 or later}%
+\fi%
 
 %%%%%%%%%
 %% Debugging
