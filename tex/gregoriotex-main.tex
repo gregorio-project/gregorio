@@ -23,16 +23,6 @@
 % All gtex files must also have the same version.
 \xdef\gre@gregoriotexversion{5.2.1}% GREGORIO_VERSION - VersionManager.py
 
-\ifluatex%
-  \ifnum\luatexversion<76%
-    \gre@error{Error: this document must be compiled with LuaTeX (lualatex) 0.76 or later}%
-  \fi%
-\else%
-  \gre@error{Error: this document must be compiled with LuaTeX (lualatex)}%
-\fi%
-
-
-
 % first some macros to allow checks for version:
 % Tests that all gregoriotex files are of the same version.
 % #1 is the name of the file
@@ -740,14 +730,28 @@
 % - typeset the text above the lines if relevant, and making sure we execute it only once
 % - not do anything else
 
+\newif\ifgre@showabovelinestext%
+\gre@showabovelinestexttrue%
+
+\def\gresetabovelinestext#1{%
+  \IfStrEqCase{#1}{%
+    {visible}{\gre@showabovelinestexttrue}%
+    {invisible}{\gre@showabovelinestextfalse}%
+    }[% all other cases
+      \gre@error{Unknown option, "#1" for \protect\gresetabovelinestext\MessageBreak Possible options are: 'visible' and 'invisible'}%
+    ]%
+}%
+
 \xdef\gre@currenttextabovelines{}%
 
 \def\GreSetTextAboveLines#1{%
-  \gdef\gre@currenttextabovelines{%
-    \gre@typesettextabovelines{#1}{0}%
-    \gdef\gre@currenttextabovelines{}%
-    \relax %
-  }%
+  \ifgre@showabovelinestext%
+    \gdef\gre@currenttextabovelines{%
+      \gre@typesettextabovelines{#1}{0}%
+      \gdef\gre@currenttextabovelines{}%
+      \relax %
+    }%
+  \fi%
 }%
 
 % typesets the text or nabc neumes above the line
@@ -1027,37 +1031,55 @@
     ]%
 }%
 
+\newif\ifgre@showtranslation%
+\gre@showtranslationtrue%
+
+\def\gresettranslation#1{%
+  \IfStrEqCase{#1}{%
+    {visible}{\gre@showtranslationtrue}%
+    {invisible}{\gre@showtranslationfalse}%
+    }[% all other cases
+      \gre@error{Unknown option, "#1" for \protect\gresettranslation\MessageBreak Possible options are: 'visible' and 'invisible'}%
+    ]%
+}%
+
 \def\GreWriteTranslation#1{%
-  \ifgre@translationcentering %
-    \setbox\gre@box@temp@width=\hbox{#1}%
-    \gre@dimen@temp@five=\dimexpr((\wd\gre@box@syllabletext - \wd\gre@box@temp@width) / 2)\relax%
-    \gre@mark@translation %
-    \kern\gre@dimen@temp@five %
-    \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}}%
-    \kern-\gre@dimen@temp@five %
-  \else %
-    \gre@mark@translation %
-    \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}}%
-  \fi %
+  \ifgre@showtranslation%
+    \ifgre@translationcentering %
+      \setbox\gre@box@temp@width=\hbox{#1}%
+      \gre@dimen@temp@five=\dimexpr((\wd\gre@box@syllabletext - \wd\gre@box@temp@width) / 2)\relax%
+      \gre@mark@translation %
+      \kern\gre@dimen@temp@five %
+      \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}}%
+      \kern-\gre@dimen@temp@five %
+    \else %
+      \gre@mark@translation %
+      \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}}%
+    \fi %
+  \fi%
 }%
 
 \def\GreWriteTranslationWithCenterBeginning#1{%
-  \ifgre@breakintranslation\else%
-    \GreBeginNLBArea{0}{1}%
-  \fi %
-  \gre@attr@center=1\relax %
-  \gre@mark@translation %
-  \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\kern 0pt\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}\kern 0pt}%
-  \unsetluatexattribute{\gre@attr@center}%
-  \relax %
+  \ifgre@showtranslation%
+    \ifgre@breakintranslation\else%
+      \GreBeginNLBArea{0}{1}%
+    \fi %
+    \gre@attr@center=1\relax %
+    \gre@mark@translation %
+    \raise\gre@space@dimen@spacebeneathtext\hbox to 0pt{\kern 0pt\vbox to 0pt{\vss\hbox to 0pt{\gre@style@translation#1\endgre@style@translation\hss}}\kern 0pt}%
+    \unsetluatexattribute{\gre@attr@center}%
+    \relax %
+  \fi%
 }%
 
 \newif\ifgre@mustdotranslationcenterend%
 \gre@mustdotranslationcenterendfalse%
 
 \def\GreTranslationCenterEnd{%
-  \gre@mustdotranslationcenterendtrue%
-  \relax %
+  \ifgre@showtranslation%
+    \gre@mustdotranslationcenterendtrue%
+    \relax %
+  \fi%
 }%
 
 \def\gre@dotranslationcenterend{%
@@ -1248,8 +1270,6 @@
   \gre@computespaces%
   \gre@cancelpenalties %
   \gre@attr@dash=0\relax %
-  \xdef\gre@exhyphencharsave{\the\exhyphenchar}%
-  \exhyphenchar=-1\relax %
   \gre@generatelines %
   \noindent%
   \gre@calculate@additionalspaces{#2}{#3}{#4}{#5}%
@@ -1300,7 +1320,6 @@
   \gre@removetranslationspace %
   \gre@normalinitial %
   \gre@restorepenalties %
-  \exhyphenchar=\gre@exhyphencharsave %
   \gre@dimen@temp@one=0pt\relax%
   \gre@dimen@temp@two=0pt\relax%
   \gre@dimen@temp@three=0pt\relax%
@@ -1553,6 +1572,10 @@
 %% 20: space between a punctum inclinatum and a "no-bar" glyph two pitches above
 %% 21: space between a punctum inclinatum and a "no-bar" glyph three or four pitches above
 %% 22: half-space
+%% 23: Space between two puncta inclinata on a unison
+%% 24: Space before a right-leaning puncta inclinatum when the pitch is ascending (up to 4 pitches away)
+%% 25: Space before a left-leaning puncta inclinatum when the pitch is descending (up to 4 pitches away)
+%% 26: Space after after a non-punctum inclinatum and before the upright punctum inclinatum
 \def\gre@get@spaceskip#1{%
   \gre@trace{gre@get@spaceskip{#1}}%
   \ifcase#1%
@@ -1608,7 +1631,7 @@
   \or% case 25
     \gre@skip@temp@four = \gre@space@skip@ascendingpunctuminclinatumdescendingshift\relax%
   \or% case 26
-    \gre@skip@temp@four = \gre@space@skip@unisonpunctuminclinatumshift\relax%
+    \gre@skip@temp@four = \gre@space@skip@uprightpunctuminclinatumshift\relax%
   \else%
     \gre@error{Unrecognized spaceskip #1}%
   \fi%
@@ -1631,13 +1654,13 @@
 % 2: no line break area due to <nlba> tag
 \xdef\gre@nlbstate{0}%
 
-\newcount\gre@nobreakpenaltysave%
-\newcount\gre@endofwordpenaltysave%
-\newcount\gre@endofsyllablepenaltysave%
-\newcount\gre@endafterbarpenaltysave%
-\newcount\gre@endafterbaraltpenaltysave%
-\newcount\gre@endofelementpenaltysave%
-%\newcount\gre@hyphenpenaltysave% in gregoriotex-spaces.tex
+\newcount\gre@saved@prenlba@nobreakpenalty%
+\newcount\gre@saved@prenlba@endofwordpenalty%
+\newcount\gre@saved@prenlba@endofsyllablepenalty%
+\newcount\gre@saved@prenlba@endafterbarpenalty%
+\newcount\gre@saved@prenlba@endafterbaraltpenalty%
+\newcount\gre@saved@prenlba@endofelementpenalty%
+\newcount\gre@saved@prenlba@hyphenpenalty%
 % first argument is if if the nlba is starting in neumes or not
 % second argument is if it is called from translation centering or not
 \def\GreBeginNLBArea#1#2{%
@@ -1654,20 +1677,25 @@
       \fi %
   \fi %
   \ifnum\gre@nlbinitialstate=0\relax %
-      \global\gre@nobreakpenaltysave=\gre@space@count@nobreakpenalty\relax %
-      \global\gre@endofwordpenaltysave=\gre@space@count@endofwordpenalty\relax %
-      \global\gre@endofsyllablepenaltysave=\gre@space@count@endofsyllablepenalty\relax %
-      \global\gre@endafterbarpenaltysave=\gre@space@count@endafterbarpenalty\relax %
-      \global\gre@endafterbaraltpenaltysave=\gre@space@count@endafterbaraltpenalty\relax %
-      \global\gre@endofelementpenaltysave=\gre@space@count@endofelementpenalty\relax %
-      \global\gre@hyphenpenaltysave=\gre@space@count@hyphenpenalty\relax %
-      %
+      \global\gre@saved@prenlba@nobreakpenalty=\gre@space@count@nobreakpenalty\relax %
       \global\gre@space@count@nobreakpenalty=10001\relax %
+      %
+      \global\gre@saved@prenlba@endofwordpenalty=\gre@space@count@endofwordpenalty\relax %
       \global\gre@space@count@endofwordpenalty=10001\relax %
+      %
+      \global\gre@saved@prenlba@endofsyllablepenalty=\gre@space@count@endofsyllablepenalty\relax %
       \global\gre@space@count@endofsyllablepenalty=10001\relax %
+      %
+      \global\gre@saved@prenlba@endafterbarpenalty=\gre@space@count@endafterbarpenalty\relax %
       \global\gre@space@count@endafterbarpenalty=10001\relax %
+      %
+      \global\gre@saved@prenlba@endafterbaraltpenalty=\gre@space@count@endafterbaraltpenalty\relax %
       \global\gre@space@count@endafterbaraltpenalty=10001\relax %
+      %
+      \global\gre@saved@prenlba@endofelementpenalty=\gre@space@count@endofelementpenalty\relax %
       \global\gre@space@count@endofelementpenalty=10001\relax %
+      %
+      \global\gre@saved@prenlba@hyphenpenalty=\gre@space@count@hyphenpenalty\relax %
       \global\gre@space@count@hyphenpenalty=10001\relax %
   \fi %
 }%
@@ -1688,13 +1716,13 @@
   % if gre@nlbstate is not 0, then nothing should happend
   \ifnum\gre@nlbstate=0\relax %
     \ifnum\gre@nlbinitialstate=0\else %
-      \global\gre@space@count@nobreakpenalty=\gre@nobreakpenaltysave\relax %
-      \global\gre@space@count@endofwordpenalty=\gre@endofwordpenaltysave\relax %
-      \global\gre@space@count@endofsyllablepenalty=\gre@endofsyllablepenaltysave\relax %
-      \global\gre@space@count@endafterbarpenalty=\gre@endafterbarpenaltysave\relax %
-      \global\gre@space@count@endafterbaraltpenalty=\gre@endafterbaraltpenaltysave\relax %
-      \global\gre@space@count@endofelementpenalty=\gre@endofelementpenaltysave\relax %
-      \global\gre@space@count@hyphenpenalty=\gre@hyphenpenaltysave\relax %
+      \global\gre@space@count@nobreakpenalty=\gre@saved@prenlba@nobreakpenalty\relax %
+      \global\gre@space@count@endofwordpenalty=\gre@saved@prenlba@endofwordpenalty\relax %
+      \global\gre@space@count@endofsyllablepenalty=\gre@saved@prenlba@endofsyllablepenalty\relax %
+      \global\gre@space@count@endafterbarpenalty=\gre@saved@prenlba@endafterbarpenalty\relax %
+      \global\gre@space@count@endafterbaraltpenalty=\gre@saved@prenlba@endafterbaraltpenalty\relax %
+      \global\gre@space@count@endofelementpenalty=\gre@saved@prenlba@endofelementpenalty\relax %
+      \global\gre@space@count@hyphenpenalty=\gre@saved@prenlba@hyphenpenalty\relax %
       \ifcase #1\relax % 0
         \gre@penalty{\the\gre@space@count@endofelementpenalty}%
       \or % 1
@@ -1884,12 +1912,12 @@
 %%%%%%%%%%%%%%%%%%%
 
 
-\def\gre@maketabl#1{\ifx\relax#1\else,"#1"\expandafter\gre@maketabl\fi}
+\def\gre@maketable#1{\ifx\relax#1\else,"#1"\expandafter\gre@maketable\fi}
 
 \def\gresetgregpath#1{%
   \def\gre@input@path{#1}%
   \directlua{
-    gre_input_path = {""\expandafter\gre@maketabl\gre@input@path\relax}
+    gre_input_path = {""\expandafter\gre@maketable\gre@input@path\relax}
   }
 }
 

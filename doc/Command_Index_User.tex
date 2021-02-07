@@ -150,7 +150,7 @@ When called with the optional argument \texttt{[f]} Gregorio\TeX\ will
 compile the gabc file into a gtex file. This is similar to
 \texttt{[a]} except the gabc is compiled every time.
 
-\macroname{\textbackslash gregetgregpath}{\{\#1\}}{gregoriotex-main.tex}
+\macroname{\textbackslash gresetgregpath}{\{\#1\}}{gregoriotex-main.tex}
 Set a list of additional directories which should be searched for scores.  Directories may be absolute or relative, but must end with a slash (\verb=/=) and enclosed in braces (\verb={}=), even if there is only one additional directory.  For example, to look in a directory called “Scores” which is alongside the main project directory, one could use the following:
 
 \begin{latexcode}
@@ -918,6 +918,22 @@ Sets the visibility of the lyrics.
 \begin{argtable}
   \#1 & \texttt{visible} & Lyrics are visible (default).\\
   & \texttt{invisible} & Lyrics are not visible.\\
+\end{argtable}
+
+\macroname{\textbackslash gresettranslation}{\{\#1\}}{gregoriotex-main.tex}
+Sets the visibility of the translations.
+
+\begin{argtable}
+  \#1 & \texttt{visible} & Translations are visible (default).\\
+  & \texttt{invisible} & Translations are not visible.\\
+\end{argtable}
+
+\macroname{\textbackslash gresetabovelinestext}{\{\#1\}}{gregoriotex-main.tex}
+Sets the visibility of the above lines text.
+
+\begin{argtable}
+  \#1 & \texttt{visible} & Above lines text are visible (default).\\
+  & \texttt{invisible} & Above lines text are not visible.\\
 \end{argtable}
 
 

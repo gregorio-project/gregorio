@@ -12,6 +12,7 @@
 # The script is not perfect, and especially has trouble with classes of macros
 # which have only one entry in the documentation.
 
+#set -x #echo on
 
 HERE=`pwd`
 
@@ -36,16 +37,16 @@ sed -i.temp 's:.*OBSOLETE.*::' $CODEFILE
 sed -i.temp 's:.*DEPRECATED.*::' $CODEFILE
 
 #remove trailing comments
-gsed -i.temp 's/%.*$//' $CODEFILE
+sed -i.temp 's/%.*$//' $CODEFILE
 
 #remove whitespace
-gsed -i.temp 's/^[ \t]*//;s/[ \t]*$//' $CODEFILE
+sed -i.temp 's/^[ \t]*//;s/[ \t]*$//' $CODEFILE
 
 #remove new and trailing code
 sed -i.temp 's:.*\\new[a-z]*{*\(\\*[a-zA-Z@]*\)[\\}]*.*:\1:' $CODEFILE
 
 #get rid of work around def
-sed -i.temp -E 's:\\def\\x{::' $CODEFILE
+sed -i.temp '/\\def\\x/d' $CODEFILE
 
 #accept only first def on line
 sed -i.temp -E 's:\\[gex]?def:special:' $CODEFILE
@@ -87,6 +88,7 @@ sed -i.temp 's:.*count@temp@.*::' $CODEFILE
 
 #registers for saved values
 sed -i.temp 's:\\gre@saved@.*::' $CODEFILE
+sed -i.temp '/\\ifgre@saved@.*/d' $CODEFILE
 
 #macros used to process options
 sed -i.temp 's:\\gre@autocompile::' $CODEFILE
@@ -120,7 +122,7 @@ sed -i.temp 's:\\macroname{\([^}]*\)}.*:\1:' $DOCFILE
 sed -i.temp 's:\\textbackslash :\\:' $DOCFILE
 
 #styles
-sed -i.temp 's:.*\stylename{\([a-z]*\)}.*:\1:' $DOCFILE
+sed -i.temp 's:.*stylename{\([a-z]*\)}.*:\1:' $DOCFILE
 
 #distances
 sed -i.temp 's:\\begin{gdimension}{\([a-z@]*\)}.*:\1:' $DOCFILE
@@ -146,7 +148,7 @@ grep -h '\\gre@deprecated.*' *.tex | grep -v '\\def\\' >> $DOCFILE
 grep -h '\\gre@obsolete.*' *.tex | grep -v '\\def\\' >> $DOCFILE
 
 #remove whitespace
-gsed -i.temp 's/^[ \t]*//;s/[ \t]*$//' $DOCFILE
+sed -i.temp 's/^[ \t]*//;s/[ \t]*$//' $DOCFILE
 
 sed -i.temp 's:.*\\gre@deprecated{.*::' $DOCFILE
 sed -i.temp 's:.*\\gre@obsolete{.*::' $DOCFILE
