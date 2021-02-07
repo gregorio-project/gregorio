@@ -35,77 +35,95 @@
 
 
 
-\newcount\gre@hyphenpenaltysave%
-\newcount\gre@exhyphenpenaltysave%
-\newcount\gre@doublehyphendemeritssave%
-\newcount\gre@finalhyphendemeritssave%
-\newcount\gre@brokenpenaltysave%
-\newcount\gre@loosenesssave%
-\newcount\gre@tolerancesave%
-\newcount\gre@pretolerancesave%
-\newskip\gre@emergencystretchsave%
-\newcount\gre@widowpenaltysave%
-\newcount\gre@clubpenaltysave%
-\newskip\gre@saved@parskip%
-\newskip\gre@saved@lineskip%
-\newskip\gre@saved@baselineskip%
-\newskip\gre@saved@lineskiplimit%
+\newcount\gre@saved@prescore@hyphenpenalty%
+\newcount\gre@saved@prescore@exhyphenpenalty%
+\newcount\gre@saved@prescore@exhyphenchar%
+\newcount\gre@saved@prescore@doublehyphendemerits%
+\newcount\gre@saved@prescore@finalhyphendemerits%
+\newcount\gre@saved@prescore@brokenpenalty%
+\newcount\gre@saved@prescore@looseness%
+\newcount\gre@saved@prescore@tolerance%
+\newcount\gre@saved@prescore@pretolerance%
+\newskip\gre@saved@prescore@emergencystretch%
+\newcount\gre@saved@prescore@widowpenalty%
+\newcount\gre@saved@prescore@clubpenalty%
+\newskip\gre@saved@prescore@parskip%
+\newskip\gre@saved@prescore@lineskip%
+\newskip\gre@saved@prescore@baselineskip%
+\newskip\gre@saved@prescore@lineskiplimit%
 %% The following macros cancel some useless penalties, and reinstates them
 %% at the end of a score
 
 \def\gre@cancelpenalties{%
   \gre@trace{gre@cancelpenalties}%
-  \global\gre@hyphenpenaltysave=\hyphenpenalty\relax %
-  \global\gre@exhyphenpenaltysave=\exhyphenpenalty\relax %
-  \global\gre@doublehyphendemeritssave=\doublehyphendemerits\relax %
-  \global\gre@finalhyphendemeritssave=\finalhyphendemerits\relax %
-  \global\gre@brokenpenaltysave=\brokenpenalty\relax %
-  \global\gre@loosenesssave=\looseness\relax %
-  \global\gre@tolerancesave=\tolerance\relax %
-  \global\gre@pretolerancesave=\pretolerance\relax %
-  \global\gre@emergencystretchsave=\emergencystretch\relax %
-  \global\gre@widowpenaltysave=\widowpenalty\relax %
-  \global\gre@clubpenaltysave=\clubpenalty\relax %
-  %
-  \global\gre@saved@parskip=\parskip%
-  \global\gre@saved@lineskip=\lineskip%
-  \global\gre@saved@baselineskip=\baselineskip%
-  \global\gre@saved@lineskiplimit=\lineskiplimit%
+  \global\gre@saved@prescore@hyphenpenalty=\hyphenpenalty\relax %
   \hyphenpenalty=\gre@space@count@hyphenpenalty %
+  %
+  \global\gre@saved@prescore@exhyphenpenalty=\exhyphenpenalty\relax %
   \exhyphenpenalty=\gre@space@count@hyphenpenalty %
+  %
+  \global\gre@saved@prescore@exhyphenchar=\exhyphenchar\relax %
+  \exhyphenchar=-1\relax%
+  %
+  \global\gre@saved@prescore@doublehyphendemerits=\doublehyphendemerits\relax %
   \doublehyphendemerits=0\relax %
+  %
+  \global\gre@saved@prescore@finalhyphendemerits=\finalhyphendemerits\relax %
   \finalhyphendemerits=0\relax %
+  %
+  \global\gre@saved@prescore@brokenpenalty=\brokenpenalty\relax %
   \brokenpenalty=\gre@space@count@brokenpenalty %
+  %
+  \global\gre@saved@prescore@looseness=\looseness\relax %
   \looseness=\gre@space@count@looseness %
+  %
+  \global\gre@saved@prescore@tolerance=\tolerance\relax %
   \tolerance=\gre@space@count@tolerance %
+  %
+  \global\gre@saved@prescore@pretolerance=\pretolerance\relax %
   \pretolerance=\gre@space@count@pretolerance %
+  %
+  \global\gre@saved@prescore@emergencystretch=\emergencystretch\relax %
   \emergencystretch=\gre@space@skip@emergencystretch\relax %
+  %
+  \global\gre@saved@prescore@widowpenalty=\widowpenalty\relax %
   \widowpenalty=\gre@space@count@widowpenalty %
+  %
+  \global\gre@saved@prescore@clubpenalty=\clubpenalty\relax %
   \clubpenalty=\gre@space@count@clubpenalty %
+  %
+  \global\gre@saved@prescore@parskip=\parskip%
   \parskip=\gre@space@skip@parskip%
+  %
+  \global\gre@saved@prescore@lineskip=\lineskip%
   \lineskip=\gre@space@skip@lineskip%
+  %
+  \global\gre@saved@prescore@baselineskip=\baselineskip%
   \baselineskip=\gre@space@skip@baselineskip%
+  %
+  \global\gre@saved@prescore@lineskiplimit=\lineskiplimit%
   \lineskiplimit=\gre@space@skip@lineskiplimit%
   \gre@trace@end%
 }%
 
 \def\gre@restorepenalties{%
   \gre@trace{gre@restorepenalties}%
-  \hyphenpenalty=\gre@hyphenpenaltysave %
-  \exhyphenpenalty=\gre@exhyphenpenaltysave %
-  \doublehyphendemerits=\gre@doublehyphendemeritssave %
-  \finalhyphendemerits=\gre@finalhyphendemeritssave %
-  \brokenpenalty=\gre@brokenpenaltysave %
-  \looseness=\gre@loosenesssave %
-  \tolerance=\gre@tolerancesave %
-  \pretolerance=\gre@pretolerancesave %
-  \emergencystretch=\gre@emergencystretchsave %
-  \widowpenalty=\gre@widowpenaltysave %
-  \clubpenalty=\gre@clubpenaltysave %
-  \parskip=\gre@saved@parskip%
-  \lineskip=\gre@saved@lineskip%
-  \baselineskip=\gre@saved@baselineskip%
-  \lineskiplimit=\gre@saved@lineskiplimit%
+  \hyphenpenalty=\gre@saved@prescore@hyphenpenalty %
+  \exhyphenpenalty=\gre@saved@prescore@exhyphenpenalty %
+  \exhyphenchar=\gre@saved@prescore@exhyphenchar %
+  \doublehyphendemerits=\gre@saved@prescore@doublehyphendemerits %
+  \finalhyphendemerits=\gre@saved@prescore@finalhyphendemerits %
+  \brokenpenalty=\gre@saved@prescore@brokenpenalty %
+  \looseness=\gre@saved@prescore@looseness %
+  \tolerance=\gre@saved@prescore@tolerance %
+  \pretolerance=\gre@saved@prescore@pretolerance %
+  \emergencystretch=\gre@saved@prescore@emergencystretch %
+  \widowpenalty=\gre@saved@prescore@widowpenalty %
+  \clubpenalty=\gre@saved@prescore@clubpenalty %
+  \parskip=\gre@saved@prescore@parskip%
+  \lineskip=\gre@saved@prescore@lineskip%
+  \baselineskip=\gre@saved@prescore@baselineskip%
+  \lineskiplimit=\gre@saved@prescore@lineskiplimit%
   \gre@trace@end%
 }%
 
@@ -896,16 +914,6 @@
 % the one taken into account for above lines nabc height
 \newdimen\gre@dimen@additionaltopspacenabc\relax%
 
-% backup demensions for the previous
-\newdimen\gre@saved@dimen@additionalbottomspace\relax%
-\newdimen\gre@saved@dimen@additionaltopspace\relax%
-\newdimen\gre@saved@dimen@additionaltopspacealt\relax%
-\newdimen\gre@saved@dimen@additionaltopspacenabc\relax%
-\newdimen\gre@saved@dimen@currenttranslationheight\relax%
-\newdimen\gre@saved@dimen@textlower\relax%
-\newdimen\gre@saved@dimen@currentabovelinestextheight\relax%
-\newdimen\gre@saved@dimen@constantglyphraise\relax%
-
 \newcount\gre@space@count@additionaltopspacethreshold\relax%
 \gre@space@count@additionaltopspacethreshold=2
 
@@ -937,29 +945,40 @@
   \gre@trace@end%
 }%
 
+% some backup demensions for use around discretionaries
+\newdimen\gre@saved@prediscretionary@dimen@additionalbottomspace\relax%
+\newdimen\gre@saved@prediscretionary@dimen@additionaltopspace\relax%
+\newdimen\gre@saved@prediscretionary@dimen@additionaltopspacealt\relax%
+\newdimen\gre@saved@prediscretionary@dimen@additionaltopspacenabc\relax%
+\newdimen\gre@saved@prediscretionary@dimen@currenttranslationheight\relax%
+\newdimen\gre@saved@prediscretionary@dimen@textlower\relax%
+\newdimen\gre@saved@prediscretionary@dimen@currentabovelinestextheight\relax%
+\newdimen\gre@saved@prediscretionary@dimen@constantglyphraise\relax%
+
+
 \def\gre@save@additionalspaces{%
   \gre@trace{gre@save@additionalspaces}%
-  \global\gre@saved@dimen@additionalbottomspace=\gre@dimen@additionalbottomspace\relax%
-  \global\gre@saved@dimen@additionaltopspace=\gre@dimen@additionaltopspace\relax%
-  \global\gre@saved@dimen@additionaltopspacealt=\gre@dimen@additionaltopspacealt\relax%
-  \global\gre@saved@dimen@additionaltopspacenabc=\gre@dimen@additionaltopspacenabc\relax%
-  \global\gre@saved@dimen@currenttranslationheight=\gre@dimen@currenttranslationheight\relax%
-  \global\gre@saved@dimen@textlower=\gre@dimen@textlower\relax%
-  \global\gre@saved@dimen@currentabovelinestextheight=\gre@dimen@currentabovelinestextheight\relax%
-  \global\gre@saved@dimen@constantglyphraise=\gre@dimen@constantglyphraise\relax%
+  \global\gre@saved@prediscretionary@dimen@additionalbottomspace=\gre@dimen@additionalbottomspace\relax%
+  \global\gre@saved@prediscretionary@dimen@additionaltopspace=\gre@dimen@additionaltopspace\relax%
+  \global\gre@saved@prediscretionary@dimen@additionaltopspacealt=\gre@dimen@additionaltopspacealt\relax%
+  \global\gre@saved@prediscretionary@dimen@additionaltopspacenabc=\gre@dimen@additionaltopspacenabc\relax%
+  \global\gre@saved@prediscretionary@dimen@currenttranslationheight=\gre@dimen@currenttranslationheight\relax%
+  \global\gre@saved@prediscretionary@dimen@textlower=\gre@dimen@textlower\relax%
+  \global\gre@saved@prediscretionary@dimen@currentabovelinestextheight=\gre@dimen@currentabovelinestextheight\relax%
+  \global\gre@saved@prediscretionary@dimen@constantglyphraise=\gre@dimen@constantglyphraise\relax%
   \gre@trace@end%
 }%
 
 \def\gre@restore@additionalspaces{%
   \gre@trace{gre@restore@additionalspaces}%
-  \global\gre@dimen@additionalbottomspace=\gre@saved@dimen@additionalbottomspace\relax%
-  \global\gre@dimen@additionaltopspace=\gre@saved@dimen@additionaltopspace\relax%
-  \global\gre@dimen@additionaltopspacealt=\gre@saved@dimen@additionaltopspacealt\relax%
-  \global\gre@dimen@additionaltopspacenabc=\gre@saved@dimen@additionaltopspacenabc\relax%
-  \global\gre@dimen@currenttranslationheight=\gre@saved@dimen@currenttranslationheight\relax%
-  \global\gre@dimen@textlower=\gre@saved@dimen@textlower\relax%
-  \global\gre@dimen@currentabovelinestextheight=\gre@saved@dimen@currentabovelinestextheight\relax%
-  \global\gre@dimen@constantglyphraise=\gre@saved@dimen@constantglyphraise\relax%
+  \global\gre@dimen@additionalbottomspace=\gre@saved@prediscretionary@dimen@additionalbottomspace\relax%
+  \global\gre@dimen@additionaltopspace=\gre@saved@prediscretionary@dimen@additionaltopspace\relax%
+  \global\gre@dimen@additionaltopspacealt=\gre@saved@prediscretionary@dimen@additionaltopspacealt\relax%
+  \global\gre@dimen@additionaltopspacenabc=\gre@saved@prediscretionary@dimen@additionaltopspacenabc\relax%
+  \global\gre@dimen@currenttranslationheight=\gre@saved@prediscretionary@dimen@currenttranslationheight\relax%
+  \global\gre@dimen@textlower=\gre@saved@prediscretionary@dimen@textlower\relax%
+  \global\gre@dimen@currentabovelinestextheight=\gre@saved@prediscretionary@dimen@currentabovelinestextheight\relax%
+  \global\gre@dimen@constantglyphraise=\gre@saved@prediscretionary@dimen@constantglyphraise\relax%
   \gre@trace@end%
 }%
 
@@ -1026,7 +1045,7 @@
 \def\gre@calculate@textaligncenter#1#2#3#4{%
   \gre@trace{gre@calculate@textaligncenter{#1}{#2}{#3}{#4}}%
   \ifnum#4=0\relax%
-    \gre@widthof{\gre@save@fixedtextformat{#1}\gre@fixedtextformat{#2#3}}%
+    \gre@widthof{\gre@saved@syllable@fixedtextformat{#1}\gre@fixedtextformat{#2#3}}%
   \else %
     \gre@widthof{\gre@fixedtextformat{#1}\gre@fixednexttextformat{#2#3}}%
   \fi %

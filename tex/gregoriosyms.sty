@@ -21,11 +21,13 @@
 \ProvidesPackage{gregoriosyms}
     [2019/04/06 v5.2.1 GregorioTeX symbols only.]% PARSE_VERSION_DATE_LTX
 
+\RequirePackage{iftex}%
+\RequireLuaTeX
+
 % If gregoriotex has been loaded, then we need to abort the loading process of this package here in order to avoid some conflicts.
 \ifcsname gregoriotex@symbols@loaded\endcsname\endinput\fi%
 
 \RequirePackage{kvoptions}%
-\RequirePackage{ifluatex}%
 \RequirePackage{luatexbase}%
 \RequirePackage{luaotfload}
 \RequirePackage{luamplib}%

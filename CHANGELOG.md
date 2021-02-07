@@ -3,12 +3,19 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][CTAN]
+### Changed
+- The space between a non-punctum inclinatum and the upright punctum inclinatum is renamed to uprightpunctuminclinatumshift.  This helps to better distinguish it from punctuminclinatumunisonshift (the space between two consecutive ascending or descending puncta inclinata on the same line).  See [#1507](https://github.com/gregorio-project/gregorio/issues/1507).
+
 ### Fixed
 - Staff line thickness is now set in gsp-default.tex.  This corrects a problem with the staff lines changing thickness when the default spacing configuration is loaded while the staff size is something other than the default (17).  See [#1461](https://github.com/gregorio-project/gregorio/issues/1461).
 - Corrected interaction issues between text styles and ligatures.  The LaTeX commands like `\textit` insert italics correction, preventing ligatures being formed between their arguments if two occur sequentially.  On the other hand the switches like `\itshape` do not.  Since gregorio breaks up syllables around the vowel and then applies the formating commands to each part, this behavior showed up.  We switch to using the switches to avoid this (except for underlining, for which a switch does not exist).  We also fix this for color tags by loading `luacolor` which changes how the `\color` tag is implemented to allow ligatures to span groups.  See [#1444](https://github.com/gregorio-project/gregorio/issues/1444).
+- A reuse of a save register led to the `\hyphenpenalty` not being restored correctly at the end of the score.  All save registers are now clearly identified by when they are used so as to make it harder to accidentally use the wrong one.  See [posts on mailing list](https://groups.google.com/g/gregorio-users/c/u3LmnGYnhwU).
+- Fixed an overly specific find/replace in snippets that that led to `\par` being able to slip into the snippet file under certain circumstances (and there by causing compilation to fail).  See [#1497](https://github.com/gregorio-project/gregorio/issues/1497).
+- Updated to use iftex package (the sucessor to ifluatex).  See [#1481](https://github.com/gregorio-project/gregorio/issues/1481).
 
 ### Added
 - GregorioTeX will now look in additional places for scores using.  Users can specify paths to look in using `\gresetgregpath`.  If scores are not found in the current working directory or the list of provided paths, we fall back on kpse to try and find them.  See [#1395](https://github.com/gregorio-project/gregorio/issues/1395).
+- Added the ability to toggle the visibility of the translation and above lines text.  See [user request on mailing list](https://groups.google.com/g/gregorio-users/c/J-V0dkBMevY).
 
 
 ## [5.2.1] - 2019-04-06

@@ -12,19 +12,9 @@
 # The script is not perfect, and especially has trouble with classes of macros
 # which have only one entry in the documentation.
 
+#set -x #echo on
 
 HERE=`pwd`
-
-if sed --version 2&> /dev/null; then
-  SED=sed
-elif gsed --version 2&> /dev/null; then
-  SED=gsed
-else
-  echo "I can't find GNU sed."
-  echo "Please install it and try again."
-  return 1
-fi
-
 
 CODEFILE=$HERE/code.txt
 DOCFILE=$HERE/doc.txt
@@ -56,7 +46,7 @@ $SED -i.temp 's/^[ \t]*//;s/[ \t]*$//' $CODEFILE
 $SED -i.temp 's:.*\\new[a-z]*{*\(\\*[a-zA-Z@]*\)[\\}]*.*:\1:' $CODEFILE
 
 #get rid of work around def
-$SED -i.temp -E 's:\\def\\x\{::' $CODEFILE
+$SED -i.temp '/\\def\\x/d' $CODEFILE
 
 #accept only first def on line
 $SED -i.temp -E 's:\\[gex]?def:special:' $CODEFILE
@@ -98,6 +88,7 @@ $SED -i.temp 's:.*count@temp@.*::' $CODEFILE
 
 #registers for saved values
 $SED -i.temp 's:\\gre@saved@.*::' $CODEFILE
+$SED -i.temp '/\\ifgre@saved@.*/d' $CODEFILE
 
 #macros used to process options
 $SED -i.temp 's:\\gre@autocompile::' $CODEFILE
@@ -131,7 +122,7 @@ $SED -i.temp 's:\\macroname{\([^}]*\)}.*:\1:' $DOCFILE
 $SED -i.temp 's:\\textbackslash :\\:' $DOCFILE
 
 #styles
-$SED -i.temp 's:.*\\stylename{\([a-z]*\)}.*:\1:' $DOCFILE
+$SED -i.temp 's:.*stylename{\([a-z]*\)}.*:\1:' $DOCFILE
 
 #distances
 $SED -i.temp 's:\\begin{gdimension}{\([a-z@]*\)}.*:\1:' $DOCFILE
