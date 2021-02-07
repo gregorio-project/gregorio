@@ -16,6 +16,17 @@
 
 HERE=`pwd`
 
+if sed --version 2&> /dev/null; then
+  SED=sed
+elif gsed --version 2&> /dev/null; then
+  SED=gsed
+else
+  echo "I can't find GNU sed."
+  echo "Please install it and try again."
+  return 1
+fi
+
+
 CODEFILE=$HERE/code.txt
 DOCFILE=$HERE/doc.txt
 DIFFFILE=$HERE/diff.txt
