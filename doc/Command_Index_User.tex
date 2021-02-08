@@ -905,14 +905,20 @@ Macro to add an illuminated initial.
 
 \textbf{Nota Bene:} Usually the argument of this command should be an \verb=\includegraphics= command, but you may use what ever you want as the illuminated initial.
 
-\macroname{\textbackslash gresetinitiallines}{\{\#1\}}{gregoriotex-syllable.tex}
+\macroname{\textbackslash gresetinitiallines}{\{\#1\}}{gregoriotex-main.tex}
 Sets the number of lines the score initial requires.
 
 \begin{argtable}
   \#1 & number & The number of lines required by the initial.  If \texttt{0}, the score will have no separated initial.\\
 \end{argtable}
 
-\textbf{Nota Bene:} As currently implemented, you cannot set an initial which is larger than 2 lines and in order to do so you must set manual line breaks in the gabc for the first two lines.
+\macroname{\textbackslash gresetinitialend}{\{\#1\}}{gregoriotex-main.tex}
+Indicates how the end of the initial is indicated in the gabc.
+
+\begin{argtable}
+  \#1 & \texttt{manual} & Every line that is next to the initial is ended with a \texttt{z} or \texttt{Z} in the gabc\\
+  & \texttt{semi-manual} & Only the last line that is next to the initial is ended with a \texttt{z} or \texttt{Z} in the gabc
+\end{argtable}
 
 \macroname{\textbackslash gresetmodenumbersystem}{\{\#1\}}{gregoriotex-main.tex}
 Sets the number system used for the mode number.

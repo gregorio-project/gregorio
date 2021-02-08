@@ -487,11 +487,8 @@ Macro to set the initial in the score.
 \macroname{\textbackslash gre@adjustsecondline}{}{gregoriotex.tex}
 Macro to call before first syllable, but after \verb=\GreSetInitialClef=.
 
-\macroname{\textbackslash gre@adjustthirdline}{}{gregoriotex-main.tex}
-Macro to call during the second line.
-
-\macroname{\textbackslash gre@adjustlineifnecessary}{}{gregoriotex-main.tex}
-Macro that calls \verb=\gre@adjustthirdline= if indicated by \verb=\ifgre@thirdlineadjustmentnecessary=.
+\macroname{\textbackslash gre@adjustlinesafterinitial}{}{gregoriotex-main.tex}
+Macro that call adjusts the line length after the lines next to the initial are completed.
 
 \macroname{\textbackslash gre@addspaceabove}{}{gregoriotex-main.tex}
 Macro to increase the space above the lines to account for above lines text.
@@ -558,7 +555,7 @@ Macro to (re)populate the box containing the lines.
 \macroname{\textbackslash gre@updatelinewidth}{}{gregoriotex-main.tex}
 Macro to shorten the lines to account for the presence of the initial.
 
-\macroname{\textbackslash gre@knownline}{}{gregoriotex-main.tex}
+\macroname{\textbackslash gre@count@knownline}{}{gregoriotex-main.tex}
 A count which keeps track of which line of the score we’re on.
 
 \macroname{\textbackslash gre@lastoflinecount}{}{gregoriotex-main.tex}
@@ -1838,9 +1835,6 @@ Boolean set and used by \verb=\GreSyllable= to decide if a hyphen should be show
 \macroname{\textbackslash ifgre@possibleluahyphenafterthissyllable}{}{gregoriotex-syllable.tex}
 Boolean set by \verb=\GreSyllable= indicating if the Lua pass may add an hyphen after the syllable, used by \verb=\gre@calculate@eolshift= for protrusion calculation.
 
-\macroname{\textbackslash ifgre@thirdlineadjustmentnecessary}{}{gregoriotex-syllable.tex}
-Boolean which indicates that a third-line adjustment to staff line width is necessary.
-
 \macroname{\textbackslash ifgre@scale@stafflinefactor}{}{gregoriotex-spaces.tex}
 Boolean indicating whether the stafflinefactor should scale with changes of \texttt{grefactor}, or not.
 
@@ -1929,6 +1923,9 @@ Boolean indicating whether the above lines text should be shown.
 
 \macroname{\textbackslash gre@count@initiallines}{}{gregoriotex-syllable.tex}
 Number of lines the initial takes up.  Currently limited to 0, 1, or 2.
+
+\macroname{\textbackslash ifgre@manualinitialend}{}{gregoriotex-syllable.tex}
+Boolean indicating whether all lines in the initial are indicated with a \texttt{z} or \texttt{Z} in the gabc (true), or if only the list line is so indicated (false).
 
 \macroname{\textbackslash ifgre@rewritethissyllable}{}{gregoriotex-syllable.tex}
 Boolean indicating that a syllable should be rewritten to improve ligature rendering.
