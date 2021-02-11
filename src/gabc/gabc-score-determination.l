@@ -57,7 +57,7 @@ static bool eof_found = false;
 
 #define RETURN_CHARACTERS \
     gabc_score_determination_lval.text = \
-            gregorio_strdup(gabc_score_determination_text); \
+            gabc_unescape(gabc_score_determination_text); \
     return CHARACTERS
 
 #define RETURN_SPACE \
@@ -248,7 +248,7 @@ semicolon. */
 <score>[\n\r][\n\r \t]* {
         RETURN_SPACE;
     }
-<score>[^-,;:.\{\}\(\[\]<%\n\r]+ {
+<score>(\$.|[^-,;:.\{\}\(\[\]<%\n\r])+ {
         RETURN_CHARACTERS;
     }
 <score>- {
@@ -318,7 +318,7 @@ semicolon. */
 <sp>[\n\r][\n\r \t]* {
         RETURN_SPACE;
     }
-<sp>[^<\{\}\n\r]+ {
+<sp>(\$.|[^<\{\}\n\r])+ {
         RETURN_CHARACTERS;
     }
 <score>\% {
@@ -338,7 +338,7 @@ semicolon. */
         BEGIN(score);
         return VERB_END;
     }
-<verb,alt>[^<]+ {
+<verb,alt>(\$.|[^<])+ {
         RETURN_CHARACTERS;
     }
 <verb,score,alt>< {

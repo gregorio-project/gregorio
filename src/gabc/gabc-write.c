@@ -39,7 +39,8 @@
 typedef enum {
     GABC_NORMAL,
     GABC_AT_PROTRUSION_FACTOR,
-    GABC_IN_PROTRUSION_FACTOR
+    GABC_IN_PROTRUSION_FACTOR,
+    GABC_IN_AUTO_PROTRUSION
 } gabc_write_state;
 
 static gabc_write_state write_state;
@@ -211,7 +212,7 @@ static void gabc_write_verb(FILE *f, const grewchar *first_char)
 {
     if (write_state == GABC_AT_PROTRUSION_FACTOR) {
         /* this is an auto protrusion, so ignore it */
-        write_state = GABC_NORMAL;
+        write_state = GABC_IN_AUTO_PROTRUSION;
     } else {
         fprintf(f, "<v>");
         gregorio_print_unistring(f, first_char);
@@ -238,6 +239,27 @@ static void gabc_print_char(FILE *f, const grewchar to_print)
             gregorio_print_unichar(f, to_print);
         }
     } else {
+        switch(to_print) {
+        case ',':
+        case ';':
+        case ':':
+        case '.':
+            if (write_state == GABC_IN_AUTO_PROTRUSION) {
+                break;
+            }
+            /* fall through */
+        case '-':
+        case '{':
+        case '}':
+        case '(':
+        case '[':
+        case ']':
+        case '<':
+        case '%':
+        case '$':
+            gregorio_print_unichar(f, '$');
+            break;
+        }
         gregorio_print_unichar(f, to_print);
     }
 }

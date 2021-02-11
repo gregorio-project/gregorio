@@ -39,6 +39,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
 void gabc_digest(const void *buf, size_t size);
 int gabc_score_determination_lex_destroy(void);
 int gabc_notes_determination_lex_destroy(void);
+char *gabc_unescape(const char *string);
 
 /* see comments on gregorio_add_note_to_a_glyph for meaning of these
  * variables */
