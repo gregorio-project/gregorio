@@ -1789,23 +1789,17 @@
 
 \def\gre@setgregoriofontscaled[#1]#2#3{%
   \gre@trace{gre@setgregoriofontscaled[#1]{#2}{#3}}%
-  \IfStrEq{#2}{parmesan}{%%% OBSOLETE
-    \gre@obsolete{'parmesan' font}{'granapadano' font}%%% OBSOLETE
-  }{%%% OBSOLETE
-    % keep this section
-    \if\relax\detokenize{#1}\relax %
-      \xdef\gre@gregoriofontname{#2}%
-      \expandafter\xdef\csname gre@fontfactor@#2\endcsname{#3}%
-      \gre@loadgregoriofont%
-      \gdef\GreCPVirgaReversaAscendensOnDLine##1{##1}%
-    \else %
-      \xdef\gre@gregoriofontname{#2-#1}%
-      \expandafter\xdef\csname gre@fontfactor@#2-#1\endcsname{#3}%
-      \gre@loadgregoriofont%
-      \gdef\GreCPVirgaReversaAscendensOnDLine##1{\GreCPVirgaReversaLongqueueAscendens}%
-    \fi %
-  }%%% OBSOLETE
-  \relax %
+  \if\relax\detokenize{#1}\relax %
+    \xdef\gre@gregoriofontname{#2}%
+    \expandafter\xdef\csname gre@fontfactor@#2\endcsname{#3}%
+    \gre@loadgregoriofont%
+    \gdef\GreCPVirgaReversaAscendensOnDLine##1{##1}%
+  \else %
+    \xdef\gre@gregoriofontname{#2-#1}%
+    \expandafter\xdef\csname gre@fontfactor@#2-#1\endcsname{#3}%
+    \gre@loadgregoriofont%
+    \gdef\GreCPVirgaReversaAscendensOnDLine##1{\GreCPVirgaReversaLongqueueAscendens}%
+  \fi %
   \gre@trace@end%
 }%
 
@@ -1858,7 +1852,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\grechangestyle#1#2{%
-  \IfStrEq{#1}{biginitial}{\gre@obsolete{biginitial style}{initial style}}{}%%% OBSOLETE
   \@ifnextchar[{\gre@changestyle{#1}{#2}}{\gre@changestyle{#1}{#2}[\relax]}%
 }%
 
