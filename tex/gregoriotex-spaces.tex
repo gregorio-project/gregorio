@@ -581,10 +581,9 @@
   \hbox to \gre@dimen@temp@four{#2\hss}%
 }%
 
-\def\gresethyphenprotrusion#1{% DEPRECATED for removal in 5.1
-  \gre@deprecated{\protect\gresethyphenprotrusion{percentage}}{\protect\gresetprotrusionfactor{eolhyphen}{factor}}% DEPRECATED for removal in 5.1
-  \gresetprotrusionfactor{eolhyphen}{\directlua{tex.print(string.format(string.char(37)..'g', #1 / 100.0))}}% DEPRECATED for removal in 5.1
-}% DEPRECATED for removal in 5.1
+\def\gresethyphenprotrusion#1{% OBSOLETE
+  \gre@obsolete{\protect\gresethyphenprotrusion{percentage}}{\protect\gresetprotrusionfactor{eolhyphen}{factor}}% OBSOLETE
+}% OBSOLETE
 
 % dimen keeping the shift computed with next function
 \newdimen\gre@dimen@eolshift
