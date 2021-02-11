@@ -41,14 +41,13 @@
 		                paperheight=$scribus_realheight$ pt,
           					left=0cm,top=0cm,right=0cm,bottom=0cm,nohead,nofoot]{geometry}
         \usepackage[autocompile]{gregoriotex}
-        \usepackage{filecontents}
     		\title{Scribus-Latex-File}
     		$scribus_additionalgreheaders$
     		\author{Scribus}
 		    \pagestyle{empty}
     		\setlength{\textwidth}{$scribus_realwidth$ pt}
 
-        \begin{filecontents}{scribus_file-score.gabc}
+        \begin[overwrite]{filecontents}{scribus_file-score.gabc}
     </preamble>
     <postamble>
         \end{filecontents}
