@@ -1787,6 +1787,14 @@
   \gre@trace@end%
 }%
 
+%% font calibration distances
+\newdimen\gre@dimen@stafflinethicknessbase%
+\newdimen\gre@dimen@glyphraisebase%
+\newdimen\gre@dimen@interstafflinedistancebase%
+\newdimen\gre@dimen@inclinatumonlinemoravshiftbase%
+\newdimen\gre@dimen@inclinatumonlinemorahshiftbase%
+\newdimen\gre@dimen@inclinatumofflinemorahshiftbase%
+
 \def\gre@setgregoriofontscaled[#1]#2#3{%
   \gre@trace{gre@setgregoriofontscaled[#1]{#2}{#3}}%
   \IfStrEq{#2}{parmesan}{%%% OBSOLETE
@@ -1805,7 +1813,13 @@
       \gdef\GreCPVirgaReversaAscendensOnDLine##1{\GreCPVirgaReversaLongqueueAscendens}%
     \fi %
   }%%% OBSOLETE
-  \relax %
+  % currently all fonts use the same calibration distances
+  \gre@dimen@stafflinethicknessbase=1500sp\relax %
+  \gre@dimen@glyphraisebase=-22000sp\relax%
+  \gre@dimen@interstafflinedistancebase=30000sp\relax%
+  \gre@dimen@inclinatumonlinemoravshiftbase=4500sp\relax%
+  \gre@dimen@inclinatumonlinemorahshiftbase=3700sp\relax%
+  \gre@dimen@inclinatumofflinemorahshiftbase=2500sp\relax%
   \gre@trace@end%
 }%
 
