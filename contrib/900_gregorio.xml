@@ -47,10 +47,9 @@
 		    \pagestyle{empty}
     		\setlength{\textwidth}{$scribus_realwidth$ pt}
 
-        \begin[overwrite]{filecontents}{scribus_file-score.gabc}
-    </preamble>
+        \begin{filecontents*}[overwrite]{scribus_file-score.gabc}</preamble>
     <postamble>
-        \end{filecontents}
+        \end{filecontents*}
 
         \begin{document}
         $scribus_greconf$
