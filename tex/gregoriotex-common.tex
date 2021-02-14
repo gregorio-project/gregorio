@@ -79,7 +79,11 @@
 }%
 
 \def\gre@obsolete#1#2{%
-  \gre@error{#1\space is obsolete.\MessageBreak Use #2\space instead}%
+  \ifx&#2&%
+    \gre@error{#1\space is obsolete and no longer has any effect}%
+  \else%
+    \gre@error{#1\space is obsolete.\MessageBreak Use #2\space instead}%
+  \fi%
   \relax%
 }%
 

@@ -1011,7 +1011,7 @@
   \gre@num@min{#2}{\gre@pitch@clefbottom}%
   \gre@count@temp@one=\numexpr(\gre@pitch@adjust@bottom - \gre@count@temp@one)\relax %
   \ifnum\gre@count@temp@one>0\relax %
-    \global\gre@dimen@additionalbottomspace=\dimexpr(\gre@space@dimen@noteadditionalspacelinestext * \gre@count@temp@one)\relax %
+    \global\gre@dimen@additionalbottomspace=\dimexpr(((\gre@dimen@interstafflinedistancebase + \gre@dimen@stafflinethicknessbase) / 2 ) * \gre@count@temp@one * \gre@factor)\relax %
   \else %
     \global\gre@dimen@additionalbottomspace=0 sp%
   \fi %
@@ -1579,6 +1579,7 @@
 
 % a macro for changing a dimension.  Unlike \grecreatedim, this function won’t create a new distance, just change an existing one.
 \def\grechangedim#1#2#3{%
+  \IfStrEq{noteadditionalspacelinestext}{#1}{\gre@obsolete{noteadditionalspacelinestext}{}}{}%%% OBSOLETE
   \gre@rubberpermit{#1}%
   % figure out our prefix
   \ifgre@rubber%
@@ -1898,7 +1899,6 @@
     {alterationadjustmentbar}{\gre@rubberfalse}%
     {bracketupshift}{\gre@rubberfalse}%
     {bracketdownshift}{\gre@rubberfalse}%
-    {noteadditionalspacelinestext}{\gre@rubberfalse}%
   }[\gre@rubbertrue]%
   \gre@trace@end%
 }%
@@ -2348,9 +2348,6 @@
   \ifgre@scale@stafflinefactor%
     \gre@count@temp@two = \numexpr((\gre@stafflinefactor * #2) / #1)\relax%
     \xdef\gre@stafflinefactor{\the\gre@count@temp@two}%
-  \fi%
-  \ifgre@scale@noteadditionalspacelinestext%
-    \gre@changeonedimenfactor{noteadditionalspacelinestext}{#1}{#2}%
   \fi%
   \relax %
   \gre@trace@end%
