@@ -17,8 +17,8 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - GregorioTeX will now look in additional places for scores using.  Users can specify paths to look in using `\gresetgregpath`.  If scores are not found in the current working directory or the list of provided paths, we fall back on kpse to try and find them.  See [#1395](https://github.com/gregorio-project/gregorio/issues/1395).
 - Added the ability to toggle the visibility of the translation and above lines text.  See [user request on mailing list](https://groups.google.com/g/gregorio-users/c/J-V0dkBMevY).
 
-### Removed
-- `noteadditionalspacelinestext` is removed in favor of calculating the actual amount of additional space needed by low notes.  Because the replacement is an automatic calculation, we skip straight to marking `noteadditionalspacelinestext` as obsolete (as we generally require deprecated code to still be functional).
+### Deprecated
+- `noteadditionalspacelinestext` is removed in favor of calculating the actual amount of additional space needed by low notes.
 
 
 ## [5.2.1] - 2019-04-06
