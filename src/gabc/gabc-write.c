@@ -190,38 +190,6 @@ static void gabc_write_end(FILE *f, grestyle_style style)
 
 /*
  * 
- * This function writes the special chars. As the specials chars are
- * represented simply in gabc, this function is very simple, but for TeX output 
- * modules, this may be.. a little more difficult.
- * 
- */
-static void gabc_write_special_char(FILE *f, const grewchar *first_char)
-{
-    fprintf(f, "<sp>");
-    gregorio_print_unistring(f, first_char);
-    fprintf(f, "</sp>");
-}
-
-/*
- * 
- * This functions writes verbatim output... but as the previous one it is very
- * simple.
- * 
- */
-static void gabc_write_verb(FILE *f, const grewchar *first_char)
-{
-    if (write_state == GABC_AT_PROTRUSION_FACTOR) {
-        /* this is an auto protrusion, so ignore it */
-        write_state = GABC_IN_AUTO_PROTRUSION;
-    } else {
-        fprintf(f, "<v>");
-        gregorio_print_unistring(f, first_char);
-        fprintf(f, "</v>");
-    }
-}
-
-/*
- * 
  * The function called when we will encounter a character. There may be other
  * representations of the character (for example for Omega), so it is necessary 
  * to have such a function defined in each module.
@@ -261,6 +229,66 @@ static void gabc_print_char(FILE *f, const grewchar to_print)
             break;
         }
         gregorio_print_unichar(f, to_print);
+    }
+}
+
+/*
+ *
+ * This function writes a unicode string as gregorio_print_unistring, but
+ * handles escapes using gabc_print_char.
+ *
+ */
+static void gabc_print_unistring(FILE *f, const grewchar *first_char)
+{
+    while (*first_char != 0) {
+        gabc_print_char(f, *first_char);
+        first_char++;
+    }
+}
+
+/*
+ *
+ * This function writes a null-terminated string as gregorio_print_unistring,
+ * but handles escapes using gabc_print_char.
+ *
+ */
+static void gabc_print_string(FILE *f, const char *first_char)
+{
+    while (*first_char != '\0') {
+        gabc_print_char(f, (grewchar)*first_char);
+        first_char++;
+    }
+}
+
+/*
+ * 
+ * This function writes the special chars. As the specials chars are
+ * represented simply in gabc, this function is very simple, but for TeX output 
+ * modules, this may be.. a little more difficult.
+ * 
+ */
+static void gabc_write_special_char(FILE *f, const grewchar *first_char)
+{
+    fprintf(f, "<sp>");
+    gabc_print_unistring(f, first_char);
+    fprintf(f, "</sp>");
+}
+
+/*
+ * 
+ * This functions writes verbatim output... but as the previous one it is very
+ * simple.
+ * 
+ */
+static void gabc_write_verb(FILE *f, const grewchar *first_char)
+{
+    if (write_state == GABC_AT_PROTRUSION_FACTOR) {
+        /* this is an auto protrusion, so ignore it */
+        write_state = GABC_IN_AUTO_PROTRUSION;
+    } else {
+        fprintf(f, "<v>");
+        gabc_print_unistring(f, first_char);
+        fprintf(f, "</v>");
     }
 }
 
@@ -744,7 +772,9 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     }
     write_note_heuristics(f, note);
     if (note->texverb) {
-        fprintf(f, "[nv:%s]", gregorio_texverb(note->texverb));
+        fprintf(f, "[nv:");
+        gabc_print_string(f, gregorio_texverb(note->texverb));
+        fprintf(f, "]");
     }
 }
 
@@ -902,7 +932,9 @@ static void gabc_write_gregorio_glyph(FILE *f, gregorio_glyph *glyph,
     switch (glyph->type) {
     case GRE_TEXVERB_GLYPH:
         if (glyph->texverb) {
-            fprintf(f, "[gv:%s]", gregorio_texverb(glyph->texverb));
+            fprintf(f, "[gv:");
+            gabc_print_string(f, gregorio_texverb(glyph->texverb));
+            fprintf(f, "]");
         }
         break;
     case GRE_SPACE:
@@ -1008,12 +1040,16 @@ static void gabc_write_gregorio_element(FILE *f, gregorio_element *element,
         break;
     case GRE_TEXVERB_ELEMENT:
         if (element->texverb) {
-            fprintf(f, "[ev:%s]", gregorio_texverb(element->texverb));
+            fprintf(f, "[ev:");
+            gabc_print_string(f, gregorio_texverb(element->texverb));
+            fprintf(f, "]");
         }
         break;
     case GRE_ALT:
         if (element->texverb) {
-            fprintf(f, "[alt:%s]", gregorio_texverb(element->texverb));
+            fprintf(f, "[alt:");
+            gabc_print_string(f, gregorio_texverb(element->texverb));
+            fprintf(f, "]");
         }
         break;
     case GRE_SPACE:

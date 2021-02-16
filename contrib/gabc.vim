@@ -42,7 +42,7 @@ syn match gabcSpace "/0\?" contained
 syn match gabcSpace "z[-+0]\?" contained
 syn match gabcSpace "Z[-+]\?" contained
 syn match gabcSpace "/\[[^\]]*\]" contained extend
-syn match gabcCommand "@\@<!\[[^\]]*\]" contained extend
+syn match gabcCommand "@\@<!\[\($.\|[^\]]\)*\]" contained extend
 syn match gabcCommand "[{}]" contained extend
 syn match gabcBracket "\[\[" contained
 syn match gabcBracket "\]\]" contained
