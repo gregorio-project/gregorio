@@ -220,8 +220,10 @@ static void gabc_print_char(FILE *f, const grewchar to_print)
         case '{':
         case '}':
         case '(':
+        case ')':
         case '[':
         case ']':
+        case '|':
         case '<':
         case '%':
         case '$':
