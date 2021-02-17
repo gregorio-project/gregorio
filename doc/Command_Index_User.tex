@@ -410,6 +410,13 @@ staff).  The \texttt{\textit{n}} should be set to indicate whether the
 system should act as if the ledger line exists (\texttt{1}) or not
 (\texttt{0}).
 
+\macroname{\textbackslash gresetnoteadditionalspacelinestext}{\{\#1\}}{gregoriotex-main.tex}
+Macro which determines how much additional space between the notes and the lyrics for really low notes.
+
+\begin{argtable}
+  \#1 & \texttt{automatic} & additional space between the notes and the lyrics is computed automatically (default)\\
+  & \texttt{manual} & additional space between the notes and the lyrics is based on the user setting of \texttt{noteadditionalspacelinestext} (a spacing adjustable using \verb=\grechangedim=)
+\end{argtable}
 
 \subsubsection{Staff Lines}
 

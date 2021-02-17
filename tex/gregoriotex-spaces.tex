@@ -1011,11 +1011,11 @@
   \gre@num@min{#2}{\gre@pitch@clefbottom}%
   \gre@count@temp@one=\numexpr(\gre@pitch@adjust@bottom - \gre@count@temp@one)\relax %
   \ifnum\gre@count@temp@one>0\relax %
-    \ifgre@allowdeprecated% DEPRECATED
-          \global\gre@dimen@additionalbottomspace=\dimexpr(\gre@space@dimen@noteadditionalspacelinestext * \gre@count@temp@one)\relax % DEPRECATED
-    \else% DEPRECATED
-      \global\gre@dimen@additionalbottomspace=\dimexpr(((\gre@dimen@interstafflinedistancebase + \gre@dimen@stafflinethicknessbase) / 2 ) * \gre@count@temp@one * \gre@factor)\relax % keep this line
-    \fi% DEPRECATED
+    \ifgre@noteadditionalspacelinestext%
+      \global\gre@dimen@additionalbottomspace=\dimexpr(\gre@space@dimen@noteadditionalspacelinestext * \gre@count@temp@one)\relax%
+    \else%
+      \global\gre@dimen@additionalbottomspace=\dimexpr(((\gre@dimen@interstafflinedistancebase + \gre@dimen@stafflinethicknessbase) / 2 ) * \gre@factor * \gre@count@temp@one)\relax%
+    \fi%
   \else %
     \global\gre@dimen@additionalbottomspace=0 sp%
   \fi %
@@ -1583,7 +1583,6 @@
 
 % a macro for changing a dimension.  Unlike \grecreatedim, this function won’t create a new distance, just change an existing one.
 \def\grechangedim#1#2#3{%
-  \IfStrEq{noteadditionalspacelinestext}{#1}{\gre@deprecated{noteadditionalspacelinestext}{}}{}%%% DEPRECATED
   \gre@rubberpermit{#1}%
   % figure out our prefix
   \ifgre@rubber%
@@ -1903,7 +1902,7 @@
     {alterationadjustmentbar}{\gre@rubberfalse}%
     {bracketupshift}{\gre@rubberfalse}%
     {bracketdownshift}{\gre@rubberfalse}%
-    {noteadditionalspacelinestext}{\gre@rubberfalse}% DEPRECATED
+    {noteadditionalspacelinestext}{\gre@rubberfalse}%
   }[\gre@rubbertrue]%
   \gre@trace@end%
 }%
@@ -2354,9 +2353,9 @@
     \gre@count@temp@two = \numexpr((\gre@stafflinefactor * #2) / #1)\relax%
     \xdef\gre@stafflinefactor{\the\gre@count@temp@two}%
   \fi%
-  \ifgre@scale@noteadditionalspacelinestext% DEPRECATED
-    \gre@changeonedimenfactor{noteadditionalspacelinestext}{#1}{#2}% DEPRECATED
-  \fi% DEPRECATED
+  \ifgre@scale@noteadditionalspacelinestext%
+    \gre@changeonedimenfactor{noteadditionalspacelinestext}{#1}{#2}%
+  \fi%
   \relax %
   \gre@trace@end%
 }%

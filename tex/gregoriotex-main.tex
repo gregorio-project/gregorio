@@ -1126,6 +1126,19 @@
     ]%
 }%
 
+\newif\ifgre@noteadditionalspacelinestext%
+\def\gresetnoteadditionalspacelinestext#1{%
+  \IfStrEqCase{#1}{%
+    {automatic}%
+      {\gre@noteadditionalspacelinestextfalse}%
+    {manual}%
+      {\gre@noteadditionalspacelinestexttrue}%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetnoteadditionalspacelinestext\MessageBreak Possible options are: 'automatic' and 'manual'}%
+    ]%
+}%
+\gresetnoteadditionalspacelinestext{automatic}%default setting
+
 % gre@attr@dash (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
 
 \newif\ifgre@beginningofscore%
