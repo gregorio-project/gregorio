@@ -519,7 +519,7 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         if (done) {
             break;
         }
-        /* else fallthrough to the next case! */
+        /* fall through */
     case T_PORRECTUS_FLEXUS:
         switch (i) {
         case HEPISEMA_FIRST_TWO:
@@ -705,7 +705,7 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         if (done) {
             break;
         }
-        /* else fallthrough to the next case! */
+        /* fall through */
     case T_PORRECTUS: /* or porrectus-like flexus */
         switch (i) {
         case HEPISEMA_FIRST_TWO:
@@ -799,7 +799,7 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         if (done) {
             break;
         }
-        /* else fallthrough to the next case! */
+        /* fall through */
     case T_SALICUS:
         v_episema = VPOS_BELOW;
         switch (i) {
@@ -848,7 +848,7 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         if (done) {
             break;
         }
-        /* else fallthrough to the next case! */
+        /* fall through */
     case T_ANCUS:
         switch (i) {
         case 1:

@@ -245,6 +245,11 @@ syllables.  Spaces (end end-of-lines) in syllable text mark the end of words
 and should be placed after the parenthesized notes section for the last
 syllable of a given word.
 
+The special character \texttt{\$} is an ``escape'' character which causes the
+character which follows it to lose any special meaning.  This can be used to
+insert parentheses in text (\ie, use \texttt{\$(}).  In order to put a
+\texttt{\$} itself in text, escape it (\ie, use \texttt{\$\$}).
+
 There are several markup-like codes that may be inserted into syllable text.  We divide these into three categories: style tags, syllable controls, and other.
 
 \paragraph{Style Tags}

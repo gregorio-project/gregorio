@@ -11,6 +11,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Added
 - Default spacings are now designated internal and thus always loaded.  `gsp-sample.tex` is added to the `doc` folder to show users how to create their own custom spacing configuration.  As part of this change, spacing configuration files no longer need to be complete.  Since the default configuration is always loaded at package startup, all needed penalties and spacings will be defined and the user's configuration file need only specify those whose value they wish to customize.  Addresses issues raised in [#1460](https://github.com/gregorio-project/gregorio/issues/1460).  **This is a change to the user interface and warrants a major release.**
 - Added additional message to verbose output of command-line tool to prevent confusion when a custom Latin vowel convention is found that the internal Latin rules will be used.  See [#1470](https://github.com/gregorio-project/gregorio/issues/1470).
+- Added `$` in gabc text to prevent special interpretation of the character that follows.  See [#1515](https://github.com/gregorio-project/gregorio/issues/1515)
 
 ## [Unreleased][CTAN]
 ### Changed

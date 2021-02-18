@@ -996,55 +996,55 @@ void gabc_det_notes_finish(void)
 <INITIAL>\] {
         gregorio_end_autofuse(&current_note, &notes_lloc);
     }
-<overbrace>[^\]]+ {
+<overbrace>(\$.|[^\]])+ {
         gregorio_snprintf(tempstr, sizeof tempstr,
                 "\\GreOverBrace{%s}{0pt}{0pt}{%d}",
                 gabc_notes_determination_text, char_for_brace);
-        gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
+        gregorio_add_texverb_to_note(current_note, gabc_unescape(tempstr));
     }
-<underbrace>[^\]]+ {
+<underbrace>(\$.|[^\]])+ {
         gregorio_snprintf(tempstr, sizeof tempstr,
                 "\\GreUnderBrace{%s}{0pt}{0pt}{%d}",
                 gabc_notes_determination_text, char_for_brace);
-        gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
+        gregorio_add_texverb_to_note(current_note, gabc_unescape(tempstr));
     }
-<overcurlybrace>[^\]]+ {
+<overcurlybrace>(\$.|[^\]])+ {
         gregorio_snprintf(tempstr, sizeof tempstr,
                 "\\GreOverCurlyBrace{%s}{0pt}{0pt}{%d}{0}",
                 gabc_notes_determination_text, char_for_brace);
-        gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
+        gregorio_add_texverb_to_note(current_note, gabc_unescape(tempstr));
     }
-<overcurlyaccentusbrace>[^\]]+ {
+<overcurlyaccentusbrace>(\$.|[^\]])+ {
         gregorio_snprintf(tempstr, sizeof tempstr,
                 "\\GreOverCurlyBrace{%s}{0pt}{0pt}{%d}{1}",
                 gabc_notes_determination_text, char_for_brace);
-        gregorio_add_texverb_to_note(current_note, gregorio_strdup(tempstr));
+        gregorio_add_texverb_to_note(current_note, gabc_unescape(tempstr));
     }
-<choralsign>[^\]]+ {
+<choralsign>(\$.|[^\]])+ {
         gregorio_add_cs_to_note(&current_note,
-                gregorio_strdup(gabc_notes_determination_text), false);
+                gabc_unescape(gabc_notes_determination_text), false);
     }
-<choralnabc>[^\]]+ {
+<choralnabc>(\$.|[^\]])+ {
         gregorio_add_cs_to_note(&current_note,
-                gregorio_strdup(gabc_notes_determination_text), true);
+                gabc_unescape(gabc_notes_determination_text), true);
     }
-<texverbnote>[^\]]+ {
+<texverbnote>(\$.|[^\]])+ {
         gregorio_add_texverb_to_note(current_note,
-                gregorio_strdup(gabc_notes_determination_text));
+                gabc_unescape(gabc_notes_determination_text));
     }
-<texverbglyph>[^\]]+ {
+<texverbglyph>(\$.|[^\]])+ {
         gregorio_add_texverb_as_note(&current_note,
-                gregorio_strdup(gabc_notes_determination_text),
+                gabc_unescape(gabc_notes_determination_text),
                 GRE_TEXVERB_GLYPH, &notes_lloc);
     }
-<texverbelement>[^\]]+ {
+<texverbelement>(\$.|[^\]])+ {
         gregorio_add_texverb_as_note(&current_note,
-                gregorio_strdup(gabc_notes_determination_text),
+                gabc_unescape(gabc_notes_determination_text),
                 GRE_TEXVERB_ELEMENT, &notes_lloc);
     }
-<alt>[^\]]+ {
+<alt>(\$.|[^\]])+ {
         gregorio_add_texverb_as_note(&current_note,
-                gregorio_strdup(gabc_notes_determination_text), GRE_ALT,
+                gabc_unescape(gabc_notes_determination_text), GRE_ALT,
                 &notes_lloc);
     }
 <INITIAL>\/\[ {

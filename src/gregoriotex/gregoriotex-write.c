@@ -270,7 +270,7 @@ static const char *gregoriotex_determine_liquescentia(
             liquescentia &= L_INITIO_DEBILIS;
             break;
         }
-        /* else fall through to next case */
+        /* fall through */
     case LG_NONE:
         liquescentia = L_NO_LIQUESCENTIA;
         break;
@@ -635,6 +635,11 @@ static const char *determine_note_glyph_name(const gregorio_note *const note,
         case Q_ON_LINE_ABOVE_BOTTOM_LINE:
             return SHAPE_VirgaLongqueue;
         } /* all cases return, so this line is not hit; LCOV_EXCL_LINE */
+        /* LCOV_EXCL_START */
+        gregorio_fail2(determine_note_glyph_name, "unknown queuetype: %d",
+                queuetype_of(note));
+        return "";
+        /* LCOV_EXCL_STOP */
     case S_VIRGA_REVERSA:
         switch (note->u.note.liquescentia) {
         case L_AUCTUS_ASCENDENS:
@@ -668,10 +673,15 @@ static const char *determine_note_glyph_name(const gregorio_note *const note,
             case Q_ON_LINE_ABOVE_BOTTOM_LINE:
                 return SHAPE_VirgaReversaLongqueueDescendens;
             } /* all cases return, so this line is not hit; LCOV_EXCL_LINE */
-        default:
-            return fusible_queued_shape(note, glyph, SHAPE_VirgaReversa,
-                    SHAPE_VirgaReversaLongqueue, SHAPE_VirgaReversaOpenqueue);
-        }
+            /* LCOV_EXCL_START */
+            gregorio_fail2(determine_note_glyph_name, "unknown queuetype: %d",
+                    queuetype_of(note));
+            return "";
+            /* LCOV_EXCL_STOP */
+            default:
+                return fusible_queued_shape(note, glyph, SHAPE_VirgaReversa,
+                        SHAPE_VirgaReversaLongqueue, SHAPE_VirgaReversaOpenqueue);
+            }
     case S_ORISCUS_ASCENDENS:
         *type = AT_ORISCUS;
         return compute_glyph_name(glyph, SHAPE_AscendensOriscus, LG_NONE, true);
@@ -698,7 +708,7 @@ static const char *determine_note_glyph_name(const gregorio_note *const note,
                 (L_AUCTUS_ASCENDENS | L_AUCTUS_DESCENDENS))) {
             return SHAPE_Stropha;
         }
-        /* else fall through to next case */
+        /* fall through */
     case S_STROPHA_AUCTA:
         *type = AT_STROPHA;
         switch (queuetype_of(note)) {
@@ -709,6 +719,11 @@ static const char *determine_note_glyph_name(const gregorio_note *const note,
         case Q_ON_LINE_ABOVE_BOTTOM_LINE:
             return SHAPE_StrophaAuctaLongtail;
         } /* all cases return, so this line is not hit; LCOV_EXCL_LINE */
+        /* LCOV_EXCL_START */
+        gregorio_fail2(determine_note_glyph_name, "unknown queuetype: %d",
+                queuetype_of(note));
+        return "";
+        /* LCOV_EXCL_STOP */
     case S_FLAT:
         return SHAPE_Flat;
     case S_FLAT_PAREN:
@@ -2591,7 +2606,7 @@ static void write_note(FILE *f, gregorio_note *note,
             if (glyph->u.notes.fuse_to_next_glyph > 0) {
                 break;
             }
-            /* else fall through to next case */
+            /* fall through */
         case L_DEMINUTUS:
             /* this is a currenly unused, but we keep it as a fallback case */
             /* LCOV_EXCL_START */
@@ -3281,7 +3296,7 @@ static void write_glyph(FILE *const f, const gregorio_syllable *const syllable,
             if (glyph->u.notes.fuse_to_next_glyph > 0) {
                 break;
             }
-            /* else fall through to next case */
+            /* fall through */
             case L_DEMINUTUS:
                 glyph->u.notes.first_note->u.note.shape = S_PUNCTUM_DEMINUTUS;
             default:
@@ -3290,7 +3305,7 @@ static void write_glyph(FILE *const f, const gregorio_syllable *const syllable,
             break;
         }
 
-        /* fall into the next case */
+        /* fall through */
     case G_PUNCTUM_INCLINATUM:
     case G_VIRGA:
     case G_VIRGA_REVERSA:
