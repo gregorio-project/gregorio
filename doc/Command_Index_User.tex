@@ -410,6 +410,13 @@ staff).  The \texttt{\textit{n}} should be set to indicate whether the
 system should act as if the ledger line exists (\texttt{1}) or not
 (\texttt{0}).
 
+\macroname{\textbackslash gresetnoteadditionalspacelinestext}{\{\#1\}}{gregoriotex-main.tex}
+Macro which determines how much additional space between the notes and the lyrics for really low notes.
+
+\begin{argtable}
+  \#1 & \texttt{automatic} & additional space between the notes and the lyrics is computed automatically (default)\\
+  & \texttt{manual} & additional space between the notes and the lyrics is based on the user setting of \texttt{noteadditionalspacelinestext} (a spacing adjustable using \verb=\grechangedim=)
+\end{argtable}
 
 \subsubsection{Staff Lines}
 
@@ -1428,10 +1435,8 @@ baseline.
 \end{gcount}
 
 \begin{gcount}{noteadditionalspacelinestextthreshold}
-The number of low notes which will add on the
-\texttt{noteadditionalspacelinestext} space.  For instance, with a threshold of
-\texttt{2}, every note below \texttt{c} will add {noteadditionalspacelinestext}
-space for each pitch needed below \texttt{c}, accounting for the various signs.
+The number of low notes which will add space between the lines and the lyrics.  For instance, with a threshold of
+\texttt{2}, every note below \texttt{c} will add space for each pitch needed below \texttt{c}, accounting for the various signs.
 \end{gcount}
 
 \subsection{Distances}\label{distances}
@@ -1735,11 +1740,6 @@ The space above the lines.
 
 \begin{gdimension}{spacelinestext}
 The space between the lines and the bottom of the text.
-\end{gdimension}
-
-\begin{gdimension}{noteadditionalspacelinestext}
-The space added between the lines and the bottom of the text for every pitch
-below the \texttt{noteadditionalspacelinestextthreshold}.
 \end{gdimension}
 
 \begin{gdimension}{spacebeneathtext}

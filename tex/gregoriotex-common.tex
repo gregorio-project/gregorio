@@ -71,15 +71,27 @@
 % #2 - the correct macro to use
 \def\gre@deprecated#1#2{%
   \ifgre@allowdeprecated%
-    \gre@warning{#1\space is deprecated.\MessageBreak Use #2\space instead}%
+    \ifx&#2&%
+      \gre@warning{#1\space is deprecated and marked for removal}%
+    \else%
+      \gre@warning{#1\space is deprecated.\MessageBreak Use #2\space instead}%
+    \fi%
   \else%
-    \gre@error{#1\space is deprecated.\MessageBreak Use #2\space instead}%
+    \ifx&#2&%
+      \gre@error{#1\space is deprecated and marked for removal}%
+    \else%
+      \gre@error{#1\space is deprecated.\MessageBreak Use #2\space instead}%
+    \fi%
   \fi%
   \relax%
 }%
 
 \def\gre@obsolete#1#2{%
-  \gre@error{#1\space is obsolete.\MessageBreak Use #2\space instead}%
+  \ifx&#2&%
+    \gre@error{#1\space is obsolete and no longer has any effect}%
+  \else%
+    \gre@error{#1\space is obsolete.\MessageBreak Use #2\space instead}%
+  \fi%
   \relax%
 }%
 
