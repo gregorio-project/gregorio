@@ -166,35 +166,29 @@
 
 % Messing with the staff line thickness directly is messy, so we provide the following interface to make life easier on the user:
 % stafflineheight is the height of a staff line
-% = 1500 * stafflinefactor
+% = gre@dimen@stafflinethicknessbase * stafflinefactor
 \newdimen\gre@dimen@stafflineheight\relax%
 \def\gre@calculate@stafflineheight{%
   \gre@trace{gre@calculate@stafflineheight}%
-  \global\gre@dimen@stafflineheight=\dimexpr(1500 sp * \gre@stafflinefactor)\relax %
+  \global\gre@dimen@stafflineheight=\dimexpr(\gre@dimen@stafflinethicknessbase * \gre@stafflinefactor)\relax %
   \gre@trace@end%
 }%
 
 % interstafflinespace is the space between two lines of staff
-% = (30000 - (stafflineheight/gre@factor - 1500)) * gre@factor = 31500 * gre@factor - stafflineheight
+% = (gre@dimen@interstafflinedistancebase + gre@dimen@stafflinethicknessbase) * gre@factor - gre@dimen@stafflinethicknessbase * gre@stafflinefactor
 \newdimen\gre@dimen@interstafflinespace\relax%
 \def\gre@calculate@interstafflinespace{%
   \gre@trace{gre@calculate@interstafflinespace}%
-  \global\gre@dimen@interstafflinespace=\dimexpr((31500sp * \gre@factor) %
-    - \gre@dimen@stafflineheight)\relax%
+  \global\gre@dimen@interstafflinespace=\dimexpr((\gre@dimen@interstafflinedistancebase + \gre@dimen@stafflinethicknessbase) * \gre@factor - \gre@dimen@stafflinethicknessbase * \gre@stafflinefactor)\relax%
   \gre@trace@end%
 }%
 
 % a distance to help place glyphs when the lines are not their default thickness
-% = (stafflineheight/gre@factor - 1500sp)/2 * gre@factor
+% = gre@dimen@stafflinethicknessbase * (gre@stafflinefactor - gre@factor) / 2
 \newdimen\gre@dimen@stafflinediff\relax%
 \def\gre@calculate@stafflinediff{%
   \gre@trace{gre@calculate@stafflinediff}%
-  \global\gre@dimen@stafflinediff = \dimexpr(%
-    ( ( ( \gre@dimen@stafflineheight %
-          / \gre@factor)%
-        - 1500sp)%
-      / 2)%
-    * \gre@factor)\relax%
+  \global\gre@dimen@stafflinediff = \dimexpr( \gre@dimen@stafflinethicknessbase * (\gre@stafflinefactor - \gre@factor) / 2 )\relax%
   \gre@trace@end%
 }%
 
@@ -217,7 +211,7 @@
 % to calculate that, we take the bottom of the third line : it is at 200 in the fonts, and it must be at grespacelinestext + grespacebeneathtext + 2*greinterstafflinespace + 2*grestafflineheight + translationheight
 \def\gre@calculate@constantglyphraise{%
   \gre@trace{gre@calculate@constantglyphraise}%
-  \global\gre@dimen@constantglyphraise = \dimexpr((-22000 sp * \gre@factor) %
+  \global\gre@dimen@constantglyphraise = \dimexpr((\gre@dimen@glyphraisebase * \gre@factor) %
     + \gre@dimen@additionalbottomspace %
     + \gre@space@dimen@spacebeneathtext %
     + \gre@space@dimen@spacelinestext %
@@ -812,7 +806,7 @@
     \fi%
   \fi%
   \global\advance\gre@count@temp@three by -8 %
-  \global\gre@dimen@glyphraisevalue = \dimexpr(15750 sp * \gre@factor * \gre@count@temp@three)\relax %
+  \global\gre@dimen@glyphraisevalue = \dimexpr(((\gre@dimen@interstafflinedistancebase + \gre@dimen@stafflinethicknessbase) / 2 ) * \gre@factor * \gre@count@temp@three)\relax %
   \ifcase#2 %
   \or\or\or%3: if it is a vertical episema on a line, we shift it a bit higher, so that it's more beautiful
     \ifgre@isonaline%
@@ -996,28 +990,32 @@
   \gre@num@max{#1}{\gre@pitch@cleftop}%
   \gre@count@temp@one=\numexpr(\gre@count@temp@one - \gre@pitch@adjust@top - \gre@space@count@additionaltopspacethreshold)\relax %
   \ifnum\gre@count@temp@one>0\relax %
-    \global\gre@dimen@additionaltopspace=\dimexpr(15750 sp * \gre@count@temp@one * \gre@factor)\relax %
+    \global\gre@dimen@additionaltopspace=\dimexpr(((\gre@dimen@interstafflinedistancebase + \gre@dimen@stafflinethicknessbase) / 2 ) * \gre@count@temp@one * \gre@factor)\relax %
   \else %
     \global\gre@dimen@additionaltopspace=0 sp%
   \fi %
   \gre@num@max{#1}{\gre@pitch@cleftop}%
   \gre@count@temp@one=\numexpr(\gre@count@temp@one - \gre@pitch@adjust@top - \gre@space@count@additionaltopspacealtthreshold)\relax %
   \ifnum\gre@count@temp@one>0\relax %
-    \global\gre@dimen@additionaltopspacealt=\dimexpr(15750 sp * \gre@count@temp@one * \gre@factor)\relax %
+    \global\gre@dimen@additionaltopspacealt=\dimexpr(((\gre@dimen@interstafflinedistancebase + \gre@dimen@stafflinethicknessbase) / 2 ) * \gre@count@temp@one * \gre@factor)\relax %
   \else %
     \global\gre@dimen@additionaltopspacealt=0 sp%
   \fi %
   \gre@num@max{#1}{\gre@pitch@cleftop}%
   \gre@count@temp@one=\numexpr(\gre@count@temp@one - \gre@pitch@adjust@top - \gre@space@count@additionaltopspacenabcthreshold)\relax %
   \ifnum\gre@count@temp@one>0\relax %
-    \global\gre@dimen@additionaltopspacenabc=\dimexpr(15750 sp * \gre@count@temp@one * \gre@factor)\relax %
+    \global\gre@dimen@additionaltopspacenabc=\dimexpr(((\gre@dimen@interstafflinedistancebase + \gre@dimen@stafflinethicknessbase) / 2 ) * \gre@count@temp@one * \gre@factor)\relax %
   \else %
     \global\gre@dimen@additionaltopspacenabc=0 sp%
   \fi %
   \gre@num@min{#2}{\gre@pitch@clefbottom}%
   \gre@count@temp@one=\numexpr(\gre@pitch@adjust@bottom - \gre@count@temp@one)\relax %
   \ifnum\gre@count@temp@one>0\relax %
-    \global\gre@dimen@additionalbottomspace=\dimexpr(\gre@space@dimen@noteadditionalspacelinestext * \gre@count@temp@one)\relax %
+    \ifgre@noteadditionalspacelinestext%
+      \global\gre@dimen@additionalbottomspace=\dimexpr(\gre@space@dimen@noteadditionalspacelinestext * \gre@count@temp@one)\relax%
+    \else%
+      \global\gre@dimen@additionalbottomspace=\dimexpr(((\gre@dimen@interstafflinedistancebase + \gre@dimen@stafflinethicknessbase) / 2 ) * \gre@factor * \gre@count@temp@one)\relax%
+    \fi%
   \else %
     \global\gre@dimen@additionalbottomspace=0 sp%
   \fi %
