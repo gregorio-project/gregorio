@@ -431,20 +431,31 @@
     \global\gre@dimen@initialwidth=\wd\gre@box@annotation%
   \fi%
   \gre@debugmsg{annotation}{Width check completed.}%
-  %calculate the height of a line
-  \gre@dimen@temp@one = \dimexpr(-\gre@dimen@additionalbottomspace %
-      - \gre@space@dimen@spacebeneathtext %
-      - \gre@space@dimen@spacelinestext %
-      - \gre@dimen@staffheight%
-      - \gre@dimen@currenttranslationheight %
-      - \f@size pt)\relax%
-  %adjust the initial position based on the number of lines it’s supposed to take up
-  \advance\gre@dimen@temp@five by \dimexpr(\gre@dimen@temp@one * (\gre@count@initiallines - 1))\relax%
   \ifnum\gre@count@initiallines=1\relax % a one line initial
     \setbox\gre@box@initial=\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}%
   \else % a multi-line initial
-    \setbox\gre@box@initial=\hbox{\vtop to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}\vss}}%
+    %account for fixed height elements of a line
+    \gre@dimen@temp@one = \dimexpr(- \gre@space@dimen@spacebeneathtext %
+        - \gre@space@dimen@spacelinestext %
+        - \gre@dimen@staffheight%
+        - \gre@space@dimen@spaceabovelines%
+        )\relax%
+    \advance\gre@dimen@temp@five by \dimexpr(\gre@dimen@temp@one * (\gre@count@initiallines - 1))\relax%%adjust the initial position based on the number of lines it’s supposed to take up
+    %account for the variable height elements of each line in initial
+    {% initiating a group so that the distance changes we're about to make won't persist beyond the calculation of where the initial goes
+    %first set the base "unit" distance
+    \ifgre@noteadditionalspacelinestext%
+      \gre@dimen@additionalbottomspace=\gre@space@dimen@noteadditionalspacelinestext\relax%
+    \else%
+      \gre@dimen@additionalbottomspace=\dimexpr(((\gre@dimen@interstafflinedistancebase + \gre@dimen@stafflinethicknessbase) / 2 ) * \gre@factor)\relax%
+    \fi%
+    \gre@dimen@currenttranslationheight=\gre@space@dimen@translationheight\relax%
+    \gre@dimen@currentabovelinestextheight=\gre@space@dimen@abovelinestextheight\relax
+    %now switch to lua to access the line heights information and make the adjustment
+    \directlua{gregoriotex.adjust_initial_raise(\gre@pitch@cleftop,\gre@pitch@clefbottom,\gre@pitch@adjust@top,\gre@pitch@adjust@bottom)}%
+    \global\setbox\gre@box@initial=\hbox{\vtop to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}\vss}}%
   \fi%
+  }%
   \gre@debugmsg{annotation}{Initial set.}%
   \gre@style@initial%
   \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax%

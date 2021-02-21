@@ -1289,6 +1289,63 @@ local function adjust_line_height(inside_discretionary, for_next_line)
   end
 end
 
+local function adjust_initial_raise(clef_top,clef_bottom,pitch_adjust_top,pitch_adjust_bottom)
+  if score_heights then
+    local initial_lines = tex.count['gre@count@initiallines']
+    if (initial_lines <= 1) then
+      debugmessage('initial','Initial is %d lines, no adjustment necessary',initial_lines)
+    else
+      debugmessage('initial','%d line initial, beginning raise adjustment',initial_lines)
+      local key, value
+      local last = score_heights['last']
+      local adjustment = 0
+      for key, value in pairs(score_heights) do
+        --debugmessage('initial','I see %s: %s',key,value) -- need to figure out what is seen on first run
+        if (value == last) then
+          debugmessage('initial','last entry, skipping')
+        else
+          if (value[1] > initial_lines) then
+            debugmessage('initial','line %d is outside the initial, skipping',value[1])
+          elseif (value[1] == 1) then
+            debugmessage('initial','first line is already accounted for')
+          else
+            debugmessage('initial','line %d is within the initial',value[1])
+            local max_note = math.max(value[2],clef_top)
+            local max_adjust = max_note - pitch_adjust_top - tex.count['gre@space@count@additionaltopspacethreshold']
+            if (max_adjust < 0) then
+              debugmessage('initial','high element adjustment not required')
+            else
+              debugmessage('initial','highest element position adjustment: %d',max_adjust)
+              adjustment = adjustment + max_adjust * ((tex.dimen['gre@dimen@interstafflinedistancebase'] + tex.dimen['gre@dimen@stafflinethicknessbase'])/2) * tex.count['gre@factor']
+            end
+            local min_note = math.min(value[3],clef_bottom)
+            local min_adjust = pitch_adjust_bottom - min_note
+            if (min_adjust < 0) then
+              debugmessage('initial','low element adjustment not required')
+            else
+              debugmessage('initial','lowest element position adjustment: %d',min_adjust)
+              adjustment = adjustment + min_adjust * tex.dimen['gre@dimen@additionalbottomspace']
+            end
+            if (value[4] == 1) then
+              debugmessage('initial','making adjustment for translation')
+              adjustment = adjustment + tex.dimen['gre@dimen@currenttranslationheight']
+            else
+              debugmessage('initial','no translation')
+            end
+            if (value[5] == 1) then
+              debugmessage('initial','making adjustment for above lines text')
+              adjustment = adjustment + tex.dimen['gre@dimen@currentabovelinestextheight']
+            else
+              debugmessage('initial','no above lines text')
+            end
+          end
+        end
+      end
+      tex.dimen['gre@dimen@temp@five'] = tex.dimen['gre@dimen@temp@five'] - adjustment
+    end
+  end
+end
+
 local function save_dim(name, value, modifier)
   saved_dims[name] = { value, modifier }
 end
@@ -1537,6 +1594,7 @@ gregoriotex.def_symbol                   = def_symbol
 gregoriotex.font_size                    = font_size
 gregoriotex.direct_gabc                  = direct_gabc
 gregoriotex.adjust_line_height           = adjust_line_height
+gregoriotex.adjust_initial_raise         = adjust_initial_raise
 gregoriotex.var_brace_len                = var_brace_len
 gregoriotex.save_length                  = save_length
 gregoriotex.mark_translation             = mark_translation
