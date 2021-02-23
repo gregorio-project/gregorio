@@ -1,6 +1,6 @@
 --GregorioTeX Nabc Lua file.
 --
---Copyright (C) 2014-2019 The Gregorio Project (see CONTRIBUTORS.md)
+--Copyright (C) 2014-2021 The Gregorio Project (see CONTRIBUTORS.md)
 --
 --This file is part of Gregorio.
 --
@@ -20,7 +20,7 @@
 -- this file contains lua functions used by GregorioTeX St. Gall ancient
 -- neume support when called with LuaTeX.
 
--- GREGORIO_VERSION 5.2.1
+-- GREGORIO_VERSION 6.0.0-beta1
 
 local catcode_at_letter = luatexbase.catcodetables['gre@atletter']
 

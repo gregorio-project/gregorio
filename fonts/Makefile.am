@@ -1,7 +1,7 @@
 ## This makefile is made to build to fonts from the sfd, it won't be useful for
 ## the average user.
 
-# Copyright (C) 2006-2019 The Gregorio Project (see CONTRIBUTORS.md)
+# Copyright (C) 2006-2021 The Gregorio Project (see CONTRIBUTORS.md)
 #
 # This file is part of Gregorio.
 #
