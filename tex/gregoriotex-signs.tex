@@ -1210,12 +1210,12 @@
   % here we shift a bit left in the case where we have a punctum inclinatum on a line
   \ifnum#4=1\relax %
     \ifgre@isonaline %
-      \gre@dimen@temp@three=\dimexpr(3700sp * \gre@factor)\relax %
+      \gre@dimen@temp@three=\dimexpr(\gre@dimen@inclinatumonlinemorahshiftbase * \gre@factor)\relax %
       \kern-\gre@dimen@temp@three %
-      \gre@dimen@temp@three=\dimexpr(4500sp * \gre@factor)\relax%
+      \gre@dimen@temp@three=\dimexpr(\gre@dimen@inclinatumonlinemoravshiftbase * \gre@factor)\relax%
       \advance\gre@dimen@glyphraisevalue by -\gre@dimen@temp@three %
     \else %
-      \gre@dimen@temp@three=\dimexpr(2500sp * \gre@factor)\relax %
+      \gre@dimen@temp@three=\dimexpr(\gre@dimen@inclinatumofflinemorahshiftbase * \gre@factor)\relax %
       \advance\gre@dimen@glyphraisevalue by -\gre@dimen@temp@three %
     \fi %
   \fi %

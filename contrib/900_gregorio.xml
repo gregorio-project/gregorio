@@ -36,22 +36,19 @@
     </empty-frame-text>
     <!-- you can change the basic headers here -->
     <preamble>
-		    \documentclass[$scribus_grefontsize$]{extarticle}
-		    \usepackage[paperwidth=$scribus_realwidth$ pt,
-		                paperheight=$scribus_realheight$ pt,
-          					left=0cm,top=0cm,right=0cm,bottom=0cm,nohead,nofoot]{geometry}
+        \documentclass[$scribus_grefontsize$]{extarticle}
+		\usepackage[paperwidth=$scribus_realwidth$ pt, paperheight=$scribus_realheight$ pt,	left=0cm,top=0cm,right=0cm,bottom=0cm,nohead,nofoot]{geometry}
         \usepackage[autocompile]{gregoriotex}
-        \usepackage{filecontents}
-    		\title{Scribus-Latex-File}
-    		$scribus_additionalgreheaders$
-    		\author{Scribus}
-		    \pagestyle{empty}
-    		\setlength{\textwidth}{$scribus_realwidth$ pt}
+        \title{Scribus-Latex-File}
+    	$scribus_additionalgreheaders$
+    	\author{Scribus}
+		\pagestyle{empty}
+    	\setlength{\textwidth}{$scribus_realwidth$ pt}
 
-        \begin{filecontents*}{scribus_file-score.gabc}
-</preamble>
-<postamble>
-\end{filecontents*}
+        \begin{filecontents*}[overwrite]{scribus_file-score.gabc}
+</preamble> <!-- this line's indentation is purposefully off because of the way that scribus interprets the preamble section -->
+    <postamble>
+        \end{filecontents*}
 
         \begin{document}
         $scribus_greconf$

@@ -486,10 +486,8 @@ after the centered letters.
 
 \macroname{\textbackslash GreFirstSyllableInitial}{\#1}{gregoriotex-syllable.tex}
 A macro which is called with the first letter of the first syllable which is
-not the initial of the score.  If the \texttt{initial-style} is \texttt{0}, the
-first letter of the syllable will be passed.  If the \texttt{initial-style} is
-\texttt{1} or \texttt{2}, the \emph{second} letter will be passed.  This macro
-may be redefined to style the first letter appropriately.
+not the initial of the score.  If there is no initial (\verb=\gresetinitiallines{0}= has been called), the
+first letter of the syllable will be passed.  Otherwise, the \emph{second} letter will be passed.
 
 \begin{argtable}
   \#1 & string & The first letter of the first syllable which is not the

@@ -1126,6 +1126,19 @@
     ]%
 }%
 
+\newif\ifgre@noteadditionalspacelinestext%
+\def\gresetnoteadditionalspacelinestext#1{%
+  \IfStrEqCase{#1}{%
+    {automatic}%
+      {\gre@noteadditionalspacelinestextfalse}%
+    {manual}%
+      {\gre@noteadditionalspacelinestexttrue}%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetnoteadditionalspacelinestext\MessageBreak Possible options are: 'automatic' and 'manual'}%
+    ]%
+}%
+\gresetnoteadditionalspacelinestext{automatic}%default setting
+
 % gre@attr@dash (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
 
 \newif\ifgre@beginningofscore%
@@ -1803,25 +1816,34 @@
   \gre@trace@end%
 }%
 
+%% font calibration distances
+\newdimen\gre@dimen@stafflinethicknessbase%
+\newdimen\gre@dimen@glyphraisebase%
+\newdimen\gre@dimen@interstafflinedistancebase%
+\newdimen\gre@dimen@inclinatumonlinemoravshiftbase%
+\newdimen\gre@dimen@inclinatumonlinemorahshiftbase%
+\newdimen\gre@dimen@inclinatumofflinemorahshiftbase%
+
 \def\gre@setgregoriofontscaled[#1]#2#3{%
   \gre@trace{gre@setgregoriofontscaled[#1]{#2}{#3}}%
-  \IfStrEq{#2}{parmesan}{%%% OBSOLETE
-    \gre@obsolete{'parmesan' font}{'granapadano' font}%%% OBSOLETE
-  }{%%% OBSOLETE
-    % keep this section
-    \if\relax\detokenize{#1}\relax %
-      \xdef\gre@gregoriofontname{#2}%
-      \expandafter\xdef\csname gre@fontfactor@#2\endcsname{#3}%
-      \gre@loadgregoriofont%
-      \gdef\GreCPVirgaReversaAscendensOnDLine##1{##1}%
-    \else %
-      \xdef\gre@gregoriofontname{#2-#1}%
-      \expandafter\xdef\csname gre@fontfactor@#2-#1\endcsname{#3}%
-      \gre@loadgregoriofont%
-      \gdef\GreCPVirgaReversaAscendensOnDLine##1{\GreCPVirgaReversaLongqueueAscendens}%
-    \fi %
-  }%%% OBSOLETE
-  \relax %
+  \if\relax\detokenize{#1}\relax %
+    \xdef\gre@gregoriofontname{#2}%
+    \expandafter\xdef\csname gre@fontfactor@#2\endcsname{#3}%
+    \gre@loadgregoriofont%
+    \gdef\GreCPVirgaReversaAscendensOnDLine##1{##1}%
+  \else %
+    \xdef\gre@gregoriofontname{#2-#1}%
+    \expandafter\xdef\csname gre@fontfactor@#2-#1\endcsname{#3}%
+    \gre@loadgregoriofont%
+    \gdef\GreCPVirgaReversaAscendensOnDLine##1{\GreCPVirgaReversaLongqueueAscendens}%
+  \fi %
+  % currently all fonts use the same calibration distances
+  \gre@dimen@stafflinethicknessbase=1500sp\relax %
+  \gre@dimen@glyphraisebase=-22000sp\relax%
+  \gre@dimen@interstafflinedistancebase=30000sp\relax%
+  \gre@dimen@inclinatumonlinemoravshiftbase=4500sp\relax%
+  \gre@dimen@inclinatumonlinemorahshiftbase=3700sp\relax%
+  \gre@dimen@inclinatumofflinemorahshiftbase=2500sp\relax%
   \gre@trace@end%
 }%
 
@@ -1874,7 +1896,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\grechangestyle#1#2{%
-  \IfStrEq{#1}{biginitial}{\gre@obsolete{biginitial style}{initial style}}{}%%% OBSOLETE
   \@ifnextchar[{\gre@changestyle{#1}{#2}}{\gre@changestyle{#1}{#2}[\relax]}%
 }%
 
