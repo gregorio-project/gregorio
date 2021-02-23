@@ -575,10 +575,9 @@
   \hbox to \gre@dimen@temp@four{#2\hss}%
 }%
 
-\def\gresethyphenprotrusion#1{% DEPRECATED for removal in 5.1
-  \gre@deprecated{\protect\gresethyphenprotrusion{percentage}}{\protect\gresetprotrusionfactor{eolhyphen}{factor}}% DEPRECATED for removal in 5.1
-  \gresetprotrusionfactor{eolhyphen}{\directlua{tex.print(string.format(string.char(37)..'g', #1 / 100.0))}}% DEPRECATED for removal in 5.1
-}% DEPRECATED for removal in 5.1
+\def\gresethyphenprotrusion#1{% OBSOLETE
+  \gre@obsolete{\protect\gresethyphenprotrusion{percentage}}{\protect\gresetprotrusionfactor{eolhyphen}{factor}}% OBSOLETE
+}% OBSOLETE
 
 % dimen keeping the shift computed with next function
 \newdimen\gre@dimen@eolshift
@@ -1617,30 +1616,7 @@
       }[\gre@error{Unrecognized option "#3" for \protect\grechangedim\MessageBreak Possible options are: 'scalable', 'fixed', and 'inherited'}]%
     \gre@dimension{#1}{#2}{#3}%
   \else%
-    \IfStrEqCase{#1}{% OBSOLETE
-      {spacearoundsmallbars}% OBSOLETE
-        {% OBSOLETE
-          \gre@obsolete{spacearoundsmallbars}{bar@virgula or bar@minima}% OBSOLETE
-        }% OBSOLETE
-      {spacearoundminor}% OBSOLETE
-        {% OBSOLETE
-          \gre@obsolete{spacearoundminor}{bar@minor}% OBSOLETE
-        }% OBSOLETE
-      {spacearoundmaior}% OBSOLETE
-        {% OBSOLETE
-          \gre@obsolete{spacearoundmaior}{bar@maior}% OBSOLETE
-        }% OBSOLETE
-      {spacearoundfinalis}% OBSOLETE
-        {% OBSOLETE
-          \gre@obsolete{spacearoundfinalis}{bar@finalis}% OBSOLETE
-        }% OBSOLETE
-      {spacebeforefinalfinalis}% OBSOLETE
-        {% OBSOLETE
-          \gre@obsolete{spacebeforfinalfinalis}{bar@finalfinalis}% OBSOLETE
-        }% OBSOLETE
-      }[% OBSOLETE
-        \gre@error{#1 is not a recognized distance.}% keep this line
-      ]% OBSOLETE
+    \gre@error{#1 is not a recognized distance.}%
   \fi%
 }%
 

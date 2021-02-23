@@ -20,6 +20,9 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Changed
 - `noteadditionalspacelinestext` now calculates the actual amount of additional space needed by low notes.  To enable the old behavior (when `noteadditionalspacelinestext` is set by the user), use `\gresetnoteadditionalspacelinestext{manual}`.  See [#1521](https://github.com/gregorio-project/gregorio/issues/1521) and [#1526](https://github.com/gregorio-project/gregorio/pull/1526).
 
+### Removed
+- `\gresethyphenprotrusion{percentage}`, supplanted by `\gresetprotrusionfactor{eolhyphen}{factor}`.  Note that the value the new command takes is a factor rather than a percentage.
+
 
 ## [5.2.1] - 2019-04-06
 ### Fixed
