@@ -16,6 +16,17 @@
 
 HERE=`pwd`
 
+if sed --version 2&> /dev/null; then
+  SED=sed
+elif gsed --version 2&> /dev/null; then
+  SED=gsed
+else
+  echo "I can't find GNU sed."
+  echo "Please install it and try again."
+  return 1
+fi
+
+
 CODEFILE=$HERE/code.txt
 DOCFILE=$HERE/doc.txt
 DIFFFILE=$HERE/diff.txt
@@ -32,73 +43,73 @@ grep -h '\\font\\' *.tex *.sty >> $CODEFILE
 grep -h '\\gredefsymbol{.*' *.tex *.sty >> $CODEFILE
 
 #remove deprecated code
-sed -i.temp 's:.*@empty@.*::' $CODEFILE
-sed -i.temp 's:.*OBSOLETE.*::' $CODEFILE
-sed -i.temp 's:.*DEPRECATED.*::' $CODEFILE
+$SED -i.temp 's:.*@empty@.*::' $CODEFILE
+$SED -i.temp 's:.*OBSOLETE.*::' $CODEFILE
+$SED -i.temp 's:.*DEPRECATED.*::' $CODEFILE
 
 #remove trailing comments
-sed -i.temp 's/%.*$//' $CODEFILE
+$SED -i.temp 's/%.*$//' $CODEFILE
 
 #remove whitespace
-sed -i.temp 's/^[ \t]*//;s/[ \t]*$//' $CODEFILE
+$SED -i.temp 's/^[ \t]*//;s/[ \t]*$//' $CODEFILE
 
 #remove new and trailing code
-sed -i.temp 's:.*\\new[a-z]*{*\(\\*[a-zA-Z@]*\)[\\}]*.*:\1:' $CODEFILE
+$SED -i.temp 's:.*\\new[a-z]*{*\(\\*[a-zA-Z@]*\)[\\}]*.*:\1:' $CODEFILE
 
 #get rid of work around def
-sed -i.temp '/\\def\\x/d' $CODEFILE
+$SED -i.temp '/\\def\\x/d' $CODEFILE
 
 #accept only first def on line
-sed -i.temp -E 's:\\[gex]?def:special:' $CODEFILE
+$SED -i.temp -E 's:\\[gex]?def:special:' $CODEFILE
 #remove def and definition
-sed -i.temp -E 's:.*special[a-z]*(\\[a-zA-Z@]*)[#{[].*:\1:' $CODEFILE
+$SED -i.temp -E 's:.*special[a-z]*(\\[a-zA-Z@]*)[#{[].*:\1:' $CODEFILE
 
 #remove let and definition
-sed -i.temp 's:.*\\let[a-z]*\(\\[a-zA-Z@]*\)[\\=].*:\1:' $CODEFILE
+$SED -i.temp 's:.*\\let[a-z]*\(\\[a-zA-Z@]*\)[\\=].*:\1:' $CODEFILE
 
 #remove gredefsymbol and definition
-sed -i.temp 's:.*\\gredefsymbol{\([A-Za-z]*\)}.*:\\\1:' $CODEFILE
+$SED -i.temp 's:.*\\gredefsymbol{\([A-Za-z]*\)}.*:\\\1:' $CODEFILE
 
 #remove csname
-sed -i.temp 's:.*\(\\csname.*\\endcsname\).*::' $CODEFILE
+$SED -i.temp 's:.*\(\\csname.*\\endcsname\).*::' $CODEFILE
 
 #colors
 grep -hE '\\definecolor.*' *.sty >> $CODEFILE
-sed -i.temp 's:\\definecolor{\([a-zA-Z]*\)}.*:\1:' $CODEFILE
+$SED -i.temp 's:\\definecolor{\([a-zA-Z]*\)}.*:\1:' $CODEFILE
 
 #counts
-sed -i.temp 's:.*gre@space@count@\([a-z@]*\).*:\1:' $CODEFILE
+$SED -i.temp 's:.*gre@space@count@\([a-z@]*\).*:\1:' $CODEFILE
 
 #distances
 grep -h '\\grecreatedim{.*' gsp-default.tex >> $CODEFILE
-sed -i.temp 's:\\grecreatedim{\([a-z@]*\)}.*:\1:' $CODEFILE
-sed -i.temp 's:.*gre@space@.*::' $CODEFILE
+$SED -i.temp 's:\\grecreatedim{\([a-z@]*\)}.*:\1:' $CODEFILE
+$SED -i.temp 's:.*gre@space@.*::' $CODEFILE
 
 #styles
-sed -i.temp 's:.*endgre@style@::' $CODEFILE
-sed -i.temp 's:.*gre@style@::' $CODEFILE
+$SED -i.temp 's:.*endgre@style@::' $CODEFILE
+$SED -i.temp 's:.*gre@style@::' $CODEFILE
 
 #fonts
-sed -i.temp 's:.*\\font\(\\.*\)=.*:\1:' $CODEFILE
+$SED -i.temp 's:.*\\font\(\\.*\)=.*:\1:' $CODEFILE
 
 #temp registers
-sed -i.temp 's:.*dimen@temp@.*::' $CODEFILE
-sed -i.temp 's:.*skip@temp@.*::' $CODEFILE
-sed -i.temp 's:.*count@temp@.*::' $CODEFILE
+$SED -i.temp 's:.*dimen@temp@.*::' $CODEFILE
+$SED -i.temp 's:.*skip@temp@.*::' $CODEFILE
+$SED -i.temp 's:.*count@temp@.*::' $CODEFILE
 
 #registers for saved values
-sed -i.temp 's:\\gre@saved@.*::' $CODEFILE
-sed -i.temp '/\\ifgre@saved@.*/d' $CODEFILE
+$SED -i.temp 's:\\gre@saved@.*::' $CODEFILE
+$SED -i.temp '/\\ifgre@saved@.*/d' $CODEFILE
 
 #macros used to process options
-sed -i.temp 's:\\gre@autocompile::' $CODEFILE
-sed -i.temp 's:\\gre@forcecompile::' $CODEFILE
-sed -i.temp 's:\\gre@nevercompile::' $CODEFILE
+$SED -i.temp 's:\\gre@autocompile::' $CODEFILE
+$SED -i.temp 's:\\gre@forcecompile::' $CODEFILE
+$SED -i.temp 's:\\gre@nevercompile::' $CODEFILE
 
 #block documented items
-sed -i.temp 's:\\gre@pitch.*::' $CODEFILE
-sed -i.temp 's:.*gre@char@he@.*::' $CODEFILE
-sed -i.temp 's:\\gre@protrusionfactor@.*::' $CODEFILE
+$SED -i.temp 's:\\gre@pitch.*::' $CODEFILE
+$SED -i.temp 's:.*gre@char@he@.*::' $CODEFILE
+$SED -i.temp 's:\\gre@protrusionfactor@.*::' $CODEFILE
 
 #label file
 echo "00 Macros Defined in TeX" >> $CODEFILE
@@ -116,30 +127,30 @@ grep -h '\\begin{gdimension}{.*' *.tex >> $DOCFILE
 grep -h '\\begin{gcount}{.*' *.tex >> $DOCFILE
 
 #remove all but name
-sed -i.temp 's:\\macroname{\([^}]*\)}.*:\1:' $DOCFILE
+$SED -i.temp 's:\\macroname{\([^}]*\)}.*:\1:' $DOCFILE
 
 #replace TeX code with backslash
-sed -i.temp 's:\\textbackslash :\\:' $DOCFILE
+$SED -i.temp 's:\\textbackslash :\\:' $DOCFILE
 
 #styles
-sed -i.temp 's:.*stylename{\([a-z]*\)}.*:\1:' $DOCFILE
+$SED -i.temp 's:.*stylename{\([a-z]*\)}.*:\1:' $DOCFILE
 
 #distances
-sed -i.temp 's:\\begin{gdimension}{\([a-z@]*\)}.*:\1:' $DOCFILE
+$SED -i.temp 's:\\begin{gdimension}{\([a-z@]*\)}.*:\1:' $DOCFILE
 
 #counts
-sed -i.temp 's:\\begin{gcount}{\([a-z@]*\)}.*:\1:' $DOCFILE
+$SED -i.temp 's:\\begin{gcount}{\([a-z@]*\)}.*:\1:' $DOCFILE
 
 #block documentation items
-sed -i.temp 's:.*\.\.\..*::' $DOCFILE
-sed -i.temp 's:\\gre@pitch.*::' $DOCFILE
+$SED -i.temp 's:.*\.\.\..*::' $DOCFILE
+$SED -i.temp 's:\\gre@pitch.*::' $DOCFILE
 
 #Other things which need to be removed
-sed -i.temp 's:\\newcommand.*::' $DOCFILE
-sed -i.temp 's:MacroName::' $DOCFILE
-sed -i.temp 's:\\usepackage::' $DOCFILE
-sed -i.temp 's:\\NewDocumentEnvironment.*::' $DOCFILE
-sed -i.temp 's:\\begin{gdimension.*::' $DOCFILE
+$SED -i.temp 's:\\newcommand.*::' $DOCFILE
+$SED -i.temp 's:MacroName::' $DOCFILE
+$SED -i.temp 's:\\usepackage::' $DOCFILE
+$SED -i.temp 's:\\NewDocumentEnvironment.*::' $DOCFILE
+$SED -i.temp 's:\\begin{gdimension.*::' $DOCFILE
 
 #deprecated and obsolete functions (not in documentation because they don't need to be)
 cd $HERE/tex
@@ -148,11 +159,11 @@ grep -h '\\gre@deprecated.*' *.tex | grep -v '\\def\\' >> $DOCFILE
 grep -h '\\gre@obsolete.*' *.tex | grep -v '\\def\\' >> $DOCFILE
 
 #remove whitespace
-sed -i.temp 's/^[ \t]*//;s/[ \t]*$//' $DOCFILE
+$SED -i.temp 's/^[ \t]*//;s/[ \t]*$//' $DOCFILE
 
-sed -i.temp 's:.*\\gre@deprecated{.*::' $DOCFILE
-sed -i.temp 's:.*\\gre@obsolete{.*::' $DOCFILE
-sed -i.temp 's:}.*::' $DOCFILE
+$SED -i.temp 's:.*\\gre@deprecated{.*::' $DOCFILE
+$SED -i.temp 's:.*\\gre@obsolete{.*::' $DOCFILE
+$SED -i.temp 's:}.*::' $DOCFILE
 
 #label file
 echo "00 Macros Documented" >> $DOCFILE
