@@ -76,9 +76,11 @@ DOCFILES=(doc/*.tex doc/*.lua doc/*.gabc doc/*.pdf doc/doc_README.md)
 EXAMPLEFILES=(examples/FactusEst.gabc examples/PopulusSion.gabc
               examples/main-lualatex.tex examples/debugging.tex)
 FONTSRCFILES=(greextra.sfd squarize.py convertsfdtottf.py gregall.sfd
-              gresgmodern.sfd fonts_README.md)
+              gresgmodern.sfd fonts_README.md grelaon.sfd stemsschemas.py
+              simplify.py)
 FONTSRCFILES=("${FONTSRCFILES[@]/#/fonts/}")
 FONTSRCFILES+=(fonts/*-base.sfd)
+TDSFILES=(*.md)
 # Files which have been eliminated, or whose installation location have been
 # changed.  We will remove existing versions of these files in the target texmf
 # tree before installing.
@@ -294,6 +296,7 @@ then
     echo "Making TDS-ready archive ${TDS_ZIP}."
     rm -f ${TDS_ZIP}
     (rm ${TEXMFROOT}/fonts/source/gregoriotex/gregorio-base.sfd ${TEXMFROOT}/fonts/source/gregoriotex/granapadano-base.sfd ) || die
+    (cp ${TDSFILES[@]} ${TEXMFROOT}/doc/luatex/gregoriotex/ ) || die
     (cd ${TEXMFROOT} && zip -9 ../${TDS_ZIP} -q -r .) || die
     rm -r ${TEXMFROOT} || die
 else
