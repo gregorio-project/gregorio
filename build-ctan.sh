@@ -50,6 +50,9 @@ mkdir fonts/sources/
 mkdir fonts/truetype/
 mv fonts/*.ttf fonts/truetype
 mv fonts/*.* fonts/sources
+cd gregorio-$VERSION
+zip -r ../gregorio-$VERSION.zip * --exclude=*.DS_Store*
+cd ..
 rm -rf gregorio-$VERSION
 cd ..
 zip -r ../gregoriotex.ctan.zip gregoriotex gregoriotex.tds.zip --exclude=*.DS_Store*
