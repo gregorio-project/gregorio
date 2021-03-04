@@ -80,7 +80,7 @@ FONTSRCFILES=(greextra.sfd squarize.py convertsfdtottf.py gregall.sfd
               simplify.py)
 FONTSRCFILES=("${FONTSRCFILES[@]/#/fonts/}")
 FONTSRCFILES+=(fonts/*-base.sfd)
-TDSFILES=(*.md)
+TDSDOCFILES=(*.md)
 # Files which have been eliminated, or whose installation location have been
 # changed.  We will remove existing versions of these files in the target texmf
 # tree before installing.
@@ -296,7 +296,7 @@ then
     echo "Making TDS-ready archive ${TDS_ZIP}."
     rm -f ${TDS_ZIP}
     (rm ${TEXMFROOT}/fonts/source/gregoriotex/gregorio-base.sfd ${TEXMFROOT}/fonts/source/gregoriotex/granapadano-base.sfd ) || die
-    (cp ${TDSFILES[@]} ${TEXMFROOT}/doc/luatex/gregoriotex/ ) || die
+    install_to "doc/luatex/${NAME}/" "${TDSDOCFILES[@]}"
     (cd ${TEXMFROOT} && zip -9 ../${TDS_ZIP} -q -r .) || die
     rm -r ${TEXMFROOT} || die
 else
