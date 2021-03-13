@@ -8,6 +8,11 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## [Unreleased][CTAN]
 
 
+## [6.0.0] - 2021-03-13
+
+
+
+
 ## [6.0.0-beta2] - 2021-03-04
 
 
