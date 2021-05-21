@@ -798,8 +798,8 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
     extra_args = extra_args..' -D'
   end
 
-  local cmd = string.format('%s %s -W -o %s -l %s "%s"', gregorio_exe(),
-      extra_args, gtex_file, glog_file, gabc_file)
+  local cmd = string.format('%s %s -W -o %s -l %s "%s" 2> %s', gregorio_exe(),
+      extra_args, gtex_file, glog_file, gabc_file, glog_file)
   res = os.execute(cmd)
   if res == nil then
     err("\nSomething went wrong when executing\n    '%s'.\n"
