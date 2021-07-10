@@ -3847,6 +3847,75 @@ static bool is_before_linebreak(const gregorio_syllable *syllable,
     return false;
 }
 
+static void write_default_end_of_element(FILE *f,
+        const gregorio_element *const element,
+        const unsigned int note_unit_count) {
+    const gregorio_element *next_element;
+    const gregorio_glyph *last_glyph;
+    const gregorio_note *last_note, *next_note;
+    signed char last_pitch = NO_PITCH;
+    int break_flag = 0;
+
+    /* This is only used in write_syllable, so element is assumed to be:
+     * 1. not NULL
+     * 2. of type GRE_ELEMENT
+     */
+    if (element->next) {
+        next_element = element->next;
+        if (next_element->type == GRE_ALT) {
+            next_element = next_element->next;
+        }
+        if (next_element && next_element->type == GRE_ELEMENT) {
+            for (last_glyph = element->u.first_glyph; last_glyph->next;
+                    last_glyph = last_glyph->next) {
+                /* iterate to find the last glyph */
+            }
+            if (last_glyph->type == GRE_GLYPH) {
+                last_note = gregorio_glyph_last_note(last_glyph);
+                assert(last_note != NULL);
+                if (last_note->type == GRE_NOTE)
+                    switch(last_note->u.note.shape) {
+                    case S_FLAT:
+                    case S_FLAT_PAREN:
+                    case S_SHARP:
+                    case S_SHARP_PAREN:
+                    case S_NATURAL:
+                    case S_NATURAL_PAREN:
+                        break;
+                    default:
+                        last_pitch = last_note->u.note.pitch;
+                        break;
+                }
+            }
+            if (last_pitch != NO_PITCH && next_element->u.first_glyph
+                    && next_element->u.first_glyph->type == GRE_GLYPH) {
+                next_note = next_element->u.first_glyph->u.notes.first_note;
+                if (next_note->type == GRE_NOTE) {
+                    switch(next_note->u.note.shape) {
+                    case S_FLAT:
+                    case S_FLAT_PAREN:
+                    case S_SHARP:
+                    case S_SHARP_PAREN:
+                    case S_NATURAL:
+                    case S_NATURAL_PAREN:
+                        break;
+                    default:
+                        if (next_note->u.note.pitch != NO_PITCH &&
+                                next_note->u.note.pitch - last_pitch == 0) {
+                            /* at a unison */
+                            break_flag = 2;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            fprintf(f, "\\GreEndOfElement{0}{%d}{%u}%%\n", break_flag,
+                    note_unit_count);
+        }
+    }
+}
+
 /*
  * Arguments are relatively obvious. The most obscure is certainly first_of_disc
  * which is 0 all the time, except in the case of a "clef change syllable". In
@@ -4204,19 +4273,12 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                 break;
 
             default:
-                /* here current_element->type is GRE_ELEMENT */
+                /* here element->type is GRE_ELEMENT */
                 assert(element->type == GRE_ELEMENT);
                 handle_last_of_voice(f, syllable, element, *last_of_voice);
                 note_unit_count += write_element(f, syllable, element, status,
                         score);
-                if (element->next && (element->next->type == GRE_ELEMENT
-                                || (element->next->next
-                                        && element->next->type == GRE_ALT
-                                        && element->next->next->type ==
-                                        GRE_ELEMENT))) {
-                    fprintf(f, "\\GreEndOfElement{0}{0}{%u}%%\n",
-                            note_unit_count);
-                }
+                write_default_end_of_element(f, element, note_unit_count);
                 break;
             }
         }

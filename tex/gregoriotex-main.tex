@@ -1506,13 +1506,28 @@
 }%
 
 \newif\ifgre@unbreakableendofelement %
+\def\gresetunisonbreakbehavior#1{%
+  \IfStrEqCase{#1}{%
+    {breakable}%
+      {\global\let\gre@unbreakableendofelement@unison\gre@unbreakableendofelementfalse\relax}%
+    {unbreakable}%
+      {\global\let\gre@unbreakableendofelement@unison\gre@unbreakableendofelementtrue\relax}%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetunisonbreakbehavior\MessageBreak Possible options are: 'breakable' and 'unbreakable'}%
+    ]%
+}%
+\gresetunisonbreakbehavior{breakable}
+
 % macro to end elements, #1 is the type of space, it can be :
 %% 0: default space
 %% 1: larger space
 %% 2: glyph space
 %% 3: zero-width space
 %% 4: custom space
-% #2 is if the space is unbreakable (1) or not (0)
+% #2 is whether the space is breakable :
+%% 0: breakable
+%% 1: unbreakable
+%% 2: unison (breakable according to the unisonbreakbehavior setting)
 % #3 is the number of notes emitted in this syllable before this macro
 \def\GreEndOfElement#1#2#3{%
   \ifnum\gre@count@syllablenotes<\gre@count@unbreakabletotalnotes\relax %
@@ -1525,10 +1540,14 @@
           \gre@count@unbreakablefinalnotes\relax %
         \gre@unbreakableendofelementtrue %
       \else %
-        \ifnum#2=1\relax %
-          \gre@unbreakableendofelementtrue %
-        \else %
+        \ifcase#2\relax %
           \gre@unbreakableendofelementfalse %
+        \or% case 1
+          \gre@unbreakableendofelementtrue %
+        \or% case 2
+          \gre@unbreakableendofelement@unison %
+        \else %
+          \gre@error{Unrecognized breakable argument #2}%
         \fi %
       \fi %
     \fi %
@@ -1538,7 +1557,7 @@
   \else %
     \gre@penalty{\the\gre@space@count@endofelementpenalty}%
   \fi %
-  \ifcase#1%
+  \ifcase#1\relax%
     \gre@skip@temp@four = \gre@space@skip@interelementspace\relax%
     \gre@hskip\gre@skip@temp@four %
   \or% case 1
@@ -1552,6 +1571,8 @@
     \gre@hskip\gre@skip@temp@four %
   \or% case 4
     \gre@hskip\gre@skip@temp@four %
+  \else%
+    \gre@error{Unrecognized space type #1}%
   \fi%
   \ifgre@unbreakableendofelement %
     \GreNoBreak %
