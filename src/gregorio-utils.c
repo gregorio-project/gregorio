@@ -431,7 +431,6 @@ int main(int argc, char **argv)
             break;
         case 'f':
             if (input_format) {
-                gregorio_set_error_out(error_file);
                 fprintf(stderr,
                         "warning: several output formats declared, first taken\n");
                 must_print_short_usage = true;
@@ -638,19 +637,15 @@ int main(int argc, char **argv)
         }
     }
 
-    if (!error_file_name) {
-        error_file = stderr;
-        gregorio_set_error_out(error_file);
-    } else {
+    if (error_file_name) {
         gregorio_check_file_access(write, error_file_name, ERROR,
                 gregorio_exit(1));
-        error_file = fopen(error_file_name, "wb");
+        error_file = freopen(error_file_name, "a", stderr);
         if (!error_file) {
             fprintf(stderr, "error: can't open file %s for writing\n",
                     error_file_name);
             gregorio_exit(1);
         }
-        gregorio_set_error_out(error_file);
     }
 
     if (!verb_mode) {
