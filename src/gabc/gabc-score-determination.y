@@ -63,9 +63,7 @@
 #include "gabc-score-determination.h"
 #include "gabc-score-determination-l.h"
 
-/* SB_IGNORE used to ignore a style that don't stay open between syllables and
- * to ignore the "re-opening" of open styles when the syllable changes
- */
+/* SB_IGNORE used to ignore a style that don't stay open between syllables */
 #define GABC_STYLE_BITS(A,E,X,L) \
     A(SB_IGNORE, 0x00) \
     A(SB_ITALIC, 0x01) \
@@ -335,8 +333,36 @@ static void rebuild_score_characters(void)
  *
  */
 
-static void add_style(unsigned char style, gabc_style_bits bit)
+static void add_style(grestyle_style style, gabc_style_bits bit);
+
+static void maybe_insert_open_styles(void)
 {
+    if (!current_character) {
+        /* insert open styles, leaving out ELISION on purpose */
+        if (styles & SB_ITALIC) {
+            gregorio_begin_style(&current_character, ST_ITALIC);
+        }
+        if (styles & SB_BOLD) {
+            gregorio_begin_style(&current_character, ST_BOLD);
+        }
+        if (styles & SB_TT) {
+            gregorio_begin_style(&current_character, ST_TT);
+        }
+        if (styles & SB_SMALL_CAPS) {
+            gregorio_begin_style(&current_character, ST_SMALL_CAPS);
+        }
+        if (styles & SB_UNDERLINED) {
+            gregorio_begin_style(&current_character, ST_UNDERLINED);
+        }
+        if (styles & SB_COLORED) {
+            gregorio_begin_style(&current_character, ST_COLORED);
+        }
+    }
+}
+
+static void add_style(grestyle_style style, gabc_style_bits bit)
+{
+    maybe_insert_open_styles();
     if (bit) {
         if (styles & bit) {
             gregorio_messagef("add_style", VERBOSITY_ERROR, 0,
@@ -349,8 +375,9 @@ static void add_style(unsigned char style, gabc_style_bits bit)
     gregorio_begin_style(&current_character, style);
 }
 
-static void end_style(unsigned char style, gabc_style_bits bit)
+static void end_style(grestyle_style style, gabc_style_bits bit)
 {
+    maybe_insert_open_styles();
     if (bit) {
         if (styles & bit) {
             styles ^= bit;
@@ -398,27 +425,7 @@ static void end_translation(void)
 
 static void add_text(char *mbcharacters)
 {
-    if (!current_character) {
-        /* insert open styles, leaving out ELISION on purpose */
-        if (styles & SB_ITALIC) {
-            add_style(ST_ITALIC, SB_IGNORE);
-        }
-        if (styles & SB_BOLD) {
-            add_style(ST_BOLD, SB_IGNORE);
-        }
-        if (styles & SB_TT) {
-            add_style(ST_TT, SB_IGNORE);
-        }
-        if (styles & SB_SMALL_CAPS) {
-            add_style(ST_SMALL_CAPS, SB_IGNORE);
-        }
-        if (styles & SB_UNDERLINED) {
-            add_style(ST_UNDERLINED, SB_IGNORE);
-        }
-        if (styles & SB_COLORED) {
-            add_style(ST_COLORED, SB_IGNORE);
-        }
-    }
+    maybe_insert_open_styles();
     if (current_character) {
         current_character->next_character = gregorio_build_char_list_from_buf(
                 mbcharacters);

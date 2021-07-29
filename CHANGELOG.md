@@ -3,9 +3,12 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][develop]
-
-- Added a configurable setting `\gresetunisonbreakbehavior` to control automatic line breaks between unison notes above a syllable.  Defaults to `breakable` for backwards compatibility, but may be set to `unbreakable` if that behavior is desired.  See [#1504](https://github.com/gregorio-project/gregorio/issues/1504).
+### Fixed
 - Fixed the interaction between hyphens and styles.  See [#1538](https://github.com/gregorio-project/gregorio/issues/1538).
+- Fixed the loss of ongoing styles when a syllable starts with a forced center.  See [#1551](https://github.com/gregorio-project/gregorio/issues/1551).
+
+### Added
+- Added a configurable setting `\gresetunisonbreakbehavior` to control automatic line breaks between unison notes above a syllable.  Defaults to `breakable` for backwards compatibility, but may be set to `unbreakable` if that behavior is desired.  See [#1504](https://github.com/gregorio-project/gregorio/issues/1504).
 
 ## [Unreleased][CTAN]
 
