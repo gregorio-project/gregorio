@@ -340,15 +340,22 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
 
     fuse_to_next_note = glyph->u.notes.fuse_to_next_glyph;
 
+    /*
+     * Note: due to the way auto fusion is computed, a virga inside auto fusion
+     * will have glyph type G_PUNCTUM and note shape S_VIRGA here.  However, a
+     * fused virga outside auto fusion will have glyph type G_VIRGA.
+     */
     switch (glyph->u.notes.glyph_type) {
     case G_PODATUS:
     case G_PUNCTUM:
     case G_FLEXA:
+    case G_VIRGA:
         /* directionally head-fusible */
         if (fuse_from_previous_note < 0) {
             if (glyph->u.notes.first_note->u.note.shape != S_QUILISMA
                 && glyph->u.notes.first_note->u.note.shape
-                != S_QUILISMA_QUADRATUM) {
+                != S_QUILISMA_QUADRATUM
+                && glyph->u.notes.first_note->u.note.shape != S_VIRGA) {
                 if (fuse_from_previous_note < -1) {
                     fuse_head = FUSE_Lower;
                 } else if (glyph->u.notes.first_note->u.note.shape
@@ -386,17 +393,19 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
         /* else fall through */
     case G_VIRGA_REVERSA:
     case G_PUNCTUM:
-        /* tail-fusible */
-        if (fuse_to_next_note < 0) {
-            fuse_tail = FUSE_Down;
-            fuse_ambitus = -fuse_to_next_note;
-        } else if (fuse_to_next_note > 0) {
-            fuse_tail = FUSE_Up;
-            fuse_ambitus = fuse_to_next_note;
-        }
+        if (glyph->u.notes.first_note->u.note.shape != S_VIRGA) {
+            /* tail-fusible */
+            if (fuse_to_next_note < 0) {
+                fuse_tail = FUSE_Down;
+                fuse_ambitus = -fuse_to_next_note;
+            } else if (fuse_to_next_note > 0) {
+                fuse_tail = FUSE_Up;
+                fuse_ambitus = fuse_to_next_note;
+            }
 
-        if (*fuse_tail && liquescentia == LIQ_Nothing) {
-            liquescentia = "";
+            if (*fuse_tail && liquescentia == LIQ_Nothing) {
+                liquescentia = "";
+            }
         }
         break;
 
@@ -450,7 +459,10 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
                     shape = SHAPE_DescendensOriscusLineTL;
                 }
             }
-            fuse_head = "";
+            if (shape != SHAPE_Virga && shape != SHAPE_VirgaLongqueue &&
+                    shape != SHAPE_VirgaOpenqueue) {
+                fuse_head = "";
+            }
         }
         gregorio_snprintf(buf, BUFSIZE, "%s%s%s%s%s", fuse_head, shape,
                 tex_ambitus[fuse_ambitus], liquescentia, fuse_tail);
@@ -626,15 +638,20 @@ static const char *determine_note_glyph_name(const gregorio_note *const note,
     case S_LINEA_PUNCTUM:
         return SHAPE_LineaPunctum;
     case S_VIRGA:
+        return fusible_queued_shape(note, glyph, SHAPE_Virga,
+                SHAPE_VirgaLongqueue, SHAPE_VirgaOpenqueue);
+        /*
         switch (queuetype_of(note)) {
         case Q_ON_SPACE_ABOVE_BOTTOM_LINE:
-            return SHAPE_Virga;
+            return compute_glyph_name(glyph, SHAPE_Virga, LG_NONE, true);
         case Q_ON_SPACE_BELOW_BOTTOM_LINE:
         case Q_ON_BOTTOM_LINE:
-            return SHAPE_VirgaOpenqueue;
+            return compute_glyph_name(glyph, SHAPE_VirgaOpenqueue, LG_NONE,
+                    true);
         case Q_ON_LINE_ABOVE_BOTTOM_LINE:
-            return SHAPE_VirgaLongqueue;
-        } /* all cases return, so this line is not hit; LCOV_EXCL_LINE */
+            return compute_glyph_name(glyph, SHAPE_VirgaLongqueue, LG_NONE,
+                    true);
+        }*/ /* all cases return, so this line is not hit; LCOV_EXCL_LINE */
         /* LCOV_EXCL_START */
         gregorio_fail2(determine_note_glyph_name, "unknown queuetype: %d",
                 queuetype_of(note));
