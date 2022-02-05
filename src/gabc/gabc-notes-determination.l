@@ -778,6 +778,7 @@ void gabc_det_notes_finish(void)
 %x overledger overledger2
 %x underledger underledger2
 %x endledger
+%x shapehint
 
 %%
 <INITIAL>\% {
@@ -1021,11 +1022,11 @@ void gabc_det_notes_finish(void)
         gregorio_add_texverb_to_note(current_note, gabc_unescape(tempstr));
     }
 <choralsign>(\$.|[^\]])+ {
-        gregorio_add_cs_to_note(&current_note,
+        gregorio_add_cs_to_note(current_note,
                 gabc_unescape(gabc_notes_determination_text), false);
     }
 <choralnabc>(\$.|[^\]])+ {
-        gregorio_add_cs_to_note(&current_note,
+        gregorio_add_cs_to_note(current_note,
                 gabc_unescape(gabc_notes_determination_text), true);
     }
 <texverbnote>(\$.|[^\]])+ {
@@ -1109,7 +1110,14 @@ void gabc_det_notes_finish(void)
         add_variable_ledger(SO_UNDER, gabc_notes_determination_text);
         BEGIN(endledger);
     }
-<texverbnote,texverbglyph,texverbelement,choralsign,choralnabc,alt,overcurlyaccentusbrace,overcurlybrace,overbrace,underbrace,space,nbspace,endledger>\] {
+<INITIAL>\[shape: {
+        BEGIN(shapehint);
+    }
+<shapehint>(\$.|[^\]])+ {
+        gregorio_add_shape_hint_to_note(current_note,
+                gabc_unescape(gabc_notes_determination_text));
+    }
+<texverbnote,texverbglyph,texverbelement,choralsign,choralnabc,alt,overcurlyaccentusbrace,overcurlybrace,overbrace,underbrace,space,nbspace,endledger,shapehint>\] {
         BEGIN(INITIAL);
     }
 <INITIAL>\[[ou]slur:[012];[^,]+,[^\]]+\] {

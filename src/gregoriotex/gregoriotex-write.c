@@ -237,6 +237,39 @@ static queuetype queuetype_of(const gregorio_note *const note) {
 static grestyle_style gregoriotex_ignore_style = ST_NO_STYLE;
 static grestyle_style gregoriotex_next_ignore_style = ST_NO_STYLE;
 
+static bool glyph_hint(const gregorio_glyph *const glyph,
+        const char *const hint) {
+    const char *const shape_hints = gregorio_glyph_last_note(glyph)->shape_hint;
+    if (shape_hints == NULL) {
+        /* no hints */
+        return false;
+    } else {
+        const char *const found = strstr(shape_hints, hint);
+        if (found == NULL) {
+            /* no match */
+            return false;
+        } else {
+            const char suffix = found[strlen(hint)];
+            if (suffix == '\0' || suffix == ',') {
+                /* one must be true or it's not a match */
+                if (found == shape_hints) {
+                    /* found it at the start of shape_hints */
+                    return true;
+                } else {
+                    /*
+                     * we're somewhere after the start, so it's ok to get the
+                     * character before; a comma before the start of the found
+                     * string is the only remaining way it can be a match
+                     */
+                    return (*(found - 1) == ',');
+                }
+            } else {
+                return false;
+            }
+        }
+    }
+}
+
 /*
  * The different liquescentiae are:
  * 'Nothing'
@@ -499,6 +532,17 @@ static const char *compute_glyph_name(const gregorio_glyph *const glyph,
         /* the salicus queue is at the end of the glyph, and it doesn't exist
          * for the liquescent forms */
         shape = SHAPE_Salicus;
+    }
+    if (!fuse_to_next_note && (shape == SHAPE_Flexus
+            || shape == SHAPE_FlexusLongqueue
+            || shape == SHAPE_FlexusOpenqueue
+            || shape == SHAPE_FlexusNobar)
+            && liquescentia == LIQ_Nothing
+            && glyph_hint(glyph, "stroke")) {
+        /* "fake" fusion to get the shape we want */
+        fuse_ambitus = 1;
+        liquescentia = "";
+        fuse_tail = FUSE_Up;
     }
     current_note = current_note->next;
     if (!current_note->next) {
