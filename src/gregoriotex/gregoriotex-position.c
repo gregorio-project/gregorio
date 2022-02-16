@@ -5,18 +5,18 @@
  * Copyright (C) 2008-2021 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  * more details.
- * 
- * You should have received a copy of the GNU General Public License along with 
+ *
+ * You should have received a copy of the GNU General Public License along with
  * this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "config.h"
@@ -140,7 +140,7 @@ static __inline const char *last_note_case(
     if (current_glyph->u.notes.liquescentia & L_DEMINUTUS) {
         /*
          * may seem strange, but it is unlogical to typeset a small horizontal
-         * episema at the end of a flexus deminutus 
+         * episema at the end of a flexus deminutus
          */
         return FinalDeminutus;
     }
@@ -382,7 +382,7 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
     case T_PES:
     case T_QUILISMA_PES:
         /*
-         * in the case of a pes, we put the episema just under the bottom note 
+         * in the case of a pes, we put the episema just under the bottom note
          */
         if (i == 1) {
             if (glyph->u.notes.liquescentia & L_INITIO_DEBILIS) {
@@ -436,7 +436,7 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
             if (type == T_FLEXUS_ORISCUS) {
                 note->gtex_offset_case = InitialConnectedOriscus;
             } else {
-                if (note->next && note->u.note.pitch - 
+                if (note->next && note->u.note.pitch -
                         note->next->u.note.pitch == 1) {
                     note->gtex_offset_case = InitialVirga;
                 } else {
@@ -1549,6 +1549,7 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
 
     case G_PUNCTUM:
     case G_FLEXA:
+    case G_VIRGA:
         /* these may be fused to the previous note */
         break;
 
@@ -1587,6 +1588,11 @@ static __inline int compute_fused_shift(const gregorio_glyph *glyph)
 
     gregorio_assert(prev_note->type == GRE_NOTE, compute_fused_shift,
             "previous note wasn't a note", return 0);
+
+    if (prev_note->u.note.shape == S_VIRGA) {
+        /* cannot fuse after a virga */
+        return 0;
+    }
 
     shift = first_note->u.note.pitch - prev_note->u.note.pitch;
     gregorio_assert(shift >= -MAX_AMBITUS && shift <= MAX_AMBITUS,

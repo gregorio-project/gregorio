@@ -456,6 +456,7 @@ typedef struct gregorio_note {
     /* choral sign is a letter that appears next to a note in some choral
      * scores we put it as char* because sometimes two letters appear */
     char *choral_sign;
+    char *shape_hint;
     union {
         /* note is used for GRE_NOTE */
         struct {
@@ -892,8 +893,9 @@ void gregorio_start_autofuse(gregorio_note **current_note,
 void gregorio_end_autofuse(gregorio_note **current_note,
         const gregorio_scanner_location *loc);
 void gregorio_add_texverb_to_note(gregorio_note *current_note, char *str);
-void gregorio_add_cs_to_note(gregorio_note *const*current_note, char *str,
+void gregorio_add_cs_to_note(gregorio_note *current_note, char *str,
         bool nabc);
+void gregorio_add_shape_hint_to_note(gregorio_note *current_note, char *str);
 void gregorio_add_misc_element(gregorio_element **current_element,
         gregorio_type type, gregorio_misc_element_info *info,
         unsigned short texverb);
