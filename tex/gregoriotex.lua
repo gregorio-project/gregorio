@@ -85,10 +85,14 @@ local state_hashes = nil
 local new_state_hashes = nil
 local auxname = nil
 local tmpname = nil
-local base_output_dir = 'tmp-gre'
 local test_snippet_filename = nil
 local snippet_filename = nil
 local snippet_logname = nil
+
+local base_output_dir = 'tmp-gre'
+local function set_base_output_dir(new_dirname)
+  base_output_dir = new_dirname
+end
 
 local space_below_staff = 5
 local space_above_staff = 13
@@ -1648,6 +1652,7 @@ gregoriotex.save_dim                     = save_dim
 gregoriotex.save_count                   = save_count
 gregoriotex.change_next_score_line_dim   = change_next_score_line_dim
 gregoriotex.change_next_score_line_count = change_next_score_line_count
+gregoriotex.set_base_output_dir          = set_base_output_dir
 
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))
