@@ -1097,6 +1097,7 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
                     case S_QUILISMA:
                     case S_QUADRATUM:
                     case S_QUILISMA_QUADRATUM:
+                    case S_VIRGA:
                         /* these are fusible */
                         if (current_glyph_type <= G_PUNCTA_INCLINATA
                                 || current_note->u.note.shape != S_PUNCTUM) {
@@ -1289,11 +1290,15 @@ gregorio_glyph *gabc_det_glyphs_from_notes(gregorio_note *current_note,
             }
         }
 
-        if (!next_note && current_glyph_type != G_UNDETERMINED) {
+        if ((!next_note && current_glyph_type != G_UNDETERMINED)
+                || (autofuse && current_note
+                    && current_note->u.note.shape == S_VIRGA)) {
             /* we must end the determination here */
             current_note = close_glyph(&last_glyph, current_glyph_type,
                     &current_glyph_first_note, liquescentia, current_note,
                     punctum_inclinatum_orientation);
+            next_glyph_type = current_glyph_type = G_UNDETERMINED;
+            liquescentia = L_NO_LIQUESCENTIA;
         }
 
         last_pitch = current_note->u.note.pitch;

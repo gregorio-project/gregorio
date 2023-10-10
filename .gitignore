@@ -127,3 +127,4 @@ ctan
 *.pyg
 .agignore
 *.orig
+compile_commands.json
