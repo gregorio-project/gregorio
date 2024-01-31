@@ -270,6 +270,6 @@ def get_stem_schema(schemaname, font_config):
     """
     if schemaname == 'default':
         return get_stem_schema_default(font_config)
-    elif schemaname == 'solesmes':
+    if schemaname == 'solesmes':
         return get_stem_schema_solesmes(font_config)
-    print('impossible to find schema %s, quitting' % schemaname)
+    print(f'impossible to find schema {schemaname}, quitting')
