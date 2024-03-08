@@ -45,7 +45,7 @@
 		\pagestyle{empty}
     	\setlength{\textwidth}{$scribus_realwidth$ pt}
 
-        \begin{filecontents*}[overwrite]{scribus_file-score.gabc}
+        \begin{filecontents*}[overwrite]{$scribus_file$-score.gabc}
 </preamble> <!-- this line's indentation is purposefully off because of the way that scribus interprets the preamble section -->
     <postamble>
         \end{filecontents*}
