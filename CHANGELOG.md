@@ -3,7 +3,8 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][CTAN]
-
+### Fixed
+- Multiple Scribus render frames were all using the same file name, which would result in the same score appearing in all render frames.  This change makes the score files use an available Scribus variable to force multiple file names.
 
 ## [6.0.0] - 2021-03-13
 ### Fixed
