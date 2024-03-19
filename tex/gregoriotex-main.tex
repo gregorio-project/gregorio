@@ -156,6 +156,13 @@
   \closeout\gre@gaux %
 }%
 
+%%%%%%%%%%%%%%%%%%%
+%% output directory selection
+%%%%%%%%%%%%%%%%%%%
+
+\def\gresetoutputdir#1{%
+  \directlua{gregoriotex.set_base_output_dir([[#1]])}%
+}%
 
 %%%%%%%%%%%%%%%
 %% basic start
