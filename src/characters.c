@@ -1209,7 +1209,8 @@ void gregorio_rebuild_first_syllable(gregorio_character **param_character,
             break;
         }
         if (current_character->is_character) {
-            if (separate_initial && current_character->previous_character) {
+            if (separate_initial && current_character->previous_character
+                                 && current_character->next_character) {
                 /* we need to move the initial to the front */
                 current_character->previous_character->next_character =
                         current_character->next_character;
