@@ -537,6 +537,13 @@
       \gre@debugmsg{custos}{not blocked}%
       \gre@calculate@glyphraisevalue{#1}{0}{}%
       %here we need some tricks to draw the line before the custos (for the color)
+      % we make \wd\gre@box@temp@sign contain the width of a custos
+      % the \gre@custosalteration changes \gre@box@temp@width, so do this first
+      \setbox\gre@box@temp@sign=\hbox{%
+        \gre@custosalteration{#1}{#2}%
+        \GreNoBreak%
+        \gre@pickcustos{#1}{0}\relax %
+      }%
       \setbox\gre@box@temp@width=\hbox{%
         % we type a hskip and the we type the custos
         \gre@hskip\gre@space@skip@spacebeforeeolcustos\relax %
@@ -548,12 +555,6 @@
         }%
       }%
       \gre@dimen@temp@three=\wd\gre@box@temp@width %
-      % we make \wd\gre@box@temp@sign contain the width of a custos
-      \setbox\gre@box@temp@sign=\hbox{%
-        \gre@custosalteration{#1}{#2}%
-        \GreNoBreak%
-        \gre@pickcustos{#1}{0}\relax %
-      }%
       \gre@localrightbox{%
         \ifgre@showlines %
           \ifnum#1<\gre@pitch@belowstaff\relax %
