@@ -215,7 +215,7 @@
 % sets \gre@box@temp@width with the clef, the arguments are the same as \gre@typeclef
 \def\gre@boxclef#1#2#3#4#5#6#7#8{%
   \gre@trace{gre@boxclef{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}}%
-  \global\setbox\gre@box@temp@width=\hbox{%
+  \setbox\gre@box@temp@width=\hbox{%
     \ifcase#7%
       \gre@typesingleclef{#1}{#2}{#3}{#5}%
     \else %
