@@ -31,7 +31,6 @@
     own glyphs from it.
 """
 
-from __future__ import print_function
 
 import sys
 import os
@@ -68,7 +67,7 @@ statement from your version."""
 # defines the maximal interval between two notes, the bigger this number is,
 # the more glyphs you'll have to generate
 MAX_INTERVAL = 5
-ALL_AMBITUS = range(1, MAX_INTERVAL + 1)
+ALL_AMBITUS = list(range(1, MAX_INTERVAL + 1))
 AMBITUS_ONE_ONLY = [ 1 ]
 
 # this dictionary must have a value for 0 to 14 (the maximum overall ambitus)
@@ -229,7 +228,7 @@ def set_glyph_name(name):
     global all_glyph_names, newfont, glyphnumber
     if glyphnumber in newfont:
         if name in all_glyph_names:
-            print("ERROR: duplicate glyph name [%s]" % name, file=sys.stderr)
+            print(f'ERROR: duplicate glyph name [{name}]', file=sys.stderr)
             sys.exit(1)
         else:
             all_glyph_names[name] = True
@@ -440,7 +439,7 @@ def glyph_exists(glyph_name):
     result = True
     try:
         oldfont.selection.select(glyph_name + '')
-    except Exception as ex:
+    except Exception:
         result = False
     GLYPH_EXISTS[glyph_name] = result
     return result
@@ -717,6 +716,9 @@ S_LOWER_OBLATUS_DESCENDENS_ORISCUS           = 'LowerOblatusDescendensOriscus'
 S_VIRGA                                      = 'Virga'
 S_VIRGA_LONGQUEUE                            = 'VirgaLongqueue'
 S_VIRGA_OPENQUEUE                            = 'VirgaOpenqueue'
+S_UPPER_VIRGA                                = 'UpperVirga'
+S_UPPER_VIRGA_LONGQUEUE                      = 'UpperVirgaLongqueue'
+S_UPPER_VIRGA_OPENQUEUE                      = 'UpperVirgaOpenqueue'
 S_VIRGA_REVERSA                              = 'VirgaReversa'
 S_VIRGA_REVERSA_LONGQUEUE                    = 'VirgaReversaLongqueue'
 S_VIRGA_REVERSA_OPENQUEUE                    = 'VirgaReversaOpenqueue'
@@ -813,7 +815,7 @@ def set_width(width):
     "Set the width of a glyph"
     global newfont, glyphnumber
     if glyphnumber in newfont:
-        newfont[glyphnumber].width = width
+        newfont[glyphnumber].width = int(width)
 
 def get_queue_glyph(height, rev = False):
     "Creates the asked line glyph in tmpglyph"
@@ -1009,6 +1011,9 @@ def virga():
     write_virga(S_VIRGA, L_NOTHING, True, 'virgabase', 'short', S_VIRGA)
     write_virga(S_VIRGA_LONGQUEUE, L_NOTHING, True, 'virgabase', 'long', S_VIRGA)
     write_virga(S_VIRGA_OPENQUEUE, L_NOTHING, True, 'virgabase', 'open', S_VIRGA)
+    write_virga(S_UPPER_VIRGA, L_NOTHING, True, 'VirgaBaseLineBL', 'short', S_VIRGA)
+    write_virga(S_UPPER_VIRGA_LONGQUEUE, L_NOTHING, True, 'VirgaBaseLineBL', 'long', S_VIRGA)
+    write_virga(S_UPPER_VIRGA_OPENQUEUE, L_NOTHING, True, 'VirgaBaseLineBL', 'open', S_VIRGA)
     write_virga(S_VIRGA_REVERSA, L_NOTHING, False, 'rvirgabase', 'short',
             S_VIRGA_REVERSA)
     write_virga(S_VIRGA_REVERSA_LONGQUEUE, L_NOTHING, False, 'rvirgabase',
@@ -1126,7 +1131,7 @@ HEPISEMA_GLYPHS = {
 def hepisema():
     "Creates horizontal episemata."
     message("horizontal episema")
-    for target, source in HEPISEMA_GLYPHS.items():
+    for target, source in list(HEPISEMA_GLYPHS.items()):
         write_hepisema(get_width(source), target)
         write_hepisema(get_width(source) * 2.0 / 3.0, target + "Reduced")
     reduction = get_width('PunctumSmall')
@@ -2486,7 +2491,7 @@ def scandicus():
     write_all_scandicus('rdeminutus', L_DEMINUTUS)
 
 def write_all_scandicus(last_glyph, lique=L_NOTHING, i_range=ALL_AMBITUS,
-        j_range=ALL_AMBITUS):
+                        j_range=ALL_AMBITUS):
     for i in i_range:
         for j in j_range:
                 write_scandicus(i, j, last_glyph, lique)

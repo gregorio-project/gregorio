@@ -1,6 +1,6 @@
 --GregorioTeX Nabc Lua file.
 --
---Copyright (C) 2014-2021 The Gregorio Project (see CONTRIBUTORS.md)
+--Copyright (C) 2014-2024 The Gregorio Project (see CONTRIBUTORS.md)
 --
 --This file is part of Gregorio.
 --
@@ -108,7 +108,7 @@ local gregallmetrics = {}
 
 local gregallneumekinds = { vi = 1, pu = 1, ta = 1, gr = 1, cl = 1, un = 1, pv = 1, pe = 1, po = 1, to = 1, ci = 1, sc = 1, pf = 1, sf = 1, tr = 1,
   st = 1, ds = 1, ts = 1, tg = 1, bv = 1, tv = 1, pr = 1, pi = 1, vs = 1, ["or"] = 1, sa = 1, pq = 1, qi = 1, ql = 1, pt = 1,
-  un = 1, oc = 1 }
+  un = 1, oc = 1, ni = 1 }
 local gregalllskinds = { c = 1, t = 1, s = 1, l = 1, x = 1, ["+"] = 1, a = 1, al = 1, am = 1, b = 1, cm = 1, co = 1, cw = 1, d = 1, e = 1, eq = 1,
   ew = 1, f = 1, fid = 1, fr = 1, g = 1, h = 1, hp = 1, hn = 1, i = 1, im = 1, iv = 1, k = 1, lb = 1, lc = 1, len = 1,
   lm = 1, lp = 1, lt = 1, m = 1, md = 1, moll = 1, n = 1, nl = 1, nt = 1, p = 1, par = 1, pfec = 1, pm = 1, q = 1,

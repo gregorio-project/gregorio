@@ -47,9 +47,9 @@ following structure:
   mode-modifier: t.;
   annotation: IN.;
   annotation: 6;
-  
+
   %%
-  
+
   (clef) text(notes)
   % another comment
   com(notes)plex(notes) word(notes)
@@ -240,7 +240,7 @@ We’ll start by discussing the syllable text syntax (which appears outside the 
 
 Text outside parenthesis is considered syllable text.  In general, this is the
 text that appears below the staff.  Parenthesized note sections separate
-syllables.  Spaces (end end-of-lines) in syllable text mark the end of words
+syllables.  Spaces (and end-of-lines) in syllable text mark the end of words
 and should be placed after the parenthesized notes section for the last
 syllable of a given word.
 
@@ -579,6 +579,7 @@ primitives are:
   \texttt{gf} & flexus & if not at the end, must be followed by a higher note to fuse \\
   \texttt{gh} & pes & at the end only; in non-liquescent form, the previous note must be lower to fuse \\
   \texttt{gfg} & porrectus & at the end only, previous note must be lower to fuse \\
+  \texttt{gv} & virga & at the end only, previous note must be lower to fuse \\
 \end{tabularx}
 
 In the above table, \texttt{f}, \texttt{g}, and \texttt{h} are representative
@@ -644,6 +645,19 @@ added to the notes.
   \texttt{!} & if alone, a zero-width space used when Gregorio\TeX{} does not
                break the chain of notes in the correct place; if followed by a
                space, makes the space that follows a non-breaking space \\
+\end{tabularx}
+
+\subsubsection{Shape Hints}
+
+In some cases, an alternate form of a shape is desired.  To do this, put a
+\texttt{[shape:}\textit{hint}\texttt{]} after the figure that needs to be
+altered.  The available alternate form hints are as follows:
+
+\begin{tabularx}{\textwidth}{l|X}
+  \textit{hint} & Description \\
+  \hline
+  \texttt{stroke} & Render a clivis/flexus as a stroke (like in a porrectus)
+    rather than as two notes \\
 \end{tabularx}
 
 \subsubsection{Additional Symbols}

@@ -89,6 +89,11 @@ local test_snippet_filename = nil
 local snippet_filename = nil
 local snippet_logname = nil
 
+local base_output_dir = 'tmp-gre'
+local function set_base_output_dir(new_dirname)
+  base_output_dir = new_dirname
+end
+
 local space_below_staff = 5
 local space_above_staff = 13
 
@@ -761,6 +766,71 @@ local function at_score_end()
   saved_counts = {}
 end
 
+-- Inserted copy of https://github.com/ToxicFrog/luautil/blob/master/lfs.lua
+local windows = package.config:sub(1,1) == "\\"
+
+-- We make the simplifying assumption in these functions that path separators
+-- are always forward slashes. This is true on *nix and *should* be true on
+-- windows, but you can never tell what a user will put into a config file
+-- somewhere. This function enforces this.
+function lfs.normalize(path)
+  if windows then
+    return (path:gsub("\\", "/"))
+  else
+    return path
+  end
+end
+
+local _attributes = lfs.attributes
+function lfs.attributes(path, ...)
+  path = lfs.normalize(path)
+  if windows then
+    -- Windows stat() is kind of awful. If the path has a trailing slash, it
+    -- will always fail. Except on drive root directories, which *require* a
+    -- trailing slash. Thankfully, appending a "." will always work if the
+    -- target is a directory; and if it's not, failing on paths with trailing
+    -- slashes is consistent with other OSes.
+    path = path:gsub("/$", "/.")
+  end
+
+  return _attributes(path, ...)
+end
+
+function lfs.exists(path)
+  return lfs.attributes(path, "mode") ~= nil
+end
+
+function lfs.dirname(oldpath)
+  local path = lfs.normalize(oldpath):gsub("[^/]+/*$", "")
+  if path == "" then
+    return oldpath
+  end
+  return path
+end
+
+-- Recursive directory creation a la mkdir -p. Unlike lfs.mkdir, this will
+-- create missing intermediate directories, and will not fail if the
+-- destination directory already exists.
+-- It assumes that the directory separator is '/' and that the path is valid
+-- for the OS it's running on, e.g. no trailing slashes on windows -- it's up
+-- to the caller to ensure this!
+function lfs.rmkdir(path)
+  path = lfs.normalize(path)
+  if lfs.exists(path) then
+    return true
+  end
+  if lfs.dirname(path) == path then
+    -- We're being asked to create the root directory!
+    return nil,"rmkdir: unable to create root directory"
+  end
+  local r,err = lfs.rmkdir(lfs.dirname(path))
+  if not r then
+    return nil,err.." (creating "..path..")"
+  end
+  return lfs.mkdir(path)
+end
+-- end https://github.com/ToxicFrog/luautil/blob/master/lfs.lua
+
 local function clean_old_gtex_files(file_withdir)
   local filename = ""
   local dirpath = ""
@@ -775,9 +845,11 @@ local function clean_old_gtex_files(file_withdir)
   dirpath = string.match(file_withdir, "(.*)"..sep)
   if dirpath then -- dirpath is nil if current directory
     filename = "^"..file_withdir:match(".*/".."(.*)").."%-%d+_%d+_%d+[-%a%d]*%.gtex$"
-    for a in lfs.dir(dirpath) do
-      if a:match(filename) then
-        os.remove(dirpath..sep..a)
+    if lfs.exists(dirpath) then
+      for a in lfs.dir(dirpath) do
+        if a:match(filename) then
+          os.remove(dirpath..sep..a)
+        end
       end
     end
   else
@@ -798,8 +870,8 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
     extra_args = extra_args..' -D'
   end
 
-  local cmd = string.format('%s %s -W -o %s -l %s "%s"', gregorio_exe(),
-      extra_args, gtex_file, glog_file, gabc_file)
+  local cmd = string.format('%s %s -W -o %s -l %s "%s" 2> %s', gregorio_exe(),
+      extra_args, gtex_file, glog_file, gabc_file, glog_file)
   res = os.execute(cmd)
   if res == nil then
     err("\nSomething went wrong when executing\n    '%s'.\n"
@@ -920,6 +992,29 @@ local function include_score(input_file, force_gabccompile, allow_deprecated)
       else
         gabc:close()
       end
+      local sep = ""
+      local onwindows = os.type == "windows" or
+        string.find(os.getenv("PATH"),";",1,true)
+      if onwindows then
+        sep = "\\"
+      else
+        sep = "/"
+      end
+      local output_dir = base_output_dir..sep..file_dir
+      info(output_dir)
+      if not lfs.exists(output_dir) then
+        if not lfs.exists(base_output_dir) then
+          lfs.mkdir(base_output_dir)
+        end
+        local err,message = lfs.rmkdir(output_dir)
+        if not err then
+          info(message)
+        end
+      end
+      gtex_filename = string.format("%s%s-%s.gtex", output_dir, cleaned_filename,
+          internalversion:gsub("%.", "_"))
+      glog_file = string.format("%s%s-%s.glog", output_dir, cleaned_filename,
+          internalversion:gsub("%.", "_"))
       compile_gabc(gabc_file, gtex_filename, glog_file, allow_deprecated)
       tex.print(string.format([[\input %s\relax]], gtex_filename))
       return
@@ -1557,6 +1652,7 @@ gregoriotex.save_dim                     = save_dim
 gregoriotex.save_count                   = save_count
 gregoriotex.change_next_score_line_dim   = change_next_score_line_dim
 gregoriotex.change_next_score_line_count = change_next_score_line_count
+gregoriotex.set_base_output_dir          = set_base_output_dir
 
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))

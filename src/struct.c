@@ -356,7 +356,7 @@ static __inline void change_note_texverb(gregorio_note *note, char *str)
     }
 }
 
-void gregorio_add_texverb_to_note(gregorio_note *current_note, char *str)
+void gregorio_add_texverb_to_note(gregorio_note *const current_note, char *str)
 {
     size_t len;
     char *res;
@@ -376,12 +376,26 @@ void gregorio_add_texverb_to_note(gregorio_note *current_note, char *str)
     }
 }
 
-void gregorio_add_cs_to_note(gregorio_note *const*const current_note,
+void gregorio_add_cs_to_note(gregorio_note *const current_note,
         char *const str, const bool nabc)
 {
-    if (*current_note) {
-        (*current_note)->choral_sign = str;
-        (*current_note)->choral_sign_is_nabc = nabc;
+    if (current_note) {
+        if (current_note->choral_sign) {
+            free(current_note->choral_sign);
+        }
+        current_note->choral_sign = str;
+        current_note->choral_sign_is_nabc = nabc;
+    }
+}
+
+void gregorio_add_shape_hint_to_note(gregorio_note *const current_note,
+        char *const str)
+{
+    if (current_note) {
+        if (current_note->shape_hint) {
+            free(current_note->shape_hint);
+        }
+        current_note->shape_hint = str;
     }
 }
 
@@ -708,6 +722,7 @@ static __inline void free_one_note(gregorio_note *note)
     }
     free_one_texverb(note->texverb);
     free(note->choral_sign);
+    free(note->shape_hint);
     free(note);
 }
 
