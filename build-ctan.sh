@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-# Copyright (C) 2016-2019 The Gregorio Project (see CONTRIBUTORS.md)
+# Copyright (C) 2016-2021 The Gregorio Project (see CONTRIBUTORS.md)
 #
 # This file is part of Gregorio.
 #
@@ -40,7 +40,6 @@ rm -rf macosx debian
 cd ..
 rm doc/Makefile*
 rm doc/examples/Makefile*
-rm doc/examples/debugging.tex
 rm tex/Makefile*
 mkdir tex/lualatex
 mkdir tex/luatex

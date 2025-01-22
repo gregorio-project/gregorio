@@ -1,6 +1,6 @@
 --GregorioTeX Signs Lua support file.
 --
---Copyright (C) 2015-2019 The Gregorio Project (see CONTRIBUTORS.md)
+--Copyright (C) 2015-2021 The Gregorio Project (see CONTRIBUTORS.md)
 --
 --This file is part of Gregorio.
 --
@@ -19,7 +19,7 @@
 
 -- this file contains lua functions to support signs used by GregorioTeX.
 
--- GREGORIO_VERSION 5.2.1
+-- GREGORIO_VERSION 6.0.0
 
 local err = gregoriotex.module.err
 local warn = gregoriotex.module.warn
@@ -210,6 +210,18 @@ local offset_cases = {
   {
     case = 'BarDivisioFinalis',
     v = [[\gre@vepisemaorrareaux{0}{\gre@fontchar@divisiofinalis}{1}{0}{#2}{#3}{#4}]],
+  },
+  -- parenthesized bar
+  {
+    case = 'BarParen',
+    v = [[\gre@vepisemaorrareaux{0}{\gre@char@bar@divisiominimaparen}{1}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\gre@char@bar@divisiominimaparen}{\gre@char@he@barparen{#4}}{2}{#3}]],
+  },
+  -- parenthesized virgula
+  {
+    case = 'BarVirgulaParen',
+    v = [[\gre@vepisemaorrareaux{0}{\gre@char@bar@virgulaparen}{1}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\gre@char@bar@virgulaparen}{\gre@char@he@barvirgulaparen{#4}}{2}{#3}]],
   },
   -- second note of a non-auctus torculus resupinus starting with a quilisma,
   -- with a first and second ambitus of at least two
@@ -452,8 +464,26 @@ local offset_cases = {
   -- natural
   {
     case = 'Natural',
-    v = [[\gre@vepisemaorrareaux{0}{\GreCPNatual}{1}{0}{#2}{#3}{#4}]],
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPNatural}{1}{0}{#2}{#3}{#4}]],
     h = [[\gre@hepisorlineaux{\GreCPNatural}{\gre@char@he@natural{#4}}{2}{#3}]],
+  },
+  -- parenthesized flat
+  {
+    case = 'FlatParen',
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPFlatParen}{1}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPFlatParen}{\gre@char@he@flatparen{#4}}{2}{#3}]],
+  },
+  -- parenthesized sharp
+  {
+    case = 'SharpParen',
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPSharpParen}{1}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPSharpParen}{\gre@char@he@sharpparen{#4}}{2}{#3}]],
+  },
+  -- parenthesized natural
+  {
+    case = 'NaturalParen',
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPNaturalParen}{1}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPNaturalParen}{\gre@char@he@naturalparen{#4}}{2}{#3}]],
   },
 }
 

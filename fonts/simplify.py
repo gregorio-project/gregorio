@@ -8,7 +8,7 @@
     because simplification doesn't work in squarize.py due to bugs
     in fontforge.
 
-    Copyright (C) 2016-2019 The Gregorio Project (see CONTRIBUTORS.md)
+    Copyright (C) 2016-2021 The Gregorio Project (see CONTRIBUTORS.md)
 
     This file is part of Gregorio.
 
@@ -32,9 +32,8 @@
 """
 
 
-from __future__ import print_function
-
-import getopt, sys
+import sys
+import getopt
 import fontforge
 
 

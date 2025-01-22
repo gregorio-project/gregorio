@@ -126,3 +126,4 @@ gregorio-*
 ctan
 *.pyg
 .agignore
+*.orig

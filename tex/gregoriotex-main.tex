@@ -1,6 +1,6 @@
 %GregorioTeX main file.
 %
-% Copyright (C) 2007-2019 The Gregorio Project (see CONTRIBUTORS.md)
+% Copyright (C) 2007-2021 The Gregorio Project (see CONTRIBUTORS.md)
 %
 % This file is part of Gregorio.
 %
@@ -21,7 +21,7 @@
 
 % The version of gregorio. All gregoriotex*.tex files must have the same.
 % All gtex files must also have the same version.
-\xdef\gre@gregoriotexversion{5.2.1}% GREGORIO_VERSION - VersionManager.py
+\xdef\gre@gregoriotexversion{6.0.0}% GREGORIO_VERSION - VersionManager.py
 
 % first some macros to allow checks for version:
 % Tests that all gregoriotex files are of the same version.
@@ -156,6 +156,13 @@
   \closeout\gre@gaux %
 }%
 
+%%%%%%%%%%%%%%%%%%%
+%% output directory selection
+%%%%%%%%%%%%%%%%%%%
+
+\def\gresetoutputdir#1{%
+  \directlua{gregoriotex.set_base_output_dir([[#1]])}%
+}%
 
 %%%%%%%%%%%%%%%
 %% basic start
@@ -1146,10 +1153,14 @@
     \let\gre@pitch@overbrace\gre@pitch@i %
     \let\gre@char@bar@virgula\GreCPVirgulaTwo %
     \let\gre@char@bar@virgulahigh\GreCPVirgulaThree %
+    \let\gre@char@bar@virgulaparen\GreCPVirgulaParenTwo %
+    \let\gre@char@bar@virgulaparenhigh\GreCPVirgulaParenThree %
     \let\gre@char@bar@divisiominimis\GreCPDivisioMinimisTwo %
     \let\gre@char@bar@divisiominimishigh\GreCPDivisioMinimisThree %
     \let\gre@char@bar@divisiominima\GreCPDivisioMinimaTwo %
     \let\gre@char@bar@divisiominimahigh\GreCPDivisioMinimaThree %
+    \let\gre@char@bar@divisiominimaparen\GreCPDivisioMinimaParenTwo %
+    \let\gre@char@bar@divisiominimaparenhigh\GreCPDivisioMinimaParenThree %
     \let\gre@char@bar@divisiominor\GreCPDivisioMinorTwo %
     \let\gre@char@bar@divisiomaior\GreCPDivisioMaiorTwo %
     \let\gre@char@bar@divisiomaiordotted\GreCPDivisioMaiorDottedTwo %
@@ -1165,10 +1176,14 @@
     \let\gre@pitch@overbrace\gre@pitch@k %
     \let\gre@char@bar@virgula\GreCPVirgulaThree %
     \let\gre@char@bar@virgulahigh\GreCPVirgulaFour %
+    \let\gre@char@bar@virgulaparen\GreCPVirgulaParenThree %
+    \let\gre@char@bar@virgulaparenhigh\GreCPVirgulaParenFour %
     \let\gre@char@bar@divisiominimis\GreCPDivisioMinimisThree %
     \let\gre@char@bar@divisiominimishigh\GreCPDivisioMinimisFour %
     \let\gre@char@bar@divisiominima\GreCPDivisioMinimaThree %
     \let\gre@char@bar@divisiominimahigh\GreCPDivisioMinimaFour %
+    \let\gre@char@bar@divisiominimaparen\GreCPDivisioMinimaParenThree %
+    \let\gre@char@bar@divisiominimaparenhigh\GreCPDivisioMinimaParenFour %
     \let\gre@char@bar@divisiominor\GreCPDivisioMinorThree %
     \let\gre@char@bar@divisiomaior\GreCPDivisioMaiorThree %
     \let\gre@char@bar@divisiomaiordotted\GreCPDivisioMaiorDottedThree %
@@ -1184,10 +1199,14 @@
     \let\gre@pitch@overbrace\gre@pitch@m %
     \let\gre@char@bar@virgula\GreCPVirgulaFour %
     \let\gre@char@bar@virgulahigh\GreCPVirgulaFive %
+    \let\gre@char@bar@virgulaparen\GreCPVirgulaParenFour %
+    \let\gre@char@bar@virgulaparenhigh\GreCPVirgulaParenFive %
     \let\gre@char@bar@divisiominimis\GreCPDivisioMinimisFour %
     \let\gre@char@bar@divisiominimishigh\GreCPDivisioMinimisFive %
     \let\gre@char@bar@divisiominima\GreCPDivisioMinimaFour %
     \let\gre@char@bar@divisiominimahigh\GreCPDivisioMinimaFive %
+    \let\gre@char@bar@divisiominimaparen\GreCPDivisioMinimaParenFour %
+    \let\gre@char@bar@divisiominimaparenhigh\GreCPDivisioMinimaParenFive %
     \let\gre@char@bar@divisiominor\GreCPDivisioMinorFour %
     \let\gre@char@bar@divisiomaior\GreCPDivisioMaiorFour %
     \let\gre@char@bar@divisiomaiordotted\GreCPDivisioMaiorDottedFour %
@@ -1203,10 +1222,14 @@
     \let\gre@pitch@overbrace\gre@pitch@p %
     \let\gre@char@bar@virgula\GreCPVirgulaFive %
     \let\gre@char@bar@virgulahigh\GreCPVirgulaSix %
+    \let\gre@char@bar@virgulaparen\GreCPVirgulaParenFive %
+    \let\gre@char@bar@virgulaparenhigh\GreCPVirgulaParenSix %
     \let\gre@char@bar@divisiominimis\GreCPDivisioMinimisFive %
     \let\gre@char@bar@divisiominimishigh\GreCPDivisioMinimisSix %
     \let\gre@char@bar@divisiominima\GreCPDivisioMinimaFive %
     \let\gre@char@bar@divisiominimahigh\GreCPDivisioMinimaSix %
+    \let\gre@char@bar@divisiominimaparen\GreCPDivisioMinimaParenFive %
+    \let\gre@char@bar@divisiominimaparenhigh\GreCPDivisioMinimaParenSix %
     \let\gre@char@bar@divisiominor\GreCPDivisioMinorFive %
     \let\gre@char@bar@divisiomaior\GreCPDivisioMaiorFive %
     \let\gre@char@bar@divisiomaiordotted\GreCPDivisioMaiorDottedFive %
@@ -1803,22 +1826,17 @@
 
 \def\gre@setgregoriofontscaled[#1]#2#3{%
   \gre@trace{gre@setgregoriofontscaled[#1]{#2}{#3}}%
-  \IfStrEq{#2}{parmesan}{%%% OBSOLETE
-    \gre@obsolete{'parmesan' font}{'granapadano' font}%%% OBSOLETE
-  }{%%% OBSOLETE
-    % keep this section
-    \if\relax\detokenize{#1}\relax %
-      \xdef\gre@gregoriofontname{#2}%
-      \expandafter\xdef\csname gre@fontfactor@#2\endcsname{#3}%
-      \gre@loadgregoriofont%
-      \gdef\GreCPVirgaReversaAscendensOnDLine##1{##1}%
-    \else %
-      \xdef\gre@gregoriofontname{#2-#1}%
-      \expandafter\xdef\csname gre@fontfactor@#2-#1\endcsname{#3}%
-      \gre@loadgregoriofont%
-      \gdef\GreCPVirgaReversaAscendensOnDLine##1{\GreCPVirgaReversaLongqueueAscendens}%
-    \fi %
-  }%%% OBSOLETE
+  \if\relax\detokenize{#1}\relax %
+    \xdef\gre@gregoriofontname{#2}%
+    \expandafter\xdef\csname gre@fontfactor@#2\endcsname{#3}%
+    \gre@loadgregoriofont%
+    \gdef\GreCPVirgaReversaAscendensOnDLine##1{##1}%
+  \else %
+    \xdef\gre@gregoriofontname{#2-#1}%
+    \expandafter\xdef\csname gre@fontfactor@#2-#1\endcsname{#3}%
+    \gre@loadgregoriofont%
+    \gdef\GreCPVirgaReversaAscendensOnDLine##1{\GreCPVirgaReversaLongqueueAscendens}%
+  \fi %
   % currently all fonts use the same calibration distances
   \gre@dimen@stafflinethicknessbase=1500sp\relax %
   \gre@dimen@glyphraisebase=-22000sp\relax%

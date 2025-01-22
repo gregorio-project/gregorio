@@ -6,7 +6,7 @@
 """
     Python fontforge script to build a square notation font.
 
-    Copyright (C) 2013-2019 The Gregorio Project (see CONTRIBUTORS.md)
+    Copyright (C) 2013-2021 The Gregorio Project (see CONTRIBUTORS.md)
 
     This file is part of Gregorio.
 
@@ -31,7 +31,6 @@
     own glyphs from it.
 """
 
-from __future__ import print_function
 
 import sys
 import os
@@ -68,7 +67,7 @@ statement from your version."""
 # defines the maximal interval between two notes, the bigger this number is,
 # the more glyphs you'll have to generate
 MAX_INTERVAL = 5
-ALL_AMBITUS = range(1, MAX_INTERVAL + 1)
+ALL_AMBITUS = list(range(1, MAX_INTERVAL + 1))
 AMBITUS_ONE_ONLY = [ 1 ]
 
 # this dictionary must have a value for 0 to 14 (the maximum overall ambitus)
@@ -90,7 +89,7 @@ AMBITUS = {
     14 : 'Fourteen',
 }
 
-GREGORIO_VERSION = '5.2.1'
+GREGORIO_VERSION = '6.0.0'
 
 # The unicode character at which we start our numbering:
 # U+E000 is the start of the BMP Private Use Area
@@ -229,7 +228,7 @@ def set_glyph_name(name):
     global all_glyph_names, newfont, glyphnumber
     if glyphnumber in newfont:
         if name in all_glyph_names:
-            print("ERROR: duplicate glyph name [%s]" % name, file=sys.stderr)
+            print(f'ERROR: duplicate glyph name [{name}]', file=sys.stderr)
             sys.exit(1)
         else:
             all_glyph_names[name] = True
@@ -254,12 +253,27 @@ DIRECT_GLYPHS = {
     'CClefChange' : False,
     'FClefChange' : False,
     'Flat' : False,
+    'FlatHole' : False,
+    'FlatParen' : False,
+    'FlatParenHole' : False,
     'Natural' : False,
+    'NaturalHole' : False,
+    'NaturalParen' : False,
+    'NaturalParenHole' : False,
+    'Sharp' : False,
+    'SharpHole' : False,
+    'SharpParen' : False,
+    'SharpParenHole' : False,
     'VirgulaTwo' : False,
     'VirgulaThree' : False,
     'VirgulaFour' : False,
     'VirgulaFive' : False,
     'VirgulaSix' : False,
+    'VirgulaParenTwo' : False,
+    'VirgulaParenThree' : False,
+    'VirgulaParenFour' : False,
+    'VirgulaParenFive' : False,
+    'VirgulaParenSix' : False,
     'DivisioMinimisTwo' : False,
     'DivisioMinimisThree' : False,
     'DivisioMinimisFour' : False,
@@ -270,6 +284,11 @@ DIRECT_GLYPHS = {
     'DivisioMinimaFour' : False,
     'DivisioMinimaFive' : False,
     'DivisioMinimaSix' : False,
+    'DivisioMinimaParenTwo' : False,
+    'DivisioMinimaParenThree' : False,
+    'DivisioMinimaParenFour' : False,
+    'DivisioMinimaParenFive' : False,
+    'DivisioMinimaParenSix' : False,
     'DivisioMinorTwo' : False,
     'DivisioMinorThree' : False,
     'DivisioMinorFour' : False,
@@ -323,12 +342,8 @@ DIRECT_GLYPHS = {
     'SemicirculusReversus' : False,
     'PunctumAscendens' : True,
     'PunctumDescendens' : True,
-    'FlatHole' : False,
-    'NaturalHole' : False,
     'DivisioDominican' : False,
     'DivisioDominicanAlt' : False,
-    'Sharp' : False,
-    'SharpHole' : False,
     'Linea' : True,
     'RoundBrace' : False,
     'CurlyBrace' : False,
@@ -424,7 +439,7 @@ def glyph_exists(glyph_name):
     result = True
     try:
         oldfont.selection.select(glyph_name + '')
-    except Exception as ex:
+    except Exception:
         result = False
     GLYPH_EXISTS[glyph_name] = result
     return result
@@ -1098,14 +1113,19 @@ HEPISEMA_GLYPHS = {
     'HEpisemaFlat': 'Flat',
     'HEpisemaSharp': 'Sharp',
     'HEpisemaNatural': 'Natural',
-    'HEpisemaBarStandard': 'DivisioMinima',
-    'HEpisemaBarVirgula': 'Virgula',
+    'HEpisemaBarStandard': 'DivisioMinimaTwo',
+    'HEpisemaBarVirgula': 'VirgulaTwo',
+    'HEpisemaBarParen': 'DivisioMinimaParenTwo',
+    'HEpisemaBarVirgulaParen': 'VirgulaParenTwo',
+    'HEpisemaFlatParen': 'FlatParen',
+    'HEpisemaSharpParen': 'SharpParen',
+    'HEpisemaNaturalParen': 'NaturalParen',
 }
 
 def hepisema():
     "Creates horizontal episemata."
     message("horizontal episema")
-    for target, source in HEPISEMA_GLYPHS.items():
+    for target, source in list(HEPISEMA_GLYPHS.items()):
         write_hepisema(get_width(source), target)
         write_hepisema(get_width(source) * 2.0 / 3.0, target + "Reduced")
     reduction = get_width('PunctumSmall')
@@ -2465,7 +2485,7 @@ def scandicus():
     write_all_scandicus('rdeminutus', L_DEMINUTUS)
 
 def write_all_scandicus(last_glyph, lique=L_NOTHING, i_range=ALL_AMBITUS,
-        j_range=ALL_AMBITUS):
+                        j_range=ALL_AMBITUS):
     for i in i_range:
         for j in j_range:
                 write_scandicus(i, j, last_glyph, lique)

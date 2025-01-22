@@ -1,4 +1,4 @@
--- Copyright (C) 2006-2019 The Gregorio Project (see CONTRIBUTORS.md)
+-- Copyright (C) 2006-2021 The Gregorio Project (see CONTRIBUTORS.md)
 --
 -- This file is part of Gregorio.
 --
@@ -124,6 +124,10 @@ local EXCLUDE = {
   ['VirgulaThree'] = true,
   ['VirgulaFive'] = true,
   ['VirgulaSix'] = true,
+  ['VirgulaParenTwo'] = true,
+  ['VirgulaParenThree'] = true,
+  ['VirgulaParenFive'] = true,
+  ['VirgulaParenSix'] = true,
   ['DivisioMinimisTwo'] = true,
   ['DivisioMinimisThree'] = true,
   ['DivisioMinimisFive'] = true,
@@ -132,6 +136,10 @@ local EXCLUDE = {
   ['DivisioMinimaThree'] = true,
   ['DivisioMinimaFive'] = true,
   ['DivisioMinimaSix'] = true,
+  ['DivisioMinimaParenTwo'] = true,
+  ['DivisioMinimaParenThree'] = true,
+  ['DivisioMinimaParenFive'] = true,
+  ['DivisioMinimaParenSix'] = true,
   ['DivisioMinorTwo'] = true,
   ['DivisioMinorThree'] = true,
   ['DivisioMinorFive'] = true,
@@ -191,12 +199,15 @@ local GABC = {
   DivisioMaiorDottedFour = [[:?]],
   DivisioMaiorDottedBackingFour = [[\excluded{:?}]],
   DivisioMinimaFour = [[,]],
+  DivisioMinimaParenFour = [[,?]],
   DivisioMinimisFour = [[\textasciicircum{}]],
   DivisioMinorFour = [[;]],
   FClefChange = [[f3]],
   FClef = [[f3]],
   Flat = [[gx]],
   FlatHole = [[\excluded{gx}]],
+  FlatParen = [[gx?]],
+  FlatParenHole = [[\excluded{gx?}]],
   Flexus = [[g&&&e]],
   FlexusLongqueue = [[h&&&f]],
   FlexusNobar = [[@h&&&f]],
@@ -213,6 +224,8 @@ local GABC = {
   LineaPunctum = [[g&&&R]],
   Natural = [[gy]],
   NaturalHole = [[\excluded{gy}]],
+  NaturalParen = [[gy?]],
+  NaturalParenHole = [[\excluded{gy?}]],
   OblatusAscendensOriscus = [[g&&&o1]],
   OblatusDescendensOriscus = [[g&&&o0]],
   OblatusFlexusOriscus = [[g&&&oe]],
@@ -255,6 +268,8 @@ local GABC = {
   SemicirculusReversus = [[\excluded{g}r5]],
   Sharp = [[g\#{}]],
   SharpHole = [[\excluded{g\#{}}]],
+  SharpParen = [[g\#{}?]],
+  SharpParenHole = [[\excluded{g\#{}?}]],
   StansPunctumInclinatum = [[G2&&&]],
   StrophaAucta = [[g&&&s>]],
   StrophaAuctaLongtail = [[h&&&s>]],
@@ -273,6 +288,7 @@ local GABC = {
   VirgaReversaLongqueue = [[h&&&V]],
   VirgaReversaOpenqueue = [[a&&&V]],
   VirgulaFour = [[^^^^0060]],
+  VirgulaParenFour = [[^^^^0060?]],
 }
 
 local GABC_AMBITUS_ONE = {

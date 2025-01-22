@@ -5,7 +5,7 @@
     Companion to squarize.py, building the stem length config
     according to various schemas.
 
-    Copyright (C) 2016-2019 The Gregorio Project (see CONTRIBUTORS.md)
+    Copyright (C) 2016-2021 The Gregorio Project (see CONTRIBUTORS.md)
 
     This file is part of Gregorio.
 
@@ -270,6 +270,6 @@ def get_stem_schema(schemaname, font_config):
     """
     if schemaname == 'default':
         return get_stem_schema_default(font_config)
-    elif schemaname == 'solesmes':
+    if schemaname == 'solesmes':
         return get_stem_schema_solesmes(font_config)
-    print('impossible to find schema %s, quitting' % schemaname)
+    print(f'impossible to find schema {schemaname}, quitting')

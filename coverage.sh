@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (C) 2016-2019 The Gregorio Project (see CONTRIBUTORS.md)
+# Copyright (C) 2016-2021 The Gregorio Project (see CONTRIBUTORS.md)
 # 
 # This file is part of Gregorio.
 #
