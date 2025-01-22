@@ -64,6 +64,9 @@ local glyph_top_attr = luatexbase.attributes['gre@attr@glyph@top']
 local glyph_bottom_attr = luatexbase.attributes['gre@attr@glyph@bottom']
 local prev_line_id = nil
 
+local alteration_type_attr = luatexbase.attributes['gre@attr@alteration@type']
+local alteration_id_attr = luatexbase.attributes['gre@attr@alteration@id']
+
 local syllable_id_attr = luatexbase.attributes['gre@attr@syllable@id']
 
 local cur_score_id = nil
@@ -81,6 +84,8 @@ local last_syllables = nil
 local new_last_syllables = nil
 local score_last_syllables = nil
 local new_score_last_syllables = nil
+local first_alterations = nil
+local new_first_alterations = nil
 local state_hashes = nil
 local new_state_hashes = nil
 local auxname = nil
@@ -268,6 +273,12 @@ local function is_greaux_write_needed()
   if saved_computations_changed(saved_newline_before_euouae, new_saved_newline_before_euouae) then
     return true
   end
+  for id, tab in pairs(new_first_alterations) do
+    if keys_changed(tab, first_alterations[id]) or entries_changed(tab, first_alterations[id]) then return true end
+  end
+  for id, tab in pairs(first_alterations) do
+    if keys_changed(tab, new_first_alterations[id]) or entries_changed(tab, first_alterations[id]) then return true end
+  end
   return false
 end
 
@@ -332,6 +343,14 @@ local function write_greaux()
       for id, value in pairs(new_state_hashes) do
         aux:write(string.format('  ["%s"]="%s",\n', id, value))
       end
+      aux:write(' },\n ["first_alterations"]={\n')
+      for id, tab in pairs(new_first_alterations) do
+        aux:write(string.format('  ["%s"]={\n    ', id))
+        for i, value in pairs(tab) do
+          aux:write(string.format('[%s]=%s,', i, value))
+        end
+        aux:write(string.format('},\n'))
+      end
       aux:write(' },\n}\n')
       aux:close()
     else
@@ -378,12 +397,14 @@ local function init(arg, enable_height_computation)
     state_hashes = score_info.state_hashes or {}
     saved_lengths = score_info.saved_lengths or {}
     saved_newline_before_euouae = score_info.saved_newline_before_euouae or {}
+    first_alterations = score_info.first_alterations or {}
   else
     line_heights = {}
     last_syllables = {}
     state_hashes = {}
     saved_lengths = {}
     saved_newline_before_euouae = {}
+    first_alterations = {}
   end
 
   if enable_height_computation then
@@ -414,6 +435,7 @@ local function init(arg, enable_height_computation)
   saved_positions = {}
   new_saved_lengths = {}
   new_saved_newline_before_euouae = {}
+  new_first_alterations = {}
 end
 
 -- node factory
@@ -634,6 +656,19 @@ local function post_linebreak(h, groupcode, glyphes)
       currentshift=0
     end
   end
+  -- Record whether each alteration is the first on the line
+  for line in traverse_id(hlist, h) do
+    local seen = {}
+    for n in traverse_id(hlist, line.head) do
+      if has_attribute(n, alteration_type_attr) ~= nil then
+        local i = has_attribute(n, alteration_id_attr)
+        local t = has_attribute(n, alteration_type_attr)
+        new_score_first_alterations[i] = not seen[t]
+        debugmessage("alteration", "id=%s type=%s seen=%s first=%s", i, t, seen[t], new_score_first_alterations[i])
+        seen[t] = true
+      end
+    end
+  end
   --dump_nodes(h)
   -- due to special cases, we don't return h here (see comments in bug #20974)
   return true
@@ -740,12 +775,20 @@ local function at_score_beginning(score_id, top_height, bottom_height,
   if score_last_syllables and state_hashes[score_id] ~= state then
     score_last_syllables = nil
   end
+  score_first_alterations = first_alterations[score_id]
+  if score_first_alterations and state_hashes[score_id] ~= state then
+    score_first_alterations = nil
+  end
   if new_state_hashes then
     new_state_hashes[score_id] = state
   end
   if new_last_syllables then
     new_score_last_syllables = {}
     new_last_syllables[score_id] = new_score_last_syllables
+  end
+  if new_first_alterations then
+    new_score_first_alterations = {}
+    new_first_alterations[score_id] = new_score_first_alterations
   end
 
   luatexbase.add_to_callback('post_linebreak_filter', post_linebreak, 'gregoriotex.post_linebreak', 1)
@@ -1519,6 +1562,21 @@ local function hash_spaces(name, value)
   space_hash = md5.sumhexa(mash)
 end
 
+-- prints 0 for true and 1 for false
+local function is_first_alteration()
+  if score_first_alterations then
+    local i = tex.getattribute(alteration_id_attr)
+    local v = score_first_alterations[i]
+    if v == true or v == nil then
+      tex.print(0)
+    else
+      tex.print(1)
+    end
+  else
+    tex.print(0)
+  end
+end
+
 gregoriotex.number_to_letter             = number_to_letter
 gregoriotex.init                         = init
 gregoriotex.include_score                = include_score
@@ -1557,6 +1615,7 @@ gregoriotex.save_dim                     = save_dim
 gregoriotex.save_count                   = save_count
 gregoriotex.change_next_score_line_dim   = change_next_score_line_dim
 gregoriotex.change_next_score_line_count = change_next_score_line_count
+gregoriotex.is_first_alteration          = is_first_alteration
 
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))

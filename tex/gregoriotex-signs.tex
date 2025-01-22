@@ -537,6 +537,7 @@
       \gre@debugmsg{custos}{not blocked}%
       \gre@calculate@glyphraisevalue{#1}{0}{}%
       %here we need some tricks to draw the line before the custos (for the color)
+      \edef\gre@saved@attr@alteration@id{\number\gre@attr@alteration@id\relax}% save alteration id to avoid double-counting
       \setbox\gre@box@temp@width=\hbox{%
         % we type a hskip and the we type the custos
         \gre@hskip\gre@space@skip@spacebeforeeolcustos\relax %
@@ -547,6 +548,7 @@
           \gre@pickcustos{#1}{2}\relax %
         }%
       }%
+      \global\gre@attr@alteration@id=\gre@saved@attr@alteration@id\relax %
       \gre@dimen@temp@three=\wd\gre@box@temp@width %
       % we make \wd\gre@box@temp@sign contain the width of a custos
       \setbox\gre@box@temp@sign=\hbox{%
@@ -2703,7 +2705,24 @@
 % #7 is the line:char:column for a textedit link
 \def\gre@alteration#1#2#3#4#5#6#7{%
   \gre@trace{gre@alteration{#1}{#2}{#3}{#4}{#5}{#6}{#7}}%
-  \setbox\gre@box@temp@width=\hbox{\gre@pointandclick{#2}{#7}}%
+  \global\advance\gre@attr@alteration@id by 1\relax %
+  \ifgre@alteration@line
+    \ifcase\directlua{gregoriotex.is_first_alteration()}%
+      \gre@alteration@visible{#1}{#2}{#3}{#4}{#5}{#6}{#7}%
+    \or
+      #5\relax %
+      \hbox attr \gre@attrid@alteration@type=#1\relax{}%
+      #6\relax %
+    \fi
+  \else
+    \gre@alteration@visible{#1}{#2}{#3}{#4}{#5}{#6}{#7}%
+  \fi
+}
+
+\def\gre@alteration@visible#1#2#3#4#5#6#7{%
+  \gre@trace{gre@alteration@visible{#1}{#2}{#3}{#4}{#5}{#6}{#7}}%
+  \setbox\gre@box@temp@width=\hbox attr \gre@attrid@alteration@type=#1\relax
+    {\gre@pointandclick{#2}{#7}}%
   \ifnum#4=0\relax %
     \gre@newglyphcommon %
   \fi %
