@@ -373,6 +373,7 @@
   \global\gre@boxingtrue%
   \let\ifgre@saved@prenotes@lastendswithmora\ifgre@lastendswithmora%
   \xdef\gre@saved@prenotes@lastoflinecount{\number\gre@lastoflinecount\relax }%
+  \edef\gre@saved@attr@alteration@id{\number\gre@attr@alteration@id\relax}%
   \ifgre@shownotes%
     \setbox\gre@box@syllablenotes=\hbox{#1}%
   \else%
@@ -394,6 +395,7 @@
   \fi %
   \let\ifgre@lastendswithmora\ifgre@saved@prenotes@lastendswithmora%
   \global\gre@lastoflinecount=\gre@saved@prenotes@lastoflinecount\relax %
+  \global\gre@attr@alteration@id=\gre@saved@attr@alteration@id\relax %
   \global\gre@count@lastglyphiscavum=0\relax %
   \global\gre@skip@bar@lastskip=0pt\relax %
   \global\gre@endofscorefalse %

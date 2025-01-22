@@ -102,6 +102,11 @@
 % attribute for syllable tracking
 \newluatexattribute\gre@attr@syllable@id %
 
+% attributes for soft alterations
+\newluatexattribute\gre@attr@alteration@type %
+  \edef\gre@attrid@alteration@type{\the\allocationnumber}%
+\newluatexattribute\gre@attr@alteration@id %
+
 \newluatexcatcodetable\gre@atletter %
 \setluatexcatcodetable\gre@atletter{%
   \catcode`\@=11 %
@@ -1276,6 +1281,7 @@
   \gre@resetledgerlineheuristics%
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \global\setluatexattribute\gre@attr@syllable@id{0}%
+  \global\setluatexattribute\gre@attr@alteration@id{0}%
   \let\gre@pitch@cleftop\gre@pitch@dummy %
   \let\gre@pitch@clefbottom\gre@pitch@dummy %
   \xdef\gre@gabcname{#6}%
@@ -2133,5 +2139,19 @@
 
 % We load the default space configuration.
 \greloadspaceconf{default}%
+
+\newif\ifgre@alteration@line
+\gre@alteration@linefalse
+\def\gresetalterationscope#1{%
+  \IfStrEqCase{#1}{%
+    {none}%
+      {\gre@alteration@linefalse}%
+    {line}%
+      {\gre@alteration@linetrue}%
+  }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetalterationscope\MessageBreak Possible options are: 'none' and 'line'}%
+  ]%
+}
+\gresetheadercapture{alteration-scope}{gresetalterationscope}{}
 
 \input gregoriotex-nabc.tex
