@@ -31,7 +31,6 @@
     own glyphs from it.
 """
 
-from __future__ import print_function
 
 import sys
 import os
@@ -68,7 +67,7 @@ statement from your version."""
 # defines the maximal interval between two notes, the bigger this number is,
 # the more glyphs you'll have to generate
 MAX_INTERVAL = 5
-ALL_AMBITUS = range(1, MAX_INTERVAL + 1)
+ALL_AMBITUS = list(range(1, MAX_INTERVAL + 1))
 AMBITUS_ONE_ONLY = [ 1 ]
 
 # this dictionary must have a value for 0 to 14 (the maximum overall ambitus)
@@ -229,7 +228,7 @@ def set_glyph_name(name):
     global all_glyph_names, newfont, glyphnumber
     if glyphnumber in newfont:
         if name in all_glyph_names:
-            print("ERROR: duplicate glyph name [%s]" % name, file=sys.stderr)
+            print(f'ERROR: duplicate glyph name [{name}]', file=sys.stderr)
             sys.exit(1)
         else:
             all_glyph_names[name] = True
@@ -440,7 +439,7 @@ def glyph_exists(glyph_name):
     result = True
     try:
         oldfont.selection.select(glyph_name + '')
-    except Exception as ex:
+    except Exception:
         result = False
     GLYPH_EXISTS[glyph_name] = result
     return result
@@ -1126,7 +1125,7 @@ HEPISEMA_GLYPHS = {
 def hepisema():
     "Creates horizontal episemata."
     message("horizontal episema")
-    for target, source in HEPISEMA_GLYPHS.items():
+    for target, source in list(HEPISEMA_GLYPHS.items()):
         write_hepisema(get_width(source), target)
         write_hepisema(get_width(source) * 2.0 / 3.0, target + "Reduced")
     reduction = get_width('PunctumSmall')
@@ -2486,7 +2485,7 @@ def scandicus():
     write_all_scandicus('rdeminutus', L_DEMINUTUS)
 
 def write_all_scandicus(last_glyph, lique=L_NOTHING, i_range=ALL_AMBITUS,
-        j_range=ALL_AMBITUS):
+                        j_range=ALL_AMBITUS):
     for i in i_range:
         for j in j_range:
                 write_scandicus(i, j, last_glyph, lique)
