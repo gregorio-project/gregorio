@@ -157,7 +157,8 @@ Set a list of additional directories which should be searched for scores.  Direc
   \gresetgregpath{{../Scores/}}
 \end{latexcode}
 
-Note that these directories are not searched recursively.  If you want to include subdirectories, then each subdirectory must be included individually.
+\macroname{\textbackslash gresetoutputdir}{\{\#1\}}{gregoriotex-main.tex}
+Sets the name of the output directory where gtex and glog files will be written.  By default this is tmp-gre of the current directory.  Use this command to relocate these files to some other directory.
 
 
 \macroname{\textbackslash gresetcompilegabc}{\{\#1\}}{gregoriotex-main.tex}
