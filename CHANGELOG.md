@@ -7,6 +7,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Fixed the interaction between hyphens and styles.  See [#1538](https://github.com/gregorio-project/gregorio/issues/1538).
 - Fixed the loss of ongoing styles when a syllable starts with a forced center.  See [#1551](https://github.com/gregorio-project/gregorio/issues/1551).
 - Fixed first syllables of one letter with a style causing a segfault.  See [#1585](https://github.com/gregorio-project/gregorio/issues/1585).
+- Fixed a bug that caused a custos to sometimes change into a clef. See [#1373](https://github.com/gregorio-project/gregorio/issues/1373).
 
 ### Added
 - Added a configurable setting `\gresetunisonbreakbehavior` to control automatic line breaks between unison notes above a syllable.  Defaults to `breakable` for backwards compatibility, but may be set to `unbreakable` if that behavior is desired.  See [#1504](https://github.com/gregorio-project/gregorio/issues/1504).
