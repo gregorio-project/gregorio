@@ -373,7 +373,6 @@
   \global\gre@boxingtrue%
   \let\ifgre@saved@prenotes@lastendswithmora\ifgre@lastendswithmora%
   \xdef\gre@saved@prenotes@lastoflinecount{\number\gre@lastoflinecount\relax }%
-  \edef\gre@saved@attr@alteration@id{\number\gre@attr@alteration@id\relax}%
   \ifgre@shownotes%
     \setbox\gre@box@syllablenotes=\hbox{#1}%
   \else%
@@ -395,7 +394,6 @@
   \fi %
   \let\ifgre@lastendswithmora\ifgre@saved@prenotes@lastendswithmora%
   \global\gre@lastoflinecount=\gre@saved@prenotes@lastoflinecount\relax %
-  \global\gre@attr@alteration@id=\gre@saved@attr@alteration@id\relax %
   \global\gre@count@lastglyphiscavum=0\relax %
   \global\gre@skip@bar@lastskip=0pt\relax %
   \global\gre@endofscorefalse %
@@ -858,6 +856,10 @@
   \gre@firstglyphtrue%
   \gre@dimen@bolextra = 0pt\relax%
   \gre@calculate@textaligncenter{\gre@saved@syllable@endsyllablepart}{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
+  % Before measuring the notes, save the alteration id. We will
+  % restore it later, so that the measured notes and the actual notes
+  % have the same alteration ids, if any.
+  \edef\gre@saved@attr@alteration@id{\number\gre@attr@alteration@id\relax}%
   \gre@syllablenotes{#9}% we put the notes in a box, so that we have the width of it
   % now we calculate the begin difference, that is to say \gre@dimen@notesaligncenter - \gre@dimen@textaligncenter
   \gre@dimen@begindifference=\dimexpr(\gre@dimen@notesaligncenter - \gre@dimen@textaligncenter)\relax %
@@ -911,12 +913,14 @@
   \def\nextalignment{\gre@arg@oftwo@first#7}%
   \def\nextalteration{\gre@arg@oftwo@second#7}%
   \ifnum\nextalteration>0\relax
-    \gre@alteration@isfirst{1}%
+    \gre@alteration@isfirst{1}% this uses the alteration id after the notes
     \ifgre@alteration@isfirst
     \else
       \def\nextalteration{0}%
     \fi
   \fi
+  % Now we can restore the alteration id.
+  \global\gre@attr@alteration@id=\gre@saved@attr@alteration@id\relax %
   \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{\nextalignment}{\nextalteration}%
   \gre@unsetfixednexttextformat %
   \ifgre@showlyrics%

@@ -537,7 +537,7 @@
       \gre@debugmsg{custos}{not blocked}%
       \gre@calculate@glyphraisevalue{#1}{0}{}%
       %here we need some tricks to draw the line before the custos (for the color)
-      \edef\gre@saved@attr@alteration@id{\number\gre@attr@alteration@id\relax}% save alteration id to avoid double-counting
+      \edef\gre@saved@attr@alteration@id{\number\gre@attr@alteration@id\relax}%
       \setbox\gre@box@temp@width=\hbox{%
         % we type a hskip and the we type the custos
         \gre@hskip\gre@space@skip@spacebeforeeolcustos\relax %
