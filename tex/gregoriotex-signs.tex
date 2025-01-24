@@ -2705,17 +2705,30 @@
 % #7 is the line:char:column for a textedit link
 \def\gre@alteration#1#2#3#4#5#6#7{%
   \gre@trace{gre@alteration{#1}{#2}{#3}{#4}{#5}{#6}{#7}}%
-  \global\advance\gre@attr@alteration@id by 1\relax %
+  \global\advance\gre@attr@alteration@id by 1\relax
+  \gre@alteration@isfirst{0}%
+  \ifgre@alteration@isfirst
+    \gre@alteration@visible{#1}{#2}{#3}{#4}{#5}{#6}{#7}%
+  \else
+    #5\relax
+    \hbox attr \gre@attrid@alteration@type=#1\relax{}%
+    #6\relax
+  \fi
+}
+
+% Test whether an alteration is the first on its line.
+% #1 = 0 for current alteration, 1 for next alteration.
+% Sets \ifgre@alteration@isfirsttrue or \ifgre@alteration@isfirstfalse.
+\newif\ifgre@alteration@isfirst
+\def\gre@alteration@isfirst#1{%
   \ifgre@alteration@line
-    \ifcase\directlua{gregoriotex.is_first_alteration()}%
-      \gre@alteration@visible{#1}{#2}{#3}{#4}{#5}{#6}{#7}%
-    \or
-      #5\relax %
-      \hbox attr \gre@attrid@alteration@type=#1\relax{}%
-      #6\relax %
+    \ifcase\directlua{gregoriotex.is_first_alteration(#1)}\relax
+      \global\gre@alteration@isfirsttrue
+    \else
+      \global\gre@alteration@isfirstfalse
     \fi
   \else
-    \gre@alteration@visible{#1}{#2}{#3}{#4}{#5}{#6}{#7}%
+    \global\gre@alteration@isfirstfalse
   \fi
 }
 

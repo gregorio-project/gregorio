@@ -352,7 +352,11 @@ local function write_greaux()
       for id, tab in pairs(new_first_alterations) do
         aux:write(string.format('  ["%s"]={\n    ', id))
         for i, value in pairs(tab) do
-          aux:write(string.format('[%s]=%s,', i, value))
+          if i == 'last' then
+            aux:write(string.format('["%s"]=%s,', i, value))
+          else
+            aux:write(string.format('[%s]=%s,', i, value))
+          end
         end
         aux:write(string.format('},\n'))
       end
@@ -669,6 +673,7 @@ local function post_linebreak(h, groupcode, glyphes)
         local i = has_attribute(n, alteration_id_attr)
         local t = has_attribute(n, alteration_type_attr)
         new_score_first_alterations[i] = not seen[t]
+        new_score_first_alterations['last'] = i
         debugmessage("alteration", "id=%s type=%s seen=%s first=%s", i, t, seen[t], new_score_first_alterations[i])
         seen[t] = true
       end
@@ -1658,9 +1663,15 @@ local function hash_spaces(name, value)
 end
 
 -- prints 0 for true and 1 for false
-local function is_first_alteration()
+local function is_first_alteration(next)
   if score_first_alterations then
     local i = tex.getattribute(alteration_id_attr)
+    if next == 1 then
+      i = i + 1
+      while score_first_alterations[i] == nil and i < score_first_alterations['last'] do
+        i = i + 1
+      end
+    end
     local v = score_first_alterations[i]
     if v == true or v == nil then
       tex.print(0)
