@@ -305,9 +305,7 @@
 
 % this is the function that we call when we try to determine the next aligncenter of the notes.
 % #1 is the note type
-% #2 is the alteration style : 0 = none, 1 = flat, 2 = natural, 3 = sharp,
-%                              4 = parenthesized flat, 5 = parenthesized natural,
-%                              6 = parenthesized flat
+% #2 is the alteration type (see \gre@alteration)
 \def\gre@calculate@nextnotesaligncenter#1#2{%
   \gre@trace{gre@calculate@nextnotesaligncenter{#1}{#2}}%
   \gre@calculate@simplenotesaligncenter{#1}{1}%

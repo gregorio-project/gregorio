@@ -65,6 +65,7 @@ local glyph_bottom_attr = luatexbase.attributes['gre@attr@glyph@bottom']
 local prev_line_id = nil
 
 local alteration_type_attr = luatexbase.attributes['gre@attr@alteration@type']
+local alteration_height_attr = luatexbase.attributes['gre@attr@alteration@height']
 local alteration_id_attr = luatexbase.attributes['gre@attr@alteration@id']
 
 local syllable_id_attr = luatexbase.attributes['gre@attr@syllable@id']
@@ -665,17 +666,18 @@ local function post_linebreak(h, groupcode, glyphes)
       currentshift=0
     end
   end
-  -- Record whether each alteration is the first on the line
+  -- Record whether each alteration is the first on the line, or is different than the previous alteration
   for line in traverse_id(hlist, h) do
     local seen = {}
     for n in traverse_id(hlist, line.head) do
-      if has_attribute(n, alteration_type_attr) ~= nil then
+      local t = has_attribute(n, alteration_type_attr)
+      if t ~= nil and t > 0 then
         local i = has_attribute(n, alteration_id_attr)
-        local t = has_attribute(n, alteration_type_attr)
-        new_score_first_alterations[i] = not seen[t]
+        local h = has_attribute(n, alteration_height_attr)
+        new_score_first_alterations[i] = seen[h] ~= t
         new_score_first_alterations['last'] = i
-        debugmessage("alteration", "id=%s type=%s seen=%s first=%s", i, t, seen[t], new_score_first_alterations[i])
-        seen[t] = true
+        debugmessage("alteration", "id=%s type=%s height=%s seen=%s first=%s", i, t, h, seen[t], new_score_first_alterations[i])
+        seen[h] = t
       end
     end
   end

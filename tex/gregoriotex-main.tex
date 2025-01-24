@@ -103,7 +103,9 @@
 \newluatexattribute\gre@attr@syllable@id %
 
 % attributes for soft alterations
-\newluatexattribute\gre@attr@alteration@type %
+\newluatexattribute\gre@attr@alteration@height %
+  \edef\gre@attrid@alteration@height{\the\allocationnumber}%
+\newluatexattribute\gre@attr@alteration@type % see \gre@calculate@nextnotesaligncenter for codes
   \edef\gre@attrid@alteration@type{\the\allocationnumber}%
 \newluatexattribute\gre@attr@alteration@id %
 
