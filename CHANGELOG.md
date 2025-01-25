@@ -13,6 +13,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 
 ### Changed
 - Defined an output directory for gtex and glog files.  Default is `tmp-gre`.  This can be changed using `\gresetoutputdir{...}`.  Fixes [#1393](https://github.com/gregorio-project/gregorio/issues/1393), [#1542](https://github.com/gregorio-project/gregorio/issues/1542), and [#1571](https://github.com/gregorio-project/gregorio/issues/1571).
+- gabc.vim has been expanded into a proper vim plugin.
 
 ### Added
 - Added a configurable setting `\gresetunisonbreakbehavior` to control automatic line breaks between unison notes above a syllable.  Defaults to `breakable` for backwards compatibility, but may be set to `unbreakable` if that behavior is desired.  See [#1504](https://github.com/gregorio-project/gregorio/issues/1504).
