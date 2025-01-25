@@ -908,18 +908,18 @@
   #5%
   % if the next glyph has an alteration, check if it is suppressed;
   % if so, pretend there's no alteration
-  \def\next@alignment{\gre@arg@oftwo@first#7}%
-  \def\next@alteration{\gre@arg@oftwo@second#7}%
-  \ifnum\next@alteration>0\relax
+  \def\gre@nextalignment{\gre@arg@oftwo@first#7}%
+  \def\gre@nextalteration{\gre@arg@oftwo@second#7}%
+  \ifnum\gre@nextalteration>0\relax
     \gre@alteration@isvisible{1}% if the notes contain an alteration, the id was incremented, so this checks the alteration after the notes
     \ifgre@alteration@isvisible
     \else
-      \def\next@alteration{0}%
+      \def\gre@nextalteration{0}%
     \fi
   \fi
   % now we can restore the alteration id to typeset the notes for real
   \global\gre@attr@alteration@id=\gre@saved@attr@alteration@id\relax %
-  \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{\next@alignment}{\next@alteration}%
+  \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{\gre@nextalignment}{\gre@nextalteration}%
   \gre@unsetfixednexttextformat %
   \ifgre@showlyrics%
     \setbox\gre@box@syllabletext=\hbox{%
@@ -939,8 +939,8 @@
   \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
   % gre@count@temp@one holds 1 if next is a bar, 2 if an alteration, else 0
   \gre@count@temp@one=0%
-  \ifnum\next@alteration=0\relax %
-    \ifnum\next@alignment>9\relax %
+  \ifnum\gre@nextalteration=0\relax %
+    \ifnum\gre@nextalignment>9\relax %
       \gre@count@temp@one=1\relax %
     \fi %
   \else %
@@ -1006,7 +1006,7 @@
       \fi%
     \fi %
     % recomputing end difference and final skip with the final hyphen
-    \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{\next@alignment}{\next@alteration}%
+    \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{\gre@nextalignment}{\gre@nextalteration}%
     \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{0}%
     \gre@calculate@syllablefinalskip{#4}{\gre@count@temp@one}%
   \else %
@@ -1077,7 +1077,7 @@
     \GreNoBreak %
   \fi%
   % we call end of syllable
-  \gre@syllable@end{\next@alignment}{\next@alteration}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart}}{#4}%
+  \gre@syllable@end{\gre@nextalignment}{\gre@nextalteration}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart}}{#4}%
   \gre@push@endsyllable{#6}\relax %
   \global\gre@dimen@notesaligncenter=0pt\relax% very important, see flat and natural
   \gre@unsetfixedtextformat %

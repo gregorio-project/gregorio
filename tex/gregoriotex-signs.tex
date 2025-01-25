@@ -2738,17 +2738,17 @@
 \def\gre@alteration@visible#1#2#3#4#5#6{%
   \gre@trace{gre@alteration@visible{#1}{#2}{#3}{#4}{#5}{#6}}%
   \ifcase#2\relax
-    \or\def\alterationchar{\gre@fontchar@flat}\def\alterationhole{\gre@fontchar@flathole}% flat
-    \or\def\alterationchar{\gre@fontchar@natural}\def\alterationhole{\gre@fontchar@naturalhole}% natural
-    \or\def\alterationchar{\gre@fontchar@sharp}\def\alterationhole{\gre@fontchar@sharphole}% sharp
-    \or\def\alterationchar{\gre@fontchar@flatparen}\def\alterationhole{\gre@fontchar@flatparenhole}% parenthesized flat
-    \or\def\alterationchar{\gre@fontchar@naturalparen}\def\alterationhole{\gre@fontchar@naturalparenhole}% parenthesized natural
-    \or\def\alterationchar{\gre@fontchar@sharpparen}\def\alterationhole{\gre@fontchar@sharpparenhole}% parenthesized sharp
+    \or\def\gre@alteration@char{\gre@fontchar@flat}\def\gre@alteration@hole{\gre@fontchar@flathole}% flat
+    \or\def\gre@alteration@char{\gre@fontchar@natural}\def\gre@alteration@hole{\gre@fontchar@naturalhole}% natural
+    \or\def\gre@alteration@char{\gre@fontchar@sharp}\def\gre@alteration@hole{\gre@fontchar@sharphole}% sharp
+    \or\def\gre@alteration@char{\gre@fontchar@flatparen}\def\gre@alteration@hole{\gre@fontchar@flatparenhole}% parenthesized flat
+    \or\def\gre@alteration@char{\gre@fontchar@naturalparen}\def\gre@alteration@hole{\gre@fontchar@naturalparenhole}% parenthesized natural
+    \or\def\gre@alteration@char{\gre@fontchar@sharpparen}\def\gre@alteration@hole{\gre@fontchar@sharpparenhole}% parenthesized sharp
   \fi
   \setbox\gre@box@temp@width=\hbox
     attr \gre@attrid@alteration@height=#1\relax
     attr \gre@attrid@alteration@type=#2\relax
-    {\gre@pointandclick{\alterationchar}{#6}}%
+    {\gre@pointandclick{\gre@alteration@char}{#6}}%
   \ifnum#3=0\relax %
     \gre@newglyphcommon %
   \fi %
@@ -2762,7 +2762,7 @@
   \kern-\gre@skip@temp@one %
   \gre@calculate@glyphraisevalue{#1}{0}{}%
   \ifgre@hidealtlines %
-    \gre@fillhole{\alterationhole}{0}%
+    \gre@fillhole{\gre@alteration@hole}{0}%
   \fi %
   \raise \gre@dimen@glyphraisevalue%
   \copy\gre@box@temp@width%
