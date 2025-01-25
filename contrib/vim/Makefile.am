@@ -15,6 +15,4 @@
 # You should have received a copy of the GNU General Public License
 # along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
-SUBDIRS = TeXShop vim
-
-EXTRA_DIST = gprocess gabc.xml gabc.lang 900_gregorio.xml gregorio.png gabc-syntax.plist contrib_README.md system-setup.command system-setup.bat config-texworks.command checkSyllabation.py
+SUBDIRS = ftdetect syntax
