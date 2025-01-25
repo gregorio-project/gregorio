@@ -2711,12 +2711,11 @@
   \ifgre@alteration@isvisible
     \gre@alteration@visible{#1}{#2}{#3}{#4}{#5}{#6}%
   \else
-    #4\relax
+    % ignore #4 (ledger line) and #5 (not used anyway?)
     \hbox
       attr \gre@attrid@alteration@height=#1\relax
       attr \gre@attrid@alteration@type=#2\relax
       {}%
-    #5\relax
   \fi
 }
 

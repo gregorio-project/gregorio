@@ -666,10 +666,11 @@ local function post_linebreak(h, groupcode, glyphes)
       currentshift=0
     end
   end
-  -- Record whether each alteration is the first on the line, or is different than the previous alteration
+  -- For each alteration, record true if it is the first on the line or it is different than the previous alteration; record false otherwise
   for line in traverse_id(hlist, h) do
     local seen = {}
     for n in traverse_id(hlist, line.head) do
+      -- This skips custos alterations because they're one level deeper. As a result, they are always printed.
       local t = has_attribute(n, alteration_type_attr)
       if t ~= nil and t > 0 then
         local i = has_attribute(n, alteration_id_attr)
