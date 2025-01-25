@@ -2707,8 +2707,8 @@
 \def\gre@alteration#1#2#3#4#5#6{%
   \gre@trace{gre@alteration{#1}{#2}{#3}{#4}{#5}{#6}}%
   \global\advance\gre@attr@alteration@id by 1\relax
-  \gre@alteration@isfirst{0}%
-  \ifgre@alteration@isfirst
+  \gre@alteration@isvisible{0}%
+  \ifgre@alteration@isvisible
     \gre@alteration@visible{#1}{#2}{#3}{#4}{#5}{#6}%
   \else
     #4\relax
@@ -2720,19 +2720,19 @@
   \fi
 }
 
-% Test whether an alteration is the first on its line.
+% Test whether an alteration should be visible.
 % #1 = 0 for current alteration, 1 for next alteration.
-% Sets \ifgre@alteration@isfirsttrue or \ifgre@alteration@isfirstfalse.
-\newif\ifgre@alteration@isfirst
-\def\gre@alteration@isfirst#1{%
+% Sets \ifgre@alteration@isvisibletrue or \ifgre@alteration@isvisiblefalse.
+\newif\ifgre@alteration@isvisible
+\def\gre@alteration@isvisible#1{%
   \ifgre@alteration@line
     \ifcase\directlua{gregoriotex.is_first_alteration(#1)}\relax
-      \global\gre@alteration@isfirsttrue
+      \global\gre@alteration@isvisibletrue
     \else
-      \global\gre@alteration@isfirstfalse
+      \global\gre@alteration@isvisiblefalse
     \fi
   \else
-    \global\gre@alteration@isfirstfalse
+    \global\gre@alteration@isvisibletrue
   \fi
 }
 
