@@ -1185,6 +1185,19 @@ Configures how notes should be kept together on line breaks.
                   lines.  Defaults to \getgrecount{unbreakablefinalnotes}.\\
 \end{argtable}
 
+\macroname{\textbackslash gresetunisonbreakbehavior}{\{\#1\}}{gregoriotex-main.tex}
+Macro to determine whether an automatic linebreak may occur between unison notes
+over a syllable.  This behavior governs how the system works when no explicit
+space is put between the notes.  In other words, any explicit space between the
+notes take precedence over this setting.
+
+\begin{argtable}
+  \#1 & \texttt{breakable}   & Allow automatic linebreaks between unison notes
+                               (default)\\
+      & \texttt{unbreakable} & Disallow automatic linebreaks between unison
+                               notes\\
+\end{argtable}
+
 
 \subsubsection{Bar spacing}
 

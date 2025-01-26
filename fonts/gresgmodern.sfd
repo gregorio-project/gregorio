@@ -20,7 +20,7 @@ OS2Version: 3
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1202942658
-ModificationTime: 1474720778
+ModificationTime: 1677263187
 PfmFamily: 81
 TTFWeight: 400
 TTFWidth: 5
@@ -45,7 +45,7 @@ OS2UnicodeRanges: 00000003.10000000.00000020.00000000
 Lookup: 4 1 1 "'liga'"  {"'liga'_clim"  "'liga'_base"  "'liga'_scand"  "'liga'_disj"  } ['liga' ('DFLT' <'LAT ' > 'DFLT' <'dflt' > 'latn' <'LAT ' > 'latn' <'dflt' > ) ]
 MarkAttachClasses: 1
 DEI: 91125
-LangName: 1033
+LangName: 1033 
 GaspTable: 3 8 2 150 1 65535 1 0
 Encoding: UnicodeBmp
 Compacted: 1
@@ -64,7 +64,7 @@ Grid
  169.1 53 213.708 54 253.1 54 c 24
 EndSplineSet
 TeXData: 1 0 0 100663 50331 33554 219152 1048576 33554 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
-BeginChars: 65538 545
+BeginChars: 65538 546
 
 StartChar: .notdef
 Encoding: 65536 -1 0
@@ -389,7 +389,7 @@ SplineSet
  66 66 58 60 54 50 c 0
  46 22 20 30 20 52 c 1xb8
 EndSplineSet
-LCarets2: 1 0
+LCarets2: 1 0 
 EndChar
 
 StartChar: e1
@@ -37196,6 +37196,16 @@ SplineSet
  32 199 28 201 24 205 c 4
  22 209 20 213 20 221 c 4
 EndSplineSet
+EndChar
+
+StartChar: ni
+Encoding: 58952 58952 545
+Width: 162
+VWidth: 690
+Flags: HW
+HStem: 110 124<60.2842 136.005>
+VStem: 20 122<114.655 228.762>
+LayerCount: 2
 EndChar
 EndChars
 EndSplineFont
