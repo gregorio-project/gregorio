@@ -104,7 +104,7 @@ auto/
 *.deb
 
 #gregorio specific
-doc/_minted-*
+doc/_minted*
 fonts/*.ttf
 *.greaux
 *.gz
