@@ -2729,10 +2729,23 @@
 % Sets \ifgre@alteration@isvisibletrue or \ifgre@alteration@isvisiblefalse.
 \newif\ifgre@alteration@isvisible
 \def\gre@alteration@isvisible#1#2{%
-  \ifnum#2>6 % soft: depends on whether it's the first
+  \ifnum#2>6\relax % soft: depends on whether it's the first
+    \gre@debugmsg{alteration}{\directlua{gregoriotex.is_first_alteration(#1)}}%
     \ifcase\directlua{gregoriotex.is_first_alteration(#1)}\relax
+      % 0: don't know
       \global\gre@alteration@isvisibletrue
-    \else
+    \or
+      % 1: first in line
+      \ifnum#2=8\relax % natural: don't print
+        \global\gre@alteration@isvisiblefalse
+      \else
+        \global\gre@alteration@isvisibletrue
+      \fi
+    \or
+      % 2: different from previous
+      \global\gre@alteration@isvisibletrue
+    \or
+      % 3: not first
       \global\gre@alteration@isvisiblefalse
     \fi
   \else % hard: always visible

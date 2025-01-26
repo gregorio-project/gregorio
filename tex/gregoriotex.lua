@@ -675,7 +675,13 @@ local function post_linebreak(h, groupcode, glyphes)
       if t ~= nil and t > 0 then
         local i = has_attribute(n, alteration_id_attr)
         local h = has_attribute(n, alteration_height_attr)
-        new_score_first_alterations[i] = seen[h] ~= t
+        if seen[h] == nil then
+          new_score_first_alterations[i] = 1
+        elseif seen[h] ~= t then
+          new_score_first_alterations[i] = 2
+        else
+          new_score_first_alterations[i] = 3
+        end
         new_score_first_alterations['last'] = i
         debugmessage("alteration", "id=%s type=%s height=%s seen=%s first=%s", i, t, h, seen[t], new_score_first_alterations[i])
         seen[h] = t
@@ -1665,8 +1671,11 @@ local function hash_spaces(name, value)
   space_hash = md5.sumhexa(mash)
 end
 
--- prints 0 for true and 1 for false
 local function is_first_alteration(next)
+-- Arguments
+--   next: 0 for current alteration, 1 for next alteration
+-- Returns:
+--   0 = don't know, 1 = first in line, 2 = different from previous alteration, 3 = not first
   if score_first_alterations then
     local i = tex.getattribute(alteration_id_attr)
     if next == 1 then
@@ -1676,10 +1685,11 @@ local function is_first_alteration(next)
       end
     end
     local v = score_first_alterations[i]
-    if v == true or v == nil then
-      tex.print(0)
+    if v ~= nil then
+      debugmessage("alteration", "%s", v)
+      tex.print(v)
     else
-      tex.print(1)
+      tex.print(0)
     end
   else
     tex.print(0)
