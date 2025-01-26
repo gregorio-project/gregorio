@@ -2698,8 +2698,8 @@
 % the top level macro:
 % #1 is the height
 % #2 is the alteration type: 0 = none, 1 = flat, 2 = natural, 3 = sharp,
-%                            4 = parenthesized flat, 5 = parenthesized natural,
-%                            6 = parenthesized flat
+%                            4/5/6 = parenthesized flat/natural/sharp,
+%                            7 = soft flat
 % #3 is 1 if the alteration is the flat in a clef
 % #4 are the signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)
 % #5 are the signs to typeset after the glyph (almost all signs)
@@ -2707,30 +2707,35 @@
 \def\gre@alteration#1#2#3#4#5#6{%
   \gre@trace{gre@alteration{#1}{#2}{#3}{#4}{#5}{#6}}%
   \global\advance\gre@attr@alteration@id by 1\relax
-  \gre@alteration@isvisible{0}%
+  \def\gre@alteration@type{#2}%
+  \gre@alteration@isvisible{0}{\gre@alteration@type}%
+  \ifnum\gre@alteration@type>6\relax % treat soft alterations like hard
+    \edef\gre@alteration@type{\numexpr\gre@alteration@type-6\relax}%
+  \fi
   \ifgre@alteration@isvisible
-    \gre@alteration@visible{#1}{#2}{#3}{#4}{#5}{#6}%
+    \gre@alteration@visible{#1}{\gre@alteration@type}{#3}{#4}{#5}{#6}%
   \else
     % ignore #4 (ledger line) and #5 (not used anyway?)
     \hbox
       attr \gre@attrid@alteration@height=#1\relax
-      attr \gre@attrid@alteration@type=#2\relax
+      attr \gre@attrid@alteration@type=\gre@alteration@type\relax
       {}%
   \fi
 }
 
 % Test whether an alteration should be visible.
-% #1 = 0 for current alteration, 1 for next alteration.
+% #1: 0 for current alteration, 1 for next alteration.
+% #2: alteration type
 % Sets \ifgre@alteration@isvisibletrue or \ifgre@alteration@isvisiblefalse.
 \newif\ifgre@alteration@isvisible
-\def\gre@alteration@isvisible#1{%
-  \ifgre@alteration@line
+\def\gre@alteration@isvisible#1#2{%
+  \ifnum#2>6 % soft: depends on whether it's the first
     \ifcase\directlua{gregoriotex.is_first_alteration(#1)}\relax
       \global\gre@alteration@isvisibletrue
     \else
       \global\gre@alteration@isvisiblefalse
     \fi
-  \else
+  \else % hard: always visible
     \global\gre@alteration@isvisibletrue
   \fi
 }
@@ -2744,6 +2749,7 @@
     \or\def\gre@alteration@char{\gre@fontchar@flatparen}\def\gre@alteration@hole{\gre@fontchar@flatparenhole}% parenthesized flat
     \or\def\gre@alteration@char{\gre@fontchar@naturalparen}\def\gre@alteration@hole{\gre@fontchar@naturalparenhole}% parenthesized natural
     \or\def\gre@alteration@char{\gre@fontchar@sharpparen}\def\gre@alteration@hole{\gre@fontchar@sharpparenhole}% parenthesized sharp
+    \else\gre@error{Invalid alteration type}% soft alterations should have been changed to hard
   \fi
   \setbox\gre@box@temp@width=\hbox
     attr \gre@attrid@alteration@height=#1\relax
@@ -2807,6 +2813,15 @@
   \gre@trace@end%
 }%
 
+% Same as the one before, but for soft flats.
+
+\def\GreFlatSoft#1#2#3#4#5{%
+  \gre@trace{GreFlatSoft{#1}{#2}{#3}{#4}{#5}}%
+  \gre@alteration{#1}{7}{#2}{#3}{#4}{#5}%
+  \relax%
+  \gre@trace@end%
+}%
+
 % Same as the one before, but for naturals.
 
 \def\GreNatural#1#2#3#4#5{%
@@ -2825,6 +2840,15 @@
   \gre@trace@end%
 }%
 
+% Same as the one before, but for soft naturals.
+
+\def\GreNaturalSoft#1#2#3#4#5{%
+  \gre@trace{GreNaturalSoft{#1}{#2}{#3}{#4}{#5}}%
+  \gre@alteration{#1}{8}{#2}{#3}{#4}{#5}%
+  \relax%
+  \gre@trace@end%
+}%
+
 % Same as the one before, but for sharps.
 
 \def\GreSharp#1#2#3#4#5{%
@@ -2834,11 +2858,20 @@
   \gre@trace@end%
 }%
 
-% Same as the one before, but for sharps.
+% Same as the one before, but for parenthesized sharps.
 
 \def\GreSharpParen#1#2#3#4#5{%
   \gre@trace{GreSharpParen{#1}{#2}{#3}{#4}{#5}}%
   \gre@alteration{#1}{6}{#2}{#3}{#4}{#5}%
+  \relax%
+  \gre@trace@end%
+}%
+
+% Same as the one before, but for soft sharps.
+
+\def\GreSharpSoft#1#2#3#4#5{%
+  \gre@trace{GreSharpSoft{#1}{#2}{#3}{#4}{#5}}%
+  \gre@alteration{#1}{9}{#2}{#3}{#4}{#5}%
   \relax%
   \gre@trace@end%
 }%

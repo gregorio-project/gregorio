@@ -911,7 +911,7 @@
   \def\gre@nextalignment{\gre@arg@oftwo@first#7}%
   \def\gre@nextalteration{\gre@arg@oftwo@second#7}%
   \ifnum\gre@nextalteration>0\relax
-    \gre@alteration@isvisible{1}% if the notes contain an alteration, the id was incremented, so this checks the alteration after the notes
+    \gre@alteration@isvisible{1}{\gre@nextalteration}% if the notes contain an alteration, the id was incremented, so this checks the alteration after the notes
     \ifgre@alteration@isvisible
     \else
       \def\gre@nextalteration{0}%

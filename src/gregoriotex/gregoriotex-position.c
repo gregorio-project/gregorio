@@ -90,10 +90,13 @@ OFFSET_CASE(LeadingQuilisma);
 OFFSET_CASE(LeadingOriscus);
 OFFSET_CASE(Flat);
 OFFSET_CASE(FlatParen);
+OFFSET_CASE(FlatSoft);
 OFFSET_CASE(Sharp);
 OFFSET_CASE(SharpParen);
+OFFSET_CASE(SharpSoft);
 OFFSET_CASE(Natural);
 OFFSET_CASE(NaturalParen);
+OFFSET_CASE(NaturalSoft);
 
 static __inline const char *note_before_last_note_case_ignoring_deminutus(
         const gregorio_note *const current_note)
@@ -951,17 +954,26 @@ static gregorio_vposition advise_positioning(const gregorio_glyph *const glyph,
         case S_FLAT_PAREN:
             note->gtex_offset_case = FlatParen;
             break;
+        case S_FLAT_SOFT:
+            note->gtex_offset_case = FlatSoft;
+            break;
         case S_SHARP:
             note->gtex_offset_case = Sharp;
             break;
         case S_SHARP_PAREN:
             note->gtex_offset_case = SharpParen;
             break;
+        case S_SHARP_SOFT:
+            note->gtex_offset_case = SharpSoft;
+            break;
         case S_NATURAL:
             note->gtex_offset_case = Natural;
             break;
         case S_NATURAL_PAREN:
             note->gtex_offset_case = NaturalParen;
+            break;
+        case S_NATURAL_SOFT:
+            note->gtex_offset_case = NaturalSoft;
             break;
         default:
             note->gtex_offset_case = last_note_case(glyph,

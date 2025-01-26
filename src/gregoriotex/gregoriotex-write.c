@@ -90,6 +90,7 @@ SHAPE(DescendensOriscusScapusOpenqueue);
 SHAPE(DescendensPunctumInclinatum);
 SHAPE(Flat);
 SHAPE(FlatParen);
+SHAPE(FlatSoft);
 SHAPE(Flexus);
 SHAPE(FlexusLongqueue);
 SHAPE(FlexusNobar);
@@ -106,6 +107,7 @@ SHAPE(Linea);
 SHAPE(LineaPunctum);
 SHAPE(Natural);
 SHAPE(NaturalParen);
+SHAPE(NaturalSoft);
 SHAPE(OriscusDeminutus);
 SHAPE(Pes);
 SHAPE(PesAscendensOriscus);
@@ -145,6 +147,7 @@ SHAPE(SalicusLongqueue);
 SHAPE(Scandicus);
 SHAPE(Sharp);
 SHAPE(SharpParen);
+SHAPE(SharpSoft);
 SHAPE(Stropha);
 SHAPE(StrophaAucta);
 SHAPE(StrophaAuctaLongtail);
@@ -789,14 +792,20 @@ static const char *determine_note_glyph_name(const gregorio_note *const note,
         return SHAPE_Flat;
     case S_FLAT_PAREN:
         return SHAPE_FlatParen;
+    case S_FLAT_SOFT:
+        return SHAPE_FlatSoft;
     case S_SHARP:
         return SHAPE_Sharp;
     case S_SHARP_PAREN:
         return SHAPE_SharpParen;
+    case S_SHARP_SOFT:
+        return SHAPE_SharpSoft;
     case S_NATURAL:
         return SHAPE_Natural;
     case S_NATURAL_PAREN:
         return SHAPE_NaturalParen;
+    case S_NATURAL_SOFT:
+        return SHAPE_NaturalSoft;
     default:
         /* not reachable unless there's a programming error */
         /* LCOV_EXCL_START */
@@ -2609,14 +2618,20 @@ static __inline const char *alteration_name(
         return "Flat";
     case S_FLAT_PAREN:
         return "FlatParen";
+    case S_FLAT_SOFT:
+        return "FlatSoft";
     case S_SHARP:
         return "Sharp";
     case S_SHARP_PAREN:
         return "SharpParen";
+    case S_SHARP_SOFT:
+        return "SharpSoft";
     case S_NATURAL:
         return "Natural";
     case S_NATURAL_PAREN:
         return "NaturalParen";
+    case S_NATURAL_SOFT:
+        return "NaturalSoft";
     default:
         return "";
     }
@@ -2689,10 +2704,13 @@ static void write_note(FILE *f, gregorio_note *note,
     switch (note->u.note.shape) {
     case S_FLAT:
     case S_FLAT_PAREN:
+    case S_FLAT_SOFT:
     case S_NATURAL:
     case S_NATURAL_PAREN:
+    case S_NATURAL_SOFT:
     case S_SHARP:
     case S_SHARP_PAREN:
+    case S_SHARP_SOFT:
         fprintf(f, "\\Gre%s{%d}{0}", alteration_name(note->u.note.shape),
                 pitch_value(note->u.note.pitch));
         break;
@@ -2783,17 +2801,26 @@ static void syllable_first_type(gregorio_syllable *syllable,
                             case S_FLAT_PAREN:
                                 *alteration = ALT_FLAT_PAREN;
                                 break;
+                            case S_FLAT_SOFT:
+                                *alteration = ALT_FLAT_SOFT;
+                                break;
                             case S_NATURAL:
                                 *alteration = ALT_NATURAL;
                                 break;
                             case S_NATURAL_PAREN:
                                 *alteration = ALT_NATURAL_PAREN;
                                 break;
+                            case S_NATURAL_SOFT:
+                                *alteration = ALT_NATURAL_SOFT;
+                                break;
                             case S_SHARP:
                                 *alteration = ALT_SHARP;
                                 break;
                             case S_SHARP_PAREN:
                                 *alteration = ALT_SHARP_PAREN;
+                                break;
+                            case S_SHARP_SOFT:
+                                *alteration = ALT_SHARP_SOFT;
                                 break;
                             default:
                                 /* not reachable unless there's a programming error */
@@ -3938,10 +3965,13 @@ static void write_default_end_of_element(FILE *f,
                     switch(last_note->u.note.shape) {
                     case S_FLAT:
                     case S_FLAT_PAREN:
+                    case S_FLAT_SOFT:
                     case S_SHARP:
                     case S_SHARP_PAREN:
+                    case S_SHARP_SOFT:
                     case S_NATURAL:
                     case S_NATURAL_PAREN:
+                    case S_NATURAL_SOFT:
                         break;
                     default:
                         last_pitch = last_note->u.note.pitch;
@@ -3955,10 +3985,13 @@ static void write_default_end_of_element(FILE *f,
                     switch(next_note->u.note.shape) {
                     case S_FLAT:
                     case S_FLAT_PAREN:
+                    case S_FLAT_SOFT:
                     case S_SHARP:
                     case S_SHARP_PAREN:
+                    case S_SHARP_SOFT:
                     case S_NATURAL:
                     case S_NATURAL_PAREN:
+                    case S_NATURAL_SOFT:
                         break;
                     default:
                         if (next_note->u.note.pitch != NO_PITCH &&

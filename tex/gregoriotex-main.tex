@@ -2142,18 +2142,4 @@
 % We load the default space configuration.
 \greloadspaceconf{default}%
 
-\newif\ifgre@alteration@line
-\gre@alteration@linefalse
-\def\gresetalterationscope#1{%
-  \IfStrEqCase{#1}{%
-    {none}%
-      {\gre@alteration@linefalse}%
-    {line}%
-      {\gre@alteration@linetrue}%
-  }[% all other cases
-      \gre@error{Unrecognized option "#1" for \protect\gresetalterationscope\MessageBreak Possible options are: 'none' and 'line'}%
-  ]%
-}
-\gresetheadercapture{alteration-scope}{gresetalterationscope}{}
-
 \input gregoriotex-nabc.tex
