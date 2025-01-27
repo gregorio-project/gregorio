@@ -452,10 +452,6 @@ diamond-shaped note.  Other shapes are created by appending various characters
 to the pitch letter.  These characters may be used together, and
 Gregorio\TeX{} will try to typeset them together.
 
-Things like flats, sharps, and naturals, while not technically notes, are
-treated as one-note neumes by Gregorio\TeX.  Thus, they are also added by
-appending characters to pitch letters.
-
 \begin{tabularx}{\textwidth}{l|X}
   Gabc & Description \\
   \hline
@@ -480,6 +476,12 @@ appending characters to pitch letters.
   \pitchchar\texttt{x} & flat \\
   \pitchchar\texttt{\#} & sharp \\
   \pitchchar\texttt{y} & natural \\
+  \pitchchar\texttt{x?} & parenthesized flat \\
+  \pitchchar\texttt{\#?} & parenthesized sharp \\
+  \pitchchar\texttt{y?} & parenthesized natural \\
+  \pitchchar\texttt{X} & soft flat \\
+  \pitchchar\texttt{\#*} & soft sharp \\
+  \pitchchar\texttt{Y} & soft natural \\
 \end{tabularx}
 
 In the above table, \pitchchar{} represents a pitch character and
@@ -490,16 +492,25 @@ Some examples:
 {
   \gresetinitiallines{0}\gresetlyriccentering{firstletter}%
   \gresetclef{invisible}\gresetlastline{justified}\greseteolcustos{manual}%
+  \ttfamily
   \gabcsnippet{
     ( )
     g(g) g<sp>~~</sp>(g~) g<(g<) g>(g>) go(go) go<sp>~~</sp>(go~) gw(gw)
     gv(gv) gV(gV) gs(gs) gs<(gs<) g=(g=)
     ( ) (z) ( )
     gr(gr) gR(gR) gr0(gr0) G(G) G0(G0) G1(G1) G<sp>~~</sp>(G~) G>(G>) Gr(Gr) gx(gx)
-    g#(g#) gy(gy)
+    g#(g#) gy(gy) gx?(gx?) g#?(g#?) gy?(gy?)
     ( )
   }
 }
+
+\subsubsection{Alterations (Flats, Naturals, and Sharps)} \label{softalterations}
+
+Things like flats, sharps, and naturals (called ``alterations''), while not technically notes, are
+treated as one-note neumes by Gregorio\TeX.  Thus, they are also added by
+appending characters to pitch letters.
+
+Flats, sharps, and naturals each have a ``soft'' version (\verb|X|, \verb|#*|, and \verb|Y|, respectively), whose appearance is controlled by the \verb|\gresetalterationeffect| macro (see \S\ref{setalterationeffect}). For Dominican chant, use \verb|\gresetalterationeffect{line}| and make all alterations soft.
 
 \subsubsection{Oriscus Orientation}
 

@@ -1408,6 +1408,19 @@ Macro to set the font to be used for the ancient notation.
   \#2 & integer & point size at which the font should be loaded\\
 \end{argtable}
 
+\subsubsection{Alterations (Flats, Naturals, and Sharps)}\label{setalterationeffect}
+
+\macroname{\textbackslash gresetalterationeffect}{\{\#1\}}{gregoriotex-signs.tex}
+Macro to set the effect of alterations (flats and sharps), for the purpose of deciding whether to print soft alterations (see \S\ref{softalterations}).
+\begin{argtable}
+  \#1 & \texttt{note} (default) & effect ends immediately \\
+  & \texttt{line} & effect ends at the end of the line \\
+\end{argtable}
+Setting \verb|\gresetalterationeffect{note}| causes all soft sharps and flats, and no soft naturals, to be printed.
+Setting \verb|\gresetalterationeffect{line}|, and making all alterations soft, gives the Dominican convention.
+
+(Argument \#1 is actually a comma-separated list of keywords, but currently, it must not be empty, and \texttt{note,line} has the same effect as \texttt{note}. In the future, other options may be added.)
+
 \subsection{Counts}\label{counts}
 
 Each of the following counts controls some aspect of the configuration of the Gregorio\TeX\ score.  They are changed using \verb=\grechangecount=, documented above.

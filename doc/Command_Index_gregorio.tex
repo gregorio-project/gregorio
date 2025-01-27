@@ -530,6 +530,18 @@ Macro to typeset a parenthesized flat.
   \#5 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
 \end{argtable}
 
+\macroname{\textbackslash GreFlatSoft}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
+Macro to typeset a soft flat.
+
+\begin{argtable}
+  \#1 & integer & Height number of the flat.\\
+  \#2 & \texttt{0} & The flat is not part of the clef.\\
+  & \texttt{1} & The flat is part of the clef.\\
+  \#3 & \TeX\ code & signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)\\
+  \#4 & \TeX\ code & signs to typeset after the glyph (almost all signs)\\
+  \#5 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
+\end{argtable}
+
 \macroname{\textbackslash GreForceHyphen}{}{gregoriotex-syllable.tex}
 Macro that indicates that a hyphen should be forced (if enabled) after the given syllable.
 
@@ -810,6 +822,18 @@ Macro to typeset a parenthesized natural.
   \#5 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
 \end{argtable}
 
+\macroname{\textbackslash GreNaturalSoft}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
+Macro to typeset a soft natural.
+
+\begin{argtable}
+  \#1 & integer & Height number of the natural.\\
+  \#2 & \texttt{0} & The natural is not part of the clef.\\
+  & \texttt{1} & The natural is part of the clef (doesn't happen).\\
+  \#3 & \TeX\ code & signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)\\
+  \#4 & \TeX\ code & signs to typeset after the glyph (almost all signs)\\
+  \#5 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
+\end{argtable}
+
 \macroname{\textbackslash GreNewLine}{}{gregoriotex-main.tex}
 Macro to call if you want to go to the next line.
 
@@ -1070,6 +1094,18 @@ Macro to typeset a sharp.
 
 \macroname{\textbackslash GreSharpParen}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
 Macro to typeset a parenthesized sharp.
+
+\begin{argtable}
+  \#1 & integer & Height number of the sharp.\\
+  \#2 & \texttt{0} & The sharp is not part of the clef.\\
+  & \texttt{1} & The sharp is part of the clef (doesn't happen).\\
+  \#3 & \TeX\ code & signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)\\
+  \#4 & \TeX\ code & signs to typeset after the glyph (almost all signs)\\
+  \#5 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
+\end{argtable}
+
+\macroname{\textbackslash GreSharpSoft}{\#1\#2\#3\#4\#5}{gregoriotex-signs.tex}
+Macro to typeset a soft sharp.
 
 \begin{argtable}
   \#1 & integer & Height number of the sharp.\\

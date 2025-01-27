@@ -2723,30 +2723,62 @@
   \fi
 }
 
+% Sets the behavior of soft alterations, which are not printed if the
+% same alteration (at the same pitch) is already in effect. A (hard or
+% soft) alteration's effect is always cancelled by another alteration,
+% as well as argument #1, whose default is "note":
+% "note" = effect ends immediately (i.e., print all soft alterations)
+% "line" = effect extends to the end of the line
+% In the future, "word" and "bar" may also be allowed.
+\newif\ifgre@alteration@effect@note\gre@alteration@effect@notefalse
+\newif\ifgre@alteration@effect@line\gre@alteration@effect@linetrue
+\def\gresetalterationeffect#1{%
+  \global\gre@alteration@effect@notefalse
+  \global\gre@alteration@effect@linefalse
+  \IfStrEq{#1}{}{\gre@error{Empty argument for \protect\gresetalterationeffect. Allowed arguments are: 'note', 'line'}}{%
+    \def\gre@alteration@effect@process##1{%
+      \IfStrEqCase{##1}{%
+        {note}{\global\gre@alteration@effect@notetrue}%
+        {line}{\global\gre@alteration@effect@linetrue}%
+      }[\gre@error{Unrecognized argument '##1' for \protect\gresetalterationeffect. Allowed arguments are: 'note', 'line'}]}%
+    \gre@parsecommas{#1}{\gre@alteration@effect@process}%
+  }%
+}
+
 % Test whether an alteration should be visible.
 % #1: 0 for current alteration, 1 for next alteration.
 % #2: alteration type
 % Sets \ifgre@alteration@isvisibletrue or \ifgre@alteration@isvisiblefalse.
 \newif\ifgre@alteration@isvisible
 \def\gre@alteration@isvisible#1#2{%
-  \ifnum#2>6\relax % soft: depends on whether it's the first
-    \gre@debugmsg{alteration}{\directlua{gregoriotex.is_first_alteration(#1)}}%
-    \ifcase\directlua{gregoriotex.is_first_alteration(#1)}\relax
-      % 0: don't know
-      \global\gre@alteration@isvisibletrue
-    \or
-      % 1: first in line
+  \global\gre@alteration@isvisiblefalse
+  \ifnum#2>6\relax % soft
+    % alterationeffect includes "line"
+    \ifgre@alteration@effect@line
+      \gre@debugmsg{alteration}{line}%
+      \ifcase\directlua{gregoriotex.is_first_alteration(#1)}\relax
+        % 0: don't know
+        \global\gre@alteration@isvisibletrue
+      \or
+        % 1: first in line
+        \ifnum#2=8\relax % natural: don't print
+        \else
+          \global\gre@alteration@isvisibletrue
+        \fi
+      \or
+        % 2: different from previous
+        \global\gre@alteration@isvisibletrue
+      \or
+        % 3: not first
+      \fi
+    \fi
+    % alterationeffect includes "note"
+    \ifgre@alteration@effect@note
+      \gre@debugmsg{alteration}{note}%
       \ifnum#2=8\relax % natural: don't print
-        \global\gre@alteration@isvisiblefalse
       \else
         \global\gre@alteration@isvisibletrue
       \fi
-    \or
-      % 2: different from previous
-      \global\gre@alteration@isvisibletrue
-    \or
-      % 3: not first
-      \global\gre@alteration@isvisiblefalse
     \fi
   \else % hard: always visible
     \global\gre@alteration@isvisibletrue
