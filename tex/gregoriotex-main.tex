@@ -417,7 +417,7 @@
   % first we print the initial
   \gre@dimen@temp@five = \dimexpr(\gre@dimen@textlower+\gre@space@dimen@initialraise)\relax%
   \ifvoid\gre@box@initial%
-    \gre@debugmsg{initial}{Fill initial box a}%
+    \gre@debugmsg{initial}{Fill initial box with #1}%
     \setbox\gre@box@initial=\hbox{\gre@style@initial\gre@fixedtextformat{#1}\endgre@style@initial}%
   \fi%
   \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
