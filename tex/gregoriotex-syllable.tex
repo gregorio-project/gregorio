@@ -1276,7 +1276,18 @@
   \gre@dimen@begindifference=\dimexpr(\gre@dimen@notesaligncenter - \gre@dimen@textaligncenter)\relax%
   \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
   #5%
-  \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}#7%
+  % if the next glyph has an alteration, check if it is suppressed;
+  % if so, pretend there's no alteration
+  \def\gre@nextalignment{\gre@arg@oftwo@first#7}%
+  \def\gre@nextalteration{\gre@arg@oftwo@second#7}%
+  \ifnum\gre@nextalteration>0\relax
+    \gre@alteration@isvisible{1}{\gre@nextalteration}%
+    \ifgre@alteration@isvisible
+    \else
+      \def\gre@nextalteration{0}%
+    \fi
+  \fi
+  \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{\gre@nextalignment}{\gre@nextalteration}%
   \gre@unsetfixednexttextformat %
   \gre@debugmsg{barspacing}{previousenddifference: \the\gre@dimen@previousenddifference}%
   \gre@debugmsg{barspacing}{begindifference: \the\gre@dimen@begindifference}%
@@ -1286,7 +1297,7 @@
     %
     % New bar spacing algorithm
     %
-    \gre@calculate@barposition{#4}{\gre@arg@oftwo@second#7}%
+    \gre@calculate@barposition{#4}{\gre@nextalteration}%
     \ifgre@textcleared%
       \gre@clearsyllable{bar}%
     \fi%
