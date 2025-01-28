@@ -12,6 +12,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Fixed a bug that caused a custos to sometimes change into a clef. See [#1373](https://github.com/gregorio-project/gregorio/issues/1373).
 
 ### Changed
+- Modified gregorio to append to the log file specified as an argument and to send early messages to it.  See [#1541](https://github.com/gregorio-project/gregorio/issues/1541).
 - Defined an output directory for gtex and glog files.  Default is `tmp-gre`.  This can be changed using `\gresetoutputdir{...}`.  Fixes [#1393](https://github.com/gregorio-project/gregorio/issues/1393), [#1542](https://github.com/gregorio-project/gregorio/issues/1542), and [#1571](https://github.com/gregorio-project/gregorio/issues/1571).
 - gabc.vim has been expanded into a proper vim plugin.
 
