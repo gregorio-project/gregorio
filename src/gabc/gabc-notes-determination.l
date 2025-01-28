@@ -1314,7 +1314,7 @@ X   {
         gregorio_change_shape(current_note, S_SHARP_PAREN,
                 legacy_oriscus_orientation);
     }
-#\* {
+## {
         gregorio_change_shape(current_note, S_SHARP_SOFT,
                 legacy_oriscus_orientation);
     }
