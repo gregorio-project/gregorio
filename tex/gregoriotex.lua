@@ -48,8 +48,11 @@ local vlist = node.id('vlist')
 local glyph = node.id('glyph')
 local glue = node.id('glue')
 local whatsit = node.id('whatsit')
+local rule = node.id('rule')
 
 local hyphen = tex.defaulthyphenchar or 45
+
+local stafflines_attr = luatexbase.attributes['gre@attr@stafflines']
 
 local dash_attr = luatexbase.attributes['gre@attr@dash']
 local potentialdashvalue   = 1
@@ -437,28 +440,36 @@ local function getdashnnode()
 end
 
 -- a simple (for now) function to dump nodes for debugging
-local function dump_nodes(head)
-  local n, m
+local function dump_nodes_helper(head, indent)
+  local dots = string.rep('..', indent*2)
   for n in traverse(head) do
+    local ids = format("%s", has_attribute(n, has_attribute(n, glyph_id_attr)))
     if node.type(n.id) == 'penalty' then
-      log("%s=%d {%d}", node.type(n.id), n.penalty, has_attribute(n, glyph_id_attr))
+      log("%s=%s {%s}", node.type(n.id), n.penalty, has_attribute(n, glyph_id_attr))
     elseif n.id == whatsit and n.subtype == user_defined_subtype and n.user_id == marker_whatsit_id then
       log("marker-whatsit %s", n.value)
-    else
-      log("node %s [%d] {%d}", node.type(n.id), n.subtype, has_attribute(n, glyph_id_attr))
-    end
-    if n.id == hlist then
-      for m in traverse(n.head) do
-        if node.type(m.id) == 'penalty' then
-          log("..%s=%d {%d}", node.type(m.id), m.penalty, has_attribute(n, glyph_id_attr))
-        elseif m.id == whatsit and m.subtype == user_defined_subtype and m.user_id == marker_whatsit_id then
-          log("..marker-whatsit %s", m.value)
-        else
-          log("..node %s [%d] {%d}", node.type(m.id), m.subtype, has_attribute(n, glyph_id_attr))
-        end
+      log(dots .. "marker-whatsit %s", n.value)
+    elseif n.id == glyph then
+      local f = font.fonts[n.font]
+      local charname
+      for k, v in pairs(f.resources.unicodes) do
+        if v == n.char then charname = k end
       end
+      log(dots .. "glyph %s {%s}", charname, ids)
+    elseif n.id == rule then
+      log(dots .. "rule subtype=%s width=%spt height=%spt depth=%spt", n.subtype, n.width/65536, n.height/65536, n.depth/65536)
+    else
+      log("node %s [%s] {%s}", node.type(n.id), n.subtype, has_attribute(n, glyph_id_attr))
+    end
+    if n.id == hlist or n.id == vlist then
+      dump_nodes_helper(n.head, indent+1)
     end
   end
+end
+
+local function dump_nodes(head)
+  log('--begin dump--')
+  dump_nodes_helper(head, 0)
   log('--end dump--')
 end
 
@@ -639,6 +650,26 @@ local function post_linebreak(h, groupcode, glyphes)
       currentshift=0
     end
   end
+
+  -- change width of staff lines
+  for line in traverse_id(hlist, h) do
+    debugmessage("stafflines", "line width %spt", line.width/65536)
+    for h1 in traverse_id(hlist, line.head) do
+      for h2 in traverse_id(hlist, h1.head) do
+        for v in traverse_id(vlist, h2.head) do
+          if has_attribute(v, stafflines_attr) then
+            debugmessage("stafflines", "vbox width %spt -> %spt", v.width/65536, line.width/65536)
+            v.width = line.width
+            for r in traverse_id(rule, v.head) do
+              debugmessage("stafflines", "rule width %spt -> %spt", r.width/65536, line.width/65536)
+              r.width = line.width
+            end
+          end
+        end
+      end
+    end
+  end
+
   --dump_nodes(h)
   -- due to special cases, we don't return h here (see comments in bug #20974)
   return true

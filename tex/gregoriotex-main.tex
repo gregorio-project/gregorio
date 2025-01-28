@@ -82,6 +82,8 @@
 
 %%%%%%%%%%%%%%%
 
+\newluatexattribute\gre@attr@stafflines%
+  \edef\gre@attrid@stafflines{\the\allocationnumber}
 
 % an attribute we put on the text nodes.
 % if it is 1, it means that there may be a dash here if this syllable is at the end of a line
@@ -678,7 +680,11 @@
 %% has to be called before drawing the key, after drawing the initial
 \def\gre@beginnotes{%
   \gre@trace{gre@beginnotes}%
-  \gre@drawfirstlines %
+  %\gre@drawfirstlines %
+  % Draw the staff lines the same as the other staves; post_linebreak
+  % will fix them. The \hbox is there so that post_linebreak can find
+  % it more easily.
+  \hbox{\copy\gre@box@lines}%
   %%localeleftbox is a primitive of Omega, it draws the same box at the beginning of new lines (here after the first)
   \gre@localleftbox{%
     \copy\gre@box@lines %
@@ -823,7 +829,7 @@
   %\advance\gre@dimen@stafflinewidth by -\gre@space@dimen@minimalspaceatlinebeginning
   %\gre@dimen@initialwidth=0pt
   \hbox to 0pt{%
-    \vbox{%
+    \vbox attr \gre@attrid@stafflines=1 {%
       \gre@style@normalstafflines%
       \vskip\gre@dimen@currentabovelinestextheight\relax%
       \vskip\gre@dimen@additionaltopspace\relax%
@@ -886,7 +892,7 @@
 \def\gre@generatelines{%
   \gre@trace{gre@generatelines}%
   \setbox\gre@box@lines=\hbox to 0pt{%
-    \vbox{%
+    \vbox attr \gre@attrid@stafflines=1 {%
       \gre@style@normalstafflines%
       \vskip\glueexpr(\gre@dimen@additionaltopspace+\gre@space@skip@spaceabovelines+\gre@dimen@currentabovelinestextheight)\relax%
       \ifgre@showlines %
