@@ -441,28 +441,31 @@
   \ifnum\gre@count@initiallines=1\relax % a one line initial
     \setbox\gre@box@initial=\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}%
   \else % a multi-line initial
-    %account for fixed height elements of a line
-    \gre@dimen@temp@one = \dimexpr(- \gre@space@dimen@spacebeneathtext %
-        - \gre@space@dimen@spacelinestext %
-        - \gre@dimen@staffheight%
-        - \gre@space@dimen@spaceabovelines%
+    %fixed height elements of a line will form the basis of each line’s adjustment to the initial position
+    \gre@dimen@temp@one = \dimexpr(\gre@space@dimen@spacebeneathtext %
+        + \gre@space@dimen@spacelinestext %
+        + \gre@dimen@staffheight%
+        + \gre@space@skip@spaceabovelines	%
         )\relax%
-    \advance\gre@dimen@temp@five by \dimexpr(\gre@dimen@temp@one * (\gre@count@initiallines - 1))\relax%%adjust the initial position based on the number of lines it’s supposed to take up
+    \gre@debugmsg{initial}{Fixed elements line height: \the\gre@dimen@temp@one}%
     %account for the variable height elements of each line in initial
-    {% initiating a group so that the distance changes we're about to make won't persist beyond the calculation of where the initial goes
-    %first set the base "unit" distance
-    \ifgre@noteadditionalspacelinestext%
-      \gre@dimen@additionalbottomspace=\gre@space@dimen@noteadditionalspacelinestext\relax%
-    \else%
-      \gre@dimen@additionalbottomspace=\dimexpr(((\gre@dimen@interstafflinedistancebase + \gre@dimen@stafflinethicknessbase) / 2 ) * \gre@factor)\relax%
-    \fi%
-    \gre@dimen@currenttranslationheight=\gre@space@dimen@translationheight\relax%
-    \gre@dimen@currentabovelinestextheight=\gre@space@dimen@abovelinestextheight\relax
-    %now switch to lua to access the line heights information and make the adjustment
-    \directlua{gregoriotex.adjust_initial_raise(\gre@pitch@cleftop,\gre@pitch@clefbottom,\gre@pitch@adjust@top,\gre@pitch@adjust@bottom)}%
-    \global\setbox\gre@box@initial=\hbox{\vtop to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}\vss}}%
+    \begingroup% initiating a group so that the distance changes we're about to make won't persist beyond the calculation of where the initial goes
+      %first set the base "unit" distance
+      \ifgre@noteadditionalspacelinestext%
+        \gre@dimen@additionalbottomspace=\gre@space@dimen@noteadditionalspacelinestext\relax%
+      \else%
+        \gre@dimen@additionalbottomspace=\dimexpr(((\gre@dimen@interstafflinedistancebase + \gre@dimen@stafflinethicknessbase) / 2 ) * \gre@factor)\relax%
+      \fi%
+      \gre@dimen@currenttranslationheight=\gre@space@dimen@translationheight\relax%
+      \gre@dimen@currentabovelinestextheight=\gre@space@dimen@abovelinestextheight\relax
+      %now switch to lua to access the line heights information and make the adjustment
+      \directlua{gregoriotex.adjust_initial_raise(\gre@pitch@cleftop,\gre@pitch@clefbottom,\gre@pitch@adjust@top,\gre@pitch@adjust@bottom)}%
+      \gre@debugmsg{initial}{Final initial raise: \the\gre@dimen@temp@five}%
+      \global\setbox\gre@box@initial=\hbox{\vtop to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise%
+        \gre@dimen@temp@five%
+        \box\gre@box@initial\hss}\vss}}%
+    \endgroup%
   \fi%
-  }%
   \gre@debugmsg{annotation}{Initial set.}%
   \gre@style@initial%
   \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax%

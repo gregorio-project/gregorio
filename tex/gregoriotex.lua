@@ -1393,7 +1393,7 @@ local function adjust_initial_raise(clef_top,clef_bottom,pitch_adjust_top,pitch_
       debugmessage('initial','%d line initial, beginning raise adjustment',initial_lines)
       local key, value
       local last = score_heights['last']
-      local adjustment = 0
+      local this_line_adjustment = 0
       for key, value in pairs(score_heights) do
         --debugmessage('initial','I see %s: %s',key,value) -- need to figure out what is seen on first run
         if (value == last) then
@@ -1405,13 +1405,14 @@ local function adjust_initial_raise(clef_top,clef_bottom,pitch_adjust_top,pitch_
             debugmessage('initial','first line is already accounted for')
           else
             debugmessage('initial','line %d is within the initial',value[1])
+            this_line_adjustment = tex.dimen['gre@dimen@temp@one']
             local max_note = math.max(value[2],clef_top)
             local max_adjust = max_note - pitch_adjust_top - tex.count['gre@space@count@additionaltopspacethreshold']
             if (max_adjust < 0) then
               debugmessage('initial','high element adjustment not required')
             else
               debugmessage('initial','highest element position adjustment: %d',max_adjust)
-              adjustment = adjustment + max_adjust * ((tex.dimen['gre@dimen@interstafflinedistancebase'] + tex.dimen['gre@dimen@stafflinethicknessbase'])/2) * tex.count['gre@factor']
+              this_line_adjustment = this_line_adjustment + max_adjust * ((tex.dimen['gre@dimen@interstafflinedistancebase'] + tex.dimen['gre@dimen@stafflinethicknessbase'])/2) * tex.count['gre@factor']
             end
             local min_note = math.min(value[3],clef_bottom)
             local min_adjust = pitch_adjust_bottom - min_note
@@ -1419,24 +1420,31 @@ local function adjust_initial_raise(clef_top,clef_bottom,pitch_adjust_top,pitch_
               debugmessage('initial','low element adjustment not required')
             else
               debugmessage('initial','lowest element position adjustment: %d',min_adjust)
-              adjustment = adjustment + min_adjust * tex.dimen['gre@dimen@additionalbottomspace']
+              this_line_adjustment = this_line_adjustment + min_adjust * tex.dimen['gre@dimen@additionalbottomspace']
             end
             if (value[4] == 1) then
               debugmessage('initial','making adjustment for translation')
-              adjustment = adjustment + tex.dimen['gre@dimen@currenttranslationheight']
+              this_line_adjustment = this_line_adjustment + tex.dimen['gre@dimen@currenttranslationheight']
             else
               debugmessage('initial','no translation')
             end
             if (value[5] == 1) then
               debugmessage('initial','making adjustment for above lines text')
-              adjustment = adjustment + tex.dimen['gre@dimen@currentabovelinestextheight']
+              athis_line_djustment = this_line_adjustment + tex.dimen['gre@dimen@currentabovelinestextheight']
             else
               debugmessage('initial','no above lines text')
+            end
+            debugmessage('initial','line %d appears to be %f tall', value[1], this_line_adjustment)
+            if this_line_adjustment > tex.skip['baselineskip'].width then
+              debugmessage('initial','this is bigger than baselineskip')
+              tex.dimen['gre@dimen@temp@five'] = tex.dimen['gre@dimen@temp@five'] - this_line_adjustment
+            else
+              debugmessage('initial','this is smaller than baselineskip')
+              tex.dimen['gre@dimen@temp@five'] = tex.dimen['gre@dimen@temp@five'] - tex.skip['baselineskip'].width
             end
           end
         end
       end
-      tex.dimen['gre@dimen@temp@five'] = tex.dimen['gre@dimen@temp@five'] - adjustment
     end
   end
 end
