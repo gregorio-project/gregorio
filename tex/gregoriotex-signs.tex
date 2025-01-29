@@ -392,7 +392,7 @@
   \gre@trace{GreSetInitialClef{#1}{#2}{#3}{#4}{#5}{#6}{#7}}%
   \gre@save@clef{#1}{#2}{#3}{#4}{#5}{#6}%
   \ifgre@showclef%
-    \ifnum\gre@initiallines=1\relax %
+    \ifnum\gre@count@initiallines>0\relax %
       \ifnum#7=1\relax %
         \gre@typeclef{#1}{#2}{0}{1}{#3}{#4}{#5}{#6}%
       \else %

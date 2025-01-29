@@ -84,6 +84,8 @@
 
 \newluatexattribute\gre@attr@stafflines%
   \edef\gre@attrid@stafflines{\the\allocationnumber}
+\newluatexattribute\gre@attr@initial%
+  \edef\gre@attrid@initial{\the\allocationnumber}
 
 % an attribute we put on the text nodes.
 % if it is 1, it means that there may be a dash here if this syllable is at the end of a line
@@ -407,6 +409,16 @@
   \gre@trace@end%
 }
 
+\def\gre@makeparshape#1#2{%
+  \edef\gre@parshape@dims{\numexpr#1+1\relax}%
+  \gre@count@temp@one=0\relax
+  \loop
+    \edef\gre@parshape@dims{\gre@parshape@dims#2\dimexpr\textwidth-#2\relax}%
+    \advance\gre@count@temp@one by 1\relax
+  \ifnum\gre@count@temp@one<#1\repeat
+  \parshape\gre@parshape@dims0pt\textwidth
+}
+
 \def\gre@setinitial#1{%
   \gre@trace{gre@setinitial{#1}}%
   \gre@debugmsg{annotation}{Time to calculate the true raise.}%
@@ -478,6 +490,7 @@
     \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax%
     \endgre@style@initial%
   \fi %
+  \setbox\gre@box@temp@width=\hbox attr \gre@attrid@initial=1 {%
   \gre@hskip\gre@dimen@temp@four %
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four %
   \gre@debugmsg{annotation}{Ready to place initial.}%
@@ -497,6 +510,11 @@
   \fi%
   \gre@hskip\gre@dimen@temp@four %
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four%
+  }%
+  % Set the paragraph shape. This should happen before anything is printed.
+  \gre@makeparshape{\gre@count@initiallines}{\wd\gre@box@temp@width}%
+  % Set the initial.
+  \llap{\box\gre@box@temp@width}%
   % then we center the annotation box above the initial, if there is one
   \gre@debugmsg{annotation}{Time to set the annotation.}%
   \ifvoid\gre@box@annotation\relax%

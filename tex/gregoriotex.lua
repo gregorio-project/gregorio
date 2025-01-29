@@ -53,6 +53,7 @@ local rule = node.id('rule')
 local hyphen = tex.defaulthyphenchar or 45
 
 local stafflines_attr = luatexbase.attributes['gre@attr@stafflines']
+local initial_attr = luatexbase.attributes['gre@attr@initial']
 
 local dash_attr = luatexbase.attributes['gre@attr@dash']
 local potentialdashvalue   = 1
@@ -441,11 +442,11 @@ end
 
 -- a simple (for now) function to dump nodes for debugging
 local function dump_nodes_helper(head, indent)
-  local dots = string.rep('..', indent*2)
+  local dots = string.rep('..', indent)
   for n in traverse(head) do
-    local ids = format("%s", has_attribute(n, has_attribute(n, glyph_id_attr)))
+    local ids = format("%s", has_attribute(n, glyph_id_attr))
     if node.type(n.id) == 'penalty' then
-      log("%s=%s {%s}", node.type(n.id), n.penalty, has_attribute(n, glyph_id_attr))
+      log(dots .. "%s=%s {%s}", node.type(n.id), n.penalty, ids)
     elseif n.id == whatsit and n.subtype == user_defined_subtype and n.user_id == marker_whatsit_id then
       log("marker-whatsit %s", n.value)
       log(dots .. "marker-whatsit %s", n.value)
@@ -459,7 +460,7 @@ local function dump_nodes_helper(head, indent)
     elseif n.id == rule then
       log(dots .. "rule subtype=%s width=%spt height=%spt depth=%spt", n.subtype, n.width/65536, n.height/65536, n.depth/65536)
     else
-      log("node %s [%s] {%s}", node.type(n.id), n.subtype, has_attribute(n, glyph_id_attr))
+      log(dots .. "node %s [%s] {%s}", node.type(n.id), n.subtype, ids)
     end
     if n.id == hlist or n.id == vlist then
       dump_nodes_helper(n.head, indent+1)
@@ -651,6 +652,44 @@ local function post_linebreak(h, groupcode, glyphes)
     end
   end
 
+  -- lower initial
+  local initial_node
+  local initial_shift = 0
+  local line_num = 0
+  local indented = tex.count['gre@count@initiallines']
+  debugmessage("initial", "%s indented lines", indented)
+  for line in traverse(h) do
+    if line.id == glue then
+      debugmessage("initial", "glue %spt", line.width/65536)
+      -- bug: this can't account for stretch or shrink
+      if line_num >= 1 and line_num < indented then
+        initial_shift = initial_shift + line.width
+        debugmessage("initial", "shift %spt", line.width/65536)
+      end
+    elseif line.id == hlist then
+      line_num = line_num + 1
+      debugmessage("initial", "line %s height %spt depth %spt", line_num, line.height/65536, line.depth/65536)
+      if line_num > 1 and line_num <= indented then
+        initial_shift = initial_shift + line.height
+        debugmessage("initial", "shift %spt", line.height/65536)
+      end
+      if line_num < indented then
+        initial_shift = initial_shift + line.depth
+        debugmessage("initial", "shift %spt", line.depth/65536)
+      end
+      for h1 in traverse_id(hlist, line.head) do
+        for h2 in traverse_id(hlist, h1.head) do
+          if has_attribute(h2, initial_attr) then
+            debugmessage("initial", "found initial")
+            initial_node = h2
+          end
+        end
+      end
+    end
+  end
+  debugmessage("initial", "total shift is %spt", initial_shift/65536)
+  initial_node.shift = initial_shift
+  
   -- change width of staff lines
   for line in traverse_id(hlist, h) do
     debugmessage("stafflines", "line width %spt", line.width/65536)
