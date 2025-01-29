@@ -230,13 +230,10 @@
   \relax%
 }%
 
-
-% Eliminates the error for big initials where the second new line is at the end of the score
 \def\GreFinalNewLine{%
-  \global\advance\gre@knownline by 1\relax %
 }%
 
-% the macro we call each time we force a changing of line, it automatically sets \gre@knownline, and adjusts left spaces
+% the macro we call each time we force a changing of line
 % #1 is 0 in case of gabc z, 1 for Z
 % #2 is 0 in the normal case, 1 after a bar in the new spacing algorithm
 \def\gre@newlinecommon#1#2{%
@@ -245,16 +242,6 @@
      \gre@localrightbox{}%
   \fi\fi %
   \ifgre@boxing\else%
-    \ifnum\gre@biginitial=1\relax %
-      \ifcase\gre@knownline %
-      % 0: should not happend...
-      \or % 1
-        \gre@adjustsecondline %
-      \or %2
-        \gre@adjustthirdline %
-      \fi %
-    \fi %
-    \global\advance\gre@knownline by 1\relax %
     \global\gre@lastoflinecount=2\relax %
     \ifnum#2=0\relax %
       % we have to repeat the end of syllable shifts here because the manual line breaks will occur before we get to the regular shifting code in \GreSyllable
@@ -318,57 +305,6 @@
 %% box containing the initial, and dimen containing its width (and the width of the space after)
 \newbox\gre@box@initial%
 
-
-% gre@biginitial means that the inital takes two lines
-\newcount\gre@biginitial%
-
-% gre@knownline is the line we think we are in
-\newcount\gre@knownline%
-
-% macro to call before the call of \initial
-\def\gre@setbiginitial{%
-  \gre@trace{gre@setbiginitial}%
-  \global\gre@biginitial=1\relax %
-  \relax %
-  \gre@trace@end%
-}%
-
-% macro to cancel before the call of \initial
-\def\gre@normalinitial{%
-  \gre@trace{gre@normalinitial}%
-  \global\gre@biginitial=0\relax %
-  \relax %
-  \gre@trace@end%
-}%
-
-% macro to call before the first syllable, but after setinitialclef
-\def\gre@adjustsecondline{%
-  \gre@trace{gre@adjustsecondline}%
-  \gre@dimen@additionalleftspace=\gre@dimen@initialwidth\relax%
-  \gre@updateleftbox %
-  \relax %
-  \gre@trace@end%
-}%
-
-% macro to call during the second line
-\def\gre@adjustthirdline{%
-  \gre@trace{gre@adjustthirdline}%
-  \gre@dimen@additionalleftspace= 0 pt\relax%
-  \gre@updateleftbox %
-  \relax %
-  \gre@trace@end%
-}%
-
-\newif\ifgre@thirdlineadjustmentnecessary %
-\def\gre@adjustlineifnecessary{%
-  \gre@trace{gre@adjustlineifnecessary}%
-  \ifgre@thirdlineadjustmentnecessary %
-    \gre@adjustthirdline %
-    \gre@thirdlineadjustmentnecessaryfalse %
-  \fi %
-  \gre@trace@end%
-}%
-
 \def\gre@updateleftbox{%
   \gre@trace{gre@updateleftbox}%
   \gre@updatelinewidth %
@@ -426,25 +362,18 @@
   % we print the initial always at the same place, and then we print the gre@box@annotation, centered
   % first we print the initial
   \gre@dimen@temp@five = \dimexpr(\gre@dimen@textlower+\gre@space@dimen@initialraise)\relax%
-  % if it is a big initial we print it on the second line
-  \ifnum\gre@biginitial=0\relax %
-    \ifvoid\gre@box@initial%
-      \gre@debugmsg{initial}{Fill initial box a}%
-      \setbox\gre@box@initial=\hbox{\gre@style@initial\gre@fixedtextformat{#1}\endgre@style@initial}%
-    \fi%
-    \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
-    \ifdim\gre@space@dimen@manualinitialwidth=0 pt\relax%
-      \global\gre@dimen@initialwidth=\wd\gre@box@initial %
-      \gre@style@initial%
-        \ifdim\gre@dimen@initialwidth<\gre@space@dimen@minimalinitialwidth\relax%
-          \global\gre@dimen@initialwidth=\gre@space@dimen@minimalinitialwidth\relax%
-        \fi%
-      \endgre@style@initial%
-    \else%
-      \gre@style@initial%
-      \global\gre@dimen@initialwidth=\gre@space@dimen@manualinitialwidth\relax%
-      \endgre@style@initial%
-    \fi%
+  \ifvoid\gre@box@initial%
+    \gre@debugmsg{initial}{Fill initial box a}%
+    \setbox\gre@box@initial=\hbox{\gre@style@initial\gre@fixedtextformat{#1}\endgre@style@initial}%
+  \fi%
+  \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
+  \ifdim\gre@space@dimen@manualinitialwidth=0 pt\relax%
+    \global\gre@dimen@initialwidth=\wd\gre@box@initial %
+    \gre@style@initial%
+      \ifdim\gre@dimen@initialwidth<\gre@space@dimen@minimalinitialwidth\relax%
+        \global\gre@dimen@initialwidth=\gre@space@dimen@minimalinitialwidth\relax%
+      \fi%
+    \endgre@style@initial%
     \gre@debugmsg{ifdim}{ wd(gre@box@annotation) > initialwidth}%
     \ifdim\wd\gre@box@annotation>\gre@dimen@initialwidth\relax%
       \global\gre@dimen@initialwidth=\wd\gre@box@annotation%
@@ -495,19 +424,13 @@
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four %
   \gre@debugmsg{annotation}{Ready to place initial.}%
   \ifgre@showlyrics%
-    \box\gre@box@initial%
+    \smash{\box\gre@box@initial}%
   \else%
     \kern\wd\gre@box@initial%
   \fi%
-  \ifnum\gre@biginitial=0\relax%
-    \gre@style@initial%
-    \global\gre@dimen@temp@four = \gre@space@dimen@afterinitialshift\relax%
-    \endgre@style@initial%
-  \else%
-    \gre@style@initial%
-    \global\gre@dimen@temp@four = \gre@space@dimen@afterinitialshift\relax%
-    \endgre@style@initial%
-  \fi%
+  \gre@style@initial%
+  \global\gre@dimen@temp@four = \gre@space@dimen@afterinitialshift\relax%
+  \endgre@style@initial%
   \gre@hskip\gre@dimen@temp@four %
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four%
   }%
@@ -1328,7 +1251,6 @@
   \ifdefined\optgabcAtScoreBeginning %
     \optgabcAtScoreBeginning %
   \fi %
-  \global\gre@knownline=1\relax %
   \global\gre@lastoflinecount=2\relax %
   \global\gre@endofscorefalse %
   \relax%
@@ -1336,11 +1258,6 @@
 
 %macro called at the end of a score
 \def\GreEndScore{%
-  \ifnum\gre@biginitial=1\relax%
-    \ifnum\gre@knownline<3\relax%
-      \gre@error{Score ended before finding the end\MessageBreak of the second line of a 2-line initial.  Make sure\MessageBreak you have at least two manual line breaks in \MessageBreak your gabc}%
-    \fi%
-  \fi%
   \global\gre@lastoflinecount=0\relax %
   \gre@useautoeolcustos%
   \GreEndEUOUAE{}%
@@ -1362,7 +1279,6 @@
   \gre@calculate@additionalspaces{\gre@pitch@dummy}{\gre@pitch@dummy}{0}{0}%
   \global\gre@dimen@currentabovelinestextheight=0 sp%
   \gre@removetranslationspace %
-  \gre@normalinitial %
   \gre@restorepenalties %
   \gre@dimen@temp@one=0pt\relax%
   \gre@dimen@temp@two=0pt\relax%

@@ -688,7 +688,9 @@ local function post_linebreak(h, groupcode, glyphes)
     end
   end
   debugmessage("initial", "total shift is %spt", initial_shift/65536)
-  initial_node.shift = initial_shift
+  if initial_node then
+    initial_node.shift = initial_shift
+  end
   
   -- change width of staff lines
   for line in traverse_id(hlist, h) do

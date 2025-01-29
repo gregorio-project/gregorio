@@ -1606,13 +1606,6 @@
 \def\GreScoreOpening#1#2#3#4#5{%
   #3\relax % fixed styles, etc.
   #5\relax % should emit the initial
-  \ifnum\gre@biginitial=1\relax %
-    \gre@debugmsg{general}{making adjustment NECESSARY}%
-    \gre@thirdlineadjustmentnecessarytrue %
-  \else %
-    \gre@debugmsg{general}{making adjustment unnecessary}%
-    \gre@thirdlineadjustmentnecessaryfalse %
-  \fi %
   #1\relax % score reference, voice info, etc.
   \gre@beginnotes\relax %
   #2\relax % initial clef, etc.
