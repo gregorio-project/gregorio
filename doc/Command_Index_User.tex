@@ -1412,14 +1412,18 @@ Macro to set the font to be used for the ancient notation.
 
 \macroname{\textbackslash gresetalterationeffect}{\{\#1\}}{gregoriotex-signs.tex}
 Macro to set the effect of alterations (flats and sharps), for the purpose of deciding whether to print soft alterations (see \S\ref{softalterations}).
+
 \begin{argtable}
   \#1 & \texttt{note} (default) & effect ends immediately \\
-  & \texttt{line} & effect ends at the end of the line \\
+      & \texttt{line} & effect ends at the end of the line \\
 \end{argtable}
-Setting \verb|\gresetalterationeffect{note}| causes all soft sharps and flats, and no soft naturals, to be printed.
-Setting \verb|\gresetalterationeffect{line}|, and making all alterations soft, gives the Dominican convention.
 
-(Argument \#1 is actually a comma-separated list of keywords, but currently, it must not be empty, and \texttt{note,line} has the same effect as \texttt{note}. In the future, other options may be added.)
+Soft flats are printed if no previous flat (on the same pitch) is in effect. Similarly for soft sharps. Soft naturals are printed if a previous flat or sharp (on the same pitch) is in effect.
+
+Thus, under \verb|\gresetalterationeffect{note}|, all sharps and flats lose their effect immediately, so all soft sharps and flats are printed, but no soft naturals are printed.
+Under \verb|\gresetalterationeffect{line}|, all sharps and flats are in effect until the end of the line (unless cancelled by a natural), which is the convention used in Dominican chant scores.
+
+(Argument \#1 is actually a comma-separated list of keywords, but currently, it must not be empty, and \texttt{note,line} has the same effect as \texttt{note}. In the future, other options like \texttt{word} and \texttt{bar} may be added.)
 
 \subsection{Counts}\label{counts}
 

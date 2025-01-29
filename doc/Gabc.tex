@@ -510,7 +510,32 @@ Things like flats, sharps, and naturals (called ``alterations''), while not tech
 treated as one-note neumes by Gregorio\TeX.  Thus, they are also added by
 appending characters to pitch letters.
 
-Flats, sharps, and naturals each have a ``soft'' version (\verb|X|, \verb|#*|, and \verb|Y|, respectively), whose appearance is controlled by the \verb|\gresetalterationeffect| macro (see \S\ref{setalterationeffect}). For Dominican chant, use \verb|\gresetalterationeffect{line}| and make all alterations soft.
+Flats, sharps, and naturals each have a ``soft'' version (\verb|X|, \verb|##|, and \verb|Y|, respectively). Soft flats are printed if no previous flat (on the same pitch) is in effect. Similarly for soft sharps. Soft naturals are printed if a previous flat or sharp (on the same pitch) is in effect.
+What ``in effect'' means is controlled by the \verb|\gresetalterationeffect| macro (see \S\ref{setalterationeffect}). Soft alterations currently have two use cases.
+
+For Dominican chant (in which flats take effect until the end of a line or until cancelled by a natural), use \verb|\gresetalterationeffect{line}|, and type a soft flat (\verb|X|) in front of \emph{every} note that is to be sung a half-step flat. Naturals should also be soft (\verb|Y|), but only naturals that cancel flats need to be typed. For example:
+
+\begin{center}\parbox{5in}{%
+  \gresetinitiallines{0}\gresetlyriccentering{firstletter}%
+  \grechangestyle{translation}{\ttfamily}%
+  \grechangedim{spacelinestext}{0.4cm}{scalable}%
+  \grechangedim{translationheight}{0.4cm}{scalable}%
+  \grechangedim{spaceabovelines}{0.5cm}{scalable}%
+  \gresetalterationeffect{line}%
+  \ttfamily
+  \gabcsnippet{(e) (e) (e) gX(gXge) (f)gX(gXghED) (eddc) (;) (efef//hhv) gX(gXfe//fgED//efDC//ef) (;) (hhvFEf)(fv_//hhf)gY(gYghghf) (::)}
+}\end{center}
+
+Even under the convention that flats only take effect until the end of a word, if a long word has a flat that applies to two notes, one may want a flat to appear on the second note if a line break occurs between them. To do this, again use \verb|\gresetalterationeffect{line}| and type a soft flat (\verb|X|) before the second note. For example:
+\begin{center}\parbox{4in}{%
+  \gresetinitiallines{0}\gresetlyriccentering{firstletter}%
+  \grechangestyle{translation}{\ttfamily}%
+  \grechangedim{spacelinestext}{0.4cm}{scalable}%
+  \grechangedim{translationheight}{0.4cm}{scalable}%
+  \grechangedim{spaceabovelines}{0.5cm}{scalable}%
+  \gresetalterationeffect{line}%
+  \gabcsnippet{(c3) (d)(fh) (fe/hh)(ih..) (,) (hij) (kvJIH'i)(h.) (,) (k)(ij)(k) (jvIH'i) (h.) (;) mi[gx](gxfghz)se[gX](gXhvGF)re(e[ll:1]d)re(ef) (d_[oh:h]e_[oh:h]d_[oh:h])(d.) (::)}
+}\end{center}
 
 \subsubsection{Oriscus Orientation}
 
