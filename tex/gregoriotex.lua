@@ -1385,8 +1385,8 @@ local function adjust_line_height(inside_discretionary, for_next_line)
 end
 
 local function adjust_initial_raise(clef_top,clef_bottom,pitch_adjust_top,pitch_adjust_bottom)
+  local initial_lines = tex.count['gre@count@initiallines']
   if score_heights then
-    local initial_lines = tex.count['gre@count@initiallines']
     if (initial_lines <= 1) then
       debugmessage('initial','Initial is %d lines, no adjustment necessary',initial_lines)
     else
@@ -1446,6 +1446,9 @@ local function adjust_initial_raise(clef_top,clef_bottom,pitch_adjust_top,pitch_
         end
       end
     end
+  else
+    debugmessage('initial','no line height information available\n using baselineskip as default')
+    tex.dimen['gre@dimen@temp@five'] = tex.dimen['gre@dimen@temp@five'] - (initial_lines - 1) * tex.skip['baselineskip'].width
   end
 end
 
