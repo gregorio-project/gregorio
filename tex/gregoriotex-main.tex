@@ -307,22 +307,7 @@
 
 \def\gre@updateleftbox{%
   \gre@trace{gre@updateleftbox}%
-  \gre@updatelinewidth %
   \gre@updatelinesclef %
-  \gre@trace@end%
-}%
-
-\def\gre@updatelinewidth{%
-  \gre@trace{gre@updatelinewidth}%
-  \gre@debugmsg{ifdim}{ additionalleftspace = 0pt}%
-  \ifdim\gre@dimen@additionalleftspace=0pt\relax%
-    \gre@generatelines %
-  \else %
-    \gre@dimen@temp@five=\gre@dimen@stafflinewidth\relax%
-    \global\advance\gre@dimen@stafflinewidth by -\gre@dimen@additionalleftspace\relax%
-    \gre@generatelines %
-    \global\gre@dimen@stafflinewidth=\gre@dimen@temp@five %
-  \fi %
   \gre@trace@end%
 }%
 
@@ -591,7 +576,6 @@
 %% has to be called before drawing the key, after drawing the initial
 \def\gre@beginnotes{%
   \gre@trace{gre@beginnotes}%
-  %\gre@drawfirstlines %
   % Draw the staff lines the same as the other staves; post_linebreak
   % will fix them. The \hbox is there so that post_linebreak can find
   % it more easily.
@@ -732,69 +716,6 @@
       \gre@error{Unrecognized option "#1" for \protect\gresetlines\MessageBreak Possible options are: 'visible' and 'invisible'}%
     ]%
 }
-
-%% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
-\def\gre@drawfirstlines{%
-  \gre@trace{gre@drawfirstlines}%
-  \advance\gre@dimen@stafflinewidth by -\gre@dimen@initialwidth\relax%
-  %\advance\gre@dimen@stafflinewidth by -\gre@space@dimen@minimalspaceatlinebeginning
-  %\gre@dimen@initialwidth=0pt
-  \hbox to 0pt{%
-    \vbox attr \gre@attrid@stafflines=1 {%
-      \gre@style@normalstafflines%
-      \vskip\gre@dimen@currentabovelinestextheight\relax%
-      \vskip\gre@dimen@additionaltopspace\relax%
-      \ifgre@showlines %
-        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
-      \else %
-        \vskip\gre@dimen@stafflineheight\relax%
-      \fi %
-      \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
-      \kern\gre@skip@temp@four %
-      \ifgre@showlines %
-        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
-      \else %
-        \vskip\gre@dimen@stafflineheight\relax%
-      \fi %
-      \ifgre@haslinethree %
-        \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
-        \kern\gre@skip@temp@four %
-        \ifgre@showlines %
-          \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
-        \else %
-          \vskip\gre@dimen@stafflineheight\relax%
-        \fi %
-      \fi %
-      \ifgre@haslinefour %
-        \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
-        \kern\gre@skip@temp@four %
-        \ifgre@showlines %
-          \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
-        \else %
-          \vskip\gre@dimen@stafflineheight\relax%
-        \fi %
-      \fi %
-      \ifgre@haslinefive %
-        \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
-        \kern\gre@skip@temp@four %
-        \ifgre@showlines %
-          \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
-        \else %
-          \vskip\gre@dimen@stafflineheight\relax%
-        \fi %
-      \fi %
-      \vskip\gre@space@dimen@spacelinestext\relax%
-      \vskip\gre@space@dimen@spacebeneathtext\relax%
-      \vskip\gre@dimen@currenttranslationheight\relax%
-      \vskip\gre@dimen@additionalbottomspace\relax%
-      \endgre@style@normalstafflines%
-    }%
-    \hss%
-  }%
-  \gre@dimen@stafflinewidth=\gre@dimen@linewidth\relax%
-  \relax%
-  \gre@trace@end%
-}%
 
 %% box containing the stafflines for other lines than the first
 \newbox\gre@box@lines%
