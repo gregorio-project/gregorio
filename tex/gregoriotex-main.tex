@@ -374,51 +374,21 @@
         \global\gre@dimen@initialwidth=\gre@space@dimen@minimalinitialwidth\relax%
       \fi%
     \endgre@style@initial%
-    \gre@debugmsg{ifdim}{ wd(gre@box@annotation) > initialwidth}%
-    \ifdim\wd\gre@box@annotation>\gre@dimen@initialwidth\relax%
-      \global\gre@dimen@initialwidth=\wd\gre@box@annotation%
-    \fi%
-    \gre@debugmsg{annotation}{Width check completed.}%
-    \setbox\gre@box@initial=\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}%
-    \gre@debugmsg{annotation}{Initial set.}%
+  \else
     \gre@style@initial%
-    \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax%
+    \global\gre@dimen@initialwidth=\gre@space@dimen@manualinitialwidth\relax%
     \endgre@style@initial%
-  \else %
-    \advance\gre@dimen@temp@five by \dimexpr(-\gre@dimen@additionalbottomspace %
-      - \gre@space@dimen@spacebeneathtext %
-      - \gre@space@dimen@spacelinestext %
-      - 4\gre@dimen@interstafflinespace %
-      - 4\gre@dimen@stafflineheight %
-      - \gre@dimen@currenttranslationheight %
-      - \f@size pt %
-      + \gre@space@dimen@initialraise)\relax%
-    \ifvoid\gre@box@initial%
-      \gre@debugmsg{initial}{fill big initial box}%
-      \setbox\gre@box@initial=\hbox{\gre@style@initial\gre@fixedtextformat{#1}\endgre@style@initial}%
-    \fi%
-    \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
-    \ifdim\gre@space@dimen@manualinitialwidth=0 pt\relax%
-      \global\gre@dimen@initialwidth=\wd\gre@box@initial %
-      \gre@style@initial%
-        \ifdim\gre@dimen@initialwidth<\gre@space@dimen@minimalinitialwidth\relax%
-          \global\gre@dimen@initialwidth=\gre@space@dimen@minimalinitialwidth\relax%
-        \fi%
-      \endgre@style@initial%
-    \else%
-      \gre@style@initial%
-      \global\gre@dimen@initialwidth=\gre@space@dimen@manualinitialwidth\relax%
-      \endgre@style@initial%
-    \fi%
-    \gre@debugmsg{ifdim}{ wd(GreAboveinitialfirstbox) > initialwidth}%
-    \ifdim\wd\gre@box@annotation>\gre@dimen@initialwidth\relax%
-      \global\gre@dimen@initialwidth=\wd\gre@box@annotation%
-    \fi%
-    \setbox\gre@box@initial=\hbox{\vtop to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}\vss}}%
-    \gre@style@initial%
-    \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax%
-    \endgre@style@initial%
-  \fi %
+  \fi
+  \gre@debugmsg{ifdim}{ wd(gre@box@annotation) > initialwidth}%
+  \ifdim\wd\gre@box@annotation>\gre@dimen@initialwidth\relax%
+    \global\gre@dimen@initialwidth=\wd\gre@box@annotation%
+  \fi%
+  \gre@debugmsg{annotation}{Width check completed.}%
+  \setbox\gre@box@initial=\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}%
+  \gre@debugmsg{annotation}{Initial set.}%
+  \gre@style@initial%
+  \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax%
+  \endgre@style@initial%
   \setbox\gre@box@temp@width=\hbox attr \gre@attrid@initial=1 {%
   \gre@hskip\gre@dimen@temp@four %
   \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four %
