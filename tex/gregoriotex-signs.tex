@@ -537,6 +537,8 @@
       \gre@debugmsg{custos}{not blocked}%
       \gre@calculate@glyphraisevalue{#1}{0}{}%
       %here we need some tricks to draw the line before the custos (for the color)
+      %  We want both the measured and real alteration to have the same id,
+      %  so save the id to restore it later.
       \edef\gre@saved@attr@alteration@id{\number\gre@attr@alteration@id\relax}%
       \setbox\gre@box@temp@width=\hbox{%
         % we type a hskip and the we type the custos
@@ -2708,16 +2710,19 @@
   \gre@trace{gre@alteration{#1}{#2}{#3}{#4}{#5}{#6}}%
   \global\advance\gre@attr@alteration@id by 1\relax
   \def\gre@alteration@type{#2}%
+  % Check if the alteration should be visible or not
   \gre@alteration@isvisible{0}{\gre@alteration@type}%
-  \ifnum\gre@alteration@type>6\relax % treat soft alterations like hard
+  % After the above check, we treat soft alterations like hard alterations
+  \ifnum\gre@alteration@type>6\relax 
     \edef\gre@alteration@type{\numexpr\gre@alteration@type-6\relax}%
   \fi
   \ifgre@alteration@isvisible
     \gre@alteration@visible{#1}{\gre@alteration@type}{#3}{#4}{#5}{#6}%
   \else
-    % ignore #4 (ledger line) and #5 (not used anyway?)
+    % Print an empty \hbox because it still needs to be counted
+    % Don't print #4 (ledger line) and #5 (not used anyway?)
     \hbox
-      attr \gre@attrid@alteration@height=#1\relax
+      attr \gre@attrid@alteration@pitch=#1\relax
       attr \gre@attrid@alteration@type=\gre@alteration@type\relax
       {}%
   \fi
@@ -2797,7 +2802,7 @@
     \else\gre@error{Invalid alteration type}% soft alterations should have been changed to hard
   \fi
   \setbox\gre@box@temp@width=\hbox
-    attr \gre@attrid@alteration@height=#1\relax
+    attr \gre@attrid@alteration@pitch=#1\relax
     attr \gre@attrid@alteration@type=#2\relax
     {\gre@pointandclick{\gre@alteration@char}{#6}}%
   \ifnum#3=0\relax %

@@ -65,7 +65,7 @@ local glyph_bottom_attr = luatexbase.attributes['gre@attr@glyph@bottom']
 local prev_line_id = nil
 
 local alteration_type_attr = luatexbase.attributes['gre@attr@alteration@type']
-local alteration_height_attr = luatexbase.attributes['gre@attr@alteration@height']
+local alteration_pitch_attr = luatexbase.attributes['gre@attr@alteration@pitch']
 local alteration_id_attr = luatexbase.attributes['gre@attr@alteration@id']
 
 local syllable_id_attr = luatexbase.attributes['gre@attr@syllable@id']
@@ -279,6 +279,7 @@ local function is_greaux_write_needed()
   if saved_computations_changed(saved_newline_before_euouae, new_saved_newline_before_euouae) then
     return true
   end
+  -- For alterations, check if either the keys or values changed.
   for id, tab in pairs(new_first_alterations) do
     if keys_changed(tab, first_alterations[id]) or entries_changed(tab, first_alterations[id]) then return true end
   end
@@ -349,15 +350,17 @@ local function write_greaux()
       for id, value in pairs(new_state_hashes) do
         aux:write(string.format('  ["%s"]="%s",\n', id, value))
       end
-      aux:write(' },\n ["first_alterations"]={\n')
+      aux:write(' },\n')
+      
+      -- Write information about alterations and line breaks. This
+      -- needs to go into the .gaux file because it affects whether
+      -- alterations are printed, which in turn affects which lines
+      -- alterations fall on.
+      aux:write(' ["first_alterations"]={\n')
       for id, tab in pairs(new_first_alterations) do
-        aux:write(string.format('  ["%s"]={\n    ', id))
+        aux:write(string.format('  ["%s"]={', id))
         for i, value in pairs(tab) do
-          if i == 'last' then
-            aux:write(string.format('["%s"]=%s,', i, value))
-          else
-            aux:write(string.format('[%s]=%s,', i, value))
-          end
+          aux:write(string.format('[%q]=%s,', i, value))
         end
         aux:write(string.format('},\n'))
       end
@@ -367,7 +370,7 @@ local function write_greaux()
       err("\n Unable to open %s", auxname)
     end
 
-    warn("Line heights or variable brace lengths may have changed. Rerun to fix.")
+    warn("Line heights, variable brace lengths, or soft flats/sharps may have changed. Rerun to fix.")
   end
 end
 
@@ -666,15 +669,20 @@ local function post_linebreak(h, groupcode, glyphes)
       currentshift=0
     end
   end
-  -- For each alteration, record true if it is the first on the line or it is different than the previous alteration; record false otherwise
+
+  -- Collect information about each alteration (flat, sharp, or natural):
+  --   1 if it is the first alteration on the line (on the same pitch)
+  --   2 if it has a different type from the previous alteration on the line (on the same pitch)
+  --   3 otherwise.
   for line in traverse_id(hlist, h) do
     local seen = {}
     for n in traverse_id(hlist, line.head) do
-      -- This skips custos alterations because they're one level deeper. As a result, they are always printed.
+      -- This skips custos alterations because they're one level
+      -- deeper. As a result, they are always printed.
       local t = has_attribute(n, alteration_type_attr)
       if t ~= nil and t > 0 then
         local i = has_attribute(n, alteration_id_attr)
-        local h = has_attribute(n, alteration_height_attr)
+        local h = has_attribute(n, alteration_pitch_attr)
         if seen[h] == nil then
           new_score_first_alterations[i] = 1
         elseif seen[h] ~= t then
@@ -688,6 +696,7 @@ local function post_linebreak(h, groupcode, glyphes)
       end
     end
   end
+  
   --dump_nodes(h)
   -- due to special cases, we don't return h here (see comments in bug #20974)
   return true
