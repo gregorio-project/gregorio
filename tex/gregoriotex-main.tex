@@ -265,7 +265,6 @@
     \fi %
     \gre@penalty{-10001}%
   \fi %
-  \gre@adjustlineifnecessary\relax %
   %%
   \GreResetEolCustos\relax %
   \gre@trace@end%
@@ -334,10 +333,10 @@
   \edef\gre@parshape@dims{\numexpr#1+1\relax}%
   \gre@count@temp@one=0\relax
   \loop
-    \edef\gre@parshape@dims{\gre@parshape@dims#2\dimexpr\textwidth-#2\relax}%
+    \edef\gre@parshape@dims{\gre@parshape@dims#2\dimexpr\gre@dimen@linewidth-#2\relax}%
     \advance\gre@count@temp@one by 1\relax
   \ifnum\gre@count@temp@one<#1\repeat
-  \parshape\gre@parshape@dims0pt\textwidth
+  \parshape\gre@parshape@dims0pt\gre@dimen@linewidth
 }
 
 \def\gre@setinitial#1{%
