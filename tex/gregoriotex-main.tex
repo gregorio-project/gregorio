@@ -82,10 +82,10 @@
 
 %%%%%%%%%%%%%%%
 
-\newluatexattribute\gre@attr@stafflines%
-  \edef\gre@attrid@stafflines{\the\allocationnumber}
-\newluatexattribute\gre@attr@initial%
-  \edef\gre@attrid@initial{\the\allocationnumber}
+% an attribute to mark various parts of the score
+% 1 = commentary, 2 = stafflines, 3 = initial
+\newluatexattribute\gre@attr@part%
+  \edef\gre@attrid@part{\the\allocationnumber}
 
 % an attribute we put on the text nodes.
 % if it is 1, it means that there may be a dash here if this syllable is at the end of a line
@@ -324,7 +324,7 @@
   % we then place that box inside one of 0 width so that our cursor doesn't move when we place the commentary
   \ifvoid\gre@box@commentary\else%
     \gre@debugmsg{commentary}{I am printing a commentary box}%
-    \raise\gre@dimen@commentarytrueraise\hbox to 0pt{\hbox to \gre@dimen@linewidth{\hfill\box\gre@box@commentary}\hss}%
+    \raise\gre@dimen@commentarytrueraise\hbox to 0pt{\hbox attr \gre@attrid@part=1 to \gre@dimen@linewidth{\hfill\box\gre@box@commentary}\hss}%
   \fi%
   \gre@trace@end%
 }
@@ -373,7 +373,7 @@
   \gre@style@initial%
   \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax%
   \endgre@style@initial%
-  \setbox\gre@box@temp@width=\hbox attr \gre@attrid@initial=1 {%
+  \setbox\gre@box@temp@width=\hbox attr \gre@attrid@part=3 {%
     \gre@hskip\gre@dimen@temp@four %
     \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four %
     \gre@debugmsg{annotation}{Ready to place initial.}%
@@ -723,7 +723,7 @@
 \def\gre@generatelines{%
   \gre@trace{gre@generatelines}%
   \setbox\gre@box@lines=\hbox to 0pt{%
-    \vbox attr \gre@attrid@stafflines=1 {%
+    \vbox attr \gre@attrid@part=2 {%
       \gre@style@normalstafflines%
       \vskip\glueexpr(\gre@dimen@additionaltopspace+\gre@space@skip@spaceabovelines+\gre@dimen@currentabovelinestextheight)\relax%
       \ifgre@showlines %

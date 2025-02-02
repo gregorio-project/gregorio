@@ -52,8 +52,10 @@ local rule = node.id('rule')
 
 local hyphen = tex.defaulthyphenchar or 45
 
-local stafflines_attr = luatexbase.attributes['gre@attr@stafflines']
-local initial_attr = luatexbase.attributes['gre@attr@initial']
+local part_attr = luatexbase.attributes['gre@attr@part']
+local part_commentary = 1
+local part_stafflines = 2
+local part_initial = 3
 
 local dash_attr = luatexbase.attributes['gre@attr@dash']
 local potentialdashvalue   = 1
@@ -444,7 +446,7 @@ end
 local function dump_nodes_helper(head, indent)
   local dots = string.rep('..', indent)
   for n in traverse(head) do
-    local ids = format("%s", has_attribute(n, glyph_id_attr))
+    local ids = format("%s", has_attribute(n, part_attr))
     if node.type(n.id) == 'penalty' then
       log(dots .. "%s=%s {%s}", node.type(n.id), n.penalty, ids)
     elseif n.id == whatsit and n.subtype == user_defined_subtype and n.user_id == marker_whatsit_id then
@@ -685,7 +687,7 @@ local function post_linebreak(h, groupcode, glyphes)
       if line_num == indented then last_line = line end
       for h1 in traverse_id(hlist, line.head) do
         for h2 in traverse_id(hlist, h1.head) do
-          if has_attribute(h2, initial_attr) then
+          if has_attribute(h2, part_attr, part_initial) then
             debugmessage("initial", "found initial")
             initial_node = h2
           end
@@ -701,13 +703,20 @@ local function post_linebreak(h, groupcode, glyphes)
     last_line.depth = math.max(last_line.depth, initial_node.depth)
   end
   
-  -- change width of staff lines
+  -- change width of staff lines and commentary
   for line in traverse_id(hlist, h) do
     debugmessage("stafflines", "line width %spt", line.width/65536)
     for h1 in traverse_id(hlist, line.head) do
       for h2 in traverse_id(hlist, h1.head) do
+        if has_attribute(h2, part_attr, part_commentary) then
+          debugmessage("stafflines", "commentary width %spt -> %spt", h2.width/65536, line.width/65536)
+          h2.width = line.width
+          local new = node.hpack(h2.head, line.width, 'exactly')
+          h1.head = node.insert_before(h1.head, h2, new)
+          h1.head = node.remove(h1.head, h2)
+        end
         for v in traverse_id(vlist, h2.head) do
-          if has_attribute(v, stafflines_attr) then
+          if has_attribute(v, part_attr, part_stafflines) then
             debugmessage("stafflines", "vbox width %spt -> %spt", v.width/65536, line.width/65536)
             v.width = line.width
             for r in traverse_id(rule, v.head) do
