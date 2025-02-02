@@ -571,22 +571,6 @@
   \relax%
 }%
 
-%% macro that draws the lines : starts by the first and then draws the lines of every line.
-%% has to be called before drawing the key, after drawing the initial
-\def\gre@beginnotes{%
-  \gre@trace{gre@beginnotes}%
-  % Draw the staff lines the same as the other staves; post_linebreak
-  % will fix them. The \hbox is there so that post_linebreak can find
-  % it more easily.
-  \hbox{\copy\gre@box@lines}%
-  %%localeleftbox is a primitive of Omega, it draws the same box at the beginning of new lines (here after the first)
-  \gre@localleftbox{%
-    \copy\gre@box@lines %
-  }%
-  \relax %
-  \gre@trace@end%
-}%
-
 \newbox\gre@box@commentary
 
 \def\grecommentary{\@ifnextchar[{\gre@commentary}{\gre@commentary[0pt]}}%

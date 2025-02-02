@@ -534,6 +534,35 @@ end
 
 gregoriotex.module.debugmessage = debugmessage
 
+-- Find stafflines and commentary, which are meant to take up the full
+-- line width, and adjust them to actually take up the full line
+-- width.
+local function adjust_fullwidth(line)
+  debugmessage("stafflines", "line width %spt", line.width/65536)
+
+  local function visit(cur)
+    for child in node.traverse_list(cur.head) do
+      if has_attribute(child, part_attr, part_commentary) then
+        debugmessage("adjust_fullwidth", "commentary width %spt -> %spt", child.width/65536, line.width/65536)
+        child.width = line.width
+        local new = node.hpack(child.head, line.width, 'exactly')
+        cur.head = node.insert_before(cur.head, child, new)
+        cur.head = node.remove(cur.head, child)
+      elseif has_attribute(child, part_attr, part_stafflines) then
+        debugmessage("adjust_fullwidth", "staff width %spt -> %spt", child.width/65536, line.width/65536)
+        for r in traverse_id(rule, child.head) do
+          r.width = line.width
+        end
+        child.width = line.width
+      else
+        visit(child)
+      end
+    end
+  end
+
+  visit(line)
+end  
+  
 -- in each function we check if we really are inside a score,
 -- which we can see with the dash_attr being set or not
 local function post_linebreak(h, groupcode, glyphes)
@@ -702,31 +731,10 @@ local function post_linebreak(h, groupcode, glyphes)
     -- and pretend that the initial's descender is on the last indented line
     last_line.depth = math.max(last_line.depth, initial_node.depth)
   end
-  
+
   -- change width of staff lines and commentary
   for line in traverse_id(hlist, h) do
-    debugmessage("stafflines", "line width %spt", line.width/65536)
-    for h1 in traverse_id(hlist, line.head) do
-      for h2 in traverse_id(hlist, h1.head) do
-        if has_attribute(h2, part_attr, part_commentary) then
-          debugmessage("stafflines", "commentary width %spt -> %spt", h2.width/65536, line.width/65536)
-          h2.width = line.width
-          local new = node.hpack(h2.head, line.width, 'exactly')
-          h1.head = node.insert_before(h1.head, h2, new)
-          h1.head = node.remove(h1.head, h2)
-        end
-        for v in traverse_id(vlist, h2.head) do
-          if has_attribute(v, part_attr, part_stafflines) then
-            debugmessage("stafflines", "vbox width %spt -> %spt", v.width/65536, line.width/65536)
-            v.width = line.width
-            for r in traverse_id(rule, v.head) do
-              debugmessage("stafflines", "rule width %spt -> %spt", r.width/65536, line.width/65536)
-              r.width = line.width
-            end
-          end
-        end
-      end
-    end
+    adjust_fullwidth(line)
   end
 
   --dump_nodes(h)

@@ -162,8 +162,6 @@
   \gre@trace{GreSetLinesClef{#1}{#2}{#3}{#4}{#5}{#6}{#7}}%
   \gre@save@clef{#1}{#2}{#4}{#5}{#6}{#7}%
   \gre@localleftbox{%
-    \gre@skip@temp@four = \gre@dimen@additionalleftspace\relax%
-    \kern\gre@skip@temp@four %
     \copy\gre@box@lines% draws the lines
     \unkern %
     \ifgre@showclef%
@@ -391,6 +389,7 @@
 \def\GreSetInitialClef#1#2#3#4#5#6#7{%
   \gre@trace{GreSetInitialClef{#1}{#2}{#3}{#4}{#5}{#6}{#7}}%
   \gre@save@clef{#1}{#2}{#3}{#4}{#5}{#6}%
+  \copy\gre@box@lines% draws the lines
   \ifgre@showclef%
     \ifnum\gre@count@initiallines>0\relax %
       \ifnum#7=1\relax %
