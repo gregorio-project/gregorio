@@ -374,19 +374,19 @@
   \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax%
   \endgre@style@initial%
   \setbox\gre@box@temp@width=\hbox attr \gre@attrid@initial=1 {%
-  \gre@hskip\gre@dimen@temp@four %
-  \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four %
-  \gre@debugmsg{annotation}{Ready to place initial.}%
-  \ifgre@showlyrics%
-    \smash{\box\gre@box@initial}%
-  \else%
-    \kern\wd\gre@box@initial%
-  \fi%
-  \gre@style@initial%
-  \global\gre@dimen@temp@four = \gre@space@dimen@afterinitialshift\relax%
-  \endgre@style@initial%
-  \gre@hskip\gre@dimen@temp@four %
-  \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four%
+    \gre@hskip\gre@dimen@temp@four %
+    \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four %
+    \gre@debugmsg{annotation}{Ready to place initial.}%
+    \ifgre@showlyrics%
+      \box\gre@box@initial%
+    \else%
+      \kern\wd\gre@box@initial%
+    \fi%
+    \gre@style@initial%
+    \global\gre@dimen@temp@four = \gre@space@dimen@afterinitialshift\relax%
+    \endgre@style@initial%
+    \gre@hskip\gre@dimen@temp@four %
+    \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four%
   }%
   % Set the paragraph shape. This should happen before anything is printed.
   \gre@makeparshape{\gre@count@initiallines}{\wd\gre@box@temp@width}%

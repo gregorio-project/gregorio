@@ -654,10 +654,15 @@ local function post_linebreak(h, groupcode, glyphes)
 
   -- lower initial
   local initial_node
+  local last_line
   local initial_shift = 0
   local line_num = 0
   local indented = tex.count['gre@count@initiallines']
   debugmessage("initial", "%s indented lines", indented)
+  
+  -- Add up the total distance from the initial's current position
+  -- (baseline of first line) to its desired position (baseline of
+  -- last indented line).
   for line in traverse(h) do
     if line.id == glue then
       debugmessage("initial", "glue %spt", line.width/65536)
@@ -677,6 +682,7 @@ local function post_linebreak(h, groupcode, glyphes)
         initial_shift = initial_shift + line.depth
         debugmessage("initial", "shift %spt", line.depth/65536)
       end
+      if line_num == indented then last_line = line end
       for h1 in traverse_id(hlist, line.head) do
         for h2 in traverse_id(hlist, h1.head) do
           if has_attribute(h2, initial_attr) then
@@ -689,7 +695,10 @@ local function post_linebreak(h, groupcode, glyphes)
   end
   debugmessage("initial", "total shift is %spt", initial_shift/65536)
   if initial_node then
+    -- Perform the shift
     initial_node.shift = initial_shift
+    -- and pretend that the initial's descender is on the last indented line
+    last_line.depth = math.max(last_line.depth, initial_node.depth)
   end
   
   -- change width of staff lines
