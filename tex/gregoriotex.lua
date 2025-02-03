@@ -561,7 +561,21 @@ local function adjust_fullwidth(line)
   end
 
   visit(line)
-end  
+end
+
+-- Adjust height of an hlist to fit its contents
+local function adjust_hlist(cur)
+  local new_height = 0
+  for child in traverse(cur.head) do
+    if child.id == hlist or child.id == vlist then
+      new_height = math.max(new_height, child.height - child.shift)
+    elseif child.id == rule or child.id == glyph then
+      new_height = math.max(new_height, child.height)
+    end
+  end
+  debugmessage('adjust_hlist', 'height %spt -> %spt', cur.height/2^16, new_height/2^16)
+  cur.height = new_height
+end
   
 -- in each function we check if we really are inside a score,
 -- which we can see with the dash_attr being set or not
@@ -684,7 +698,6 @@ local function post_linebreak(h, groupcode, glyphes)
   end
 
   -- lower initial
-  local initial_node
   local last_line
   local initial_shift = 0
   local line_num = 0
@@ -714,22 +727,25 @@ local function post_linebreak(h, groupcode, glyphes)
         debugmessage("initial", "shift %spt", line.depth/65536)
       end
       if line_num == indented then last_line = line end
-      for h1 in traverse_id(hlist, line.head) do
-        for h2 in traverse_id(hlist, h1.head) do
-          if has_attribute(h2, part_attr, part_initial) then
-            debugmessage("initial", "found initial")
-            initial_node = h2
-          end
-        end
-      end
     end
   end
   debugmessage("initial", "total shift is %spt", initial_shift/65536)
-  if initial_node then
-    -- Perform the shift
-    initial_node.shift = initial_shift
-    -- and pretend that the initial's descender is on the last indented line
-    last_line.depth = math.max(last_line.depth, initial_node.depth)
+  
+  for line in traverse_id(hlist, h) do
+    for h1 in traverse_id(hlist, line.head) do
+      for h2 in traverse_id(hlist, h1.head) do
+        if has_attribute(h2, part_attr, part_initial) then
+          debugmessage("initial", "found initial")
+          -- Perform the shift
+          h2.shift = initial_shift
+          -- Recompute heights, but not depths (because initial descends below baseline)
+          adjust_hlist(h1)
+          adjust_hlist(line)
+          -- Pretend that the initial's descender is on the last indented line
+          last_line.depth = math.max(last_line.depth, h2.depth)
+        end
+      end
+    end
   end
 
   -- change width of staff lines and commentary
