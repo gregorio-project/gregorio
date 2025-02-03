@@ -222,3 +222,10 @@
 %%%%%%%%%%%%%%%
 
 \gresetmodenumbersystem{roman-minuscule}%
+
+%%%%%%%%%%%%%%%
+%% protect against fancyhdr conflicts
+%%%%%%%%%%%%%%%
+ 
+\AddToHook{fancyhdr/before}{\directlua{gregoriotex.fancyhdr_toggle_callbacks()}}%
+\AddToHook{fancyhdr/after}{\directlua{gregoriotex.fancyhdr_toggle_callbacks()}}%
