@@ -461,6 +461,8 @@ local function dump_nodes_helper(head, indent)
       log(dots .. "glyph %s {%s}", charname, ids)
     elseif n.id == rule then
       log(dots .. "rule subtype=%s width=%spt height=%spt depth=%spt", n.subtype, n.width/65536, n.height/65536, n.depth/65536)
+    elseif n.id == glue then
+      log(dots .. "glue subtype=%s width=%spt", n.subtype, n.width/65536)
     else
       log(dots .. "node %s [%s] {%s}", node.type(n.id), n.subtype, ids)
     end
@@ -537,23 +539,30 @@ gregoriotex.module.debugmessage = debugmessage
 -- Find stafflines and commentary, which are meant to take up the full
 -- line width, and adjust them to actually take up the full line
 -- width.
-local function adjust_fullwidth(line)
-  debugmessage("stafflines", "line width %spt", line.width/65536)
+local function adjust_fullwidth (line)
+  -- Determine line width, ignoring \leftskip
+  local line_width = line.width
+  for child in node.traverse(line.head) do
+    if child.id == glue and child.subtype == 8 then
+      line_width = line_width - node.effective_glue(child, line)
+    end
+  end
+  debugmessage("stafflines", "line width %spt", line_width/65536)
 
   local function visit(cur)
     for child in node.traverse_list(cur.head) do
       if has_attribute(child, part_attr, part_commentary) then
-        debugmessage("adjust_fullwidth", "commentary width %spt -> %spt", child.width/65536, line.width/65536)
-        child.width = line.width
-        local new = node.hpack(child.head, line.width, 'exactly')
+        debugmessage("adjust_fullwidth", "commentary width %spt -> %spt", child.width/65536, line_width/65536)
+        child.width = line_width
+        local new = node.hpack(child.head, line_width, 'exactly')
         cur.head = node.insert_before(cur.head, child, new)
         cur.head = node.remove(cur.head, child)
       elseif has_attribute(child, part_attr, part_stafflines) then
-        debugmessage("adjust_fullwidth", "staff width %spt -> %spt", child.width/65536, line.width/65536)
+        debugmessage("adjust_fullwidth", "staff width %spt -> %spt", child.width/65536, line_width/65536)
         for r in traverse_id(rule, child.head) do
-          r.width = line.width
+          r.width = line_width
         end
-        child.width = line.width
+        child.width = line_width
       else
         visit(child)
       end
