@@ -903,7 +903,7 @@ Macro to add an illuminated initial.
 \textbf{Nota Bene:} Usually the argument of this command should be an \verb=\includegraphics= command, but you may use what ever you want as the illuminated initial.
 
 \macroname{\textbackslash gresetinitiallines}{\{\#1\}}{gregoriotex-syllable.tex}
-Sets the number of lines the score initial requires.
+Sets the number of lines the score initial requires (any non-negative integer).
 
 \begin{argtable}
   \#1 & number & The number of lines required by the initial.  If \texttt{0}, the score will have no separated initial.\\
@@ -1776,7 +1776,7 @@ Space around a clef change.
 \end{gdimension}
 
 \begin{gdimension}{initialraise}
-Distance the initial will be raised above its default baseline.  The default baseline for the initial coincides with the baseline for the text below the staff.
+Distance the initial will be raised above its default baseline.  The default baseline for the initial coincides with the baseline for the text below the staff, on the lowest line that the initial appears next to.
 \end{gdimension}
 
 \begin{gdimension}{overslurshift}
