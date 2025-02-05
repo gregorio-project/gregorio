@@ -572,18 +572,22 @@ local function adjust_fullwidth (line)
   visit(line)
 end
 
--- Adjust height of an hlist to fit its contents
+-- Adjust height and depth of an hlist to fit its contents
 local function adjust_hlist(cur)
   local new_height = 0
+  local new_depth = 0
   for child in traverse(cur.head) do
     if child.id == hlist or child.id == vlist then
       new_height = math.max(new_height, child.height - child.shift)
+      new_depth = math.max(new_depth, child.depth + child.shift)
     elseif child.id == rule or child.id == glyph then
       new_height = math.max(new_height, child.height)
+      new_depth = math.max(new_depth, child.depth)
     end
   end
-  debugmessage('adjust_hlist', 'height %spt -> %spt', cur.height/2^16, new_height/2^16)
+  debugmessage('adjust_hlist', 'height %spt -> %spt, depth %spt -> %spt', cur.height/2^16, new_height/2^16, cur.depth/2^16, new_depth/2^16)
   cur.height = new_height
+  cur.depth = new_depth
 end
   
 -- in each function we check if we really are inside a score,
@@ -706,55 +710,66 @@ local function post_linebreak(h, groupcode, glyphes)
     end
   end
 
-  -- lower initial
-  local last_line
-  local initial_shift = 0
-  local line_num = 0
+  -- If there is a dropped initial, lower it to its correct position
   local indented = tex.count['gre@count@initiallines']
   debugmessage("initial", "%s indented lines", indented)
-  
-  -- Add up the total distance from the initial's current position
-  -- (baseline of first line) to its desired position (baseline of
-  -- last indented line).
-  for line in traverse(h) do
-    if line.id == glue then
-      debugmessage("initial", "glue %spt", line.width/65536)
-      -- bug: this can't account for stretch or shrink
-      if line_num >= 1 and line_num < indented then
-        initial_shift = initial_shift + line.width
-        debugmessage("initial", "shift %spt", line.width/65536)
-      end
-    elseif line.id == hlist then
-      line_num = line_num + 1
-      debugmessage("initial", "line %s height %spt depth %spt", line_num, line.height/65536, line.depth/65536)
-      if line_num > 1 and line_num <= indented then
-        initial_shift = initial_shift + line.height
-        debugmessage("initial", "shift %spt", line.height/65536)
-      end
-      if line_num < indented then
-        initial_shift = initial_shift + line.depth
-        debugmessage("initial", "shift %spt", line.depth/65536)
-      end
-      if line_num == indented then last_line = line end
-    end
-  end
-  debugmessage("initial", "total shift is %spt", initial_shift/65536)
-  
-  for line in traverse_id(hlist, h) do
-    for h1 in traverse_id(hlist, line.head) do
-      for h2 in traverse_id(hlist, h1.head) do
-        if has_attribute(h2, part_attr, part_initial) then
-          debugmessage("initial", "found initial")
-          -- Perform the shift
-          h2.shift = initial_shift
-          -- Recompute heights, but not depths (because initial descends below baseline)
-          adjust_hlist(h1)
-          adjust_hlist(line)
-          -- Pretend that the initial's descender is on the last indented line
-          last_line.depth = math.max(last_line.depth, h2.depth)
+  if indented > 1 then
+    local initial, initial_line
+    local save_height, save_depth, save_shift
+
+    -- Find the initial.
+    for line in traverse_id(hlist, h) do
+      for h1 in traverse_id(hlist, line.head) do
+        for h2 in traverse_id(hlist, h1.head) do
+          if has_attribute(h2, part_attr, part_initial) then
+            initial_line, initial = line, h2
+            -- Smash the initial but save its size
+            save_height, save_depth, save_shift = h2.height, h2.depth, h2.shift
+            h2.height, h2.depth, h2.shift = 0, 0, 0
+            -- Recompute containing boxes
+            adjust_hlist(h1)
+            adjust_hlist(line)
+          end
         end
       end
     end
+
+    -- Add up the total distance from the initial's current position
+    -- (baseline of first line) to the baseline of the last indented line.
+    local last_line
+    local last_distance = 0
+    local line_num = 0
+    for line in traverse(h) do
+      if line.id == glue then
+        debugmessage("initial", "glue %spt", line.width/2^16)
+        -- bug: this can't account for stretch or shrink
+        if line_num >= 1 and line_num < indented then
+          last_distance = last_distance + line.width
+        end
+      elseif line.id == hlist then
+        debugmessage("initial", "line height=%spt depth=%spt", line.height/2^16, line.depth/2^16)
+        line_num = line_num + 1
+        if line_num > 1 and line_num <= indented then
+          last_distance = last_distance + line.height
+        end
+        if line_num < indented then
+          last_distance = last_distance + line.depth
+        end
+        if line_num == indented then last_line = line end
+      end
+    end
+    debugmessage("initial", "distance from first to last indented line is %spt", last_distance/2^16)
+  
+    local initial_shift = last_distance
+    debugmessage("initial", "initial shift is %spt", initial_shift/2^16)
+  
+    -- Perform the shift
+    initial.shift = save_shift + initial_shift
+    
+    -- Adjust height of first line using the initial's true height
+    initial_line.height = math.max(initial_line.height, save_height - initial_shift)
+    -- Pretend that the initial's descender is on the last indented line
+    last_line.depth = math.max(last_line.depth, save_depth + initial_shift - last_distance)
   end
 
   -- change width of staff lines and commentary
