@@ -10,9 +10,12 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Fixed the loss of ongoing styles when a syllable starts with a forced center.  See [#1551](https://github.com/gregorio-project/gregorio/issues/1551).
 - Fixed first syllables of one letter with a style causing a segfault.  See [#1585](https://github.com/gregorio-project/gregorio/issues/1585).
 - Fixed a bug that caused a custos to sometimes change into a clef. See [#1373](https://github.com/gregorio-project/gregorio/issues/1373).
+- When fancyhdr and GregorioTeX are used together, GregorioTeX's disabling of hyphenation and its `post_linebreak` modification of the `post_linebreak_filter` interfere with multiline headers.  Using the `fancyhdr/before` and `fancyhdr/after` hooks we temporarily reenable hyphenation and disable our `post_linebreak` modification while headers and footers are being processed in the middle of a score.  See [#1603](https://github.com/gregorio-project/gregorio/issues/1603).
 
 ### Changed
+- Modified gregorio to append to the log file specified as an argument and to send early messages to it.  See [#1541](https://github.com/gregorio-project/gregorio/issues/1541).
 - Defined an output directory for gtex and glog files.  Default is `tmp-gre`.  This can be changed using `\gresetoutputdir{...}`.  Fixes [#1393](https://github.com/gregorio-project/gregorio/issues/1393), [#1542](https://github.com/gregorio-project/gregorio/issues/1542), and [#1571](https://github.com/gregorio-project/gregorio/issues/1571).
+- gabc.vim has been expanded into a proper vim plugin.
 
 ### Added
 - Added a configurable setting `\gresetunisonbreakbehavior` to control automatic line breaks between unison notes above a syllable.  Defaults to `breakable` for backwards compatibility, but may be set to `unbreakable` if that behavior is desired.  See [#1504](https://github.com/gregorio-project/gregorio/issues/1504).

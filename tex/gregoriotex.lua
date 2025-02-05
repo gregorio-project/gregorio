@@ -775,9 +775,21 @@ local function get_score_font_unicode_pairs(name)
   return pairs(unicodes)
 end
 
+local inside_score = false
+--- Start a score
+-- Prepare all variables for processing a new score and add our callbacks
+-- @param score_id score identifier
+-- @param top_height height of highest score element
+-- @param bottom_height height of lowest score element
+-- @param has_translation does this score have a translation?
+-- @param has_above_lines_text does this score have above lines text?
+-- @param top_height_adj limit below which a top_height doesn't require adjustment
+-- @param bottom_height_adj limit above which a bottom_height doesn't require adjustment
+-- @param score_font_name which font does this score use for the neumes
 local function at_score_beginning(score_id, top_height, bottom_height,
     has_translation, has_above_lines_text, top_height_adj, bottom_height_adj,
     score_font_name)
+  inside_score = true
   local inclusion = score_inclusion[score_id] or 1
   score_inclusion[score_id] = inclusion + 1
   score_id = score_id..'.'..inclusion
@@ -823,7 +835,10 @@ local function at_score_beginning(score_id, top_height, bottom_height,
   luatexbase.add_to_callback("hyphenate", disable_hyphenation, "gregoriotex.disable_hyphenation", 1)
 end
 
+--- Finish a score
+-- Reset variables to out of score state and remove our callbacks
 local function at_score_end()
+  inside_score = false
   luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.post_linebreak')
   luatexbase.remove_from_callback("hyphenate", "gregoriotex.disable_hyphenation")
   per_line_dims = {}
@@ -831,6 +846,23 @@ local function at_score_end()
   saved_dims = {}
   saved_counts = {}
 end
+
+--- Toggle the state of GretorioTeX callbacks.
+-- Our callbacks can affect fancyhdr's ability to create multi-line headers/footers
+-- By adding this function to fancyhdr's before and after hooks, our callbacks are removed
+-- while processing headers/footers and then reinstated for the rest of the score.
+local function fancyhdr_toggle_callbacks()
+  if inside_score then
+    if luatexbase.is_active_callback('post_linebreak_filter','gregoriotex.post_linebreak') then
+      luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.post_linebreak')
+      luatexbase.remove_from_callback("hyphenate", "gregoriotex.disable_hyphenation")
+    else
+      luatexbase.add_to_callback('post_linebreak_filter', post_linebreak, 'gregoriotex.post_linebreak', 1)
+      luatexbase.add_to_callback("hyphenate", disable_hyphenation, "gregoriotex.disable_hyphenation", 1)
+    end
+  end
+end
+
 
 -- Inserted copy of https://github.com/ToxicFrog/luautil/blob/master/lfs.lua
 local windows = package.config:sub(1,1) == "\\"
@@ -1745,6 +1777,7 @@ gregoriotex.change_next_score_line_dim   = change_next_score_line_dim
 gregoriotex.change_next_score_line_count = change_next_score_line_count
 gregoriotex.set_base_output_dir          = set_base_output_dir
 gregoriotex.is_first_alteration          = is_first_alteration
+gregoriotex.fancyhdr_toggle_callbacks    = fancyhdr_toggle_callbacks
 
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))

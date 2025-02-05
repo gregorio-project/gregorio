@@ -110,7 +110,6 @@ static kpathsea kpse = NULL;
 void gregorio_support_init(const char *const program USED_FOR_KPSE,
         const char *const argv0 USED_FOR_KPSE)
 {
-    gregorio_set_error_out(stderr);
     gregorio_set_verbosity_mode(VERBOSITY_ERROR);
     gregorio_struct_init();
 #ifdef USE_KPSE
