@@ -902,12 +902,12 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
     -- The next few lines would open the gtex file for writing so that LuaTeX records the fact that gregorio has written to it
     -- when the -recorder option is used.
     -- However, in restricted \write18 mode, the gtex file might not be writable. Since we're the sole consumer of the gtex file, it should be okay not to record the write.
-    --local gtex = io.open(gtex_file, 'a')
-    --if gtex == nil then
-    --  err("\n Unable to open %s", gtex_file)
-    --else
-    --  gtex:close()
-    --end
+    local gtex = io.open(gtex_file, 'a')
+    if gtex == nil then
+      warn("\n Unable to open %s for writing. If another program depends on %s, latexmk may not recognize the dependency.", gtex_file, gtex_file)
+    else
+      gtex:close()
+    end
     local glog = io.open(glog_file, 'a+')
     if glog == nil then
       err("\n Unable to open %s", glog_file)
