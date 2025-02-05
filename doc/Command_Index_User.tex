@@ -1414,16 +1414,17 @@ Macro to set the font to be used for the ancient notation.
 Macro to set the effect of alterations (flats and sharps), for the purpose of deciding whether to print soft alterations (see \S\ref{softalterations}).
 
 \begin{argtable}
-  \#1 & \texttt{note} (default) & effect ends immediately \\
-      & \texttt{line} & effect ends at the end of the line \\
+  \#1 & \texttt{line} (default) & effect ends at the end of the line \\
+      & \texttt{note} & effect ends immediately \\
 \end{argtable}
 
 Soft flats are printed if no previous flat (on the same pitch) is in effect. Similarly for soft sharps. Soft naturals are printed if a previous flat or sharp (on the same pitch) is in effect.
 
-Thus, under \verb|\gresetalterationeffect{note}|, all sharps and flats lose their effect immediately, so all soft sharps and flats are printed, but no soft naturals are printed.
-Under \verb|\gresetalterationeffect{line}|, all sharps and flats are in effect until the end of the line (unless cancelled by a natural), which is the convention used in Dominican chant scores.
+Thus, under \verb|\gresetalterationeffect{line}|, all sharps and flats are in effect until the end of the line (unless cancelled by a natural), which is the convention used in Dominican chant scores. For the currently envisioned uses of soft alterations, this is the right setting.
 
-(Argument \#1 is actually a comma-separated list of keywords, but currently, it must not be empty, and \texttt{note,line} has the same effect as \texttt{note}. In the future, other options like \texttt{word} and \texttt{bar} may be added.)
+Under \verb|\gresetalterationeffect{note}|, all sharps and flats lose their effect immediately, so all soft flats and sharps are printed (but no soft naturals are printed).
+
+(Argument \#1 is actually a comma-separated list of options. If multiple options are given, then an alteration's effect ends as soon as \emph{any} of the options says it should end. However, currently, the list must not be empty, and \texttt{note,line} has the same effect as \texttt{note}, because ``immediately'' always occurs before the end of the line. In the future, other options like \texttt{word} and \texttt{bar} may be added; \texttt{word,bar} would then be the convention used in most Gregorian chant scores.)
 
 \subsection{Counts}\label{counts}
 
