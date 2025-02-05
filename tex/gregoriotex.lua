@@ -899,9 +899,7 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
         .."'%s' with %s.\nPlease check your score file.", gabc_file,
         gregorio_exe())
   else
-    -- open the gtex file for writing so that LuaTeX records output to it
-    -- when the -recorder option is used
-    local gtex = io.open(gtex_file, 'a')
+    local gtex = io.open(gtex_file, 'r')
     if gtex == nil then
       err("\n Unable to open %s", gtex_file)
     else
