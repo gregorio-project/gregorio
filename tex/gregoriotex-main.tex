@@ -304,6 +304,38 @@
 %% box containing the initial, and dimen containing its width (and the width of the space after)
 \newbox\gre@box@initial%
 
+% Where the initial appears
+\newcount\gre@count@initialposition
+% firsttop (0) = top of first line
+% lastbaseline (1) = baseline of last indented line
+% lastbottom (2) = bottom of last indented line
+\def\gresetinitialposition#1{%
+  \IfStrEqCase{#1}{%
+    {firsttop}{\gre@count@initialposition=0}%
+    {lastbaseline}{\gre@count@initialposition=1}%
+    {lastbottom}{\gre@count@initialposition=2}%
+  }[%
+    \gre@error{Unrecognized option "#1" for \protect\gresetinitialposition\MessageBreak Possible options are: 'firsttop', 'lastbaseline', and 'lastbottom'}%
+  ]%
+}%
+\gresetinitialposition{lastbaseline}%
+
+% What part of the initial is aligned to \gre@count@initialposition:
+% top (0) = top of initial
+% baseline (1) = baseline
+% bottom (2) = bottom
+\newcount\gre@count@initialanchor
+\def\gresetinitialanchor#1{%
+  \IfStrEqCase{#1}{%
+    {top}{\gre@count@initialanchor=0}%
+    {baseline}{\gre@count@initialanchor=1}%
+    {bottom}{\gre@count@initialanchor=2}%
+  }[%
+    \gre@error{Unrecognized option "#1" for \protect\gresetinitialanchor\MessageBreak Possible options are: 'top', 'baseline', and 'bottom'}%
+  ]%
+}%
+\gresetinitialanchor{baseline}%
+
 \def\gre@updateleftbox{%
   \gre@trace{gre@updateleftbox}%
   \gre@updatelinesclef %
@@ -314,21 +346,9 @@
   \setbox\gre@box@initial=\hbox{#1}%
 }%
 
-\def\gre@printcommentary{%
-  \gre@trace{gre@printcommentary}%
-  % see comments on this function to see what it does
-  \gre@debugmsg{commentary}{Time to calculate the true raise.}%
-  \gre@calculate@commentarytrueraise%
-  % we start by printing the commentary
-  % when doing this we place it inside a box as which is linewidth wide with an \hfill before to get it to align to the right of the page
-  % we then place that box inside one of 0 width so that our cursor doesn't move when we place the commentary
-  \ifvoid\gre@box@commentary\else%
-    \gre@debugmsg{commentary}{I am printing a commentary box}%
-    \raise\gre@dimen@commentarytrueraise\hbox to 0pt{\hbox attr \gre@attrid@part=1 to \gre@dimen@linewidth{\hfill\box\gre@box@commentary}\hss}%
-  \fi%
-  \gre@trace@end%
-}
-
+% Set paragraph shape.
+% #1: How many lines are indented
+% #2: The amount of the indentation
 \def\gre@makeparshape#1#2{%
   \edef\gre@parshape@dims{\numexpr#1+1\relax}%
   \gre@count@temp@one=0\relax
@@ -345,7 +365,6 @@
   \gre@calculate@annotationtrueraise %
   % we print the initial always at the same place, and then we print the gre@box@annotation, centered
   % first we print the initial
-  \gre@dimen@temp@five = \dimexpr(\gre@dimen@textlower+\gre@space@dimen@initialraise)\relax%
   \ifvoid\gre@box@initial%
     \gre@debugmsg{initial}{Fill initial box a}%
     \setbox\gre@box@initial=\hbox{\gre@style@initial\gre@fixedtextformat{#1}\endgre@style@initial}%
@@ -368,6 +387,25 @@
     \global\gre@dimen@initialwidth=\wd\gre@box@annotation%
   \fi%
   \gre@debugmsg{annotation}{Width check completed.}%
+  % Now compute the raise
+  \gre@dimen@temp@five = \dimexpr(\gre@dimen@textlower+\gre@space@dimen@initialraise)\relax%
+  \ifnum\gre@count@initialposition=0\relax
+    \advance\gre@dimen@temp@five by 
+      \dimexpr(\gre@dimen@staffheight
+      + \gre@space@dimen@spacebeneathtext
+      + \gre@dimen@currenttranslationheight
+      + \gre@space@dimen@spacelinestext
+      + \gre@dimen@additionalbottomspace)\relax%
+  \fi % post_linebreak takes care of the other cases
+  \ifcase\gre@count@initialanchor\relax
+    % top
+    \advance\gre@dimen@temp@five by -\ht\gre@box@initial\relax
+    \or
+    % baseline: do nothing
+    \or
+    % bottom
+    \advance\gre@dimen@temp@five by \dp\gre@box@initial\relax
+  \fi
   \setbox\gre@box@initial=\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}%
   \gre@debugmsg{annotation}{Initial set.}%
   \gre@style@initial%
@@ -390,8 +428,9 @@
   }%
   % Set the paragraph shape. This should happen before anything is printed.
   \gre@makeparshape{\gre@count@initiallines}{\wd\gre@box@temp@width}%
-  % Set the initial.
-  \llap{\box\gre@box@temp@width}%
+  % Set the initial. We smash it so it doesn't disrupt anything, in
+  % particular the glue between lines.
+  \llap{\smash{\box\gre@box@temp@width}}%
   % then we center the annotation box above the initial, if there is one
   \gre@debugmsg{annotation}{Time to set the annotation.}%
   \ifvoid\gre@box@annotation\relax%
@@ -419,7 +458,9 @@
   \gre@trace@end%
 }%
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting the things above the initial
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newbox\gre@box@annotation%
 \newbox\gre@box@add%
@@ -523,11 +564,6 @@
   \gre@trace@end%
 }%
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% macros for the typesetting the things above the initial
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \def\gre@writemode#1#2#3{%
   \gre@trace{gre@writemode{#1}{#2}{#3}}%
   \greannotation{%
@@ -570,6 +606,25 @@
   \fi%
   \relax%
 }%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting of the commentary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\gre@printcommentary{%
+  \gre@trace{gre@printcommentary}%
+  % see comments on this function to see what it does
+  \gre@debugmsg{commentary}{Time to calculate the true raise.}%
+  \gre@calculate@commentarytrueraise%
+  % we start by printing the commentary
+  % when doing this we place it inside a box as which is linewidth wide with an \hfill before to get it to align to the right of the page
+  % we then place that box inside one of 0 width so that our cursor doesn't move when we place the commentary
+  \ifvoid\gre@box@commentary\else%
+    \gre@debugmsg{commentary}{I am printing a commentary box}%
+    \raise\gre@dimen@commentarytrueraise\hbox to 0pt{\hbox attr \gre@attrid@part=1 to \gre@dimen@linewidth{\hfill\box\gre@box@commentary}\hss}%
+  \fi%
+  \gre@trace@end%
+}
 
 \newbox\gre@box@commentary
 

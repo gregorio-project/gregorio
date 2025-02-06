@@ -547,18 +547,18 @@ local function adjust_fullwidth (line)
       line_width = line_width - node.effective_glue(child, line)
     end
   end
-  debugmessage("stafflines", "line width %spt", line_width/65536)
+  debugmessage("stafflines", "line width %spt", line_width/2^16)
 
   local function visit(cur)
     for child in node.traverse_list(cur.head) do
       if has_attribute(child, part_attr, part_commentary) then
-        debugmessage("adjust_fullwidth", "commentary width %spt -> %spt", child.width/65536, line_width/65536)
+        debugmessage("adjust_fullwidth", "commentary width %spt -> %spt", child.width/2^16, line_width/2^16)
         child.width = line_width
         local new = node.hpack(child.head, line_width, 'exactly')
         cur.head = node.insert_before(cur.head, child, new)
         cur.head = node.remove(cur.head, child)
       elseif has_attribute(child, part_attr, part_stafflines) then
-        debugmessage("adjust_fullwidth", "staff width %spt -> %spt", child.width/65536, line_width/65536)
+        debugmessage("adjust_fullwidth", "staff width %spt -> %spt", child.width/2^16, line_width/2^16)
         for r in traverse_id(rule, child.head) do
           r.width = line_width
         end
@@ -588,6 +588,19 @@ local function adjust_hlist(cur)
   debugmessage('adjust_hlist', 'height %spt -> %spt, depth %spt -> %spt', cur.height/2^16, new_height/2^16, cur.depth/2^16, new_depth/2^16)
   cur.height = new_height
   cur.depth = new_depth
+end
+
+local function find_attr(cur, attr, val)
+  if has_attribute(cur, attr, val) then
+    return cur
+  elseif cur.id == hlist or cur.id == vlist then
+    for child in traverse(cur.head) do
+      local found = find_attr(child, attr, val)
+      if found ~= nil then
+        return found
+      end
+    end
+  end
 end
   
 -- in each function we check if we really are inside a score,
@@ -713,26 +726,20 @@ local function post_linebreak(h, groupcode, glyphes)
   -- If there is a dropped initial, lower it to its correct position
   local indented = tex.count['gre@count@initiallines']
   debugmessage("initial", "%s indented lines", indented)
-  if indented > 1 then
+  if indented > 0 then
     local initial, initial_line
     local save_height, save_depth, save_shift
 
     -- Find the initial.
     for line in traverse_id(hlist, h) do
-      for h1 in traverse_id(hlist, line.head) do
-        for h2 in traverse_id(hlist, h1.head) do
-          if has_attribute(h2, part_attr, part_initial) then
-            initial_line, initial = line, h2
-            -- Smash the initial but save its size
-            save_height, save_depth, save_shift = h2.height, h2.depth, h2.shift
-            h2.height, h2.depth, h2.shift = 0, 0, 0
-            -- Recompute containing boxes
-            adjust_hlist(h1)
-            adjust_hlist(line)
-          end
-        end
+      initial = find_attr(line, part_attr, part_initial)
+      if initial ~= nil then
+        initial_line = line
+        break
       end
     end
+    debugmessage('initial', 'found initial with height=%spt depth=%spt shift=%spt', initial.height/2^16, initial.depth/2^16, initial.shift/2^16)
+    save_height, save_depth, save_shift = initial.height, initial.depth, initial.shift
 
     -- Add up the total distance from the initial's current position
     -- (baseline of first line) to the baseline of the last indented line.
@@ -759,8 +766,18 @@ local function post_linebreak(h, groupcode, glyphes)
       end
     end
     debugmessage("initial", "distance from first to last indented line is %spt", last_distance/2^16)
-  
-    local initial_shift = last_distance
+
+    -- Compute the shift. If initialposition = 0 (top) then it's
+    -- already in the right place, but otherwise it's aligned with the
+    -- baseline of the first line and needs to be adjusted.
+    local initial_shift = 0
+    if tex.count['gre@count@initialposition'] == 1 then
+      debugmessage('initial', 'align to baseline of last line')
+      initial_shift = last_distance
+    elseif tex.count['gre@count@initialposition'] == 2 then
+      debugmessage('initial', 'align to bottom of last line')
+      initial_shift = last_distance + last_line.depth
+    end
     debugmessage("initial", "initial shift is %spt", initial_shift/2^16)
   
     -- Perform the shift
@@ -772,7 +789,7 @@ local function post_linebreak(h, groupcode, glyphes)
     last_line.depth = math.max(last_line.depth, save_depth + initial_shift - last_distance)
   end
 
-  -- change width of staff lines and commentary
+  -- Change width of staff lines and commentary
   for line in traverse_id(hlist, h) do
     adjust_fullwidth(line)
   end
