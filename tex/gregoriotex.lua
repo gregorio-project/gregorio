@@ -762,19 +762,20 @@ local function post_linebreak(h, groupcode, glyphes)
         if line_num < indented then
           last_distance = last_distance + line.depth
         end
-        if line_num == indented then last_line = line end
+        if line_num <= indented then last_line = line end
       end
     end
     debugmessage("initial", "distance from first to last indented line is %spt", last_distance/2^16)
 
-    -- Compute the shift. If initialposition = 0 (top) then it's
-    -- already in the right place, but otherwise it's aligned with the
-    -- baseline of the first line and needs to be adjusted.
+    -- Compute the shift. If initialposition = 0 (firsttop) or 1
+    -- (firstbaseline) then it's already in the right place, but
+    -- otherwise it's aligned with the baseline of the first line and
+    -- needs to be adjusted.
     local initial_shift = 0
-    if tex.count['gre@count@initialposition'] == 1 then
+    if tex.count['gre@count@initialposition'] == 2 then
       debugmessage('initial', 'align to baseline of last line')
       initial_shift = last_distance
-    elseif tex.count['gre@count@initialposition'] == 2 then
+    elseif tex.count['gre@count@initialposition'] == 3 then
       debugmessage('initial', 'align to bottom of last line')
       initial_shift = last_distance + last_line.depth
     end

@@ -19,7 +19,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Added a configurable setting `\gresetunisonbreakbehavior` to control automatic line breaks between unison notes above a syllable.  Defaults to `breakable` for backwards compatibility, but may be set to `unbreakable` if that behavior is desired.  See [#1504](https://github.com/gregorio-project/gregorio/issues/1504).
 - Added the ability to fuse upwards to a virga.  See [#1558](https://github.com/gregorio-project/gregorio/issues/1558)
 - Added the ability to use the "stroke" form of a clivis instead of the default two-notes form by specifying `[shape:stroke]` after the clivis to change.  See [#1558](https://github.com/gregorio-project/gregorio/issues/1558)
-- Allow \gresetinitiallines{n} where n is any number of lines (a non-negative integer). See [#1488](https://github.com/gregorio-project/gregorio/issues/1488).
+- Allow `\gresetinitiallines{n}` where `n` is any number of lines (a non-negative integer). The manual linebreaks (`z`) that used to be required for 2-line initials are no longer required. See [#1488](https://github.com/gregorio-project/gregorio/issues/1488). Added new options `\gresetinitialanchor` and `\gresetinitialposition` to control the placement of initials.
 
 
 ## [6.0.0] - 2021-03-13

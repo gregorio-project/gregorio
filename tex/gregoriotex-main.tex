@@ -307,13 +307,15 @@
 % Where the initial appears
 \newcount\gre@count@initialposition
 % firsttop (0) = top of first line
-% lastbaseline (1) = baseline of last indented line
-% lastbottom (2) = bottom of last indented line
+% firstbaseline (1) = baseline of first line
+% lastbaseline (2) = baseline of last indented line
+% lastbottom (3) = bottom of last indented line
 \def\gresetinitialposition#1{%
   \IfStrEqCase{#1}{%
     {firsttop}{\gre@count@initialposition=0}%
-    {lastbaseline}{\gre@count@initialposition=1}%
-    {lastbottom}{\gre@count@initialposition=2}%
+    {firstbaseline}{\gre@count@initialposition=1}%
+    {lastbaseline}{\gre@count@initialposition=2}%
+    {lastbottom}{\gre@count@initialposition=3}%
   }[%
     \gre@error{Unrecognized option "#1" for \protect\gresetinitialposition\MessageBreak Possible options are: 'firsttop', 'lastbaseline', and 'lastbottom'}%
   ]%
@@ -322,8 +324,8 @@
 
 % What part of the initial is aligned to \gre@count@initialposition:
 % top (0) = top of initial
-% baseline (1) = baseline
-% bottom (2) = bottom
+% baseline (1) = baseline of initial
+% bottom (2) = bottom of initial
 \newcount\gre@count@initialanchor
 \def\gresetinitialanchor#1{%
   \IfStrEqCase{#1}{%
