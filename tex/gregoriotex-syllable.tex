@@ -305,9 +305,7 @@
 
 % this is the function that we call when we try to determine the next aligncenter of the notes.
 % #1 is the note type
-% #2 is the alteration style : 0 = none, 1 = flat, 2 = natural, 3 = sharp,
-%                              4 = parenthesized flat, 5 = parenthesized natural,
-%                              6 = parenthesized flat
+% #2 is the alteration type (see \gre@alteration)
 \def\gre@calculate@nextnotesaligncenter#1#2{%
   \gre@trace{gre@calculate@nextnotesaligncenter{#1}{#2}}%
   \gre@calculate@simplenotesaligncenter{#1}{1}%
@@ -856,6 +854,10 @@
   \gre@firstglyphtrue%
   \gre@dimen@bolextra = 0pt\relax%
   \gre@calculate@textaligncenter{\gre@saved@syllable@endsyllablepart}{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
+  % Before measuring the notes, save the alteration id. We will
+  % restore it later, so that the measured notes and the actual notes
+  % have the same alteration ids, if any.
+  \edef\gre@saved@attr@alteration@id{\number\gre@attr@alteration@id\relax}%
   \gre@syllablenotes{#9}% we put the notes in a box, so that we have the width of it
   % now we calculate the begin difference, that is to say \gre@dimen@notesaligncenter - \gre@dimen@textaligncenter
   \gre@dimen@begindifference=\dimexpr(\gre@dimen@notesaligncenter - \gre@dimen@textaligncenter)\relax %
@@ -904,7 +906,20 @@
   % by default, gre@attr@dash will be 2
   \gre@attr@dash=2\relax %
   #5%
-  \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}#7%
+  % if the next glyph has an alteration, check if it is suppressed;
+  % if so, pretend there's no alteration
+  \def\gre@nextalignment{\gre@arg@oftwo@first#7}%
+  \def\gre@nextalteration{\gre@arg@oftwo@second#7}%
+  \ifnum\gre@nextalteration>0\relax
+    \gre@alteration@isvisible{1}{\gre@nextalteration}% if the notes contain an alteration, the id was incremented, so this checks the alteration after the notes
+    \ifgre@alteration@isvisible
+    \else
+      \def\gre@nextalteration{0}%
+    \fi
+  \fi
+  % now we can restore the alteration id to typeset the notes for real
+  \global\gre@attr@alteration@id=\gre@saved@attr@alteration@id\relax %
+  \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{\gre@nextalignment}{\gre@nextalteration}%
   \gre@unsetfixednexttextformat %
   \ifgre@showlyrics%
     \setbox\gre@box@syllabletext=\hbox{%
@@ -922,10 +937,10 @@
     \setbox\gre@box@syllabletext=\box\voidb@x%
   \fi%
   \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
-  % gre@count@temp@one holds 0 if next is a not bar, 1 if it is
+  % gre@count@temp@one holds 1 if next is a bar, 2 if an alteration, else 0
   \gre@count@temp@one=0%
-  \ifnum\gre@arg@oftwo@second#7=0\relax %
-    \ifnum\gre@arg@oftwo@first#7>9\relax %
+  \ifnum\gre@nextalteration=0\relax %
+    \ifnum\gre@nextalignment>9\relax %
       \gre@count@temp@one=1\relax %
     \fi %
   \else %
@@ -991,7 +1006,7 @@
       \fi%
     \fi %
     % recomputing end difference and final skip with the final hyphen
-    \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}#7%
+    \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{\gre@nextalignment}{\gre@nextalteration}%
     \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{0}%
     \gre@calculate@syllablefinalskip{#4}{\gre@count@temp@one}%
   \else %
@@ -1062,7 +1077,7 @@
     \GreNoBreak %
   \fi%
   % we call end of syllable
-  \gre@syllable@end#7{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart}}{#4}%
+  \gre@syllable@end{\gre@nextalignment}{\gre@nextalteration}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart}}{#4}%
   \gre@push@endsyllable{#6}\relax %
   \global\gre@dimen@notesaligncenter=0pt\relax% very important, see flat and natural
   \gre@unsetfixedtextformat %
@@ -1261,7 +1276,18 @@
   \gre@dimen@begindifference=\dimexpr(\gre@dimen@notesaligncenter - \gre@dimen@textaligncenter)\relax%
   \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
   #5%
-  \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}#7%
+  % if the next glyph has an alteration, check if it is suppressed;
+  % if so, pretend there's no alteration
+  \def\gre@nextalignment{\gre@arg@oftwo@first#7}%
+  \def\gre@nextalteration{\gre@arg@oftwo@second#7}%
+  \ifnum\gre@nextalteration>0\relax
+    \gre@alteration@isvisible{1}{\gre@nextalteration}%
+    \ifgre@alteration@isvisible
+    \else
+      \def\gre@nextalteration{0}%
+    \fi
+  \fi
+  \gre@calculate@nextbegindifference{\gre@emit@endsyllablepartfornextsyllable}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{\gre@nextalignment}{\gre@nextalteration}%
   \gre@unsetfixednexttextformat %
   \gre@debugmsg{barspacing}{previousenddifference: \the\gre@dimen@previousenddifference}%
   \gre@debugmsg{barspacing}{begindifference: \the\gre@dimen@begindifference}%
@@ -1271,7 +1297,7 @@
     %
     % New bar spacing algorithm
     %
-    \gre@calculate@barposition{#4}{\gre@arg@oftwo@second#7}%
+    \gre@calculate@barposition{#4}{\gre@nextalteration}%
     \ifgre@textcleared%
       \gre@clearsyllable{bar}%
     \fi%

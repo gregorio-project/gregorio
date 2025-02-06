@@ -70,6 +70,10 @@ local glyph_top_attr = luatexbase.attributes['gre@attr@glyph@top']
 local glyph_bottom_attr = luatexbase.attributes['gre@attr@glyph@bottom']
 local prev_line_id = nil
 
+local alteration_type_attr = luatexbase.attributes['gre@attr@alteration@type']
+local alteration_pitch_attr = luatexbase.attributes['gre@attr@alteration@pitch']
+local alteration_id_attr = luatexbase.attributes['gre@attr@alteration@id']
+
 local syllable_id_attr = luatexbase.attributes['gre@attr@syllable@id']
 
 local cur_score_id = nil
@@ -87,6 +91,8 @@ local last_syllables = nil
 local new_last_syllables = nil
 local score_last_syllables = nil
 local new_score_last_syllables = nil
+local first_alterations = nil
+local new_first_alterations = nil
 local state_hashes = nil
 local new_state_hashes = nil
 local auxname = nil
@@ -279,6 +285,13 @@ local function is_greaux_write_needed()
   if saved_computations_changed(saved_newline_before_euouae, new_saved_newline_before_euouae) then
     return true
   end
+  -- For alterations, check if either the keys or values changed.
+  for id, tab in pairs(new_first_alterations) do
+    if keys_changed(tab, first_alterations[id]) or entries_changed(tab, first_alterations[id]) then return true end
+  end
+  for id, tab in pairs(first_alterations) do
+    if keys_changed(tab, new_first_alterations[id]) or entries_changed(tab, first_alterations[id]) then return true end
+  end
   return false
 end
 
@@ -343,13 +356,27 @@ local function write_greaux()
       for id, value in pairs(new_state_hashes) do
         aux:write(string.format('  ["%s"]="%s",\n', id, value))
       end
+      aux:write(' },\n')
+      
+      -- Write information about alterations and line breaks. This
+      -- needs to go into the .gaux file because it affects whether
+      -- alterations are printed, which in turn affects which lines
+      -- alterations fall on.
+      aux:write(' ["first_alterations"]={\n')
+      for id, tab in pairs(new_first_alterations) do
+        aux:write(string.format('  ["%s"]={', id))
+        for i, value in pairs(tab) do
+          aux:write(string.format('[%q]=%s,', i, value))
+        end
+        aux:write(string.format('},\n'))
+      end
       aux:write(' },\n}\n')
       aux:close()
     else
       err("\n Unable to open %s", auxname)
     end
 
-    warn("Line heights or variable brace lengths may have changed. Rerun to fix.")
+    warn("Line heights, variable brace lengths, or soft flats/sharps may have changed. Rerun to fix.")
   end
 end
 
@@ -389,12 +416,14 @@ local function init(arg, enable_height_computation)
     state_hashes = score_info.state_hashes or {}
     saved_lengths = score_info.saved_lengths or {}
     saved_newline_before_euouae = score_info.saved_newline_before_euouae or {}
+    first_alterations = score_info.first_alterations or {}
   else
     line_heights = {}
     last_syllables = {}
     state_hashes = {}
     saved_lengths = {}
     saved_newline_before_euouae = {}
+    first_alterations = {}
   end
 
   if enable_height_computation then
@@ -425,6 +454,7 @@ local function init(arg, enable_height_computation)
   saved_positions = {}
   new_saved_lengths = {}
   new_saved_newline_before_euouae = {}
+  new_first_alterations = {}
 end
 
 -- node factory
@@ -602,6 +632,74 @@ local function find_attr(cur, attr, val)
     end
   end
 end
+
+local function drop_initial(h)
+  -- If there is a dropped initial, lower it to its correct position
+  local indented = tex.count['gre@count@initiallines']
+  debugmessage("initial", "%s indented lines", indented)
+
+  local initial, initial_line
+  local save_height, save_depth, save_shift
+
+  -- Find the initial.
+  for line in traverse_id(hlist, h) do
+    initial = find_attr(line, part_attr, part_initial)
+    if initial ~= nil then
+      initial_line = line
+      break
+    end
+  end
+  debugmessage('initial', 'found initial with height=%spt depth=%spt shift=%spt', initial.height/2^16, initial.depth/2^16, initial.shift/2^16)
+  save_height, save_depth, save_shift = initial.height, initial.depth, initial.shift
+
+  -- Add up the total distance from the initial's current position
+  -- (baseline of first line) to the baseline of the last indented line.
+  local last_line
+  local last_distance = 0
+  local line_num = 0
+  for line in traverse(h) do
+    if line.id == glue then
+      debugmessage("initial", "glue %spt", line.width/2^16)
+      -- bug: this can't account for stretch or shrink
+      if line_num >= 1 and line_num < indented then
+        last_distance = last_distance + line.width
+      end
+    elseif line.id == hlist then
+      debugmessage("initial", "line height=%spt depth=%spt", line.height/2^16, line.depth/2^16)
+      line_num = line_num + 1
+      if line_num > 1 and line_num <= indented then
+        last_distance = last_distance + line.height
+      end
+      if line_num < indented then
+        last_distance = last_distance + line.depth
+      end
+      if line_num <= indented then last_line = line end
+    end
+  end
+  debugmessage("initial", "distance from first to last indented line is %spt", last_distance/2^16)
+
+  -- Compute the shift. If initialposition = 0 (firsttop) or 1
+  -- (firstbaseline) then it's already in the right place, but
+  -- otherwise it's aligned with the baseline of the first line and
+  -- needs to be adjusted.
+  local initial_shift = 0
+  if tex.count['gre@count@initialposition'] == 2 then
+    debugmessage('initial', 'align to baseline of last line')
+    initial_shift = last_distance
+  elseif tex.count['gre@count@initialposition'] == 3 then
+    debugmessage('initial', 'align to bottom of last line')
+    initial_shift = last_distance + last_line.depth
+  end
+  debugmessage("initial", "initial shift is %spt", initial_shift/2^16)
+
+  -- Perform the shift
+  initial.shift = save_shift + initial_shift
+  
+  -- Adjust height of first line using the initial's true height
+  initial_line.height = math.max(initial_line.height, save_height - initial_shift)
+  -- Pretend that the initial's descender is on the last indented line
+  last_line.depth = math.max(last_line.depth, save_depth + initial_shift - last_distance)
+end
   
 -- in each function we check if we really are inside a score,
 -- which we can see with the dash_attr being set or not
@@ -724,70 +822,8 @@ local function post_linebreak(h, groupcode, glyphes)
   end
 
   -- If there is a dropped initial, lower it to its correct position
-  local indented = tex.count['gre@count@initiallines']
-  debugmessage("initial", "%s indented lines", indented)
-  if indented > 0 then
-    local initial, initial_line
-    local save_height, save_depth, save_shift
-
-    -- Find the initial.
-    for line in traverse_id(hlist, h) do
-      initial = find_attr(line, part_attr, part_initial)
-      if initial ~= nil then
-        initial_line = line
-        break
-      end
-    end
-    debugmessage('initial', 'found initial with height=%spt depth=%spt shift=%spt', initial.height/2^16, initial.depth/2^16, initial.shift/2^16)
-    save_height, save_depth, save_shift = initial.height, initial.depth, initial.shift
-
-    -- Add up the total distance from the initial's current position
-    -- (baseline of first line) to the baseline of the last indented line.
-    local last_line
-    local last_distance = 0
-    local line_num = 0
-    for line in traverse(h) do
-      if line.id == glue then
-        debugmessage("initial", "glue %spt", line.width/2^16)
-        -- bug: this can't account for stretch or shrink
-        if line_num >= 1 and line_num < indented then
-          last_distance = last_distance + line.width
-        end
-      elseif line.id == hlist then
-        debugmessage("initial", "line height=%spt depth=%spt", line.height/2^16, line.depth/2^16)
-        line_num = line_num + 1
-        if line_num > 1 and line_num <= indented then
-          last_distance = last_distance + line.height
-        end
-        if line_num < indented then
-          last_distance = last_distance + line.depth
-        end
-        if line_num <= indented then last_line = line end
-      end
-    end
-    debugmessage("initial", "distance from first to last indented line is %spt", last_distance/2^16)
-
-    -- Compute the shift. If initialposition = 0 (firsttop) or 1
-    -- (firstbaseline) then it's already in the right place, but
-    -- otherwise it's aligned with the baseline of the first line and
-    -- needs to be adjusted.
-    local initial_shift = 0
-    if tex.count['gre@count@initialposition'] == 2 then
-      debugmessage('initial', 'align to baseline of last line')
-      initial_shift = last_distance
-    elseif tex.count['gre@count@initialposition'] == 3 then
-      debugmessage('initial', 'align to bottom of last line')
-      initial_shift = last_distance + last_line.depth
-    end
-    debugmessage("initial", "initial shift is %spt", initial_shift/2^16)
-  
-    -- Perform the shift
-    initial.shift = save_shift + initial_shift
-    
-    -- Adjust height of first line using the initial's true height
-    initial_line.height = math.max(initial_line.height, save_height - initial_shift)
-    -- Pretend that the initial's descender is on the last indented line
-    last_line.depth = math.max(last_line.depth, save_depth + initial_shift - last_distance)
+  if tex.count['gre@count@initiallines'] > 0 then
+    drop_initial(h)
   end
 
   -- Change width of staff lines and commentary
@@ -795,6 +831,33 @@ local function post_linebreak(h, groupcode, glyphes)
     adjust_fullwidth(line)
   end
 
+  -- Collect information about each alteration (flat, sharp, or natural):
+  --   1 if it is the first alteration on the line (on the same pitch)
+  --   2 if it has a different type from the previous alteration on the line (on the same pitch)
+  --   3 otherwise.
+  for line in traverse_id(hlist, h) do
+    local seen = {}
+    for n in traverse_id(hlist, line.head) do
+      -- This skips custos alterations because they're one level
+      -- deeper. As a result, they are always printed.
+      local t = has_attribute(n, alteration_type_attr)
+      if t ~= nil and t > 0 then
+        local i = has_attribute(n, alteration_id_attr)
+        local h = has_attribute(n, alteration_pitch_attr)
+        if seen[h] == nil then
+          new_score_first_alterations[i] = 1
+        elseif seen[h] ~= t then
+          new_score_first_alterations[i] = 2
+        else
+          new_score_first_alterations[i] = 3
+        end
+        new_score_first_alterations['last'] = i
+        debugmessage("alteration", "id=%s type=%s height=%s seen=%s first=%s", i, t, h, seen[t], new_score_first_alterations[i])
+        seen[h] = t
+      end
+    end
+  end
+  
   --dump_nodes(h)
   -- due to special cases, we don't return h here (see comments in bug #20974)
   return true
@@ -873,9 +936,21 @@ local function get_score_font_unicode_pairs(name)
   return pairs(unicodes)
 end
 
+local inside_score = false
+--- Start a score
+-- Prepare all variables for processing a new score and add our callbacks
+-- @param score_id score identifier
+-- @param top_height height of highest score element
+-- @param bottom_height height of lowest score element
+-- @param has_translation does this score have a translation?
+-- @param has_above_lines_text does this score have above lines text?
+-- @param top_height_adj limit below which a top_height doesn't require adjustment
+-- @param bottom_height_adj limit above which a bottom_height doesn't require adjustment
+-- @param score_font_name which font does this score use for the neumes
 local function at_score_beginning(score_id, top_height, bottom_height,
     has_translation, has_above_lines_text, top_height_adj, bottom_height_adj,
     score_font_name)
+  inside_score = true
   local inclusion = score_inclusion[score_id] or 1
   score_inclusion[score_id] = inclusion + 1
   score_id = score_id..'.'..inclusion
@@ -901,6 +976,10 @@ local function at_score_beginning(score_id, top_height, bottom_height,
   if score_last_syllables and state_hashes[score_id] ~= state then
     score_last_syllables = nil
   end
+  score_first_alterations = first_alterations[score_id]
+  if score_first_alterations and state_hashes[score_id] ~= state then
+    score_first_alterations = nil
+  end
   if new_state_hashes then
     new_state_hashes[score_id] = state
   end
@@ -908,12 +987,19 @@ local function at_score_beginning(score_id, top_height, bottom_height,
     new_score_last_syllables = {}
     new_last_syllables[score_id] = new_score_last_syllables
   end
+  if new_first_alterations then
+    new_score_first_alterations = {}
+    new_first_alterations[score_id] = new_score_first_alterations
+  end
 
   luatexbase.add_to_callback('post_linebreak_filter', post_linebreak, 'gregoriotex.post_linebreak', 1)
   luatexbase.add_to_callback("hyphenate", disable_hyphenation, "gregoriotex.disable_hyphenation", 1)
 end
 
+--- Finish a score
+-- Reset variables to out of score state and remove our callbacks
 local function at_score_end()
+  inside_score = false
   luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.post_linebreak')
   luatexbase.remove_from_callback("hyphenate", "gregoriotex.disable_hyphenation")
   per_line_dims = {}
@@ -921,6 +1007,23 @@ local function at_score_end()
   saved_dims = {}
   saved_counts = {}
 end
+
+--- Toggle the state of GretorioTeX callbacks.
+-- Our callbacks can affect fancyhdr's ability to create multi-line headers/footers
+-- By adding this function to fancyhdr's before and after hooks, our callbacks are removed
+-- while processing headers/footers and then reinstated for the rest of the score.
+local function fancyhdr_toggle_callbacks()
+  if inside_score then
+    if luatexbase.is_active_callback('post_linebreak_filter','gregoriotex.post_linebreak') then
+      luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.post_linebreak')
+      luatexbase.remove_from_callback("hyphenate", "gregoriotex.disable_hyphenation")
+    else
+      luatexbase.add_to_callback('post_linebreak_filter', post_linebreak, 'gregoriotex.post_linebreak', 1)
+      luatexbase.add_to_callback("hyphenate", disable_hyphenation, "gregoriotex.disable_hyphenation", 1)
+    end
+  end
+end
+
 
 -- Inserted copy of https://github.com/ToxicFrog/luautil/blob/master/lfs.lua
 local windows = package.config:sub(1,1) == "\\"
@@ -1770,6 +1873,31 @@ local function hash_spaces(name, value)
   space_hash = md5.sumhexa(mash)
 end
 
+local function is_first_alteration(next)
+-- Arguments
+--   next: 0 for current alteration, 1 for next alteration
+-- Returns:
+--   0 = don't know, 1 = first in line, 2 = different from previous alteration, 3 = not first
+  if score_first_alterations then
+    local i = tex.getattribute(alteration_id_attr)
+    if next == 1 then
+      i = i + 1
+      while score_first_alterations[i] == nil and i < score_first_alterations['last'] do
+        i = i + 1
+      end
+    end
+    local v = score_first_alterations[i]
+    if v ~= nil then
+      debugmessage("alteration", "%s", v)
+      tex.print(v)
+    else
+      tex.print(0)
+    end
+  else
+    tex.print(0)
+  end
+end
+
 gregoriotex.number_to_letter             = number_to_letter
 gregoriotex.init                         = init
 gregoriotex.include_score                = include_score
@@ -1809,6 +1937,8 @@ gregoriotex.save_count                   = save_count
 gregoriotex.change_next_score_line_dim   = change_next_score_line_dim
 gregoriotex.change_next_score_line_count = change_next_score_line_count
 gregoriotex.set_base_output_dir          = set_base_output_dir
+gregoriotex.is_first_alteration          = is_first_alteration
+gregoriotex.fancyhdr_toggle_callbacks    = fancyhdr_toggle_callbacks
 
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))

@@ -1433,6 +1433,24 @@ Macro to set the font to be used for the ancient notation.
   \#2 & integer & point size at which the font should be loaded\\
 \end{argtable}
 
+\subsubsection{Alterations (Flats, Naturals, and Sharps)}\label{setalterationeffect}
+
+\macroname{\textbackslash gresetalterationeffect}{\{\#1\}}{gregoriotex-signs.tex}
+Macro to set the effect of alterations (flats and sharps), for the purpose of deciding whether to print soft alterations (see \S\ref{softalterations}).
+
+\begin{argtable}
+  \#1 & \texttt{line} (default) & effect ends at the end of the line \\
+      & \texttt{note} & effect ends immediately \\
+\end{argtable}
+
+Soft flats are printed if no previous flat (on the same pitch) is in effect. Similarly for soft sharps. Soft naturals are printed if a previous flat or sharp (on the same pitch) is in effect.
+
+Thus, under \verb|\gresetalterationeffect{line}|, all sharps and flats are in effect until the end of the line (unless cancelled by a natural), which is the convention used in Dominican chant scores. For the currently envisioned uses of soft alterations, this is the right setting.
+
+Under \verb|\gresetalterationeffect{note}|, all sharps and flats lose their effect immediately, so all soft flats and sharps are printed (but no soft naturals are printed).
+
+(Argument \#1 is actually a comma-separated list of options. If multiple options are given, then an alteration's effect ends as soon as \emph{any} of the options says it should end. However, currently, the list must not be empty, and \texttt{note,line} has the same effect as \texttt{note}, because ``immediately'' always occurs before the end of the line. In the future, other options like \texttt{word} and \texttt{bar} may be added; \texttt{word,bar} would then be the convention used in most Gregorian chant scores.)
+
 \subsection{Counts}\label{counts}
 
 Each of the following counts controls some aspect of the configuration of the Gregorio\TeX\ score.  They are changed using \verb=\grechangecount=, documented above.

@@ -631,17 +631,26 @@ static void gabc_write_gregorio_note(FILE *f, gregorio_note *note,
     case S_FLAT_PAREN:
         fprintf(f, "%cx?", pitch_letter(note->u.note.pitch));
         break;
+    case S_FLAT_SOFT:
+        fprintf(f, "%cX", pitch_letter(note->u.note.pitch));
+        break;
     case S_NATURAL:
         fprintf(f, "%cy", pitch_letter(note->u.note.pitch));
         break;
     case S_NATURAL_PAREN:
         fprintf(f, "%cy?", pitch_letter(note->u.note.pitch));
         break;
+    case S_NATURAL_SOFT:
+        fprintf(f, "%cY", pitch_letter(note->u.note.pitch));
+        break;
     case S_SHARP:
         fprintf(f, "%c#", pitch_letter(note->u.note.pitch));
         break;
     case S_SHARP_PAREN:
         fprintf(f, "%c#?", pitch_letter(note->u.note.pitch));
+        break;
+    case S_SHARP_SOFT:
+        fprintf(f, "%c#*", pitch_letter(note->u.note.pitch));
         break;
     case S_VIRGA:
         fprintf(f, "%cv", pitch_letter(note->u.note.pitch));
