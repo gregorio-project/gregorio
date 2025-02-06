@@ -89,7 +89,10 @@ typedef enum gtex_alteration {
     ALT_SHARP = 3,
     ALT_FLAT_PAREN = 4,
     ALT_NATURAL_PAREN = 5,
-    ALT_SHARP_PAREN = 6
+    ALT_SHARP_PAREN = 6,
+    ALT_FLAT_SOFT = 7,
+    ALT_NATURAL_SOFT = 8,
+    ALT_SHARP_SOFT = 9
 } gtex_alteration;
 
 /* Here we define a function that will determine the number of the

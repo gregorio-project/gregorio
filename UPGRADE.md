@@ -2,6 +2,10 @@
 
 This file contains instructions to upgrade to a new release of Gregorio.  These instructions are cumulative; meaning that you should apply the instructions from all versions between the one you are upgrading from and the current version.
 
+## [Unreleased][develop]
+
+GABC now has some new alterations: soft flat (`X`) and sharp (`##`), which appear when there is no previous flat or sharp (respectively) in effect, and soft natural (`Y`), which appears when there is a previous flat or sharp in effect. A new option `\gresetalterationeffect` determines what the "effect" of an alteration is. It defaults to `line`, meaning that an alteration's effect extends to the end of the line. Thus, for Dominican chant, type a soft flat (`X`) in front of _every_ note that is to be sung a half-step flat; naturals should also be soft (`Y`), but only naturals that cancel flats need to be typed.
+
 ## 6.0
 
 ### Upright punctum inclinatum

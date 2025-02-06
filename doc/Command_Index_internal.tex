@@ -510,7 +510,7 @@ Macro to typeset an alteration.
   \#3 & character alias & the hole of the alteration\\
   \#4 & \texttt{1} & the alteration is part of the clef\\
   & \texttt{0} & the alteration is not part of the clef\\
-  \#5 & \TeX\ code & signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)\\
+  \#5 & \TeX\ code & signs to typeset before the glyph (typically additional bars, as they must be ``behind'' the glyph)\\
   \#6 & \TeX\ code & signs to typeset after the glyph (almost all signs)\\
   \#7 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
 \end{argtable}
@@ -685,7 +685,7 @@ Macro to typeset a horizontal line (either an additional staff line or an episem
   & \texttt{l} & a small episema aligned left\\
   & \texttt{c} & a small episema aligned center\\
   & \texttt{r} & for a small episema aligned right\\
-  \#6 & string & a positive or negative "nudge" (dimension) for the vertical position of the horizontal episema\\
+  \#6 & string & a positive or negative ``nudge'' (dimension) for the vertical position of the horizontal episema\\
   \#7 & \texttt{0} & for horizontal episema cases, use automatic positioning within the space\\
   & \texttt{1} & for horizontal episema cases, position in the middle of the space\\
   & \texttt{2} & for horizontal episema cases, position low within the space as if the episema is over the note\\
@@ -2386,7 +2386,10 @@ rather than have multiple definitions.
   \texttt{3} & sharp\\
   \texttt{4} & parenthesized flat\\
   \texttt{5} & parenthesized natural\\
-  \texttt{6} & parenthesized sharp
+  \texttt{6} & parenthesized sharp \\
+  \texttt{7} & soft flat\\
+  \texttt{8} & soft natural\\
+  \texttt{9} & soft sharp\\
  \end{tabulary}
 
 \subsection{Note Offset Specifier}\label{NoteOffset}

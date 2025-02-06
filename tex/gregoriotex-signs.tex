@@ -537,6 +537,9 @@
       \gre@debugmsg{custos}{not blocked}%
       \gre@calculate@glyphraisevalue{#1}{0}{}%
       %here we need some tricks to draw the line before the custos (for the color)
+      %  We want both the measured and real alteration to have the same id,
+      %  so save the id to restore it later.
+      \edef\gre@saved@attr@alteration@id{\number\gre@attr@alteration@id\relax}%
       \setbox\gre@box@temp@width=\hbox{%
         % we type a hskip and the we type the custos
         \gre@hskip\gre@space@skip@spacebeforeeolcustos\relax %
@@ -547,6 +550,7 @@
           \gre@pickcustos{#1}{2}\relax %
         }%
       }%
+      \global\gre@attr@alteration@id=\gre@saved@attr@alteration@id\relax %
       \gre@dimen@temp@three=\wd\gre@box@temp@width %
       % we make \wd\gre@box@temp@sign contain the width of a custos
       \setbox\gre@box@temp@sign=\hbox{%
@@ -2695,16 +2699,113 @@
 
 % the top level macro:
 % #1 is the height
-% #2 is the char of the alteration
-% #3 is the char of the alteration hole
-% #4 is 1 if the alteration is the flat in a clef
-% #5 are the signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)
-% #6 are the signs to typeset after the glyph (almost all signs)
-% #7 is the line:char:column for a textedit link
-\def\gre@alteration#1#2#3#4#5#6#7{%
-  \gre@trace{gre@alteration{#1}{#2}{#3}{#4}{#5}{#6}{#7}}%
-  \setbox\gre@box@temp@width=\hbox{\gre@pointandclick{#2}{#7}}%
-  \ifnum#4=0\relax %
+% #2 is the alteration type: 0 = none, 1 = flat, 2 = natural, 3 = sharp,
+%                            4/5/6 = parenthesized flat/natural/sharp,
+%                            7 = soft flat
+% #3 is 1 if the alteration is the flat in a clef
+% #4 are the signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)
+% #5 are the signs to typeset after the glyph (almost all signs)
+% #6 is the line:char:column for a textedit link
+\def\gre@alteration#1#2#3#4#5#6{%
+  \gre@trace{gre@alteration{#1}{#2}{#3}{#4}{#5}{#6}}%
+  \global\advance\gre@attr@alteration@id by 1\relax
+  \def\gre@alteration@type{#2}%
+  % Check if the alteration should be visible or not
+  \gre@alteration@isvisible{0}{\gre@alteration@type}%
+  % After the above check, we treat soft alterations like hard alterations
+  \ifnum\gre@alteration@type>6\relax 
+    \edef\gre@alteration@type{\numexpr\gre@alteration@type-6\relax}%
+  \fi
+  \ifgre@alteration@isvisible
+    \gre@alteration@visible{#1}{\gre@alteration@type}{#3}{#4}{#5}{#6}%
+  \else
+    % Print an empty \hbox because it still needs to be counted
+    % Don't print #4 (ledger line) and #5 (not used anyway?)
+    \hbox
+      attr \gre@attrid@alteration@pitch=#1\relax
+      attr \gre@attrid@alteration@type=\gre@alteration@type\relax
+      {}%
+  \fi
+}
+
+% Sets the behavior of soft alterations, which are not printed if the
+% same alteration (at the same pitch) is already in effect. A (hard or
+% soft) alteration's effect is always cancelled by another alteration,
+% as well as argument #1, whose default is "note":
+% "note" = effect ends immediately (i.e., print all soft alterations)
+% "line" = effect extends to the end of the line
+% In the future, "word" and "bar" may also be allowed.
+\newif\ifgre@alteration@effect@note\gre@alteration@effect@notefalse
+\newif\ifgre@alteration@effect@line\gre@alteration@effect@linetrue
+\def\gresetalterationeffect#1{%
+  \global\gre@alteration@effect@notefalse
+  \global\gre@alteration@effect@linefalse
+  \IfStrEq{#1}{}{\gre@error{Empty argument for \protect\gresetalterationeffect. Allowed arguments are: 'note', 'line'}}{%
+    \def\gre@alteration@effect@process##1{%
+      \IfStrEqCase{##1}{%
+        {note}{\global\gre@alteration@effect@notetrue}%
+        {line}{\global\gre@alteration@effect@linetrue}%
+      }[\gre@error{Unrecognized argument '##1' for \protect\gresetalterationeffect. Allowed arguments are: 'note', 'line'}]}%
+    \gre@parsecommas{#1}{\gre@alteration@effect@process}%
+  }%
+}
+
+% Test whether an alteration should be visible.
+% #1: 0 for current alteration, 1 for next alteration.
+% #2: alteration type
+% Sets \ifgre@alteration@isvisibletrue or \ifgre@alteration@isvisiblefalse.
+\newif\ifgre@alteration@isvisible
+\def\gre@alteration@isvisible#1#2{%
+  \global\gre@alteration@isvisiblefalse
+  \ifnum#2>6\relax % soft
+    % alterationeffect includes "line"
+    \ifgre@alteration@effect@line
+      \gre@debugmsg{alteration}{line}%
+      \ifcase\directlua{gregoriotex.is_first_alteration(#1)}\relax
+        % 0: don't know
+        \global\gre@alteration@isvisibletrue
+      \or
+        % 1: first in line
+        \ifnum#2=8\relax % natural: don't print
+        \else
+          \global\gre@alteration@isvisibletrue
+        \fi
+      \or
+        % 2: different from previous
+        \global\gre@alteration@isvisibletrue
+      \or
+        % 3: not first
+      \fi
+    \fi
+    % alterationeffect includes "note"
+    \ifgre@alteration@effect@note
+      \gre@debugmsg{alteration}{note}%
+      \ifnum#2=8\relax % natural: don't print
+      \else
+        \global\gre@alteration@isvisibletrue
+      \fi
+    \fi
+  \else % hard: always visible
+    \global\gre@alteration@isvisibletrue
+  \fi
+}
+
+\def\gre@alteration@visible#1#2#3#4#5#6{%
+  \gre@trace{gre@alteration@visible{#1}{#2}{#3}{#4}{#5}{#6}}%
+  \ifcase#2\relax
+    \or\def\gre@alteration@char{\gre@fontchar@flat}\def\gre@alteration@hole{\gre@fontchar@flathole}% flat
+    \or\def\gre@alteration@char{\gre@fontchar@natural}\def\gre@alteration@hole{\gre@fontchar@naturalhole}% natural
+    \or\def\gre@alteration@char{\gre@fontchar@sharp}\def\gre@alteration@hole{\gre@fontchar@sharphole}% sharp
+    \or\def\gre@alteration@char{\gre@fontchar@flatparen}\def\gre@alteration@hole{\gre@fontchar@flatparenhole}% parenthesized flat
+    \or\def\gre@alteration@char{\gre@fontchar@naturalparen}\def\gre@alteration@hole{\gre@fontchar@naturalparenhole}% parenthesized natural
+    \or\def\gre@alteration@char{\gre@fontchar@sharpparen}\def\gre@alteration@hole{\gre@fontchar@sharpparenhole}% parenthesized sharp
+    \else\gre@error{Invalid alteration type}% soft alterations should have been changed to hard
+  \fi
+  \setbox\gre@box@temp@width=\hbox
+    attr \gre@attrid@alteration@pitch=#1\relax
+    attr \gre@attrid@alteration@type=#2\relax
+    {\gre@pointandclick{\gre@alteration@char}{#6}}%
+  \ifnum#3=0\relax %
     \gre@newglyphcommon %
   \fi %
   \ifgre@in@custos\else\relax %
@@ -2713,16 +2814,16 @@
   % the three next lines are a trick to get the additional lines below the glyphs
   \gre@skip@temp@one = \gre@dimen@lastglyphwidth\relax%
   \kern\gre@skip@temp@one %
-  #5\relax %
+  #4\relax %
   \kern-\gre@skip@temp@one %
   \gre@calculate@glyphraisevalue{#1}{0}{}%
   \ifgre@hidealtlines %
-    \gre@fillhole{#3}{0}%
+    \gre@fillhole{\gre@alteration@hole}{0}%
   \fi %
   \raise \gre@dimen@glyphraisevalue%
   \copy\gre@box@temp@width%
-  #6\relax %
-  \ifnum#4=0\relax %
+  #5\relax %
+  \ifnum#3=0\relax %
     % we try to avoid line breaking after a flat or a natural
     \GreNoBreak %
     \gre@skip@temp@four = \gre@space@dimen@alterationspace\relax%
@@ -2748,7 +2849,7 @@
 
 \def\GreFlat#1#2#3#4#5{%
   \gre@trace{GreFlat{#1}{#2}{#3}{#4}{#5}}%
-  \gre@alteration{#1}{\gre@fontchar@flat}{\gre@fontchar@flathole}{#2}{#3}{#4}{#5}%
+  \gre@alteration{#1}{1}{#2}{#3}{#4}{#5}%
   \relax%
   \gre@trace@end%
 }%
@@ -2757,7 +2858,16 @@
 
 \def\GreFlatParen#1#2#3#4#5{%
   \gre@trace{GreFlatParen{#1}{#2}{#3}{#4}{#5}}%
-  \gre@alteration{#1}{\gre@fontchar@flatparen}{\gre@fontchar@flatparenhole}{#2}{#3}{#4}{#5}%
+  \gre@alteration{#1}{4}{#2}{#3}{#4}{#5}%
+  \relax%
+  \gre@trace@end%
+}%
+
+% Same as the one before, but for soft flats.
+
+\def\GreFlatSoft#1#2#3#4#5{%
+  \gre@trace{GreFlatSoft{#1}{#2}{#3}{#4}{#5}}%
+  \gre@alteration{#1}{7}{#2}{#3}{#4}{#5}%
   \relax%
   \gre@trace@end%
 }%
@@ -2766,7 +2876,7 @@
 
 \def\GreNatural#1#2#3#4#5{%
   \gre@trace{GreNatural{#1}{#2}{#3}{#4}{#5}}%
-  \gre@alteration{#1}{\gre@fontchar@natural}{\gre@fontchar@naturalhole}{#2}{#3}{#4}{#5}%
+  \gre@alteration{#1}{2}{#2}{#3}{#4}{#5}%
   \relax%
   \gre@trace@end%
 }%
@@ -2775,7 +2885,16 @@
 
 \def\GreNaturalParen#1#2#3#4#5{%
   \gre@trace{GreNaturalParen{#1}{#2}{#3}{#4}{#5}}%
-  \gre@alteration{#1}{\gre@fontchar@naturalparen}{\gre@fontchar@naturalparenhole}{#2}{#3}{#4}{#5}%
+  \gre@alteration{#1}{5}{#2}{#3}{#4}{#5}%
+  \relax%
+  \gre@trace@end%
+}%
+
+% Same as the one before, but for soft naturals.
+
+\def\GreNaturalSoft#1#2#3#4#5{%
+  \gre@trace{GreNaturalSoft{#1}{#2}{#3}{#4}{#5}}%
+  \gre@alteration{#1}{8}{#2}{#3}{#4}{#5}%
   \relax%
   \gre@trace@end%
 }%
@@ -2784,16 +2903,25 @@
 
 \def\GreSharp#1#2#3#4#5{%
   \gre@trace{GreSharp{#1}{#2}{#3}{#4}{#5}}%
-  \gre@alteration{#1}{\gre@fontchar@sharp}{\gre@fontchar@sharphole}{#2}{#3}{#4}{#5}%
+  \gre@alteration{#1}{3}{#2}{#3}{#4}{#5}%
   \relax%
   \gre@trace@end%
 }%
 
-% Same as the one before, but for sharps.
+% Same as the one before, but for parenthesized sharps.
 
 \def\GreSharpParen#1#2#3#4#5{%
-  \gre@trace{GreSharpParem{#1}{#2}{#3}{#4}{#5}}%
-  \gre@alteration{#1}{\gre@fontchar@sharpparen}{\gre@fontchar@sharpparenhole}{#2}{#3}{#4}{#5}%
+  \gre@trace{GreSharpParen{#1}{#2}{#3}{#4}{#5}}%
+  \gre@alteration{#1}{6}{#2}{#3}{#4}{#5}%
+  \relax%
+  \gre@trace@end%
+}%
+
+% Same as the one before, but for soft sharps.
+
+\def\GreSharpSoft#1#2#3#4#5{%
+  \gre@trace{GreSharpSoft{#1}{#2}{#3}{#4}{#5}}%
+  \gre@alteration{#1}{9}{#2}{#3}{#4}{#5}%
   \relax%
   \gre@trace@end%
 }%

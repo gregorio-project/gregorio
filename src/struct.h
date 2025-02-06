@@ -123,10 +123,13 @@ ENUM(gregorio_clef, GREGORIO_CLEF);
     E(S_LINEA_PUNCTUM) \
     E(S_FLAT) \
     E(S_FLAT_PAREN) \
+    E(S_FLAT_SOFT) \
     E(S_SHARP) \
     E(S_SHARP_PAREN) \
+    E(S_SHARP_SOFT) \
     E(S_NATURAL) \
     E(S_NATURAL_PAREN) \
+    E(S_NATURAL_SOFT) \
     /* special shapes that must not appear in the final form of the score :
      * quadratum is the shape of the first note of a punctum quadratum
      * and quilisma quadratum is the shape of the first note of a pes

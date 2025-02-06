@@ -1302,6 +1302,10 @@ x\? {
         gregorio_change_shape(current_note, S_FLAT_PAREN,
                 legacy_oriscus_orientation);
     }
+X   {
+        gregorio_change_shape(current_note, S_FLAT_SOFT,
+                legacy_oriscus_orientation);
+    }
 #   {
         gregorio_change_shape(current_note, S_SHARP,
                 legacy_oriscus_orientation);
@@ -1310,12 +1314,20 @@ x\? {
         gregorio_change_shape(current_note, S_SHARP_PAREN,
                 legacy_oriscus_orientation);
     }
+## {
+        gregorio_change_shape(current_note, S_SHARP_SOFT,
+                legacy_oriscus_orientation);
+    }
 y   {
         gregorio_change_shape(current_note, S_NATURAL,
                 legacy_oriscus_orientation);
     }
 y\? {
         gregorio_change_shape(current_note, S_NATURAL_PAREN,
+                legacy_oriscus_orientation);
+    }
+Y   {
+        gregorio_change_shape(current_note, S_NATURAL_SOFT,
                 legacy_oriscus_orientation);
     }
 !?\/0 {

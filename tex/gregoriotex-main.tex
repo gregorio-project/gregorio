@@ -102,6 +102,22 @@
 % attribute for syllable tracking
 \newluatexattribute\gre@attr@syllable@id %
 
+% attributes for soft alterations
+
+% Alterations are numbered consecutively starting from 1. If an
+% alteration is set twice, once for measurement and once for printing,
+% they have the same id (unlike glyph ids).
+\newluatexattribute\gre@attr@alteration@id %
+
+% The pitch and type of an alteration. If an alteration has a glyph
+% id, then \gre@attr@alteration@pitch = \gre@attr@glyph@top
+% = \gre@attr@glyph@bottom, but we can't use the latter because we
+% also keep track of custos alterations, which don't have glyph ids.
+\newluatexattribute\gre@attr@alteration@pitch
+  \edef\gre@attrid@alteration@pitch{\the\allocationnumber}%
+\newluatexattribute\gre@attr@alteration@type % see \gre@alteration for codes
+  \edef\gre@attrid@alteration@type{\the\allocationnumber}%
+
 \newluatexcatcodetable\gre@atletter %
 \setluatexcatcodetable\gre@atletter{%
   \catcode`\@=11 %
@@ -1276,6 +1292,7 @@
   \gre@resetledgerlineheuristics%
   \global\setluatexattribute\gre@attr@glyph@id{0}%
   \global\setluatexattribute\gre@attr@syllable@id{0}%
+  \global\setluatexattribute\gre@attr@alteration@id{0}%
   \let\gre@pitch@cleftop\gre@pitch@dummy %
   \let\gre@pitch@clefbottom\gre@pitch@dummy %
   \xdef\gre@gabcname{#6}%
