@@ -655,11 +655,13 @@ local function drop_initial(h)
   -- Add up the total distance from the initial's current position
   -- (baseline of first line) to the baseline of the last indented line.
   local last_line
+  local last_glue
   local last_distance = 0
   local line_num = 0
   for line in traverse(h) do
     if line.id == glue then
       debugmessage("initial", "glue %spt", line.width/2^16)
+      if line_num == indented then last_glue = line end
       -- bug: this can't account for stretch or shrink
       if line_num >= 1 and line_num < indented then
         last_distance = last_distance + line.width
@@ -698,7 +700,19 @@ local function drop_initial(h)
   -- Adjust height of first line using the initial's true height
   initial_line.height = math.max(initial_line.height, save_height - initial_shift)
   -- Pretend that the initial's descender is on the last indented line
+  local save_last_depth = last_line.depth
   last_line.depth = math.max(last_line.depth, save_depth + initial_shift - last_distance)
+
+  -- Adjust glue between last line and the line after it.
+  if last_glue and last_glue.subtype == 2 then -- baselineskip
+    last_glue.width = last_glue.width - last_line.depth + save_last_depth
+    if last_glue.width < tex.lineskiplimit then
+      last_glue.subtype = 1 -- lineskip
+      node.setglue(last_glue, node.getglue(tex.lineskip))
+    end
+    debugmessage('initial', 'set last_glue to %spt plus %spt minus %spt', last_glue.width/2^16, last_glue.stretch/2^16, last_glue.shrink/2^16)
+  end
+
 end
   
 -- in each function we check if we really are inside a score,
@@ -822,7 +836,7 @@ local function post_linebreak(h, groupcode, glyphes)
   end
 
   -- If there is a dropped initial, lower it to its correct position
-  if tex.count['gre@count@initiallines'] > 1 then
+  if tex.count['gre@count@initiallines'] > 1 or tex.count['gre@count@initialposition'] == 3 then
     drop_initial(h)
   end
 
