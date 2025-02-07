@@ -822,7 +822,7 @@ local function post_linebreak(h, groupcode, glyphes)
   end
 
   -- If there is a dropped initial, lower it to its correct position
-  if tex.count['gre@count@initiallines'] > 0 then
+  if tex.count['gre@count@initiallines'] > 1 then
     drop_initial(h)
   end
 

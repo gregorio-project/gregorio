@@ -446,9 +446,15 @@
   }%
   % Set the paragraph shape. This should happen before anything is printed.
   \gre@makeparshape{\gre@count@initiallines}{\wd\gre@box@temp@width}%
-  % Set the initial. We smash it so it doesn't disrupt anything, in
-  % particular the glue between lines.
-  \llap{\smash{\box\gre@box@temp@width}}%
+  % Set the initial. If it has more than one line, we smash it so it
+  % doesn't disrupt anything, in particular the glue between lines.
+  % The Lua function lower_initial will insert vertical space
+  % appropriately.
+  \ifnum\gre@count@initiallines>1\relax
+    \llap{\smash{\box\gre@box@temp@width}}%
+  \else
+    \llap{\box\gre@box@temp@width}%
+  \fi
   % then we center the annotation box above the initial, if there is one
   \gre@debugmsg{annotation}{Time to set the annotation.}%
   \ifvoid\gre@box@annotation\relax%
