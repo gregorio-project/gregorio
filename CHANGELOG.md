@@ -22,6 +22,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Added the ability to fuse upwards to a virga.  See [#1558](https://github.com/gregorio-project/gregorio/issues/1558)
 - Added the ability to use the "stroke" form of a clivis instead of the default two-notes form by specifying `[shape:stroke]` after the clivis to change.  See [#1558](https://github.com/gregorio-project/gregorio/issues/1558)
 - Added new alterations: soft flat (X) and sharp (##), which appear when there is no previous flat or sharp (respectively) in effect, and soft natural (Y), which appears when there is a previous flat or sharp in effect. A new option `\gresetalterationeffect` determines what the "effect" of an alteration is. It defaults to `line`, which is useful for Dominican chant. See [#157](https://github.com/gregorio-project/gregorio/issues/157) and also [#1575](https://github.com/gregorio-project/gregorio/issues/1575).
+- 9 new St. Gall neume glyphs have been added to the `gregall` font.
 
 
 ## [6.0.0] - 2021-03-13
