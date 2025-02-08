@@ -1172,11 +1172,12 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
         .."'%s' with %s.\nPlease check your score file.", gabc_file,
         gregorio_exe())
   else
-    -- open the gtex file for writing so that LuaTeX records output to it
-    -- when the -recorder option is used
+    -- The next few lines would open the gtex file for writing so that LuaTeX records the fact that gregorio has written to it
+    -- when the -recorder option is used.
+    -- However, in restricted \write18 mode, the gtex file might not be writable. Since we're the sole consumer of the gtex file, it should be okay not to record the write.
     local gtex = io.open(gtex_file, 'a')
     if gtex == nil then
-      err("\n Unable to open %s", gtex_file)
+      warn("\n Unable to open %s for writing. If another program depends on %s, latexmk may not recognize the dependency.", gtex_file, gtex_file)
     else
       gtex:close()
     end
