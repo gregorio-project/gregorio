@@ -1641,7 +1641,9 @@ local function adjust_line_height(inside_discretionary, for_next_line)
     if for_next_line then
       local last = score_heights['last']
       if last then
-        local target_id = tex.getattribute(glyph_id_attr) + 1
+        -- Let target_id be the glyph_id of the last glyph on this line.
+        -- Then heights[target_id] is the information for the next line.
+        local target_id = tex.getattribute(glyph_id_attr)
         while target_id <= last do
           heights = score_heights[target_id]
           if heights then break end
