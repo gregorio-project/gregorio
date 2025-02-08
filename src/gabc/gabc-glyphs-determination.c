@@ -138,10 +138,13 @@ static char add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
         break;
     case S_FLAT:
     case S_FLAT_PAREN:
+    case S_FLAT_SOFT:
     case S_SHARP:
     case S_SHARP_PAREN:
+    case S_SHARP_SOFT:
     case S_NATURAL:
     case S_NATURAL_PAREN:
+    case S_NATURAL_SOFT:
         next_glyph_type = G_ALTERATION;
         *end_of_glyph = DET_END_OF_BOTH;
         break;

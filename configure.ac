@@ -123,6 +123,9 @@ AC_CONFIG_FILES([
     examples/Makefile
     contrib/Makefile
     contrib/TeXShop/Makefile
+    contrib/vim/Makefile
+    contrib/vim/ftdetect/Makefile
+    contrib/vim/syntax/Makefile
     doc/Makefile
     tex/Makefile
     fonts/Makefile

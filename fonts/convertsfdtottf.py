@@ -31,9 +31,8 @@
 """
 
 
-from __future__ import print_function
-
-import getopt, sys
+import sys
+import getopt
 import fontforge
 
 
@@ -64,7 +63,7 @@ def main():
         usage()
         sys.exit(2)
     if args[0][-3:] == "sfd":
-        outputfile = "%s.ttf" % args[0][:-4]
+        outputfile = f'{args[0][:-4]}.ttf'
         inputfile = args[0]
     else:
         usage()

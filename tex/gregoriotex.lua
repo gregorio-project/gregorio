@@ -64,6 +64,10 @@ local glyph_top_attr = luatexbase.attributes['gre@attr@glyph@top']
 local glyph_bottom_attr = luatexbase.attributes['gre@attr@glyph@bottom']
 local prev_line_id = nil
 
+local alteration_type_attr = luatexbase.attributes['gre@attr@alteration@type']
+local alteration_pitch_attr = luatexbase.attributes['gre@attr@alteration@pitch']
+local alteration_id_attr = luatexbase.attributes['gre@attr@alteration@id']
+
 local syllable_id_attr = luatexbase.attributes['gre@attr@syllable@id']
 
 local cur_score_id = nil
@@ -81,6 +85,8 @@ local last_syllables = nil
 local new_last_syllables = nil
 local score_last_syllables = nil
 local new_score_last_syllables = nil
+local first_alterations = nil
+local new_first_alterations = nil
 local state_hashes = nil
 local new_state_hashes = nil
 local auxname = nil
@@ -88,6 +94,11 @@ local tmpname = nil
 local test_snippet_filename = nil
 local snippet_filename = nil
 local snippet_logname = nil
+
+local base_output_dir = 'tmp-gre'
+local function set_base_output_dir(new_dirname)
+  base_output_dir = new_dirname
+end
 
 local space_below_staff = 5
 local space_above_staff = 13
@@ -268,6 +279,13 @@ local function is_greaux_write_needed()
   if saved_computations_changed(saved_newline_before_euouae, new_saved_newline_before_euouae) then
     return true
   end
+  -- For alterations, check if either the keys or values changed.
+  for id, tab in pairs(new_first_alterations) do
+    if keys_changed(tab, first_alterations[id]) or entries_changed(tab, first_alterations[id]) then return true end
+  end
+  for id, tab in pairs(first_alterations) do
+    if keys_changed(tab, new_first_alterations[id]) or entries_changed(tab, first_alterations[id]) then return true end
+  end
   return false
 end
 
@@ -332,13 +350,27 @@ local function write_greaux()
       for id, value in pairs(new_state_hashes) do
         aux:write(string.format('  ["%s"]="%s",\n', id, value))
       end
+      aux:write(' },\n')
+      
+      -- Write information about alterations and line breaks. This
+      -- needs to go into the .gaux file because it affects whether
+      -- alterations are printed, which in turn affects which lines
+      -- alterations fall on.
+      aux:write(' ["first_alterations"]={\n')
+      for id, tab in pairs(new_first_alterations) do
+        aux:write(string.format('  ["%s"]={', id))
+        for i, value in pairs(tab) do
+          aux:write(string.format('[%q]=%s,', i, value))
+        end
+        aux:write(string.format('},\n'))
+      end
       aux:write(' },\n}\n')
       aux:close()
     else
       err("\n Unable to open %s", auxname)
     end
 
-    warn("Line heights or variable brace lengths may have changed. Rerun to fix.")
+    warn("Line heights, variable brace lengths, or soft flats/sharps may have changed. Rerun to fix.")
   end
 end
 
@@ -378,12 +410,14 @@ local function init(arg, enable_height_computation)
     state_hashes = score_info.state_hashes or {}
     saved_lengths = score_info.saved_lengths or {}
     saved_newline_before_euouae = score_info.saved_newline_before_euouae or {}
+    first_alterations = score_info.first_alterations or {}
   else
     line_heights = {}
     last_syllables = {}
     state_hashes = {}
     saved_lengths = {}
     saved_newline_before_euouae = {}
+    first_alterations = {}
   end
 
   if enable_height_computation then
@@ -414,6 +448,7 @@ local function init(arg, enable_height_computation)
   saved_positions = {}
   new_saved_lengths = {}
   new_saved_newline_before_euouae = {}
+  new_first_alterations = {}
 end
 
 -- node factory
@@ -634,6 +669,34 @@ local function post_linebreak(h, groupcode, glyphes)
       currentshift=0
     end
   end
+
+  -- Collect information about each alteration (flat, sharp, or natural):
+  --   1 if it is the first alteration on the line (on the same pitch)
+  --   2 if it has a different type from the previous alteration on the line (on the same pitch)
+  --   3 otherwise.
+  for line in traverse_id(hlist, h) do
+    local seen = {}
+    for n in traverse_id(hlist, line.head) do
+      -- This skips custos alterations because they're one level
+      -- deeper. As a result, they are always printed.
+      local t = has_attribute(n, alteration_type_attr)
+      if t ~= nil and t > 0 then
+        local i = has_attribute(n, alteration_id_attr)
+        local h = has_attribute(n, alteration_pitch_attr)
+        if seen[h] == nil then
+          new_score_first_alterations[i] = 1
+        elseif seen[h] ~= t then
+          new_score_first_alterations[i] = 2
+        else
+          new_score_first_alterations[i] = 3
+        end
+        new_score_first_alterations['last'] = i
+        debugmessage("alteration", "id=%s type=%s height=%s seen=%s first=%s", i, t, h, seen[t], new_score_first_alterations[i])
+        seen[h] = t
+      end
+    end
+  end
+  
   --dump_nodes(h)
   -- due to special cases, we don't return h here (see comments in bug #20974)
   return true
@@ -712,9 +775,21 @@ local function get_score_font_unicode_pairs(name)
   return pairs(unicodes)
 end
 
+local inside_score = false
+--- Start a score
+-- Prepare all variables for processing a new score and add our callbacks
+-- @param score_id score identifier
+-- @param top_height height of highest score element
+-- @param bottom_height height of lowest score element
+-- @param has_translation does this score have a translation?
+-- @param has_above_lines_text does this score have above lines text?
+-- @param top_height_adj limit below which a top_height doesn't require adjustment
+-- @param bottom_height_adj limit above which a bottom_height doesn't require adjustment
+-- @param score_font_name which font does this score use for the neumes
 local function at_score_beginning(score_id, top_height, bottom_height,
     has_translation, has_above_lines_text, top_height_adj, bottom_height_adj,
     score_font_name)
+  inside_score = true
   local inclusion = score_inclusion[score_id] or 1
   score_inclusion[score_id] = inclusion + 1
   score_id = score_id..'.'..inclusion
@@ -740,6 +815,10 @@ local function at_score_beginning(score_id, top_height, bottom_height,
   if score_last_syllables and state_hashes[score_id] ~= state then
     score_last_syllables = nil
   end
+  score_first_alterations = first_alterations[score_id]
+  if score_first_alterations and state_hashes[score_id] ~= state then
+    score_first_alterations = nil
+  end
   if new_state_hashes then
     new_state_hashes[score_id] = state
   end
@@ -747,12 +826,19 @@ local function at_score_beginning(score_id, top_height, bottom_height,
     new_score_last_syllables = {}
     new_last_syllables[score_id] = new_score_last_syllables
   end
+  if new_first_alterations then
+    new_score_first_alterations = {}
+    new_first_alterations[score_id] = new_score_first_alterations
+  end
 
   luatexbase.add_to_callback('post_linebreak_filter', post_linebreak, 'gregoriotex.post_linebreak', 1)
   luatexbase.add_to_callback("hyphenate", disable_hyphenation, "gregoriotex.disable_hyphenation", 1)
 end
 
+--- Finish a score
+-- Reset variables to out of score state and remove our callbacks
 local function at_score_end()
+  inside_score = false
   luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.post_linebreak')
   luatexbase.remove_from_callback("hyphenate", "gregoriotex.disable_hyphenation")
   per_line_dims = {}
@@ -760,6 +846,88 @@ local function at_score_end()
   saved_dims = {}
   saved_counts = {}
 end
+
+--- Toggle the state of GretorioTeX callbacks.
+-- Our callbacks can affect fancyhdr's ability to create multi-line headers/footers
+-- By adding this function to fancyhdr's before and after hooks, our callbacks are removed
+-- while processing headers/footers and then reinstated for the rest of the score.
+local function fancyhdr_toggle_callbacks()
+  if inside_score then
+    if luatexbase.is_active_callback('post_linebreak_filter','gregoriotex.post_linebreak') then
+      luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.post_linebreak')
+      luatexbase.remove_from_callback("hyphenate", "gregoriotex.disable_hyphenation")
+    else
+      luatexbase.add_to_callback('post_linebreak_filter', post_linebreak, 'gregoriotex.post_linebreak', 1)
+      luatexbase.add_to_callback("hyphenate", disable_hyphenation, "gregoriotex.disable_hyphenation", 1)
+    end
+  end
+end
+
+
+-- Inserted copy of https://github.com/ToxicFrog/luautil/blob/master/lfs.lua
+local windows = package.config:sub(1,1) == "\\"
+
+-- We make the simplifying assumption in these functions that path separators
+-- are always forward slashes. This is true on *nix and *should* be true on
+-- windows, but you can never tell what a user will put into a config file
+-- somewhere. This function enforces this.
+function lfs.normalize(path)
+  if windows then
+    return (path:gsub("\\", "/"))
+  else
+    return path
+  end
+end
+
+local _attributes = lfs.attributes
+function lfs.attributes(path, ...)
+  path = lfs.normalize(path)
+  if windows then
+    -- Windows stat() is kind of awful. If the path has a trailing slash, it
+    -- will always fail. Except on drive root directories, which *require* a
+    -- trailing slash. Thankfully, appending a "." will always work if the
+    -- target is a directory; and if it's not, failing on paths with trailing
+    -- slashes is consistent with other OSes.
+    path = path:gsub("/$", "/.")
+  end
+
+  return _attributes(path, ...)
+end
+
+function lfs.exists(path)
+  return lfs.attributes(path, "mode") ~= nil
+end
+
+function lfs.dirname(oldpath)
+  local path = lfs.normalize(oldpath):gsub("[^/]+/*$", "")
+  if path == "" then
+    return oldpath
+  end
+  return path
+end
+
+-- Recursive directory creation a la mkdir -p. Unlike lfs.mkdir, this will
+-- create missing intermediate directories, and will not fail if the
+-- destination directory already exists.
+-- It assumes that the directory separator is '/' and that the path is valid
+-- for the OS it's running on, e.g. no trailing slashes on windows -- it's up
+-- to the caller to ensure this!
+function lfs.rmkdir(path)
+  path = lfs.normalize(path)
+  if lfs.exists(path) then
+    return true
+  end
+  if lfs.dirname(path) == path then
+    -- We're being asked to create the root directory!
+    return nil,"rmkdir: unable to create root directory"
+  end
+  local r,err = lfs.rmkdir(lfs.dirname(path))
+  if not r then
+    return nil,err.." (creating "..path..")"
+  end
+  return lfs.mkdir(path)
+end
+-- end https://github.com/ToxicFrog/luautil/blob/master/lfs.lua
 
 local function clean_old_gtex_files(file_withdir)
   local filename = ""
@@ -775,9 +943,11 @@ local function clean_old_gtex_files(file_withdir)
   dirpath = string.match(file_withdir, "(.*)"..sep)
   if dirpath then -- dirpath is nil if current directory
     filename = "^"..file_withdir:match(".*/".."(.*)").."%-%d+_%d+_%d+[-%a%d]*%.gtex$"
-    for a in lfs.dir(dirpath) do
-      if a:match(filename) then
-        os.remove(dirpath..sep..a)
+    if lfs.exists(dirpath) then
+      for a in lfs.dir(dirpath) do
+        if a:match(filename) then
+          os.remove(dirpath..sep..a)
+        end
       end
     end
   else
@@ -798,8 +968,8 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
     extra_args = extra_args..' -D'
   end
 
-  local cmd = string.format('%s %s -W -o %s -l %s "%s"', gregorio_exe(),
-      extra_args, gtex_file, glog_file, gabc_file)
+  local cmd = string.format('%s %s -W -o %s -l %s "%s" 2> %s', gregorio_exe(),
+      extra_args, gtex_file, glog_file, gabc_file, glog_file)
   res = os.execute(cmd)
   if res == nil then
     err("\nSomething went wrong when executing\n    '%s'.\n"
@@ -827,11 +997,12 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
         .."'%s' with %s.\nPlease check your score file.", gabc_file,
         gregorio_exe())
   else
-    -- open the gtex file for writing so that LuaTeX records output to it
-    -- when the -recorder option is used
+    -- The next few lines would open the gtex file for writing so that LuaTeX records the fact that gregorio has written to it
+    -- when the -recorder option is used.
+    -- However, in restricted \write18 mode, the gtex file might not be writable. Since we're the sole consumer of the gtex file, it should be okay not to record the write.
     local gtex = io.open(gtex_file, 'a')
     if gtex == nil then
-      err("\n Unable to open %s", gtex_file)
+      warn("\n Unable to open %s for writing. If another program depends on %s, latexmk may not recognize the dependency.", gtex_file, gtex_file)
     else
       gtex:close()
     end
@@ -920,6 +1091,29 @@ local function include_score(input_file, force_gabccompile, allow_deprecated)
       else
         gabc:close()
       end
+      local sep = ""
+      local onwindows = os.type == "windows" or
+        string.find(os.getenv("PATH"),";",1,true)
+      if onwindows then
+        sep = "\\"
+      else
+        sep = "/"
+      end
+      local output_dir = base_output_dir..sep..file_dir
+      info(output_dir)
+      if not lfs.exists(output_dir) then
+        if not lfs.exists(base_output_dir) then
+          lfs.mkdir(base_output_dir)
+        end
+        local err,message = lfs.rmkdir(output_dir)
+        if not err then
+          info(message)
+        end
+      end
+      gtex_filename = string.format("%s%s-%s.gtex", output_dir, cleaned_filename,
+          internalversion:gsub("%.", "_"))
+      glog_file = string.format("%s%s-%s.glog", output_dir, cleaned_filename,
+          internalversion:gsub("%.", "_"))
       compile_gabc(gabc_file, gtex_filename, glog_file, allow_deprecated)
       tex.print(string.format([[\input %s\relax]], gtex_filename))
       return
@@ -1519,6 +1713,31 @@ local function hash_spaces(name, value)
   space_hash = md5.sumhexa(mash)
 end
 
+local function is_first_alteration(next)
+-- Arguments
+--   next: 0 for current alteration, 1 for next alteration
+-- Returns:
+--   0 = don't know, 1 = first in line, 2 = different from previous alteration, 3 = not first
+  if score_first_alterations then
+    local i = tex.getattribute(alteration_id_attr)
+    if next == 1 then
+      i = i + 1
+      while score_first_alterations[i] == nil and i < score_first_alterations['last'] do
+        i = i + 1
+      end
+    end
+    local v = score_first_alterations[i]
+    if v ~= nil then
+      debugmessage("alteration", "%s", v)
+      tex.print(v)
+    else
+      tex.print(0)
+    end
+  else
+    tex.print(0)
+  end
+end
+
 gregoriotex.number_to_letter             = number_to_letter
 gregoriotex.init                         = init
 gregoriotex.include_score                = include_score
@@ -1557,6 +1776,9 @@ gregoriotex.save_dim                     = save_dim
 gregoriotex.save_count                   = save_count
 gregoriotex.change_next_score_line_dim   = change_next_score_line_dim
 gregoriotex.change_next_score_line_count = change_next_score_line_count
+gregoriotex.set_base_output_dir          = set_base_output_dir
+gregoriotex.is_first_alteration          = is_first_alteration
+gregoriotex.fancyhdr_toggle_callbacks    = fancyhdr_toggle_callbacks
 
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))

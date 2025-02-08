@@ -23,6 +23,32 @@
   \gre@error{Error: this document must be compiled with LuaTeX (lualatex) 0.76 or later}%
 \fi%
 
+% Run a command for each string in a comma-separated list of strings.
+% #1: a comma-separated list of strings
+% #2: a command
+% Examples:
+% \greparsecommas{}{\typeout} does nothing.
+% \greparsecommas{foo}{\typeout} -> \typeout{foo}
+% \greparsecommas{foo,bar}{\typeout} -> \typeout{foo}\typeout{bar}
+% Note: Does not strip out any whitespace.
+\newcount\gre@parsecommas@cur
+\def\gre@parsecommas#1#2{%
+  % https://tex.stackexchange.com/a/510410
+  \def\gre@options{,#1,}%
+  \gre@debugmsg{parsecommas}{\gre@options}%
+  \IfStrEq{\gre@options}{,,}{%
+    % do nothing
+  }{%
+    \StrCount{\gre@options}{,}[\gre@total]% number of items plus one
+    \gre@parsecommas@cur=1\relax
+    \loop\ifnum\gre@parsecommas@cur<\gre@total\relax
+      \StrBetween[\the\gre@parsecommas@cur,\the\numexpr\gre@parsecommas@cur+1]{\gre@options}{,}{,}[\gre@option]%
+      #2{\gre@option}%
+      \advance\gre@parsecommas@cur by 1\relax
+    \repeat
+  }%
+}
+
 %%%%%%%%%
 %% Debugging
 %%%%%%%%%
