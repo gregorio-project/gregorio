@@ -26,8 +26,8 @@ grep -hE '\\let\\Gre.*' *.tex *.sty >> $TEXFILE
 grep -h '\\gredefsymbol{Gre.*' *.tex *.sty >> $TEXFILE
 
 #remove deprecated code
-sed -i.temp 's:.*OBSOLETE.*::' $TEXFILE
-sed -i.temp 's:.*DEPRECATED.*::' $TEXFILE
+sed -i.temp '/.*OBSOLETE.*/d' $TEXFILE
+sed -i.temp '/.*DEPRECATED.*/d' $TEXFILE
 
 #Isolate function names
 sed -i.temp 's:Gre:\
@@ -36,21 +36,20 @@ sed -i.temp '/Gre/!d' $TEXFILE
 sed -i.temp 's:\(Gre[a-zA-Z]*\).*:\1:' $TEXFILE
 
 #remove bar lines (these names are assembled piecemeal, not whole)
-sed -i.temp 's:^GreDivisioFinalis$::' $TEXFILE
-sed -i.temp 's:^GreDivisioMaior$::' $TEXFILE
-sed -i.temp 's:^GreDivisioMinima$::' $TEXFILE
-sed -i.temp 's:^GreDivisioMinor$::' $TEXFILE
-sed -i.temp 's:^GreDominica$::' $TEXFILE
-sed -i.temp 's:^GreVirgula$::' $TEXFILE
-sed -i.temp 's:^GreFinalDivisioFinalis$::' $TEXFILE
-sed -i.temp 's:^GreFinalDivisioMaior$::' $TEXFILE
-sed -i.temp 's:^GreInDivisioFinalis$::' $TEXFILE
-sed -i.temp 's:^GreInDivisioMaior$::' $TEXFILE
-sed -i.temp 's:^GreInDivisioMinima$::' $TEXFILE
-sed -i.temp 's:^GreInDivisioMinor$::' $TEXFILE
-sed -i.temp 's:^GreInDominica$::' $TEXFILE
-sed -i.temp 's:^GreInVirgula$::' $TEXFILE
-
+sed -i.temp '/^GreDivisioFinalis$/d' $TEXFILE
+sed -i.temp '/^GreDivisioMaior$/d' $TEXFILE
+sed -i.temp '/^GreDivisioMinima$/d' $TEXFILE
+sed -i.temp '/^GreDivisioMinor$/d ' $TEXFILE
+sed -i.temp '/^GreDominica$/d' $TEXFILE
+sed -i.temp '/^GreVirgula$/d' $TEXFILE
+sed -i.temp '/^GreFinalDivisioFinalis$/d' $TEXFILE
+sed -i.temp '/^GreFinalDivisioMaior$/d' $TEXFILE
+sed -i.temp '/^GreInDivisioFinalis$/d' $TEXFILE
+sed -i.temp '/^GreInDivisioMaior$/d' $TEXFILE
+sed -i.temp '/^GreInDivisioMinima$/d' $TEXFILE
+sed -i.temp '/^GreInDivisioMinor$/d' $TEXFILE
+sed -i.temp '/^GreInDominica$/d' $TEXFILE
+sed -i.temp '/^GreInVirgula$/d' $TEXFILE
 
 #label file
 echo "00 GreMacros Defined in TeX" >> $TEXFILE
@@ -68,8 +67,8 @@ grep -hE '\\\\Gre.*' gabc-notes-determination.l >> $CFILE
 grep -hE '\\\\Gre.*' gabc-score-determination.y >> $CFILE
 
 #remove deprecated code
-sed -i.temp 's:.*OBSOLETE.*::' $CFILE
-sed -i.temp 's:.*DEPRECATED.*::' $CFILE
+sed -i.temp '/.*OBSOLETE.*/d' $CFILE
+sed -i.temp '/.*DEPRECATED.*/d' $CFILE
 
 #Isolate function names
 sed -i.temp 's:Gre:\
@@ -78,10 +77,10 @@ sed -i.temp '/Gre/!d' $CFILE
 sed -i.temp 's:\(Gre[a-zA-Z]*\).*:\1:' $CFILE
 
 #remove prefixes of assembled function names
-sed -i.temp 's:^Gre$::' $CFILE
-sed -i.temp 's:^GreCP$::' $CFILE
-sed -i.temp 's:^GreFinal$::' $CFILE
-sed -i.temp 's:^GreIn$::' $CFILE
+sed -i.temp '/^Gre$/d' $CFILE
+sed -i.temp '/^GreCP$/d' $CFILE
+sed -i.temp '/^GreFinal$/d' $CFILE
+sed -i.temp '/^GreIn$/d' $CFILE
 
 #label file
 echo "00 Macros Written by C" >> $CFILE
