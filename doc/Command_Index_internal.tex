@@ -1435,6 +1435,9 @@ Evaluates to the second of its arguments.
   \#2 & any & the second argument\\
 \end{argtable}
 
+\macroname{\textbackslash gre@parshape@dims}{}{gregoriotex-main.tex}
+Holds the \verb=\parshape= information needed to shape the score around the initial.
+
 \subsection{Auxiliary File}
 Gregorio\TeX\ creates its own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.
 
@@ -1963,7 +1966,7 @@ Boolean indicating whether the translation should be shown.
 Boolean indicating whether the above lines text should be shown.
 
 \macroname{\textbackslash gre@count@initiallines}{}{gregoriotex-syllable.tex}
-Number of lines the initial takes up.  Currently limited to 0, 1, or 2.  Not currently a count, but will be changed to one in 5.0.
+Number of lines the initial takes up.
 
 \macroname{\textbackslash ifgre@rewritethissyllable}{}{gregoriotex-syllable.tex}
 Boolean indicating that a syllable should be rewritten to improve ligature rendering.
@@ -1976,6 +1979,15 @@ Boolean indicating that some aspect of the next syllable is being evaluated in a
 
 \macroname{\textbackslash ifgre@noteadditionalspacelinestext}{}{gregoriotex-main.tex}
 Boolean indicating that the additional space needed between the notes and the lyrics due to really low notes should follow the user setting of noteadditionalspacelinestext (as opposed to being calculated automatically, the default).
+
+\macroname{\textbackslash ifgre@alteration@effect@note}{}{gregoriotex-signs.tex}
+Boolean indicating that soft alterations should last until they apply to a single note (i.e. all soft alterations will be printed).
+
+\macroname{\textbackslash ifgre@alteration@effect@line}{}{gregoriotex-signs.tex}
+Boolean indicating that soft alterations should last until the end of line.
+
+\macroname{\textbackslash gre@count@parsecomma@cur}{}{gregoriotex-common.tex}
+When parsing a comma separated list of options, the comma we are currently processing.
 
 
 \subsection{Boxes}
