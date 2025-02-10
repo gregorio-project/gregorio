@@ -231,8 +231,8 @@
 \def\gre@calculate@staffheight{%
   \gre@trace{gre@calculate@staffheight}%
   \global\gre@dimen@staffheight = \dimexpr %
-    \gre@stafflines\gre@dimen@stafflineheight %
-    + \gre@stafflines\gre@dimen@interstafflinespace %
+    \gre@count@stafflines\gre@dimen@stafflineheight %
+    + \gre@count@stafflines\gre@dimen@interstafflinespace %
     - \gre@dimen@interstafflinespace\relax%
   \relax %
   \gre@trace@end%
@@ -733,7 +733,7 @@
     \global\gre@isonalinetrue%
   \or\gre@count@temp@three=\number 8%
   \or\gre@count@temp@three=\number 9%
-    \ifgre@haslinethree %
+    \ifnum\gre@count@stafflines>2\relax
       \global\gre@isonalinetrue%
     \else %
       \ifgre@ledgerline@above %
@@ -742,10 +742,10 @@
     \fi %
   \or\gre@count@temp@three=\number 10%
   \or\gre@count@temp@three=\number 11%
-    \ifgre@haslinefour %
+    \ifnum\gre@count@stafflines>3\relax
       \global\gre@isonalinetrue%
     \else %
-      \ifgre@haslinethree %
+      \ifnum\gre@count@stafflines>2\relax
         \ifgre@ledgerline@above %
           \global\gre@isonalinetrue%
         \fi %
@@ -753,10 +753,10 @@
     \fi %
   \or\gre@count@temp@three=\number 12%
   \or\gre@count@temp@three=\number 13%
-    \ifgre@haslinefive %
+    \ifnum\gre@count@stafflines>4\relax
       \global\gre@isonalinetrue%
     \else %
-      \ifgre@haslinefour %
+      \ifnum\gre@count@stafflines>3\relax
         \ifgre@ledgerline@above %
           \global\gre@isonalinetrue%
         \fi %
@@ -764,7 +764,7 @@
     \fi %
   \or\gre@count@temp@three=\number 14%
   \or\gre@count@temp@three=\number 15%
-    \ifgre@haslinefive %
+    \ifnum\gre@count@stafflines>4\relax
       \ifgre@ledgerline@above %
         \global\gre@isonalinetrue%
       \fi %

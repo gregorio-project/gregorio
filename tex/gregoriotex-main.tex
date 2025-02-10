@@ -788,45 +788,17 @@
     \vbox attr \gre@attrid@part=2 {%
       \gre@style@normalstafflines%
       \vskip\glueexpr(\gre@dimen@additionaltopspace+\gre@space@skip@spaceabovelines+\gre@dimen@currentabovelinestextheight)\relax%
-      \ifgre@showlines %
-        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
-      \else %
-        \vskip\gre@dimen@stafflineheight\relax%
-      \fi %
-      \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
-      \kern\gre@skip@temp@four %
-      \ifgre@showlines %
-        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
-      \else %
-        \vskip\gre@dimen@stafflineheight\relax%
-      \fi %
-      \ifgre@haslinethree %
-        \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
-        \kern\gre@skip@temp@four %
+      \gre@count@temp@one=0\relax
+      \loop
         \ifgre@showlines %
           \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
         \else %
           \vskip\gre@dimen@stafflineheight\relax%
         \fi %
-      \fi %
-      \ifgre@haslinefour %
-        \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
-        \kern\gre@skip@temp@four %
-        \ifgre@showlines %
-          \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
-        \else %
-          \vskip\gre@dimen@stafflineheight\relax%
-        \fi %
-      \fi %
-      \ifgre@haslinefive %
-        \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
-        \kern\gre@skip@temp@four %
-        \ifgre@showlines %
-          \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
-        \else %
-          \vskip\gre@dimen@stafflineheight\relax%
-        \fi %
-      \fi %
+        \advance\gre@count@temp@one by 1\relax
+        \ifnum\gre@count@temp@one<\gre@count@stafflines
+          \kern\gre@dimen@interstafflinespace\relax
+        \repeat
       \kern\dimexpr(\gre@space@dimen@spacelinestext+\gre@dimen@additionalbottomspace+\gre@space@dimen@spacebeneathtext+\gre@dimen@currenttranslationheight)\relax%
       \endgre@style@normalstafflines %
     }%
@@ -1048,13 +1020,11 @@
 % gre@attr@dash (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
 
 \newif\ifgre@beginningofscore%
-\newif\ifgre@haslinethree%
-\newif\ifgre@haslinefour%
-\newif\ifgre@haslinefive%
 
+\newcount\gre@count@stafflines
 \def\gre@setstafflines#1{%
   \gre@trace{gre@setstafflines{#1}}%
-  \def\gre@stafflines{#1}%
+  \gre@count@stafflines=#1\relax
   \ifcase#1% 0
     \gre@error{Invalid number of staff lines}%
   \or % 1
@@ -1079,9 +1049,6 @@
     \let\gre@char@bar@divisiomaior\GreCPDivisioMaiorTwo %
     \let\gre@char@bar@divisiomaiordotted\GreCPDivisioMaiorDottedTwo %
     \let\gre@char@bar@divisiomaiordottedbacking\GreCPDivisioMaiorDottedBackingTwo %
-    \gre@haslinethreefalse %
-    \gre@haslinefourfalse %
-    \gre@haslinefivefalse %
   \or % 3
     \let\gre@pitch@adjust@top\gre@pitch@h %
     \let\gre@pitch@abovestaff\gre@pitch@i %
@@ -1102,9 +1069,6 @@
     \let\gre@char@bar@divisiomaior\GreCPDivisioMaiorThree %
     \let\gre@char@bar@divisiomaiordotted\GreCPDivisioMaiorDottedThree %
     \let\gre@char@bar@divisiomaiordottedbacking\GreCPDivisioMaiorDottedBackingThree %
-    \gre@haslinethreetrue %
-    \gre@haslinefourfalse %
-    \gre@haslinefivefalse %
   \or % 4
     \let\gre@pitch@adjust@top\gre@pitch@j %
     \let\gre@pitch@abovestaff\gre@pitch@k %
@@ -1125,9 +1089,6 @@
     \let\gre@char@bar@divisiomaior\GreCPDivisioMaiorFour %
     \let\gre@char@bar@divisiomaiordotted\GreCPDivisioMaiorDottedFour %
     \let\gre@char@bar@divisiomaiordottedbacking\GreCPDivisioMaiorDottedBackingFour %
-    \gre@haslinethreetrue %
-    \gre@haslinefourtrue %
-    \gre@haslinefivefalse %
   \or % 5
     \let\gre@pitch@adjust@top\gre@pitch@l %
     \let\gre@pitch@abovestaff\gre@pitch@m %
@@ -1148,9 +1109,6 @@
     \let\gre@char@bar@divisiomaior\GreCPDivisioMaiorFive %
     \let\gre@char@bar@divisiomaiordotted\GreCPDivisioMaiorDottedFive %
     \let\gre@char@bar@divisiomaiordottedbacking\GreCPDivisioMaiorDottedBackingFive %
-    \gre@haslinethreetrue %
-    \gre@haslinefourtrue %
-    \gre@haslinefivetrue %
   \else %
     \gre@error{Invalid number of staff lines}%
   \fi %
