@@ -214,8 +214,7 @@
 \let\gre@pitch@underbrace\gre@pitch@b %
 \let\gre@pitch@overbraceglyph\gre@pitch@g %
 \let\gre@pitch@bar\gre@pitch@g %
-\let\gre@pitch@dummy\gre@pitch@g %
-\let\gre@pitch@nominal\gre@pitch@e %
+\let\gre@pitch@dummy\gre@pitch@e % not above or below staff, even if 2 lines
 
 % factor is the factor with which you open you font (the number after the at). It will decide almost everything (spaces, etc.), so it is particularly important.
 % it is set to the default value : 17 (the value that makes it look like a standard graduale)
@@ -735,8 +734,8 @@
   \else%
     \gre@dimen@temp@five=\gre@dimen@additionaltopspacenabc\relax%
   \fi%
-  \gre@dimen@temp@five=\dimexpr(4\gre@dimen@stafflineheight %
-    + 4\gre@dimen@interstafflinespace %
+  \gre@dimen@temp@five=\dimexpr(\gre@dimen@staffheight %
+    + \gre@dimen@interstafflinespace %
     + \gre@space@dimen@spacebeneathtext %
     + \gre@dimen@currenttranslationheight %
     + \gre@space@dimen@spacelinestext %
