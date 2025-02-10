@@ -40,7 +40,7 @@ sed -i.temp 's:.*DEPRECATED.*::' $CODEFILE
 sed -i.temp 's/%.*$//' $CODEFILE
 
 #remove whitespace
-sed -i.temp 's/^[ \t]*//;s/[ \t]*$//' $CODEFILE
+sed -i.temp 's/^[[:space:]]*//;s/[[:space:]]*$//' $CODEFILE
 
 #remove new and trailing code
 sed -i.temp 's:.*\\new[a-z]*{*\(\\*[a-zA-Z@]*\)[\\}]*.*:\1:' $CODEFILE
@@ -148,7 +148,7 @@ grep -h '\\gre@deprecated.*' *.tex | grep -v '\\def\\' >> $DOCFILE
 grep -h '\\gre@obsolete.*' *.tex | grep -v '\\def\\' >> $DOCFILE
 
 #remove whitespace
-sed -i.temp 's/^[ \t]*//;s/[ \t]*$//' $DOCFILE
+sed -i.temp 's/^[[:space:]]*//;s/[[:space:]]*$//' $DOCFILE
 
 sed -i.temp 's:.*\\gre@deprecated{.*::' $DOCFILE
 sed -i.temp 's:.*\\gre@obsolete{.*::' $DOCFILE
@@ -175,5 +175,4 @@ rm $CODEFILE.temp
 rm $CODEFILE
 rm $DIFFFILE
 
-#open result
-open $RESFILE
+cat $RESFILE

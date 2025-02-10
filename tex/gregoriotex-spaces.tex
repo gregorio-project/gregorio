@@ -435,7 +435,7 @@
   \gre@debugmsg{bolshift}{ clefwidthcurrent = \the\gre@dimen@clefwidth@current}%
   \gre@debugmsg{bolshift}{ clefwidthbol = \the\gre@dimen@clefwidth@bol}%
   % we ignore the current-bol adjustment if the clef is the first of the score and there is an initial on one line:
-  \ifnum\gre@initiallines=1\ifgre@beginningofscore\else %
+  \ifnum\gre@count@initiallines=1\ifgre@beginningofscore\else %
       \global\advance\gre@skip@temp@three by \dimexpr(\gre@dimen@clefwidth@current-\gre@dimen@clefwidth@bol)\relax %
     \fi\else %
       \global\advance\gre@skip@temp@three by \dimexpr(\gre@dimen@clefwidth@current-\gre@dimen@clefwidth@bol)\relax %
@@ -1530,9 +1530,6 @@
 
 % notes align center is the point of alignment for the notes
 \newdimen\gre@dimen@notesaligncenter\relax%
-
-%this dimension is the additional space that we have to add to the localleftbox sometimes. For now it is used only for the initials on two lines
-\newdimen\gre@dimen@additionalleftspace\relax%
 
 % the calculated width of the initial (may be actual width of letter or be forced wider under certain conditions)
 \newdimen\gre@dimen@initialwidth\relax%

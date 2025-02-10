@@ -82,6 +82,10 @@
 
 %%%%%%%%%%%%%%%
 
+% an attribute to mark various parts of the score
+% 1 = commentary, 2 = stafflines, 3 = initial
+\newluatexattribute\gre@attr@part%
+  \edef\gre@attrid@part{\the\allocationnumber}
 
 % an attribute we put on the text nodes.
 % if it is 1, it means that there may be a dash here if this syllable is at the end of a line
@@ -242,13 +246,10 @@
   \relax%
 }%
 
-
-% Eliminates the error for big initials where the second new line is at the end of the score
 \def\GreFinalNewLine{%
-  \global\advance\gre@knownline by 1\relax %
 }%
 
-% the macro we call each time we force a changing of line, it automatically sets \gre@knownline, and adjusts left spaces
+% the macro we call each time we force a changing of line
 % #1 is 0 in case of gabc z, 1 for Z
 % #2 is 0 in the normal case, 1 after a bar in the new spacing algorithm
 \def\gre@newlinecommon#1#2{%
@@ -257,16 +258,6 @@
      \gre@localrightbox{}%
   \fi\fi %
   \ifgre@boxing\else%
-    \ifnum\gre@biginitial=1\relax %
-      \ifcase\gre@knownline %
-      % 0: should not happend...
-      \or % 1
-        \gre@adjustsecondline %
-      \or %2
-        \gre@adjustthirdline %
-      \fi %
-    \fi %
-    \global\advance\gre@knownline by 1\relax %
     \global\gre@lastoflinecount=2\relax %
     \ifnum#2=0\relax %
       % we have to repeat the end of syllable shifts here because the manual line breaks will occur before we get to the regular shifting code in \GreSyllable
@@ -290,7 +281,6 @@
     \fi %
     \gre@penalty{-10001}%
   \fi %
-  \gre@adjustlineifnecessary\relax %
   %%
   \GreResetEolCustos\relax %
   \gre@trace@end%
@@ -330,75 +320,43 @@
 %% box containing the initial, and dimen containing its width (and the width of the space after)
 \newbox\gre@box@initial%
 
-
-% gre@biginitial means that the inital takes two lines
-\newcount\gre@biginitial%
-
-% gre@knownline is the line we think we are in
-\newcount\gre@knownline%
-
-% macro to call before the call of \initial
-\def\gre@setbiginitial{%
-  \gre@trace{gre@setbiginitial}%
-  \global\gre@biginitial=1\relax %
-  \relax %
-  \gre@trace@end%
+% Where the initial appears
+\newcount\gre@count@initialposition
+% firsttop (0) = top of first line
+% firstbaseline (1) = baseline of first line
+% lastbaseline (2) = baseline of last indented line
+% lastbottom (3) = bottom of last indented line
+\def\gresetinitialposition#1{%
+  \IfStrEqCase{#1}{%
+    {firsttop}{\gre@count@initialposition=0}%
+    {firstbaseline}{\gre@count@initialposition=1}%
+    {lastbaseline}{\gre@count@initialposition=2}%
+    {lastbottom}{\gre@count@initialposition=3}%
+  }[%
+    \gre@error{Unrecognized option "#1" for \protect\gresetinitialposition\MessageBreak Possible options are: 'firsttop', 'lastbaseline', and 'lastbottom'}%
+  ]%
 }%
+\gresetinitialposition{lastbaseline}%
 
-% macro to cancel before the call of \initial
-\def\gre@normalinitial{%
-  \gre@trace{gre@normalinitial}%
-  \global\gre@biginitial=0\relax %
-  \relax %
-  \gre@trace@end%
+% What part of the initial is aligned to \gre@count@initialposition:
+% top (0) = top of initial
+% baseline (1) = baseline of initial
+% bottom (2) = bottom of initial
+\newcount\gre@count@initialanchor
+\def\gresetinitialanchor#1{%
+  \IfStrEqCase{#1}{%
+    {top}{\gre@count@initialanchor=0}%
+    {baseline}{\gre@count@initialanchor=1}%
+    {bottom}{\gre@count@initialanchor=2}%
+  }[%
+    \gre@error{Unrecognized option "#1" for \protect\gresetinitialanchor\MessageBreak Possible options are: 'top', 'baseline', and 'bottom'}%
+  ]%
 }%
-
-% macro to call before the first syllable, but after setinitialclef
-\def\gre@adjustsecondline{%
-  \gre@trace{gre@adjustsecondline}%
-  \gre@dimen@additionalleftspace=\gre@dimen@initialwidth\relax%
-  \gre@updateleftbox %
-  \relax %
-  \gre@trace@end%
-}%
-
-% macro to call during the second line
-\def\gre@adjustthirdline{%
-  \gre@trace{gre@adjustthirdline}%
-  \gre@dimen@additionalleftspace= 0 pt\relax%
-  \gre@updateleftbox %
-  \relax %
-  \gre@trace@end%
-}%
-
-\newif\ifgre@thirdlineadjustmentnecessary %
-\def\gre@adjustlineifnecessary{%
-  \gre@trace{gre@adjustlineifnecessary}%
-  \ifgre@thirdlineadjustmentnecessary %
-    \gre@adjustthirdline %
-    \gre@thirdlineadjustmentnecessaryfalse %
-  \fi %
-  \gre@trace@end%
-}%
+\gresetinitialanchor{baseline}%
 
 \def\gre@updateleftbox{%
   \gre@trace{gre@updateleftbox}%
-  \gre@updatelinewidth %
   \gre@updatelinesclef %
-  \gre@trace@end%
-}%
-
-\def\gre@updatelinewidth{%
-  \gre@trace{gre@updatelinewidth}%
-  \gre@debugmsg{ifdim}{ additionalleftspace = 0pt}%
-  \ifdim\gre@dimen@additionalleftspace=0pt\relax%
-    \gre@generatelines %
-  \else %
-    \gre@dimen@temp@five=\gre@dimen@stafflinewidth\relax%
-    \global\advance\gre@dimen@stafflinewidth by -\gre@dimen@additionalleftspace\relax%
-    \gre@generatelines %
-    \global\gre@dimen@stafflinewidth=\gre@dimen@temp@five %
-  \fi %
   \gre@trace@end%
 }%
 
@@ -406,19 +364,17 @@
   \setbox\gre@box@initial=\hbox{#1}%
 }%
 
-\def\gre@printcommentary{%
-  \gre@trace{gre@printcommentary}%
-  % see comments on this function to see what it does
-  \gre@debugmsg{commentary}{Time to calculate the true raise.}%
-  \gre@calculate@commentarytrueraise%
-  % we start by printing the commentary
-  % when doing this we place it inside a box as which is linewidth wide with an \hfill before to get it to align to the right of the page
-  % we then place that box inside one of 0 width so that our cursor doesn't move when we place the commentary
-  \ifvoid\gre@box@commentary\else%
-    \gre@debugmsg{commentary}{I am printing a commentary box}%
-    \raise\gre@dimen@commentarytrueraise\hbox to 0pt{\hbox to \gre@dimen@linewidth{\hfill\box\gre@box@commentary}\hss}%
-  \fi%
-  \gre@trace@end%
+% Set paragraph shape.
+% #1: How many lines are indented
+% #2: The amount of the indentation
+\def\gre@makeparshape#1#2{%
+  \edef\gre@parshape@dims{\numexpr#1+1\relax}%
+  \gre@count@temp@one=0\relax
+  \loop
+    \edef\gre@parshape@dims{\gre@parshape@dims#2\dimexpr\gre@dimen@linewidth-#2\relax}%
+    \advance\gre@count@temp@one by 1\relax
+  \ifnum\gre@count@temp@one<#1\repeat
+  \parshape\gre@parshape@dims0pt\gre@dimen@linewidth
 }
 
 \def\gre@setinitial#1{%
@@ -427,90 +383,78 @@
   \gre@calculate@annotationtrueraise %
   % we print the initial always at the same place, and then we print the gre@box@annotation, centered
   % first we print the initial
+  \ifvoid\gre@box@initial%
+    \gre@debugmsg{initial}{Fill initial box a}%
+    \setbox\gre@box@initial=\hbox{\gre@style@initial\gre@fixedtextformat{#1}\endgre@style@initial}%
+  \fi%
+  \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
+  \ifdim\gre@space@dimen@manualinitialwidth=0 pt\relax%
+    \global\gre@dimen@initialwidth=\wd\gre@box@initial %
+    \gre@style@initial%
+      \ifdim\gre@dimen@initialwidth<\gre@space@dimen@minimalinitialwidth\relax%
+        \global\gre@dimen@initialwidth=\gre@space@dimen@minimalinitialwidth\relax%
+      \fi%
+    \endgre@style@initial%
+  \else
+    \gre@style@initial%
+    \global\gre@dimen@initialwidth=\gre@space@dimen@manualinitialwidth\relax%
+    \endgre@style@initial%
+  \fi
+  \gre@debugmsg{ifdim}{ wd(gre@box@annotation) > initialwidth}%
+  \ifdim\wd\gre@box@annotation>\gre@dimen@initialwidth\relax%
+    \global\gre@dimen@initialwidth=\wd\gre@box@annotation%
+  \fi%
+  \gre@debugmsg{annotation}{Width check completed.}%
+  % Now compute the raise
   \gre@dimen@temp@five = \dimexpr(\gre@dimen@textlower+\gre@space@dimen@initialraise)\relax%
-  % if it is a big initial we print it on the second line
-  \ifnum\gre@biginitial=0\relax %
-    \ifvoid\gre@box@initial%
-      \gre@debugmsg{initial}{Fill initial box a}%
-      \setbox\gre@box@initial=\hbox{\gre@style@initial\gre@fixedtextformat{#1}\endgre@style@initial}%
-    \fi%
-    \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
-    \ifdim\gre@space@dimen@manualinitialwidth=0 pt\relax%
-      \global\gre@dimen@initialwidth=\wd\gre@box@initial %
-      \gre@style@initial%
-        \ifdim\gre@dimen@initialwidth<\gre@space@dimen@minimalinitialwidth\relax%
-          \global\gre@dimen@initialwidth=\gre@space@dimen@minimalinitialwidth\relax%
-        \fi%
-      \endgre@style@initial%
+  \ifnum\gre@count@initialposition=0\relax
+    \advance\gre@dimen@temp@five by 
+      \dimexpr(\gre@dimen@staffheight
+      + \gre@space@dimen@spacebeneathtext
+      + \gre@dimen@currenttranslationheight
+      + \gre@space@dimen@spacelinestext
+      + \gre@dimen@additionalbottomspace)\relax%
+  \fi % post_linebreak takes care of the other cases
+  \ifcase\gre@count@initialanchor\relax
+    % top
+    \advance\gre@dimen@temp@five by -\ht\gre@box@initial\relax
+    \or
+    % baseline: do nothing
+    \or
+    % bottom
+    \advance\gre@dimen@temp@five by \dp\gre@box@initial\relax
+  \fi
+  \setbox\gre@box@initial=\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}%
+  \gre@debugmsg{annotation}{Initial set.}%
+  \gre@style@initial%
+  \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax%
+  \endgre@style@initial%
+  \setbox\gre@box@temp@width=\hbox attr \gre@attrid@part=3 {%
+    \gre@hskip\gre@dimen@temp@four %
+    \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four %
+    \gre@debugmsg{annotation}{Ready to place initial.}%
+    \ifgre@showlyrics%
+      \box\gre@box@initial%
     \else%
-      \gre@style@initial%
-      \global\gre@dimen@initialwidth=\gre@space@dimen@manualinitialwidth\relax%
-      \endgre@style@initial%
+      \kern\wd\gre@box@initial%
     \fi%
-    \gre@debugmsg{ifdim}{ wd(gre@box@annotation) > initialwidth}%
-    \ifdim\wd\gre@box@annotation>\gre@dimen@initialwidth\relax%
-      \global\gre@dimen@initialwidth=\wd\gre@box@annotation%
-    \fi%
-    \gre@debugmsg{annotation}{Width check completed.}%
-    \setbox\gre@box@initial=\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}%
-    \gre@debugmsg{annotation}{Initial set.}%
-    \gre@style@initial%
-    \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax%
-    \endgre@style@initial%
-  \else %
-    \advance\gre@dimen@temp@five by \dimexpr(-\gre@dimen@additionalbottomspace %
-      - \gre@space@dimen@spacebeneathtext %
-      - \gre@space@dimen@spacelinestext %
-      - 4\gre@dimen@interstafflinespace %
-      - 4\gre@dimen@stafflineheight %
-      - \gre@dimen@currenttranslationheight %
-      - \f@size pt %
-      + \gre@space@dimen@initialraise)\relax%
-    \ifvoid\gre@box@initial%
-      \gre@debugmsg{initial}{fill big initial box}%
-      \setbox\gre@box@initial=\hbox{\gre@style@initial\gre@fixedtextformat{#1}\endgre@style@initial}%
-    \fi%
-    \gre@debugmsg{ifdim}{ manualinitialwidth = 0pt}%
-    \ifdim\gre@space@dimen@manualinitialwidth=0 pt\relax%
-      \global\gre@dimen@initialwidth=\wd\gre@box@initial %
-      \gre@style@initial%
-        \ifdim\gre@dimen@initialwidth<\gre@space@dimen@minimalinitialwidth\relax%
-          \global\gre@dimen@initialwidth=\gre@space@dimen@minimalinitialwidth\relax%
-        \fi%
-      \endgre@style@initial%
-    \else%
-      \gre@style@initial%
-      \global\gre@dimen@initialwidth=\gre@space@dimen@manualinitialwidth\relax%
-      \endgre@style@initial%
-    \fi%
-    \gre@debugmsg{ifdim}{ wd(GreAboveinitialfirstbox) > initialwidth}%
-    \ifdim\wd\gre@box@annotation>\gre@dimen@initialwidth\relax%
-      \global\gre@dimen@initialwidth=\wd\gre@box@annotation%
-    \fi%
-    \setbox\gre@box@initial=\hbox{\vtop to 0pt{\hbox to \gre@dimen@initialwidth {\hss\raise \gre@dimen@temp@five\box\gre@box@initial\hss}\vss}}%
-    \gre@style@initial%
-    \global\gre@dimen@temp@four = \gre@space@dimen@beforeinitialshift\relax%
-    \endgre@style@initial%
-  \fi %
-  \gre@hskip\gre@dimen@temp@four %
-  \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four %
-  \gre@debugmsg{annotation}{Ready to place initial.}%
-  \ifgre@showlyrics%
-    \box\gre@box@initial%
-  \else%
-    \kern\wd\gre@box@initial%
-  \fi%
-  \ifnum\gre@biginitial=0\relax%
     \gre@style@initial%
     \global\gre@dimen@temp@four = \gre@space@dimen@afterinitialshift\relax%
     \endgre@style@initial%
-  \else%
-    \gre@style@initial%
-    \global\gre@dimen@temp@four = \gre@space@dimen@afterinitialshift\relax%
-    \endgre@style@initial%
-  \fi%
-  \gre@hskip\gre@dimen@temp@four %
-  \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four%
+    \gre@hskip\gre@dimen@temp@four %
+    \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four%
+  }%
+  % Set the paragraph shape. This should happen before anything is printed.
+  \gre@makeparshape{\gre@count@initiallines}{\wd\gre@box@temp@width}%
+  % Set the initial. If it has more than one line, we smash it so it
+  % doesn't disrupt anything, in particular the glue between lines.
+  % The Lua function lower_initial will insert vertical space
+  % appropriately.
+  \ifnum\gre@count@initiallines>1\relax
+    \llap{\smash{\box\gre@box@temp@width}}%
+  \else
+    \llap{\box\gre@box@temp@width}%
+  \fi
   % then we center the annotation box above the initial, if there is one
   \gre@debugmsg{annotation}{Time to set the annotation.}%
   \ifvoid\gre@box@annotation\relax%
@@ -538,7 +482,9 @@
   \gre@trace@end%
 }%
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting the things above the initial
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newbox\gre@box@annotation%
 \newbox\gre@box@add%
@@ -642,11 +588,6 @@
   \gre@trace@end%
 }%
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% macros for the typesetting the things above the initial
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \def\gre@writemode#1#2#3{%
   \gre@trace{gre@writemode{#1}{#2}{#3}}%
   \greannotation{%
@@ -690,18 +631,24 @@
   \relax%
 }%
 
-%% macro that draws the lines : starts by the first and then draws the lines of every line.
-%% has to be called before drawing the key, after drawing the initial
-\def\gre@beginnotes{%
-  \gre@trace{gre@beginnotes}%
-  \gre@drawfirstlines %
-  %%localeleftbox is a primitive of Omega, it draws the same box at the beginning of new lines (here after the first)
-  \gre@localleftbox{%
-    \copy\gre@box@lines %
-  }%
-  \relax %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for the typesetting of the commentary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\gre@printcommentary{%
+  \gre@trace{gre@printcommentary}%
+  % see comments on this function to see what it does
+  \gre@debugmsg{commentary}{Time to calculate the true raise.}%
+  \gre@calculate@commentarytrueraise%
+  % we start by printing the commentary
+  % when doing this we place it inside a box as which is linewidth wide with an \hfill before to get it to align to the right of the page
+  % we then place that box inside one of 0 width so that our cursor doesn't move when we place the commentary
+  \ifvoid\gre@box@commentary\else%
+    \gre@debugmsg{commentary}{I am printing a commentary box}%
+    \raise\gre@dimen@commentarytrueraise\hbox to 0pt{\hbox attr \gre@attrid@part=1 to \gre@dimen@linewidth{\hfill\box\gre@box@commentary}\hss}%
+  \fi%
   \gre@trace@end%
-}%
+}
 
 \newbox\gre@box@commentary
 
@@ -832,69 +779,6 @@
     ]%
 }
 
-%% macro that draws the stafflines on the first line, it is different from others due to the initial that can take some place, without lines
-\def\gre@drawfirstlines{%
-  \gre@trace{gre@drawfirstlines}%
-  \advance\gre@dimen@stafflinewidth by -\gre@dimen@initialwidth\relax%
-  %\advance\gre@dimen@stafflinewidth by -\gre@space@dimen@minimalspaceatlinebeginning
-  %\gre@dimen@initialwidth=0pt
-  \hbox to 0pt{%
-    \vbox{%
-      \gre@style@normalstafflines%
-      \vskip\gre@dimen@currentabovelinestextheight\relax%
-      \vskip\gre@dimen@additionaltopspace\relax%
-      \ifgre@showlines %
-        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
-      \else %
-        \vskip\gre@dimen@stafflineheight\relax%
-      \fi %
-      \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
-      \kern\gre@skip@temp@four %
-      \ifgre@showlines %
-        \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
-      \else %
-        \vskip\gre@dimen@stafflineheight\relax%
-      \fi %
-      \ifgre@haslinethree %
-        \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
-        \kern\gre@skip@temp@four %
-        \ifgre@showlines %
-          \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
-        \else %
-          \vskip\gre@dimen@stafflineheight\relax%
-        \fi %
-      \fi %
-      \ifgre@haslinefour %
-        \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
-        \kern\gre@skip@temp@four %
-        \ifgre@showlines %
-          \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
-        \else %
-          \vskip\gre@dimen@stafflineheight\relax%
-        \fi %
-      \fi %
-      \ifgre@haslinefive %
-        \gre@skip@temp@four = \gre@dimen@interstafflinespace\relax%
-        \kern\gre@skip@temp@four %
-        \ifgre@showlines %
-          \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
-        \else %
-          \vskip\gre@dimen@stafflineheight\relax%
-        \fi %
-      \fi %
-      \vskip\gre@space@dimen@spacelinestext\relax%
-      \vskip\gre@space@dimen@spacebeneathtext\relax%
-      \vskip\gre@dimen@currenttranslationheight\relax%
-      \vskip\gre@dimen@additionalbottomspace\relax%
-      \endgre@style@normalstafflines%
-    }%
-    \hss%
-  }%
-  \gre@dimen@stafflinewidth=\gre@dimen@linewidth\relax%
-  \relax%
-  \gre@trace@end%
-}%
-
 %% box containing the stafflines for other lines than the first
 \newbox\gre@box@lines%
 
@@ -902,7 +786,7 @@
 \def\gre@generatelines{%
   \gre@trace{gre@generatelines}%
   \setbox\gre@box@lines=\hbox to 0pt{%
-    \vbox{%
+    \vbox attr \gre@attrid@part=2 {%
       \gre@style@normalstafflines%
       \vskip\glueexpr(\gre@dimen@additionaltopspace+\gre@space@skip@spaceabovelines+\gre@dimen@currentabovelinestextheight)\relax%
       \ifgre@showlines %
@@ -1321,7 +1205,6 @@
   \ifdefined\optgabcAtScoreBeginning %
     \optgabcAtScoreBeginning %
   \fi %
-  \global\gre@knownline=1\relax %
   \global\gre@lastoflinecount=2\relax %
   \global\gre@endofscorefalse %
   \relax%
@@ -1329,11 +1212,6 @@
 
 %macro called at the end of a score
 \def\GreEndScore{%
-  \ifnum\gre@biginitial=1\relax%
-    \ifnum\gre@knownline<3\relax%
-      \gre@error{Score ended before finding the end\MessageBreak of the second line of a 2-line initial.  Make sure\MessageBreak you have at least two manual line breaks in \MessageBreak your gabc}%
-    \fi%
-  \fi%
   \global\gre@lastoflinecount=0\relax %
   \gre@useautoeolcustos%
   \GreEndEUOUAE{}%
@@ -1355,7 +1233,6 @@
   \gre@calculate@additionalspaces{\gre@pitch@dummy}{\gre@pitch@dummy}{0}{0}%
   \global\gre@dimen@currentabovelinestextheight=0 sp%
   \gre@removetranslationspace %
-  \gre@normalinitial %
   \gre@restorepenalties %
   \gre@dimen@temp@one=0pt\relax%
   \gre@dimen@temp@two=0pt\relax%
