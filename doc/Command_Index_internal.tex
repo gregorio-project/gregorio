@@ -486,19 +486,34 @@ Macro to increase the space above the lines to account for above lines text.
 \macroname{\textbackslash gre@removespaceabove}{}{gregoriotex-main.tex}
 Macro to decrease the space above the lines as there is no longer any above lines text.
 
-\macroname{\textbackslash gre@alteration}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-signs.tex}
+\macroname{\textbackslash gre@alteration}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
 Macro to typeset an alteration.
 
 \begin{argtable}
   \#1 & integer & height of the alteration\\
-  \#2 & character alias & the alteration\\
-  \#3 & character alias & the hole of the alteration\\
-  \#4 & \texttt{1} & the alteration is part of the clef\\
+  \#2 & integer & alteration type (see Section \ref{alterationtype})\\
+  \#3 & \texttt{1} & the alteration is part of the clef\\
   & \texttt{0} & the alteration is not part of the clef\\
-  \#5 & \TeX\ code & signs to typeset before the glyph (typically additional bars, as they must be ``behind'' the glyph)\\
-  \#6 & \TeX\ code & signs to typeset after the glyph (almost all signs)\\
-  \#7 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
+  \#4 & \TeX\ code & signs to typeset before the glyph (typically additional bars, as they must be ``behind'' the glyph)\\
+  \#5 & \TeX\ code & signs to typeset after the glyph (almost all signs)\\
+  \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
 \end{argtable}
+
+\macroname{\textbackslash gre@alteration@isvisible}{\#1\#2}{gregoriotex-signs.tex}
+Test whether an alteration should be visible or not.
+
+\begin{argtable}
+  \#1 & integer & 0 for current alteration, 1 for next alteration\\
+  \#2 & integer & alteration type (see Section \ref{alterationtype})\\
+\end{argtable}
+
+\macroname{\textbackslash gre@alteration@visible}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
+The special case of \verb|gre@alteration| for when the alteration is visible.
+
+\macroname{\textbackslash gre@alteration@char}{}{gregoriotex-signs.tex}
+\vspace*{-10ex}%
+\macroname{\textbackslash gre@alteration@type}{}{gregoriotex-signs.tex}
+Used internally by \verb|\gre@alteration@visible|.
 
 \macroname{\textbackslash gre@clef}{}{gregoriotex-signs.tex}
 Macro holding the current clef type.
@@ -1435,8 +1450,27 @@ Evaluates to the second of its arguments.
   \#2 & any & the second argument\\
 \end{argtable}
 
+\macroname{\textbackslash gre@parsecommas}{\#1\#2}{gregoriotex-common.tex}
+Runs a command for each string in a comma-separated list of strings.
+
+\begin{argtable}
+  \#1 & string & a comma-separated list of strings\\
+  \#2 & control sequence & a command that takes one argument\\
+\end{argtable}
+
+\macroname{\textbackslash gre@parsecommas@options}{}{gregoriotex-common.tex}
+Internal to \verb|\gre@parsecommas|.
+
+\macroname{\textbackslash gre@makeparshape}{}{gregoriotex-main.tex}
+Sets the shape of the paragraph shape using \verb|\parshape|.
+
+\begin{argtable}
+  \#1 & integer & How many lines are indented \\
+  \#2 & dimen & The amount of the indentation \\
+\end{argtable}  
+
 \macroname{\textbackslash gre@parshape@dims}{}{gregoriotex-main.tex}
-Holds the \verb=\parshape= information needed to shape the score around the initial.
+Used inside \verb|\gre@makeparshape| to hold the \verb=\parshape= information needed to shape the score around the initial.
 
 \subsection{Auxiliary File}
 Gregorio\TeX\ creates its own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.
@@ -1968,6 +2002,16 @@ Boolean indicating whether the above lines text should be shown.
 \macroname{\textbackslash gre@count@initiallines}{}{gregoriotex-syllable.tex}
 Number of lines the initial takes up.
 
+\macroname{\textbackslash gre@count@initialanchor}{}{gregoriotex-main.tex}
+
+What part of the initial is aligned to \verb|\gre@count@initialposition|:
+0 = top of initial (\texttt{top}); 1 = baseline of initial (\texttt{baseline}); 2 = bottom of initial (\texttt{bottom}).
+
+\macroname{\textbackslash gre@count@initialposition}{}{gregoriotex-main.tex}
+
+The position where the initial appears. 
+0 = top of first line (\texttt{firsttop}), that is, the top staff-line; 1 = baseline of first line (\texttt{firstbaseline}); 2 = baseline of last indented line (\texttt{lastbaseline}); 3 = bottom of last indented line (\texttt{lastbottom}).
+
 \macroname{\textbackslash ifgre@rewritethissyllable}{}{gregoriotex-syllable.tex}
 Boolean indicating that a syllable should be rewritten to improve ligature rendering.
 
@@ -1983,12 +2027,42 @@ Boolean indicating that the additional space needed between the notes and the ly
 \macroname{\textbackslash ifgre@alteration@effect@note}{}{gregoriotex-signs.tex}
 Boolean indicating that soft alterations should last until they apply to a single note (i.e. all soft alterations will be printed).
 
+\macroname{\textbackslash gre@attr@alteration@id}{}{gregoriotex-main.tex}
+Unique identifier of an alteration, numbered consecutively starting from 1. If an
+alteration is set twice, once for measurement and once for printing,
+they have the same id (unlike glyph ids).
+
+\macroname{\textbackslash gre@attr@alteration@pitch}{}{gregoriotex-main.tex}
+\vspace*{-10ex}%
+\macroname{\textbackslash gre@attrid@alteration@pitch}{}{gregoriotex-main.tex}
+\vspace*{-10ex}%
+\macroname{\textbackslash gre@attr@alteration@type}{}{gregoriotex-main.tex}
+\vspace*{-10ex}%
+\macroname{\textbackslash gre@attrid@alteration@type}{}{gregoriotex-main.tex}
+The pitch and type of an alteration. For alteration types, please see Section~\ref{alterationtype}. The control sequences with \verb|attr| in their name are attributes, while those with \verb|attrid| in their names are attribute numbers (for use with \verb|\hbox attr|).
+
+\macroname{\textbackslash ifgre@alteration@isvisible}{}{gregoriotex-signs.tex}
+Flag returned by \verb|gre@alteration@isvisible|.
+
 \macroname{\textbackslash ifgre@alteration@effect@line}{}{gregoriotex-signs.tex}
 Boolean indicating that soft alterations should last until the end of line.
 
-\macroname{\textbackslash gre@count@parsecomma@cur}{}{gregoriotex-common.tex}
-When parsing a comma separated list of options, the comma we are currently processing.
+\macroname{\textbackslash gre@count@parsecommas@cur}{}{gregoriotex-common.tex}
+Internal to \verb|\gre@parsecommas|.
 
+\macroname{\textbackslash gre@alteration@effect@process}{}{gregoriotex-signs.tex}
+Internal to \verb|\gresetalterationeffect|.
+
+\macroname{\textbackslash gre@nextalteration}{}{gregoriotex-syllable.tex}
+\vspace*{-10ex}%
+\macroname{\textbackslash gre@nextalignment}{}{gregoriotex-syllable.tex}
+Internal to \verb|\gre@syllable@act|.
+
+\macroname{\textbackslash gre@attr@part}{}{gregoriotex-main.tex}
+\vspace*{-10ex}%
+\macroname{\textbackslash gre@attrid@part}{}{gregoriotex-main.tex}
+An attribute to mark various parts of the score. \verb|gre@attr@part| is the attribute, while \verb|gre@attrid@part| is the attribute number (to be used with \verb|\hbox attr|).
+1 = commentary, 2 = stafflines, 3 = initial.
 
 \subsection{Boxes}
 
