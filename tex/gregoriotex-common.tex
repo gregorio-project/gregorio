@@ -34,16 +34,16 @@
 \newcount\gre@count@parsecommas@cur
 \def\gre@parsecommas#1#2{%
   % https://tex.stackexchange.com/a/510410
-  \def\gre@options{,#1,}%
-  \gre@debugmsg{parsecommas}{\gre@options}%
-  \IfStrEq{\gre@options}{,,}{%
+  \def\gre@parsecommas@options{,#1,}%
+  \gre@debugmsg{parsecommas}{\gre@parsecommas@options}%
+  \IfStrEq{\gre@parsecommas@options}{,,}{%
     % do nothing
   }{%
-    \StrCount{\gre@options}{,}[\gre@total]% number of items plus one
+    \StrCount{\gre@parsecommas@options}{,}[\gre@parsecommas@total]% number of items plus one
     \gre@count@parsecommas@cur=1\relax
-    \loop\ifnum\gre@count@parsecommas@cur<\gre@total\relax
-      \StrBetween[\the\gre@count@parsecommas@cur,\the\numexpr\gre@parsecommas@cur+1]{\gre@options}{,}{,}[\gre@option]%
-      #2{\gre@option}%
+    \loop\ifnum\gre@count@parsecommas@cur<\gre@parsecommas@total\relax
+      \StrBetween[\the\gre@count@parsecommas@cur,\the\numexpr\gre@count@parsecommas@cur+1]{\gre@parsecommas@options}{,}{,}[\gre@parsecommas@option]%
+      #2{\gre@parsecommas@option}%
       \advance\gre@count@parsecommas@cur by 1\relax
     \repeat
   }%
