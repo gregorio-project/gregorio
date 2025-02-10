@@ -2,7 +2,7 @@
  * Gregorio is a program that translates gabc files to GregorioTeX.
  * This file contains functions that deal with lyrics and styles.
  *
- * Copyright (C) 2008-2021 The Gregorio Project (see CONTRIBUTORS.md)
+ * Copyright (C) 2008-2025 The Gregorio Project (see CONTRIBUTORS.md)
  *
  * This file is part of Gregorio.
  *
