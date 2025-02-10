@@ -38,18 +38,47 @@ sed -i.temp 's:\(Gre[a-zA-Z]*\).*:\1:' $TEXFILE
 #remove bar lines (these names are assembled piecemeal, not whole)
 sed -i.temp '/^GreDivisioFinalis$/d' $TEXFILE
 sed -i.temp '/^GreDivisioMaior$/d' $TEXFILE
+sed -i.temp '/^GreDivisioMaiorDotted$/d' $TEXFILE
 sed -i.temp '/^GreDivisioMinima$/d' $TEXFILE
+sed -i.temp '/^GreDivisioMinimaHigh$/d' $TEXFILE
+sed -i.temp '/^GreDivisioMinimaParen$/d' $TEXFILE
+sed -i.temp '/^GreDivisioMinimaParenHigh$/d' $TEXFILE
+sed -i.temp '/^GreDivisioMinimis$/d' $TEXFILE
+sed -i.temp '/^GreDivisioMinimisHigh$/d' $TEXFILE
 sed -i.temp '/^GreDivisioMinor$/d ' $TEXFILE
 sed -i.temp '/^GreDominica$/d' $TEXFILE
 sed -i.temp '/^GreVirgula$/d' $TEXFILE
+sed -i.temp '/^GreVirgulaHigh$/d' $TEXFILE
+sed -i.temp '/^GreVirgulaParen$/d' $TEXFILE
+sed -i.temp '/^GreVirgulaParenHigh$/d' $TEXFILE
 sed -i.temp '/^GreFinalDivisioFinalis$/d' $TEXFILE
 sed -i.temp '/^GreFinalDivisioMaior$/d' $TEXFILE
 sed -i.temp '/^GreInDivisioFinalis$/d' $TEXFILE
 sed -i.temp '/^GreInDivisioMaior$/d' $TEXFILE
+sed -i.temp '/^GreInDivisioMaiorDotted$/d' $TEXFILE
 sed -i.temp '/^GreInDivisioMinima$/d' $TEXFILE
+sed -i.temp '/^GreInDivisioMinimaHigh$/d' $TEXFILE
+sed -i.temp '/^GreInDivisioMinimaParen$/d' $TEXFILE
+sed -i.temp '/^GreInDivisioMinimaParenHigh$/d' $TEXFILE
+sed -i.temp '/^GreInDivisioMinimis$/d' $TEXFILE
+sed -i.temp '/^GreInDivisioMinimisHigh$/d' $TEXFILE
 sed -i.temp '/^GreInDivisioMinor$/d' $TEXFILE
 sed -i.temp '/^GreInDominica$/d' $TEXFILE
 sed -i.temp '/^GreInVirgula$/d' $TEXFILE
+sed -i.temp '/^GreInVirgulaHigh$/d' $TEXFILE
+sed -i.temp '/^GreInVirgulaParen$/d' $TEXFILE
+sed -i.temp '/^GreInVirgulaParenHigh$/d' $TEXFILE
+
+#remove alterations (these names are assembled piecemeal, not whole)
+sed -i.temp '/^GreFlat$/d' $TEXFILE
+sed -i.temp '/^GreFlatParen$/d' $TEXFILE
+sed -i.temp '/^GreFlatSoft$/d' $TEXFILE
+sed -i.temp '/^GreNatural$/d' $TEXFILE
+sed -i.temp '/^GreNaturalParen$/d' $TEXFILE
+sed -i.temp '/^GreNaturalSoft$/d' $TEXFILE
+sed -i.temp '/^GreSharp$/d' $TEXFILE
+sed -i.temp '/^GreSharpParen$/d' $TEXFILE
+sed -i.temp '/^GreSharpSoft$/d' $TEXFILE
 
 #label file
 echo "00 GreMacros Defined in TeX" >> $TEXFILE
