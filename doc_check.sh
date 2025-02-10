@@ -100,6 +100,9 @@ sed -i.temp 's:\\gre@pitch.*::' $CODEFILE
 sed -i.temp 's:.*gre@char@he@.*::' $CODEFILE
 sed -i.temp 's:\\gre@protrusionfactor@.*::' $CODEFILE
 
+#remove LaTeX internal
+sed -i '/\\input@path/d' $CODEFILE
+
 #label file
 echo "00 Macros Defined in TeX" >> $CODEFILE
 
