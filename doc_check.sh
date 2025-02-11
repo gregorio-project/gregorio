@@ -46,7 +46,7 @@ sed -i.temp 's/^[[:space:]]*//;s/[[:space:]]*$//' $CODEFILE
 sed -i.temp 's:.*\\new[a-z]*{*\(\\*[a-zA-Z@]*\)[\\}]*.*:\1:' $CODEFILE
 
 #get rid of work around def
-sed -i.temp '/\\def\\x/d' $CODEFILE
+sed -i.temp 's/\\def\\x//' $CODEFILE
 
 #accept only first def on line
 sed -i.temp -E 's:\\[gex]?def:special:' $CODEFILE
