@@ -110,6 +110,7 @@ sed -i.temp '/^Gre$/d' $CFILE
 sed -i.temp '/^GreCP$/d' $CFILE
 sed -i.temp '/^GreFinal$/d' $CFILE
 sed -i.temp '/^GreIn$/d' $CFILE
+sed -i.temp '/^GreOCase$/d' $CFILE
 
 #label file
 echo "00 Macros Written by C" >> $CFILE
