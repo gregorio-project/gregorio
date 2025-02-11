@@ -31,7 +31,7 @@ sed -i.temp '/.*DEPRECATED.*/d' $TEXFILE
 
 #Isolate function names
 sed -i.temp 's:Gre:\
-Gre:g' $TEXFILE
+Gre:' $TEXFILE
 sed -i.temp '/Gre/!d' $TEXFILE
 sed -i.temp 's:\(Gre[a-zA-Z]*\).*:\1:' $TEXFILE
 
