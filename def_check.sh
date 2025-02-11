@@ -80,6 +80,9 @@ sed -i.temp '/^GreSharp$/d' $TEXFILE
 sed -i.temp '/^GreSharpParen$/d' $TEXFILE
 sed -i.temp '/^GreSharpSoft$/d' $TEXFILE
 
+#remove piecemeal assembled style
+sed -i.temp '/^GreUnstyled$/d' $TEXFILE
+
 #remove extra alias
 sed -i.temp '/^\GreCPVirgaReversaAscendensOnDLine$/d' $TEXFILE
 
