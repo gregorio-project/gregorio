@@ -80,6 +80,9 @@ sed -i.temp '/^GreSharp$/d' $TEXFILE
 sed -i.temp '/^GreSharpParen$/d' $TEXFILE
 sed -i.temp '/^GreSharpSoft$/d' $TEXFILE
 
+#remove extra alias
+sed -i.temp '/^\GreCPVirgaReversaAscendensOnDLine$/d' $TEXFILE
+
 #label file
 echo "00 GreMacros Defined in TeX" >> $TEXFILE
 
@@ -133,4 +136,4 @@ rm $TEXFILE
 rm $DIFFFILE
 
 #open result
-open $RESFILE
+cat $RESFILE
