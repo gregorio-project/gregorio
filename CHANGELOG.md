@@ -14,6 +14,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - When fancyhdr and GregorioTeX are used together, GregorioTeX's disabling of hyphenation and its `post_linebreak` modification of the `post_linebreak_filter` interfere with multiline headers.  Using the `fancyhdr/before` and `fancyhdr/after` hooks we temporarily reenable hyphenation and disable our `post_linebreak` modification while headers and footers are being processed in the middle of a score.  See [#1603](https://github.com/gregorio-project/gregorio/issues/1603).
 - Fixed a bug where the above-lines text (`<alt>`) could collid with a note above the staff. See [#1613](https://github.com/gregorio-project/gregorio/issues/1613).
 - Fixed a bug that could cause a hyphen to appear on the wrong line. See [#1319](https://github.com/gregorio-project/gregorio/issues/1319).
+- Fixed the placement of above-lines text (`<alt>`) relative to a note above the staff or when the number of staff lines is not 4. See [#1613](https://github.com/gregorio-project/gregorio/issues/1613) and [#1614](https://github.com/gregorio-project/gregorio/issues/1614).
 
 ### Changed
 - Modified gregorio to append to the log file specified as an argument and to send early messages to it.  See [#1541](https://github.com/gregorio-project/gregorio/issues/1541).
