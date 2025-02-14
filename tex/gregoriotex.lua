@@ -788,8 +788,8 @@ local function post_linebreak(h, groupcode, glyphes)
 
           if new_score_heights then
             local glyph_id = has_attribute(n, glyph_id_attr)
-            local glyph_top = has_attribute(n, glyph_top_attr) or 9 -- 'g'
-            local glyph_bottom = has_attribute(n, glyph_bottom_attr) or 9 -- 'g'
+            local glyph_top = has_attribute(n, glyph_top_attr) or 7 -- 'e' = \gre@pitch@dummy
+            local glyph_bottom = has_attribute(n, glyph_bottom_attr) or 7 -- 'e' = \gre@pitch@dummy
             if glyph_id and glyph_id > prev_line_id then
               if not line_id or glyph_id > line_id then
                 line_id = glyph_id
