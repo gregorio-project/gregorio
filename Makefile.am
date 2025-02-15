@@ -47,3 +47,6 @@ gregoriotex.tds.zip: dist-zip install-gtex.sh
 
 ctan: gregoriotex.tds.zip build-ctan.sh
 	./build-ctan.sh
+
+dist-hook:
+	rm -rf $(distdir)/windows
