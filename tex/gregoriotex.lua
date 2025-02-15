@@ -509,7 +509,6 @@ local function dump_nodes(head)
   log('--end dump--')
 end
 
-
 -- helper function for center_translation()
 local function get_first_node_by_id(id, head)
   for n in traverse_id(id, head) do
@@ -1298,6 +1297,7 @@ local function include_score(input_file, force_gabccompile, allow_deprecated)
       glog_file = string.format("%s%s-%s.glog", output_dir, cleaned_filename,
           internalversion:gsub("%.", "_"))
       compile_gabc(gabc_file, gtex_filename, glog_file, allow_deprecated)
+      gtex_filename = lfs.normalize(gtex_filename)
       tex.print(string.format([[\input %s\relax]], gtex_filename))
       return
     else
@@ -1306,6 +1306,7 @@ local function include_score(input_file, force_gabccompile, allow_deprecated)
     end
   end
   if not gabc_file then
+    gtex_file = lfs.normalize(gtex_file)
     tex.print(string.format([[\input %s\relax]], gtex_file))
     return
   end
@@ -1328,6 +1329,7 @@ local function include_score(input_file, force_gabccompile, allow_deprecated)
   elseif force_gabccompile then
     compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
   end
+  gtex_file = lfs.normalize(gtex_file)
   tex.print(string.format([[\input %s\relax]], gtex_file))
   return
 end
