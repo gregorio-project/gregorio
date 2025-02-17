@@ -154,16 +154,21 @@
 % #7 is the line:char:column for a textedit link
 \def\GreGlyph#1#2#3#4#5#6#7{%
   \gre@newglyphcommon %
+  % Create box containing the new glyph.
   \setbox\gre@box@temp@width=\hbox{\gre@pointandclick{\gre@font@music #1}{#7}}%
   \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
   % the three next lines are a trick to get the additional lines below the glyphs
   \gre@skip@temp@one = \gre@dimen@lastglyphwidth\relax%
   \kern\gre@skip@temp@one %
+  % #5 contains things like ledger lines, but also calls to \GreGlyphHeights
   #5\relax %
   \kern-\gre@skip@temp@one %
   \gre@calculate@glyphraisevalue{#2}{0}{}%
   \raise\gre@dimen@glyphraisevalue%
-  \copy\gre@box@temp@width%
+  % Since \gre@box@temp@width was created before the calls
+  % to \GreGlyphHeights, we need to rebox it to
+  % set \gre@attr@glyph@top and \gre@attr@glyph@bottom correctly.
+  \hbox{\unhcopy\gre@box@temp@width}%
   \ifgre@endofscore\else\ifgre@boxing\else %
     #3%
   \fi\fi %

@@ -476,11 +476,10 @@ end
 local function dump_nodes_helper(head, indent)
   local dots = string.rep('..', indent)
   for n in traverse(head) do
-    local ids = format("%s", has_attribute(n, part_attr))
+    local ids = format("%s", has_attribute(n, glyph_id))
     if node.type(n.id) == 'penalty' then
-      log(dots .. "%s=%s {%s}", node.type(n.id), n.penalty, ids)
+      log(dots .. "%s %s {%s}", node.type(n.id), n.penalty, ids)
     elseif n.id == whatsit and n.subtype == user_defined_subtype and n.user_id == marker_whatsit_id then
-      log("marker-whatsit %s", n.value)
       log(dots .. "marker-whatsit %s", n.value)
     elseif n.id == glyph then
       local f = font.fonts[n.font]
@@ -490,9 +489,11 @@ local function dump_nodes_helper(head, indent)
       end
       log(dots .. "glyph %s {%s}", charname, ids)
     elseif n.id == rule then
-      log(dots .. "rule subtype=%s width=%spt height=%spt depth=%spt", n.subtype, n.width/65536, n.height/65536, n.depth/65536)
+      log(dots .. "rule [%s] width=%.2fpt height=%.2fpt depth=%.2fpt", n.subtype, n.width/2^16, n.height/2^16, n.depth/2^16)
+    elseif n.id == hlist or n.id ==vlist then
+      log(dots .. "%s [%s] width=%.2fpt height=%.2fpt depth=%.2fpt shift=%.2fpt {%s}", node.type(n.id), n.subtype, n.width/2^16, n.height/2^16, n.depth/2^16, n.shift/2^16, ids)
     elseif n.id == glue then
-      log(dots .. "glue subtype=%s width=%spt", n.subtype, n.width/65536)
+      log(dots .. "glue [%s] width=%.2fpt", n.subtype, n.width/2^16)
     else
       log(dots .. "node %s [%s] {%s}", node.type(n.id), n.subtype, ids)
     end
@@ -720,9 +721,6 @@ end
 local function post_linebreak(h, groupcode, glyphes)
   -- TODO: to be changed according to the font
   local lastseennode            = nil
-  local adddash                 = false
-  local currentfont             = 0
-  local currentshift            = 0
   local centerstartnode         = nil
   local line_id                 = nil
   local line_top                = nil
@@ -754,6 +752,7 @@ local function post_linebreak(h, groupcode, glyphes)
         line_bottom = nil
         line_has_translation = false
         line_has_abovelinestext = false
+
         for n in traverse_id(hlist, line.head) do
           syl_id = has_attribute(n, syllable_id_attr) or syl_id
           if has_attribute(n, center_attr, startcenter) then
@@ -764,32 +763,12 @@ local function post_linebreak(h, groupcode, glyphes)
             else
               center_translation(centerstartnode, n, line.glue_set, line.glue_sign, line.glue_order)
             end
-          elseif has_attribute(n, dash_attr, potentialdashvalue) then
-            adddash=true
-            lastseennode=n
-            currentfont = 0
-            -- we traverse the list, to detect the font to use,
-            -- and also not to add an hyphen if there is already one
-            for g in node.traverse_id(glyph, n.head) do
-              if currentfont == 0 then
-                currentfont = g.font
-              end
-              if g.char == hyphen or g.char == 45 then
-                adddash = false
-              end
-            end
-            if currentshift == 0 then
-              currentshift = n.shift
-            end
-            -- if we encounter a text that doesn't need a dash, we acknowledge it
-          elseif has_attribute(n, dash_attr, nopotentialdashvalue) then
-            adddash=false
           end
-
+ 
           if new_score_heights then
             local glyph_id = has_attribute(n, glyph_id_attr)
-            local glyph_top = has_attribute(n, glyph_top_attr) or 9 -- 'g'
-            local glyph_bottom = has_attribute(n, glyph_bottom_attr) or 9 -- 'g'
+            local glyph_top = has_attribute(n, glyph_top_attr) or 7 -- 'e' = \gre@pitch@dummy
+            local glyph_bottom = has_attribute(n, glyph_bottom_attr) or 7 -- 'e' = \gre@pitch@dummy
             if glyph_id and glyph_id > prev_line_id then
               if not line_id or glyph_id > line_id then
                 line_id = glyph_id
@@ -812,13 +791,7 @@ local function post_linebreak(h, groupcode, glyphes)
                 is_mark(n, abovelinestext_mark)
           end
         end
-        if adddash==true then
-          local dashnode, hyphnode = getdashnnode()
-          dashnode.shift = currentshift
-          hyphnode.font = currentfont
-          insert_after(line.head, lastseennode, dashnode)
-          addash=false
-        end
+
         if line_id then
           new_score_heights[prev_line_id] = { linenum, line_top, line_bottom,
               line_has_translation and 1 or 0,
@@ -830,8 +803,6 @@ local function post_linebreak(h, groupcode, glyphes)
           new_score_last_syllables[syl_id] = syl_id
         end
       end
-      -- we reinitialize the shift value, because it may change according to the line
-      currentshift=0
     end
   end
 
@@ -871,7 +842,43 @@ local function post_linebreak(h, groupcode, glyphes)
       end
     end
   end
-  
+
+  -- Look for words that are broken across lines and insert a hyphen
+  for line in traverse_id(hlist, h) do
+    if has_attribute(line, dash_attr) then
+      -- Look for the last node that has dash_attr > 0
+      local adddash=false
+      for n in traverse_id(hlist, line.head) do
+        -- If a syllable is not word-final, it may need a dash if it
+        -- ends up being line-final.
+        -- Note: This also loops over translations, but translations
+        -- come before lyrics, so they should never become lastseennode
+        if has_attribute(n, dash_attr, potentialdashvalue) then
+          adddash=true
+          lastseennode=n
+          -- if we encounter a text that doesn't need a dash, we acknowledge it
+        elseif has_attribute(n, dash_attr, nopotentialdashvalue) then
+          adddash=false
+        end
+      end
+
+      -- If the last syllable needed a dash, add it
+      if adddash then
+        local lastglyph
+        -- we traverse the list, to detect the font to use,
+        -- and also not to add an hyphen if there is already one
+        for g in node.traverse_id(glyph, lastseennode.head) do
+          lastglyph = g
+        end
+        if not (lastglyph.char == hyphen or lastglyph.char == 45) then
+          local dashnode, hyphnode = getdashnnode()
+          hyphnode.font = lastglyph.font
+          insert_after(lastseennode.head, lastglyph, dashnode)
+        end
+      end
+    end
+  end
+
   --dump_nodes(h)
   -- due to special cases, we don't return h here (see comments in bug #20974)
   return true
@@ -1290,6 +1297,7 @@ local function include_score(input_file, force_gabccompile, allow_deprecated)
       glog_file = string.format("%s%s-%s.glog", output_dir, cleaned_filename,
           internalversion:gsub("%.", "_"))
       compile_gabc(gabc_file, gtex_filename, glog_file, allow_deprecated)
+      gtex_filename = lfs.normalize(gtex_filename)
       tex.print(string.format([[\input %s\relax]], gtex_filename))
       return
     else
@@ -1298,6 +1306,7 @@ local function include_score(input_file, force_gabccompile, allow_deprecated)
     end
   end
   if not gabc_file then
+    gtex_file = lfs.normalize(gtex_file)
     tex.print(string.format([[\input %s\relax]], gtex_file))
     return
   end
@@ -1320,6 +1329,7 @@ local function include_score(input_file, force_gabccompile, allow_deprecated)
   elseif force_gabccompile then
     compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
   end
+  gtex_file = lfs.normalize(gtex_file)
   tex.print(string.format([[\input %s\relax]], gtex_file))
   return
 end
@@ -1641,7 +1651,9 @@ local function adjust_line_height(inside_discretionary, for_next_line)
     if for_next_line then
       local last = score_heights['last']
       if last then
-        local target_id = tex.getattribute(glyph_id_attr) + 1
+        -- Let target_id be the glyph_id of the last glyph on this line.
+        -- Then heights[target_id] is the information for the next line.
+        local target_id = tex.getattribute(glyph_id_attr)
         while target_id <= last do
           heights = score_heights[target_id]
           if heights then break end

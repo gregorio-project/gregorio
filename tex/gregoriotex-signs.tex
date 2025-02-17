@@ -705,44 +705,44 @@
   \or\gre@fontchar@custostoplong %
   \or\gre@fontchar@custostopshort %
   \or %
-    \ifgre@haslinethree %
+    \ifnum\gre@count@stafflines>2\relax
       \gre@fontchar@custostoplong %
     \else %
       \gre@fontchar@custosbottomlong %
     \fi %
   \or %
-    \ifgre@haslinethree %
+    \ifnum\gre@count@stafflines>2\relax
       \gre@fontchar@custostopshort %
     \else %
       \gre@fontchar@custosbottomshort %
     \fi %
   \or %
-    \ifgre@haslinefour %
+    \ifnum\gre@count@stafflines>3\relax
       \gre@fontchar@custostoplong %
     \else %
       \gre@fontchar@custosbottomlong %
     \fi %
   \or %
-    \ifgre@haslinefour %
+    \ifnum\gre@count@stafflines>3\relax
       \gre@fontchar@custostopshort %
     \else %
-      \ifgre@haslinethree %
+      \ifnum\gre@count@stafflines>2\relax
         \gre@fontchar@custosbottomshort %
       \else %
         \gre@fontchar@custosbottommiddle %
       \fi %
     \fi %
   \or %
-    \ifgre@haslinefive %
+    \ifnum\gre@count@stafflines>4\relax
       \gre@fontchar@custostoplong %
     \else %
       \gre@fontchar@custosbottomlong %
     \fi %
   \or %
-    \ifgre@haslinefive %
+    \ifnum\gre@count@stafflines>4\relax
       \gre@fontchar@custostopshort %
     \else %
-      \ifgre@haslinefour %
+      \ifnum\gre@count@stafflines>3\relax
         \gre@fontchar@custosbottomshort %
       \else %
         \gre@fontchar@custosbottommiddle %
@@ -750,7 +750,7 @@
     \fi %
   \or\gre@fontchar@custosbottomlong %
   \or %
-    \ifgre@haslinefive %
+    \ifnum\gre@count@stafflines>4\relax
       \gre@fontchar@custosbottomshort %
     \else %
       \gre@fontchar@custosbottommiddle %
@@ -1637,8 +1637,8 @@
       + \gre@space@dimen@spacebeneathtext %
       + \gre@space@dimen@spacelinestext %
       + \gre@dimen@currenttranslationheight %
-      + \gre@stafflines\gre@dimen@interstafflinespace %
-      + \gre@stafflines\gre@dimen@stafflineheight)\relax%
+      + \gre@count@stafflines\gre@dimen@interstafflinespace %
+      + \gre@count@stafflines\gre@dimen@stafflineheight)\relax%
   \or % 1
     \gre@dimen@glyphraisevalue=%
       \dimexpr(\gre@dimen@additionalbottomspace %

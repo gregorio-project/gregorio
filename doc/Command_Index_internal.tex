@@ -1294,9 +1294,6 @@ Sets the number of staff lines.
   \#1 & integer & The number of staff lines\\
 \end{argtable}
 
-\macroname{\textbackslash gre@stafflines}{}{gregoriotex-main.tex}
-Contains the number of staff lines.
-
 \macroname{\textbackslash gre@romannumeral@majuscule}{\#1}{gregoriotex-main.tex}
 Typesets its numeric argument as an upper-case Roman numeral.
 
@@ -1912,15 +1909,6 @@ Boolean set by \verb=\GreSyllable= indicating if the Lua pass may add an hyphen 
 \macroname{\textbackslash ifgre@scale@stafflinefactor}{}{gregoriotex-spaces.tex}
 Boolean indicating whether the stafflinefactor should scale with changes of \texttt{grefactor}, or not.
 
-\macroname{\textbackslash ifgre@haslinethree}{}{gregoriotex-spaces.tex}
-Boolean indicating whether the staff has a third line.
-
-\macroname{\textbackslash ifgre@haslinefour}{}{gregoriotex-spaces.tex}
-Boolean indicating whether the staff has a fourth line.
-
-\macroname{\textbackslash ifgre@haslinefive}{}{gregoriotex-spaces.tex}
-Boolean indicating whether the staff has a fifth line.
-
 \macroname{\textbackslash gre@count@shiftaftermora}{}{gregoriotex-signs.tex}
 Count indicating when the presence of a punctum mora at the end of a syllable should affect the spacing with the next syllable.
 
@@ -2023,6 +2011,9 @@ Boolean indicating that some aspect of the next syllable is being evaluated in a
 
 \macroname{\textbackslash ifgre@noteadditionalspacelinestext}{}{gregoriotex-main.tex}
 Boolean indicating that the additional space needed between the notes and the lyrics due to really low notes should follow the user setting of noteadditionalspacelinestext (as opposed to being calculated automatically, the default).
+
+\macroname{\textbackslash gre@count@stafflines}{}{gregoriotex-main.tex}
+Count containing the number of staff lines.
 
 \macroname{\textbackslash ifgre@alteration@effect@note}{}{gregoriotex-signs.tex}
 Boolean indicating that soft alterations should last until they apply to a single note (i.e. all soft alterations will be printed).
