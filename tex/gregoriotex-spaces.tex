@@ -147,15 +147,6 @@
   \gre@trace@end%
 }%
 
-% stafflinewidth is the width of a line of staff, this can vary, for example at the first line
-\newdimen\gre@dimen@stafflinewidth\relax%
-\def\gre@calculate@stafflinewidth{%
-  \gre@trace{gre@calculate@stafflinewidth}%
-  \gre@dimen@stafflinewidth=\gre@dimen@linewidth\relax%
-  \gre@trace@end%
-}%
-
-
 % linewidth is the width of a line of a score (including the initial)
 \newdimen\gre@dimen@linewidth\relax%
 \def\gre@calculate@linewidth{%
@@ -243,7 +234,6 @@
 %% Dependencies:
 %% textlower: spacebeneathtext
 %% linewidth: hsize
-%% stafflinewidth: linewidth
 %% stafflineheight: stafflinefactor & gre@factor
 %% interstafflinespace: stafflineheight & gre@factor
 %% stafflinediff: stafflineheight & gre@factor
@@ -253,7 +243,6 @@
   \gre@trace{gre@computespaces}%
   \gre@calculate@textlower%
   \gre@calculate@linewidth%
-  \gre@calculate@stafflinewidth%
   \gre@calculate@stafflineheight%
   \gre@calculate@interstafflinespace%
   \gre@calculate@stafflinediff%
