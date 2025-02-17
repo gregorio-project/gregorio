@@ -9,11 +9,6 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 
 
 ## [6.1.0-beta2] - 2025-02-17
-
-
-
-
-## [6.1.0-beta1] - 2025-02-10
 ### Fixed
 - Multiple Scribus render frames were all using the same file name, which would result in the same score appearing in all render frames.  This change makes the score files use an available Scribus variable to force multiple file names.
 - When kpsewhich cannot write to a particular location, it generates an error which is directed to stderr but not to our glog file.  This created an undocumented error when trying to write to a gtex file to a bad location.  We now capture stderr output produced when compiling scores and redirect it to our glog file so that the error is properly recorded.  Fixes [#1541](https://github.com/gregorio-project/gregorio/issues/1541).
