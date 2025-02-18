@@ -128,3 +128,4 @@ ctan
 .agignore
 *.orig
 compile_commands.json
+*.err
