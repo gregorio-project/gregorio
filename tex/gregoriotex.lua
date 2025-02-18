@@ -1155,7 +1155,7 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
   if status.shell_escape == 1 then
     cmd = string.format('%s 2> %s.err', cmd, glog_file)
   else
-    info('Running in restricted mode.\n Some file related errors may not be caputered.\n'
+    info('Running in restricted mode.\n Some kpse file related errors may not be caputered.\n'
       ..'Try running with --shell-escape active for more complete error loging.')
   end
   res = os.execute(cmd)
