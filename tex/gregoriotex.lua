@@ -1152,7 +1152,7 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
 
   local cmd = string.format('%s %s -W -o %s -l %s "%s"', gregorio_exe(),
       extra_args, gtex_file, glog_file, gabc_file)
-  if status.shell_escape then
+  if status.shell_escape == 1 then
     cmd = string.format('%s 2> %s.err', cmd, glog_file)
   else
     info('Running in restricted mode.\n Some file related errors may not be caputered.\n'
