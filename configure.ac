@@ -129,5 +129,6 @@ AC_CONFIG_FILES([
     doc/Makefile
     tex/Makefile
     fonts/Makefile
+    macosx/Makefile
 ])
 AC_OUTPUT

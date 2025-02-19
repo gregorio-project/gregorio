@@ -165,6 +165,7 @@ COPYRIGHT_FILES = ["install-gtex.sh",
                    "windows/gregorio.iss",
                    "windows/install.lua",
                    "windows/uninstall.lua",
+                   "macosx/Makefile.am",
                   ]
 
 def strtobool(val):
