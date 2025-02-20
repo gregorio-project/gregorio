@@ -59,4 +59,4 @@ dist-macosx: gregorio doc fonts
 	$(MAKE) -C macosx dist-macosx
 
 clean-macosx:
-	$(MAKE) -C macosx clean
+	$(MAKE) -C macosx clean-local
