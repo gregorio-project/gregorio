@@ -14,6 +14,12 @@
 #      --force=    : force autoreconf
 #      {other)     : anything else is passed to configure verbatim
 
+# Before we do anything we make sure our working directory is the top level of the
+# repository (where this script is located).  This allows us to call this script from
+# other folders and still have it work.
+cd "${0%/*}"
+
+
 # try to find bash, in case the standard shell is not capable of
 # handling the generated configure's += variable assignments
 if which bash >/dev/null
@@ -84,7 +90,7 @@ then
   OLDPATH=$PATH
   PATH=/usr/$MINGWSTR/bin:$PATH
   CFLAGS="-mtune=pentiumpro -msse2 -g -O2 $CFLAGS"
-  LDFLAGS="-Wl,--large-address-aware $CFLAGS"
+  LDFLAGS="-static -Wl,--large-address-aware $CFLAGS"
   ARCHFLAGS="--target=\"$MINGWSTR\" \
     --with-gnu-ld \
     --host=$MINGWSTR \
