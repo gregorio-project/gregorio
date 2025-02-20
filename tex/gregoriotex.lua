@@ -1088,58 +1088,6 @@ function lfs.dirname(oldpath)
   return path
 end
 
--- Recursive directory creation a la mkdir -p. Unlike lfs.mkdir, this will
--- create missing intermediate directories, and will not fail if the
--- destination directory already exists.
--- It assumes that the directory separator is '/' and that the path is valid
--- for the OS it's running on, e.g. no trailing slashes on windows -- it's up
--- to the caller to ensure this!
-function lfs.rmkdir(path)
-  path = lfs.normalize(path)
-  if lfs.exists(path) then
-    return true
-  end
-  if lfs.dirname(path) == path then
-    -- We're being asked to create the root directory!
-    return nil,"rmkdir: unable to create root directory"
-  end
-  local r,err = lfs.rmkdir(lfs.dirname(path))
-  if not r then
-    return nil,err.." (creating "..path..")"
-  end
-  return lfs.mkdir(path)
-end
--- end https://github.com/ToxicFrog/luautil/blob/master/lfs.lua
-
-local function clean_old_gtex_files(file_withdir)
-  local filename = ""
-  local dirpath = ""
-  local sep = ""
-  local onwindows = os.type == "windows" or
-    string.find(os.getenv("PATH"),";",1,true)
-  if onwindows then
-    sep = "\\"
-  else
-    sep = "/"
-  end
-  dirpath = string.match(file_withdir, "(.*)"..sep)
-  if dirpath then -- dirpath is nil if current directory
-    filename = "^"..file_withdir:match(".*/".."(.*)").."%-%d+_%d+_%d+[-%a%d]*%.gtex$"
-    if lfs.exists(dirpath) then
-      for a in lfs.dir(dirpath) do
-        if a:match(filename) then
-          os.remove(dirpath..sep..a)
-        end
-      end
-    end
-  else
-    filename = "^"..file_withdir.."%-%d+_%d+_%d+[-%a%d]*%.gtex$"
-    for a in lfs.dir(lfs.currentdir()) do
-      if a:match(filename) then os.remove(a) end
-    end
-  end
-end
-
 local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
   info("compiling the score %s...", gabc_file)
   local extra_args = ''
@@ -1226,101 +1174,80 @@ local function locate_file(filename)
   return result
 end
 
-local function include_score(input_file, force_gabccompile, allow_deprecated)
-  if string.match(input_file, "[#%%]") then
-    err("GABC filename contains invalid character(s): # %%\n"
-        .."Rename the file and retry: %s", input_file)
-  end
-  local has_extention = false
-  local file_dir,input_name
-  local extensions = {['gabc']=true, ['gtex']=true, ['tex']=true}
-  if extensions[string.match(input_file, "([^%.\\/]*)$")] then
-    has_extention = true
-  end
-  if has_extention then
-    file_dir,input_name = string.match(input_file, "(.-)([^\\/]-)%.?[^%.\\/]*$")
+local function include_score(gabc_file, force_gabccompile, allow_deprecated)
+  local sep = ""
+  local onwindows = (os.type == "windows" or
+                     string.find(os.getenv("PATH"),";",1,true))
+  if onwindows then
+    sep = "\\"
   else
-    file_dir,input_name = string.match(input_file, "(.-)([^\\/]*)$")
+    sep = "/"
   end
+    
+  if string.match(gabc_file, "[#%%]") then
+    err("GABC filename contains invalid character(s): # %%\n"
+        .."Rename the file and retry: %s", gabc_file)
+  end
+  local gabc_dir, base
+  local extensions = {['gabc']=true, ['gtex']=true, ['tex']=true}
+  if extensions[string.match(gabc_file, "([^%.\\/]*)$")] then
+    gabc_dir, base = string.match(gabc_file, "(.-)([^\\/]-)%.?[^%.\\/]*$")
+  else
+    gabc_dir, base = string.match(gabc_file, "(.-)([^\\/]*)$")
+  end
+  local cleaned_base = base:gsub("[%s%+%&%*%?$@:;!\"\'`]", "-")
 
-  local cleaned_filename = input_name:gsub("[%s%+%&%*%?$@:;!\"\'`]", "-")
-  local gabc_filename = string.format("%s%s.gabc", file_dir, input_name)
-  local gabc_file = locate_file(gabc_filename)
-  local gtex_filename = string.format("%s%s-%s.gtex", file_dir, cleaned_filename,
-      internalversion:gsub("%.", "_"))
-  local gtex_file = locate_file(gtex_filename)
-  local glog_file = string.format("%s%s-%s.glog", file_dir, cleaned_filename,
-      internalversion:gsub("%.", "_"))
-  if not gtex_file then
-    clean_old_gtex_files(file_dir..cleaned_filename)
-    log("The file %s does not exist. Will use gabc file", gtex_filename)
-    if gabc_file then
-      local gabc = io.open(gabc_file, 'r')
-      if gabc == nil then
-        err("\n Unable to open %s", gabc_file)
-        return
-      else
-        gabc:close()
-      end
-      local sep = ""
-      local onwindows = os.type == "windows" or
-        string.find(os.getenv("PATH"),";",1,true)
-      if onwindows then
-        sep = "\\"
-      else
-        sep = "/"
-      end
-      local output_dir = base_output_dir..sep..file_dir
-      info(output_dir)
-      if not lfs.exists(output_dir) then
-        if not lfs.exists(base_output_dir) then
-          lfs.mkdir(base_output_dir)
-        end
-        local err,message = lfs.rmkdir(output_dir)
-        if not err then
-          info(message)
-        end
-      end
-      gtex_filename = string.format("%s%s-%s.gtex", output_dir, cleaned_filename,
-          internalversion:gsub("%.", "_"))
-      glog_file = string.format("%s%s-%s.glog", output_dir, cleaned_filename,
-          internalversion:gsub("%.", "_"))
-      compile_gabc(gabc_file, gtex_filename, glog_file, allow_deprecated)
-      gtex_filename = lfs.normalize(gtex_filename)
-      tex.print(string.format([[\input %s\relax]], gtex_filename))
+  -- Check that we can read gabc file
+  gabc_file = string.format("%s%s.gabc", gabc_dir, base)
+  local gabc_path = locate_file(gabc_file)
+  if not gabc_path then
+      err("The file %s does not exist", gabc_file)
       return
-    else
-      err("The file %s does not exist", gabc_filename)
-      return
-    end
   end
-  if not gabc_file then
-    gtex_file = lfs.normalize(gtex_file)
-    tex.print(string.format([[\input %s\relax]], gtex_file))
-    return
-  end
-  local gtex_timestamp = lfs.attributes(gtex_file).modification
-  local gabc_timestamp = lfs.attributes(gabc_file).modification
-  -- open the gabc file for reading so that LuaTeX records input from it
-  -- when the -recorder option is used; do this here so that this happens
-  -- on every run
-  tex.sprint(catcode_at_letter, string.format(
-      [[\openin\gre@read@temp=%s\relax\closein\gre@read@temp]], gabc_file))
+  gabc_file = gabc_path
   local gabc = io.open(gabc_file, 'r')
   if gabc == nil then
     err("\n Unable to open %s", gabc_file)
+    return
   else
     gabc:close()
   end
-  if gtex_timestamp < gabc_timestamp then
-    log("%s has been modified and %s needs to be updated. Recompiling the gabc file.", gabc_file, gtex_file)
-    compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
-  elseif force_gabccompile then
+
+  -- Set up output directory
+  local output_dir = base_output_dir..sep..gabc_dir
+  info('Output directory: %s', output_dir)
+  if not lfs.exists(output_dir) then
+    local ok, message = lfs.mkdirp(output_dir)
+    if not ok then
+      info('Could not create directory %s: %s', output_dir, message)
+    end
+  end
+    
+  -- Choose output filenames
+  gtex_file = string.format("%s%s-%s.gtex", output_dir, cleaned_base,
+                            internalversion:gsub("%.", "_"))
+  glog_file = string.format("%s%s-%s.glog", output_dir, cleaned_base,
+                            internalversion:gsub("%.", "_"))
+
+  -- Decide if we need to recompile
+  local needs_compile = false
+  if not lfs.exists(gtex_file) then
+    log("The file %s does not exist. Will use gabc file", gtex_file)
+    needs_compile = true
+  else
+    local gtex_timestamp = lfs.attributes(gtex_file).modification
+    local gabc_timestamp = lfs.attributes(gabc_file).modification
+    if gtex_timestamp < gabc_timestamp then
+      log("%s has been modified and %s needs to be updated. Recompiling the gabc file.", gabc_file, gtex_file)
+      needs_compile = true
+    end
+  end
+  if needs_compile then
     compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
   end
-  gtex_file = lfs.normalize(gtex_file)
-  tex.print(string.format([[\input %s\relax]], gtex_file))
-  return
+
+  -- Input the gtex file
+  tex.print(string.format([[\input %s\relax]], lfs.normalize(gtex_file)))
 end
 
 local function direct_gabc(gabc, header, allow_deprecated)
