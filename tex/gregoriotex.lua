@@ -1085,6 +1085,28 @@ function lfs.dirname(oldpath)
   return path
 end
 
+local function delete_versioned_files(dir, base, ext)
+  -- Assume that dir is either empty (current directory) or ends with separator
+  filename = "^"..base.."%-%d+_%d+_%d+[-%a%d]*%."..ext.."$"
+  if dir ~= "" then
+    if lfs.exists(dir) then
+      for a in lfs.dir(dir) do
+        if a:match(filename) then
+          info("Deleting old file %s", dir..a)
+          os.remove(dir..a)
+        end
+      end
+    end
+  else
+    for a in lfs.dir(lfs.currentdir()) do
+      if a:match(filename) then
+        info("Deleting old file %s", a)
+        os.remove(a)
+      end
+    end
+  end
+end
+
 function table.extend(x, y)
   table.move(y, 1, #y, #x+1, x)
 end
@@ -1242,6 +1264,14 @@ local function include_score(gabc_file, force_gabccompile, allow_deprecated)
     end
   end
   if needs_compile then
+    -- Delete old gtex files.
+    -- Before version 6.1, gtex files were stored in gabc_dir
+    delete_versioned_files(gabc_dir, base_cleaned, 'gtex')
+    delete_versioned_files(gabc_dir, base_cleaned, 'glog')
+    -- Since version 6.1, gtex files are stored in output_dir
+    delete_versioned_files(output_dir, base_cleaned, 'gtex')
+    delete_versioned_files(output_dir, base_cleaned, 'glog')
+
     local gabc = io.open(gabc_file, 'r')
     if gabc == nil then
       err("\n Unable to open %s", gabc_found)
