@@ -1197,22 +1197,10 @@ local function include_score(gabc_file, force_gabccompile, allow_deprecated)
   end
   local cleaned_base = base:gsub("[%s%+%&%*%?$@:;!\"\'`]", "-")
 
-  -- Check that we can read gabc file
+  -- Find gabc file
   gabc_file = string.format("%s%s.gabc", gabc_dir, base)
   local gabc_path = locate_file(gabc_file)
-  if not gabc_path then
-      err("The file %s does not exist", gabc_file)
-      return
-  end
-  gabc_file = gabc_path
-  local gabc = io.open(gabc_file, 'r')
-  if gabc == nil then
-    err("\n Unable to open %s", gabc_file)
-    return
-  else
-    gabc:close()
-  end
-
+  
   -- Set up output directory
   local output_dir = base_output_dir..sep..gabc_dir
   info('Output directory: %s', output_dir)
@@ -1231,18 +1219,34 @@ local function include_score(gabc_file, force_gabccompile, allow_deprecated)
 
   -- Decide if we need to recompile
   local needs_compile = false
-  if not lfs.exists(gtex_file) then
-    log("The file %s does not exist. Will use gabc file", gtex_file)
-    needs_compile = true
-  else
-    local gtex_timestamp = lfs.attributes(gtex_file).modification
-    local gabc_timestamp = lfs.attributes(gabc_file).modification
-    if gtex_timestamp < gabc_timestamp then
-      log("%s has been modified and %s needs to be updated. Recompiling the gabc file.", gabc_file, gtex_file)
+  if gabc_path then
+    if lfs.exists(gtex_file) then
+      local gtex_timestamp = lfs.attributes(gtex_file).modification
+      local gabc_timestamp = lfs.attributes(gabc_file).modification
+      if gtex_timestamp < gabc_timestamp then
+        log("%s has been modified and %s needs to be updated. Recompiling the gabc file", gabc_file, gtex_file)
+        needs_compile = true
+      end
+    else
+      log("The file %s does not exist. Compiling gabc file", gtex_file)
       needs_compile = true
+    end
+  else
+    if lfs.exists(gtex_file) then
+      log("The file %s does not exist. Using gtex file", gabc_file)
+    else
+      err("The file %s does not exist", gabc_file)
+      return
     end
   end
   if needs_compile then
+    local gabc = io.open(gabc_file, 'r')
+    if gabc == nil then
+      err("\n Unable to open %s", gabc_file)
+      return
+    else
+      gabc:close()
+    end
     compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
   end
 
