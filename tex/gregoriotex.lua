@@ -1197,11 +1197,11 @@ local function include_score(gabc_file, force_gabccompile, allow_deprecated)
   else
     gabc_dir, base = string.match(gabc_file, "(.-)([^\\/]*)$")
   end
-  local cleaned_base = base:gsub("[%s%+%&%*%?$@:;!\"\'`]", "-")
+  local base_cleaned = base:gsub("[%s%+%&%*%?$@:;!\"\'`]", "-")
 
   -- Find gabc file
   gabc_file = string.format("%s%s.gabc", gabc_dir, base)
-  local gabc_path = locate_file(gabc_file)
+  local gabc_found = locate_file(gabc_file)
   
   -- Set up output directory
   local output_dir = base_output_dir..sep..gabc_dir
@@ -1214,19 +1214,19 @@ local function include_score(gabc_file, force_gabccompile, allow_deprecated)
   end
     
   -- Choose output filenames
-  gtex_file = string.format("%s%s-%s.gtex", output_dir, cleaned_base,
+  gtex_file = string.format("%s%s-%s.gtex", output_dir, base_cleaned,
                             internalversion:gsub("%.", "_"))
-  glog_file = string.format("%s%s-%s.glog", output_dir, cleaned_base,
+  glog_file = string.format("%s%s-%s.glog", output_dir, base_cleaned,
                             internalversion:gsub("%.", "_"))
 
   -- Decide if we need to recompile
   local needs_compile = false
-  if gabc_path then
+  if gabc_found then
     if lfs.exists(gtex_file) then
       local gtex_timestamp = lfs.attributes(gtex_file).modification
-      local gabc_timestamp = lfs.attributes(gabc_file).modification
+      local gabc_timestamp = lfs.attributes(gabc_found).modification
       if gtex_timestamp < gabc_timestamp then
-        log("%s has been modified and %s needs to be updated. Recompiling the gabc file", gabc_file, gtex_file)
+        log("%s has been modified and %s needs to be updated. Recompiling the gabc file", gabc_found, gtex_file)
         needs_compile = true
       end
     else
@@ -1235,7 +1235,7 @@ local function include_score(gabc_file, force_gabccompile, allow_deprecated)
     end
   else
     if lfs.exists(gtex_file) then
-      log("The file %s does not exist. Using gtex file", gabc_file)
+      log("The file %s does not exist. Using gtex file", gabc_found)
     else
       err("The file %s does not exist", gabc_file)
       return
@@ -1244,12 +1244,12 @@ local function include_score(gabc_file, force_gabccompile, allow_deprecated)
   if needs_compile then
     local gabc = io.open(gabc_file, 'r')
     if gabc == nil then
-      err("\n Unable to open %s", gabc_file)
+      err("\n Unable to open %s", gabc_found)
       return
     else
       gabc:close()
     end
-    compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
+    compile_gabc(gabc_found, gtex_file, glog_file, allow_deprecated)
   end
 
   -- Input the gtex file
