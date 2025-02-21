@@ -139,9 +139,8 @@ local translation_mark = 1
 local abovelinestext_mark = 2
 log("marker whatsit id is %d", marker_whatsit_id)
 
-local function get_prog_output(cmd, fmt)
-  cmd = string.format(cmd, tmpname)
-  local rc = os.execute(cmd)
+local function get_prog_output(cmd, tmpname, fmt)
+  local rc = os.spawn(cmd)
   local content = nil
   if rc == 0 then
     local f = io.open(tmpname, 'r');
@@ -164,15 +163,13 @@ local function gregorio_exe()
 
     -- first look for one with the exact version
     real_gregorio_exe = 'gregorio-6_1_0-beta2' -- FILENAME_VERSION
-    local cmd = string.format([[%s -o "%%s" "%s"]], real_gregorio_exe,
-        test_snippet_filename)
-    exe_version = get_prog_output(cmd, '*line')
+    local cmd = {real_gregorio_exe, '-o', tmpname, test_snippet_filename}
+    exe_version = get_prog_output(cmd, tmpname, '*line')
     if not exe_version then
       -- look for suffix-less executable
       real_gregorio_exe = 'gregorio'
-      cmd = string.format([[%s -o "%%s" "%s"]], real_gregorio_exe,
-          test_snippet_filename)
-      exe_version = get_prog_output(cmd, '*line')
+      cmd = {real_gregorio_exe, '-o', tmpname, test_snippet_filename}
+      exe_version = get_prog_output(cmd, tmpname, '*line')
     end
     if not exe_version or string.match(exe_version,"%d+%.%d+%.")
         ~= string.match(internalversion,"%d+%.%d+%.") then
@@ -1088,19 +1085,24 @@ function lfs.dirname(oldpath)
   return path
 end
 
+function table.extend(x, y)
+  table.move(y, 1, #y, #x+1, x)
+end
+
 local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
   info("compiling the score %s...", gabc_file)
-  local extra_args = ''
+  local cmd = {gregorio_exe()}
   if tex.count['gre@generate@pointandclick'] == 1 then
-    extra_args = extra_args..' -p'
+    table.insert(cmd, '-p')
   end
   if not allow_deprecated then
-    extra_args = extra_args..' -D'
+    table.insert(cmd, '-D')
   end
 
-  local cmd = string.format('%s %s -W -o %s -l %s "%s"', gregorio_exe(),
-                            extra_args, gtex_file, glog_file, gabc_file)
-  res = os.execute(cmd)
+  table.extend(cmd, {'-W', '-o', gtex_file, '-l', glog_file, gabc_file})
+  res = os.spawn(cmd)
+  info("running: %s", table.concat(cmd, ' '))
+
   if res == nil then
     err("\nSomething went wrong when executing\n    '%s'.\n"
         .."shell-escape mode may not be activated. Try\n\n"
@@ -1256,20 +1258,16 @@ end
 
 local function direct_gabc(gabc, header, allow_deprecated)
   info('Processing gabc snippet...')
-  local deprecated
-  if allow_deprecated then
-    deprecated = ''
-  else
-    deprecated = '-D '
-  end
   local f = io.open(snippet_filename, 'w')
   -- trims spaces on both ends (trim6 from http://lua-users.org/wiki/StringTrim)
   gabc = gabc:match('^()%s*$') and '' or gabc:match('^%s*(.*%S)')
   f:write('name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par', '\n'))
   f:close()
-  local cmd = string.format([[%s -W %s-o "%%s" -l "%s" "%s"]], gregorio_exe(),
-      deprecated, snippet_logname, snippet_filename)
-  local content = get_prog_output(cmd, '*a')
+  cmd = {gregorio_exe(), '-W'}
+  if allow_deprecated then table.insert(cmd, '-D') end
+  table.extend(cmd, {'-o', tmpname, '-l', snippet_logname, snippet_filename})
+  info('Running %s', table.concat(cmd, ' '))
+  local content = get_prog_output(cmd, tmpname, '*a')
   if content == nil then
     err("\nSomething went wrong when executing\n    %s\n"
         .."shell-escape mode may not be activated. Try\n\n"
