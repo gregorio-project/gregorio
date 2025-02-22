@@ -58,8 +58,6 @@ AX_CHECK_LINK_FLAG([-Wl,-z,now], [LDFLAGS+=" -Wl,-z,now"])
 AX_CHECK_LINK_FLAG([-fPIE], [LDFLAGS+=" -fPIE"])
 AX_CHECK_LINK_FLAG([-pie], [LDFLAGS+=" -pie"])
 
-AC_HEADER_STDC
-
 gl_FUNC_REALPATH_WORKS
 
 dnl linux has integer types in stdint.h, solaris, vms in inttypes.h
