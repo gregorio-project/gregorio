@@ -55,8 +55,13 @@ ctan: gregoriotex.tds.zip build-ctan.sh
 dist-hook:
 	rm -rf $(distdir)/windows
 
+if MACOSX
 dist-macosx: gregorio doc fonts
 	$(MAKE) -C macosx dist-macosx
+else
+dist-macosx:
+	@echo "macOS packages can only be built on Mac systems."
+endif
 
 clean-macosx:
 	$(MAKE) -C macosx clean-local
