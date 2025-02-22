@@ -29,4 +29,4 @@ This will create `src/gregorio-<version number>.exe`
 
 You need [InnoSetup](http://www.jrsoftware.org/isinfo.php) to be able to compile the installer. It runs fine under [Wine](https://www.winehq.org/). Once you have it installed: run InnoSetup.exe, open the `windows/gregorio.iss` file and compile it, it will produce `windows/Output/mysetup.exe`. You can also run it from command line: `wine 'C:\\Program Files (x86)\Inno Setup 6\ISCC.exe' gregorio.iss` in the `windows` directory (replace the `ISCC.exe` path with yours if different).
 
-**Note:** If you're building the compiler on Ubuntu 14.04 (because of the above issue with mingw32) then you will need Inno Setup 5.x.  This is because the version of wine available on Ubuntu 14.04 emulates a version of Windows which is not compatible with Inno Setup 6.x.
+**Note:** If you're building the compiler on Ubuntu 14.04 (because of the above issue with mingw32) then you will need Inno Setup 5.x (which is installed to `C:\\Program Files (x86)\Inno Setup 5\` by default).  This is because the version of wine available on Ubuntu 14.04 emulates a version of Windows which is not compatible with Inno Setup 6.x.
