@@ -1232,6 +1232,7 @@ local function include_score(gabc_file, force_gabccompile, allow_deprecated)
   
   -- Set up output directory
   local output_dir = base_output_dir..sep..gabc_dir
+  output_dir = output_dir:gsub('%.%.', 'dotdot')
   info('Output directory: %s', output_dir)
   if not lfs.exists(output_dir) then
     local ok, message = lfs.mkdirp(output_dir)
@@ -1277,7 +1278,7 @@ local function include_score(gabc_file, force_gabccompile, allow_deprecated)
     delete_versioned_files(output_dir, base_cleaned, 'gtex')
     delete_versioned_files(output_dir, base_cleaned, 'glog')
 
-    local gabc = io.open(gabc_file, 'r')
+    local gabc = io.open(gabc_found, 'r')
     if gabc == nil then
       err("\n Unable to open %s", gabc_found)
       return
