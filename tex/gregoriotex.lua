@@ -1122,8 +1122,8 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
   end
 
   table.extend(cmd, {'-W', '-o', gtex_file, '-l', glog_file, gabc_file})
-  res = os.spawn(cmd)
   info("running: %s", table.concat(cmd, ' '))
+  res = os.spawn(cmd)
 
   if res == nil then
     err("\nSomething went wrong when executing\n    '%s'.\n"
@@ -1131,20 +1131,25 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
         .."%s --shell-escape %s.tex\n\n"
         .."See the documentation of Gregorio or your TeX\n"
         .."distribution to automatize it.",
-        cmd, tex.formatname, tex.jobname)
+        table.concat(cmd, ' '), tex.formatname, tex.jobname)
+  elseif res ~= 0 then
+    err("\nSomething went wrong when executing\n    '%s'",
+        table.concat(cmd, ' '))
   else
-    -- Copy the contents of glog_file into warnings.
-    -- Open it for writing so that the LuaTeX recorder knows that gregorio wrote to it.
-    local glog = io.open(glog_file, 'a+')
+    -- Open glog_file for writing so that the LuaTeX recorder knows that gregorio wrote to it.
+    local glog = io.open(gtex_file, 'a')
     if glog == nil then
-      err("\n Unable to open %s", glog_file)
+      warn("\n Unable to open %s for writing. If another program depends on %s, latexmk may not recognize the dependency", glog_file, glog_file)
     else
-      local size = glog:seek('end')
-      if size > 0 then
-        glog:seek('set')
-        for line in glog:lines() do
-          warn(line)
-        end
+      glog:close()
+    end
+    -- Copy the contents of glog_file into warnings.
+    glog = io.open(glog_file, 'r')
+    if glog == nil then
+      err("\n Unable to open %s for reading", glog_file)
+    else
+      for line in glog:lines() do
+        warn(line)
       end
       glog:close()
     end
