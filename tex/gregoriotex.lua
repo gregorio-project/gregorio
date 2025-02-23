@@ -1263,7 +1263,7 @@ local function include_score(gabc_file, force_gabccompile, allow_deprecated)
     end
   else
     if lfs.exists(gtex_file) then
-      log("The file %s does not exist. Using gtex file", gabc_found)
+      log("The file %s does not exist. Using gtex file", gabc_file)
     else
       err("The file %s does not exist", gabc_file)
       return
