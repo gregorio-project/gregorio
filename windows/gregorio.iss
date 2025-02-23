@@ -1,7 +1,7 @@
 [Setup]
 AppName=gregorio
 AppVersion=6.1.0-beta2
-DefaultDirName={pf}\gregorio
+DefaultDirName={commonpf}\gregorio
 DefaultGroupName=gregorio
 SetupIconFile=gregorio.ico
 Compression=lzma2
@@ -13,8 +13,6 @@ AppContact=gregorio-devel@googlegroups.com
 AppPublisher=The Gregorio Project
 AppPublisherURL=https://github.com/gregorio-project/gregorio
 AppReadmeFile=https://github.com/gregorio-project/gregorio
-BackColor=$D4AE65
-BackColor2=$FDF7EB
 WizardSmallImageFile=gregorio-32.bmp
 WizardImageFile=gregorio-image.bmp
 ChangesAssociations=yes
