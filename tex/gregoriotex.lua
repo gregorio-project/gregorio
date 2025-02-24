@@ -1137,7 +1137,7 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
         table.concat(cmd, ' '))
   else
     -- Open glog_file for writing so that the LuaTeX recorder knows that gregorio wrote to it.
-    local glog = io.open(gtex_file, 'a')
+    local glog = io.open(glog_file, 'a')
     if glog == nil then
       warn("\n Unable to open %s for writing. If another program depends on %s, latexmk may not recognize the dependency", glog_file, glog_file)
     else
