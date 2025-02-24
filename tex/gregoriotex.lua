@@ -389,19 +389,18 @@ local function init(arg, enable_height_computation)
       end
     end
   end
+  
+  local basepath = tex.jobname
   if outputdir and lfs.isdir(outputdir) then
-    auxname = outputdir..'/'..tex.jobname..'.gaux'
-    tmpname = outputdir..'/'..tex.jobname..'.gtmp'
-    test_snippet_filename = outputdir..'/'..tex.jobname..'.test.gsnippet'
-    snippet_filename = outputdir..'/'..tex.jobname..'.gsnippet'
-    snippet_logname = outputdir..'/'..tex.jobname..'.gsniplog'
-  else
-    auxname = tex.jobname..'.gaux'
-    tmpname = tex.jobname..'.gtmp'
-    test_snippet_filename = tex.jobname..'.test.gsnippet'
-    snippet_filename = tex.jobname..'.gsnippet'
-    snippet_logname = tex.jobname..'.gsniplog'
+    basepath = outputdir..'/'..basepath
   end
+  basepath = lfs.normalize(basepath)
+    
+  auxname = basepath..'.gaux'
+  tmpname = basepath..'.gtmp'
+  test_snippet_filename = basepath..'.test.gsnippet'
+  snippet_filename = basepath..'.gsnippet'
+  snippet_logname = basepath..'.gsniplog'
 
   -- to get latexmk to realize the aux file is a dependency
   texio.write_nl('('..auxname..')')
@@ -1178,6 +1177,7 @@ local function locate_file(filename)
     gre_input_path = {""}
   end
   for i,k in pairs(gre_input_path) do
+    k = lfs.normalize(k)
     log("Looking in %s", k)
     if lfs.isfile(k .. filename) then
       result = k..filename
@@ -1204,35 +1204,33 @@ local function locate_file(filename)
 end
 
 local function include_score(gabc_file, force_gabccompile, allow_deprecated)
-  local sep = ""
-  local onwindows = (os.type == "windows" or
-                     string.find(os.getenv("PATH"),";",1,true))
-  if onwindows then
-    sep = "\\"
-  else
-    sep = "/"
-  end
-    
+  gabc_file = lfs.normalize(gabc_file)
+  
   if string.match(gabc_file, "[#%%]") then
     err("GABC filename contains invalid character(s): # %%\n"
         .."Rename the file and retry: %s", gabc_file)
   end
   local gabc_dir, base
   local extensions = {['gabc']=true, ['gtex']=true, ['tex']=true}
-  if extensions[string.match(gabc_file, "([^%.\\/]*)$")] then
-    gabc_dir, base = string.match(gabc_file, "(.-)([^\\/]-)%.?[^%.\\/]*$")
+  if extensions[string.match(gabc_file, "([^%./]*)$")] then
+    gabc_dir, base = string.match(gabc_file, "(.-)([^/]-)%.?[^%./]*$")
   else
-    gabc_dir, base = string.match(gabc_file, "(.-)([^\\/]*)$")
+    gabc_dir, base = string.match(gabc_file, "(.-)([^/]*)$")
   end
   local base_cleaned = base:gsub("[%s%+%&%*%?$@:;!\"\'`]", "-")
 
   -- Find gabc file
   gabc_file = string.format("%s%s.gabc", gabc_dir, base)
   local gabc_found = locate_file(gabc_file)
+  gabc_found = lfs.normalize(gabc_found)
   
   -- Set up output directory
-  local output_dir = base_output_dir..sep..gabc_dir
-  output_dir = output_dir:gsub('%.%.', 'dotdot')
+  local output_dir = base_output_dir..'/'..gabc_dir
+  output_dir = string.explode(output_dir, '/')
+  for i, _ in ipairs(output_dir) do
+    if output_dir[i] == '..' then output_dir[i] = 'dotdot' end
+  end
+  output_dir = table.concat(output_dir, '/')
   info('Output directory: %s', output_dir)
   if not lfs.exists(output_dir) then
     local ok, message = lfs.mkdirp(output_dir)
@@ -1289,7 +1287,7 @@ local function include_score(gabc_file, force_gabccompile, allow_deprecated)
   end
 
   -- Input the gtex file
-  tex.print(string.format([[\input %s\relax]], lfs.normalize(gtex_file)))
+  tex.print(string.format([[\input %s\relax]], gtex_file))
 end
 
 local function direct_gabc(gabc, header, allow_deprecated)
