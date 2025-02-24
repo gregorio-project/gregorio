@@ -103,7 +103,7 @@ local snippet_logname = nil
 
 local base_output_dir = 'tmp-gre'
 local function set_base_output_dir(new_dirname)
-  base_output_dir = new_dirname
+  base_output_dir = lfs.normalize(new_dirname)
 end
 
 local space_below_staff = 5
