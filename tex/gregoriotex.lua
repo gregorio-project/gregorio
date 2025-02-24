@@ -1090,6 +1090,7 @@ local function delete_versioned_files(dir, base, ext)
   if dir ~= "" then
     if lfs.exists(dir) then
       for a in lfs.dir(dir) do
+        a = lfs.normalize(a)
         if a:match(filename) then
           info("Deleting old file %s", dir..a)
           os.remove(dir..a)
@@ -1098,6 +1099,7 @@ local function delete_versioned_files(dir, base, ext)
     end
   else
     for a in lfs.dir(lfs.currentdir()) do
+      a = lfs.normalize(a)
       if a:match(filename) then
         info("Deleting old file %s", a)
         os.remove(a)
