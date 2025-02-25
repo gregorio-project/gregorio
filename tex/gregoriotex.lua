@@ -717,9 +717,12 @@ local function get_score_font_unicode_pairs(name)
   return pairs(unicodes)
 end
 
-local function at_score_beginning(score_id, top_height, bottom_height,
-    has_translation, has_above_lines_text, top_height_adj, bottom_height_adj,
-    score_font_name)
+local inside_score = false
+--- Start a score
+-- Prepare all variables for processing a new score and add our callbacks
+-- @param score_id score identifier
+local function at_score_beginning(score_id)
+  inside_score = true
   local inclusion = score_inclusion[score_id] or 1
   score_inclusion[score_id] = inclusion + 1
   score_id = score_id..'.'..inclusion

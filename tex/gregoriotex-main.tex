@@ -1295,9 +1295,7 @@
   \gre@calculate@additionalspaces{#2}{#3}{#4}{#5}%
   #8%
   \directlua{
-    gregoriotex.at_score_beginning([[#1]], #2, #3, #4, #5,
-        \gre@pitch@adjust@top, \gre@pitch@adjust@bottom,
-        "\luatexluaescapestring{\gre@gregoriofontname}")
+    gregoriotex.at_score_beginning([[#1]])
     gregoriotex.adjust_line_height(1)
   }%
   %TODO do something like LaTeX's AtBeginDocument
