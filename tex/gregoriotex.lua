@@ -1224,7 +1224,9 @@ local function include_score(gabc_file, force_gabccompile, allow_deprecated)
   -- Find gabc file
   gabc_file = string.format("%s%s.gabc", gabc_dir, base)
   local gabc_found = locate_file(gabc_file)
-  gabc_found = lfs.normalize(gabc_found)
+  if gabc_found then
+    gabc_found = lfs.normalize(gabc_found)
+  end
   
   -- Set up output directory
   local output_dir = base_output_dir..'/'..gabc_dir
