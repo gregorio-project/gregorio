@@ -961,16 +961,7 @@ local inside_score = false
 --- Start a score
 -- Prepare all variables for processing a new score and add our callbacks
 -- @param score_id score identifier
--- @param top_height height of highest score element
--- @param bottom_height height of lowest score element
--- @param has_translation does this score have a translation?
--- @param has_above_lines_text does this score have above lines text?
--- @param top_height_adj limit below which a top_height doesn't require adjustment
--- @param bottom_height_adj limit above which a bottom_height doesn't require adjustment
--- @param score_font_name which font does this score use for the neumes
-local function at_score_beginning(score_id, top_height, bottom_height,
-    has_translation, has_above_lines_text, top_height_adj, bottom_height_adj,
-    score_font_name)
+local function at_score_beginning(score_id)
   inside_score = true
   local inclusion = score_inclusion[score_id] or 1
   score_inclusion[score_id] = inclusion + 1
