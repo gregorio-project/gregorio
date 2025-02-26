@@ -22,6 +22,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Fixed the placement of above-lines text (`<alt>`) relative to a note above the staff or when the number of staff lines is not 4. See [#1613](https://github.com/gregorio-project/gregorio/issues/1613) and [#1614](https://github.com/gregorio-project/gregorio/issues/1614).
 - Fixed a bug where the above-lines text (`<alt>`) could collid with a note above the staff. See [#1613](https://github.com/gregorio-project/gregorio/issues/1613).
 - Fixed a bug that could cause the clef and staff to be printed too high. See [#1503](https://github.com/gregorio-project/gregorio/issues/1503).
+- Fixed a bug that could cause insufficient additional space to be added above or below the staff. See [#1633](https://github.com/gregorio-project/gregorio/issues/1633) and [#1634](https://github.com/gregorio-project/gregorio/issues/1634).
 
 ### Changed
 - Modified gregorio to append to the log file specified as an argument and to send early messages to it.  See [#1541](https://github.com/gregorio-project/gregorio/issues/1541).
