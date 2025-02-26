@@ -6,6 +6,17 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Fixed
 - Multiple Scribus render frames were all using the same file name, which would result in the same score appearing in all render frames.  This change makes the score files use an available Scribus variable to force multiple file names.
 - When kpsewhich cannot write to a particular location, it generates an error which is directed to stderr but not to our glog file.  This created an undocumented error when trying to write to a gtex file to a bad location.  We now capture stderr output produced when compiling scores and redirect it to our glog file so that the error is properly recorded.  Fixes [#1541](https://github.com/gregorio-project/gregorio/issues/1541).
+- Fixed the interaction between hyphens and styles.  See [#1538](https://github.com/gregorio-project/gregorio/issues/1538).
+- Fixed the loss of ongoing styles when a syllable starts with a forced center.  See [#1551](https://github.com/gregorio-project/gregorio/issues/1551).
+- Fixed first syllables of one letter with a style causing a segfault.  See [#1585](https://github.com/gregorio-project/gregorio/issues/1585).
+- Fixed a bug that caused a custos to sometimes change into a clef. See [#1373](https://github.com/gregorio-project/gregorio/issues/1373).
+- Fixed the alignment of 2-line initials so that an initial's baseline more exactly aligns with the baseline of the lowest line it appears next to.
+- When fancyhdr and GregorioTeX are used together, GregorioTeX's disabling of hyphenation and its `post_linebreak` modification of the `post_linebreak_filter` interfere with multiline headers.  Using the `fancyhdr/before` and `fancyhdr/after` hooks we temporarily reenable hyphenation and disable our `post_linebreak` modification while headers and footers are being processed in the middle of a score.  See [#1603](https://github.com/gregorio-project/gregorio/issues/1603).
+- Fixed a bug that could cause a hyphen to appear on the wrong line. See [#1319](https://github.com/gregorio-project/gregorio/issues/1319).
+- Fixed the placement of above-lines text (`<alt>`) relative to a note above the staff or when the number of staff lines is not 4. See [#1613](https://github.com/gregorio-project/gregorio/issues/1613) and [#1614](https://github.com/gregorio-project/gregorio/issues/1614).
+- Fixed a bug where the above-lines text (`<alt>`) could collid with a note above the staff. See [#1613](https://github.com/gregorio-project/gregorio/issues/1613).
+- Fixed a bug that could cause the clef and staff to be printed too high. See [#1503](https://github.com/gregorio-project/gregorio/issues/1503).
+- Fixed a bug that could cause insufficient additional space to be added above or below the staff. See [#1633](https://github.com/gregorio-project/gregorio/issues/1633) and [#1634](https://github.com/gregorio-project/gregorio/issues/1634).
 
 ### Changed
 - Defined an output directory for gtex and glog files.  Default is `tmp-gre`.  This can be changed using `\gresetoutputdir{...}`.  Fixes [#1393](https://github.com/gregorio-project/gregorio/issues/1393), [#1542](https://github.com/gregorio-project/gregorio/issues/1542), and [#1571](https://github.com/gregorio-project/gregorio/issues/1571).
