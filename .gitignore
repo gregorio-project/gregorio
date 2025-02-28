@@ -104,7 +104,7 @@ auto/
 *.deb
 
 #gregorio specific
-doc/_minted-*
+doc/_minted*
 fonts/*.ttf
 *.greaux
 *.gz
@@ -127,3 +127,4 @@ ctan
 *.pyg
 .agignore
 *.orig
+compile_commands.json

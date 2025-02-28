@@ -6,7 +6,7 @@
 """
     Python fontforge script to build a square notation font.
 
-    Copyright (C) 2013-2021 The Gregorio Project (see CONTRIBUTORS.md)
+    Copyright (C) 2013-2025 The Gregorio Project (see CONTRIBUTORS.md)
 
     This file is part of Gregorio.
 
@@ -89,7 +89,7 @@ AMBITUS = {
     14 : 'Fourteen',
 }
 
-GREGORIO_VERSION = '6.0.0'
+GREGORIO_VERSION = '6.1.0'
 
 # The unicode character at which we start our numbering:
 # U+E000 is the start of the BMP Private Use Area
@@ -716,6 +716,9 @@ S_LOWER_OBLATUS_DESCENDENS_ORISCUS           = 'LowerOblatusDescendensOriscus'
 S_VIRGA                                      = 'Virga'
 S_VIRGA_LONGQUEUE                            = 'VirgaLongqueue'
 S_VIRGA_OPENQUEUE                            = 'VirgaOpenqueue'
+S_UPPER_VIRGA                                = 'UpperVirga'
+S_UPPER_VIRGA_LONGQUEUE                      = 'UpperVirgaLongqueue'
+S_UPPER_VIRGA_OPENQUEUE                      = 'UpperVirgaOpenqueue'
 S_VIRGA_REVERSA                              = 'VirgaReversa'
 S_VIRGA_REVERSA_LONGQUEUE                    = 'VirgaReversaLongqueue'
 S_VIRGA_REVERSA_OPENQUEUE                    = 'VirgaReversaOpenqueue'
@@ -812,7 +815,7 @@ def set_width(width):
     "Set the width of a glyph"
     global newfont, glyphnumber
     if glyphnumber in newfont:
-        newfont[glyphnumber].width = width
+        newfont[glyphnumber].width = int(width)
 
 def get_queue_glyph(height, rev = False):
     "Creates the asked line glyph in tmpglyph"
@@ -1008,6 +1011,9 @@ def virga():
     write_virga(S_VIRGA, L_NOTHING, True, 'virgabase', 'short', S_VIRGA)
     write_virga(S_VIRGA_LONGQUEUE, L_NOTHING, True, 'virgabase', 'long', S_VIRGA)
     write_virga(S_VIRGA_OPENQUEUE, L_NOTHING, True, 'virgabase', 'open', S_VIRGA)
+    write_virga(S_UPPER_VIRGA, L_NOTHING, True, 'VirgaBaseLineBL', 'short', S_VIRGA)
+    write_virga(S_UPPER_VIRGA_LONGQUEUE, L_NOTHING, True, 'VirgaBaseLineBL', 'long', S_VIRGA)
+    write_virga(S_UPPER_VIRGA_OPENQUEUE, L_NOTHING, True, 'VirgaBaseLineBL', 'open', S_VIRGA)
     write_virga(S_VIRGA_REVERSA, L_NOTHING, False, 'rvirgabase', 'short',
             S_VIRGA_REVERSA)
     write_virga(S_VIRGA_REVERSA_LONGQUEUE, L_NOTHING, False, 'rvirgabase',

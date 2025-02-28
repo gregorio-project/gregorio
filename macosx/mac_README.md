@@ -3,12 +3,9 @@
 
 To build the distribution package for Gregorio for Mac, you first need to install [Packages](http://s.sudre.free.fr/Software/Packages/about.html) and [Pandoc](johnmacfarlane.net/pandoc/index.html).  Once those are installed, simply run:
 
-`create_pacakge.sh`
+`make dist-macosx`
 
-This script contains all the necessary commands to create the distribution package.  It will first build and "install" the package into the `macosx` directory (this way we know where everything is).  It will then use Pandoc to convert the necessary documentation files from markdown to html (the format required by Packages).  Once that's done, it will use the command line interface for Packages to build the installer package.
-
-It will also build an Uninstall package which has an empty payload.  This package runs a post-flight script which knows where the installed components of Gregorio are and removes them.
-
+This will create two package installers `Gregorio-<version>.pkg` and `Gregorio-Uninstall-<version>.pkg`.  The first installs the specified version of Gregorio, the second uninstall that **same** version (not prior versions).
 
 ## Limitations
 

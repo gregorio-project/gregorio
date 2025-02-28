@@ -1,6 +1,6 @@
 % !TEX program = LuaLaTeX+se
 %
-% Copyright (C) 2006-2021 The Gregorio Project (see CONTRIBUTORS.md)
+% Copyright (C) 2006-2025 The Gregorio Project (see CONTRIBUTORS.md)
 %
 % This file is part of Gregorio.
 %
@@ -183,26 +183,25 @@
 
     \vspace{1cm}
 
-    \large Version \textbf{6.0.0}, 13 March 2021 %% PARSE_VERSION_DATE
+    \large Version \textbf{6.1.0}, 28 February 2025 %% PARSE_VERSION_DATE
 
     \vspace{1.5cm}
-  \end{center}
-  \gresetlinecolor{gregoriocolor}
-  \grechangestyle{lowchoralsign}{\cminfamily\small}%
-  \grechangestyle{highchoralsign}{\cminfamily\small}%
-  \def\GreStar{\greheightstar}%
-  \greannotation{\scriptsize Comm.}%
-  \greannotation{\scriptsize VII}%
-  \begingroup%
-    \color{black!60}%
-    \setmainfont[SmallCapsFont=AlegreyaSC]{Alegreya}%
-    \newlength{\mini}%
-    \setlength{\mini}{\hsize}%
-    \addtolength{\mini}{-4cm}%
-    \setlength{\fboxsep}{5mm}%
-    \hfill\fbox{\parbox{\mini}{\gregorioscore[f]{factus}}}\hfill%
-  \endgroup
-  \begin{center}
+    \gresetlinecolor{gregoriocolor}
+    \grechangestyle{lowchoralsign}{\cminfamily\small}%
+    \grechangestyle{highchoralsign}{\cminfamily\small}%
+    \def\GreStar{\greheightstar}%
+    \greannotation{\scriptsize Comm.}%
+    \greannotation{\scriptsize VII}%
+    \begingroup%
+      \color{black!60}%
+      \setmainfont[SmallCapsFont=AlegreyaSC]{Alegreya}%
+      \newlength{\mini}%
+      \setlength{\mini}{\hsize}%
+      \addtolength{\mini}{-4cm}%
+      \setlength{\fboxsep}{5mm}%
+      \fbox{\parbox{\mini}{\gregorioscore[f]{factus}}}%
+    \endgroup
+      
     \vspace{1.5cm}%
     \href{http://gregorio-project.github.io/}{Homepage}
 

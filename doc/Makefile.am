@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2021 The Gregorio Project (see CONTRIBUTORS.md)
+# Copyright (C) 2006-2025 The Gregorio Project (see CONTRIBUTORS.md)
 #
 # This file is part of Gregorio.
 #
@@ -57,7 +57,7 @@ pdf-local: doc
 clean-doc-intermediate:
 	latexmk -quiet -c -f -jobname=GregorioRef GregorioRef.tex
 	latexmk -quiet -c -f -jobname=GregorioNabcRef GregorioNabcRef.tex
-	rm -rf _minted* *.gtex *.aux *.gaux *.glog
+	rm -rf tmp-gre _minted* *.gtex *.aux *.gaux *.glog
 
 clean-doc: clean-doc-intermediate
 	rm -rf GregorioRef.pdf

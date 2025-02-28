@@ -1,20 +1,18 @@
 [Setup]
 AppName=gregorio
-AppVersion=6.0.0
-DefaultDirName={pf}\gregorio
+AppVersion=6.1.0
+DefaultDirName={commonpf}\gregorio
 DefaultGroupName=gregorio
 SetupIconFile=gregorio.ico
 Compression=lzma2
 SolidCompression=yes
 LicenseFile=../COPYING.md
-AppCopyright=Copyright (C) 2006-2021 The Gregorio Project
+AppCopyright=Copyright (C) 2006-2025 The Gregorio Project
 AppComments=Software for engraving Gregorian Chant scores.
 AppContact=gregorio-devel@googlegroups.com
 AppPublisher=The Gregorio Project
 AppPublisherURL=https://github.com/gregorio-project/gregorio
 AppReadmeFile=https://github.com/gregorio-project/gregorio
-BackColor=$D4AE65
-BackColor2=$FDF7EB
 WizardSmallImageFile=gregorio-32.bmp
 WizardImageFile=gregorio-image.bmp
 ChangesAssociations=yes
@@ -49,7 +47,7 @@ Name: "{app}\texmf\doc\luatex\gregoriotex\examples"
 
 [Files]
 ; PARSE_VERSION_FILE_NEXTLINE
-Source: "../src/gregorio-6_0_0.exe"; DestDir: "{app}\bin";
+Source: "../src/gregorio-6_1_0.exe"; DestDir: "{app}\bin";
 Source: "gregorio.ico"; DestDir: "{app}";
 Source: "install.lua"; DestDir: "{app}";
 Source: "uninstall.lua"; DestDir: "{app}";

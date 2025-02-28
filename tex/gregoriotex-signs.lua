@@ -1,6 +1,6 @@
 --GregorioTeX Signs Lua support file.
 --
---Copyright (C) 2015-2021 The Gregorio Project (see CONTRIBUTORS.md)
+--Copyright (C) 2015-2025 The Gregorio Project (see CONTRIBUTORS.md)
 --
 --This file is part of Gregorio.
 --
@@ -19,7 +19,7 @@
 
 -- this file contains lua functions to support signs used by GregorioTeX.
 
--- GREGORIO_VERSION 6.0.0
+-- GREGORIO_VERSION 6.1.0
 
 local err = gregoriotex.module.err
 local warn = gregoriotex.module.warn
@@ -484,6 +484,24 @@ local offset_cases = {
     case = 'NaturalParen',
     v = [[\gre@vepisemaorrareaux{0}{\GreCPNaturalParen}{1}{0}{#2}{#3}{#4}]],
     h = [[\gre@hepisorlineaux{\GreCPNaturalParen}{\gre@char@he@naturalparen{#4}}{2}{#3}]],
+  },
+  -- soft flat
+  {
+    case = 'FlatSoft',
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPFlat}{1}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPFlat}{\gre@char@he@flat{#4}}{2}{#3}]],
+  },
+  -- soft sharp
+  {
+    case = 'SharpSoft',
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPSharp}{1}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPSharp}{\gre@char@he@sharp{#4}}{2}{#3}]],
+  },
+  -- soft natural
+  {
+    case = 'NaturalSoft',
+    v = [[\gre@vepisemaorrareaux{0}{\GreCPNatural}{1}{0}{#2}{#3}{#4}]],
+    h = [[\gre@hepisorlineaux{\GreCPNatural}{\gre@char@he@natural{#4}}{2}{#3}]],
   },
 }
 

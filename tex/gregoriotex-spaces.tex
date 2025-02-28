@@ -1,6 +1,6 @@
 %GregorioTeX file.
 %
-% Copyright (C) 2007-2021 The Gregorio Project (see CONTRIBUTORS.md)
+% Copyright (C) 2007-2025 The Gregorio Project (see CONTRIBUTORS.md)
 %
 % This file is part of Gregorio.
 %
@@ -19,7 +19,7 @@
 
 % this file contains definitions of spaces
 
-\gre@declarefileversion{gregoriotex-spaces.tex}{6.0.0}% GREGORIO_VERSION
+\gre@declarefileversion{gregoriotex-spaces.tex}{6.1.0}% GREGORIO_VERSION
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% macros for tuning penalties
@@ -231,8 +231,8 @@
 \def\gre@calculate@staffheight{%
   \gre@trace{gre@calculate@staffheight}%
   \global\gre@dimen@staffheight = \dimexpr %
-    \gre@stafflines\gre@dimen@stafflineheight %
-    + \gre@stafflines\gre@dimen@interstafflinespace %
+    \gre@count@stafflines\gre@dimen@stafflineheight %
+    + \gre@count@stafflines\gre@dimen@interstafflinespace %
     - \gre@dimen@interstafflinespace\relax%
   \relax %
   \gre@trace@end%
@@ -435,7 +435,7 @@
   \gre@debugmsg{bolshift}{ clefwidthcurrent = \the\gre@dimen@clefwidth@current}%
   \gre@debugmsg{bolshift}{ clefwidthbol = \the\gre@dimen@clefwidth@bol}%
   % we ignore the current-bol adjustment if the clef is the first of the score and there is an initial on one line:
-  \ifnum\gre@initiallines=1\ifgre@beginningofscore\else %
+  \ifnum\gre@count@initiallines=1\ifgre@beginningofscore\else %
       \global\advance\gre@skip@temp@three by \dimexpr(\gre@dimen@clefwidth@current-\gre@dimen@clefwidth@bol)\relax %
     \fi\else %
       \global\advance\gre@skip@temp@three by \dimexpr(\gre@dimen@clefwidth@current-\gre@dimen@clefwidth@bol)\relax %
@@ -733,7 +733,7 @@
     \global\gre@isonalinetrue%
   \or\gre@count@temp@three=\number 8%
   \or\gre@count@temp@three=\number 9%
-    \ifgre@haslinethree %
+    \ifnum\gre@count@stafflines>2\relax
       \global\gre@isonalinetrue%
     \else %
       \ifgre@ledgerline@above %
@@ -742,10 +742,10 @@
     \fi %
   \or\gre@count@temp@three=\number 10%
   \or\gre@count@temp@three=\number 11%
-    \ifgre@haslinefour %
+    \ifnum\gre@count@stafflines>3\relax
       \global\gre@isonalinetrue%
     \else %
-      \ifgre@haslinethree %
+      \ifnum\gre@count@stafflines>2\relax
         \ifgre@ledgerline@above %
           \global\gre@isonalinetrue%
         \fi %
@@ -753,10 +753,10 @@
     \fi %
   \or\gre@count@temp@three=\number 12%
   \or\gre@count@temp@three=\number 13%
-    \ifgre@haslinefive %
+    \ifnum\gre@count@stafflines>4\relax
       \global\gre@isonalinetrue%
     \else %
-      \ifgre@haslinefour %
+      \ifnum\gre@count@stafflines>3\relax
         \ifgre@ledgerline@above %
           \global\gre@isonalinetrue%
         \fi %
@@ -764,7 +764,7 @@
     \fi %
   \or\gre@count@temp@three=\number 14%
   \or\gre@count@temp@three=\number 15%
-    \ifgre@haslinefive %
+    \ifnum\gre@count@stafflines>4\relax
       \ifgre@ledgerline@above %
         \global\gre@isonalinetrue%
       \fi %
@@ -1116,7 +1116,7 @@
 %% 3 : the middle letters of the next syllable
 %% 4 : the end letters of the next syllable
 %% 5 : the type of notes alignment
-%% 6 : alteration type (see gre@calculate@nextnotesaligncenter)
+%% 6 : alteration type (see \gre@alteration)
 \def\gre@calculate@nextbegindifference#1#2#3#4#5#6{%
   \gre@trace{gre@calculate@nextbegindifference{#1}{#2}{#3}{#4}{#5}{#6}}%
   \ifnum\gre@lastoflinecount=1\relax %
@@ -1530,9 +1530,6 @@
 
 % notes align center is the point of alignment for the notes
 \newdimen\gre@dimen@notesaligncenter\relax%
-
-%this dimension is the additional space that we have to add to the localleftbox sometimes. For now it is used only for the initials on two lines
-\newdimen\gre@dimen@additionalleftspace\relax%
 
 % the calculated width of the initial (may be actual width of letter or be forced wider under certain conditions)
 \newdimen\gre@dimen@initialwidth\relax%
