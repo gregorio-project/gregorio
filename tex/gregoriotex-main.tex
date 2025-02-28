@@ -363,19 +363,6 @@
   \setbox\gre@box@initial=\hbox{#1}%
 }%
 
-% Set paragraph shape.
-% #1: How many lines are indented
-% #2: The amount of the indentation
-\def\gre@makeparshape#1#2{%
-  \edef\gre@parshape@dims{\numexpr#1+1\relax}%
-  \gre@count@temp@one=0\relax
-  \loop
-    \edef\gre@parshape@dims{\gre@parshape@dims#2\dimexpr\gre@dimen@linewidth-#2\relax}%
-    \advance\gre@count@temp@one by 1\relax
-  \ifnum\gre@count@temp@one<#1\repeat
-  \parshape\gre@parshape@dims0pt\gre@dimen@linewidth
-}
-
 \def\gre@setinitial#1{%
   \gre@trace{gre@setinitial{#1}}%
   \gre@debugmsg{annotation}{Time to calculate the true raise.}%
@@ -444,7 +431,8 @@
     \global\advance\gre@dimen@initialwidth by \gre@dimen@temp@four%
   }%
   % Set the paragraph shape. This should happen before anything is printed.
-  \gre@makeparshape{\gre@count@initiallines}{\wd\gre@box@temp@width}%
+  \hangindent=\wd\gre@box@temp@width\relax
+  \hangafter=-\gre@count@initiallines\relax
   % Set the initial. If it has more than one line, we smash it so it
   % doesn't disrupt anything, in particular the glue between lines.
   % The Lua function lower_initial will insert vertical space
@@ -785,13 +773,13 @@
 \def\gre@generatelines{%
   \gre@trace{gre@generatelines}%
   \setbox\gre@box@lines=\hbox to 0pt{%
-    \vbox attr \gre@attrid@part=2 {%
+    \vbox attr \gre@attrid@part=2 {% width will be adjusted in Lua
       \gre@style@normalstafflines%
       \vskip\glueexpr(\gre@dimen@additionaltopspace+\gre@space@skip@spaceabovelines+\gre@dimen@currentabovelinestextheight)\relax%
       \gre@count@temp@one=0\relax
       \loop
         \ifgre@showlines %
-          \hrule height \gre@dimen@stafflineheight width \gre@dimen@stafflinewidth\relax%
+          \hrule height \gre@dimen@stafflineheight\relax%
         \else %
           \vskip\gre@dimen@stafflineheight\relax%
         \fi %
@@ -977,17 +965,21 @@
 %% other macros
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newif\ifgre@justifylastline%
-\gre@justifylastlinefalse%
+% Whether the last line of a score should be:
+% 0 = justified, 1 = ragged, 2 = trimmed
+\newcount\gre@count@lastline
+\gre@count@lastline=1\relax
 
 \def\gresetlastline#1{%
   \IfStrEqCase{#1}{%
     {justified}%
-      {\gre@justifylastlinetrue}%
+      {\gre@count@lastline=0}%
     {ragged}%
-      {\gre@justifylastlinefalse}%
+      {\gre@count@lastline=1}%
+    {trimmed}%
+      {\gre@count@lastline=2}%
     }[% all other cases
-      \gre@error{Unrecognized option "#1" for \protect\gresetlastline\MessageBreak Possible options are: 'justified' and 'ragged'}%
+      \gre@error{Unrecognized option "#1" for \protect\gresetlastline\MessageBreak Possible options are: 'justified', 'ragged', and 'trimmed'}%
     ]%
 }%
 
@@ -1138,7 +1130,7 @@
   \let\gre@pitch@clefbottom\gre@pitch@dummy %
   \xdef\gre@gabcname{#6}%
   \gre@setstafflines{#7}%
-  \ifgre@justifylastline%
+  \ifnum\gre@count@lastline=0\relax
     \xdef\gre@saved@parfillskip{\the\parfillskip}%
     \parfillskip=0pt plus 0pt minus 0pt\relax%
   \fi %
@@ -1208,7 +1200,7 @@
   \unsetluatexattribute{\gre@attr@glyph@bottom}%
   \unsetluatexattribute{\gre@attr@dash}%
   \xdef\gre@bolshiftcleftypelocal{\gre@bolshiftcleftypeglobal}%
-  \ifgre@justifylastline%
+  \ifnum\gre@count@lastline=0\relax
     \parfillskip=\gre@saved@parfillskip\relax%
   \fi %
   \global\setluatexattribute\gre@attr@glyph@id{0}%

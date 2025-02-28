@@ -34,7 +34,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Allow `\gresetinitiallines{n}` where `n` is any number of lines (a non-negative integer). The manual linebreaks (`z`) that used to be required for 2-line initials are no longer required. See [#1488](https://github.com/gregorio-project/gregorio/issues/1488). Added new options `\gresetinitialanchor` and `\gresetinitialposition` to control the placement of initials.
 - Added new alterations: soft flat (X) and sharp (##), which appear when there is no previous flat or sharp (respectively) in effect, and soft natural (Y), which appears when there is a previous flat or sharp in effect. A new option `\gresetalterationeffect` determines what the "effect" of an alteration is. It defaults to `line`, which is useful for Dominican chant. See [#157](https://github.com/gregorio-project/gregorio/issues/157) and also [#1575](https://github.com/gregorio-project/gregorio/issues/1575).
 - 9 new St. Gall neume glyphs have been added to the `gregall` font.
-
+- Added new option `\gresetlastline{trimmed}`, which sets the last line ragged and also trims the staff lines. See [#1418](https://github.com/gregorio-project/gregorio/issues/1418).
 
 ## [6.0.0] - 2021-03-13
 ### Fixed

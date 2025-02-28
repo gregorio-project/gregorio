@@ -567,29 +567,32 @@ gregoriotex.module.debugmessage = debugmessage
 -- line width, and adjust them to actually take up the full line
 -- width.
 local function adjust_fullwidth (line)
-  -- Determine line width, ignoring \leftskip
+  -- Determine line width, ignoring \leftskip and \rightskip
+  -- and, optionally, \parfillskip
   local line_width = line.width
   for child in node.traverse(line.head) do
-    if child.id == glue and child.subtype == 8 then
+    if child.id == glue and (
+      child.subtype == 8 -- leftskip
+      or child.subtype == 9 -- rightskip
+      or tex.count['gre@count@lastline'] == 2 and child.subtype == 15 -- parfillskip
+    ) then
       line_width = line_width - node.effective_glue(child, line)
     end
   end
-  debugmessage("stafflines", "line width %spt", line_width/2^16)
+  debugmessage("adjust_fullwidth", "line width %spt", line_width/2^16)
 
   local function visit(cur)
     for child in node.traverse_list(cur.head) do
-      if has_attribute(child, part_attr, part_commentary) then
-        debugmessage("adjust_fullwidth", "commentary width %spt -> %spt", child.width/2^16, line_width/2^16)
-        child.width = line_width
-        local new = node.hpack(child.head, line_width, 'exactly')
-        cur.head = node.insert_before(cur.head, child, new)
-        cur.head = node.remove(cur.head, child)
-      elseif has_attribute(child, part_attr, part_stafflines) then
-        debugmessage("adjust_fullwidth", "staff width %spt -> %spt", child.width/2^16, line_width/2^16)
-        for r in traverse_id(rule, child.head) do
-          r.width = line_width
+      local attr = has_attribute(child, part_attr)
+      if attr == part_commentary or attr == part_stafflines then
+        debugmessage("adjust_fullwidth", "width %spt -> %spt", child.width/2^16, line_width/2^16)
+        if child.id == hlist then
+          local new = node.hpack(child.head, line_width, 'exactly')
+          cur.head = node.insert_before(cur.head, child, new)
+          cur.head = node.remove(cur.head, child)
+        else
+          child.width = line_width
         end
-        child.width = line_width
       else
         visit(child)
       end
@@ -597,24 +600,6 @@ local function adjust_fullwidth (line)
   end
 
   visit(line)
-end
-
--- Adjust height and depth of an hlist to fit its contents
-local function adjust_hlist(cur)
-  local new_height = 0
-  local new_depth = 0
-  for child in traverse(cur.head) do
-    if child.id == hlist or child.id == vlist then
-      new_height = math.max(new_height, child.height - child.shift)
-      new_depth = math.max(new_depth, child.depth + child.shift)
-    elseif child.id == rule or child.id == glyph then
-      new_height = math.max(new_height, child.height)
-      new_depth = math.max(new_depth, child.depth)
-    end
-  end
-  debugmessage('adjust_hlist', 'height %spt -> %spt, depth %spt -> %spt', cur.height/2^16, new_height/2^16, cur.depth/2^16, new_depth/2^16)
-  cur.height = new_height
-  cur.depth = new_depth
 end
 
 local function find_attr(cur, attr, val)
