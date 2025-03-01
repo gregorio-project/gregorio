@@ -3,7 +3,8 @@ All notable changes to this project will be documented in this file.
 As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). It follows [some conventions](http://keepachangelog.com/).
 
 ## [Unreleased][CTAN]
-
+### Fixed
+- Fixed a bug that could cause insufficient additional space to be added above or below the staff. See [#1633](https://github.com/gregorio-project/gregorio/issues/1633) and [#1634](https://github.com/gregorio-project/gregorio/issues/1634).
 
 ## [6.1.0] - 2025-02-28
 ### Fixed
