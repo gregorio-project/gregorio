@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-# Copyright (C) 2016-2021 The Gregorio Project (see CONTRIBUTORS.md)
+# Copyright (C) 2016-2025 The Gregorio Project (see CONTRIBUTORS.md)
 #
 # This file is part of Gregorio.
 #
@@ -26,17 +26,16 @@ FILEVERSION=`echo $VERSION | sed 's/\./_/g'`
 rm -rf ctan
 mkdir -p ctan/gregoriotex/
 mv gregoriotex.tds.zip ctan/gregoriotex.tds.zip
-mv gregorio-$VERSION.tar.bz2 ctan/gregoriotex/
+cp gregorio-$VERSION.zip ctan/gregoriotex/
+cp *.md ctan/gregoriotex
 cd ctan/gregoriotex
-tar xf gregorio-$VERSION.tar.bz2
-rm gregorio-$VERSION.tar.bz2
-cp ../../*.md .
+unzip gregorio-$VERSION.zip
 cd gregorio-$VERSION
-mv doc/ ../
-mv tex/ ../
-mv fonts/ ../
-mv examples/ ../doc/
-rm -rf macosx debian
+cp -r doc/ ../
+cp -r tex/ ../
+cp -r fonts/ ../
+cp -r examples/ ../doc/
+rm -rf windows
 cd ..
 rm doc/Makefile*
 rm doc/examples/Makefile*
@@ -50,9 +49,6 @@ mkdir fonts/sources/
 mkdir fonts/truetype/
 mv fonts/*.ttf fonts/truetype
 mv fonts/*.* fonts/sources
-cd gregorio-$VERSION
-zip -r ../gregorio-$VERSION.zip * --exclude=*.DS_Store*
-cd ..
 rm -rf gregorio-$VERSION
 cd ..
 zip -r ../gregoriotex.ctan.zip gregoriotex gregoriotex.tds.zip --exclude=*.DS_Store*

@@ -4,6 +4,10 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 
 ## [Unreleased][CTAN]
 ### Fixed
+- Fixed a bug that could cause insufficient additional space to be added above or below the staff. See [#1633](https://github.com/gregorio-project/gregorio/issues/1633) and [#1634](https://github.com/gregorio-project/gregorio/issues/1634).
+
+## [6.1.0] - 2025-02-28
+### Fixed
 - Multiple Scribus render frames were all using the same file name, which would result in the same score appearing in all render frames.  This change makes the score files use an available Scribus variable to force multiple file names.
 - When kpsewhich cannot write to a particular location, it generates an error which is directed to stderr but not to our glog file.  This created an undocumented error when trying to write to a gtex file to a bad location.  We now capture stderr output produced when compiling scores and redirect it to our glog file so that the error is properly recorded.  Fixes [#1541](https://github.com/gregorio-project/gregorio/issues/1541).
 - Fixed the interaction between hyphens and styles.  See [#1538](https://github.com/gregorio-project/gregorio/issues/1538).
@@ -16,10 +20,22 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Fixed the placement of above-lines text (`<alt>`) relative to a note above the staff or when the number of staff lines is not 4. See [#1613](https://github.com/gregorio-project/gregorio/issues/1613) and [#1614](https://github.com/gregorio-project/gregorio/issues/1614).
 - Fixed a bug where the above-lines text (`<alt>`) could collid with a note above the staff. See [#1613](https://github.com/gregorio-project/gregorio/issues/1613).
 - Fixed a bug that could cause the clef and staff to be printed too high. See [#1503](https://github.com/gregorio-project/gregorio/issues/1503).
-- Fixed a bug that could cause insufficient additional space to be added above or below the staff. See [#1633](https://github.com/gregorio-project/gregorio/issues/1633) and [#1634](https://github.com/gregorio-project/gregorio/issues/1634).
 
 ### Changed
+- Modified gregorio to write to the log file specified as an argument and to send all messages to it (except errors about opening the log file itself).  See [#1541](https://github.com/gregorio-project/gregorio/issues/1541) and [#1628](https://github.com/gregorio-project/gregorio/issues/1628).
 - Defined an output directory for gtex and glog files.  Default is `tmp-gre`.  This can be changed using `\gresetoutputdir{...}`.  Fixes [#1393](https://github.com/gregorio-project/gregorio/issues/1393), [#1542](https://github.com/gregorio-project/gregorio/issues/1542), and [#1571](https://github.com/gregorio-project/gregorio/issues/1571).
+- GregorioTeX no longer searches for and reuses existing gtex files using kpathsea; it only looks in the output directory.
+- If gtex or glog files from other versions of gregorio are found either in the same directory as the gabc file or in the output directory, they are deleted.
+- gabc.vim has been expanded into a proper vim plugin.
+
+### Added
+- Added a configurable setting `\gresetunisonbreakbehavior` to control automatic line breaks between unison notes above a syllable.  Defaults to `breakable` for backwards compatibility, but may be set to `unbreakable` if that behavior is desired.  See [#1504](https://github.com/gregorio-project/gregorio/issues/1504).
+- Added the ability to fuse upwards to a virga.  See [#1558](https://github.com/gregorio-project/gregorio/issues/1558)
+- Added the ability to use the "stroke" form of a clivis instead of the default two-notes form by specifying `[shape:stroke]` after the clivis to change.  See [#1558](https://github.com/gregorio-project/gregorio/issues/1558)
+- Allow `\gresetinitiallines{n}` where `n` is any number of lines (a non-negative integer). The manual linebreaks (`z`) that used to be required for 2-line initials are no longer required. See [#1488](https://github.com/gregorio-project/gregorio/issues/1488). Added new options `\gresetinitialanchor` and `\gresetinitialposition` to control the placement of initials.
+- Added new alterations: soft flat (X) and sharp (##), which appear when there is no previous flat or sharp (respectively) in effect, and soft natural (Y), which appears when there is a previous flat or sharp in effect. A new option `\gresetalterationeffect` determines what the "effect" of an alteration is. It defaults to `line`, which is useful for Dominican chant. See [#157](https://github.com/gregorio-project/gregorio/issues/157) and also [#1575](https://github.com/gregorio-project/gregorio/issues/1575).
+- 9 new St. Gall neume glyphs have been added to the `gregall` font.
+
 
 ## [6.0.0] - 2021-03-13
 ### Fixed

@@ -5,7 +5,7 @@
 
     See VersionUpdate.py -h for help
 
-    Copyright (C) 2015-2021 The Gregorio Project (see CONTRIBUTORS.md)
+    Copyright (C) 2015-2025 The Gregorio Project (see CONTRIBUTORS.md)
 
     This file is part of Gregorio.
 
@@ -87,6 +87,9 @@ COPYRIGHT_FILES = ["install-gtex.sh",
                    "tex/gregoriotex-signs.lua",
                    "tex/gregoriotex-symbols.tex",
                    "contrib/TeXShop/Makefile.am",
+                   "contrib/vim/Makefile.am",
+                   "contrib/vim/ftdetect/Makefile.am",
+                   "contrib/vim/syntax/Makefile.am",
                    "contrib/900_gregorio.xml",
                    "contrib/Makefile.am",
                    "contrib/gabc.lang",
@@ -165,6 +168,7 @@ COPYRIGHT_FILES = ["install-gtex.sh",
                    "windows/gregorio.iss",
                    "windows/install.lua",
                    "windows/uninstall.lua",
+                   "macosx/Makefile.am",
                   ]
 
 def strtobool(val):

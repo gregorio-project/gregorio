@@ -1,6 +1,6 @@
 --GregorioTeX Lua file.
 --
---Copyright (C) 2008-2021 The Gregorio Project (see CONTRIBUTORS.md)
+--Copyright (C) 2008-2025 The Gregorio Project (see CONTRIBUTORS.md)
 --
 --This file is part of Gregorio.
 --
@@ -24,16 +24,16 @@ local hpack, traverse, traverse_id, has_attribute, count, remove, insert_after, 
 gregoriotex = gregoriotex or {}
 local gregoriotex = gregoriotex
 
-local internalversion = '6.0.0' -- GREGORIO_VERSION (comment used by VersionManager.py)
+local internalversion = '6.1.0' -- GREGORIO_VERSION (comment used by VersionManager.py)
 
 local err, warn, info, log = luatexbase.provides_module({
     name               = "gregoriotex",
-    version            = '6.0.0', -- GREGORIO_VERSION
+    version            = '6.1.0', -- GREGORIO_VERSION
     greinternalversion = internalversion,
-    date               = "2021/03/13", -- GREGORIO_DATE_LTX
+    date               = "2025/02/28", -- GREGORIO_DATE_LTX
     description        = "GregorioTeX module.",
     author             = "The Gregorio Project (see CONTRIBUTORS.md)",
-    copyright          = "2008-2021 - The Gregorio Project",
+    copyright          = "2008-2025 - The Gregorio Project",
     license            = "GPLv3+",
 })
 
@@ -48,8 +48,14 @@ local vlist = node.id('vlist')
 local glyph = node.id('glyph')
 local glue = node.id('glue')
 local whatsit = node.id('whatsit')
+local rule = node.id('rule')
 
 local hyphen = tex.defaulthyphenchar or 45
+
+local part_attr = luatexbase.attributes['gre@attr@part']
+local part_commentary = 1
+local part_stafflines = 2
+local part_initial = 3
 
 local dash_attr = luatexbase.attributes['gre@attr@dash']
 local potentialdashvalue   = 1
@@ -63,6 +69,10 @@ local glyph_id_attr = luatexbase.attributes['gre@attr@glyph@id']
 local glyph_top_attr = luatexbase.attributes['gre@attr@glyph@top']
 local glyph_bottom_attr = luatexbase.attributes['gre@attr@glyph@bottom']
 local prev_line_id = nil
+
+local alteration_type_attr = luatexbase.attributes['gre@attr@alteration@type']
+local alteration_pitch_attr = luatexbase.attributes['gre@attr@alteration@pitch']
+local alteration_id_attr = luatexbase.attributes['gre@attr@alteration@id']
 
 local syllable_id_attr = luatexbase.attributes['gre@attr@syllable@id']
 
@@ -81,6 +91,8 @@ local last_syllables = nil
 local new_last_syllables = nil
 local score_last_syllables = nil
 local new_score_last_syllables = nil
+local first_alterations = nil
+local new_first_alterations = nil
 local state_hashes = nil
 local new_state_hashes = nil
 local auxname = nil
@@ -91,7 +103,7 @@ local snippet_logname = nil
 
 local base_output_dir = 'tmp-gre'
 local function set_base_output_dir(new_dirname)
-  base_output_dir = new_dirname
+  base_output_dir = lfs.normalize(new_dirname)
 end
 
 local space_below_staff = 5
@@ -127,9 +139,8 @@ local translation_mark = 1
 local abovelinestext_mark = 2
 log("marker whatsit id is %d", marker_whatsit_id)
 
-local function get_prog_output(cmd, fmt)
-  cmd = string.format(cmd, tmpname)
-  local rc = os.execute(cmd)
+local function get_prog_output(cmd, tmpname, fmt)
+  local rc = os.spawn(cmd)
   local content = nil
   if rc == 0 then
     local f = io.open(tmpname, 'r');
@@ -151,16 +162,14 @@ local function gregorio_exe()
     local exe_version
 
     -- first look for one with the exact version
-    real_gregorio_exe = 'gregorio-6_0_0' -- FILENAME_VERSION
-    local cmd = string.format([[%s -o "%%s" "%s"]], real_gregorio_exe,
-        test_snippet_filename)
-    exe_version = get_prog_output(cmd, '*line')
+    real_gregorio_exe = 'gregorio-6_1_0' -- FILENAME_VERSION
+    local cmd = {real_gregorio_exe, '-o', tmpname, test_snippet_filename}
+    exe_version = get_prog_output(cmd, tmpname, '*line')
     if not exe_version then
       -- look for suffix-less executable
       real_gregorio_exe = 'gregorio'
-      cmd = string.format([[%s -o "%%s" "%s"]], real_gregorio_exe,
-          test_snippet_filename)
-      exe_version = get_prog_output(cmd, '*line')
+      cmd = {real_gregorio_exe, '-o', tmpname, test_snippet_filename}
+      exe_version = get_prog_output(cmd, tmpname, '*line')
     end
     if not exe_version or string.match(exe_version,"%d+%.%d+%.")
         ~= string.match(internalversion,"%d+%.%d+%.") then
@@ -273,6 +282,13 @@ local function is_greaux_write_needed()
   if saved_computations_changed(saved_newline_before_euouae, new_saved_newline_before_euouae) then
     return true
   end
+  -- For alterations, check if either the keys or values changed.
+  for id, tab in pairs(new_first_alterations) do
+    if keys_changed(tab, first_alterations[id]) or entries_changed(tab, first_alterations[id]) then return true end
+  end
+  for id, tab in pairs(first_alterations) do
+    if keys_changed(tab, new_first_alterations[id]) or entries_changed(tab, first_alterations[id]) then return true end
+  end
   return false
 end
 
@@ -337,13 +353,27 @@ local function write_greaux()
       for id, value in pairs(new_state_hashes) do
         aux:write(string.format('  ["%s"]="%s",\n', id, value))
       end
+      aux:write(' },\n')
+      
+      -- Write information about alterations and line breaks. This
+      -- needs to go into the .gaux file because it affects whether
+      -- alterations are printed, which in turn affects which lines
+      -- alterations fall on.
+      aux:write(' ["first_alterations"]={\n')
+      for id, tab in pairs(new_first_alterations) do
+        aux:write(string.format('  ["%s"]={', id))
+        for i, value in pairs(tab) do
+          aux:write(string.format('[%q]=%s,', i, value))
+        end
+        aux:write(string.format('},\n'))
+      end
       aux:write(' },\n}\n')
       aux:close()
     else
       err("\n Unable to open %s", auxname)
     end
 
-    warn("Line heights or variable brace lengths may have changed. Rerun to fix.")
+    warn("Line heights, variable brace lengths, or soft flats/sharps may have changed. Rerun to fix.")
   end
 end
 
@@ -359,19 +389,18 @@ local function init(arg, enable_height_computation)
       end
     end
   end
+  
+  local basepath = tex.jobname
   if outputdir and lfs.isdir(outputdir) then
-    auxname = outputdir..'/'..tex.jobname..'.gaux'
-    tmpname = outputdir..'/'..tex.jobname..'.gtmp'
-    test_snippet_filename = outputdir..'/'..tex.jobname..'.test.gsnippet'
-    snippet_filename = outputdir..'/'..tex.jobname..'.gsnippet'
-    snippet_logname = outputdir..'/'..tex.jobname..'.gsniplog'
-  else
-    auxname = tex.jobname..'.gaux'
-    tmpname = tex.jobname..'.gtmp'
-    test_snippet_filename = tex.jobname..'.test.gsnippet'
-    snippet_filename = tex.jobname..'.gsnippet'
-    snippet_logname = tex.jobname..'.gsniplog'
+    basepath = outputdir..'/'..basepath
   end
+  basepath = lfs.normalize(basepath)
+    
+  auxname = basepath..'.gaux'
+  tmpname = basepath..'.gtmp'
+  test_snippet_filename = basepath..'.test.gsnippet'
+  snippet_filename = basepath..'.gsnippet'
+  snippet_logname = basepath..'.gsniplog'
 
   -- to get latexmk to realize the aux file is a dependency
   texio.write_nl('('..auxname..')')
@@ -383,12 +412,14 @@ local function init(arg, enable_height_computation)
     state_hashes = score_info.state_hashes or {}
     saved_lengths = score_info.saved_lengths or {}
     saved_newline_before_euouae = score_info.saved_newline_before_euouae or {}
+    first_alterations = score_info.first_alterations or {}
   else
     line_heights = {}
     last_syllables = {}
     state_hashes = {}
     saved_lengths = {}
     saved_newline_before_euouae = {}
+    first_alterations = {}
   end
 
   if enable_height_computation then
@@ -419,6 +450,7 @@ local function init(arg, enable_height_computation)
   saved_positions = {}
   new_saved_lengths = {}
   new_saved_newline_before_euouae = {}
+  new_first_alterations = {}
 end
 
 -- node factory
@@ -437,28 +469,39 @@ local function getdashnnode()
 end
 
 -- a simple (for now) function to dump nodes for debugging
-local function dump_nodes(head)
-  local n, m
+local function dump_nodes_helper(head, indent)
+  local dots = string.rep('..', indent)
   for n in traverse(head) do
+    local ids = format("%s", has_attribute(n, glyph_id))
     if node.type(n.id) == 'penalty' then
-      log("%s=%d {%d}", node.type(n.id), n.penalty, has_attribute(n, glyph_id_attr))
+      log(dots .. "%s %s {%s}", node.type(n.id), n.penalty, ids)
     elseif n.id == whatsit and n.subtype == user_defined_subtype and n.user_id == marker_whatsit_id then
-      log("marker-whatsit %s", n.value)
-    else
-      log("node %s [%d] {%d}", node.type(n.id), n.subtype, has_attribute(n, glyph_id_attr))
-    end
-    if n.id == hlist then
-      for m in traverse(n.head) do
-        if node.type(m.id) == 'penalty' then
-          log("..%s=%d {%d}", node.type(m.id), m.penalty, has_attribute(n, glyph_id_attr))
-        elseif m.id == whatsit and m.subtype == user_defined_subtype and m.user_id == marker_whatsit_id then
-          log("..marker-whatsit %s", m.value)
-        else
-          log("..node %s [%d] {%d}", node.type(m.id), m.subtype, has_attribute(n, glyph_id_attr))
-        end
+      log(dots .. "marker-whatsit %s", n.value)
+    elseif n.id == glyph then
+      local f = font.fonts[n.font]
+      local charname
+      for k, v in pairs(f.resources.unicodes) do
+        if v == n.char then charname = k end
       end
+      log(dots .. "glyph %s {%s}", charname, ids)
+    elseif n.id == rule then
+      log(dots .. "rule [%s] width=%.2fpt height=%.2fpt depth=%.2fpt", n.subtype, n.width/2^16, n.height/2^16, n.depth/2^16)
+    elseif n.id == hlist or n.id ==vlist then
+      log(dots .. "%s [%s] width=%.2fpt height=%.2fpt depth=%.2fpt shift=%.2fpt {%s}", node.type(n.id), n.subtype, n.width/2^16, n.height/2^16, n.depth/2^16, n.shift/2^16, ids)
+    elseif n.id == glue then
+      log(dots .. "glue [%s] width=%.2fpt", n.subtype, n.width/2^16)
+    else
+      log(dots .. "node %s [%s] {%s}", node.type(n.id), n.subtype, ids)
+    end
+    if n.id == hlist or n.id == vlist then
+      dump_nodes_helper(n.head, indent+1)
     end
   end
+end
+
+local function dump_nodes(head)
+  log('--begin dump--')
+  dump_nodes_helper(head, 0)
   log('--end dump--')
 end
 
@@ -520,14 +563,160 @@ end
 
 gregoriotex.module.debugmessage = debugmessage
 
+-- Find stafflines and commentary, which are meant to take up the full
+-- line width, and adjust them to actually take up the full line
+-- width.
+local function adjust_fullwidth (line)
+  -- Determine line width, ignoring \leftskip
+  local line_width = line.width
+  for child in node.traverse(line.head) do
+    if child.id == glue and child.subtype == 8 then
+      line_width = line_width - node.effective_glue(child, line)
+    end
+  end
+  debugmessage("stafflines", "line width %spt", line_width/2^16)
+
+  local function visit(cur)
+    for child in node.traverse_list(cur.head) do
+      if has_attribute(child, part_attr, part_commentary) then
+        debugmessage("adjust_fullwidth", "commentary width %spt -> %spt", child.width/2^16, line_width/2^16)
+        child.width = line_width
+        local new = node.hpack(child.head, line_width, 'exactly')
+        cur.head = node.insert_before(cur.head, child, new)
+        cur.head = node.remove(cur.head, child)
+      elseif has_attribute(child, part_attr, part_stafflines) then
+        debugmessage("adjust_fullwidth", "staff width %spt -> %spt", child.width/2^16, line_width/2^16)
+        for r in traverse_id(rule, child.head) do
+          r.width = line_width
+        end
+        child.width = line_width
+      else
+        visit(child)
+      end
+    end
+  end
+
+  visit(line)
+end
+
+-- Adjust height and depth of an hlist to fit its contents
+local function adjust_hlist(cur)
+  local new_height = 0
+  local new_depth = 0
+  for child in traverse(cur.head) do
+    if child.id == hlist or child.id == vlist then
+      new_height = math.max(new_height, child.height - child.shift)
+      new_depth = math.max(new_depth, child.depth + child.shift)
+    elseif child.id == rule or child.id == glyph then
+      new_height = math.max(new_height, child.height)
+      new_depth = math.max(new_depth, child.depth)
+    end
+  end
+  debugmessage('adjust_hlist', 'height %spt -> %spt, depth %spt -> %spt', cur.height/2^16, new_height/2^16, cur.depth/2^16, new_depth/2^16)
+  cur.height = new_height
+  cur.depth = new_depth
+end
+
+local function find_attr(cur, attr, val)
+  if has_attribute(cur, attr, val) then
+    return cur
+  elseif cur.id == hlist or cur.id == vlist then
+    for child in traverse(cur.head) do
+      local found = find_attr(child, attr, val)
+      if found ~= nil then
+        return found
+      end
+    end
+  end
+end
+
+local function drop_initial(h)
+  -- If there is a dropped initial, lower it to its correct position
+  local indented = tex.count['gre@count@initiallines']
+  debugmessage("initial", "%s indented lines", indented)
+
+  local initial, initial_line
+  local save_height, save_depth, save_shift
+
+  -- Find the initial.
+  for line in traverse_id(hlist, h) do
+    initial = find_attr(line, part_attr, part_initial)
+    if initial ~= nil then
+      initial_line = line
+      break
+    end
+  end
+  debugmessage('initial', 'found initial with height=%spt depth=%spt shift=%spt', initial.height/2^16, initial.depth/2^16, initial.shift/2^16)
+  save_height, save_depth, save_shift = initial.height, initial.depth, initial.shift
+
+  -- Add up the total distance from the initial's current position
+  -- (baseline of first line) to the baseline of the last indented line.
+  local last_line
+  local last_glue
+  local last_distance = 0
+  local line_num = 0
+  for line in traverse(h) do
+    if line.id == glue then
+      debugmessage("initial", "glue %spt", line.width/2^16)
+      if line_num == indented then last_glue = line end
+      -- bug: this can't account for stretch or shrink
+      if line_num >= 1 and line_num < indented then
+        last_distance = last_distance + line.width
+      end
+    elseif line.id == hlist then
+      debugmessage("initial", "line height=%spt depth=%spt", line.height/2^16, line.depth/2^16)
+      line_num = line_num + 1
+      if line_num > 1 and line_num <= indented then
+        last_distance = last_distance + line.height
+      end
+      if line_num < indented then
+        last_distance = last_distance + line.depth
+      end
+      if line_num <= indented then last_line = line end
+    end
+  end
+  debugmessage("initial", "distance from first to last indented line is %spt", last_distance/2^16)
+
+  -- Compute the shift. If initialposition = 0 (firsttop) or 1
+  -- (firstbaseline) then it's already in the right place, but
+  -- otherwise it's aligned with the baseline of the first line and
+  -- needs to be adjusted.
+  local initial_shift = 0
+  if tex.count['gre@count@initialposition'] == 2 then
+    debugmessage('initial', 'align to baseline of last line')
+    initial_shift = last_distance
+  elseif tex.count['gre@count@initialposition'] == 3 then
+    debugmessage('initial', 'align to bottom of last line')
+    initial_shift = last_distance + last_line.depth
+  end
+  debugmessage("initial", "initial shift is %spt", initial_shift/2^16)
+
+  -- Perform the shift
+  initial.shift = save_shift + initial_shift
+  
+  -- Adjust height of first line using the initial's true height
+  initial_line.height = math.max(initial_line.height, save_height - initial_shift)
+  -- Pretend that the initial's descender is on the last indented line
+  local save_last_depth = last_line.depth
+  last_line.depth = math.max(last_line.depth, save_depth + initial_shift - last_distance)
+
+  -- Adjust glue between last line and the line after it.
+  if last_glue and last_glue.subtype == 2 then -- baselineskip
+    last_glue.width = last_glue.width - last_line.depth + save_last_depth
+    if last_glue.width < tex.lineskiplimit then
+      last_glue.subtype = 1 -- lineskip
+      node.setglue(last_glue, node.getglue(tex.lineskip))
+    end
+    debugmessage('initial', 'set last_glue to %spt plus %spt minus %spt', last_glue.width/2^16, last_glue.stretch/2^16, last_glue.shrink/2^16)
+  end
+
+end
+  
 -- in each function we check if we really are inside a score,
 -- which we can see with the dash_attr being set or not
 local function post_linebreak(h, groupcode, glyphes)
   -- TODO: to be changed according to the font
   local lastseennode            = nil
-  local adddash                 = false
-  local currentfont             = 0
-  local currentshift            = 0
   local centerstartnode         = nil
   local line_id                 = nil
   local line_top                = nil
@@ -559,6 +748,7 @@ local function post_linebreak(h, groupcode, glyphes)
         line_bottom = nil
         line_has_translation = false
         line_has_abovelinestext = false
+
         for n in traverse_id(hlist, line.head) do
           syl_id = has_attribute(n, syllable_id_attr) or syl_id
           if has_attribute(n, center_attr, startcenter) then
@@ -569,32 +759,12 @@ local function post_linebreak(h, groupcode, glyphes)
             else
               center_translation(centerstartnode, n, line.glue_set, line.glue_sign, line.glue_order)
             end
-          elseif has_attribute(n, dash_attr, potentialdashvalue) then
-            adddash=true
-            lastseennode=n
-            currentfont = 0
-            -- we traverse the list, to detect the font to use,
-            -- and also not to add an hyphen if there is already one
-            for g in node.traverse_id(glyph, n.head) do
-              if currentfont == 0 then
-                currentfont = g.font
-              end
-              if g.char == hyphen or g.char == 45 then
-                adddash = false
-              end
-            end
-            if currentshift == 0 then
-              currentshift = n.shift
-            end
-            -- if we encounter a text that doesn't need a dash, we acknowledge it
-          elseif has_attribute(n, dash_attr, nopotentialdashvalue) then
-            adddash=false
           end
-
+ 
           if new_score_heights then
             local glyph_id = has_attribute(n, glyph_id_attr)
-            local glyph_top = has_attribute(n, glyph_top_attr) or 9 -- 'g'
-            local glyph_bottom = has_attribute(n, glyph_bottom_attr) or 9 -- 'g'
+            local glyph_top = has_attribute(n, glyph_top_attr) or 7 -- 'e' = \gre@pitch@dummy
+            local glyph_bottom = has_attribute(n, glyph_bottom_attr) or 7 -- 'e' = \gre@pitch@dummy
             if glyph_id and glyph_id > prev_line_id then
               if not line_id or glyph_id > line_id then
                 line_id = glyph_id
@@ -617,13 +787,7 @@ local function post_linebreak(h, groupcode, glyphes)
                 is_mark(n, abovelinestext_mark)
           end
         end
-        if adddash==true then
-          local dashnode, hyphnode = getdashnnode()
-          dashnode.shift = currentshift
-          hyphnode.font = currentfont
-          insert_after(line.head, lastseennode, dashnode)
-          addash=false
-        end
+
         if line_id then
           new_score_heights[prev_line_id] = { linenum, line_top, line_bottom,
               line_has_translation and 1 or 0,
@@ -635,10 +799,82 @@ local function post_linebreak(h, groupcode, glyphes)
           new_score_last_syllables[syl_id] = syl_id
         end
       end
-      -- we reinitialize the shift value, because it may change according to the line
-      currentshift=0
     end
   end
+
+  -- If there is a dropped initial, lower it to its correct position
+  if tex.count['gre@count@initiallines'] > 1 or tex.count['gre@count@initialposition'] == 3 then
+    drop_initial(h)
+  end
+
+  -- Change width of staff lines and commentary
+  for line in traverse_id(hlist, h) do
+    adjust_fullwidth(line)
+  end
+
+  -- Collect information about each alteration (flat, sharp, or natural):
+  --   1 if it is the first alteration on the line (on the same pitch)
+  --   2 if it has a different type from the previous alteration on the line (on the same pitch)
+  --   3 otherwise.
+  for line in traverse_id(hlist, h) do
+    local seen = {}
+    for n in traverse_id(hlist, line.head) do
+      -- This skips custos alterations because they're one level
+      -- deeper. As a result, they are always printed.
+      local t = has_attribute(n, alteration_type_attr)
+      if t ~= nil and t > 0 then
+        local i = has_attribute(n, alteration_id_attr)
+        local h = has_attribute(n, alteration_pitch_attr)
+        if seen[h] == nil then
+          new_score_first_alterations[i] = 1
+        elseif seen[h] ~= t then
+          new_score_first_alterations[i] = 2
+        else
+          new_score_first_alterations[i] = 3
+        end
+        new_score_first_alterations['last'] = i
+        debugmessage("alteration", "id=%s type=%s height=%s seen=%s first=%s", i, t, h, seen[t], new_score_first_alterations[i])
+        seen[h] = t
+      end
+    end
+  end
+
+  -- Look for words that are broken across lines and insert a hyphen
+  for line in traverse_id(hlist, h) do
+    if has_attribute(line, dash_attr) then
+      -- Look for the last node that has dash_attr > 0
+      local adddash=false
+      for n in traverse_id(hlist, line.head) do
+        -- If a syllable is not word-final, it may need a dash if it
+        -- ends up being line-final.
+        -- Note: This also loops over translations, but translations
+        -- come before lyrics, so they should never become lastseennode
+        if has_attribute(n, dash_attr, potentialdashvalue) then
+          adddash=true
+          lastseennode=n
+          -- if we encounter a text that doesn't need a dash, we acknowledge it
+        elseif has_attribute(n, dash_attr, nopotentialdashvalue) then
+          adddash=false
+        end
+      end
+
+      -- If the last syllable needed a dash, add it
+      if adddash then
+        local lastglyph
+        -- we traverse the list, to detect the font to use,
+        -- and also not to add an hyphen if there is already one
+        for g in node.traverse_id(glyph, lastseennode.head) do
+          lastglyph = g
+        end
+        if not (lastglyph.char == hyphen or lastglyph.char == 45) then
+          local dashnode, hyphnode = getdashnnode()
+          hyphnode.font = lastglyph.font
+          insert_after(lastseennode.head, lastglyph, dashnode)
+        end
+      end
+    end
+  end
+
   --dump_nodes(h)
   -- due to special cases, we don't return h here (see comments in bug #20974)
   return true
@@ -746,6 +982,10 @@ local function at_score_beginning(score_id)
   if score_last_syllables and state_hashes[score_id] ~= state then
     score_last_syllables = nil
   end
+  score_first_alterations = first_alterations[score_id]
+  if score_first_alterations and state_hashes[score_id] ~= state then
+    score_first_alterations = nil
+  end
   if new_state_hashes then
     new_state_hashes[score_id] = state
   end
@@ -753,12 +993,19 @@ local function at_score_beginning(score_id)
     new_score_last_syllables = {}
     new_last_syllables[score_id] = new_score_last_syllables
   end
+  if new_first_alterations then
+    new_score_first_alterations = {}
+    new_first_alterations[score_id] = new_score_first_alterations
+  end
 
   luatexbase.add_to_callback('post_linebreak_filter', post_linebreak, 'gregoriotex.post_linebreak', 1)
   luatexbase.add_to_callback("hyphenate", disable_hyphenation, "gregoriotex.disable_hyphenation", 1)
 end
 
+--- Finish a score
+-- Reset variables to out of score state and remove our callbacks
 local function at_score_end()
+  inside_score = false
   luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.post_linebreak')
   luatexbase.remove_from_callback("hyphenate", "gregoriotex.disable_hyphenation")
   per_line_dims = {}
@@ -766,6 +1013,23 @@ local function at_score_end()
   saved_dims = {}
   saved_counts = {}
 end
+
+--- Toggle the state of GretorioTeX callbacks.
+-- Our callbacks can affect fancyhdr's ability to create multi-line headers/footers
+-- By adding this function to fancyhdr's before and after hooks, our callbacks are removed
+-- while processing headers/footers and then reinstated for the rest of the score.
+local function fancyhdr_toggle_callbacks()
+  if inside_score then
+    if luatexbase.is_active_callback('post_linebreak_filter','gregoriotex.post_linebreak') then
+      luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.post_linebreak')
+      luatexbase.remove_from_callback("hyphenate", "gregoriotex.disable_hyphenation")
+    else
+      luatexbase.add_to_callback('post_linebreak_filter', post_linebreak, 'gregoriotex.post_linebreak', 1)
+      luatexbase.add_to_callback("hyphenate", disable_hyphenation, "gregoriotex.disable_hyphenation", 1)
+    end
+  end
+end
+
 
 -- Inserted copy of https://github.com/ToxicFrog/luautil/blob/master/lfs.lua
 local windows = package.config:sub(1,1) == "\\"
@@ -809,119 +1073,91 @@ function lfs.dirname(oldpath)
   return path
 end
 
--- Recursive directory creation a la mkdir -p. Unlike lfs.mkdir, this will
--- create missing intermediate directories, and will not fail if the
--- destination directory already exists.
--- It assumes that the directory separator is '/' and that the path is valid
--- for the OS it's running on, e.g. no trailing slashes on windows -- it's up
--- to the caller to ensure this!
-function lfs.rmkdir(path)
-  path = lfs.normalize(path)
-  if lfs.exists(path) then
-    return true
-  end
-  if lfs.dirname(path) == path then
-    -- We're being asked to create the root directory!
-    return nil,"rmkdir: unable to create root directory"
-  end
-  local r,err = lfs.rmkdir(lfs.dirname(path))
-  if not r then
-    return nil,err.." (creating "..path..")"
-  end
-  return lfs.mkdir(path)
-end
--- end https://github.com/ToxicFrog/luautil/blob/master/lfs.lua
-
-local function clean_old_gtex_files(file_withdir)
-  local filename = ""
-  local dirpath = ""
-  local sep = ""
-  local onwindows = os.type == "windows" or
-    string.find(os.getenv("PATH"),";",1,true)
-  if onwindows then
-    sep = "\\"
-  else
-    sep = "/"
-  end
-  dirpath = string.match(file_withdir, "(.*)"..sep)
-  if dirpath then -- dirpath is nil if current directory
-    filename = "^"..file_withdir:match(".*/".."(.*)").."%-%d+_%d+_%d+[-%a%d]*%.gtex$"
-    if lfs.exists(dirpath) then
-      for a in lfs.dir(dirpath) do
+local function delete_versioned_files(dir, base, ext)
+  -- Assume that dir is either empty (current directory) or ends with separator
+  filename = "^"..base.."%-%d+_%d+_%d+[-%a%d]*%."..ext.."$"
+  if dir ~= "" then
+    if lfs.exists(dir) then
+      for a in lfs.dir(dir) do
+        a = lfs.normalize(a)
         if a:match(filename) then
-          os.remove(dirpath..sep..a)
+          info("Deleting old file %s", dir..a)
+          os.remove(dir..a)
         end
       end
     end
   else
-    filename = "^"..file_withdir.."%-%d+_%d+_%d+[-%a%d]*%.gtex$"
     for a in lfs.dir(lfs.currentdir()) do
-      if a:match(filename) then os.remove(a) end
+      a = lfs.normalize(a)
+      if a:match(filename) then
+        info("Deleting old file %s", a)
+        os.remove(a)
+      end
     end
   end
 end
 
+function table.extend(x, y)
+  table.move(y, 1, #y, #x+1, x)
+end
+
 local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
   info("compiling the score %s...", gabc_file)
-  local extra_args = ''
+  local cmd = {gregorio_exe()}
   if tex.count['gre@generate@pointandclick'] == 1 then
-    extra_args = extra_args..' -p'
+    table.insert(cmd, '-p')
   end
   if not allow_deprecated then
-    extra_args = extra_args..' -D'
+    table.insert(cmd, '-D')
   end
 
-  local cmd = string.format('%s %s -W -o %s -l %s "%s" 2> %s', gregorio_exe(),
-      extra_args, gtex_file, glog_file, gabc_file, glog_file)
-  res = os.execute(cmd)
+  table.extend(cmd, {'-W', '-o', gtex_file, '-l', glog_file, gabc_file})
+  info("running: %s", table.concat(cmd, ' '))
+  res = os.spawn(cmd)
+
   if res == nil then
     err("\nSomething went wrong when executing\n    '%s'.\n"
         .."shell-escape mode may not be activated. Try\n\n"
         .."%s --shell-escape %s.tex\n\n"
         .."See the documentation of Gregorio or your TeX\n"
         .."distribution to automatize it.",
-        cmd, tex.formatname, tex.jobname)
+        table.concat(cmd, ' '), tex.formatname, tex.jobname)
   elseif res ~= 0 then
-    local glog = io.open(glog_file, 'a+')
-    if glog == nil then
-      err("\n Unable to open %s", glog_file)
-    else
-      local size = glog:seek('end')
-      if size > 0 then
-        glog:seek('set')
-        local line
-        for line in glog:lines() do
-          warn(line)
-        end
-      end
-      glog:close()
-    end
-    err("\nAn error occured when compiling the score file\n"
-        .."'%s' with %s.\nPlease check your score file.", gabc_file,
-        gregorio_exe())
+    err("\nSomething went wrong when executing\n    '%s'",
+        table.concat(cmd, ' '))
   else
-    -- open the gtex file for writing so that LuaTeX records output to it
-    -- when the -recorder option is used
-    local gtex = io.open(gtex_file, 'a')
-    if gtex == nil then
-      err("\n Unable to open %s", gtex_file)
-    else
-      gtex:close()
-    end
-    local glog = io.open(glog_file, 'a+')
+    -- Open glog_file for writing so that the LuaTeX recorder knows that gregorio wrote to it.
+    local glog = io.open(glog_file, 'a')
     if glog == nil then
-      err("\n Unable to open %s", glog_file)
+      warn("\n Unable to open %s for writing. If another program depends on %s, latexmk may not recognize the dependency", glog_file, glog_file)
     else
-      local size = glog:seek('end')
-      if size > 0 then
-        glog:seek('set')
-        local line
-        for line in glog:lines() do
-          warn(line)
-        end
-        warn("*** end of warnings for %s ***", gabc_file)
+      glog:close()
+    end
+    -- Copy the contents of glog_file into warnings.
+    glog = io.open(glog_file, 'r')
+    if glog == nil then
+      err("\n Unable to open %s for reading", glog_file)
+    else
+      for line in glog:lines() do
+        warn(line)
       end
       glog:close()
+    end
+    
+    if res ~= 0 then
+      err("\nAn error occured when compiling the score file\n"
+          .."'%s' with %s.\nPlease check your score file.", gabc_file,
+          gregorio_exe())
+    else
+      -- The next few lines would open the gtex file for writing so that LuaTeX records the fact that gregorio has written to it
+      -- when the -recorder option is used.
+      -- However, in restricted \write18 mode, the gtex file might not be writable. Since we're the sole consumer of the gtex file, it should be okay not to record the write.
+      local gtex = io.open(gtex_file, 'a')
+      if gtex == nil then
+        warn("\n Unable to open %s for writing. If another program depends on %s, latexmk may not recognize the dependency.", gtex_file, gtex_file)
+      else
+        gtex:close()
+      end
     end
   end
 end
@@ -932,6 +1168,7 @@ local function locate_file(filename)
     gre_input_path = {""}
   end
   for i,k in pairs(gre_input_path) do
+    k = lfs.normalize(k)
     log("Looking in %s", k)
     if lfs.isfile(k .. filename) then
       result = k..filename
@@ -957,116 +1194,107 @@ local function locate_file(filename)
   return result
 end
 
-local function include_score(input_file, force_gabccompile, allow_deprecated)
-  if string.match(input_file, "[#%%]") then
+local function include_score(gabc_file, force_gabccompile, allow_deprecated)
+  gabc_file = lfs.normalize(gabc_file)
+  
+  if string.match(gabc_file, "[#%%]") then
     err("GABC filename contains invalid character(s): # %%\n"
-        .."Rename the file and retry: %s", input_file)
+        .."Rename the file and retry: %s", gabc_file)
   end
-  local has_extention = false
-  local file_dir,input_name
+  local gabc_dir, base
   local extensions = {['gabc']=true, ['gtex']=true, ['tex']=true}
-  if extensions[string.match(input_file, "([^%.\\/]*)$")] then
-    has_extention = true
-  end
-  if has_extention then
-    file_dir,input_name = string.match(input_file, "(.-)([^\\/]-)%.?[^%.\\/]*$")
+  if extensions[string.match(gabc_file, "([^%./]*)$")] then
+    gabc_dir, base = string.match(gabc_file, "(.-)([^/]-)%.?[^%./]*$")
   else
-    file_dir,input_name = string.match(input_file, "(.-)([^\\/]*)$")
+    gabc_dir, base = string.match(gabc_file, "(.-)([^/]*)$")
   end
+  local base_cleaned = base:gsub("[%s%+%&%*%?$@:;!\"\'`]", "-")
 
-  local cleaned_filename = input_name:gsub("[%s%+%&%*%?$@:;!\"\'`]", "-")
-  local gabc_filename = string.format("%s%s.gabc", file_dir, input_name)
-  local gabc_file = locate_file(gabc_filename)
-  local gtex_filename = string.format("%s%s-%s.gtex", file_dir, cleaned_filename,
-      internalversion:gsub("%.", "_"))
-  local gtex_file = locate_file(gtex_filename)
-  local glog_file = string.format("%s%s-%s.glog", file_dir, cleaned_filename,
-      internalversion:gsub("%.", "_"))
-  if not gtex_file then
-    clean_old_gtex_files(file_dir..cleaned_filename)
-    log("The file %s does not exist. Will use gabc file", gtex_filename)
-    if gabc_file then
-      local gabc = io.open(gabc_file, 'r')
-      if gabc == nil then
-        err("\n Unable to open %s", gabc_file)
-        return
-      else
-        gabc:close()
+  -- Find gabc file
+  gabc_file = string.format("%s%s.gabc", gabc_dir, base)
+  local gabc_found = locate_file(gabc_file)
+  if gabc_found then
+    gabc_found = lfs.normalize(gabc_found)
+  end
+  
+  -- Set up output directory
+  local output_dir = base_output_dir..'/'..gabc_dir
+  output_dir = string.explode(output_dir, '/')
+  for i, _ in ipairs(output_dir) do
+    if output_dir[i] == '..' then output_dir[i] = 'dotdot' end
+  end
+  output_dir = table.concat(output_dir, '/')
+  info('Output directory: %s', output_dir)
+  if not lfs.exists(output_dir) then
+    local ok, message = lfs.mkdirp(output_dir)
+    if not ok then
+      info('Could not create directory %s: %s', output_dir, message)
+    end
+  end
+    
+  -- Choose output filenames
+  gtex_file = string.format("%s%s-%s.gtex", output_dir, base_cleaned,
+                            internalversion:gsub("%.", "_"))
+  glog_file = string.format("%s%s-%s.glog", output_dir, base_cleaned,
+                            internalversion:gsub("%.", "_"))
+
+  -- Decide if we need to recompile
+  local needs_compile = false
+  if gabc_found then
+    if lfs.exists(gtex_file) then
+      local gtex_timestamp = lfs.attributes(gtex_file).modification
+      local gabc_timestamp = lfs.attributes(gabc_found).modification
+      if gtex_timestamp < gabc_timestamp then
+        log("%s has been modified and %s needs to be updated. Recompiling the gabc file", gabc_found, gtex_file)
+        needs_compile = true
       end
-      local sep = ""
-      local onwindows = os.type == "windows" or
-        string.find(os.getenv("PATH"),";",1,true)
-      if onwindows then
-        sep = "\\"
-      else
-        sep = "/"
-      end
-      local output_dir = base_output_dir..sep..file_dir
-      info(output_dir)
-      if not lfs.exists(output_dir) then
-        if not lfs.exists(base_output_dir) then
-          lfs.mkdir(base_output_dir)
-        end
-        local err,message = lfs.rmkdir(output_dir)
-        if not err then
-          info(message)
-        end
-      end
-      gtex_filename = string.format("%s%s-%s.gtex", output_dir, cleaned_filename,
-          internalversion:gsub("%.", "_"))
-      glog_file = string.format("%s%s-%s.glog", output_dir, cleaned_filename,
-          internalversion:gsub("%.", "_"))
-      compile_gabc(gabc_file, gtex_filename, glog_file, allow_deprecated)
-      tex.print(string.format([[\input %s\relax]], gtex_filename))
-      return
     else
-      err("The file %s does not exist", gabc_filename)
+      log("The file %s does not exist. Compiling gabc file", gtex_file)
+      needs_compile = true
+    end
+  else
+    if lfs.exists(gtex_file) then
+      log("The file %s does not exist. Using gtex file", gabc_file)
+    else
+      err("The file %s does not exist", gabc_file)
       return
     end
   end
-  if not gabc_file then
-    tex.print(string.format([[\input %s\relax]], gtex_file))
-    return
+  if needs_compile then
+    -- Delete old gtex files.
+    -- Before version 6.1, gtex files were stored in gabc_dir
+    delete_versioned_files(gabc_dir, base_cleaned, 'gtex')
+    delete_versioned_files(gabc_dir, base_cleaned, 'glog')
+    -- Since version 6.1, gtex files are stored in output_dir
+    delete_versioned_files(output_dir, base_cleaned, 'gtex')
+    delete_versioned_files(output_dir, base_cleaned, 'glog')
+
+    local gabc = io.open(gabc_found, 'r')
+    if gabc == nil then
+      err("\n Unable to open %s", gabc_found)
+      return
+    else
+      gabc:close()
+    end
+    compile_gabc(gabc_found, gtex_file, glog_file, allow_deprecated)
   end
-  local gtex_timestamp = lfs.attributes(gtex_file).modification
-  local gabc_timestamp = lfs.attributes(gabc_file).modification
-  -- open the gabc file for reading so that LuaTeX records input from it
-  -- when the -recorder option is used; do this here so that this happens
-  -- on every run
-  tex.sprint(catcode_at_letter, string.format(
-      [[\openin\gre@read@temp=%s\relax\closein\gre@read@temp]], gabc_file))
-  local gabc = io.open(gabc_file, 'r')
-  if gabc == nil then
-    err("\n Unable to open %s", gabc_file)
-  else
-    gabc:close()
-  end
-  if gtex_timestamp < gabc_timestamp then
-    log("%s has been modified and %s needs to be updated. Recompiling the gabc file.", gabc_file, gtex_file)
-    compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
-  elseif force_gabccompile then
-    compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
-  end
+
+  -- Input the gtex file
   tex.print(string.format([[\input %s\relax]], gtex_file))
-  return
 end
 
 local function direct_gabc(gabc, header, allow_deprecated)
   info('Processing gabc snippet...')
-  local deprecated
-  if allow_deprecated then
-    deprecated = ''
-  else
-    deprecated = '-D '
-  end
   local f = io.open(snippet_filename, 'w')
   -- trims spaces on both ends (trim6 from http://lua-users.org/wiki/StringTrim)
   gabc = gabc:match('^()%s*$') and '' or gabc:match('^%s*(.*%S)')
   f:write('name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par', '\n'))
   f:close()
-  local cmd = string.format([[%s -W %s-o "%%s" -l "%s" "%s"]], gregorio_exe(),
-      deprecated, snippet_logname, snippet_filename)
-  local content = get_prog_output(cmd, '*a')
+  cmd = {gregorio_exe(), '-W'}
+  if allow_deprecated then table.insert(cmd, '-D') end
+  table.extend(cmd, {'-o', tmpname, '-l', snippet_logname, snippet_filename})
+  info('Running %s', table.concat(cmd, ' '))
+  local content = get_prog_output(cmd, tmpname, '*a')
   if content == nil then
     err("\nSomething went wrong when executing\n    %s\n"
         .."shell-escape mode may not be activated. Try\n\n"
@@ -1368,7 +1596,9 @@ local function adjust_line_height(inside_discretionary, for_next_line)
     if for_next_line then
       local last = score_heights['last']
       if last then
-        local target_id = tex.getattribute(glyph_id_attr) + 1
+        -- Let target_id be the glyph_id of the last glyph on this line.
+        -- Then heights[target_id] is the information for the next line.
+        local target_id = tex.getattribute(glyph_id_attr)
         while target_id <= last do
           heights = score_heights[target_id]
           if heights then break end
@@ -1615,6 +1845,31 @@ local function hash_spaces(name, value)
   space_hash = md5.sumhexa(mash)
 end
 
+local function is_first_alteration(next)
+-- Arguments
+--   next: 0 for current alteration, 1 for next alteration
+-- Returns:
+--   0 = don't know, 1 = first in line, 2 = different from previous alteration, 3 = not first
+  if score_first_alterations then
+    local i = tex.getattribute(alteration_id_attr)
+    if next == 1 then
+      i = i + 1
+      while score_first_alterations[i] == nil and i < score_first_alterations['last'] do
+        i = i + 1
+      end
+    end
+    local v = score_first_alterations[i]
+    if v ~= nil then
+      debugmessage("alteration", "%s", v)
+      tex.print(v)
+    else
+      tex.print(0)
+    end
+  else
+    tex.print(0)
+  end
+end
+
 gregoriotex.number_to_letter             = number_to_letter
 gregoriotex.init                         = init
 gregoriotex.include_score                = include_score
@@ -1654,6 +1909,8 @@ gregoriotex.save_count                   = save_count
 gregoriotex.change_next_score_line_dim   = change_next_score_line_dim
 gregoriotex.change_next_score_line_count = change_next_score_line_count
 gregoriotex.set_base_output_dir          = set_base_output_dir
+gregoriotex.is_first_alteration          = is_first_alteration
+gregoriotex.fancyhdr_toggle_callbacks    = fancyhdr_toggle_callbacks
 
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))

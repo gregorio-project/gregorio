@@ -40,13 +40,13 @@ sed -i.temp 's:.*DEPRECATED.*::' $CODEFILE
 sed -i.temp 's/%.*$//' $CODEFILE
 
 #remove whitespace
-sed -i.temp 's/^[ \t]*//;s/[ \t]*$//' $CODEFILE
+sed -i.temp 's/^[[:space:]]*//;s/[[:space:]]*$//' $CODEFILE
 
 #remove new and trailing code
 sed -i.temp 's:.*\\new[a-z]*{*\(\\*[a-zA-Z@]*\)[\\}]*.*:\1:' $CODEFILE
 
 #get rid of work around def
-sed -i.temp '/\\def\\x/d' $CODEFILE
+sed -i.temp 's/\\def\\x//' $CODEFILE
 
 #accept only first def on line
 sed -i.temp -E 's:\\[gex]?def:special:' $CODEFILE
@@ -100,6 +100,9 @@ sed -i.temp 's:\\gre@pitch.*::' $CODEFILE
 sed -i.temp 's:.*gre@char@he@.*::' $CODEFILE
 sed -i.temp 's:\\gre@protrusionfactor@.*::' $CODEFILE
 
+#remove LaTeX internal
+sed -i '/\\input@path/d' $CODEFILE
+
 #label file
 echo "00 Macros Defined in TeX" >> $CODEFILE
 
@@ -148,7 +151,7 @@ grep -h '\\gre@deprecated.*' *.tex | grep -v '\\def\\' >> $DOCFILE
 grep -h '\\gre@obsolete.*' *.tex | grep -v '\\def\\' >> $DOCFILE
 
 #remove whitespace
-sed -i.temp 's/^[ \t]*//;s/[ \t]*$//' $DOCFILE
+sed -i.temp 's/^[[:space:]]*//;s/[[:space:]]*$//' $DOCFILE
 
 sed -i.temp 's:.*\\gre@deprecated{.*::' $DOCFILE
 sed -i.temp 's:.*\\gre@obsolete{.*::' $DOCFILE
@@ -175,5 +178,4 @@ rm $CODEFILE.temp
 rm $CODEFILE
 rm $DIFFFILE
 
-#open result
-open $RESFILE
+cat $RESFILE

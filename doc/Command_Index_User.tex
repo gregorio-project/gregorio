@@ -1,7 +1,7 @@
 % !TEX root = GregorioRef.tex
 % !TEX program = LuaLaTeX+se
 %
-% Copyright (C) 2006-2021 The Gregorio Project (see CONTRIBUTORS.md)
+% Copyright (C) 2006-2025 The Gregorio Project (see CONTRIBUTORS.md)
 %
 % This file is part of Gregorio.
 %
@@ -903,13 +903,40 @@ Macro to add an illuminated initial.
 \textbf{Nota Bene:} Usually the argument of this command should be an \verb=\includegraphics= command, but you may use what ever you want as the illuminated initial.
 
 \macroname{\textbackslash gresetinitiallines}{\{\#1\}}{gregoriotex-syllable.tex}
-Sets the number of lines the score initial requires.
+Sets the number of lines the score initial requires (any non-negative integer).
 
 \begin{argtable}
   \#1 & number & The number of lines required by the initial.  If \texttt{0}, the score will have no separated initial.\\
 \end{argtable}
 
-\textbf{Nota Bene:} As currently implemented, you cannot set an initial which is larger than 2 lines and in order to do so you must set manual line breaks in the gabc for the first two lines.
+\macroname{\textbackslash gresetinitialanchor}{\{\#1\}}{gregoriotex-main.tex}
+Macro to specify which part of the initial letter is aligned with the setting of \verb|\gresetinitialposition|.
+
+\begin{argtable}
+  \#1 & \texttt{top} & The initial letter is aligned using its top. \\
+  & \texttt{baseline} & The initial letter is aligned using its baseline (default). \\
+  & \texttt{bottom} & The initial letter is aligned using its baseline. \\
+\end{argtable}
+
+\macroname{\textbackslash gresetinitialposition}{\{\#1\}}{gregoriotex-main.tex}
+
+Macro to specify which part of the staff the initial letter's anchor (\verb|\gresetinitialanchor|) is aligned with.
+
+\begin{argtable}
+  \#1 & \texttt{firsttop} & The initial letter's anchor is aligned with the top staff-line of the first line. \\
+  & \texttt{firstbaseline} & The initial letter's anchor is aligned with the baseline of the lyrics of the first line. \\
+  & \texttt{lastbaseline} & The initial letter's anchor is aligned with the baseline of the lyrics of the last line next to the initial (default). \\
+  & \texttt{lastbottom} & The initial letter's anchor is aligned with the bottom of the last line next to the initial. \\
+\end{argtable}
+
+\textbf{Nota Bene:} The \texttt{top} of a line is its top staff-line, excluding notes or text above the staff (the same position that the annotation is aligned to). But the \texttt{bottom} of the line is the very bottom, including lyrics and translations.
+
+The alignment specified by the above two macros is performed before \texttt{initialraise} is applied. When \verb|\gresetinitiallines| is set to 2 or more, the following settings may be preferable to the defaults:
+\begin{verbatim}
+\gresetinitialanchor{top}%
+\gresetinitialposition{firsttop}%
+\grechangedim{initialraise}{0.5cm}{scalable}%
+\end{verbatim}
 
 \macroname{\textbackslash gresetmodenumbersystem}{\{\#1\}}{gregoriotex-main.tex}
 Sets the number system used for the mode number.
@@ -1179,6 +1206,19 @@ Configures how notes should be kept together on line breaks.
                   lines.  Defaults to \getgrecount{unbreakablefinalnotes}.\\
 \end{argtable}
 
+\macroname{\textbackslash gresetunisonbreakbehavior}{\{\#1\}}{gregoriotex-main.tex}
+Macro to determine whether an automatic linebreak may occur between unison notes
+over a syllable.  This behavior governs how the system works when no explicit
+space is put between the notes.  In other words, any explicit space between the
+notes take precedence over this setting.
+
+\begin{argtable}
+  \#1 & \texttt{breakable}   & Allow automatic linebreaks between unison notes
+                               (default)\\
+      & \texttt{unbreakable} & Disallow automatic linebreaks between unison
+                               notes\\
+\end{argtable}
+
 
 \subsubsection{Bar spacing}
 
@@ -1394,6 +1434,24 @@ Macro to set the font to be used for the ancient notation.
   \#1 & string & the name of the font, either \texttt{gregall}, \texttt{grelaon}, or \texttt{gresgmodern}\\
   \#2 & integer & point size at which the font should be loaded\\
 \end{argtable}
+
+\subsubsection{Alterations (Flats, Naturals, and Sharps)}\label{setalterationeffect}
+
+\macroname{\textbackslash gresetalterationeffect}{\{\#1\}}{gregoriotex-signs.tex}
+Macro to set the effect of alterations (flats and sharps), for the purpose of deciding whether to print soft alterations (see \S\ref{softalterations}).
+
+\begin{argtable}
+  \#1 & \texttt{line} (default) & effect ends at the end of the line \\
+      & \texttt{note} & effect ends immediately \\
+\end{argtable}
+
+Soft flats are printed if no previous flat (on the same pitch) is in effect. Similarly for soft sharps. Soft naturals are printed if a previous flat or sharp (on the same pitch) is in effect.
+
+Thus, under \verb|\gresetalterationeffect{line}|, all sharps and flats are in effect until the end of the line (unless cancelled by a natural), which is the convention used in Dominican chant scores. For the currently envisioned uses of soft alterations, this is the right setting.
+
+Under \verb|\gresetalterationeffect{note}|, all sharps and flats lose their effect immediately, so all soft flats and sharps are printed (but no soft naturals are printed).
+
+(Argument \#1 is actually a comma-separated list of options. If multiple options are given, then an alteration's effect ends as soon as \emph{any} of the options says it should end. However, currently, the list must not be empty, and \texttt{note,line} has the same effect as \texttt{note}, because ``immediately'' always occurs before the end of the line. In the future, other options like \texttt{word} and \texttt{bar} may be added; \texttt{word,bar} would then be the convention used in most Gregorian chant scores.)
 
 \subsection{Counts}\label{counts}
 
@@ -1726,6 +1784,10 @@ The space above the lines.
 The space between the lines and the bottom of the text.
 \end{gdimension}
 
+\begin{gdimension}{noteadditionalspacelinestext}
+The per-note additional space between lines and the bottom of the text.
+\end{gdimension}
+
 \begin{gdimension}{spacebeneathtext}
 The space beneath the text.
 \end{gdimension}
@@ -1763,7 +1825,7 @@ Space around a clef change.
 \end{gdimension}
 
 \begin{gdimension}{initialraise}
-Distance the initial will be raised above its default baseline.  The default baseline for the initial coincides with the baseline for the text below the staff.
+Distance the initial will be raised above its default baseline.  The default baseline for the initial coincides with the baseline for the text below the staff, on the lowest line that the initial appears next to.
 \end{gdimension}
 
 \begin{gdimension}{overslurshift}

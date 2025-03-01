@@ -1,7 +1,7 @@
 #!/usr/bin/env texlua
 --[[
 Gregorio font automatic installation script.
-Copyright (C) 2010-2021 Gregorio Project authors
+Copyright (C) 2010-2025 Gregorio Project authors
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

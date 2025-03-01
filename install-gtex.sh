@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (C) 2015-2021 The Gregorio Project (see CONTRIBUTORS.md)
+# Copyright (C) 2015-2025 The Gregorio Project (see CONTRIBUTORS.md)
 #
 # This file is part of Gregorio.
 #
@@ -65,6 +65,11 @@
 # uninstall script generation and any existing uninstall script will be left
 # alone.
 
+# Before we do anything we make sure our working directory is the top level of the
+# repository (where this script is located).  This allows us to specify the files to be
+# installed by their relative locations in the repository.
+cd "${0%/*}"
+
 VERSION=`head -1 .gregorio-version`
 FILEVERSION=`echo $VERSION | sed 's/\./_/g'`
 
@@ -81,7 +86,7 @@ FONTSRCFILES=(greextra.sfd squarize.py convertsfdtottf.py gregall.sfd
 FONTSRCFILES=("${FONTSRCFILES[@]/#/fonts/}")
 FONTSRCFILES+=(fonts/*-base.sfd)
 TDSDOCFILES=(*.md)
-TDSSRCFILES=(gregorio-${VERSION}.tar.bz2)
+TDSSRCFILES=(gregorio-${VERSION}.zip)
 # Files which have been eliminated, or whose installation location have been
 # changed.  We will remove existing versions of these files in the target texmf
 # tree before installing.
@@ -298,12 +303,7 @@ then
     rm -f ${TDS_ZIP}
     (rm ${TEXMFROOT}/fonts/source/gregoriotex/gregorio-base.sfd ${TEXMFROOT}/fonts/source/gregoriotex/granapadano-base.sfd ) || die
     install_to "doc/luatex/${NAME}/" "${TDSDOCFILES[@]}"
-    tar xf ${TDSSRCFILES[@]}
-    cd gregorio-$VERSION
-    zip -r ../gregorio-$VERSION.zip * --exclude=*.DS_Store*
-    cd ..
-    install_to "source/luatex/${NAME}/" "gregorio-$VERSION.zip"
-    rm -rf gregorio-$VERSION gregorio-$VERSION.zip
+    install_to "source/luatex/${NAME}/" "${TDSSRCFILES[@]}"
     (cd ${TEXMFROOT} && zip -9 ../${TDS_ZIP} -q -r .) || die
     rm -r ${TEXMFROOT} || die
 else

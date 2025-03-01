@@ -1,4 +1,4 @@
--- Copyright (C) 2006-2021 The Gregorio Project (see CONTRIBUTORS.md)
+-- Copyright (C) 2006-2025 The Gregorio Project (see CONTRIBUTORS.md)
 --
 -- This file is part of Gregorio.
 --
@@ -38,7 +38,7 @@ local function sort_unique_keys(tables, compare)
     end
   end
   return sort_keys(set)
-end 
+end
 
 local EXCLUDE = {
   ['.notdef'] = true,
@@ -326,6 +326,9 @@ local GABC_FUSE = {
     Flexus = [[\excluded{e}@]],
     FlexusOriscus = [[\excluded{e}@]],
     FlexusOriscusInusitatus = [[\excluded{e}@]],
+    Virga = [[\excluded{e}@]],
+    VirgaLongqueue = [[\excluded{f}@]],
+    VirgaOpenqueue = { [[\excluded{a}@]], [[cv]] },
   },
   Lower = {
     Punctum = [[\excluded{i}@]],

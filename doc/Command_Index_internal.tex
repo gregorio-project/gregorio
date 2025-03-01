@@ -1,7 +1,7 @@
 % !TEX root = GregorioRef.tex
 % !TEX program = LuaLaTeX+se
 %
-% Copyright (C) 2006-2021 The Gregorio Project (see CONTRIBUTORS.md)
+% Copyright (C) 2006-2025 The Gregorio Project (see CONTRIBUTORS.md)
 %
 % This file is part of Gregorio.
 %
@@ -474,26 +474,11 @@ Typesets the alteration for a custos, if enabled.
       & \textit{empty} & The custos should not have an alteration.\\
 \end{argtable}
 
-\macroname{\textbackslash gre@beginnotes}{}{gregoriotex-main.tex}
-Macro to draw the staff lines.  Comes after the initial but before the clef.
-
 \macroname{\textbackslash gre@noinitial}{}{gregoriotex-main.tex}
 Macro called when no initial is being set.
 
-\macroname{\textbackslash gre@setbiginitial}{}{gregoriotex-main.tex}
-Macro which indicates that a 2-line initial is desired.
-
 \macroname{\textbackslash gre@setinitial}{\#1}{gregoriotex-main.tex}
 Macro to set the initial in the score.
-
-\macroname{\textbackslash gre@adjustsecondline}{}{gregoriotex.tex}
-Macro to call before first syllable, but after \verb=\GreSetInitialClef=.
-
-\macroname{\textbackslash gre@adjustthirdline}{}{gregoriotex-main.tex}
-Macro to call during the second line.
-
-\macroname{\textbackslash gre@adjustlineifnecessary}{}{gregoriotex-main.tex}
-Macro that calls \verb=\gre@adjustthirdline= if indicated by \verb=\ifgre@thirdlineadjustmentnecessary=.
 
 \macroname{\textbackslash gre@addspaceabove}{}{gregoriotex-main.tex}
 Macro to increase the space above the lines to account for above lines text.
@@ -501,19 +486,34 @@ Macro to increase the space above the lines to account for above lines text.
 \macroname{\textbackslash gre@removespaceabove}{}{gregoriotex-main.tex}
 Macro to decrease the space above the lines as there is no longer any above lines text.
 
-\macroname{\textbackslash gre@alteration}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-signs.tex}
+\macroname{\textbackslash gre@alteration}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
 Macro to typeset an alteration.
 
 \begin{argtable}
   \#1 & integer & height of the alteration\\
-  \#2 & character alias & the alteration\\
-  \#3 & character alias & the hole of the alteration\\
-  \#4 & \texttt{1} & the alteration is part of the clef\\
+  \#2 & integer & alteration type (see Section \ref{alterationtype})\\
+  \#3 & \texttt{1} & the alteration is part of the clef\\
   & \texttt{0} & the alteration is not part of the clef\\
-  \#5 & \TeX\ code & signs to typeset before the glyph (typically additional bars, as they must be "behind" the glyph)\\
-  \#6 & \TeX\ code & signs to typeset after the glyph (almost all signs)\\
-  \#7 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
+  \#4 & \TeX\ code & signs to typeset before the glyph (typically additional bars, as they must be ``behind'' the glyph)\\
+  \#5 & \TeX\ code & signs to typeset after the glyph (almost all signs)\\
+  \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
 \end{argtable}
+
+\macroname{\textbackslash gre@alteration@isvisible}{\#1\#2}{gregoriotex-signs.tex}
+Test whether an alteration should be visible or not.
+
+\begin{argtable}
+  \#1 & integer & 0 for current alteration, 1 for next alteration\\
+  \#2 & integer & alteration type (see Section \ref{alterationtype})\\
+\end{argtable}
+
+\macroname{\textbackslash gre@alteration@visible}{\#1\#2\#3\#4\#5\#6}{gregoriotex-signs.tex}
+The special case of \verb|gre@alteration| for when the alteration is visible.
+
+\macroname{\textbackslash gre@alteration@char}{}{gregoriotex-signs.tex}
+\vspace*{-10ex}%
+\macroname{\textbackslash gre@alteration@type}{}{gregoriotex-signs.tex}
+Used internally by \verb|\gre@alteration@visible|.
 
 \macroname{\textbackslash gre@clef}{}{gregoriotex-signs.tex}
 Macro holding the current clef type.
@@ -551,17 +551,8 @@ Macro for typesetting the text or nabc neumes above the lines.
 \macroname{\textbackslash gre@dotranslationcenterend}{}{gregoriotex-main.tex}
 Macro to typeset a centered translation.
 
-\macroname{\textbackslash gre@drawfirstlines}{}{gregoriotex-main.tex}
-Macro to draw the first set of lines in a score (when shortened by an initial).
-
 \macroname{\textbackslash gre@generatelines}{}{gregoriotex-main.tex}
 Macro to (re)populate the box containing the lines.
-
-\macroname{\textbackslash gre@updatelinewidth}{}{gregoriotex-main.tex}
-Macro to shorten the lines to account for the presence of the initial.
-
-\macroname{\textbackslash gre@knownline}{}{gregoriotex-main.tex}
-A count which keeps track of which line of the score we’re on.
 
 \macroname{\textbackslash gre@lastoflinecount}{}{gregoriotex-main.tex}
 Count to track where on the line we are.  Values are \texttt{0} (we are not near the end of a line), \texttt{1} (we’re at the last syllable of the line), and \texttt{2} (we just set the last syllable of the line and so are at the first syllable of a new line).
@@ -685,7 +676,7 @@ Macro to typeset a horizontal line (either an additional staff line or an episem
   & \texttt{l} & a small episema aligned left\\
   & \texttt{c} & a small episema aligned center\\
   & \texttt{r} & for a small episema aligned right\\
-  \#6 & string & a positive or negative "nudge" (dimension) for the vertical position of the horizontal episema\\
+  \#6 & string & a positive or negative ``nudge'' (dimension) for the vertical position of the horizontal episema\\
   \#7 & \texttt{0} & for horizontal episema cases, use automatic positioning within the space\\
   & \texttt{1} & for horizontal episema cases, position in the middle of the space\\
   & \texttt{2} & for horizontal episema cases, position low within the space as if the episema is over the note\\
@@ -746,9 +737,6 @@ Macro to help typesetting vertical episema.
 
 \macroname{\textbackslash gre@newglyphcommon}{}{gregoriotex-syllable.tex}
 Macro called before each glyph.
-
-\macroname{\textbackslash gre@normalinitial}{}{gregoriotex-main.tex}
-Macro called at the end of the score to ensure that a big initial setting doesn’t carry into the next score.
 
 \macroname{\textbackslash greoldcatcode}{}{gregoriotex.tex}
 Macro to store the catcode for ``@'' so that we can use said symbol in function names under Plain \TeX\ and then restore the original catcode after the package is done loading.
@@ -1306,9 +1294,6 @@ Sets the number of staff lines.
   \#1 & integer & The number of staff lines\\
 \end{argtable}
 
-\macroname{\textbackslash gre@stafflines}{}{gregoriotex-main.tex}
-Contains the number of staff lines.
-
 \macroname{\textbackslash gre@romannumeral@majuscule}{\#1}{gregoriotex-main.tex}
 Typesets its numeric argument as an upper-case Roman numeral.
 
@@ -1461,6 +1446,28 @@ Evaluates to the second of its arguments.
   \#1 & any & the first argument\\
   \#2 & any & the second argument\\
 \end{argtable}
+
+\macroname{\textbackslash gre@parsecommas}{\#1\#2}{gregoriotex-common.tex}
+Runs a command for each string in a comma-separated list of strings.
+
+\begin{argtable}
+  \#1 & string & a comma-separated list of strings\\
+  \#2 & control sequence & a command that takes one argument\\
+\end{argtable}
+
+\macroname{\textbackslash gre@parsecommas@options}{}{gregoriotex-common.tex}
+Internal to \verb|\gre@parsecommas|.
+
+\macroname{\textbackslash gre@makeparshape}{}{gregoriotex-main.tex}
+Sets the shape of the paragraph shape using \verb|\parshape|.
+
+\begin{argtable}
+  \#1 & integer & How many lines are indented \\
+  \#2 & dimen & The amount of the indentation \\
+\end{argtable}  
+
+\macroname{\textbackslash gre@parshape@dims}{}{gregoriotex-main.tex}
+Used inside \verb|\gre@makeparshape| to hold the \verb=\parshape= information needed to shape the score around the initial.
 
 \subsection{Auxiliary File}
 Gregorio\TeX\ creates its own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.
@@ -1764,9 +1771,6 @@ opposed to rendered via the score font.
 Boolean used to specify whether divisio braces should be drawn by \MP{} as
 opposed to rendered via the score font.
 
-\macroname{\textbackslash gre@biginitial}{}{gregoriotex-main.tex}
-Count to track whether the initial is big (2-lines) or normal (1-line).
-
 \macroname{\textbackslash ifgre@boxing}{}{gregoriotex-syllable.tex}
 Boolean to track whether we’re placing the contents of syllable notes into their box or actually printing that box (helps prevent spurious spaces from occurring when the box is being filled but not printed).
 
@@ -1902,20 +1906,8 @@ Boolean set and used by \verb=\GreSyllable= to decide if a hyphen should be show
 \macroname{\textbackslash ifgre@possibleluahyphenafterthissyllable}{}{gregoriotex-syllable.tex}
 Boolean set by \verb=\GreSyllable= indicating if the Lua pass may add an hyphen after the syllable, used by \verb=\gre@calculate@eolshift= for protrusion calculation.
 
-\macroname{\textbackslash ifgre@thirdlineadjustmentnecessary}{}{gregoriotex-syllable.tex}
-Boolean which indicates that a third-line adjustment to staff line width is necessary.
-
 \macroname{\textbackslash ifgre@scale@stafflinefactor}{}{gregoriotex-spaces.tex}
 Boolean indicating whether the stafflinefactor should scale with changes of \texttt{grefactor}, or not.
-
-\macroname{\textbackslash ifgre@haslinethree}{}{gregoriotex-spaces.tex}
-Boolean indicating whether the staff has a third line.
-
-\macroname{\textbackslash ifgre@haslinefour}{}{gregoriotex-spaces.tex}
-Boolean indicating whether the staff has a fourth line.
-
-\macroname{\textbackslash ifgre@haslinefive}{}{gregoriotex-spaces.tex}
-Boolean indicating whether the staff has a fifth line.
 
 \macroname{\textbackslash gre@count@shiftaftermora}{}{gregoriotex-signs.tex}
 Count indicating when the presence of a punctum mora at the end of a syllable should affect the spacing with the next syllable.
@@ -1961,6 +1953,10 @@ Boolean indicating that the next syllable had a forced center in the gabc which 
 \macroname{\textbackslash ifgre@unbreakableendofelement}{}{gregoriotex-main.tex}
 Boolean used by \verb=\GreEndOfElement= to store whether the line may be broken at that point.
 
+\macroname{\textbackslash gre@unbreakableendofelement@unison}{}{gregoriotex-main.tex}
+Alias that sets \verb=\ifgre@unbreakableendofelement= according to the
+\verb=\setunisonbreakbehavior= preference.
+
 \macroname{\textbackslash gre@count@syllablenotes}{}{gregoriotex-syllable.tex}
 Count containing the number of notes in the syllable.
 
@@ -1991,8 +1987,18 @@ Boolean indicating whether the translation should be shown.
 \macroname{\textbackslash ifgre@showabovelinestext}{}{gregoriotex-main.tex}
 Boolean indicating whether the above lines text should be shown.
 
-\macroname{\textbackslash gre@initiallines}{}{gregoriotex-syllable.tex}
-Number of lines the initial takes up.  Currently limited to 0, 1, or 2.  Not currently a count, but will be changed to one in 5.0.
+\macroname{\textbackslash gre@count@initiallines}{}{gregoriotex-syllable.tex}
+Number of lines the initial takes up.
+
+\macroname{\textbackslash gre@count@initialanchor}{}{gregoriotex-main.tex}
+
+What part of the initial is aligned to \verb|\gre@count@initialposition|:
+0 = top of initial (\texttt{top}); 1 = baseline of initial (\texttt{baseline}); 2 = bottom of initial (\texttt{bottom}).
+
+\macroname{\textbackslash gre@count@initialposition}{}{gregoriotex-main.tex}
+
+The position where the initial appears. 
+0 = top of first line (\texttt{firsttop}), that is, the top staff-line; 1 = baseline of first line (\texttt{firstbaseline}); 2 = baseline of last indented line (\texttt{lastbaseline}); 3 = bottom of last indented line (\texttt{lastbottom}).
 
 \macroname{\textbackslash ifgre@rewritethissyllable}{}{gregoriotex-syllable.tex}
 Boolean indicating that a syllable should be rewritten to improve ligature rendering.
@@ -2006,6 +2012,48 @@ Boolean indicating that some aspect of the next syllable is being evaluated in a
 \macroname{\textbackslash ifgre@noteadditionalspacelinestext}{}{gregoriotex-main.tex}
 Boolean indicating that the additional space needed between the notes and the lyrics due to really low notes should follow the user setting of noteadditionalspacelinestext (as opposed to being calculated automatically, the default).
 
+\macroname{\textbackslash gre@count@stafflines}{}{gregoriotex-main.tex}
+Count containing the number of staff lines.
+
+\macroname{\textbackslash ifgre@alteration@effect@note}{}{gregoriotex-signs.tex}
+Boolean indicating that soft alterations should last until they apply to a single note (i.e. all soft alterations will be printed).
+
+\macroname{\textbackslash gre@attr@alteration@id}{}{gregoriotex-main.tex}
+Unique identifier of an alteration, numbered consecutively starting from 1. If an
+alteration is set twice, once for measurement and once for printing,
+they have the same id (unlike glyph ids).
+
+\macroname{\textbackslash gre@attr@alteration@pitch}{}{gregoriotex-main.tex}
+\vspace*{-10ex}%
+\macroname{\textbackslash gre@attrid@alteration@pitch}{}{gregoriotex-main.tex}
+\vspace*{-10ex}%
+\macroname{\textbackslash gre@attr@alteration@type}{}{gregoriotex-main.tex}
+\vspace*{-10ex}%
+\macroname{\textbackslash gre@attrid@alteration@type}{}{gregoriotex-main.tex}
+The pitch and type of an alteration. For alteration types, please see Section~\ref{alterationtype}. The control sequences with \verb|attr| in their name are attributes, while those with \verb|attrid| in their names are attribute numbers (for use with \verb|\hbox attr|).
+
+\macroname{\textbackslash ifgre@alteration@isvisible}{}{gregoriotex-signs.tex}
+Flag returned by \verb|gre@alteration@isvisible|.
+
+\macroname{\textbackslash ifgre@alteration@effect@line}{}{gregoriotex-signs.tex}
+Boolean indicating that soft alterations should last until the end of line.
+
+\macroname{\textbackslash gre@count@parsecommas@cur}{}{gregoriotex-common.tex}
+Internal to \verb|\gre@parsecommas|.
+
+\macroname{\textbackslash gre@alteration@effect@process}{}{gregoriotex-signs.tex}
+Internal to \verb|\gresetalterationeffect|.
+
+\macroname{\textbackslash gre@nextalteration}{}{gregoriotex-syllable.tex}
+\vspace*{-10ex}%
+\macroname{\textbackslash gre@nextalignment}{}{gregoriotex-syllable.tex}
+Internal to \verb|\gre@syllable@act|.
+
+\macroname{\textbackslash gre@attr@part}{}{gregoriotex-main.tex}
+\vspace*{-10ex}%
+\macroname{\textbackslash gre@attrid@part}{}{gregoriotex-main.tex}
+An attribute to mark various parts of the score. \verb|gre@attr@part| is the attribute, while \verb|gre@attrid@part| is the attribute number (to be used with \verb|\hbox attr|).
+1 = commentary, 2 = stafflines, 3 = initial.
 
 \subsection{Boxes}
 
@@ -2132,10 +2180,6 @@ Dimension representing the width from the beginning of the letters in
 a syllable to the middle of the middle letters.  Used for lining up
 neumes and syllables.
 
-\macroname{\textbackslash gre@dimen@additionalleftspace}{}{gregoriotex-spaces.tex}
-Dimension representing the additional space that has to be added to
-the localleftbox for a big initial (one taking two lines).
-
 \macroname{\textbackslash gre@dimen@initialwidth}{}{gregoriotex-spaces.tex}
 Dimension representing the width of the initial (and the space after).
 
@@ -2261,6 +2305,18 @@ Displacement of whole syllable to account for the presence of a punctum mora at 
 \macroname{\textbackslash gre@skip@alterationshift}{}{gregoriotex-spaces.tex}
 Displacement of whole syllable to account for the presence of an alteration at the beginning of the next syllable.
 
+\macroname{\textbackslash gre@dimen@stafflinethicknessbase}{}{gregoriotex-main.tex}%
+\vspace*{-10ex}%
+\macroname{\textbackslash gre@dimen@glyphraisebase}{}{gregoriotex-main.tex}%
+\vspace*{-10ex}%
+\macroname{\textbackslash gre@dimen@interstafflinedistancebase}{}{gregoriotex-main.tex}%
+\vspace*{-10ex}%
+\macroname{\textbackslash gre@dimen@inclinatumonlinemoravshiftbase}{}{gregoriotex-main.tex}%
+\vspace*{-10ex}%
+\macroname{\textbackslash gre@dimen@inclinatumonlinemorahshiftbase}{}{gregoriotex-main.tex}%
+\vspace*{-10ex}%
+\macroname{\textbackslash gre@dimen@inclinatumofflinemorahshiftbase}{}{gregoriotex-main.tex}%
+These distances are used to calibrate a font for use with Gregorio\TeX.  Currently all of our fonts are made in house and thus use the same values for these distances, but font designers might find it useful to adjust these values to make their font compatible with Gregorio\TeX.
 
 
 \subsection{Penalties}
@@ -2382,7 +2438,10 @@ rather than have multiple definitions.
   \texttt{3} & sharp\\
   \texttt{4} & parenthesized flat\\
   \texttt{5} & parenthesized natural\\
-  \texttt{6} & parenthesized sharp
+  \texttt{6} & parenthesized sharp \\
+  \texttt{7} & soft flat\\
+  \texttt{8} & soft natural\\
+  \texttt{9} & soft sharp\\
  \end{tabulary}
 
 \subsection{Note Offset Specifier}\label{NoteOffset}
