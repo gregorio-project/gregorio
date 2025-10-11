@@ -722,7 +722,7 @@ static char *concatenate(char *first, char *const second) {
 %token ALT_BEGIN ALT_END
 %token NLBA_B NLBA_E
 %token EUOUAE_B EUOUAE_E
-%token NABC_CUT NABC_LINES
+%token NABC_MAJOR_CUT NABC_MINOR_CUT NABC_LINES
 %token CLEAR
 %token PROTRUSION PROTRUSION_VALUE PROTRUSION_END PROTRUDING_PUNCTUATION
 
@@ -866,16 +866,29 @@ note:
         nabc_state=0;
         update_position_with_space();
     }
-    | NOTES NABC_CUT {
+    | NOTES NABC_MAJOR_CUT {
         if (!nabc_lines) {
-            gregorio_message(_("You used character \"|\" in gabc without "
-                               "setting \"nabc-lines\" parameter. Please "
+            gregorio_message(_("You used an nabc separator \"|\" without "
+                               "setting the \"nabc-lines\" parameter. Please "
                                "set it in your gabc header."),
                              "det_score", VERBOSITY_FATAL, 0);
         }
         gabc_y_add_notes($1.text, @1);
         free($1.text);
         nabc_state = (nabc_state + 1) % (nabc_lines+1);
+    }
+    | NOTES NABC_MINOR_CUT {
+        if (!nabc_lines) {
+            gregorio_message(_("You used an nabc separator \"&\" without "
+                               "setting the \"nabc-lines\" parameter. Please "
+                               "set it in your gabc header."),
+                             "det_score", VERBOSITY_FATAL, 0);
+        }
+        gabc_y_add_notes($1.text, @1);
+        free($1.text);
+        nabc_state = (nabc_state + 1) % (nabc_lines+1);
+        if (nabc_state == 0)
+            gregorio_message(_("Too many nabc segments"), "det_score", VERBOSITY_FATAL, 0);
     }
     | CLOSING_BRACKET {
         elements[voice]=NULL;
