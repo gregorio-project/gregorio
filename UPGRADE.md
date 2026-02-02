@@ -6,6 +6,10 @@ This file contains instructions to upgrade to a new release of Gregorio.  These 
 
 ## [Unreleased][CTAN]
 
+### LuaTeX >= 1.0 required
+
+The minimum required version of LuaTeX is now 1.0 (released in 2016).
+
 ### `grefinalpenalty`
 
 The count `grefinalpenalty` no longer has any effect and will be removed in a future release.

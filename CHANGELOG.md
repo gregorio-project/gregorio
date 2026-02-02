@@ -5,12 +5,17 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ## [Unreleased][CTAN]
 ### Added
 - Added new option `\gresetlastline{trimmed}`, which sets the last line ragged and also trims the staff lines. See [#1418](https://github.com/gregorio-project/gregorio/issues/1418).
+- A score can now have NABC both above the staff and below the staff. To do this, the GABC header should have a line `nabc-lines: 2;`, and the notes should look like `(f|un|ta)`, which has a square note on line `f`, an uncinus (`un`) above the staff, and a tractulus (`ta`) below the staff.
 
 ### Changed
 - Variable line heights are now computed in one pass instead of two. Per-line adjustments using `\grechangenextscorelinedim` and `\grechangenextscorelinecount` are also done in one pass, but only work on dimensions/counts related to line heights.
 - Previously, if a score ended with `Z` (ragged line break) or `z` (justified line break), the appearance of the last line would sometimes depend on `Z` versus `z` and sometimes depend on `\gresetlastline{ragged}` versus `\gresetlastline{justified}`. Now, the appearance of the last line always depends on `\gresetlastline`.
 - The meanings of the distances `spaceabovelines` and `abovelinestextheight` were changed to be (hopefully) easier to use and closer to their descriptions in the documentation.
 - All lengths related to vertical spacing are documented in greater detail in a dedicated section in GregorioRef.pdf.
+- Fixed a bug (issue #1652) that was causing an error with two line breaks in a row.
+- Changed some internals in handling of dimens (PR #1664 and #1679). One consequence of this is that the minimum required version of LuaTeX is now 1.0.
+- Fixed inconsistently formatted error messages (issue #1644).
+- Fixed a bug that would cause the commentary to disappear issue (#1678).
 
 ### Deprecated
 - The count `grefinalpenalty` no longer has any effect and will be removed in a future release.
