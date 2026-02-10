@@ -386,13 +386,16 @@ semicolon. */
         BEGIN(notes);
         return OPENING_BRACKET;
     }
-<notes>(\$.|[^|\)])+ {
+<notes>(\$.|[^|&\)])+ {
         gabc_score_determination_lval.text =
                 gregorio_strdup(gabc_score_determination_text);
         return NOTES;
     }
 <notes>\| {
-        return NABC_CUT;
+        return NABC_MAJOR_CUT;
+    }
+<notes>& {
+        return NABC_MINOR_CUT;
     }
 <notes>\) {
         BEGIN(score);
