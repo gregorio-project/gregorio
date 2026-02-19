@@ -66,6 +66,9 @@ local dash_node = node.new(glyph, 0)
 dash_node.font = 0
 dash_node.char = hyphen
 
+local score_attr = luatexbase.attributes['gre@attr@score']
+local syllable_id_attr = luatexbase.attributes['gre@attr@syllable@id']
+
 local part_attr = luatexbase.attributes['gre@attr@part']
 local part_commentary = 1
 local part_stafflines = 2
@@ -77,7 +80,7 @@ local part_nabc = 7
 local part_blnabc = 8
 local part_annotation = 9
 
-local score_attr = luatexbase.attributes['gre@attr@score']
+local skip_type_attr = luatexbase.attributes['gre@attr@skip@type']
 
 local dash_attr = luatexbase.attributes['gre@attr@dash']
 local dash_maybedash = 1
@@ -95,8 +98,6 @@ local glyph_bottom_attr = luatexbase.attributes['gre@attr@glyph@bottom']
 local alteration_type_attr = luatexbase.attributes['gre@attr@alteration@type']
 local alteration_pitch_attr = luatexbase.attributes['gre@attr@alteration@pitch']
 local alteration_id_attr = luatexbase.attributes['gre@attr@alteration@id']
-
-local syllable_id_attr = luatexbase.attributes['gre@attr@syllable@id']
 
 local cur_score_id = nil
 local score_inclusion = {}
@@ -416,10 +417,9 @@ local function dump_nodes_helper(head, indent)
     if node.subtypes(n.id) ~= nil then
       subtype = node.subtypes(n.id)[n.subtype]
     end
-    local attrs = format("syllable=%s,part=%s,dash=%s",
+    local attrs = format("syllable=%s,part=%s",
                          has_attribute(n, syllable_id_attr),
-                         has_attribute(n, part_attr),
-                         has_attribute(n, dash_attr))
+                         has_attribute(n, part_attr))
     if n.id == hlist or n.id == vlist then
       log(dots .. "%s [%s] width=%.2fpt height=%.2fpt depth=%.2fpt shift=%.2fpt {%s}", type, subtype, n.width/2^16, n.height/2^16, n.depth/2^16, n.shift/2^16, attrs)
     elseif n.id == rule then
@@ -427,9 +427,9 @@ local function dump_nodes_helper(head, indent)
     elseif n.id == whatsit and subtype == user_defined_subtype and n.user_id == marker_whatsit_id then
       log(dots .. "marker-whatsit %s", n.value)
     elseif n.id == glue then
-      log(dots .. "glue [%s] width=%.2fpt", subtype, n.width/2^16)
+      log(dots .. "glue [%s] width=%.2fpt {%s}", subtype, n.width/2^16, attrs)
     elseif n.id == kern then
-      log(dots .. "kern [%s] kern=%.2fpt", subtype, n.kern/2^16)
+      log(dots .. "kern [%s] kern=%.2fpt {%s}", subtype, n.kern/2^16, attrs)
     elseif type == 'penalty' then
       log(dots .. "penalty %s {%s}", n.penalty, attrs)
     elseif n.id == glyph then
@@ -445,6 +445,11 @@ local function dump_nodes_helper(head, indent)
     if n.id == hlist or n.id == vlist then
       dump_nodes_helper(n.head, indent+1)
     elseif n.id == disc then
+      log(dots .. 'pre')
+      dump_nodes_helper(n.pre, indent+1)
+      log(dots .. 'post')
+      dump_nodes_helper(n.post, indent+1)
+      log(dots .. 'replace')
       dump_nodes_helper(n.replace, indent+1)
     end
   end
@@ -957,7 +962,11 @@ local function ligaturing(head)
 end
 
 local function pre_linebreak(head)
-  head = gregoriotex.syllable_rewriting(head)
+  --dump_nodes(head)
+  local syllables = gregoriotex.scan_syllables(head)
+  if #syllables == 0 then return head end
+  gregoriotex.syllable_spacing(syllables)
+  gregoriotex.syllable_rewriting(syllables)
   return head
 end
 
@@ -1232,7 +1241,7 @@ local function at_score_end()
   remove_callbacks()
   per_line_dims = {}
   per_line_counts = {}
-  gregoriotex.free_saved_syllable_texts()
+  gregoriotex.free_saved_syllables()
 end
 
 --- Toggle the state of GregorioTeX callbacks.

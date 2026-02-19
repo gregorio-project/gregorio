@@ -52,6 +52,7 @@
 % an attribute to mark various parts of the score
 % 1 = commentary, 2 = stafflines, 3 = initial
 % 4 = lyrics, 5 = translation, 6 = alt, 7 = nabc, 8 = nabc below
+% 9 = annotation, 10 = notes
 \newattribute\gre@attr@part
   \edef\gre@attrid@part{\the\allocationnumber}
 
@@ -71,6 +72,13 @@
 
 % attribute for syllable tracking
 \newattribute\gre@attr@syllable@id
+
+% attributes for horizontal spacing
+% 1 = syllablefinalskip between \GreSyllables
+% 2 = \GreBarSyllable from syllable left to text left
+% 3 = \GreBarSyllable from text right to bar left
+% 4 = \GreBarSyllable from bar right to syllable right (to do)
+\newattribute\gre@attr@skip@type
 
 % attributes for soft alterations
 
@@ -654,6 +662,7 @@
 % #2: 0 = text, 1 = nabc
 \def\gre@typesettextabovelines#1#2{%
   \gre@trace{gre@typesettextabovelines{#1}{#2}}%
+  {% localize change to \gre@attr@part
   \ifnum#2=0\relax%
     \gre@attr@part=6\relax
   \else%
@@ -685,7 +694,7 @@
       \endgre@style@abovelinestext
     \hss}%
   \fi%
-  \unsetattribute{\gre@attr@part}%
+  }% restore \gre@attr@part
   \gre@trace@end%
 }%
 
@@ -724,12 +733,10 @@
 
 % Phase 2: Place voice 1 (above staff)
 \def\gre@nabc@place@voice@i{%
-  \gre@attr@part=7\relax%
   \gre@dimen@temp@five=\dimexpr(\gre@dimen@staffheight %
     + \gre@space@dimen@spacebeneathtext %
     + \gre@space@dimen@spacelinestext)\relax%
-  \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\unhbox\gre@box@nabc@voice@i\hss}%
-  \unsetattribute{\gre@attr@part}%
+  \leavevmode\raise\gre@dimen@temp@five\hbox attr \gre@attrid@part=7 to 0pt{\unhbox\gre@box@nabc@voice@i\hss}%
 }%
 
 % Phase 2: Place voice 2 (below staff)

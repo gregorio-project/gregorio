@@ -555,7 +555,7 @@
         \setbox\gre@box@syllablenotes=\hbox{\gre@notes@rendernabc@tight{#1}}%
         \gre@compute@nabc@extrakern
       \else
-        \setbox\gre@box@syllablenotes=\box\voidb@x%
+        \setbox\gre@box@syllablenotes=\hbox{}%
       \fi
     \fi
   \fi%
@@ -1009,8 +1009,9 @@
   \gre@calculate@nextbegindifference{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{\gre@nextalignment}{\gre@nextalteration}%
   \gre@unsetfixednexttextformat %
   \gre@attr@dash=3
+  \gre@attr@part=4
   \ifgre@showlyrics%
-    \setbox\gre@box@syllabletext=\hbox attr \gre@attrid@part=4 {%
+    \setbox\gre@box@syllabletext=\hbox{%
       \IfSubStr{\gre@debug}{,notespacing,}%
         % when debugging we add a zero-width line to mark the syllable bound
         {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
@@ -1025,10 +1026,11 @@
     \ifnum\gre@lyrics@phantomwrapper>0\relax
       \setbox\gre@box@syllabletext=\hbox{\gre@applyphantomwrapper{\gre@lyrics@phantomwrapper}{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}}%
     \else
-      \setbox\gre@box@syllabletext=\box\voidb@x%
+      \setbox\gre@box@syllabletext=\hbox{}%
     \fi
   \fi%
   \unsetattribute{\gre@attr@dash}%
+  \unsetattribute{\gre@attr@part}%
   \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
   % gre@count@temp@one holds 1 if next is a bar, 2 if an alteration, else 0
   \gre@count@temp@one=0%
@@ -1067,8 +1069,9 @@
     % if it's the last syllable of line, the hyphen will be \GreHyph
     \ifnum\gre@lastoflinecount=1\relax %
       \gre@attr@dash=2
+      \gre@attr@part=4
       \ifgre@showlyrics%
-        \setbox\gre@box@syllabletext=\hbox attr \gre@attrid@part=4 {%
+        \setbox\gre@box@syllabletext=\hbox{%
           \IfSubStr{\gre@debug}{,notespacing,}%
             % when debugging we add a zero-width line to mark the syllable bound
             {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
@@ -1083,14 +1086,16 @@
         \ifnum\gre@lyrics@phantomwrapper>0\relax
           \setbox\gre@box@syllabletext=\hbox{\gre@applyphantomwrapper{\gre@lyrics@phantomwrapper}{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart#3{\GreHyph}\relax}{#6}}}}%
         \else
-          \setbox\gre@box@syllabletext=\box\voidb@x%
+          \setbox\gre@box@syllabletext=\hbox{}%
         \fi
       \fi%
       \unsetattribute{\gre@attr@dash}%
+      \unsetattribute{\gre@attr@part}%
     \else %
       \gre@attr@dash=2
+      \gre@attr@part=4
       \ifgre@showlyrics%
-        \setbox\gre@box@syllabletext=\hbox attr \gre@attrid@part=4 {%
+        \setbox\gre@box@syllabletext=\hbox{%
           \IfSubStr{\gre@debug}{,notespacing,}%
             % when debugging we add a zero-width line to mark the syllable bound
             {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
@@ -1105,10 +1110,11 @@
         \ifnum\gre@lyrics@phantomwrapper>0\relax
           \setbox\gre@box@syllabletext=\hbox{\gre@applyphantomwrapper{\gre@lyrics@phantomwrapper}{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart#3{-}}{#6}}}}%
         \else
-          \setbox\gre@box@syllabletext=\box\voidb@x%
+          \setbox\gre@box@syllabletext=\hbox{}%
         \fi
       \fi%
       \unsetattribute{\gre@attr@dash}%
+      \unsetattribute{\gre@attr@part}%
     \fi %
     % recomputing end difference and final skip with the final hyphen
     \gre@calculate@nextbegindifference{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{\gre@nextalignment}{\gre@nextalteration}%
@@ -1119,9 +1125,10 @@
       \global\gre@possibleluahyphenafterthissyllabletrue %
       \gre@debugmsg{hyphen}{No hyphen}%
       \gre@attr@dash=1 % if not the end of a word and we haven't added a dash, we set potential dash to 1
+      \gre@attr@part=4
       % we rebuild this box, in order it to have the attribute
       \ifgre@showlyrics%
-        \setbox\gre@box@syllabletext=\hbox attr \gre@attrid@part=4 {%
+        \setbox\gre@box@syllabletext=\hbox{%
           \IfSubStr{\gre@debug}{,notespacing,}%
             % when debugging we add a zero-width line to mark the syllable bound
             {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
@@ -1133,9 +1140,10 @@
             {}% do nothing if not debugging
         }%
       \else%
-        \setbox\gre@box@syllabletext=\box\voidb@x%
+        \setbox\gre@box@syllabletext=\hbox{}%
       \fi%
       \unsetattribute{\gre@attr@dash}%
+      \unsetattribute{\gre@attr@part}%
     \else %
       \global\gre@possibleluahyphenafterthissyllablefalse %
     \fi %
@@ -1163,13 +1171,14 @@
   \kern\gre@skip@temp@one %
   % here we need to unset \gre@attr@dash for the typesetting of notes
   \unsetattribute{\gre@attr@dash}%
+  \gre@attr@part=10
   \GreNoBreak % no line breaks between text and notes
   \ifgre@shownotes%
     \IfSubStr{\gre@debug}{,notespacing,}%
       % when debugging we add a zero-width line to mark the syllable bound
       {\raise 12pt\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
       {}% do nothing if not debugging
-    #9% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
+    #9% we do that instead of \unhbox\gre@syllablenotes, because it would not set the \localrightbox
     % Apply per-syllable NABC kern computed in \gre@syllablenotes.
     \ifdim\gre@dimen@nabc@extrakern>0pt\relax
       \kern\gre@dimen@nabc@extrakern
@@ -1196,6 +1205,7 @@
       \fi
     \fi
   \fi%
+  \unsetattribute{\gre@attr@part}%
   \GreNoBreak % no line breaks between notes and end of syllable skips
   \gre@debugmsg{ifdim}{ enddifference < 0pt}%
   \ifdim\gre@dimen@enddifference <0pt\relax%
@@ -1315,20 +1325,29 @@
       %the new bar spacing algorithms take care of this for us when the next syllable is a bar
       \relax%
     \else%
-      \gre@hskip\gre@skip@syllablefinalskip\relax%
+      \gre@syllablefinalskip
     \fi%
     \ifnum#3=1\relax %
       \GreNoBreak %
     \else%
       \ifgre@newbarspacing%
         %the new bar spacing algorithm still needs the syllablefinalskip when the next syllable is not a bar
-        \gre@hskip\gre@skip@syllablefinalskip\relax%
+        \gre@syllablefinalskip
       \fi%
     \fi %
   \fi %
   \relax%
   \gre@trace@end%
 }%
+
+\def\gre@syllablefinalskip{%
+  % Save the computed minNotesDistance and minTextDistance
+  \directlua{gregoriotex.save_min_distances()}%
+  % Emit a zero-width skip, which will be resized in the Lua pre-linebreak filter.
+  {\gre@attr@skip@type=1
+   \gre@hskip0pt
+  }%
+}
 
 \def\gresetbarspacing#1{%
   \IfStrEqCase{#1}{%
@@ -1374,8 +1393,9 @@
   #1%
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}%
   \gre@attr@dash=4
+  \gre@attr@part=4
   \ifgre@showlyrics%
-    \setbox\gre@box@syllabletext=\hbox attr \gre@attrid@part=4 {%
+    \setbox\gre@box@syllabletext=\hbox{%
       \IfSubStr{\gre@debug}{,barspacing,}%
         % when debugging we add a zero-width line to mark the syllable bound
         {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
@@ -1390,10 +1410,11 @@
     \ifnum\gre@lyrics@phantomwrapper>0\relax
       \setbox\gre@box@syllabletext=\hbox{\gre@applyphantomwrapper{\gre@lyrics@phantomwrapper}{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}}}%
     \else
-      \setbox\gre@box@syllabletext=\box\voidb@x%
+      \setbox\gre@box@syllabletext=\hbox{}%
     \fi
   \fi%
   \unsetattribute{\gre@attr@dash}%
+  \unsetattribute{\gre@attr@part}%
   \gre@debugmsg{barspacing}{Width of bar text: \the\wd\gre@box@syllabletext}%
   \global\let\gre@saved@prelinedelay@newlinecommon\gre@newlinecommon %
   \global\let\gre@newlinecommon\gre@newlinecommondelayed %
@@ -1437,11 +1458,13 @@
     \fi%
     \GreNoBreak %
     %move to the beginning of the text
+    \gre@attr@skip@type=2
     \gre@hskip\glueexpr(\gre@skip@bar@allocation/2% right from end of previous notes to nominal middle of bar line
       +\gre@dimen@bar@shift% from nominal middle of bar line to actual middle
       -\wd\gre@box@syllablenotes/2% back up to beginning of bar line
       +\gre@dimen@begindifference% from beginning of bar line to beginning of text
       +\gre@space@skip@bar@rubber)\relax % the rubber component
+    \unsetattribute{\gre@attr@skip@type}%
     \GreNoBreak %
     % all that extra stuff (translations and the like)
     #8%
@@ -1456,9 +1479,12 @@
       \gre@mustdotranslationcenterendfalse%
     \fi %
     %move back to the beginning of the bar line
+    \gre@attr@skip@type=2
     \kern\dimexpr(\gre@dimen@enddifference% move from end of text to end of bar line
       -\wd\gre@box@syllablenotes)\relax % back up from end of bar line to beginning
+    \unsetattribute{\gre@attr@skip@type}%
     \GreNoBreak%
+    \gre@attr@part=10
     \ifgre@shownotes%
       \IfSubStr{\gre@debug}{,barspacing,}%
         % when debugging we add a zero-width line to mark the syllable bound
@@ -1487,6 +1513,7 @@
         \fi
       \fi
     \fi%
+    \unsetattribute{\gre@attr@part}%
     \global\let\gre@newlinecommon\gre@saved@prelinedelay@newlinecommon %
     \GreNoBreak%
     % get into position to place the penalty
@@ -1621,9 +1648,11 @@
         \gre@dotranslationcenterend %
         \gre@mustdotranslationcenterendfalse%
       \fi %
+      \gre@attr@part=10
       \ifgre@shownotes%
         #9\relax %
       \fi%
+      \unsetattribute{\gre@attr@part}%
       \gre@penalty{\the\gre@space@count@endafterbaraltpenalty }% TODO: isn't it a bit buggy?
       % end of same code as syllable
       \ifnum\gre@lastoflinecount=1\relax %
@@ -1667,9 +1696,11 @@
       \kern\gre@skip@temp@one %
       \gre@skip@temp@one = -\gre@dimen@begindifference\relax%
       \kern\gre@skip@temp@one %
+      \gre@attr@part=10
       \ifgre@shownotes%
         #9%
       \fi%
+      \unsetattribute{\gre@attr@part}%
       \gre@debugmsg{ifdim}{ enddifference < 0pt}%
       \ifdim\gre@dimen@enddifference <0pt\relax%
         %% important, else we are not really at the end of the syllable
