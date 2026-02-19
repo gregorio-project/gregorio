@@ -44,6 +44,11 @@
 
 %%%%%%%%%%%%%%%
 
+% an attribute to mark everything in the score
+% 1 = in score
+% undefined = not in score
+\newattribute\gre@attr@score
+
 % an attribute to mark various parts of the score
 % 1 = commentary, 2 = stafflines, 3 = initial
 % 4 = lyrics, 5 = translation, 6 = alt, 7 = nabc, 8 = nabc below
@@ -51,15 +56,14 @@
   \edef\gre@attrid@part{\the\allocationnumber}
 
 % an attribute we put on the text nodes.
-% if it is 1, it means that there may be a dash here if this syllable is at the end of a line
-% if it is 2, it means that it's never useful to typeset a dash
-% if it is 0, it just means that we are in a score...
+% 1 = the syllable may need a dash added (in Lua) if at the end of a line
+% 2 = the syllable doesn't need a dash because it already has one
+% 3 = the syllable doesn't need a dash because it's word-final
+% 4 = the syllable doesn't need a dash because it is a \GreBarSyllable
 \newattribute\gre@attr@dash
 
 % an attribute used for translation centering
 \newattribute\gre@attr@center
-
-\newattribute\GreScoreId
 
 % attributes for tracking glyph heights
 \newattribute\gre@attr@glyph@top
@@ -1118,8 +1122,6 @@
 }%
 \gresetnoteadditionalspacelinestext{automatic}%default setting
 
-% gre@attr@dash (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
-
 \newif\ifgre@beginningofscore%
 
 \newcount\gre@count@stafflines
@@ -1241,7 +1243,7 @@
   \fi %
   \gre@computespaces%
   \gre@cancelpenalties %
-  \gre@attr@dash=0\relax %
+  \gre@attr@score=1
   \gre@generatelines %
   \noindent%
   \gre@calculate@additionalspaces
@@ -1290,7 +1292,7 @@
   \directlua{gregoriotex.at_score_end()}%
   \unsetattribute{\gre@attr@glyph@top}%
   \unsetattribute{\gre@attr@glyph@bottom}%
-  \unsetattribute{\gre@attr@dash}%
+  \unsetattribute{\gre@attr@score}%
   \xdef\gre@bolshiftcleftypelocal{\gre@bolshiftcleftypeglobal}%
   \ifnum\gre@count@lastline=0\relax
     \parfillskip=\gre@saved@parfillskip\relax%

@@ -911,24 +911,26 @@
 }%
 
 %% macro that typesets the text of the syllable, and sets textaligncenter to the middle of the middle letters, it is needed because we align the note (often the middle of the note) with the middle of the middle letters
-%% third argument is 0 if it's the current syllable, 1 if it's the alignment of the following one
+%% #1: The first part of the syllable
+%% #2: The middle part of the syllable
+%% #3: 0 if it's the current syllable, 1 if it's the following one
 %% warning: gretextaligncenter is the width from the beginning of the letters to the middle of the middle letters
 %% warning: value is approximative when a ligature appears
 
 \newdimen\gre@dimen@textaligncenter\relax%
 
-\def\gre@calculate@textaligncenter#1#2#3#4{%
-  \gre@trace{gre@calculate@textaligncenter{#1}{#2}{#3}{#4}}%
-  \ifnum#4=0\relax%
-    \gre@widthof{\gre@saved@syllable@fixedtextformat{#1}\gre@fixedtextformat{#2#3}}%
+\def\gre@calculate@textaligncenter#1#2#3{%
+  \gre@trace{gre@calculate@textaligncenter{#1}{#2}{#3}}%
+  \ifnum#3=0\relax
+    \gre@widthof{\gre@fixedtextformat{#1#2}}%
   \else %
-    \gre@widthof{\gre@fixedtextformat{#1}\gre@fixednexttextformat{#2#3}}%
+    \gre@widthof{\gre@fixednexttextformat{#1#2}}%
   \fi %
   \global\gre@dimen@textaligncenter=\the\gre@dimen@temp@three %
-  \ifnum#4=0\relax%
-    \gre@widthof{\gre@fixedtextformat{#3}}%
+  \ifnum#3=0\relax
+    \gre@widthof{\gre@fixedtextformat{#2}}%
   \else %
-    \gre@widthof{\gre@fixednexttextformat{#3}}%
+    \gre@widthof{\gre@fixednexttextformat{#2}}%
   \fi %
   \divide\gre@dimen@temp@three by 2 %
   \global\advance\gre@dimen@textaligncenter by -\the\gre@dimen@temp@three%
@@ -964,25 +966,24 @@
 \newskip\gre@skip@nextbegindifference\relax%
 
 % macro to set nextbegindifference
-%% 1 : the carry-over letters for the next syllable
-%% 2 : the first letters of the next syllable
-%% 3 : the middle letters of the next syllable
-%% 4 : the end letters of the next syllable
-%% 5 : the type of notes alignment
-%% 6 : alteration type (see \gre@alteration)
-\def\gre@calculate@nextbegindifference#1#2#3#4#5#6{%
-  \gre@trace{gre@calculate@nextbegindifference{#1}{#2}{#3}{#4}{#5}{#6}}%
+%% 1 : the first letters of the next syllable
+%% 2 : the middle letters of the next syllable
+%% 3 : the end letters of the next syllable
+%% 4 : the type of notes alignment
+%% 5 : alteration type (see \gre@alteration)
+\def\gre@calculate@nextbegindifference#1#2#3#4#5{%
+  \gre@trace{gre@calculate@nextbegindifference{#1}{#2}{#3}{#4}{#5}}%
   \ifnum\gre@lastoflinecount=1\relax %
     \global\gre@skip@nextbegindifference=0pt\relax%
   \else %
     %to prevent the pollution of the normal values, we stock them into a temp value
     \gre@dimen@temp@two=\gre@dimen@textaligncenter\relax%
-    \gre@calculate@textaligncenter{#1}{#2}{#3}{1}%
+    \gre@calculate@textaligncenter{#1}{#2}{1}%
     \gre@dimen@temp@four=\gre@dimen@notesaligncenter\relax%
     \global\gre@skip@nextbegindifference=-\gre@dimen@textaligncenter\relax%
     % caution: calculate@nextnotesaligncenter needs a properly set \gre@dimen@textaligncenter
     % (corresponding to the text align center of the next syllable)
-    \gre@calculate@nextnotesaligncenter{#5}{#6}% idem
+    \gre@calculate@nextnotesaligncenter{#4}{#5}% idem
     \global\advance\gre@skip@nextbegindifference by \the\gre@dimen@notesaligncenter\relax%
     \global\gre@dimen@textaligncenter=\gre@dimen@temp@two %
     \global\gre@dimen@notesaligncenter=\gre@dimen@temp@four %
