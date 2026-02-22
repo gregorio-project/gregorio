@@ -1294,15 +1294,6 @@ Sets the visibility of an NABC voice.
 
 \textbf{Important:} NABC glyphs visibility is controlled independently from notes visibility (\verb=\gresetnotes=). This allows you to hide the main notes (i.e. using \verb=\gresetnotes{invisible}= or some \verb=\gresetnotes{?phantom}= variant) while keeping NABC glyphs visible, which is useful for producing NABC-only output with lyrics.
 
-\macroname{\textbackslash gresetnabcalignment}{[\#1]\{\#2\}}{gregoriotex-nabc.tex}
-Sets the horizontal alignment reference for nabc neumes relative to the gabc notes below.  By default, nabc neumes are aligned to the left edge of the entire complex glyph descriptor (including significative letters), which can produce aesthetically suboptimal results when there are significative letters to the left of the neume.  The optional voice parameter allows setting the alignment independently for each nabc voice.
-
-\begin{argtable}
-  \#1 & integer & (Optional) The nabc voice number: 1 = above staff, 2 = below staff.  If omitted, sets the default for all voices and clears any per-voice overrides.\\
-  \#2 & \texttt{neume} & Align to the neume (basic glyph descriptor + prepunctis), ignoring significative letters.\\
-  & \texttt{full} & Align to the entire complex glyph descriptor (default).\\
-\end{argtable}
-
 \macroname{\textbackslash greprintsigns}{\{\#1\}\{\#2\}}{gregoriotex-signs.tex}
 Macro to prevent rythmic signs from printing (all signs are printed by default):
 

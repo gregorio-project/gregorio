@@ -659,102 +659,53 @@
     + \gre@space@dimen@spacebeneathtext %
     + \gre@space@dimen@spacelinestext)\relax%
   \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
-  \ifnum#2=1\relax%
-    % For NABC: pre-evaluate content in a box to trigger Lua execution,
-    % which may set \gre@dimen@nabcleftoverflow for 'neume' alignment mode.
-    \setbox\gre@box@nabctemp=\hbox{#1}%
-    % Reserve space at the note level for left-extending significative letters.
-    % Only emit additional kern beyond what was already emitted (by a previous
-    % voice).  The kern must NOT carry the nabc part attribute, otherwise the
-    % Lua post_linebreak filter will try to shift it (kerns have no shift field).
-    \ifdim\gre@dimen@nabcleftoverflow>\gre@dimen@nabckernemitted\relax%
-      \unsetattribute{\gre@attr@part}%
-      \kern\dimexpr(\gre@dimen@nabcleftoverflow-\gre@dimen@nabckernemitted)\relax%
-      \gre@attr@part=7\relax%
-      \global\gre@dimen@nabckernemitted=\gre@dimen@nabcleftoverflow\relax%
-    \fi%
-    \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\unhbox\gre@box@nabctemp\hss}%
-  \else%
+  \ifnum#2=1\relax
+    % NABC: measure natural width for overflow detection
+    \setbox0=\hbox{#1}%
+    \ifdim\wd0 > \gre@dimen@nabc@maxwidth\relax
+      \global\gre@dimen@nabc@maxwidth=\wd0\relax
+    \fi
+    \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\box0\hss}%
+  \else
     \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{%
       \gre@style@abovelinestext
         \gre@applyphantomwrapper{\gre@abovelinestext@phantomwrapper}{#1}%
       \endgre@style@abovelinestext
     \hss}%
-  \fi%
+  \fi
   \unsetattribute{\gre@attr@part}%
   \gre@trace@end%
 }%
 
-% NABC two-phase processing macros.
-% Phase 1 (prepare): pre-evaluate Lua content, emit note-level kern for
-% overflow, and save the rendered content in a box register.
-% Phase 2 (place): emit the saved box at the correct position.
-% By splitting into two phases across all voices, we ensure that all
-% note-level kerns are emitted before any voice hbox is placed.  This
-% guarantees that each voice's hbox starts at position P + total_kern
-% (the max across all voices), so each voice's neume correctly aligns
-% with the GABC note regardless of the other voice's overflow.
+% similarly, but for typesetting Nabc neumes above lines
 
-% Phase 1: Pre-evaluate NABC content, emit kern, save content.
-% #1: content (from \GreNABCChar)
-% #2: box register to save to
-\def\gre@nabc@prepare#1#2{%
-  \gre@attr@part=7\relax%
-  \setbox\gre@box@nabctemp=\hbox{#1}%
-  \ifdim\gre@dimen@nabcleftoverflow>\gre@dimen@nabckernemitted\relax%
-    \unsetattribute{\gre@attr@part}%
-    \kern\dimexpr(\gre@dimen@nabcleftoverflow-\gre@dimen@nabckernemitted)\relax%
-    \gre@attr@part=7\relax%
-    \global\gre@dimen@nabckernemitted=\gre@dimen@nabcleftoverflow\relax%
-  \fi%
-  \global\setbox#2=\hbox{\unhbox\gre@box@nabctemp}%
-  \unsetattribute{\gre@attr@part}%
-}%
-
-% Phase 2: Place voice 1 (above staff)
-\def\gre@nabc@place@voice@i{%
-  \gre@attr@part=7\relax%
-  \gre@dimen@temp@five=\dimexpr(\gre@dimen@staffheight %
-    + \gre@space@dimen@spacebeneathtext %
-    + \gre@space@dimen@spacelinestext)\relax%
-  \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\unhbox\gre@box@nabc@voice@i\hss}%
-  \unsetattribute{\gre@attr@part}%
-}%
-
-% Phase 2: Place voice 2 (below staff)
-\def\gre@nabc@place@voice@ii{%
-  \gre@dimen@temp@five=\dimexpr(\gre@space@dimen@spacebeneathtext
-    + \gre@space@dimen@spacelinestext)\relax
-  \leavevmode\raise\gre@dimen@temp@five\hbox attr \gre@attrid@part=8 to 0pt{\unhbox\gre@box@nabc@voice@ii\hss}%
-}%
-
-% Deferred macros for two-phase processing.
-% pre = Phase 1, emit = Phase 2.  Set by \GreSetNabcAboveLines / BelowLines,
-% called from \gre@newglyphcommon.
-\xdef\gre@nabc@pre@voice@i{}%
-\xdef\gre@nabc@pre@voice@ii{}%
-\xdef\gre@nabc@emit@voice@i{}%
-\xdef\gre@nabc@emit@voice@ii{}%
+\xdef\gre@currentnabcvoice@i{}%
+\xdef\gre@currentnabcvoice@ii{}%
 
 \def\GreSetNabcAboveLines#1{%
-  \gdef\gre@nabc@pre@voice@i{%
-    \gre@nabc@prepare{#1}\gre@box@nabc@voice@i%
-    \gdef\gre@nabc@pre@voice@i{}%
+  \gdef\gre@currentnabcvoice@i{%
+    \gre@typesettextabovelines{#1}{1}%
+    \gdef\gre@currentnabcvoice@i{}%
   }%
-  \gdef\gre@nabc@emit@voice@i{%
-    \gre@nabc@place@voice@i%
-    \gdef\gre@nabc@emit@voice@i{}%
-  }%
+}%
+
+\def\gre@typesettextbelowlines#1{%
+  \gre@trace{gre@typesettextbelowlines{#1}}%
+  \gre@dimen@temp@five=\dimexpr(\gre@space@dimen@spacebeneathtext
+    + \gre@space@dimen@spacelinestext)\relax
+  % Measure natural width for overflow detection
+  \setbox0=\hbox{#1}%
+  \ifdim\wd0 > \gre@dimen@nabc@maxwidth\relax
+    \global\gre@dimen@nabc@maxwidth=\wd0\relax
+  \fi
+  \leavevmode\raise\gre@dimen@temp@five\hbox attr \gre@attrid@part=8 to 0pt{\box0\hss}%
+  \gre@trace@end%
 }%
 
 \def\GreSetNabcBelowLines#1{%
-  \gdef\gre@nabc@pre@voice@ii{%
-    \gre@nabc@prepare{#1}\gre@box@nabc@voice@ii%
-    \gdef\gre@nabc@pre@voice@ii{}%
-  }%
-  \gdef\gre@nabc@emit@voice@ii{%
-    \gre@nabc@place@voice@ii%
-    \gdef\gre@nabc@emit@voice@ii{}%
+  \gdef\gre@currentnabcvoice@ii{%
+    \gre@typesettextbelowlines{#1}%
+    \gdef\gre@currentnabcvoice@ii{}%
   }%
 }%
 

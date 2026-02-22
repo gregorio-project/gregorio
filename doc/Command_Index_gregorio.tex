@@ -1053,14 +1053,16 @@ The arguments are the same as \verb=\GreSetInitialClef= without the \#7th one, w
 to be \texttt{1}.
 
 \macroname{\textbackslash GreSetNabcAboveLines}{\#1}{gregoriotex-main.tex}
-Macro to place argument containing Nabc neumes above the lines.
+Macro to place argument containing Nabc neumes above the lines and empty
+\verb=\gre@currentnabcvoice@i= when done.
 
 \begin{argtable}
   \#1 & string & Nabc neumes to be placed above the lines.\\
 \end{argtable}
 
 \macroname{\textbackslash GreSetNabcBelowLines}{\#1}{gregoriotex-main.tex}
-Macro to place argument containing Nabc neumes below the lines.
+Macro to place argument containing Nabc neumes below the lines and empty
+\verb=\gre@currentnabcvoice@ii= when done.
 
 \begin{argtable}
   \#1 & string & Nabc neumes to be placed below the lines.\\

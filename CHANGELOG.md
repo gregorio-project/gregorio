@@ -25,7 +25,6 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 ### Added
 - Added new option `\gresetlastline{trimmed}`, which sets the last line ragged and also trims the staff lines. See [#1418](https://github.com/gregorio-project/gregorio/issues/1418).
 - Nabc can now appear below the staff in addition (or instead of) above.  See [#1645](https://github.com/gregorio-project/gregorio/issues/1645).
-- Added `\gresetnabcalignment` command to control NABC horizontal alignment mode (`full` or `neume`). In `neume` mode, significative letters are excluded from alignment calculation, keeping the neume body centered above the corresponding note. Supports per-voice configuration with optional voice parameter.  See [#1702](https://github.com/gregorio-project/gregorio/issues/1702).
 
 ### Changed
 - Variable line heights are now computed in one pass instead of two. Per-line adjustments using `\grechangenextscorelinedim` and `\grechangenextscorelinecount` are also done in one pass, but only work on dimensions/counts related to line heights.  Mentioned in [#1488](https://github.com/gregorio-project/gregorio/issues/1488).

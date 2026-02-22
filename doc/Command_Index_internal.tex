@@ -556,6 +556,12 @@ Macro to hold the height of the current flat for the secondary clef (\texttt{3} 
 \macroname{\textbackslash gre@currenttextabovelines}{}{gregoriotex-main.tex}
 Macro for storing the text which needs to be placed above the lines.
 
+\macroname{\textbackslash gre@currentnabcvoice@i}{}{gregoriotex-main.tex}
+Macro for storing the nabc neumes which need to be placed above the lines.
+
+\macroname{\textbackslash gre@currentnabcvoice@ii}{}{gregoriotex-main.tex}
+Macro for storing the nabc neumes which need to be placed below the lines.
+
 \macroname{\textbackslash gre@typesettextabovelines}{\#1\#2}{gregoriotex-main.tex}
 Macro for typesetting the text or nabc neumes above the lines.
 
@@ -1471,49 +1477,6 @@ Prints the nabc glyphs for the given nabc string.
   \#2 & string & The \texttt{nabc} syntax which indicates what neumes are to be printed.\\
 \end{argtable}
 
-\macroname{\textbackslash gre@nabc@prepare}{\#1\#2}{gregoriotex-main.tex}
-Phase 1 of NABC two-phase processing: pre-evaluates NABC content, emits note-level kern for left overflow (in \texttt{neume} alignment mode), and saves the rendered content in a box register.
-
-\begin{argtable}
-  \#1 & content & The NABC content (from \textbackslash GreNABCChar)\\
-  \#2 & box register & Box register to save the rendered content to\\
-\end{argtable}
-
-\macroname{\textbackslash gre@nabc@place@voice@i}{}{gregoriotex-main.tex}
-Phase 2 of NABC two-phase processing for voice 1 (above staff): places the pre-rendered NABC voice 1 content from \textbackslash gre@box@nabc@voice@i at the correct vertical position above the staff.
-
-\macroname{\textbackslash gre@nabc@place@voice@ii}{}{gregoriotex-main.tex}
-Phase 2 of NABC two-phase processing for voice 2 (below staff): places the pre-rendered NABC voice 2 content from \textbackslash gre@box@nabc@voice@ii at the correct vertical position below the staff.
-
-\macroname{\textbackslash gre@nabc@pre@voice@i}{}{gregoriotex-main.tex}
-Deferred macro for phase 1 processing of NABC voice 1 (above staff). Set by \textbackslash GreSetNabcAboveLines, called from \textbackslash gre@newglyphcommon. After execution, resets itself to empty.
-
-\macroname{\textbackslash gre@nabc@pre@voice@ii}{}{gregoriotex-main.tex}
-Deferred macro for phase 1 processing of NABC voice 2 (below staff). Set by \textbackslash GreSetNabcBelowLines, called from \textbackslash gre@newglyphcommon. After execution, resets itself to empty.
-
-\macroname{\textbackslash gre@nabc@emit@voice@i}{}{gregoriotex-main.tex}
-Deferred macro for phase 2 processing of NABC voice 1 (above staff). Set by \textbackslash GreSetNabcAboveLines, called from \textbackslash gre@newglyphcommon. After execution, resets itself to empty.
-
-\macroname{\textbackslash gre@nabc@emit@voice@ii}{}{gregoriotex-main.tex}
-Deferred macro for phase 2 processing of NABC voice 2 (below staff). Set by \textbackslash GreSetNabcBelowLines, called from \textbackslash gre@newglyphcommon. After execution, resets itself to empty.
-
-\macroname{\textbackslash gre@setnabcalignment@global}{\#1}{gregoriotex-nabc.tex}
-Sets the default NABC horizontal alignment mode for all voices and clears any per-voice overrides.
-
-\begin{argtable}
-  \#1 & \texttt{neume} & Align to the neume (basic glyph + prepunctis), ignoring significative letters\\
-  & \texttt{full} & Align to the entire complex glyph descriptor (default)\\
-\end{argtable}
-
-\macroname{\textbackslash gre@setnabcalignment@voice}{[\#1]\{\#2\}}{gregoriotex-nabc.tex}
-Sets the NABC horizontal alignment mode for a specific voice.
-
-\begin{argtable}
-  \#1 & integer & The nabc voice number: 1 = above staff, 2 = below staff\\
-  \#2 & \texttt{neume} & Align to the neume (basic glyph + prepunctis), ignoring significative letters\\
-  & \texttt{full} & Align to the entire complex glyph descriptor (default)\\
-\end{argtable}
-
 
 \subsection{Auxiliary File}
 Gregorio\TeX\ creates its own auxiliary file (extension \texttt{gaux}) which it uses to store information between successive typesetting runs.  This allows for such features as the dynamic interline spacing.  The following functions are used to interact with that auxiliary file.
@@ -1754,14 +1717,13 @@ number of lines for the staff.
 Alias that will hold the character for the dotted divisio maior backing for the
 current number of lines for the staff.
 
-\macroname{\textbackslash gre@nabccharno}{\#1\#2\#3\#4}{gregoriotex-nabc.tex}
+\macroname{\textbackslash gre@nabccharno}{\#1\#2\#3}{gregoriotex-nabc.tex}
 Prints the nabc glyphs for the given nabc string.
 
 \begin{argtable}
   \#1 & string & nabc code representing the character\\
   \#2 & string & name of nabc font to use\\
   \#3 & integer & scaling factor\\
-  \#4 & integer & voice number (1 = above staff, 2 = below staff)\\
 \end{argtable}
 
 
@@ -2188,15 +2150,6 @@ Box holding the text associated with a syllable.
 \macroname{\textbackslash gre@box@hep}{}{gregoriotex-chars.tex}
 Box holding the horizontal episema.
 
-\macroname{\textbackslash gre@box@nabctemp}{}{gregoriotex-nabc.tex}
-Temporary box used during NABC two-phase processing to pre-evaluate NABC content and trigger Lua-side calculations (such as left overflow in \texttt{neume} alignment mode).
-
-\macroname{\textbackslash gre@box@nabc@voice@i}{}{gregoriotex-nabc.tex}
-Box for saving NABC voice 1 (above staff) content between phase 1 (prepare) and phase 2 (place) of the two-phase processing. The two-phase approach ensures all note-level kerns are emitted before any voice hbox is placed, guaranteeing correct horizontal alignment.
-
-\macroname{\textbackslash gre@box@nabc@voice@ii}{}{gregoriotex-nabc.tex}
-Box for saving NABC voice 2 (below staff) content between phase 1 (prepare) and phase 2 (place) of the two-phase processing. The two-phase approach ensures all note-level kerns are emitted before any voice hbox is placed, guaranteeing correct horizontal alignment.
-
 
 \subsection{Protrusion factors}
 
@@ -2359,12 +2312,6 @@ Working alias for \verb=\gre@skip@temp@one= or \verb=\gre@dimen@temp@one=, as ap
 
 \macroname{\textbackslash gre@skip@syllablefinalskip}{}{gregoriotex-spaces.tex}
 The final distance to skip at the end of a syllable.
-
-\macroname{\textbackslash gre@dimen@nabcleftoverflow}{}{gregoriotex-nabc.tex}
-Dimension for communicating NABC left overflow from Lua to \TeX. When NABC alignment mode is \texttt{neume}, significative letters on the left side of a neume extend to the left of the neume body. This dimension holds the overflow width (set by Lua code during NABC rendering) so that the \TeX\ layer can reserve space at the note level to prevent overlap with previous elements. Reset to 0pt after each syllable.
-
-\macroname{\textbackslash gre@dimen@nabckernemitted}{}{gregoriotex-nabc.tex}
-Tracks the total kern emitted at the note level across all NABC voices for the current syllable. Used to coordinate left overflow handling between voice 1 (above staff) and voice 2 (below staff), ensuring that only the maximum overflow is applied. Reset to 0pt after each syllable.
 
 \macroname{\textbackslash greslurheight}{}{gregoriotex-signs.tex}
 Stores the computed height of a variable-length slur.  The control sequence name

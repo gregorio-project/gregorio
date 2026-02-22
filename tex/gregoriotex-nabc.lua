@@ -106,17 +106,6 @@ end
 local gregalltab = {}
 local gregallmetrics = {}
 
--- NABC alignment mode (per-voice, with global default):
--- 'full' = align to left of entire complex glyph descriptor (default)
--- 'neume' = align to left of neume (basic glyph + prepunctis), ignoring
---           significative letters
--- Index 0 = global default, 1..n = per-voice override
-local nabc_alignment = { [0] = 'full' }
-
-local function get_nabc_alignment(voice)
-  return nabc_alignment[voice or 0] or nabc_alignment[0] or 'full'
-end
-
 local gregallneumekinds = { vi = 1, pu = 1, ta = 1, gr = 1, cl = 1, un = 1, pv = 1, pe = 1, po = 1, to = 1, ci = 1, sc = 1, pf = 1, sf = 1, tr = 1,
   st = 1, ds = 1, ts = 1, tg = 1, bv = 1, tv = 1, pr = 1, pi = 1, vs = 1, ["or"] = 1, sa = 1, pq = 1, qi = 1, ql = 1, pt = 1,
   un = 1, oc = 1, ni = 1 }
@@ -302,7 +291,7 @@ local add_spacing = function(str, len, idx, ret)
   return idx, ret
 end
 
-local gregallparse_neumes = function(str, kind, scale, voice)
+local gregallparse_neumes = function(str, kind, scale)
   local len = str:len()
   local idx = 1
   local ret = ''
@@ -456,17 +445,6 @@ local gregallparse_neumes = function(str, kind, scale, voice)
           end
         end
         base = pre..base..post
-        -- Apply alignment offset: in 'neume' mode, shift left by the
-        -- width of left-side significative letters (positions 1, 4, 7)
-        -- so that the neume (base glyph + prepunctis) is the reference.
-        -- Also set \gre@dimen@nabcleftoverflow so the TeX layer can
-        -- reserve space at the note level and prevent overlap with the
-        -- previous element.
-        if get_nabc_alignment(voice) == 'neume' and lwidths[10] > 0 then
-          local overflow_sp = string.format("%.3f", lwidths[10] * scale)
-          base = '\\global\\gre@dimen@nabcleftoverflow=' .. overflow_sp .. 'sp'
-              .. '\\kern -' .. overflow_sp .. 'sp' .. base
-        end
       end
     end
     ret = ret .. base
@@ -485,26 +463,7 @@ local function print_nabc(nabc)
   tex.sprint(catcode_at_letter, nabc)
 end
 
-local function set_nabc_alignment(mode, voice)
-  if mode == 'neume' or mode == 'full' then
-    if voice then
-      nabc_alignment[voice] = mode
-    else
-      -- Setting without voice resets all per-voice overrides
-      nabc_alignment = { [0] = mode }
-    end
-  else
-    texio.write_nl('Warning: unknown nabc alignment mode "'..mode..'", using "full".')
-    if voice then
-      nabc_alignment[voice] = 'full'
-    else
-      nabc_alignment = { [0] = 'full' }
-    end
-  end
-end
-
 gregoriotex.parse_nabc = gregallparse_neumes
 gregoriotex.print_nabc = print_nabc
 gregoriotex.init_nabc_font = init_font
 gregoriotex.nabc_font_tables = gregalltab
-gregoriotex.set_nabc_alignment = set_nabc_alignment

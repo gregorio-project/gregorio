@@ -21,24 +21,6 @@
 
 \gre@declarefileversion{gregoriotex-nabc.tex}{6.1.0}% GREGORIO_VERSION
 
-% Dimension for communicating NABC left overflow from Lua to TeX.
-% When nabc alignment is 'neume', left-side significative letters extend
-% to the left of the neume.  This dimension holds the overflow width so
-% that \gre@typesettextabovelines can reserve space at the note level.
-\newdimen\gre@dimen@nabcleftoverflow
-\gre@dimen@nabcleftoverflow=0pt\relax
-% Tracks how much kern has been emitted at note level across all NABC voices.
-% Used to coordinate overflow between voice 1 (above) and voice 2 (below).
-\newdimen\gre@dimen@nabckernemitted
-\gre@dimen@nabckernemitted=0pt\relax
-\newbox\gre@box@nabctemp
-% Boxes for saving NABC voice content between prepare and place phases.
-% The two-phase processing ensures that all voices are pre-evaluated and
-% all note-level kerns emitted before any voice hbox is placed, so that
-% each voice is at the correct horizontal position (P + total_kern).
-\newbox\gre@box@nabc@voice@i
-\newbox\gre@box@nabc@voice@ii
-
 % \gresetnabcfont[#1]#2#3
 % #1: voice
 % #2: font name
@@ -55,13 +37,9 @@
   }%
 }
 
-% #1: NABC string
-% #2: font name
-% #3: scale
-% #4: voice number
-\def\gre@nabccharno#1#2#3#4{%
-  \gre@trace{gre@nabccharno{#1}{#2}{#3}{#4}}%
-  {\directlua{gregoriotex.print_nabc(gregoriotex.parse_nabc("#1", "\luaescapestring{#2}", #3, #4))}}%
+\def\gre@nabccharno#1#2#3{%
+  \gre@trace{gre@nabccharno{#1}{#2}{#3}}%
+  {\directlua{gregoriotex.print_nabc(gregoriotex.parse_nabc("#1", "\luaescapestring{#2}", #3))}}%
   \gre@trace@end%
 }
 
@@ -75,7 +53,7 @@
   \csname gre@font@nabcvoice@\romannumeral#1\endcsname
   \gre@style@nabc
   \ifcase#1\relax\or\gre@style@abovelinesnabc\or\gre@style@belowlinesnabc\fi
-  \gre@nabccharno{#2}{\csname gre@nabcvoice@\romannumeral#1@fontname\endcsname}{1}{#1}%
+  \gre@nabccharno{#2}{\csname gre@nabcvoice@\romannumeral#1@fontname\endcsname}{1}%
   \ifcase#1\relax\or\endgre@style@abovelinesnabc\or\endgre@style@belowlinesnabc\fi
   \endgre@style@nabc
 }}
@@ -96,36 +74,6 @@
     {\csname gre@nabcvoice@\romannumeral#1@visiblefalse\endcsname}%
     {\csname gre@nabcvoice@\romannumeral#1@phantomwrapper\endcsname}%
     {\protect\gresetnabc}%
-}
-
-% \gresetnabcalignment[#1]#2 - set the horizontal alignment reference for NABC
-% neumes relative to the gabc notes below.
-% #1: voice number (optional; if omitted, sets the default for all voices
-%     and clears any per-voice overrides)
-% #2: alignment mode
-%   neume - align to the neume (basic glyph + prepunctis), ignoring
-%           significative letters
-%   full  - align to the entire complex glyph descriptor (default)
-\def\gresetnabcalignment{\@ifnextchar[{\gre@setnabcalignment@voice}{\gre@setnabcalignment@global}}%
-\def\gre@setnabcalignment@global#1{%
-  \IfStrEqCase{#1}{%
-    {neume}%
-      {\directlua{gregoriotex.set_nabc_alignment("neume")}}%
-    {full}%
-      {\directlua{gregoriotex.set_nabc_alignment("full")}}%
-    }[% all other cases
-      \gre@error{Unrecognized option "#1" for \protect\gresetnabcalignment\MessageBreak Possible options are: 'neume' and 'full'}%
-    ]%
-}%
-\def\gre@setnabcalignment@voice[#1]#2{%
-  \IfStrEqCase{#2}{%
-    {neume}%
-      {\directlua{gregoriotex.set_nabc_alignment("neume", #1)}}%
-    {full}%
-      {\directlua{gregoriotex.set_nabc_alignment("full", #1)}}%
-    }[% all other cases
-      \gre@error{Unrecognized option "#2" for \protect\gresetnabcalignment\MessageBreak Possible options are: 'neume' and 'full'}%
-    ]%
 }
 
 \def\GreNABCNeumes#1#2#3#4{%
