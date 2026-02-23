@@ -724,6 +724,7 @@
 \xdef\gre@nabc@emit@voice@i{}%
 \xdef\gre@nabc@emit@voice@ii{}%
 
+% Arms the two-phase NABC machinery for voice 1 (above staff).
 \def\GreSetNabcAboveLines#1{%
   \gdef\gre@nabc@pre@voice@i{%
     \gre@nabc@prepare{#1}\gre@box@nabc@voice@i%
@@ -735,6 +736,7 @@
   }%
 }%
 
+% Arms the two-phase NABC machinery for voice 2 (below staff).
 \def\GreSetNabcBelowLines#1{%
   \gdef\gre@nabc@pre@voice@ii{%
     \gre@nabc@prepare{#1}\gre@box@nabc@voice@ii%
@@ -743,6 +745,48 @@
   \gdef\gre@nabc@emit@voice@ii{%
     \gre@nabc@place@voice@ii%
     \gdef\gre@nabc@emit@voice@ii{}%
+  }%
+}%
+
+% Deferred variant of \GreSetNabcAboveLines for voice 1: skips accidentals
+% and anchors the neume to the first real square note.
+\def\GreSetNabcAboveLinesDeferred#1{%
+  \global\gre@nabc@voice@i@readyfalse%
+  \gdef\gre@nabc@pre@voice@i{%
+    \ifgre@nabc@in@alteration\else%
+      \gre@nabc@prepare{#1}\gre@box@nabc@voice@i%
+      \global\gre@nabc@voice@i@readytrue%
+      \gdef\gre@nabc@pre@voice@i{}%
+    \fi%
+  }%
+  \gdef\gre@nabc@emit@voice@i{%
+    \ifgre@nabc@voice@i@ready%
+      \gre@nabc@place@voice@i%
+      \global\gre@nabc@voice@i@readyfalse%
+      \gdef\gre@nabc@emit@voice@i{}%
+    \fi%
+    % if not ready: do nothing and do not self-destruct
+  }%
+}%
+
+% Deferred variant of \GreSetNabcBelowLines for voice 2: skips accidentals
+% and anchors the neume to the first real square note.
+\def\GreSetNabcBelowLinesDeferred#1{%
+  \global\gre@nabc@voice@ii@readyfalse%
+  \gdef\gre@nabc@pre@voice@ii{%
+    \ifgre@nabc@in@alteration\else%
+      \gre@nabc@prepare{#1}\gre@box@nabc@voice@ii%
+      \global\gre@nabc@voice@ii@readytrue%
+      \gdef\gre@nabc@pre@voice@ii{}%
+    \fi%
+  }%
+  \gdef\gre@nabc@emit@voice@ii{%
+    \ifgre@nabc@voice@ii@ready%
+      \gre@nabc@place@voice@ii%
+      \global\gre@nabc@voice@ii@readyfalse%
+      \gdef\gre@nabc@emit@voice@ii{}%
+    \fi%
+    % if not ready: do nothing and do not self-destruct
   }%
 }%
 

@@ -1058,6 +1058,29 @@ Macro to place argument containing Nabc neumes below the lines.
   \#1 & string & Nabc neumes to be placed below the lines.\\
 \end{argtable}
 
+\macroname{\textbackslash GreSetNabcAboveLinesDeferred}{\#1}{gregoriotex-main.tex}
+Deferred variant of \verb=\GreSetNabcAboveLines= used when skip-accidentals is
+enabled for voice~1 (\verb=\gresetnabcskipaccidentals[1]{true}=).  The
+pre-phase is guarded by \verb=\ifgre@nabc@in@alteration= so it silently
+postpones execution during free-standing accidental signs and fires only at
+the next real \verb=\GreGlyph= call, anchoring the neume to the first square
+note.  The emit-phase is likewise guarded by \verb=\ifgre@nabc@voice@i@ready=
+to prevent placing an empty box before the pre-phase has run.
+
+\begin{argtable}
+  \#1 & string & Nabc neumes to be placed above the lines.\\
+\end{argtable}
+
+\macroname{\textbackslash GreSetNabcBelowLinesDeferred}{\#1}{gregoriotex-main.tex}
+Deferred variant of \verb=\GreSetNabcBelowLines= used when skip-accidentals is
+enabled for voice~2 (\verb=\gresetnabcskipaccidentals[2]{true}=).  Mirrors
+\verb=\GreSetNabcAboveLinesDeferred= but targets voice~2 (below staff), using
+\verb=\ifgre@nabc@voice@ii@ready= and the \verb=\gre@nabc@*@voice@ii= macros.
+
+\begin{argtable}
+  \#1 & string & Nabc neumes to be placed below the lines.\\
+\end{argtable}
+
 \macroname{\textbackslash GreSetNextSyllable}{\#1\#2\#3}{gregoriotex-syllable.tex}
 Macro to set the text of the next syllable for spacing purposes.
 
@@ -1328,11 +1351,14 @@ Macro used to prevent a line break from occurring at a given position.
 A Lua\TeX\ attribute which designates a unique identifier for each score.
 
 \macroname{\textbackslash GreNABCNeumes}{\#1\#2\#3\#4}{gregoriotex-nabc.tex}
-Macro to print a nabc character above the lines.
+Macro called by the generated \texttt{.gtex} file to typeset the neumes of one
+NABC voice for a GABC element.  Dispatches to \verb=\GreSetNabcAboveLines= or
+\verb=\GreSetNabcBelowLines= (possibly the Deferred variant when
+\verb=\gresetnabcskipaccidentals= is enabled for that voice).
 
 \begin{argtable}
-  \#1 & integer & the line on which the character should appear (currently unused)\\
-  \#2 & string & The \texttt{nabc} syntax which indicates what neumes are to be printed\\
+  \#1 & integer & NABC voice number: 1 = above staff, 2 = below staff.\\
+  \#2 & string & The \texttt{nabc} syntax which indicates what neumes are to be printed.\\
   \#3 & integer & The high pitch of the notes covered by the nabc character(s).\\
   \#4 & integer & The low pitch of the notes covered by the nabc character(s).\\
 \end{argtable}

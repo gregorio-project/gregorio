@@ -2764,7 +2764,9 @@
     attr \gre@attrid@alteration@type=#2\relax
     {\gre@pointandclick{\gre@alteration@char}{#6}}%
   \ifnum#3=0\relax %
+    \gre@nabc@in@alterationtrue%
     \gre@newglyphcommon %
+    \gre@nabc@in@alterationfalse%
   \fi %
   \ifgre@in@custos\else\relax %
     \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %

@@ -1259,6 +1259,17 @@ Sets the horizontal alignment reference for nabc neumes relative to the gabc not
   & \texttt{full} & Align to the entire complex glyph descriptor (default).\\
 \end{argtable}
 
+\macroname{\textbackslash gresetnabcskipaccidentals}{[\#1]\{\#2\}}{gregoriotex-nabc.tex}
+Controls whether NABC neumes skip leading accidental signs (flat, natural, sharp)
+when computing the horizontal anchor position, aligning instead to the first real
+square note.  By default this feature is disabled.
+
+\begin{argtable}
+  \#1 & integer & (Optional) The nabc voice number: 1 = above staff, 2 = below staff.  If omitted, applies to all voices.\\
+  \#2 & \texttt{true} & Skip leading accidentals; anchor neume to first square note.\\
+  & \texttt{false} & Use the leftmost symbol as anchor (default).\\
+\end{argtable}
+
 \macroname{\textbackslash greprintsigns}{\{\#1\}\{\#2\}}{gregoriotex-signs.tex}
 Macro to prevent rythmic signs from printing (all signs are printed by default):
 

@@ -86,6 +86,24 @@
 \gre@nabcvoice@ii@visibletrue
 % define more of these when more voices are supported
 
+% Per-voice 'skip-accidentals' flags: when true, NABC neumes are anchored to
+% the first real square note, skipping any leading accidental signs.
+\newif\ifgre@nabc@voice@i@skipaccidentals
+\gre@nabc@voice@i@skipaccidentalsfalse
+\newif\ifgre@nabc@voice@ii@skipaccidentals
+\gre@nabc@voice@ii@skipaccidentalsfalse
+% In-alteration signal: set to true by \gre@alteration@visible around the
+% \gre@newglyphcommon call so that deferred pre/emit macros can detect they
+% are being called from an alteration and defer execution.
+\newif\ifgre@nabc@in@alteration
+\gre@nabc@in@alterationfalse
+% Per-voice 'ready' flags: set when the deferred pre-phase fills the nabc
+% box, cleared after the emit-phase places it.
+\newif\ifgre@nabc@voice@i@ready
+\gre@nabc@voice@i@readyfalse
+\newif\ifgre@nabc@voice@ii@ready
+\gre@nabc@voice@ii@readyfalse
+
 \def\gresetnabc#1#2{%
   \IfStrEqCase{#2}{%
     {visible}%
@@ -97,14 +115,7 @@
     ]%
 }
 
-% \gresetnabcalignment[#1]#2 - set the horizontal alignment reference for NABC
-% neumes relative to the gabc notes below.
-% #1: voice number (optional; if omitted, sets the default for all voices
-%     and clears any per-voice overrides)
-% #2: alignment mode
-%   neume - align to the neume (basic glyph + prepunctis), ignoring
-%           significative letters
-%   full  - align to the entire complex glyph descriptor (default)
+% See Command_Index_User.tex for documentation.
 \def\gresetnabcalignment{\@ifnextchar[{\gre@setnabcalignment@voice}{\gre@setnabcalignment@global}}%
 \def\gre@setnabcalignment@global#1{%
   \IfStrEqCase{#1}{%
@@ -127,13 +138,46 @@
     ]%
 }
 
+% See Command_Index_User.tex for documentation.
+\def\gresetnabcskipaccidentals{%
+  \@ifnextchar[{\gre@setnabcskipaccidentals@voice}{\gre@setnabcskipaccidentals@global}%
+}%
+\def\gre@setnabcskipaccidentals@global#1{%
+  \IfStrEqCase{#1}{%
+    {true}%
+      {\global\gre@nabc@voice@i@skipaccidentalstrue
+       \global\gre@nabc@voice@ii@skipaccidentalstrue}%
+    {false}%
+      {\global\gre@nabc@voice@i@skipaccidentalsfalse
+       \global\gre@nabc@voice@ii@skipaccidentalsfalse}%
+    }[%
+      \gre@error{Unrecognized option "#1" for \protect\gresetnabcskipaccidentals\MessageBreak Possible options are: 'true' and 'false'}%
+    ]%
+}%
+\def\gre@setnabcskipaccidentals@voice[#1]#2{%
+  \IfStrEqCase{#2}{%
+    {true}%
+      {\ifnum#1=1\relax\global\gre@nabc@voice@i@skipaccidentalstrue\fi%
+       \ifnum#1=2\relax\global\gre@nabc@voice@ii@skipaccidentalstrue\fi}%
+    {false}%
+      {\ifnum#1=1\relax\global\gre@nabc@voice@i@skipaccidentalsfalse\fi%
+       \ifnum#1=2\relax\global\gre@nabc@voice@ii@skipaccidentalsfalse\fi}%
+    }[%
+      \gre@error{Unrecognized option "#2" for \protect\gresetnabcskipaccidentals\MessageBreak Possible options are: 'true' and 'false'}%
+    ]%
+}
+
 \def\GreNABCNeumes#1#2#3#4{%
   \csname ifgre@nabcvoice@\romannumeral#1@visible\endcsname %
     \ifcase#1\relax
       \or % 1
-        \GreSetNabcAboveLines{\GreNABCChar[1]{#2}}%
+        \csname GreSetNabcAboveLines%
+          \ifgre@nabc@voice@i@skipaccidentals Deferred\fi\endcsname
+        {\GreNABCChar[1]{#2}}%
       \or % 2
-        \GreSetNabcBelowLines{\GreNABCChar[2]{#2}}%
+        \csname GreSetNabcBelowLines%
+          \ifgre@nabc@voice@ii@skipaccidentals Deferred\fi\endcsname
+        {\GreNABCChar[2]{#2}}%
       \fi
   \fi %
 }

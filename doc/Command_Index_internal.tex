@@ -1386,16 +1386,29 @@ Phase 2 of NABC two-phase processing for voice 1 (above staff): places the pre-r
 Phase 2 of NABC two-phase processing for voice 2 (below staff): places the pre-rendered NABC voice 2 content from \textbackslash gre@box@nabc@voice@ii at the correct vertical position below the staff.
 
 \macroname{\textbackslash gre@nabc@pre@voice@i}{}{gregoriotex-main.tex}
-Deferred macro for phase 1 processing of NABC voice 1 (above staff). Set by \textbackslash GreSetNabcAboveLines, called from \textbackslash gre@newglyphcommon. After execution, resets itself to empty.
+Deferred macro for phase~1 processing of NABC voice~1 (above staff).  Set by
+\verb=\GreSetNabcAboveLines= (or \verb=\GreSetNabcAboveLinesDeferred= when
+skip-accidentals is enabled), called from \verb=\gre@newglyphcommon=.  When set
+by the deferred variant, guarded by \verb=\ifgre@nabc@in@alteration=: execution
+is postponed during free-standing accidentals and fires at the next real glyph.
+After execution, resets itself to empty.
 
 \macroname{\textbackslash gre@nabc@pre@voice@ii}{}{gregoriotex-main.tex}
-Deferred macro for phase 1 processing of NABC voice 2 (below staff). Set by \textbackslash GreSetNabcBelowLines, called from \textbackslash gre@newglyphcommon. After execution, resets itself to empty.
+Deferred macro for phase~1 processing of NABC voice~2 (below staff).  Set by
+\verb=\GreSetNabcBelowLines= (or \verb=\GreSetNabcBelowLinesDeferred= when
+skip-accidentals is enabled), called from \verb=\gre@newglyphcommon=.  Mirrors
+\verb=\gre@nabc@pre@voice@i= for voice~2.  After execution, resets itself to empty.
 
 \macroname{\textbackslash gre@nabc@emit@voice@i}{}{gregoriotex-main.tex}
-Deferred macro for phase 2 processing of NABC voice 1 (above staff). Set by \textbackslash GreSetNabcAboveLines, called from \textbackslash gre@newglyphcommon. After execution, resets itself to empty.
+Deferred macro for phase~2 processing of NABC voice~1 (above staff).  Set by
+\verb=\GreSetNabcAboveLines= (or \verb=\GreSetNabcAboveLinesDeferred=).  When
+set by the deferred variant, guarded by \verb=\ifgre@nabc@voice@i@ready= so it
+does not fire before phase~1 has completed.  After execution, resets itself to empty.
 
 \macroname{\textbackslash gre@nabc@emit@voice@ii}{}{gregoriotex-main.tex}
-Deferred macro for phase 2 processing of NABC voice 2 (below staff). Set by \textbackslash GreSetNabcBelowLines, called from \textbackslash gre@newglyphcommon. After execution, resets itself to empty.
+Deferred macro for phase~2 processing of NABC voice~2 (below staff).  Set by
+\verb=\GreSetNabcBelowLines= (or \verb=\GreSetNabcBelowLinesDeferred=).  Mirrors
+\verb=\gre@nabc@emit@voice@i= for voice~2, guarded by \verb=\ifgre@nabc@voice@ii@ready=.
 
 \macroname{\textbackslash gre@setnabcalignment@global}{\#1}{gregoriotex-nabc.tex}
 Sets the default NABC horizontal alignment mode for all voices and clears any per-voice overrides.
@@ -1412,6 +1425,27 @@ Sets the NABC horizontal alignment mode for a specific voice.
   \#1 & integer & The nabc voice number: 1 = above staff, 2 = below staff\\
   \#2 & \texttt{neume} & Align to the neume (basic glyph + prepunctis), ignoring significative letters\\
   & \texttt{full} & Align to the entire complex glyph descriptor (default)\\
+\end{argtable}
+
+\macroname{\textbackslash gre@setnabcskipaccidentals@global}{\#1}{gregoriotex-nabc.tex}
+Sets the skip-accidentals flag for all NABC voices simultaneously.  Internal
+implementation of \verb=\gresetnabcskipaccidentals= when called without the
+optional voice argument.
+
+\begin{argtable}
+  \#1 & \texttt{true} & Enable skip-accidentals for all voices\\
+  & \texttt{false} & Disable skip-accidentals for all voices (default)\\
+\end{argtable}
+
+\macroname{\textbackslash gre@setnabcskipaccidentals@voice}{[\#1]\{\#2\}}{gregoriotex-nabc.tex}
+Sets the skip-accidentals flag for a specific NABC voice.  Internal
+implementation of \verb=\gresetnabcskipaccidentals= when called with the
+optional voice argument.
+
+\begin{argtable}
+  \#1 & integer & The nabc voice number: 1 = above staff, 2 = below staff\\
+  \#2 & \texttt{true} & Enable skip-accidentals for the given voice\\
+  & \texttt{false} & Disable skip-accidentals for the given voice\\
 \end{argtable}
 
 
@@ -1931,6 +1965,42 @@ Boolean indicating whether the first nabc voice should be shown.
 
 \macroname{\textbackslash ifgre@nabcvoice@ii@visible}{}{gregoriotex-nabc.tex}
 Boolean indicating whether the second nabc voice should be shown.
+
+\macroname{\textbackslash ifgre@nabc@voice@i@skipaccidentals}{}{gregoriotex-nabc.tex}
+When true, NABC neumes for voice~1 are anchored to the first real square note,
+skipping any leading free-standing accidental signs.  Controlled by
+\verb=\gresetnabcskipaccidentals=.
+
+\macroname{\textbackslash ifgre@nabc@voice@ii@skipaccidentals}{}{gregoriotex-nabc.tex}
+When true, NABC neumes for voice~2 are anchored to the first real square note,
+skipping any leading free-standing accidental signs.  Mirrors
+\verb=\ifgre@nabc@voice@i@skipaccidentals= for voice~2.
+
+\macroname{\textbackslash ifgre@nabc@in@alteration}{}{gregoriotex-nabc.tex}
+Set to true by \verb=\gre@alteration@visible= around its internal call to
+\verb=\gre@newglyphcommon=, so that the deferred NABC pre/emit macros can detect
+they are being triggered by a free-standing accidental sign rather than by a real
+glyph and defer execution accordingly.
+
+\macroname{\textbackslash ifgre@nabc@voice@i@ready}{}{gregoriotex-main.tex}
+Set to true by \verb=\GreSetNabcAboveLinesDeferred= pre-phase when the NABC box
+for voice~1 has been filled, and cleared after the emit-phase places it.  The
+emit-phase checks this flag to avoid placing an empty box when called before
+phase~1 has executed.
+
+\macroname{\textbackslash ifgre@nabc@voice@ii@ready}{}{gregoriotex-main.tex}
+Set to true by \verb=\GreSetNabcBelowLinesDeferred= pre-phase when the NABC box
+for voice~2 has been filled, and cleared after the emit-phase places it.  Mirrors
+\verb=\ifgre@nabc@voice@i@ready= for voice~2.
+
+\macroname{\textbackslash ifgre@staffdimensions@zeroed}{}{gregoriotex-main.tex}
+Boolean indicating whether the staff dimensions (line height, inter-line space, and total staff height) have been zeroed.  Set to true by \verb=\gre@staffdimensions@dozero= when lines are made invisible or hphantom, and cleared by \verb=\gre@staffdimensions@unzero= when lines are restored.
+
+\macroname{\textbackslash ifgre@nabc@needsspacing}{}{gregoriotex-syllable.tex}
+Boolean indicating whether any NABC voice is visible and therefore requires horizontal spacing to be preserved even when notes are invisible.  Set by \verb=\gre@check@nabc@needsspacing=.
+
+\macroname{\textbackslash ifgre@notes@invisrender}{}{gregoriotex-syllable.tex}
+Boolean indicating that notes are being typeset in invisible-rendering mode.  Set to true inside \verb=\gre@applynotesphantom= so that glyph rendering code can suppress note output while still allowing NABC neumes to be rendered.
 
 \macroname{\textbackslash ifgre@showlyrics}{}{gregoriotex-syllable.tex}
 Boolean indicating whether the lyrics should be shown.
