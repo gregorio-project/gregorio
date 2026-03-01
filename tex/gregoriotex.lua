@@ -60,6 +60,8 @@ for i, t in ipairs(node.subtypes('glue')) do
   end
 end
 
+local hlist_subtypes = node.subtypes(hlist)
+
 local hyphen = tex.defaulthyphenchar or 45
 
 local part_attr = luatexbase.attributes['gre@attr@part']
@@ -710,7 +712,11 @@ local function compute_line_statistics(line, info)
           end
         end
       end
-      if n.id == hlist then
+      if n.id == hlist and hlist_subtypes[n.subtype] == 'box' then
+        -- Only descend into "adjusted" hboxes (subtype 2), which hold
+        -- syllable/note content.  Subtype-0 hboxes at the top level are
+        -- \localrightbox/\localleftbox wrappers (e.g. end-of-line custos)
+        -- whose glyph-height attributes must not influence line statistics.
         visit(n.head)
       elseif n.id == disc then
         visit(n.replace)
