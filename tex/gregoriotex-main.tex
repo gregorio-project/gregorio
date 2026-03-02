@@ -718,13 +718,34 @@
   \global\setbox#2=\hbox{\unhbox\gre@box@nabctemp}%
 }%
 
+% Helper: apply horizontal alignment kern inside a zero-width NABC hbox.
+% #1: halign count register (0=left, 1=center)
+% #2: nabc box register (must still contain the box)
+% #3: per-voice right-side LS overflow dimension (\gre@dimen@nabcrightoverflow@i/ii)
+% The kern shifts the NABC content to the right inside the zero-width hbox
+% so that the neume aligns with the GABC glyph according to the chosen mode.
+% \gre@dimen@lastglyphwidth must be set to the current GABC glyph width.
+\def\gre@nabc@halign@content#1#2#3{%
+  \ifcase#1\relax
+    % 0 = left: no offset (current default behavior)
+    \unhbox#2%
+  \or
+    % 1 = center: kern = (glyphwidth - (nabcwidth - rightoverflow)) / 2
+    % In neume mode, rightoverflow excludes right-side LS from centering.
+    \kern\dimexpr(\gre@dimen@lastglyphwidth - \wd#2 + #3) / 2\relax
+    \unhbox#2%
+  \fi
+}%
+
 % Phase 2: Place voice 1 (above staff)
 \def\gre@nabc@place@voice@i{%
   \gre@attr@part=7\relax%
   \gre@dimen@temp@five=\dimexpr(\gre@dimen@staffheight %
     + \gre@space@dimen@spacebeneathtext %
     + \gre@space@dimen@spacelinestext)\relax%
-  \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\unhbox\gre@box@nabc@voice@i\hss}%
+  \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{%
+    \gre@nabc@halign@content{\gre@count@nabc@halign@i}{\gre@box@nabc@voice@i}{\gre@dimen@nabcrightoverflow@i}%
+  \hss}%
   \unsetattribute{\gre@attr@part}%
 }%
 
@@ -732,7 +753,9 @@
 \def\gre@nabc@place@voice@ii{%
   \gre@dimen@temp@five=\dimexpr(\gre@space@dimen@spacebeneathtext
     + \gre@space@dimen@spacelinestext)\relax
-  \leavevmode\raise\gre@dimen@temp@five\hbox attr \gre@attrid@part=8 to 0pt{\unhbox\gre@box@nabc@voice@ii\hss}%
+  \leavevmode\raise\gre@dimen@temp@five\hbox attr \gre@attrid@part=8 to 0pt{%
+    \gre@nabc@halign@content{\gre@count@nabc@halign@ii}{\gre@box@nabc@voice@ii}{\gre@dimen@nabcrightoverflow@ii}%
+  \hss}%
 }%
 
 % Deferred macros for two-phase processing.

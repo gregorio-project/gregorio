@@ -462,10 +462,23 @@ local gregallparse_neumes = function(str, kind, scale, voice)
         -- Also set \gre@dimen@nabcleftoverflow so the TeX layer can
         -- reserve space at the note level and prevent overlap with the
         -- previous element.
-        if get_nabc_alignment(voice) == 'neume' and lwidths[10] > 0 then
+        local is_neume_mode = (get_nabc_alignment(voice) == 'neume')
+        if is_neume_mode and lwidths[10] > 0 then
           local overflow_sp = string.format("%.3f", lwidths[10] * scale)
           base = '\\global\\gre@dimen@nabcleftoverflow=' .. overflow_sp .. 'sp'
               .. '\\kern -' .. overflow_sp .. 'sp' .. base
+        end
+        -- Communicate right-side significative letter width to TeX.
+        -- In 'neume' + 'center' mode, the centering computation ignores
+        -- this width so the neume glyph is centered on the GABC note
+        -- group, mirroring the left-side exclusion.
+        local rdim = '\\gre@dimen@nabcrightoverflow@'
+            .. (voice == 1 and 'i' or 'ii')
+        if is_neume_mode and lwidths[12] > 0 then
+          base = base .. '\\global' .. rdim .. '='
+              .. string.format("%.3f", lwidths[12] * scale) .. 'sp'
+        else
+          base = base .. '\\global' .. rdim .. '=0sp'
         end
       end
     end

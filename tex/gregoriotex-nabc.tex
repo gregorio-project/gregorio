@@ -121,6 +121,25 @@
 \newif\ifgre@nabc@suppress@leftoverflow
 \gre@nabc@suppress@leftoverflowfalse
 
+% Horizontal alignment of NABC neumes relative to the GABC note group.
+% Values: 0 = left (default), 1 = center.
+% Per-voice registers; set via the optional second argument of
+% \gresetnabcalignment.
+\newcount\gre@count@nabc@halign@i
+\gre@count@nabc@halign@i=0\relax
+\newcount\gre@count@nabc@halign@ii
+\gre@count@nabc@halign@ii=0\relax
+
+% Per-voice dimensions for right-side significative letter overflow.
+% In 'neume' mode, the Lua code sets these to the width of right-side LS
+% (positions 3, 6, 9).  The center alignment computation subtracts this
+% width so that centering is based on the neume glyph only, ignoring
+% right-side significative letters (mirroring the left-side exclusion).
+\newdimen\gre@dimen@nabcrightoverflow@i
+\gre@dimen@nabcrightoverflow@i=0pt\relax
+\newdimen\gre@dimen@nabcrightoverflow@ii
+\gre@dimen@nabcrightoverflow@ii=0pt\relax
+
 \def\gresetnabc#1#2{%
   \gre@processvisibilitywithphantom{#2}%
     {\csname gre@nabcvoice@\romannumeral#1@visibletrue\endcsname}%
@@ -130,6 +149,16 @@
 }
 
 % See Command_Index_User.tex for documentation.
+% \gresetnabcalignment{neume|full}
+% \gresetnabcalignment{neume|full}{left|center}
+% \gresetnabcalignment[voice]{neume|full}
+% \gresetnabcalignment[voice]{neume|full}{left|center}
+%
+% The first argument selects the vertical alignment mode (significative-letter
+% handling).  The optional second argument selects the horizontal alignment
+% of the NABC neume relative to the GABC note group: 'left' (default) or
+% 'center'.  When the second argument is omitted the horizontal alignment
+% is left unchanged.
 \def\gresetnabcalignment{\@ifnextchar[{\gre@setnabcalignment@voice}{\gre@setnabcalignment@global}}%
 \def\gre@setnabcalignment@global#1{%
   \IfStrEqCase{#1}{%
@@ -140,6 +169,8 @@
     }[% all other cases
       \gre@error{Unrecognized option "#1" for \protect\gresetnabcalignment\MessageBreak Possible options are: 'neume' and 'full'}%
     ]%
+  % Check for optional second argument (horizontal alignment)
+  \@ifnextchar\bgroup{\gre@setnabchalign@global}{}%
 }%
 \def\gre@setnabcalignment@voice[#1]#2{%
   \IfStrEqCase{#2}{%
@@ -150,7 +181,35 @@
     }[% all other cases
       \gre@error{Unrecognized option "#2" for \protect\gresetnabcalignment\MessageBreak Possible options are: 'neume' and 'full'}%
     ]%
-}
+  % Check for optional second argument (horizontal alignment)
+  \@ifnextchar\bgroup{\gre@setnabchalign@voice[#1]}{}%
+}%
+
+% Internal helpers for horizontal alignment (called from \gresetnabcalignment)
+\def\gre@setnabchalign@global#1{%
+  \IfStrEqCase{#1}{%
+    {left}{%
+      \global\gre@count@nabc@halign@i=0\relax
+      \global\gre@count@nabc@halign@ii=0\relax}%
+    {center}{%
+      \global\gre@count@nabc@halign@i=1\relax
+      \global\gre@count@nabc@halign@ii=1\relax}%
+  }[%
+    \gre@error{Unrecognized horizontal alignment "#1" for \protect\gresetnabcalignment\MessageBreak Possible options are: 'left' and 'center'}%
+  ]%
+}%
+\def\gre@setnabchalign@voice[#1]#2{%
+  \IfStrEqCase{#2}{%
+    {left}{%
+      \ifnum#1=1\relax\global\gre@count@nabc@halign@i=0\relax\fi
+      \ifnum#1=2\relax\global\gre@count@nabc@halign@ii=0\relax\fi}%
+    {center}{%
+      \ifnum#1=1\relax\global\gre@count@nabc@halign@i=1\relax\fi
+      \ifnum#1=2\relax\global\gre@count@nabc@halign@ii=1\relax\fi}%
+  }[%
+    \gre@error{Unrecognized horizontal alignment "#2" for \protect\gresetnabcalignment\MessageBreak Possible options are: 'left' and 'center'}%
+  ]%
+}%
 
 % See Command_Index_User.tex for documentation.
 \def\gresetnabcskipalterations{%
