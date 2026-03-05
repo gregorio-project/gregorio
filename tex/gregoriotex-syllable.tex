@@ -108,6 +108,10 @@
   \fi%
   \gre@nabc@emit@voice@i
   \gre@nabc@emit@voice@ii
+  % Track element advance for deferred center alignment.
+  \ifgre@nabc@halign@pending
+    \global\advance\gre@dimen@nabc@elementadvance by \gre@dimen@lastglyphwidth\relax
+  \fi
   % Reset NABC overflow accumulators after all voices have been processed.
   % During boxing, keep values so the adjustment code can read them.
   \ifgre@boxing\else%
@@ -497,6 +501,9 @@
     \gre@suppress@bars
     \def\GreEndOfElement##1##2##3{}%
     \def\GreEndOfGlyph##1{}%
+    % Disable deferred centering: no glyph widths to track in tight mode.
+    \let\gre@nabc@place@voice@i\gre@nabc@place@voice@i@now
+    \let\gre@nabc@place@voice@ii\gre@nabc@place@voice@ii@now
     #1%
   \endgroup
 }%
@@ -1266,6 +1273,7 @@
       {\raise 12pt\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
       {}% do nothing if not debugging
     #9% we do that instead of \unhbox\Syllablnotes, because it would not set the \localrightbox
+    \gre@nabc@flush@deferred@halign
     % Apply per-syllable NABC kern computed in \gre@syllablenotes.
     \ifdim\gre@dimen@nabc@extrakern>0pt\relax
       \kern\gre@dimen@nabc@extrakern
@@ -1564,6 +1572,7 @@
         {\raise 12pt\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
         {}% do nothing if not debugging
       #9%
+      \gre@nabc@flush@deferred@halign
       \IfSubStr{\gre@debug}{,barspacing,}%
         % when debugging we add a zero-width line to mark the syllable bound
         {\raise 12pt\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%

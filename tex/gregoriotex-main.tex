@@ -737,8 +737,8 @@
   \fi
 }%
 
-% Phase 2: Place voice 1 (above staff)
-\def\gre@nabc@place@voice@i{%
+% Immediate placement helper for voice 1 (always places, no deferral check).
+\def\gre@nabc@place@voice@i@now{%
   \gre@attr@part=7\relax%
   \gre@dimen@temp@five=\dimexpr(\gre@dimen@staffheight %
     + \gre@space@dimen@spacebeneathtext %
@@ -748,14 +748,64 @@
   \hss}%
   \unsetattribute{\gre@attr@part}%
 }%
+% Phase 2: Place voice 1 (above staff) — with deferral for center alignment.
+\def\gre@nabc@place@voice@i{%
+  \ifgre@boxing
+    \gre@nabc@place@voice@i@now
+  \else\ifnum\gre@count@nabc@halign@i=1\relax
+    \global\gre@nabc@halign@pending@itrue
+    \ifgre@nabc@halign@pending\else
+      \global\gre@nabc@halign@pendingtrue
+      \global\gre@dimen@nabc@elementadvance=0pt\relax
+    \fi
+  \else
+    \gre@nabc@place@voice@i@now
+  \fi\fi
+}%
 
-% Phase 2: Place voice 2 (below staff)
-\def\gre@nabc@place@voice@ii{%
+% Immediate placement helper for voice 2 (always places, no deferral check).
+\def\gre@nabc@place@voice@ii@now{%
   \gre@dimen@temp@five=\dimexpr(\gre@space@dimen@spacebeneathtext
     + \gre@space@dimen@spacelinestext)\relax
   \leavevmode\raise\gre@dimen@temp@five\hbox attr \gre@attrid@part=8 to 0pt{%
     \gre@nabc@halign@content{\gre@count@nabc@halign@ii}{\gre@box@nabc@voice@ii}{\gre@dimen@nabcrightoverflow@ii}%
   \hss}%
+}%
+% Phase 2: Place voice 2 (below staff) — with deferral for center alignment.
+\def\gre@nabc@place@voice@ii{%
+  \ifgre@boxing
+    \gre@nabc@place@voice@ii@now
+  \else\ifnum\gre@count@nabc@halign@ii=1\relax
+    \global\gre@nabc@halign@pending@iitrue
+    \ifgre@nabc@halign@pending\else
+      \global\gre@nabc@halign@pendingtrue
+      \global\gre@dimen@nabc@elementadvance=0pt\relax
+    \fi
+  \else
+    \gre@nabc@place@voice@ii@now
+  \fi\fi
+}%
+
+% Flush deferred center-aligned NABC placement.
+% Kerns backwards by the accumulated element advance so that the NABC is
+% placed at the position of the first glyph, centered over the full advance.
+\def\gre@nabc@flush@deferred@halign{%
+  \ifgre@nabc@halign@pending
+    \kern-\gre@dimen@nabc@elementadvance\relax
+    \begingroup
+      \gre@dimen@lastglyphwidth=\gre@dimen@nabc@elementadvance\relax
+      \ifgre@nabc@halign@pending@i
+        \gre@nabc@place@voice@i@now
+      \fi
+      \ifgre@nabc@halign@pending@ii
+        \gre@nabc@place@voice@ii@now
+      \fi
+    \endgroup
+    \kern\gre@dimen@nabc@elementadvance\relax
+    \global\gre@nabc@halign@pendingfalse
+    \global\gre@nabc@halign@pending@ifalse
+    \global\gre@nabc@halign@pending@iifalse
+  \fi
 }%
 
 % Deferred macros for two-phase processing.
@@ -1639,6 +1689,9 @@
   \GreNoBreak %
   \gre@get@spaceskip{#1}%
   \gre@hskip\gre@skip@temp@four %
+  \ifgre@nabc@halign@pending
+    \global\advance\gre@dimen@nabc@elementadvance by \gre@skip@temp@four\relax
+  \fi
   \GreNoBreak %
   \relax%
 }%

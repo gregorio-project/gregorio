@@ -140,6 +140,19 @@
 \newdimen\gre@dimen@nabcrightoverflow@ii
 \gre@dimen@nabcrightoverflow@ii=0pt\relax
 
+% Element-wide horizontal advance tracking for center alignment of
+% multi-glyph and multi-element neumes.  When center alignment is active,
+% NABC placement is deferred to the end of the NABC scope so that
+% centering uses the full element advance, not just the first glyph width.
+\newdimen\gre@dimen@nabc@elementadvance
+\gre@dimen@nabc@elementadvance=0pt\relax
+\newif\ifgre@nabc@halign@pending
+\gre@nabc@halign@pendingfalse
+\newif\ifgre@nabc@halign@pending@i
+\gre@nabc@halign@pending@ifalse
+\newif\ifgre@nabc@halign@pending@ii
+\gre@nabc@halign@pending@iifalse
+
 \def\gresetnabc#1#2{%
   \gre@processvisibilitywithphantom{#2}%
     {\csname gre@nabcvoice@\romannumeral#1@visibletrue\endcsname}%
@@ -241,6 +254,7 @@
 }
 
 \def\GreNABCNeumes#1#2#3#4{%
+  \gre@nabc@flush@deferred@halign
   \csname ifgre@nabcvoice@\romannumeral#1@visible\endcsname %
     \ifcase#1\relax
       \or % 1
@@ -261,6 +275,7 @@
   \gre@nabc@pre@voice@ii
   \gre@nabc@emit@voice@i
   \gre@nabc@emit@voice@ii
+  \gre@nabc@flush@deferred@halign
 }
 
 \newif\ifgre@nabcfontloaded%
