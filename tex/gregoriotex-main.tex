@@ -797,15 +797,17 @@
     \begingroup
       \gre@dimen@temp@five=\dimexpr\gre@dimen@nabc@elementadvance
         - \csname gre@dimen@nabc@advance@start@#1\endcsname\relax
-      \kern-\gre@dimen@temp@five\relax
-      \gre@dimen@lastglyphwidth=\gre@dimen@temp@five\relax
+% N.B. We use \gre@dimen@temp@one for the span because the @now macros
+% overwrite \gre@dimen@temp@five with the vertical raise amount.
+\def\gre@nabc@flush@deferred@voice#1{%
+  \csname ifgre@nabc@halign@pending@#1\endcsname
+    \begingroup
+      \gre@dimen@temp@one=\dimexpr\gre@dimen@nabc@elementadvance
+        - \csname gre@dimen@nabc@advance@start@#1\endcsname\relax
+      \kern-\gre@dimen@temp@one\relax
+      \gre@dimen@lastglyphwidth=\gre@dimen@temp@one\relax
       \csname gre@nabc@place@voice@#1@now\endcsname
-      \kern\gre@dimen@temp@five\relax
-    \endgroup
-    \global\csname gre@nabc@halign@pending@#1false\endcsname
-    % Clear global pending flag when no voice remains pending.
-    \ifgre@nabc@halign@pending@i\else
-      \ifgre@nabc@halign@pending@ii\else
+      \kern\gre@dimen@temp@onng@ii\else
         \global\gre@nabc@halign@pendingfalse
       \fi
     \fi
