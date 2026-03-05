@@ -152,6 +152,13 @@
 \gre@nabc@halign@pending@ifalse
 \newif\ifgre@nabc@halign@pending@ii
 \gre@nabc@halign@pending@iifalse
+% Per-voice advance start: the value of \gre@dimen@nabc@elementadvance
+% at the moment each voice entered pending state.  This allows each voice
+% to span a different number of elements when one voice has empty NABC.
+\newdimen\gre@dimen@nabc@advance@start@i
+\gre@dimen@nabc@advance@start@i=0pt\relax
+\newdimen\gre@dimen@nabc@advance@start@ii
+\gre@dimen@nabc@advance@start@ii=0pt\relax
 
 \def\gresetnabc#1#2{%
   \gre@processvisibilitywithphantom{#2}%
@@ -254,7 +261,13 @@
 }
 
 \def\GreNABCNeumes#1#2#3#4{%
-  \gre@nabc@flush@deferred@halign
+  % Flush only the voice being replaced, not all voices.  This allows
+  % a voice whose NABC is empty on the next element to keep accumulating
+  % advance and center over the combined span.
+  \ifcase#1\relax
+    \or \gre@nabc@flush@deferred@voice{i}%
+    \or \gre@nabc@flush@deferred@voice{ii}%
+  \fi
   \csname ifgre@nabcvoice@\romannumeral#1@visible\endcsname %
     \ifcase#1\relax
       \or % 1
