@@ -792,11 +792,6 @@
 % #1 = voice suffix (i or ii).
 % Kerns back from current position to the voice's start, centers over
 % that voice's span, then kerns forward to the current position.
-\def\gre@nabc@flush@deferred@voice#1{%
-  \csname ifgre@nabc@halign@pending@#1\endcsname
-    \begingroup
-      \gre@dimen@temp@five=\dimexpr\gre@dimen@nabc@elementadvance
-        - \csname gre@dimen@nabc@advance@start@#1\endcsname\relax
 % N.B. We use \gre@dimen@temp@one for the span because the @now macros
 % overwrite \gre@dimen@temp@five with the vertical raise amount.
 \def\gre@nabc@flush@deferred@voice#1{%
@@ -807,7 +802,12 @@
       \kern-\gre@dimen@temp@one\relax
       \gre@dimen@lastglyphwidth=\gre@dimen@temp@one\relax
       \csname gre@nabc@place@voice@#1@now\endcsname
-      \kern\gre@dimen@temp@onng@ii\else
+      \kern\gre@dimen@temp@one\relax
+    \endgroup
+    \global\csname gre@nabc@halign@pending@#1false\endcsname
+    % Clear global pending flag when no voice remains pending.
+    \ifgre@nabc@halign@pending@i\else
+      \ifgre@nabc@halign@pending@ii\else
         \global\gre@nabc@halign@pendingfalse
       \fi
     \fi
@@ -1555,6 +1555,9 @@
 %% 2: unison (breakable according to the unisonbreakbehavior setting)
 % #3 is the number of notes emitted in this syllable before this macro
 \def\GreEndOfElement#1#2#3{%
+  % Flush all deferred NABC voices at element boundaries so that centering
+  % spans do not extend across elements.
+  \gre@nabc@flush@deferred@halign
   \ifnum\gre@count@syllablenotes<\gre@count@unbreakabletotalnotes\relax %
     \gre@unbreakableendofelementtrue %
   \else %
