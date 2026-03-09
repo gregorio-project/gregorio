@@ -41,6 +41,7 @@ local part_notes = 10
 local skip_type_attr = luatexbase.attributes['gre@attr@skip@type']
 local skip_type_syllablefinal = 1
 local skip_type_barspacing1 = 2
+local skip_type_clearsyllable = 5
 
 local dash_attr = luatexbase.attributes['gre@attr@dash']
 local dash_hasdash = 2
@@ -195,6 +196,8 @@ local function scan_syllables(head)
             syllables[sid].syllablefinalskip = n
           elseif skip_type == skip_type_barspacing1 then
             syllables[sid].barspacing1 = n
+          elseif skip_type == skip_type_clearsyllable then
+            syllables[sid].clearsyllable = n
           end
         end
       end
@@ -206,33 +209,6 @@ end
 
 local function syllable_spacing(syllables)
 
-  -- Compute begin_difference and end_difference of each syllable (how
-  -- much the notes extend past the text to the left or right,
-  -- respectively)
-  for sid, cur in pairs(syllables) do
-    debugmessage('syllablespacing', 'after syllable %d', sid)
-    if cur.text and cur.first_note and cur.last_note then
-      -- The text comes first, then the notes
-      syllables[sid].begin_difference = -node.dimensions(cur.text, cur.first_note)
-      syllables[sid].end_difference = node.dimensions(cur.text.next, cur.last_note.next)
-      debugmessage('syllablespacing', 'begin difference = %s', glue_to_string(syllables[sid].begin_difference))
-      debugmessage('syllablespacing', 'end difference = %s', glue_to_string(syllables[sid].end_difference))
-    elseif cur.text then
-      -- Text, but no notes: arbitrarily place the empty "notes" at the left
-      -- edge of the text (it shouldn't matter)
-      syllables[sid].begin_difference = 0
-      syllables[sid].end_difference = -cur.text.width
-    elseif cur.first_note and cur.last_note then
-      -- Notes, but no text (this normally shouldn't happen)
-      syllables[sid].begin_difference = 0
-      syllables[sid].end_difference = -node.dimensions(cur.first_note, cur.last_note.next)
-    else
-      -- Neither notes nor text?!
-      syllables[sid].begin_difference = 0
-      syllables[sid].end_difference = 0
-    end
-  end
-  
   for sid, cur in pairs(syllables) do
     -- If the next syllable is a bar syllable, then this syllable
     -- shouldn't have syllablefinalskip. But (due to a bug, #1724)
@@ -241,16 +217,14 @@ local function syllable_spacing(syllables)
     debugmessage('syllablespacing', 'after syllable %d', sid)
     local next = syllables[sid+1]
     if cur.syllablefinalskip and next ~= nil and not next.barspacing1 then
-
-      local text_distance = math.max(0, cur.end_difference) + math.max(0, next.begin_difference)
-      debugmessage('syllablespacing', '  text distance = %s', glue_to_string(text_distance))
+      local text_distance = node.dimensions(cur.text.next, next.text)
+      debugmessage('syllablespacing', '  text distance = %s', glue_to_string(new_text_distance))
       local min_text_distance = saved_syllables[sid].min_text_distance
       debugmessage('syllablespacing', '  min text distance = %s', glue_to_string(min_text_distance))
       local min_text_shift = glue_add(min_text_distance, -text_distance)
       debugmessage('syllablespacing', '  min text shift = %s', glue_to_string(min_text_shift))
       
-      local notes_distance = math.max(0, -cur.end_difference) + math.max(0, -next.begin_difference)
-      debugmessage('syllablespacing', '  notes distance = %s', glue_to_string(notes_distance))
+      local notes_distance = node.dimensions(cur.last_note.next, next.first_note)
       local min_notes_distance = saved_syllables[sid].min_notes_distance
       debugmessage('syllablespacing', '  min notes distance = %s', glue_to_string(min_notes_distance))
       local min_notes_shift = glue_add(min_notes_distance, -notes_distance)
@@ -269,6 +243,30 @@ local function syllable_spacing(syllables)
       node.setglue(cur.syllablefinalskip, table.unpack(syllablefinalskip))
     else
       debugmessage('syllablespacing', '  no syllable final skip, not adjusting')
+    end
+  end
+end
+
+local function syllable_clearing(syllables)
+  for sid, cur in pairs(syllables) do
+    local prev = syllables[sid-1]
+    if cur.clearsyllable and prev then
+      debugmessage('clear', 'syllable %d', sid)
+      local kern = 0
+      -- current text must begin at or after prev notes' end
+      if prev.last_note and cur.text then
+        local overlap = -node.dimensions(prev.last_note.next, cur.text)
+        debugmessage('clear', ' text-note overlap %fpt', overlap/2^16)
+        kern = math.max(kern, overlap)
+      end
+      -- current notes must begin at or after prev text's end
+      if prev.text and cur.first_note then
+        local overlap = -node.dimensions(prev.text.next, cur.first_note)
+        debugmessage('clear', ' note-text overlap %fpt', overlap/2^16)
+        kern = math.max(kern, overlap)
+      end
+      debugmessage('clear', ' kern %fpt', kern/2^16)
+      cur.clearsyllable.kern = kern
     end
   end
 end
@@ -338,4 +336,5 @@ gregoriotex.save_min_distances = save_min_distances
 gregoriotex.free_saved_syllables = free_saved_syllables
 gregoriotex.scan_syllables = scan_syllables
 gregoriotex.syllable_spacing = syllable_spacing
+gregoriotex.syllable_clearing = syllable_clearing
 gregoriotex.syllable_rewriting = syllable_rewriting

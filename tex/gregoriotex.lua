@@ -417,9 +417,11 @@ local function dump_nodes_helper(head, indent)
     if node.subtypes(n.id) ~= nil then
       subtype = node.subtypes(n.id)[n.subtype]
     end
-    local attrs = format("syllable=%s,part=%s",
+    local attrs = format("syllable=%s,part=%s,skip_type=%s",
                          has_attribute(n, syllable_id_attr),
-                         has_attribute(n, part_attr))
+                         has_attribute(n, part_attr),
+                         has_attribute(n, skip_type_attr)
+    )
     if n.id == hlist or n.id == vlist then
       log(dots .. "%s [%s] width=%.2fpt height=%.2fpt depth=%.2fpt shift=%.2fpt {%s}", type, subtype, n.width/2^16, n.height/2^16, n.depth/2^16, n.shift/2^16, attrs)
     elseif n.id == rule then
@@ -427,7 +429,7 @@ local function dump_nodes_helper(head, indent)
     elseif n.id == whatsit and subtype == user_defined_subtype and n.user_id == marker_whatsit_id then
       log(dots .. "marker-whatsit %s", n.value)
     elseif n.id == glue then
-      log(dots .. "glue [%s] width=%.2fpt {%s}", subtype, n.width/2^16, attrs)
+      log(dots .. "glue [%s] width=%.2fpt stretch=%d shrink=%d {%s}", subtype, n.width/2^16, n.stretch, n.shrink, attrs)
     elseif n.id == kern then
       log(dots .. "kern [%s] kern=%.2fpt {%s}", subtype, n.kern/2^16, attrs)
     elseif type == 'penalty' then
@@ -962,10 +964,11 @@ local function ligaturing(head)
 end
 
 local function pre_linebreak(head)
-  --dump_nodes(head)
+  dump_nodes(head)
   local syllables = gregoriotex.scan_syllables(head)
   if #syllables == 0 then return head end
   gregoriotex.syllable_spacing(syllables)
+  gregoriotex.syllable_clearing(syllables)
   gregoriotex.syllable_rewriting(syllables)
   return head
 end
@@ -1008,7 +1011,7 @@ local function add_dash(line)
 end
 
 local function post_linebreak(h, groupcode, glyphes)
-  --dump_nodes(h)
+  dump_nodes(h)
   -- TODO: to be changed according to the font
   local centerstartnode         = nil
   local linenum                 = 0

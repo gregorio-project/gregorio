@@ -1149,7 +1149,8 @@
     \fi %
   \fi%
   \ifgre@textcleared%
-    \gre@clearsyllable{note}%
+    % Insert a zero kern that will be adjusted in the Lua function syllable_clearing.
+    {\gre@attr@skip@type=5 \kern0pt}%
   \fi%
   % then we reuse temp, we assign to it the \gre@dimen@begindifference, but only if it is positive, else it is 0
   \gre@debugmsg{ifdim}{ begindifference > 0pt}%

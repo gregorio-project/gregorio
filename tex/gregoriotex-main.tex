@@ -78,6 +78,7 @@
 % 2 = \GreBarSyllable from syllable left to text left
 % 3 = \GreBarSyllable from text right to bar left
 % 4 = \GreBarSyllable from bar right to syllable right (to do)
+% 5 = clearsyllable
 \newattribute\gre@attr@skip@type
 
 % attributes for soft alterations
@@ -261,6 +262,18 @@
         \hfill
       \fi
       \gre@penalty{-10001}%
+      % Above, we emitted kerns of -enddifference and -eolshift early,
+      % and they will be emitted again later in \GreSyllable. The
+      % second set of kerns has no effect because they are at the
+      % beginning of a line. But in order that Lua pre_linebreak can
+      % measure distances accurately, we emit a third set of kerns to
+      % cancel out the second one.
+      \ifdim\gre@dimen@enddifference<0pt
+        \kern \gre@dimen@enddifference
+      \fi
+      \ifgre@eolshiftsenabled
+        \kern \gre@dimen@eolshift
+      \fi
     \fi
   \fi %
   %%
