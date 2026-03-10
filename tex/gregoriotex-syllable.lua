@@ -17,7 +17,7 @@
 --You should have received a copy of the GNU General Public License
 --along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
 
--- this file contains lua functions to support signs used by GregorioTeX.
+-- This file contains Lua functions to support spacing of syllables.
 
 -- GREGORIO_VERSION 6.1.0
 
@@ -31,6 +31,7 @@ local has_attribute = node.has_attribute
 local kern = node.id('kern')
 local temp = node.id('temp')
 local disc = node.id('disc')
+local glyph = node.id('glyph')
 
 local syllable_id_attr = luatexbase.attributes['gre@attr@syllable@id']
 
@@ -44,8 +45,10 @@ local skip_type_barspacing1 = 2
 local skip_type_clearsyllable = 5
 
 local dash_attr = luatexbase.attributes['gre@attr@dash']
+local dash_maybedash = 1
 local dash_hasdash = 2
 local dash_barsyllable = 4
+local dash_forced = 5
 
 -- Functions for manipulating glue, which we just store as a 3-tuple
 -- {width, stretch, shrink} in sp.
@@ -103,7 +106,16 @@ end
 
 -- Table for storing information about syllables that is impossible or
 -- inconvenient to recover from node attributes.
-local saved_syllables = {}
+local syllables = {}
+gregoriotex.syllables = syllables
+
+local function save_syllable_info()
+  local sid = tex.getattribute(syllable_id_attr)
+  if syllables[sid] == nil then syllables[sid] = {} end
+  syllables[sid].sid = sid
+  syllables[sid].font = font.current()
+  log('saving font for syllable %s', sid)
+end
 
 local function save_syllable_texts(head)
   -- Save syllable texts before ligaturing and kerning happens. This
@@ -115,24 +127,24 @@ local function save_syllable_texts(head)
     local sid = tex.getattribute(syllable_id_attr)
     local cur = head
     while cur ~= nil and cur.id == temp do cur = cur.next end
-    if saved_syllables[sid] == nil then saved_syllables[sid] = {} end
-    saved_syllables[sid].text = node.copy_list(cur)
+    if syllables[sid] == nil then syllables[sid] = {} end
+    syllables[sid].raw_text = node.copy_list(cur)
   end
 end
 
 local function save_min_distances()
   local sid = tex.getattribute(syllable_id_attr)
-  if saved_syllables[sid] == nil then saved_syllables[sid] = {} end
+  if syllables[sid] == nil then syllables[sid] = {} end
   local g = tex.skip['gre@skip@minTextDistance']
-  saved_syllables[sid].min_text_distance = {g.width, g.stretch, g.shrink}
+  syllables[sid].min_text_distance = {g.width, g.stretch, g.shrink}
   g = tex.skip['gre@skip@minNotesDistance']
-  saved_syllables[sid].min_notes_distance = {g.width, g.stretch, g.shrink}
+  syllables[sid].min_notes_distance = {g.width, g.stretch, g.shrink}
 end
 
-local function free_saved_syllables()
-  for sid, syl in pairs(saved_syllables) do
-    node.flush_list(syl.text)
-    saved_syllables[sid] = nil
+local function free_syllables()
+  for sid, syl in pairs(syllables) do
+    node.flush_list(syl.raw_text)
+    syllables[sid] = nil
   end
 end
 
@@ -161,8 +173,9 @@ end
 local function scan_syllables(head)
   -- Find nodes corresponding to various parts of syllables and store them in a
   -- data structure more convenient for downstream processing.
-  local syllables = {}
-  local prev_sid = 0
+  for _, cur in pairs(syllables) do
+    cur.first_note = nil
+  end
   local function visit(head)
     for n in node.traverse(head) do
       -- to do: The two syllables in a discretionary are numbered
@@ -177,11 +190,7 @@ local function scan_syllables(head)
         local part = has_attribute(n, part_attr)
         local skip_type = has_attribute(n, skip_type_attr)
         if sid ~= nil then
-          while prev_sid < sid do
-            prev_sid = prev_sid+1
-            syllables[prev_sid] = {}
-            if saved_syllables[prev_sid] == nil then saved_syllables[prev_sid] = {} end
-          end
+          if syllables[sid] == nil then syllables[sid] = {} end
           if part == part_lyrics then
             if syllables[sid].text ~= nil then
               err(' syllable %d has more than one text node', sid)
@@ -204,50 +213,118 @@ local function scan_syllables(head)
     end
   end
   visit(head)
-  return syllables
 end
 
-local function syllable_spacing(syllables)
+local function adjust_syllablefinalskip(cur, next)
+  local text_distance = node.dimensions(cur.text.next, next.text)
+  debugmessage('syllablespacing', '  text distance = %s', glue_to_string(text_distance))
+  local min_text_distance = cur.min_text_distance
+  debugmessage('syllablespacing', '  min text distance = %s', glue_to_string(min_text_distance))
+  local min_text_shift = glue_add(min_text_distance, -text_distance)
+  debugmessage('syllablespacing', '  min text shift = %s', glue_to_string(min_text_shift))
+  
+  local notes_distance = node.dimensions(cur.last_note.next, next.first_note)
+  debugmessage('syllablespacing', '  notes distance = %s', glue_to_string(notes_distance))
+  local min_notes_distance = cur.min_notes_distance
+  debugmessage('syllablespacing', '  min notes distance = %s', glue_to_string(min_notes_distance))
+  local min_notes_shift = glue_add(min_notes_distance, -notes_distance)
+  debugmessage('syllablespacing', '  min notes shift = %s', glue_to_string(min_notes_shift))
+  
+  local syllablefinalskip = {cur.syllablefinalskip.width, cur.syllablefinalskip.stretch, cur.syllablefinalskip.shrink}
+  -- Ensure that min text shift and min notes shift are satisfied.
+  syllablefinalskip = glue_add(syllablefinalskip, glue_max(min_text_shift, min_notes_shift))
+  -- If this syllable has a hyphen, add some additional stretch.
+  -- Note: This happens even if there is no text (\gresetlyrics{invisible}).
+  if cur.text and has_attribute(cur.text, dash_attr, dash_hasdash) then
+    debugmessage('syllablespacing', '  adding stretch for hyphen')
+    syllablefinalskip = glue_add(syllablefinalskip, string_to_glue(token.get_macro('gre@space@skip@intersyllablespacestretchhyphen')))
+  end
+  debugmessage('syllablespacing', '  syllable final skip = %s', glue_to_string(syllablefinalskip))
+  node.setglue(cur.syllablefinalskip, table.unpack(syllablefinalskip))
+end
 
+local function add_hyphen(cur)
+  -- Append hyphen to saved syllable text (needed if the syllable gets rewritten)
+  local g = node.new(glyph)
+  g.font = cur.font
+  g.char = gregoriotex.hyphen
+  -- Find last glyph (because the last node may be a marker)
+  local last = node.tail(cur.raw_text)
+  while last ~= nil and last.id ~= glyph do last = last.prev end
+  cur.raw_text = node.insert_after(cur.raw_text, last, g)
+  
+  -- Replace actual syllable text
+  local old_width = cur.text.width
+  node.flush_list(cur.text.head)
+  cur.text.head = shaping(node.copy_list(cur.raw_text))
+  local new_width = node.rangedimensions(cur.text, cur.text.head)
+  cur.text.width = new_width
+  local width_change = new_width - old_width
+
+  -- Mark text as having a hyphen
+  node.set_attribute(cur.text, dash_attr, dash_hasdash)
+
+  -- The text node is immediately followed by a kern whose size
+  -- is the text width. To keep the text and notes aligned, we
+  -- need to update this kern.
+  local k = cur.text.next
+  if k.id ~= kern then err('expected kern to follow syllable text') end
+  k.kern = k.kern - width_change
+
+  -- We also need to adjust the kern after the notes that moves
+  -- to the right edge of the syllable. If this syllable ends up
+  -- as the last of the line, \gre@calculateeolshift has already
+  -- allocated space for the hyphen, and this adjustment is not
+  -- necessary. So we want the adjustment to go after the
+  -- endofsyllablepenalty, where it will disappear in case of a
+  -- line break. But syllablefinalskip goes after the
+  -- endofsyllablepenalty, so we can just let
+  -- adjust_syllablefinalskip do all the work.
+
+  -- Bug: if this syllable gets a hyphen and the next syllable is a
+  -- bar (presumably rare in practice, but occurs in the tests), then
+  -- the bar will have the wrong previousenddifference.
+end
+
+local function syllable_spacing()
   for sid, cur in pairs(syllables) do
+    debugmessage('syllablespacing', 'after syllable %d', sid)
+    local next = syllables[sid+1]
+    
     -- If the next syllable is a bar syllable, then this syllable
     -- shouldn't have syllablefinalskip. But (due to a bug, #1724)
     -- if the next syllable is a clef change, it is a bar syllable
     -- and this syllable does have syllablefinalskip; we ignore it.
-    debugmessage('syllablespacing', 'after syllable %d', sid)
-    local next = syllables[sid+1]
     if cur.syllablefinalskip and next ~= nil and not next.barspacing1 then
-      local text_distance = node.dimensions(cur.text.next, next.text)
-      debugmessage('syllablespacing', '  text distance = %s', glue_to_string(new_text_distance))
-      local min_text_distance = saved_syllables[sid].min_text_distance
-      debugmessage('syllablespacing', '  min text distance = %s', glue_to_string(min_text_distance))
-      local min_text_shift = glue_add(min_text_distance, -text_distance)
-      debugmessage('syllablespacing', '  min text shift = %s', glue_to_string(min_text_shift))
-      
-      local notes_distance = node.dimensions(cur.last_note.next, next.first_note)
-      local min_notes_distance = saved_syllables[sid].min_notes_distance
-      debugmessage('syllablespacing', '  min notes distance = %s', glue_to_string(min_notes_distance))
-      local min_notes_shift = glue_add(min_notes_distance, -notes_distance)
-      debugmessage('syllablespacing', '  min notes shift = %s', glue_to_string(min_notes_shift))
+      adjust_syllablefinalskip(cur, next)
+    end
 
-      local syllablefinalskip = {cur.syllablefinalskip.width, cur.syllablefinalskip.stretch, cur.syllablefinalskip.shrink}
-      -- Ensure that min text shift and min notes shift are satisfied.
-      syllablefinalskip = glue_add(syllablefinalskip, glue_max(min_text_shift, min_notes_shift))
-      -- If this syllable has a hyphen, add some additional stretch.
-      -- Note: This happens even if there is no text (\gresetlyrics{invisible}).
-      if cur.text and has_attribute(cur.text, dash_attr, dash_hasdash) then
-        debugmessage('syllablespacing', '  adding stretch for hyphen')
-        syllablefinalskip = glue_add(syllablefinalskip, string_to_glue(token.get_macro('gre@space@skip@intersyllablespacestretchhyphen')))
+    local needs_hyphen = false
+    -- If there is too much space between text, add a hyphen
+    if (cur.text ~= nil and has_attribute(cur.text, dash_attr, dash_maybedash) and
+        next ~= nil and next.text ~= nil) then
+      local text_distance = node.dimensions(cur.text.next, next.text)
+      local max_distance = tex.sp(token.get_macro('gre@space@dimen@maximumspacewithoutdash'))
+      if text_distance > max_distance then needs_hyphen = true end
+    end
+    -- If hyphen was forced, add a hyphen
+    if cur.text ~= nil and has_attribute(cur.text, dash_attr, dash_forced) then
+      needs_hyphen = true
+    end
+    -- If lyrics are disabled, don't add a hyphen
+    if not gregoriotex.get_if('gre@showlyrics') then needs_hyphen = false end
+
+    if needs_hyphen then
+      add_hyphen(cur)
+      -- Since adding the hyphen made cur wider, recompute syllablefinalskip
+      if cur.syllablefinalskip and next ~= nil and not next.barspacing1 then
+        adjust_syllablefinalskip(cur, next)
       end
-      debugmessage('syllablespacing', '  syllable final skip = %s', glue_to_string(syllablefinalskip))
-      node.setglue(cur.syllablefinalskip, table.unpack(syllablefinalskip))
-    else
-      debugmessage('syllablespacing', '  no syllable final skip, not adjusting')
     end
   end
 end
 
-local function syllable_clearing(syllables)
+local function syllable_clearing()
   for sid, cur in pairs(syllables) do
     local prev = syllables[sid-1]
     if cur.clearsyllable and prev then
@@ -271,7 +348,7 @@ local function syllable_clearing(syllables)
   end
 end
 
-local function syllable_rewriting(syllables)
+local function syllable_rewriting()
   if not gregoriotex.get_if('gre@rewritesyllables') then return end
 
   local start = 1
@@ -305,8 +382,8 @@ local function syllable_rewriting(syllables)
         local head, tail
         for sid = start, stop do
           -- Extend new text
-          local n = saved_syllables[sid].text
-          saved_syllables[sid].text = nil
+          local n = syllables[sid].raw_text
+          syllables[sid].raw_text = nil
           head, tail = concat_list(head, tail, n, node.tail(n))
         end
         head = shaping(head)
@@ -331,10 +408,12 @@ local function syllable_rewriting(syllables)
   end
 end
 
+gregoriotex.save_syllable_info = save_syllable_info
 gregoriotex.save_syllable_texts = save_syllable_texts
 gregoriotex.save_min_distances = save_min_distances
-gregoriotex.free_saved_syllables = free_saved_syllables
+gregoriotex.free_syllables = free_syllables
 gregoriotex.scan_syllables = scan_syllables
 gregoriotex.syllable_spacing = syllable_spacing
 gregoriotex.syllable_clearing = syllable_clearing
 gregoriotex.syllable_rewriting = syllable_rewriting
+gregoriotex.add_hyphen = add_hyphen

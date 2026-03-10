@@ -920,14 +920,8 @@
   \gre@debugmsg{general}{}%
   \gre@debugmsg{general}{New syllable: \expandafter\unexpanded{#1}}%
   \gre@debugmsg{general}{}%
-  % This needs to be calculated early for syllable rewriting, the value
-  % will be refined later on
-  \ifcase#4 %
-     \global\gre@possibleluahyphenafterthissyllabletrue %
-   \else %
-     \global\gre@possibleluahyphenafterthissyllablefalse %
-   \fi %
   \global\advance\gre@attr@syllable@id by 1\relax %
+  \directlua{gregoriotex.save_syllable_info()}%
   \gre@showhyphenafterthissyllablefalse%
   \ifcase#4\ifgre@forcehyphen%
     \gre@debugmsg{hyphen}{Forcing hyphen}%
@@ -1008,8 +1002,6 @@
   \global\gre@attr@alteration@id=\gre@saved@attr@alteration@id\relax %
   \gre@calculate@nextbegindifference{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{\gre@nextalignment}{\gre@nextalteration}%
   \gre@unsetfixednexttextformat %
-  \gre@attr@dash=3
-  \gre@attr@part=4
   \ifgre@showlyrics%
     \setbox\gre@box@syllabletext=\hbox{%
       \IfSubStr{\gre@debug}{,notespacing,}%
@@ -1029,8 +1021,6 @@
       \setbox\gre@box@syllabletext=\hbox{}%
     \fi
   \fi%
-  \unsetattribute{\gre@attr@dash}%
-  \unsetattribute{\gre@attr@part}%
   \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
   % gre@count@temp@one holds 1 if next is a bar, 2 if an alteration, else 0
   \gre@count@temp@one=0%
@@ -1043,111 +1033,25 @@
   \fi %
   \gre@debugmsg{spacing}{ gre@count@temp@one = \the\gre@count@temp@one}%
   \gre@calculate@syllablefinalskip{#4}{\gre@count@temp@one}%
-  \ifcase#4 %
-    % we enter here if the end of word is 0, so we must determine if we need to type a dash here
-    \gre@skip@temp@one = \gre@skip@syllablefinalskip\relax%
-    \gre@debugmsg{ifdim}{ enddifference > 0pt}%
-    \ifdim\gre@dimen@enddifference >0pt\relax%
-      \advance\gre@skip@temp@one by \gre@dimen@enddifference\relax%
-    \fi %
-    \gre@debugmsg{ifdim}{ nextbegindifference > 0pt}%
-    \ifdim\gre@skip@nextbegindifference >0pt\relax%
-      \advance\gre@skip@temp@one by \gre@skip@nextbegindifference\relax%
-    \fi %
-    %
-    % then we compare it with \gre@space@dimen@maximumspacewithoutdash, if it is larger, we add a dash
-    %
-    \gre@debugmsg{ifdim}{ temp@skip@one > maximumspacewithoutdash}%
-    \ifdim\gre@skip@temp@one > \gre@space@dimen@maximumspacewithoutdash\relax%
-      \gre@debugmsg{hyphen}{spacing requires hyphen}%
-      \gre@showhyphenafterthissyllabletrue%
-    \fi %
-  \fi% ficase#4
-  \ifgre@showhyphenafterthissyllable\relax%
-    \global\gre@possibleluahyphenafterthissyllablefalse %
-    \gre@debugmsg{hyphen}{Showing the hyphen}%
-    % if it's the last syllable of line, the hyphen will be \GreHyph
-    \ifnum\gre@lastoflinecount=1\relax %
-      \gre@attr@dash=2
-      \gre@attr@part=4
-      \ifgre@showlyrics%
-        \setbox\gre@box@syllabletext=\hbox{%
-          \IfSubStr{\gre@debug}{,notespacing,}%
-            % when debugging we add a zero-width line to mark the syllable bound
-            {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
-            {}% do nothing if not debugging
-          \gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart#3{\GreHyph}}{#6}}%
-          \IfSubStr{\gre@debug}{,notespacing,}%
-            % when debugging we add a zero-width line to mark the syllable bound
-            {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
-            {}% do nothing if not debugging
-        }%
-      \else%
-        \ifnum\gre@lyrics@phantomwrapper>0\relax
-          \setbox\gre@box@syllabletext=\hbox{\gre@applyphantomwrapper{\gre@lyrics@phantomwrapper}{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart#3{\GreHyph}\relax}{#6}}}}%
-        \else
-          \setbox\gre@box@syllabletext=\hbox{}%
-        \fi
-      \fi%
-      \unsetattribute{\gre@attr@dash}%
-      \unsetattribute{\gre@attr@part}%
-    \else %
-      \gre@attr@dash=2
-      \gre@attr@part=4
-      \ifgre@showlyrics%
-        \setbox\gre@box@syllabletext=\hbox{%
-          \IfSubStr{\gre@debug}{,notespacing,}%
-            % when debugging we add a zero-width line to mark the syllable bound
-            {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
-            {}% do nothing if not debugging
-          \gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart#3{-}}{#6}}%
-          \IfSubStr{\gre@debug}{,notespacing,}%
-            % when debugging we add a zero-width line to mark the syllable bound
-            {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
-            {}% do nothing if not debugging
-        }%
-      \else%
-        \ifnum\gre@lyrics@phantomwrapper>0\relax
-          \setbox\gre@box@syllabletext=\hbox{\gre@applyphantomwrapper{\gre@lyrics@phantomwrapper}{\gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart#3{-}}{#6}}}}%
-        \else
-          \setbox\gre@box@syllabletext=\hbox{}%
-        \fi
-      \fi%
-      \unsetattribute{\gre@attr@dash}%
-      \unsetattribute{\gre@attr@part}%
-    \fi %
-    % recomputing end difference and final skip with the final hyphen
-    \gre@calculate@nextbegindifference{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{\gre@nextalignment}{\gre@nextalteration}%
-    \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{0}%
-    \gre@calculate@syllablefinalskip{#4}{\gre@count@temp@one}%
-  \else %
-    \ifcase#4 %
-      \global\gre@possibleluahyphenafterthissyllabletrue %
-      \gre@debugmsg{hyphen}{No hyphen}%
-      \gre@attr@dash=1 % if not the end of a word and we haven't added a dash, we set potential dash to 1
-      \gre@attr@part=4
-      % we rebuild this box, in order it to have the attribute
-      \ifgre@showlyrics%
-        \setbox\gre@box@syllabletext=\hbox{%
-          \IfSubStr{\gre@debug}{,notespacing,}%
-            % when debugging we add a zero-width line to mark the syllable bound
-            {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
-            {}% do nothing if not debugging
-          \gre@fixedtextformat{\gre@pointandclick{\gre@firstsyllablepart\gre@middlesyllablepart\gre@endsyllablepart}{#6}}%
-          \IfSubStr{\gre@debug}{,notespacing,}%
-            % when debugging we add a zero-width line to mark the syllable bound
-            {\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
-            {}% do nothing if not debugging
-        }%
-      \else%
-        \setbox\gre@box@syllabletext=\hbox{}%
-      \fi%
-      \unsetattribute{\gre@attr@dash}%
-      \unsetattribute{\gre@attr@part}%
-    \else %
-      \global\gre@possibleluahyphenafterthissyllablefalse %
-    \fi %
-  \fi%
+  \gre@attr@part=4 % text
+  \ifcase#4
+    \global\gre@possibleluahyphenafterthissyllabletrue
+    \ifgre@showhyphenafterthissyllable
+      \gre@attr@dash=5 % needs forced hyphen
+    \else
+      \gre@attr@dash=1 % maybe needs hyphen
+    \fi
+  \else
+    \global\gre@possibleluahyphenafterthissyllablefalse
+    \ifgre@showhyphenafterthissyllable
+      \gre@attr@dash=5 % needs forced hyphen
+    \else
+      \gre@attr@dash=3 % end of word
+    \fi
+  \fi
+  \setbox\gre@box@syllabletext=\hbox{\unhbox\gre@box@syllabletext}%
+  \unsetattribute{\gre@attr@dash}%
+  \unsetattribute{\gre@attr@part}%
   \ifgre@textcleared%
     % Insert a zero kern that will be adjusted in the Lua function syllable_clearing.
     {\gre@attr@skip@type=5 \kern0pt}%
@@ -1385,6 +1289,7 @@
   \gre@debugmsg{general}{New bar syllable}%
   \gre@debugmsg{general}{}%
   \global\advance\gre@attr@syllable@id by 1\relax %
+  \directlua{gregoriotex.save_syllable_info()}%
   \gre@possibleluahyphenafterthissyllablefalse %
   \gre@showhyphenafterthissyllablefalse %
   % the algorithm of this function is *extremely* complex, and has been much painful to write... good luck to understand.
