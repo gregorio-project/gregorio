@@ -336,6 +336,20 @@ local gregallparse_neumes = function(str, kind, scale, voice)
       end
       lscount = lscount + 1
     end
+    -- Accumulate per-position LS widths from ALL original entries,
+    -- before font resolution may clear ls[i] for combined glyphs.
+    -- This ensures overflow widths (lwidths[10]/[12]) are correct
+    -- even when LS are baked into a combined font glyph.
+    local all_lwidths = { 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+    for i = 0, lscount - 1 do
+      if ls[i] ~= '' then
+        local p = tonumber(ls[i]:sub(-1, -1))
+        local l = ls[i]:sub(1, -2)
+        if gregallmetrics[kind][l] then
+          all_lwidths[p] = all_lwidths[p] + gregallmetrics[kind][l].width
+        end
+      end
+    end
     if base ~= "ERR" then
       local l = {}
       function l.try (kind, base, parts, pp, su, ls5, ls)
@@ -445,6 +459,10 @@ local gregallparse_neumes = function(str, kind, scale, voice)
         lwidths[10] = math.max (lwidths[1], lwidths[4], lwidths[7])
         lwidths[11] = math.max (lwidths[2], lwidths[8])
         lwidths[12] = math.max (lwidths[3], lwidths[6], lwidths[9])
+        -- For alignment overflow purposes, use the pre-resolution widths
+        -- so that LS baked into combined glyphs are still accounted for.
+        local overflow_left  = math.max(all_lwidths[1], all_lwidths[4], all_lwidths[7])
+        local overflow_right = math.max(all_lwidths[3], all_lwidths[6], all_lwidths[9])
         local pre = ''
         local post = ''
         for i = 0, lscount - 1 do
@@ -463,8 +481,8 @@ local gregallparse_neumes = function(str, kind, scale, voice)
         -- reserve space at the note level and prevent overlap with the
         -- previous element.
         local is_neume_mode = (get_nabc_alignment(voice) == 'neume')
-        if is_neume_mode and lwidths[10] > 0 then
-          local overflow_sp = string.format("%.3f", lwidths[10] * scale)
+        if is_neume_mode and overflow_left > 0 then
+          local overflow_sp = string.format("%.3f", overflow_left * scale)
           base = '\\global\\gre@dimen@nabcleftoverflow=' .. overflow_sp .. 'sp'
               .. '\\kern -' .. overflow_sp .. 'sp' .. base
         end
@@ -474,9 +492,10 @@ local gregallparse_neumes = function(str, kind, scale, voice)
         -- group, mirroring the left-side exclusion.
         local rdim = '\\gre@dimen@nabcrightoverflow@'
             .. (voice == 1 and 'i' or 'ii')
-        if is_neume_mode and lwidths[12] > 0 then
+        if is_neume_mode and overflow_right > 0 then
+          local rval = string.format("%.3f", overflow_right * scale)
           base = base .. '\\global' .. rdim .. '='
-              .. string.format("%.3f", lwidths[12] * scale) .. 'sp'
+              .. rval .. 'sp'
         else
           base = base .. '\\global' .. rdim .. '=0sp'
         end
