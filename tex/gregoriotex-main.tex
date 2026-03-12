@@ -1580,6 +1580,11 @@
       \fi %
     \fi %
   \fi %
+  % While center-aligned NABC is deferred, keep elements unbreakable so
+  % pending NABC cannot be flushed on the next line detached from its glyph.
+  \ifgre@nabc@halign@pending
+    \gre@unbreakableendofelementtrue %
+  \fi
   \ifgre@unbreakableendofelement %
     \GreNoBreak %
   \else %
