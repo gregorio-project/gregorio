@@ -132,14 +132,13 @@
 
 \def\gre@endofglyphcommon{%
   \gre@trace{gre@endofglyphcommon}%
-  \global\unsetattribute{\gre@attr@glyph@top}%
-  \global\unsetattribute{\gre@attr@glyph@bottom}%
+  \gre@unset@glyph@heights
   \ifgre@endofscore %
     \localleftbox{}%
     \localrightbox{}%
   \fi %
   \gre@trace@end%
-}
+}%
 
 % passes the glyph height limits:
 % #1: the high height
@@ -147,6 +146,11 @@
 \def\GreGlyphHeights#1#2{%
   \global\setattribute\gre@attr@glyph@top{#1}%
   \global\setattribute\gre@attr@glyph@bottom{#2}%
+}%
+
+\def\gre@unset@glyph@heights{%
+  \global\unsetattribute{\gre@attr@glyph@top}%
+  \global\unsetattribute{\gre@attr@glyph@bottom}%
 }%
 
 % Flag that tells us if the current glyph is the first glyph or not.
@@ -195,6 +199,7 @@
   \else
     \hbox{\unhcopy\gre@box@temp@width}%
   \fi
+  \gre@unset@glyph@heights
   \ifgre@endofscore\else\ifgre@boxing\else %
     #3%
   \fi\fi %

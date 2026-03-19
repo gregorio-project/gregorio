@@ -1393,6 +1393,19 @@ local function locate_file(filename)
   return result
 end
 
+if lfs.mkdirp == nil then
+  -- Introduced in LuaTeX 1.18
+  function lfs.mkdirp(path)
+    local full=""
+    local r1,r2,r3
+    for sub in string.gmatch(path,"(/*[^\\/]+)") do
+      full=full..sub
+      r1,r2,r3 = lfs.mkdir(full)
+    end
+    return r1,r2,r3
+  end
+end
+
 local function include_score(gabc_file, force_gabccompile, allow_deprecated)
   gabc_file = lfs.normalize(gabc_file)
   
