@@ -1068,6 +1068,8 @@
   \ifdim\gre@dimen@begindifference > 0 pt\relax%
     \gre@skip@temp@one = \gre@dimen@begindifference\relax%
     \kern\gre@skip@temp@one %
+  \else
+    \kern0pt
   \fi}%
   #8\relax %
   \raise\gre@space@dimen@spacebeneathtext
@@ -1079,8 +1081,13 @@
   \fi %
   {\gre@attr@skip@type=3
   \kern\dimexpr-\wd\gre@box@syllabletext-\gre@dimen@begindifference}%
-  \gre@attr@part=10
   \GreNoBreak % no line breaks between text and notes
+  \gre@attr@part=10
+  % In case there are no notes, ensure that there is at least one
+  % box with the attribute.
+  \ifdim\wd\gre@box@syllablenotes=0pt
+    \hbox{}%
+  \fi
   \ifgre@shownotes%
     \IfSubStr{\gre@debug}{,notespacing,}%
       % when debugging we add a zero-width line to mark the syllable bound
@@ -1128,7 +1135,7 @@
   \ifgre@blockeolcustos\ifnum\gre@insidediscretionary=0\relax %
      \localrightbox{}%
   \fi\fi %
-  \relax %
+  \directlua{gregoriotex.save_post_syllable()}%
   \gre@trace@end%
 }%
 
@@ -1209,6 +1216,7 @@
     \gre@calculate@eolshift{\gre@dimen@enddifference}%
     \kern -\gre@dimen@eolshift\relax%
   \fi%
+  {\gre@attr@part=11
   \ifnum#3=1\relax %
     \GreNoBreak %
     \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@nobreakpenalty}%
@@ -1222,7 +1230,7 @@
       \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@endofsyllablepenalty}%
     \fi
     \gre@count@temp@one=0\relax %
-  \fi %
+  \fi}%
   \ifgre@eolshiftsenabled%
     %If the above penalties don't result in a line break, then we need to undo the eolshift to prevent the next syllable from overlapping with this one.  If the line break did occur, then this shift will occur at the beginning of a line and thus will be ignored automatically by TeX.
     \kern \gre@dimen@eolshift\relax%
@@ -1233,29 +1241,22 @@
       %the new bar spacing algorithms take care of this for us when the next syllable is a bar
       \relax%
     \else%
-      \gre@syllablefinalskip
+      {\gre@attr@skip@type=1
+       \gre@hskip0pt}%
     \fi%
     \ifnum#3=1\relax %
       \GreNoBreak %
     \else%
       \ifgre@newbarspacing%
         %the new bar spacing algorithm still needs the syllablefinalskip when the next syllable is not a bar
-        \gre@syllablefinalskip
+        {\gre@attr@skip@type=1
+         \gre@hskip0pt}%
       \fi%
     \fi %
   \fi %
   \relax%
   \gre@trace@end%
 }%
-
-\def\gre@syllablefinalskip{%
-  % Save the computed minNotesDistance and minTextDistance
-  \directlua{gregoriotex.save_min_distances()}%
-  % Emit a zero-width skip, which will be resized in the Lua pre-linebreak filter.
-  {\gre@attr@skip@type=1
-   \gre@hskip0pt
-  }%
-}
 
 \def\gresetbarspacing#1{%
   \IfStrEqCase{#1}{%
@@ -1292,10 +1293,14 @@
   \gre@debugmsg{general}{New bar syllable}%
   \gre@debugmsg{general}{}%
   \global\advance\gre@attr@syllable@id by 1\relax %
-  \gre@fixedtextformat{%
-  \directlua{gregoriotex.save_syllable_info('bar')}%
-  }%
   \gre@beginningofscorefalse
+  \gre@fixedtextformat{%
+  \ifnum\gre@insidediscretionary=0
+    \directlua{gregoriotex.save_syllable_info('bar')}%
+  \else
+    \directlua{gregoriotex.save_syllable_info('clefchange')}%
+  \fi
+  }%
   \gre@possibleluahyphenafterthissyllablefalse %
   \gre@showhyphenafterthissyllablefalse %
   % the algorithm of this function is *extremely* complex, and has been much painful to write... good luck to understand.
@@ -1357,24 +1362,51 @@
     %
     % New bar spacing algorithm
     %
-    \gre@calculate@barposition{#4}{\gre@nextalteration}%
+    \gre@punctummoraadjustment % sets \gre@skip@punctummorashift and inserts kern
+    \gre@debugmsg{barspacing}{Saving punctum mora shift: \the\gre@skip@punctummorashift}%
+    \directlua{gregoriotex.save_min_distance('mora_shift', 'gre@skip@punctummorashift')}%
+    \gre@skip@minTextDistance=0pt
+    \ifdim\wd\gre@box@syllabletext > 0pt
+      \ifnum#4=1
+        \ifgre@in@euouae
+          \gre@skip@minTextDistance=\gre@space@dimen@interwordspacetext@bars@euouae
+        \else
+          \gre@skip@minTextDistance=\gre@space@dimen@interwordspacetext@bars
+        \fi
+      \fi
+    \else
+      \ifnum#4=1
+        \ifgre@in@euouae
+          \gre@skip@minTextDistance=\gre@space@dimen@interwordspacetext@bars@notext@euouae
+        \else
+          \gre@skip@minTextDistance=\gre@space@dimen@interwordspacetext@bars@notext
+        \fi
+      \fi
+    \fi
+    \gre@debugmsg{barspacing}{Saving minimum text distance: \the\gre@skip@minTextDistance}%
+    \directlua{gregoriotex.save_min_distance('text', 'gre@skip@minTextDistance')}%
+    \ifdim\wd\gre@box@syllablenotes > 0pt
+      % The box already has space built in, so don't add extra space
+      \gre@skip@minNotesDistance=0pt
+    \else
+      % If there are no notes, add extra space
+      \gre@skip@minNotesDistance=\gre@space@skip@interwordspacenotes
+    \fi
+    \gre@debugmsg{barspacing}{Saving minimum notes distance: \the\gre@skip@minNotesDistance}%
+    \directlua{gregoriotex.save_min_distance('notes', 'gre@skip@minNotesDistance')}%
     \ifgre@textcleared%
-      \gre@clearsyllable{bar}%
+      % Insert a zero kern that will be adjusted in the Lua function syllable_clearing.
+      {\gre@attr@skip@type=5 \kern0pt}%
     \fi%
-    %now we can place the text and bar
-    %we're going to use the bar line to control positioning, so we need to start by getting to the end of the notes of the previous syllable
-    \ifdim\gre@dimen@adjustedpreviousenddifference < 0pt\relax%
-      %we need to move back to where the previous notes ended
-      \kern\gre@dimen@adjustedpreviousenddifference\relax%
-    \fi%
-    \GreNoBreak %
-    %move to the beginning of the text
+    \GreNoBreak
+    \gre@hskip\glueexpr\gre@space@skip@bar@rubber
+    % From left edge of syllable to left edge of text
     {\gre@attr@skip@type=2
-    \gre@hskip\glueexpr(\gre@skip@bar@allocation/2% right from end of previous notes to nominal middle of bar line
-      +\gre@dimen@bar@shift% from nominal middle of bar line to actual middle
-      -\wd\gre@box@syllablenotes/2% back up to beginning of bar line
-      +\gre@dimen@begindifference% from beginning of bar line to beginning of text
-      +\gre@space@skip@bar@rubber)}% the rubber component
+    \ifdim\gre@dimen@begindifference>0pt
+      \kern\gre@dimen@begindifference
+    \else
+      \kern0pt
+    \fi}%
     \GreNoBreak %
     % all that extra stuff (translations and the like)
     #8%
@@ -1394,6 +1426,11 @@
       -\wd\gre@box@syllablenotes)}% back up from end of bar line to beginning
     \GreNoBreak%
     \gre@attr@part=10
+    % In case there are no notes, ensure that there is at least one
+    % box with the attribute.
+    \ifdim\wd\gre@box@syllablenotes=0pt
+      \hbox{}%
+    \fi
     \ifgre@shownotes%
       \IfSubStr{\gre@debug}{,barspacing,}%
         % when debugging we add a zero-width line to mark the syllable bound
@@ -1434,19 +1471,6 @@
       \kern0pt
     \fi}%
     \GreNoBreak
-    \ifgre@eolshiftsenabled%
-      \ifgre@endofscore%
-        \kern\glueexpr(-\gre@skip@bar@lastskip)\relax%
-      \else%
-        %this shift will shorten the line somewhat to allow the lyrics to extend under the custos should TeX decide to insert a line break after the syllable being ended
-        \gre@calculate@eolshift{\dimexpr(\gre@dimen@enddifference-\gre@skip@bar@lastskip)\relax }%
-        \gre@debugmsg{barspacing}{End of line shift: \the\gre@dimen@eolshift}%
-        \ifdim\gre@dimen@eolshift<\gre@skip@bar@lastskip %
-          \gre@dimen@eolshift=\gre@skip@bar@lastskip\relax %
-        \fi %
-        \kern\glueexpr(-\gre@dimen@eolshift)\relax%
-      \fi%
-    \fi%
     % gre@count@temp@one is "forced end of line or last of score"
     \gre@count@temp@one=0\relax %
     \ifnum\gre@newlinearg=-1\else %
@@ -1462,33 +1486,10 @@
     \ifnum\gre@count@temp@one=0\relax %
       % add the penalty
       \gre@debugmsg{barspacing}{after bar penalty: \the\gre@space@count@endafterbarpenalty}%
-      \gre@penalty{\the\gre@space@count@endafterbarpenalty}%
-      \ifgre@eolshiftsenabled%
-        \ifgre@endofscore\else%
-          %If the above penalties don't result in a line break, then we need to undo the eolshift to prevent the next syllable from overlapping with this one.  If the line break did occur, then this shift will occur at the beginning of a line and thus will be ignored automatically by TeX.
-          \kern \dimexpr(\gre@dimen@eolshift)\relax%
-          \GreNoBreak%
-        \fi%
-      \fi%
-      \ifdim\gre@dimen@enddifference < 0pt\relax%
-        %undo the earlier shift
-        \kern\gre@dimen@enddifference%
-        \GreNoBreak%
-      \fi%
-      % adjustment for alterations:
-      \kern-\gre@skip@alterationshift %
-      \GreNoBreak
-      %move to the beginning of the notes of the next syllable
+      {\gre@attr@part=11
+      \gre@penalty{\the\gre@space@count@endafterbarpenalty}}%
       {\gre@attr@skip@type=1
-      \gre@hskip\glueexpr(-\wd\gre@box@syllablenotes/2% back up to middle of notes
-        -\gre@dimen@bar@shift% go back from actual middle to nominal middle of bar line
-        +\gre@skip@bar@allocation/2% go from nominal middle to the start of the next notes
-        +\gre@space@skip@bar@rubber)}% the rubber component
-      \ifdim\gre@skip@nextbegindifference < 0pt\relax%
-        %we need to move back to where the text for the next syllable should start
-        \GreNoBreak %
-        \kern\gre@skip@nextbegindifference\relax%
-      \fi%
+      \gre@hskip\glueexpr\gre@space@skip@bar@rubber}%
     \else %
       \ifgre@endofscore %
         \localleftbox{}%
@@ -1506,7 +1507,8 @@
     %This is the old algorithm.  I've kept it in case people still want to use it.
     \gre@punctummoraadjustment%
     \ifgre@textcleared%
-      \gre@clearsyllable{bar}%
+      % Insert a zero kern that will be adjusted in the Lua function syllable_clearing.
+      {\gre@attr@skip@type=5 \kern0pt}%
     \fi%
     % then we check if there is something to write
     \global\let\gre@newlinecommon\gre@saved@prelinedelay@newlinecommon %
@@ -1573,7 +1575,8 @@
         #9\relax %
       \fi%
       \unsetattribute{\gre@attr@part}%
-      \gre@penalty{\the\gre@space@count@endafterbaraltpenalty }% TODO: isn't it a bit buggy?
+      {\gre@attr@part=11
+      \gre@penalty{\the\gre@space@count@endafterbaraltpenalty}}% TODO: isn't it a bit buggy?
       % end of same code as syllable
       \ifnum\gre@lastoflinecount=1\relax %
         \global\gre@lastoflinecount=2\relax %
@@ -1646,7 +1649,7 @@
   \ifgre@blockeolcustos\ifnum\gre@insidediscretionary=0\relax %
      \localrightbox{}%
   \fi\fi %
-  \relax%
+  \directlua{gregoriotex.save_post_syllable()}%
   \gre@trace@end%
 }
 

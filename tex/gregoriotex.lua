@@ -76,6 +76,7 @@ local part_nabc = 7
 local part_blnabc = 8
 local part_annotation = 9
 
+local note_type_attr = luatexbase.attributes['gre@attr@note@type']
 local skip_type_attr = luatexbase.attributes['gre@attr@skip@type']
 
 --- Possible values of syllables[sid].dash
@@ -406,6 +407,12 @@ end
 
 -- a simple (for now) function to dump nodes for debugging
 local function dump_nodes_helper(head, indent)
+
+  local function d(x)
+    --return string.format('%dpt', x/2^16)
+    return string.format('%dsp', x)
+  end
+  
   local dots = string.rep('..', indent)
   for n in traverse(head) do
     local type = node.type(n.id)
@@ -413,21 +420,23 @@ local function dump_nodes_helper(head, indent)
     if node.subtypes(n.id) ~= nil then
       subtype = node.subtypes(n.id)[n.subtype]
     end
-    local attrs = format("syllable=%s,part=%s,skip=%s",
+    local attrs = format("syllable=%s,part=%s,note=%s,skip=%s,alt=%s",
                          has_attribute(n, syllable_id_attr),
                          has_attribute(n, part_attr),
-                         has_attribute(n, skip_type_attr)
+                         has_attribute(n, note_type_attr),
+                         has_attribute(n, skip_type_attr),
+                         has_attribute(n, alteration_type_attr)
     )
     if n.id == hlist or n.id == vlist then
-      log(dots .. "%s [%s] width=%.2fpt height=%.2fpt depth=%.2fpt shift=%.2fpt {%s}", type, subtype, n.width/2^16, n.height/2^16, n.depth/2^16, n.shift/2^16, attrs)
+      log(dots .. "%s [%s] width=%s height=%s depth=%s shift=%s glue_set=%s {%s}", type, subtype, d(n.width), d(n.height), d(n.depth), d(n.shift), n.glue_set, attrs)
     elseif n.id == rule then
-      log(dots .. "rule [%s] width=%.2fpt height=%.2fpt depth=%.2fpt", subtype, n.width/2^16, n.height/2^16, n.depth/2^16)
+      log(dots .. "rule [%s] width=%s height=%s depth=%s", subtype, d(n.width), d(n.height), d(n.depth))
     elseif n.id == whatsit and subtype == user_defined_subtype and n.user_id == marker_whatsit_id then
       log(dots .. "marker-whatsit %s", n.value)
     elseif n.id == glue then
-      log(dots .. "glue [%s] width=%.2fpt stretch=%d shrink=%d {%s}", subtype, n.width/2^16, n.stretch, n.shrink, attrs)
+      log(dots .. "glue [%s] width=%s stretch=%s shrink=%s {%s}", subtype, d(n.width), d(n.stretch), d(n.shrink), attrs)
     elseif n.id == kern then
-      log(dots .. "kern [%s] kern=%.2fpt {%s}", subtype, n.kern/2^16, attrs)
+      log(dots .. "kern [%s] kern=%s {%s}", subtype, d(n.kern), attrs)
     elseif type == 'penalty' then
       log(dots .. "penalty %s {%s}", n.penalty, attrs)
     elseif n.id == glyph then
@@ -1022,7 +1031,13 @@ local function post_linebreak(h, groupcode, glyphes)
     centerstartnode = nil
 
     for n in traverse_id(hlist, line.head) do
-      syl_id = has_attribute(n, syllable_id_attr) or syl_id
+      -- Because some non-syllable boxes (like custoses) can have
+      -- out-of-order syllable ids, and every syllable is guaranteed
+      -- to have one text node, only record the syllable id for text
+      -- nodes.
+      if has_attribute(n, part_attr, part_lyrics) then
+        syl_id = has_attribute(n, syllable_id_attr) or syl_id
+      end
       if has_attribute(n, center_attr, startcenter) then
         centerstartnode = n
       elseif has_attribute(n, center_attr, endcenter) then

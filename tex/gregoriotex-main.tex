@@ -47,7 +47,7 @@
 % an attribute to mark various parts of the score
 % 1 = commentary, 2 = stafflines, 3 = initial
 % 4 = lyrics, 5 = translation, 6 = alt, 7 = nabc, 8 = nabc below
-% 9 = annotation, 10 = notes
+% 9 = annotation, 10 = notes, 11 = syllable-final penalty
 \newattribute\gre@attr@part
   \edef\gre@attrid@part{\the\allocationnumber}
 
@@ -63,9 +63,9 @@
 
 % attributes for horizontal spacing
 % 1 = syllablefinalskip after syllable and penalty
-% 2 = from syllable left to text left
-% 3 = from text right to notes left
-% 4 = from notes right to syllable right
+% 2 = between syllable left and text left
+% 3 = between text right and notes left
+% 4 = between notes right and syllable right
 % 5 = clearsyllable
 \newattribute\gre@attr@skip@type
 
@@ -232,6 +232,7 @@
       \fi%
       \ifgre@eolshiftsenabled%
         \GreNoBreak% we want to make sure this shift doesn't get separated from the previous one if both occur
+        % bug: if the break occurs between notes, like (gzg), the enddifference is wrong (#1738)
         \gre@calculate@eolshift{\gre@dimen@enddifference}%
         \gre@debugmsg{eolshift}{Manual end of line shift: \the\gre@dimen@eolshift}%
         \kern -\gre@dimen@eolshift\relax%

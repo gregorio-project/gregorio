@@ -1354,15 +1354,6 @@ Workhorse behind \verb=\gresetgregoriofontscaled=.
   \#3 & integer & the scaling factor\\
 \end{argtable}
 
-\macroname{\textbackslash gre@calculate@barposition}{\#1\#2}{gregoriotex-spaces.tex}
-Macro for calculating the position of the elements of a bar syllable using the new bar positioning algorithm.
-
-\begin{argtable}
-  \#1 & 0 & bar is not the end of a word\\
-  & 1 & bar is the end of a word\\
-  \#2 & integer & alteration type of the first glyph in the next syllable.  See \Nameref{alterationtype}\\
-\end{argtable}
-
 \macroname{\textbackslash gre@newlinearg}{}{gregoriotex-syllable.tex}
 Macro for storing the argument for \verb=\gre@newlinecommon= when the line break must be delayed (i.e. in the new bar spacing algorithm).
 
@@ -1387,22 +1378,11 @@ Macro to typeset a punctum mora.
 \macroname{\textbackslash gre@changecavumhole}{\#1[\#2][\#3]}{gregoriotex-main.tex}
 Macro used by \verb=\grechangecavumglyph= to handle the optional arguments.
 
-\macroname{\textbackslash gre@alterationadjustment}{\#1}{gregoriotex-spaces.tex}
-Macro to make adjustments to \verb=nextbegindifference= in order to account for an alteration at the begining of the next syllable.
-
 \macroname{\textbackslash gre@punctummoraadjustment}{}{gregoriotex-spaces.tex}
 Macro to make adjustments to cursor position and \verb=previousenddifference= based on the presence of a punctum mora at the end of the last syllable.
 
 \macroname{\textbackslash gre@evaluatenextsyllable}{\#1}{gregoriotex-syllable.tex}
 Evaluates its first argument as an advance computation against the next syllable.  Twiddles the \verb=ifgre@evaluatingnextsyllable= flag around evaluation of the macro argument.
-
-\macroname{\textbackslash gre@clearsyllable}{\#1}{gregoriotex-spaces.tex}
-Prevents the current syllable from overlapping with the previous syllable.
-
-\begin{argtable}
-  \#1 & bar  & the current syllable is a bar syllable.\\
-      & note & the current syllable is a note syllable.\\
-\end{argtable}
 
 \macroname{\textbackslash gre@arg@oftwo@first}{\#1\#2}{gregoriotex-syllable.tex}
 Evaluates to the first of its arguments.
@@ -2347,9 +2327,6 @@ Stored value of enddifference prior to the current one after adjusting for the p
 \macroname{\textbackslash gre@skip@nextbegindifference}{}{gregoriotex-spaces.tex}
 The difference between the start of the notes and the start of the text for the next syllable.  Positive when when text begins first, negative in other case.
 
-\macroname{\textbackslash gre@skip@adjustednextbegindifference}{}{gregoriotex-spaces.tex}
-Only used in new bar spacing algorithm. It is \verb=grebegindifference= adjusted with \verb=alterationadjustmentbar= if relevant.
-
 \macroname{\textbackslash gre@dimen@begindifference}{}{gregoriotex-spaces.tex}
 The difference between the start of the notes and the start of the text for the current syllable.  Positive when when text begins first, negative in other case.  This means that \verb=\kern\gre@dimen@begindifference= will take you from the start of the notes to the start of the text.
 
@@ -2404,32 +2381,11 @@ Tracks the total kern emitted at the note level across all NABC voices for the c
 Stores the computed height of a variable-length slur.  The control sequence name
 does not have the \texttt{@} symbol because this dimension is used within \MP{}.
 
-\macroname{\textbackslash gre@dimen@bar@shift}{}{gregoriotex-spaces.tex}
-Shift of the bar away from its center position to account for the offset limits in the new bar spacing algorithm.
-
-\macroname{\textbackslash gre@dimen@text@shift}{}{gregoriotex-spaces.tex}
-Shift of the text away from its center position to account for the offset limits in the new bar spacing algorithm.
-
-\macroname{\textbackslash gre@skip@bar@allocation}{}{gregoriotex-spaces.tex}
-Space allocated to the bar in the new bar spacing algorithm.
-
-\macroname{\textbackslash gre@skip@bar@requirement}{}{gregoriotex-spaces.tex}
-Space required by the bar in the new bar spacing algorithm.
-
-\macroname{\textbackslash gre@skip@text@allocation}{}{gregoriotex-spaces.tex}
-Space allocated to the text in the new bar spacing algorithm.
-
-\macroname{\textbackslash gre@skip@text@requirement}{}{gregoriotex-spaces.tex}
-Space required by the text in the new bar spacing algorithm.
-
 \macroname{\textbackslash gre@skip@bar@lastskip}{}{gregoriotex-signs.tex}
 Skip after the most recent bar.
 
 \macroname{\textbackslash gre@skip@punctummorashift}{}{gregoriotex-spaces.tex}
 Displacement of whole syllable to account for the presence of a punctum mora at the end of the previous syllable.
-
-\macroname{\textbackslash gre@skip@alterationshift}{}{gregoriotex-spaces.tex}
-Displacement of whole syllable to account for the presence of an alteration at the beginning of the next syllable.
 
 \macroname{\textbackslash gre@dimen@stafflinethicknessbase}{}{gregoriotex-main.tex}%
 \vspace*{-10ex}%
