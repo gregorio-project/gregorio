@@ -1008,7 +1008,7 @@ static __inline char compute_h_episema_height(
         const gregorio_glyph *const glyph, const gregorio_note *const note,
         const gregorio_vposition vpos)
 {
-    char height = note->u.note.pitch;
+    signed char height = note->u.note.pitch;
 
     if (note->signs & _V_EPISEMA) {
         if ((vpos == VPOS_ABOVE && note->v_episema_height >= height)
@@ -1057,7 +1057,7 @@ typedef struct height_computation {
     void (*const position)(gregorio_note *, signed char, bool);
 
     bool active;
-    char height;
+    signed char height;
     bool connected;
     const gregorio_element *start_element;
     const gregorio_glyph *start_glyph;

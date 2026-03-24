@@ -1959,11 +1959,11 @@ static __inline char *suppose_low_ledger_line(const gregorio_note *const note)
 static void write_auctum_duplex(FILE *f,
         const gregorio_note *const current_note)
 {
-    char pitch = current_note->u.note.pitch;
-    char previous_pitch = 0;
+    signed char pitch = current_note->u.note.pitch;
+    signed char previous_pitch = 0;
     /* second_pitch is the second argument of the \augmentumduplex macro,
      * that's what this function is all about. */
-    char second_pitch = 0;
+    signed char second_pitch = 0;
     /* this variable will be set to 1 if we are on the note before the last
      * note of a podatus or a porrectus or a torculus resupinus */
     unsigned char special_punctum = 0;
@@ -2019,7 +2019,7 @@ static void write_punctum_mora(FILE *f, const gregorio_glyph *glyph,
     /* 0 if space is normal, 1 if there should be no space after a punctum */
     unsigned char no_space = 0;
     /* the pitch where to set the punctum */
-    char pitch = current_note->u.note.pitch;
+    signed char pitch = current_note->u.note.pitch;
     /* a variable to know if we are on a punctum inclinatum or not */
     unsigned char punctum_inclinatum = 0;
     /* a temp variable */
@@ -2190,7 +2190,7 @@ static void write_punctum_mora(FILE *f, const gregorio_glyph *glyph,
 static __inline int get_punctum_inclinatum_space_case(
         const gregorio_note *const note)
 {
-    char temp;
+    signed char temp;
 
     switch (note->u.note.shape) {
     case S_PUNCTUM_INCLINATUM_ASCENDENS:
@@ -2355,7 +2355,7 @@ static __inline void write_single_hepisema(FILE *const f, int hepisema_case,
         const gregorio_hepisema_adjustment *adj =
                 gregorio_get_hepisema_adjustment(
                         note->he_adjustment_index[orientation]);
-        char ambitus = 0;
+        signed char ambitus = 0;
         char size_arg;
 
         switch (size) {
@@ -2466,7 +2466,7 @@ static void gregoriotex_write_hepisema(FILE *const f,
 static void write_additional_line(FILE *f, int i, gtex_type type, bool bottom,
         const gregorio_note *current_note, const gregorio_score *const score)
 {
-    char ambitus = 0;
+    signed char ambitus = 0;
     gregorio_assert(current_note, write_additional_line, "called with no note",
             return);
     /* patch to get a line under the full glyph in the case of dbc (for
@@ -2978,7 +2978,7 @@ static void compute_height_extrema(const gregorio_glyph *const glyph,
         const gregorio_note *note, signed char *const top_height,
         signed char *const bottom_height)
 {
-    char height;
+    signed char height;
     /* get the minima/maxima pitches */
     for (; note; note = note->next) {
         if (note->h_episema_above) {
