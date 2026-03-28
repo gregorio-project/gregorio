@@ -1294,13 +1294,21 @@ Sets the visibility of an NABC voice.
 
 \textbf{Important:} NABC glyphs visibility is controlled independently from notes visibility (\verb=\gresetnotes=). This allows you to hide the main notes (i.e. using \verb=\gresetnotes{invisible}= or some \verb=\gresetnotes{?phantom}= variant) while keeping NABC glyphs visible, which is useful for producing NABC-only output with lyrics.
 
-\macroname{\textbackslash gresetnabcalignment}{[\#1]\{\#2\}}{gregoriotex-nabc.tex}
-Sets the horizontal alignment reference for nabc neumes relative to the gabc notes below.  By default, nabc neumes are aligned to the left edge of the entire complex glyph descriptor (including significative letters), which can produce aesthetically suboptimal results when there are significative letters to the left of the neume.  The optional voice parameter allows setting the alignment independently for each nabc voice.
+\macroname{\textbackslash gresetnabcalignment}{[\#1]\{\#2\}\{\#3\}}{gregoriotex-nabc.tex}
+Sets the alignment reference and horizontal alignment of nabc neumes relative to the gabc notes below.
+
+The first mandatory argument (\#2) controls the \emph{alignment reference}: which part of the nabc complex glyph descriptor is used as anchor.  By default, the entire complex glyph descriptor (including significative letters) is used; with \texttt{neume}, only the neume body (basic glyph descriptor + prepunctis) is considered, which avoids visual misalignment caused by significative letters.
+
+The second argument (\#3) is \emph{optional}: if omitted, the current horizontal alignment is not changed.  This allows calling \verb=\gresetnabcalignment{full}= to change only the alignment reference while preserving the horizontal setting.  When provided, it controls the \emph{horizontal alignment} of the nabc neume relative to the gabc note group.
+
+When \texttt{center} is combined with \texttt{neume} mode, both left-side and right-side significative letters are excluded from the centering calculation, so that the neume body is centered on the gabc glyph.
 
 \begin{argtable}
   \#1 & integer & (Optional) The nabc voice number: 1 = above staff, 2 = below staff.  If omitted, sets the default for all voices and clears any per-voice overrides.\\
   \#2 & \texttt{neume} & Align to the neume (basic glyph descriptor + prepunctis), ignoring significative letters.\\
   & \texttt{full} & Align to the entire complex glyph descriptor (default).\\
+  \#3 & \texttt{left} & (Optional) Left-align the nabc neume with the gabc glyph (default).\\
+  & \texttt{center} & Center the nabc neume on the gabc glyph.\\
 \end{argtable}
 
 \macroname{\textbackslash gresetnabcskipalterations}{[\#1]\{\#2\}}{gregoriotex-nabc.tex}

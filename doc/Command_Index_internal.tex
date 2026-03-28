@@ -1479,11 +1479,23 @@ Phase 1 of NABC two-phase processing: pre-evaluates NABC content, tracks the max
   \#2 & box register & Box register to save the rendered content to\\
 \end{argtable}
 
+\macroname{\textbackslash gre@nabc@halign@content}{\#1\#2\#3}{gregoriotex-main.tex}
+Helper that applies horizontal alignment inside a zero-width NABC hbox.  Used by \verb=\gre@nabc@place@voice@i= and \verb=\gre@nabc@place@voice@ii= to shift the NABC content according to the chosen horizontal alignment mode.
+
+\begin{argtable}
+  \#1 & count register & The horizontal alignment register: 0 = left, 1 = center\\
+  \#2 & box register & The NABC box (must still contain its content)\\
+  \#3 & dimen & Per-voice right-side significative letter overflow (\verb=\gre@dimen@nabcrightoverflow@i= or \verb=\gre@dimen@nabcrightoverflow@ii=). In \texttt{neume} mode this width is added back to the centering formula so that right-side LS are excluded from centering, mirroring the left-side exclusion\\
+\end{argtable}
+
+The centering formula is:
+\verb=\kern\dimexpr(\gre@dimen@lastglyphwidth - \wd#2 + #3) / 2\relax=
+
 \macroname{\textbackslash gre@nabc@place@voice@i}{}{gregoriotex-main.tex}
-Phase 2 of NABC two-phase processing for voice 1 (above staff): places the pre-rendered NABC voice 1 content from \textbackslash gre@box@nabc@voice@i at the correct vertical position above the staff.
+Phase 2 of NABC two-phase processing for voice 1 (above staff): places the pre-rendered NABC voice 1 content from \verb=\gre@box@nabc@voice@i= at the correct vertical position above the staff.  Passes \verb=\gre@count@nabc@halign@i= and \verb=\gre@dimen@nabcrightoverflow@i= to \verb=\gre@nabc@halign@content= for horizontal alignment.
 
 \macroname{\textbackslash gre@nabc@place@voice@ii}{}{gregoriotex-main.tex}
-Phase 2 of NABC two-phase processing for voice 2 (below staff): places the pre-rendered NABC voice 2 content from \textbackslash gre@box@nabc@voice@ii at the correct vertical position below the staff.
+Phase 2 of NABC two-phase processing for voice 2 (below staff): places the pre-rendered NABC voice 2 content from \verb=\gre@box@nabc@voice@ii= at the correct vertical position below the staff.  Passes \verb=\gre@count@nabc@halign@ii= and \verb=\gre@dimen@nabcrightoverflow@ii= to \verb=\gre@nabc@halign@content= for horizontal alignment.
 
 \macroname{\textbackslash gre@nabc@pre@voice@i}{}{gregoriotex-main.tex}
 Deferred macro for phase~1 processing of NABC voice~1 (above staff).  Set by
@@ -1511,7 +1523,7 @@ Deferred macro for phase~2 processing of NABC voice~2 (below staff).  Set by
 \verb=\gre@nabc@emit@voice@i= for voice~2, guarded by \verb=\ifgre@nabc@voice@ii@ready=.
 
 \macroname{\textbackslash gre@setnabcalignment@global}{\#1}{gregoriotex-nabc.tex}
-Sets the default NABC horizontal alignment mode for all voices and clears any per-voice overrides.
+Sets the default NABC alignment reference mode for all voices and clears any per-voice overrides.
 
 \begin{argtable}
   \#1 & \texttt{neume} & Align to the neume (basic glyph + prepunctis), ignoring significative letters\\
@@ -1519,12 +1531,33 @@ Sets the default NABC horizontal alignment mode for all voices and clears any pe
 \end{argtable}
 
 \macroname{\textbackslash gre@setnabcalignment@voice}{[\#1]\{\#2\}}{gregoriotex-nabc.tex}
-Sets the NABC horizontal alignment mode for a specific voice.
+Sets the NABC alignment reference mode for a specific voice.
 
 \begin{argtable}
   \#1 & integer & The nabc voice number: 1 = above staff, 2 = below staff\\
   \#2 & \texttt{neume} & Align to the neume (basic glyph + prepunctis), ignoring significative letters\\
   & \texttt{full} & Align to the entire complex glyph descriptor (default)\\
+\end{argtable}
+
+\macroname{\textbackslash gre@setnabchalign@global}{\#1}{gregoriotex-nabc.tex}
+Sets the default NABC horizontal alignment for all voices.  Called by
+\verb=\gresetnabcalignment= when an optional second argument is provided
+without a voice specifier.
+
+\begin{argtable}
+  \#1 & \texttt{left} & Left-align the NABC neume with the GABC glyph (default)\\
+  & \texttt{center} & Center the NABC neume on the GABC glyph\\
+\end{argtable}
+
+\macroname{\textbackslash gre@setnabchalign@voice}{[\#1]\{\#2\}}{gregoriotex-nabc.tex}
+Sets the NABC horizontal alignment for a specific voice.  Called by
+\verb=\gresetnabcalignment= when both a voice specifier and a second argument
+are provided.
+
+\begin{argtable}
+  \#1 & integer & The nabc voice number: 1 = above staff, 2 = below staff\\
+  \#2 & \texttt{left} & Left-align the NABC neume with the GABC glyph (default)\\
+  & \texttt{center} & Center the NABC neume on the GABC glyph\\
 \end{argtable}
 
 \macroname{\textbackslash gre@setnabcskipalterations@global}{\#1}{gregoriotex-nabc.tex}
@@ -2443,6 +2476,18 @@ The final distance to skip at the end of a syllable.
 
 \macroname{\textbackslash gre@dimen@nabcleftoverflow}{}{gregoriotex-nabc.tex}
 Dimension for communicating NABC left overflow from Lua to \TeX. When NABC alignment mode is \texttt{neume}, significative letters on the left side of a neume extend to the left of the neume body. This dimension holds the overflow width (set by Lua code during NABC rendering) so that the \TeX\ layer can reserve space at the note level to prevent overlap with previous elements. Reset to 0pt after each syllable.
+
+\macroname{\textbackslash gre@dimen@nabcrightoverflow@i}{}{gregoriotex-nabc.tex}
+Per-voice dimension for communicating the width of right-side significative letters (positions 3, 6, 9) from Lua to \TeX\ for voice~1.  In \texttt{neume} alignment mode, the Lua code sets this to the maximum right-side LS width scaled by the NABC font scale.  In \texttt{full} mode (or when there are no right-side LS), it is set to 0pt.  Used by \verb=\gre@nabc@halign@content= to exclude right-side LS from the centering computation, mirroring the left-side exclusion.
+
+\macroname{\textbackslash gre@dimen@nabcrightoverflow@ii}{}{gregoriotex-nabc.tex}
+Same as \verb=\gre@dimen@nabcrightoverflow@i= but for voice~2 (below staff).
+
+\macroname{\textbackslash gre@count@nabc@halign@i}{}{gregoriotex-nabc.tex}
+Count register holding the horizontal alignment mode for voice~1.  Values: 0 = left (default), 1 = center.  Set by \verb=\gre@setnabchalign@global= or \verb=\gre@setnabchalign@voice=.
+
+\macroname{\textbackslash gre@count@nabc@halign@ii}{}{gregoriotex-nabc.tex}
+Count register holding the horizontal alignment mode for voice~2.  Values: 0 = left (default), 1 = center.  Set by \verb=\gre@setnabchalign@global= or \verb=\gre@setnabchalign@voice=.
 
 \macroname{\textbackslash gre@dimen@nabckernemitted}{}{gregoriotex-nabc.tex}
 Tracks the total kern emitted at the note level across all NABC voices for the current syllable. Used to coordinate left overflow handling between voice 1 (above staff) and voice 2 (below staff), ensuring that only the maximum overflow is applied. Reset to 0pt after each syllable.
