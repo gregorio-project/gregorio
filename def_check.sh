@@ -86,6 +86,10 @@ sed -i.temp '/^GreUnstyled$/d' $TEXFILE
 #remove extra alias
 sed -i.temp '/^\GreCPVirgaReversaAscendensOnDLine$/d' $TEXFILE
 
+#other exceptions (I know these get written to gtex files, I just can't find where)
+sed -i.temp '/^GreSetNabcAboveLines$/d' $TEXFILE
+sed -i.temp '/^GreSetNabcBelowLines$/d' $TEXFILE
+
 #label file
 echo "00 GreMacros Defined in TeX" >> $TEXFILE
 

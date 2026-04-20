@@ -700,7 +700,7 @@ static const char *determine_note_glyph_name(const gregorio_note *const note,
                     true);
         }*/ /* all cases return, so this line is not hit; LCOV_EXCL_LINE */
         /* LCOV_EXCL_START */
-        gregorio_fail2(determine_note_glyph_name, "unknown queuetype: %d",
+        gregorio_fail(determine_note_glyph_name, "unknown queuetype: %d",
                 queuetype_of(note));
         return "";
         /* LCOV_EXCL_STOP */
@@ -738,7 +738,7 @@ static const char *determine_note_glyph_name(const gregorio_note *const note,
                 return SHAPE_VirgaReversaLongqueueDescendens;
             } /* all cases return, so this line is not hit; LCOV_EXCL_LINE */
             /* LCOV_EXCL_START */
-            gregorio_fail2(determine_note_glyph_name, "unknown queuetype: %d",
+            gregorio_fail(determine_note_glyph_name, "unknown queuetype: %d",
                     queuetype_of(note));
             return "";
             /* LCOV_EXCL_STOP */
@@ -784,7 +784,7 @@ static const char *determine_note_glyph_name(const gregorio_note *const note,
             return SHAPE_StrophaAuctaLongtail;
         } /* all cases return, so this line is not hit; LCOV_EXCL_LINE */
         /* LCOV_EXCL_START */
-        gregorio_fail2(determine_note_glyph_name, "unknown queuetype: %d",
+        gregorio_fail(determine_note_glyph_name, "unknown queuetype: %d",
                 queuetype_of(note));
         return "";
         /* LCOV_EXCL_STOP */
@@ -809,7 +809,7 @@ static const char *determine_note_glyph_name(const gregorio_note *const note,
     default:
         /* not reachable unless there's a programming error */
         /* LCOV_EXCL_START */
-        gregorio_fail2(determine_note_glyph_name,
+        gregorio_fail(determine_note_glyph_name,
                 "called with unknown shape: %s",
                 gregorio_shape_to_string(note->u.note.shape));
         return "";
@@ -1217,7 +1217,7 @@ const char *gregoriotex_determine_glyph_name(const gregorio_glyph *const glyph,
     default:
         /* not reachable unless there's a programming error */
         /* LCOV_EXCL_START */
-        gregorio_fail2(gregoriotex_determine_glyph_name,
+        gregorio_fail(gregoriotex_determine_glyph_name,
                 "called with unknown glyph: %s",
                 gregorio_glyph_type_to_string(glyph->u.notes.glyph_type));
         break;
@@ -1501,7 +1501,7 @@ static unsigned char gregoriotex_internal_style_to_gregoriotex(
     default:
         /* not reachable unless there's a programming error */
         /* LCOV_EXCL_START */
-        gregorio_fail2(gregoriotex_internal_style_to_gregoriotex,
+        gregorio_fail(gregoriotex_internal_style_to_gregoriotex,
                 "unrecognized style: %s", grestyle_style_to_string(style));
         return 0;
         /* LCOV_EXCL_STOP */
@@ -1663,7 +1663,7 @@ static char clef_flat_height(gregorio_clef clef, signed char line, bool flatted)
         default:
             /* not reachable unless there's a programming error */
             /* LCOV_EXCL_START */
-            gregorio_fail2(clef_flat_height, "unknown line number: %d", line);
+            gregorio_fail(clef_flat_height, "unknown line number: %d", line);
             break;
             /* LCOV_EXCL_STOP */
         }
@@ -1688,7 +1688,7 @@ static char clef_flat_height(gregorio_clef clef, signed char line, bool flatted)
         default:
             /* not reachable unless there's a programming error */
             /* LCOV_EXCL_START */
-            gregorio_fail2(clef_flat_height, "unknown line number: %d", line);
+            gregorio_fail(clef_flat_height, "unknown line number: %d", line);
             break;
             /* LCOV_EXCL_STOP */
         }
@@ -1696,7 +1696,7 @@ static char clef_flat_height(gregorio_clef clef, signed char line, bool flatted)
     default:
         /* not reachable unless there's a programming error */
         /* LCOV_EXCL_START */
-        gregorio_fail2(clef_flat_height, "unknown clef type: %d", clef);
+        gregorio_fail(clef_flat_height, "unknown clef type: %d", clef);
         break;
         /* LCOV_EXCL_STOP */
     }
@@ -1811,7 +1811,7 @@ static void write_bar(FILE *f, const gregorio_score *const score,
     default:
         /* not reachable unless there's a programming error */
         /* LCOV_EXCL_START */
-        gregorio_fail2(write_bar, "unknown bar type: %d", type);
+        gregorio_fail(write_bar, "unknown bar type: %d", type);
         break;
         /* LCOV_EXCL_STOP */
     }
@@ -3956,7 +3956,8 @@ static void write_default_end_of_element(FILE *f,
         if (next_element->type == GRE_ALT) {
             next_element = next_element->next;
         }
-        if (next_element && next_element->type == GRE_ELEMENT) {
+        if (next_element && next_element->type == GRE_ELEMENT
+                && element->u.first_glyph) {
             for (last_glyph = element->u.first_glyph; last_glyph->next;
                     last_glyph = last_glyph->next) {
                 /* iterate to find the last glyph */

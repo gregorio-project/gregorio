@@ -114,11 +114,13 @@ sort -u -o$CODEFILE $CODEFILE
 cd $HERE/doc
 
 grep -h '\\macroname.*' *.tex > $DOCFILE
+grep -h '\\longmacroname.*' *.tex >> $DOCFILE
 grep -h '\\stylename{.*' *.tex >> $DOCFILE
 grep -h '\\begin{gdimension}{.*' *.tex >> $DOCFILE
 grep -h '\\begin{gcount}{.*' *.tex >> $DOCFILE
 
 #remove all but name
+sed -i.temp 's:\\longmacroname{\([^}]*\)}.*:\1:' $DOCFILE
 sed -i.temp 's:\\macroname{\([^}]*\)}.*:\1:' $DOCFILE
 
 #replace TeX code with backslash

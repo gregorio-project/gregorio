@@ -1017,7 +1017,7 @@ void gregorio_rebuild_characters(gregorio_character **const param_character,
                 case ST_CENTER:
                     /* not reachable unless there's a programming error */
                     /* LCOV_EXCL_START */
-                    gregorio_fail2(gregorio_rebuild_characters,
+                    gregorio_fail(gregorio_rebuild_characters,
                             "encountered unexpected end %s",
                             grestyle_style_to_string(
                                 current_character->cos.s.style));

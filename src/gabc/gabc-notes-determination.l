@@ -79,7 +79,7 @@ static __inline gregorio_sign_orientation letter_to_sign_orientation(
     }
     /* not reachable unless there's a programming error */
     /* LCOV_EXCL_START */
-    gregorio_fail2(letter_to_sign_orientation,
+    gregorio_fail(letter_to_sign_orientation,
             "invalid sign orientation letter: %c", letter);
     return SO_OVER;
     /* LCOV_EXCL_STOP */
@@ -94,7 +94,7 @@ static __inline int letter_to_pitch_adjustment(const char letter) {
     }
     /* not reachable unless there's a programming error */
     /* LCOV_EXCL_START */
-    gregorio_fail2(letter_to_pitch_adjustment,
+    gregorio_fail(letter_to_pitch_adjustment,
             "invalid sign orientation letter: %c", letter);
     return 0;
     /* LCOV_EXCL_STOP */
@@ -207,7 +207,7 @@ static void add_h_episema(void)
         default:
             /* not reachable unless there's a programming error */
             /* LCOV_EXCL_START */
-            gregorio_fail2(gabc_notes_determination,
+            gregorio_fail(gabc_notes_determination,
                     "unrecognized horizontal episema modifier: %c", current);
             break;
             /* LCOV_EXCL_STOP */
@@ -271,7 +271,7 @@ static __inline const char *over_or_under(
     }
     /* not reachable unless there's a programming error */
     /* LCOV_EXCL_START */
-    gregorio_fail2(over_or_under, "invalid ledger type %d", type);
+    gregorio_fail(over_or_under, "invalid ledger type %d", type);
     return "";
     /* LCOV_EXCL_STOP */
 }
@@ -376,7 +376,7 @@ static __inline gregorio_bar parse_dominican_bar(char bar)
     }
     /* not reachable unless there's a programming error */
     /* LCOV_EXCL_START */
-    gregorio_fail2(check_dominican_line, "invalid dominican bar: %d", (int)bar);
+    gregorio_fail(check_dominican_line, "invalid dominican bar: %d", (int)bar);
     return B_NO_BAR;
     /* LCOV_EXCL_STOP */
 }
@@ -391,7 +391,7 @@ static __inline gregorio_clef letter_to_clef(char letter)
     }
     /* not reachable unless there's a programming error */
     /* LCOV_EXCL_START */
-    gregorio_fail2(letter_to_clef, "invalid clef: %c", letter);
+    gregorio_fail(letter_to_clef, "invalid clef: %c", letter);
     return CLEF_C;
     /* LCOV_EXCL_STOP */
 }

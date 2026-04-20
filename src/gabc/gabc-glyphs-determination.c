@@ -439,7 +439,7 @@ static char add_note_to_a_glyph(gregorio_glyph_type current_glyph_type,
     default:
         /* not reachable unless there's a programming error */
         /* LCOV_EXCL_START */
-        gregorio_fail2(add_note_to_a_glyph, "unexpected shape: %s",
+        gregorio_fail(add_note_to_a_glyph, "unexpected shape: %s",
                 gregorio_shape_to_string(shape));
         break;
         /* LCOV_EXCL_STOP */

@@ -17,8 +17,12 @@
 
 CLEANFILES = $(wildcard GregorioSetup-*.exe)
 
-dist-windows :
+dist-windows : GregorioSetup-$(FILENAME_VERSION).exe
+
+../src/gregorio-$(FILENAME_VERSION).exe :
 	$(top_srcdir)/build.sh --mingw
+
+GregorioSetup-$(FILENAME_VERSION).exe : ../src/gregorio-$(FILENAME_VERSION).exe
 	wine 'C:\\Program Files (x86)\Inno Setup 6\ISCC.exe' gregorio.iss
 	mv Output/mysetup.exe GregorioSetup-$(FILENAME_VERSION).exe
 	rm -rf Output/

@@ -697,7 +697,7 @@ void gregorio_add_sign(gregorio_note *note, gregorio_sign sign,
     default:
         /* not reachable unless there's a programming error */
         /* LCOV_EXCL_START */
-        gregorio_fail2(gregorio_add_sign, "unexpected sign to add: %s",
+        gregorio_fail(gregorio_add_sign, "unexpected sign to add: %s",
                 gregorio_sign_to_string(sign));
         break;
         /* LCOV_EXCL_STOP */
@@ -1317,7 +1317,7 @@ static __inline signed char next_pitch_from_glyph(const gregorio_glyph *glyph,
                     default:
                         /* not reachable unless there's a programming error */
                         /* LCOV_EXCL_START */
-                        gregorio_fail2(next_pitch_from_glyph,
+                        gregorio_fail(next_pitch_from_glyph,
                                 "unrecognized alteration shape: %s",
                                 gregorio_shape_to_string(note->u.note.shape));
                         break;

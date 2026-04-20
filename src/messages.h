@@ -80,10 +80,7 @@ int gregorio_get_return_value(void);
 #define gregorio_not_null_ptr(VARIABLE,FUNCTION,ON_FALSE) \
     gregorio_assert(VARIABLE && *VARIABLE, FUNCTION, #VARIABLE " may not be null", ON_FALSE)
 
-#define gregorio_fail(FUNCTION,MESSAGE) \
-    gregorio_message(_(MESSAGE), #FUNCTION, VERBOSITY_ASSERTION, __LINE__)
-
-#define gregorio_fail2(FUNCTION,FORMAT,ARG) \
-    gregorio_messagef(#FUNCTION, VERBOSITY_ASSERTION, __LINE__, FORMAT, ARG)
+#define gregorio_fail(FUNCTION, FORMAT, args...) \
+    gregorio_messagef(#FUNCTION, VERBOSITY_ASSERTION, __LINE__, _(FORMAT), ##args)
 
 #endif

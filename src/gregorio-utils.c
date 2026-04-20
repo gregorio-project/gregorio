@@ -331,7 +331,7 @@ int main(int argc, char **argv)
     bool debug = false;
     bool must_print_short_usage = false;
     int option_index = 0;
-    static const char *const options = "o:SF:l:f:shOLVvWDpd";
+    static const char *const options = ":o:SF:l:f:shOLVvWDpd";
     static const struct option long_options[] = {
         {"output-file", 1, 0, 'o'},
         {"stdout", 0, 0, 'S'},
@@ -352,6 +352,13 @@ int main(int argc, char **argv)
 
     gregorio_support_init("gregorio", argv[0]);
     setlocale(LC_CTYPE, "C");
+    
+    /* Turn off getopt's error handling:
+     * Its formatting isn't consistent with what we do elsewhere
+     * and we're going to call getopt_long() twice, so some of its
+     * error messages would be duplicated.
+     * Instead we're going to handle errors in the options ourselves. */
+    opterr = 0;
 
     /* need to look for the -l option up front */
     for (;;) {
@@ -541,12 +548,25 @@ int main(int argc, char **argv)
             debug = true;
             break;
         case '?':
-            must_print_short_usage = true;
+            if (optopt) {
+                fprintf(stderr, "%s: invalid option '%c'\n", argv[0], optopt);
+            } else {
+                fprintf(stderr, "%s: invalid option\n", argv[0]);
+            }
+            print_short_usage(argv[0]);
+            gregorio_exit(1);
+            break;
+
+        case ':':
+            fprintf(stderr, "%s: option '%c' requires an argument \n",
+                    argv[0], optopt);
+            print_short_usage(argv[0]);
+            gregorio_exit(1);
             break;
         default:
             /* not reachable unless there's a programming error */
             /* LCOV_EXCL_START */
-            gregorio_fail2(main, "unknown option: %c", c);
+            gregorio_fail(main, "%s: internal error: unexpected option code '%c'\n", argv[0], c);
             print_short_usage(argv[0]);
             gregorio_exit(1);
             break;
