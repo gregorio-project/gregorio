@@ -53,6 +53,9 @@ local dash_forced = 5
 -- Functions for manipulating glue, which we just store as a 3-tuple
 -- {width, stretch, shrink} in sp.
 
+--- Convert glue to a string.
+--- @param g table The glue to be converted
+--- @return string Human-readable string representation of g.
 local function glue_to_string(g)
   if g == nil then
     return 'nil'
@@ -69,6 +72,9 @@ local function glue_to_string(g)
   end
 end
 
+--- Convert a string to glue.
+--- @param s string The string to be converted, e.g., "1pt plus 2pt minus 3pt"
+--- @return table The glue represented by s.
 local function string_to_glue(s)
   local stretch = 0
   local shrink = 0
@@ -87,17 +93,27 @@ local function string_to_glue(s)
   return {width, stretch, shrink}
 end
 
+--- Convert a dimen to glue.
+--- @param dimen number A dimension, in sp.
+--- @return table The glue equivalent to dimen, with no stretch or shrink.
 local function dimen_to_glue(dimen)
   return {dimen, 0, 0}
 end
 
+--- Find the maximum of two glues.
+--- @param a table A glue.
+--- @param b table Another glue.
+--- @return table The greater of a and b. If the natural widths are equal, return a.
 local function glue_max(a, b)
-  -- If the natural widths are equal, return a.
   if type(a) == 'number' then a = dimen_to_glue(a) end
   if type(b) == 'number' then b = dimen_to_glue(b) end
   if a[1] > b[1] then return a else return b end
 end
 
+--- Find the sum of two glues.
+--- @param a table A glue.
+--- @param b table Another glue.
+--- @return table The sum of a and b.
 local function glue_add(a, b)
   if type(a) == 'number' then a = dimen_to_glue(a) end
   if type(b) == 'number' then b = dimen_to_glue(b) end
@@ -109,6 +125,8 @@ end
 local syllables = {}
 gregoriotex.syllables = syllables
 
+--- Save information about syllables that is impossible or
+--- inconvenient to recover from node attributes.
 local function save_syllable_info()
   local sid = tex.getattribute(syllable_id_attr)
   if syllables[sid] == nil then syllables[sid] = {} end
@@ -117,9 +135,10 @@ local function save_syllable_info()
   log('saving font for syllable %s', sid)
 end
 
+--- Save syllable text before ligaturing and kerning happens. This
+--- is needed later during syllable rewriting.
+--- @param head node The syllable text.
 local function save_syllable_texts(head)
-  -- Save syllable texts before ligaturing and kerning happens. This
-  -- is needed later during syllable rewriting.
   -- Because syllable_id_attr is set even for material not in the
   -- syllable text, it's better to use dash_attr to detect whether
   -- this box is really syllable text.
@@ -132,6 +151,9 @@ local function save_syllable_texts(head)
   end
 end
 
+--- Save the minimum distance between text/notes of a \GreSyllable and
+--- the following syllable, or before and after the text/notes of a
+--- \GreBarSyllable.
 local function save_min_distances()
   local sid = tex.getattribute(syllable_id_attr)
   if syllables[sid] == nil then syllables[sid] = {} end
@@ -141,6 +163,7 @@ local function save_min_distances()
   syllables[sid].min_notes_distance = {g.width, g.stretch, g.shrink}
 end
 
+--- Free all information saved about syllables.
 local function free_syllables()
   for sid, syl in pairs(syllables) do
     node.flush_list(syl.raw_text)
@@ -148,6 +171,13 @@ local function free_syllables()
   end
 end
 
+--- Concatenate two node lists.
+--- @param head node The head of the first list.
+--- @param tail node The tail of the first list.
+--- @param newhead node The head of the second list.
+--- @param newtail node The tail of the second list.
+--- @return node The head of the concatenated list.
+--- @return node The tail of the concatenated list.
 local function concat_list(head, tail, newhead, newtail)
   if head == nil then
     return newhead, newtail
@@ -160,6 +190,9 @@ local function concat_list(head, tail, newhead, newtail)
   end
 end
 
+--- Apply ligaturing and kerning to a node list.
+--- @param head node The head of the list to be processed.
+--- @return node The head of the processed list.
 local function shaping(head)
   head = node.ligaturing(head)
   head = node.kerning(head)
@@ -170,9 +203,11 @@ local function shaping(head)
   return head
 end
 
+--- Find nodes corresponding to various parts of syllables and store them in a
+--- data structure more convenient for downstream processing.
+--- @param head node The head of the list to be processed.
+--- @return node The head of the processed list.
 local function scan_syllables(head)
-  -- Find nodes corresponding to various parts of syllables and store them in a
-  -- data structure more convenient for downstream processing.
   for _, cur in pairs(syllables) do
     cur.first_note = nil
   end
@@ -215,6 +250,10 @@ local function scan_syllables(head)
   visit(head)
 end
 
+--- Determine the width of a syllable's syllable-final skip, which is
+--- the last skip before the start of the next syllable.
+--- @param cur table The current syllable.
+--- @param next table The next syllable.
 local function adjust_syllablefinalskip(cur, next)
   local text_distance = node.dimensions(cur.text.next, next.text)
   debugmessage('syllablespacing', '  text distance = %s', glue_to_string(text_distance))
@@ -243,6 +282,8 @@ local function adjust_syllablefinalskip(cur, next)
   node.setglue(cur.syllablefinalskip, table.unpack(syllablefinalskip))
 end
 
+--- Add a hyphen to the end of a syllable's text.
+--- @param cur table The current syllable.
 local function add_hyphen(cur)
   -- Append hyphen to saved syllable text (needed if the syllable gets rewritten)
   local g = node.new(glyph)
@@ -286,10 +327,11 @@ local function add_hyphen(cur)
   -- the bar will have the wrong previousenddifference.
 end
 
+--- Determine the width of all syllables' horizontal spacing.
 local function syllable_spacing()
   for sid, cur in pairs(syllables) do
     debugmessage('syllablespacing', 'after syllable %d', sid)
-    local next = syllables[sid+1]
+    local next = syllables[sid+1] -- to do: correctly handle discretionaries
     
     -- If the next syllable is a bar syllable, then this syllable
     -- shouldn't have syllablefinalskip. But (due to a bug, #1724)
@@ -324,6 +366,7 @@ local function syllable_spacing()
   end
 end
 
+--- Clear all syllables that are marked for clearing.
 local function syllable_clearing()
   for sid, cur in pairs(syllables) do
     local prev = syllables[sid-1]
@@ -348,6 +391,8 @@ local function syllable_clearing()
   end
 end
 
+--- Rewrite all syllable texts that have no space in between them, so that
+--- ligaturing and kerning can take place.
 local function syllable_rewriting()
   if not gregoriotex.get_if('gre@rewritesyllables') then return end
 

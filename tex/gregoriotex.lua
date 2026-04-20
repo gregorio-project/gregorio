@@ -955,12 +955,18 @@ local function adjust_additional_spaces(line, info, linenum)
   end
 end
 
+--- Callback for processing before ligaturing or kerning takes place.
+--- @param head node The list of nodes to be processed.
+--- @return node The processed list of nodes.
 local function ligaturing(head)
   gregoriotex.save_syllable_texts(head)
   head = node.ligaturing(head)
   return head
 end
 
+--- Callback for processing after a paragraph is built but before line-breaking takes place.
+--- @param head node The list of nodes to be processed.
+--- @return node The processed list of nodes.
 local function pre_linebreak(head)
   --dump_nodes(head)
   gregoriotex.scan_syllables(head)
@@ -971,6 +977,8 @@ local function pre_linebreak(head)
   return head
 end
 
+--- Add a hyphen to the end of a line.
+--- @param line node The list of nodes for the line.
 local function add_eol_hyphen(line)
   -- Add an end-of-line dash to line, if necessary.
 
@@ -1173,6 +1181,7 @@ local function get_score_font_unicode_pairs(name)
   return pairs(unicodes)
 end
 
+--- Add GregorioTeX callbacks.
 local function add_callbacks()
   luatexbase.add_to_callback('post_linebreak_filter', post_linebreak, 'gregoriotex.post_linebreak', 1)
   luatexbase.add_to_callback('hyphenate', disable_hyphenation, 'gregoriotex.disable_hyphenation', 1)
@@ -1180,6 +1189,7 @@ local function add_callbacks()
   luatexbase.add_to_callback('pre_linebreak_filter', pre_linebreak, 'gregoriotex.pre_linebreak', 1)
 end
 
+--- Remove GregorioTeX callbacks.
 local function remove_callbacks()
   luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.post_linebreak')
   luatexbase.remove_from_callback('hyphenate', 'gregoriotex.disable_hyphenation')
@@ -1942,7 +1952,10 @@ local function mode_part(part)
   end
 end
 
--- this function is meant to be called from Lua
+--- Test whether a syllable is the last syllable in its line.
+--- Similar to is_last_syllable_on_line but meant to be called from Lua.
+--- @param sid number The id of the syllable to check.
+--- @return boolean Whether it is the last syllable in its line.
 local function is_last_syllable_id_on_line(sid)
   return not score_last_syllables or score_last_syllables[sid]
 end
