@@ -483,6 +483,56 @@ local function note_syllable_spacing(cur, next)
   end
 end
 
+--- Get the ends of the text and notes of the previous syllable, relative to the beginning of the current syllable.
+--- @param prev node The previous syllable.
+--- @param cur node The current syllable.
+--- @return int The end of the text, in sp.
+--- @return int The end of the notes, in sp.
+--- @return int The end of the syllable, in sp (with punctum mora adjustment; used in old bar spacing only).
+local function get_prev_ends(prev, cur)
+  local prev_text_end, prev_notes_end
+  local prev_end = 0
+  if prev == nil then
+    prev_text_end, prev_notes_end = 0, 0
+  else
+    prev_text_end = -node.dimensions(prev.text.next, prev.last.next)
+    -- If previous text has a hyphen, ignore it.
+    if prev.hyphen_width then
+      prev_text_end = prev_text_end - prev.hyphen_width
+    end
+    prev_notes_end = -node.dimensions(prev.last_note.next, prev.last.next)
+    -- Adjust if the previous note has a punctum mora.
+    if cur.mora_shift[1] ~= 0 then
+      local save = math.max(prev_text_end, prev_notes_end)
+      prev_notes_end = prev_notes_end + cur.mora_shift[1]
+      -- Recompute end of previous syllable as if the punctum mora were not there, but the syllablefinalskip (if any) is
+      prev_end = math.max(prev_text_end, prev_notes_end) - save
+      debugmessage('barspacing', 'punctum mora adjustment: %fpt', cur.mora_shift[1]/2^16)
+    end
+  end
+  debugmessage('barspacing', 'previous text end: %fpt', prev_text_end/2^16)
+  debugmessage('barspacing', 'previous notes end: %fpt', prev_notes_end/2^16)
+  -- useful for comparison with previous version:
+  debugmessage('barspacing', 'previous end difference: %fpt', (prev_notes_end-prev_text_end)/2^16)
+  debugmessage('barspacing', 'previous syllable end: %fpt', prev_end/2^16)
+  return prev_text_end, prev_notes_end, prev_end
+end
+
+--- Get the position of the penalty (that is, where a line break may occur).
+--- @param cur node The current syllable.
+local function get_penalty(cur)
+  local penalty_pos
+  if cur.penalty ~= nil then
+    penalty_pos = node.dimensions(cur.first, cur.penalty.next)
+  else
+    -- Inside a discretionary or at the end of the score, there is no penalty.
+    -- Set this to the right edge of the syllable.
+    penalty_pos = node.dimensions(cur.first, cur.last.next)
+  end
+  debugmessage('barspacing', 'penalty position: %fpt', penalty_pos/2^16)
+  return penalty_pos
+end
+  
 --- Set the widths of all horizontal spaces in a \GreBarSyllable, using the new bar spacing algorithm.
 --- @param prev node The previous syllable.
 --- @param cur node The bar syllable.
@@ -500,26 +550,7 @@ local function bar_syllable_spacing(prev, cur, next)
   -- All positions are calculated relative to the beginning of the syllable.
 
   -- The end of the text and notes of the previous syllable.
-  local prev_text_end, prev_notes_end
-  if prev == nil then
-    prev_text_end, prev_notes_end = 0, 0
-  else
-    prev_text_end = -node.dimensions(prev.text.next, prev.last.next)
-    -- If previous text has a hyphen, ignore it.
-    if prev.hyphen_width then
-      prev_text_end = prev_text_end - prev.hyphen_width
-    end
-    prev_notes_end = -node.dimensions(prev.last_note.next, prev.last.next)
-    -- Adjust if the previous note has a punctum mora.
-    if cur.mora_shift[1] ~= 0 then
-      prev_notes_end = prev_notes_end + cur.mora_shift[1]
-      debugmessage('barspacing', 'punctum mora adjustment: %fpt', cur.mora_shift[1]/2^16)
-    end
-  end
-  debugmessage('barspacing', 'previous text end: %fpt', prev_text_end/2^16)
-  debugmessage('barspacing', 'previous notes end: %fpt', prev_notes_end/2^16)
-  -- useful for comparison with previous version:
-  debugmessage('barspacing', 'previous end difference: %fpt', (prev_notes_end-prev_text_end)/2^16)
+  local prev_text_end, prev_notes_end = get_prev_ends(prev, cur)
 
   if prev and prev.syllablefinalskip then
     local width = prev.syllablefinalskip.width or prev.syllablefinalskip.kern
@@ -572,16 +603,7 @@ local function bar_syllable_spacing(prev, cur, next)
   local cur_end = node.dimensions(cur.first, cur.last.next)
   debugmessage('barspacing', 'syllable width: %fpt', cur_end/2^16)
 
-  -- The place near the end of the syllable where the line may be broken.
-  local penalty_pos
-  if cur.penalty ~= nil then
-    penalty_pos = node.dimensions(cur.first, cur.penalty.next)
-  else
-    -- Inside a discretionary or at the end of the score, there is no penalty.
-    -- Set this to the right edge of the syllable.
-    penalty_pos = cur_end
-  end
-  debugmessage('barspacing', 'penalty position: %fpt', penalty_pos/2^16)
+  local penalty_pos = get_penalty(cur)
 
   -- The beginning of the text and notes of the next syllable.
   local next_text_begin, next_notes_begin
@@ -716,6 +738,7 @@ local function bar_syllable_spacing(prev, cur, next)
   debugmessage('barspacing', 'shift notes by: %fpt', notes_shift/2^16)
   local penalty_shift = new_penalty_pos - penalty_pos
   debugmessage('barspacing', 'shift penalty by: %fpt', penalty_shift/2^16)
+  debugmessage('barspacing', 'shift end by: %fpt', end_shift/2^16)
 
   -- Apply the shifts.
   cur.before_text_skip.kern = cur.before_text_skip.kern + text_shift
@@ -730,6 +753,122 @@ local function bar_syllable_spacing(prev, cur, next)
   end
 end
 
+--- Set the widths of all horizontal spaces in a \GreBarSyllable, using the old bar spacing algorithm.
+--- @param prev node The previous syllable.
+--- @param cur node The bar syllable.
+--- @param next node The next syllable.
+local function old_bar_syllable_spacing(prev, cur, next)
+  debugmessage('barspacing', 'syllable %d', cur.sid)
+  
+  -- The end of the text and notes of the previous syllable.
+  local prev_text_end, prev_notes_end, prev_end = get_prev_ends(prev, cur)
+
+  local text_begin = node.dimensions(cur.first, cur.text)
+  local text_end = text_begin + cur.text.width
+  
+  -- Width of notes including built-in space
+  local notes_begin = node.dimensions(cur.first, cur.first_note)
+  local notes_width = node.dimensions(cur.first_note, cur.last_note.next)
+  local notes_end = notes_begin + notes_width
+  debugmessage('barspacing', 'notes begin: %fpt', notes_begin/2^16)
+  debugmessage('barspacing', 'notes width: %fpt', notes_width/2^16)
+
+  local penalty_pos = get_penalty(cur)
+
+  -- The end of the syllable, which is also the beginning of the next syllable.
+  local cur_end = node.dimensions(cur.first, cur.last.next)
+  debugmessage('barspacing', 'syllable width: %fpt', cur_end/2^16)
+  
+  -- The beginning of the text and notes of the next syllable.
+  local next_text_begin, next_notes_begin
+  if next == nil or cur.forced_line_break then
+    next_text_begin, next_notes_begin = cur_end, cur_end
+  else
+    next_text_begin = cur_end + node.dimensions(next.first, next.text) 
+    next_notes_begin = cur_end + node.dimensions(next.first, next.first_note)
+  end  
+  debugmessage('barspacing', 'next text begin: %fpt', next_text_begin/2^16)
+  debugmessage('barspacing', 'next notes begin: %fpt', next_notes_begin/2^16)
+  -- useful for comparison with previous version:
+  debugmessage('barspacing', 'next begin difference: %fpt', (next_text_begin-next_notes_begin)/2^16)
+  
+  local new_text_begin, new_notes_begin, end_shift
+  local end_glue = {0, 0, 0}
+  if cur.text.width == 0 then
+    debugmessage('barspacing', 'bar has no text')
+    -- The notes should have at least notebarspace around the notes on either side
+    local notes_req = notes_width + 2*string_to_glue(token.get_macro('gre@space@skip@notebarspace'))[1]
+    debugmessage('barspacing', 'minimum space for notes: %fpt', notes_req/2^16)
+    -- Minimum distance between the previous and next syllable
+    local syllable_req
+    if prev_notes_end < prev_text_end then
+      syllable_req = string_to_glue(token.get_macro('gre@space@skip@interwordspacetext'))[1]
+    else
+      syllable_req = string_to_glue(token.get_macro('gre@space@skip@interwordspacenotes'))[1]
+    end
+    debugmessage('barspacing', 'minimum space for syllable: %fpt', syllable_req/2^16)
+    end_shift = math.max(prev_notes_end + notes_req - next_notes_begin, prev_end + syllable_req - cur_end)
+    debugmessage('barspacing', 'shift end by: %fpt', end_shift/2^16)
+    -- Move the (empty) text as far right as possible so as not to interfere with hyphenation
+    new_text_begin = next_text_begin
+    -- Center notes between previous and next notes
+    new_notes_begin = tex.round((prev_notes_end + next_notes_begin + end_shift - notes_width)/2)
+    debugmessage('barspacing', 'new notes begin: %fpt', new_notes_begin/2^16)
+    -- If notes end earlier than previous text, move notes right (but don't move end of syllable)
+    new_notes_begin = math.max(new_notes_begin, prev_text_end - notes_width)
+    debugmessage('barspacing', 'new notes begin: %fpt', new_notes_begin/2^16)
+    -- If notes begin later than next text, move end of syllable right (rather than move notes left)
+    end_shift = math.max(end_shift, new_notes_begin - next_text_begin)
+    -- The penalty is at the end of the notes (even if the text is longer, probably a bug)
+    new_penalty_pos = new_notes_begin + notes_width
+  else
+    debugmessage('barspacing', 'bar has text')
+    -- The text begins at the beginning of the syllable.
+    -- Bug: If the bar is wider than the notes, it could overlap the preceding notes.
+    new_text_begin = prev_end
+    new_notes_begin = prev_end - text_begin + notes_begin
+    new_penalty_pos = math.max(new_notes_begin + notes_width, prev_end + cur.text.width)
+    local final_skip
+    if text_end < notes_end then
+      if next_notes_begin < next_text_begin then
+        final_skip = string_to_glue(token.get_macro('gre@space@skip@notebarspace'))
+      else
+        final_skip = string_to_glue(token.get_macro('gre@space@skip@textbartextspace'))
+      end
+    else
+      if next_text_begin < next_notes_begin then
+        final_skip = string_to_glue(token.get_macro('gre@space@skip@textbartextspace'))
+      else
+        final_skip = string_to_glue(token.get_macro('gre@space@skip@interwordspacetext'))
+      end
+    end
+    end_shift = glue_add(new_penalty_pos, final_skip)[1] - cur_end
+    end_glue[2], end_glue[3] = final_skip[2], final_skip[3]
+  end
+  
+  -- Compute how much everything should shift by.
+  local text_shift = new_text_begin - text_begin
+  debugmessage('barspacing', 'shift text by: %fpt', text_shift/2^16)
+  local notes_shift = new_notes_begin - notes_begin
+  debugmessage('barspacing', 'shift notes by: %fpt', notes_shift/2^16)
+  local penalty_shift = new_penalty_pos - penalty_pos
+  debugmessage('barspacing', 'shift penalty by: %fpt', penalty_shift/2^16)
+  debugmessage('barspacing', 'shift end by: %fpt', end_shift/2^16)
+
+  -- Apply the shifts.
+  cur.before_text_skip.kern = cur.before_text_skip.kern + text_shift
+  cur.text_notes_skip.kern = cur.text_notes_skip.kern - text_shift + notes_shift
+  cur.after_notes_skip.kern = cur.after_notes_skip.kern - notes_shift + penalty_shift
+  if cur.syllablefinalskip ~= nil and not (next == nil or cur.forced_line_break) then
+    if cur.syllablefinalskip.id == kern then -- possible inside discretionary
+      cur.syllablefinalskip.kern = cur.syllablefinalskip.kern - penalty_shift + end_shift
+    elseif cur.syllablefinalskip.id == glue then
+      cur.syllablefinalskip.width = cur.syllablefinalskip.width - penalty_shift + end_shift
+      cur.syllablefinalskip.stretch, cur.syllablefinalskip.shrink = end_glue[2], end_glue[3]
+    end
+  end
+end
+
 local function syllable_spacing()
   for sid, cur in pairs(syllables) do
     local prev = syllables[cur.prev_sid]
@@ -740,7 +879,7 @@ local function syllable_spacing()
       if gregoriotex.get_if('gre@newbarspacing') then
         bar_syllable_spacing(prev, cur, next)
       else
-        -- to do
+        old_bar_syllable_spacing(prev, cur, next)
       end
     end
   end
