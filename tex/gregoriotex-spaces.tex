@@ -263,7 +263,6 @@
 %%        an alteration
 %%
 %% @uses \gre@dimen@enddifference
-%% @uses \gre@skip@nextbegindifference
 %%
 %% Pseudo-code:
 %%  min_text_dist = same_word ? 0 : space_inter_words
@@ -876,9 +875,6 @@
 % a dimen that will contain the difference between the end of the text and the end of the notes for the previous syllable (if we are in the same word) : positive if notes go further than text. We will use it for space adjustment between syllables of the same word
 \newdimen\gre@dimen@enddifference\relax%
 
-% a dimen that will contain the enddifference of the previous glyph
-\newdimen\gre@dimen@previousenddifference\relax%
-
 % macro to set enddifference (defined above) to \wd\gre@box@syllablenotes - (\wd\gre@box@syllabletext - textaligncenter) - notesaligncenter
 % enddifference will be positive if text go further than the notes, and negative in the other case
 % arguments are :
@@ -886,44 +882,10 @@
 % #2: \wd\gre@box@syllabletext : the total width of the text
 % #3: textaligncenter (defined above)
 % #4: notesaligncenter (defined above too)
-% #5: if we have to set previousenddifference or not
-\def\gre@calculate@enddifference#1#2#3#4#5{%
-  \gre@trace{gre@calculate@enddifference{#1}{#2}{#3}{#4}{#5}}%
-  \ifcase#5\or %
-    \global\gre@dimen@previousenddifference=\the\gre@dimen@enddifference\relax%
-  \fi %
+\def\gre@calculate@enddifference#1#2#3#4{%
+  \gre@trace{gre@calculate@enddifference{#1}{#2}{#3}{#4}}%
   \global\gre@dimen@enddifference=\dimexpr(#1 - #2 + #3 - #4)\relax%
   \relax%
-  \gre@trace@end%
-}%
-
-%nextbegindifference is the begindifference of the next syllable
-\newskip\gre@skip@nextbegindifference\relax%
-
-% macro to set nextbegindifference
-%% 1 : the first letters of the next syllable
-%% 2 : the middle letters of the next syllable
-%% 3 : the end letters of the next syllable
-%% 4 : the type of notes alignment
-%% 5 : alteration type (see \gre@alteration)
-\def\gre@calculate@nextbegindifference#1#2#3#4#5{%
-  \gre@trace{gre@calculate@nextbegindifference{#1}{#2}{#3}{#4}{#5}}%
-  \ifnum\gre@lastoflinecount=1\relax %
-    \global\gre@skip@nextbegindifference=0pt\relax%
-  \else %
-    %to prevent the pollution of the normal values, we stock them into a temp value
-    \gre@dimen@temp@two=\gre@dimen@textaligncenter\relax%
-    \gre@calculate@textaligncenter{#1}{#2}{1}%
-    \gre@dimen@temp@four=\gre@dimen@notesaligncenter\relax%
-    \global\gre@skip@nextbegindifference=-\gre@dimen@textaligncenter\relax%
-    % caution: calculate@nextnotesaligncenter needs a properly set \gre@dimen@textaligncenter
-    % (corresponding to the text align center of the next syllable)
-    \gre@calculate@nextnotesaligncenter{#4}{#5}% idem
-    \global\advance\gre@skip@nextbegindifference by \the\gre@dimen@notesaligncenter\relax%
-    \global\gre@dimen@textaligncenter=\gre@dimen@temp@two %
-    \global\gre@dimen@notesaligncenter=\gre@dimen@temp@four %
-  \fi %
-  \relax %
   \gre@trace@end%
 }%
 
@@ -963,14 +925,12 @@
   \gre@trace@end%
 }%
 
-\newdimen\gre@dimen@adjustedpreviousenddifference% previousenddifference adjusted to account for the presence of a punctum mora at the end of the pervious syllable
 \newskip\gre@skip@punctummorashift% displacement of whole syllable to account for the presence of a punctum mora at the end of the previous syllable
 
 %punctum mora adjustment calculations for bars
 \def\gre@punctummoraadjustment{%
   \gre@trace{gre@punctummoraadjustment}%
   % taking into account the punctum mora shift
-  \global\gre@dimen@adjustedpreviousenddifference=\gre@dimen@previousenddifference %
   % gre@skip@punctummorashift is 0 or the punctum mora shift
   \gre@skip@punctummorashift=0pt\relax %
   \ifgre@lastendswithmora %
@@ -978,16 +938,13 @@
       \ifdim\wd\gre@box@syllabletext=0pt\relax %
         % punctum mora adjustment should occur only for bars with no text
         \gre@get@unkern@aftermora{2}%
-        \advance\gre@dimen@adjustedpreviousenddifference by \gre@skip@punctummorashift %
       \fi %
     \or %
       % punctum mora adjustment only before bars
       \gre@get@unkern@aftermora{2}%
-      \advance\gre@dimen@adjustedpreviousenddifference by \gre@skip@punctummorashift %
     \or\or %
       % punctum mora adjustment always occurs
       \gre@get@unkern@aftermora{2}%
-      \advance\gre@dimen@adjustedpreviousenddifference by \gre@skip@punctummorashift %
     \fi %
   \fi %
   \gre@trace@end%

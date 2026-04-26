@@ -216,16 +216,14 @@ Macro to calculate the distance from the beginning of the text of a syllable to 
   & \texttt{1} & perform this calculation for the next syllable
 \end{argtable}
 
-\macroname{\textbackslash gre@calculate@enddifference}{\#1\#2\#3\#4\#5}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@enddifference}{\#1\#2\#3\#4}{gregoriotex-spaces.tex}
 Calculates the difference between the end of the notes and the end of the syllable text.  Also stores the value for the previous syllable if needed.  This is a time of use calculation.
 
 \begin{argtable}
   \#1 & length & the total width of the notes\\
   \#2 & length & the total width of the syllable text\\
   \#3 & length & the alignment distance for the text (\texttt{textaligncenter})\\
-  \#4 & length & the alignment distance for the notes (\texttt{notesaligncenter})\\
-  \#5 & \texttt{0} & do not save the value for the previous syllable before calculating the new value\\
-  & \texttt{1} & save the value for the previous syllable before calculating the new value
+  \#4 & length & the alignment distance for the notes (\texttt{notesaligncenter})
 \end{argtable}
 
 The formula used is \verb=#1 - #2 + #3 - #4= or (more sensibly) \verb=(#1 - #4) - (#2 - #3)=.  This is also equivalent to \verb=-#4 - \gre@dimen@begindifference + #3=, a fact we take advantage of when calculating the end difference for a bar syllable under the new bar spacing algorithm.
@@ -245,17 +243,6 @@ Rescales all the distances (and \texttt{stafflinefactor}) which are supposed to 
 \begin{argtable}
   \#1 & integer & the factor the distances are currently in\\
   \#2 & integer & the factor the distances are to be put into\\
-\end{argtable}
-
-\macroname{\textbackslash gre@calculate@nextbegindifference}{\#1\#2\#3\#4\#5}{gregoriotex-spaces.tex}
-Macro to calculate \texttt{nextbegindifference}.
-
-\begin{argtable}
-  \#1 & string & the first letters of the next syllable\\
-  \#2 & string & the middle letters of the next syllable (the vowel in Latin, the whole syllable in English)\\
-  \#3 & string & the end letters of the next syllable\\
-  \#4 & integer & the type of notes alignment.  See \Nameref{notesalign}.\\
-  \#5 & integer & the type of alteration.  See \Nameref{alterationtype}.\\
 \end{argtable}
 
 \macroname{\textbackslash gre@strip@pt}{\#1}{gregoriotex.sty \textup{and} gregoriotex.tex}
@@ -646,34 +633,22 @@ Macro to find the alignment center for a group of notes.  The value is the dista
   \#1 & Note alignment type & See \ref{notesalign}\\
 \end{argtable}
 
-\macroname{\textbackslash gre@calculate@nextnotesaligncenter}{\#1\#2}{gregoriotex-syllable.tex}
-Same as previous, but for the next syllable.
+\macroname{\textbackslash gre@calculate@simplenotesaligncenter}{\#1}{gregoriotex-syllable.tex}
+Workhorse function behind \verb=\gre@calculate@notesaligncenter=.
 
 \begin{argtable}
   \#1 & Note alignment type & See \ref{notesalign}\\
-  \#1 & Alteration type & See \ref{alterationtype}\\
-\end{argtable}
-
-\macroname{\textbackslash gre@calculate@simplenotesaligncenter}{\#1\#2}{gregoriotex-syllable.tex}
-Workhorse function behind \verb=\gre@calculate@notesaligncenter= and\\ \verb=\gre@calculate@nextnotesaligncenter=.
-
-\begin{argtable}
-  \#1 & Note alignment type & See \ref{notesalign}\\
-  \#2 & \texttt{0} & this is for the current syllable\\
-  & \texttt{1} & this is for the next syllable\\
 \end{argtable}
 
 \macroname{\textbackslash gre@gregoriofontname}{}{gregoriotex-main.tex}
 Macro which stores the name of the currently selected font for the neumes.
 
-\macroname{\textbackslash gre@handleclivisspecialalignment}{\#1\#2\#3}{gregoriotex-syllable.tex}
+\macroname{\textbackslash gre@handleclivisspecialalignment}{\#1\#2}{gregoriotex-syllable.tex}
 Macro for aligning clivis syllables according to the flag \verb=\gre@clivisalignment=.
 
 \begin{argtable}
   \#1 & Gregorio\TeX\ glyph & Glyph to use when aligning clivis on its center\\
   \#2 & Gregorio\TeX\ glyph & Glyph to use when aligning clivis on the center of the first punctum\\
-  \#3 &  \texttt{0} & this is for the current syllable\\
-  & \texttt{1} & this is for the next syllable\\
 \end{argtable}
 
 \macroname{\textbackslash gre@hepisorline}{\#1\#2\#3\#4\#5\#6\#7}{gregoriotex-signs.tex}
@@ -1371,7 +1346,7 @@ Macro to typeset a punctum mora.
 Macro used by \verb=\grechangecavumglyph= to handle the optional arguments.
 
 \macroname{\textbackslash gre@punctummoraadjustment}{}{gregoriotex-spaces.tex}
-Macro to make adjustments to cursor position and \verb=previousenddifference= based on the presence of a punctum mora at the end of the last syllable.
+Macro to make adjustments to cursor position based on the presence of a punctum mora at the end of the last syllable.
 
 \macroname{\textbackslash gre@evaluatenextsyllable}{\#1}{gregoriotex-syllable.tex}
 Evaluates its first argument as an advance computation against the next syllable.  Twiddles the \verb=ifgre@evaluatingnextsyllable= flag around evaluation of the macro argument.
@@ -2310,19 +2285,8 @@ Distance from the end of the notes to the end of the text for the previous sylla
 
 For regular syllables and bar syllables using the old bar spacing algorithm this is calculated using \verb=\gre@calculate@enddifference=.  For bar syllables using the new bar spacing algorithm the calculation is \texttt{\small-\pmac{wd}\pmac{gre@box@syllabletext} - \pmac{gre@dimen@begindifference} + \pmac{wd}\pmac{gre@box@syllablenotes}}
 
-\macroname{\textbackslash gre@dimen@previousenddifference}{}{gregoriotex-spaces.tex}
-Stored value of enddifference prior to the current one.
-
-\macroname{\textbackslash gre@dimen@adjustedpreviousenddifference}{}{gregoriotex-spaces.tex}
-Stored value of enddifference prior to the current one after adjusting for the possibility of a punctum mora at the end of the last syllable (and the setting of \verb=\gre@count@aftermorashift=.
-
-\macroname{\textbackslash gre@skip@nextbegindifference}{}{gregoriotex-spaces.tex}
-The difference between the start of the notes and the start of the text for the next syllable.  Positive when when text begins first, negative in other case.
-
 \macroname{\textbackslash gre@dimen@begindifference}{}{gregoriotex-spaces.tex}
 The difference between the start of the notes and the start of the text for the current syllable.  Positive when when text begins first, negative in other case.  This means that \verb=\kern\gre@dimen@begindifference= will take you from the start of the notes to the start of the text.
-
-For regular syllables and bar syllables using the old bar spacing algorithm this is calculated as \texttt{\small\pmac{gre@dimen@notesaligncenter} - \pmac{gre@dimen@textaligncenter}}.  For bar syllables using the new bar spacing algorithm the calculation is \linebreak\texttt{\small-\pmac{wd}\pmac{gre@box@syllablenotes}/2 - \pmac{gre@dimen@bar@shift} - \pmac{gre@skip@bar@allocation} - \pmac{gre@dimen@adjustedpreviousenddifference} + \pmac{gre@skip@text@allocation} + \pmac{gre@dimen@text@shift} - \pmac{wd}\pmac{gre@box@syllabletext}/2}.
 
 \macroname{\textbackslash gre@dimen@lastglyphwidth}{}{gregoriotex-spaces.tex}
 The width of the last glyph.
