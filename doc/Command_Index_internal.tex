@@ -1345,9 +1345,6 @@ Macro to typeset a punctum mora.
 \macroname{\textbackslash gre@changecavumhole}{\#1[\#2][\#3]}{gregoriotex-main.tex}
 Macro used by \verb=\grechangecavumglyph= to handle the optional arguments.
 
-\macroname{\textbackslash gre@punctummoraadjustment}{}{gregoriotex-spaces.tex}
-Macro to make adjustments to cursor position based on the presence of a punctum mora at the end of the last syllable.
-
 \macroname{\textbackslash gre@evaluatenextsyllable}{\#1}{gregoriotex-syllable.tex}
 Evaluates its first argument as an advance computation against the next syllable.  Twiddles the \verb=ifgre@evaluatingnextsyllable= flag around evaluation of the macro argument.
 
@@ -1818,9 +1815,6 @@ Boolean which indicates whether the current note is on a line or not (used to ad
 
 \macroname{\textbackslash ifgre@lastendswithmora}{}{gregoriotex-syllable.tex}
 Boolean which indicates if the previous syllable ends with a punctum mora (set glyph by glyph, do not rely on it when typesetting glyph).
-
-\macroname{\textbackslash ifgre@thisendswithmora}{}{gregoriotex-syllable.tex}
-Same as previous one but for current syllable.
 
 \macroname{\textbackslash ifgre@ledgerline@above}{}{gregoriotex-spaces.tex}
 Boolean which indicates whether the system should act as if there is a ledger line above the staff.

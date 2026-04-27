@@ -313,14 +313,6 @@
     \else %
       \gre@skip@minNotesDistance=\gre@space@dimen@intersyllablespacenotes\relax%
     \fi %
-    \ifnum\gre@count@shiftaftermora>3\relax %
-      \ifgre@thisendswithmora %
-        % last syllable ends by a punctum mora, we want to ignore it.
-        % this sets the distance to shift into \gre@skip@temp@four:
-        \gre@get@unkern@aftermora{1}%
-        \advance\gre@skip@minNotesDistance by \gre@skip@punctummorashift %
-      \fi %
-    \fi %
   \or %
     \ifgre@newbarspacing %
       \gre@skip@minNotesDistance=0pt\relax%
@@ -926,29 +918,6 @@
 }%
 
 \newskip\gre@skip@punctummorashift% displacement of whole syllable to account for the presence of a punctum mora at the end of the previous syllable
-
-%punctum mora adjustment calculations for bars
-\def\gre@punctummoraadjustment{%
-  \gre@trace{gre@punctummoraadjustment}%
-  % taking into account the punctum mora shift
-  % gre@skip@punctummorashift is 0 or the punctum mora shift
-  \gre@skip@punctummorashift=0pt\relax %
-  \ifgre@lastendswithmora %
-    \ifcase\gre@count@shiftaftermora\or\or %
-      \ifdim\wd\gre@box@syllabletext=0pt\relax %
-        % punctum mora adjustment should occur only for bars with no text
-        \gre@get@unkern@aftermora{2}%
-      \fi %
-    \or %
-      % punctum mora adjustment only before bars
-      \gre@get@unkern@aftermora{2}%
-    \or\or %
-      % punctum mora adjustment always occurs
-      \gre@get@unkern@aftermora{2}%
-    \fi %
-  \fi %
-  \gre@trace@end%
-}%
 
 %%%%%%%%%%%%%%%%%%%
 %% other spaces calculated elsewhere

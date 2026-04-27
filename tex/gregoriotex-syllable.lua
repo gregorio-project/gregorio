@@ -45,6 +45,9 @@ local part_lyrics = 4
 local part_notes = 10
 local part_penalty = 11
 
+local note_type_attr = luatexbase.attributes['gre@attr@note@type']
+local note_type_mora = 1
+
 local alteration_type_attr = luatexbase.attributes['gre@attr@alteration@type']
 
 local skip_type_attr = luatexbase.attributes['gre@attr@skip@type']
@@ -233,8 +236,6 @@ local function save_min_distance(part, skip)
     syllables[sid].min_notes_distance = {g.width, g.stretch, g.shrink}
   elseif part == 'text' then
     syllables[sid].min_text_distance = {g.width, g.stretch, g.shrink}
-  elseif part == 'mora_shift' then
-    syllables[sid].mora_shift = {g.width, g.stretch, g.shrink}
   end
 end
 
@@ -325,6 +326,64 @@ local function scan_syllables(head)
   visit(head)
 end
 
+--- Calculate how much the beginning of a syllable's notes should be
+--- effectively moved right by when it starts with an alteration.
+--- @param cur node The syllable to compute the shift for.
+local function calculate_alteration_shift(cur)
+  -- Skip over kerns and zero-width boxes (which are used both for debugging and for holes).
+  local n = cur.first_note
+  while (n ~= nil and has_attribute(n, part_attr, part_attr_notes) and
+         n.id ~= hlist or n.id == hlist and n.width == 0) do
+    n = n.next
+  end
+  if has_attribute(n, alteration_type_attr) then
+    local adj = tex.sp(token.get_macro('gre@space@dimen@alterationadjustmentbar'))
+    debugmessage('syllablespacing', 'alteration adjustment for syllable %d: %fpt', cur.sid, adj/2^16)
+    cur.alteration_shift = adj
+  end
+end
+
+--- Calculate how much the end of a syllable's notes should be effectively moved left by
+--- when it ends with a punctum mora.
+--- @param cur node The syllable to compute the shift for.
+--- @param next node The next syllable.
+local function calculate_punctum_mora_shift(cur, next)
+  debugmessage('syllablespacing', 'calculating punctum mora shift for syllable %d', cur.sid)
+  -- Skip various things at the end of the notes. Zero-width boxes are used during debugging.
+  local n = cur.last_note
+  while has_attribute(n, part_attr, part_notes) and (n.id == hlist and n.width == 0 or n.id == penalty or n.id == local_par) do
+    n = n.prev
+  end
+  -- Look for final punctum mora and measure it (including preceding spacebeforesigns).
+  local has_mora = false
+  while has_attribute(n, note_type_attr, note_type_mora) do
+    n = n.prev
+    has_mora = true
+  end
+  if has_mora then
+    local mora_shift = dimen_to_glue(0)
+    local mora_width = node.dimensions(n.next, cur.last_note.next)
+    debugmessage('syllablespacing', 'mora width: %fpt', mora_width/2^16)
+    local code = cur.settings.shiftaftermora
+    if next ~= nil and (next.type == 'bar' or next.type == 'clefchange') then
+      if (code == 2 and next.text.width == 0 -- barsnotextonly
+          or code == 3 -- barsonly
+          or code == 5 -- always
+      ) then
+        mora_shift = glue_add(-mora_width, cur.settings.moraadjustmentbar)
+        debugmessage('syllablespacing', 'mora adjustment before bar: %fpt', cur.settings.moraadjustmentbar[1]/2^16)
+      end
+    elseif next ~= nil and next.type == 'note' then
+      if code > 3 then
+        mora_shift = glue_add(-mora_width, cur.settings.moraadjustment)
+        debugmessage('syllablespacing', 'mora adjustment: %fpt', cur.settings.moraadjustment[1]/2^16)
+      end
+    end
+    debugmessage('syllablespacing', 'punctum mora shift: %fpt', mora_shift[1]/2^16)
+    cur.mora_shift = mora_shift
+  end
+end
+
 --- Determine the width of a \GreSyllable's syllable-final skip, which is
 --- the last skip before the start of the next syllable.
 --- @param cur table The current syllable.
@@ -348,6 +407,14 @@ local function adjust_syllablefinalskip(cur, next)
   )
   debugmessage('syllablespacing', '  notes distance = %s', glue_to_string(notes_distance))
   local min_notes_distance = cur.min_notes_distance
+  if (
+    next.type == 'note' and -- not before bar syllable, because they have their own mora shift
+    cur.mora_shift ~= nil and
+    next.alteration_shift == nil -- not if next starts with alteration
+  )
+  then
+    min_notes_distance = glue_add(min_notes_distance, cur.mora_shift)
+  end
   debugmessage('syllablespacing', '  min notes distance = %s', glue_to_string(min_notes_distance))
   local min_notes_shift = glue_add(min_notes_distance, -notes_distance)
   debugmessage('syllablespacing', '  min notes shift = %s', glue_to_string(min_notes_shift))
@@ -502,12 +569,12 @@ local function get_prev_ends(prev, cur)
     end
     prev_notes_end = -node.dimensions(prev.last_note.next, prev.last.next)
     -- Adjust if the previous note has a punctum mora.
-    if cur.mora_shift[1] ~= 0 then
+    if prev.mora_shift ~= nil then
       local save = math.max(prev_text_end, prev_notes_end)
-      prev_notes_end = prev_notes_end + cur.mora_shift[1]
+      prev_notes_end = prev_notes_end + prev.mora_shift[1]
       -- Recompute end of previous syllable as if the punctum mora were not there, but the syllablefinalskip (if any) is
       prev_end = math.max(prev_text_end, prev_notes_end) - save
-      debugmessage('barspacing', 'punctum mora adjustment: %fpt', cur.mora_shift[1]/2^16)
+      debugmessage('barspacing', 'punctum mora adjustment: %fpt', prev.mora_shift[1]/2^16)
     end
   end
   debugmessage('barspacing', 'previous text end: %fpt', prev_text_end/2^16)
@@ -613,7 +680,7 @@ local function bar_syllable_spacing(prev, cur, next)
     next_text_begin = cur_end + node.dimensions(next.first, next.text) 
     next_notes_begin = cur_end + node.dimensions(next.first, next.first_note)
     local n = next.first_note
-    -- Skip over kerns and zero-width boxes (holes).
+    -- Skip over kerns and zero-width boxes (which are used both for debugging and for holes).
     while (n ~= nil and has_attribute(n, part_attr, part_attr_notes) and
            n.id ~= hlist or n.id == hlist and n.width == 0) do
       n = n.next
@@ -623,12 +690,9 @@ local function bar_syllable_spacing(prev, cur, next)
       next_notes_begin = next_notes_begin + node.dimensions(next.first_note, n)
     end
     -- Adjust if the next note has an alteration.
-    if cur.type == 'bar' then -- don't adjust if cur.type == 'clefchange'
-      if has_attribute(n, alteration_type_attr) then
-        local adj = tex.sp(token.get_macro('gre@space@dimen@alterationadjustmentbar'))
-        next_notes_begin = next_notes_begin + adj
-        debugmessage('barspacing', 'alteration adjustment: %fpt', adj/2^16)
-      end
+    if cur.type == 'bar' and next.alteration_shift ~= nil then -- but not if cur.type == 'clefchange'
+      debugmessage('barspacing', 'alteration shift: %fpt', next.alteration_shift/2^16)
+      next_notes_begin = next_notes_begin + next.alteration_shift
     end
   end
   debugmessage('barspacing', 'next text begin: %fpt', next_text_begin/2^16)
@@ -793,7 +857,7 @@ local function old_bar_syllable_spacing(prev, cur, next)
   debugmessage('barspacing', 'next begin difference: %fpt', (next_text_begin-next_notes_begin)/2^16)
   
   local new_text_begin, new_notes_begin, end_shift
-  local end_glue = {0, 0, 0}
+  local end_glue = dimen_to_glue(0)
   if cur.text.width == 0 then
     debugmessage('barspacing', 'bar has no text')
     -- The notes should have at least notebarspace around the notes on either side
@@ -873,6 +937,8 @@ local function syllable_spacing()
   for sid, cur in pairs(syllables) do
     local prev = syllables[cur.prev_sid]
     local next = syllables[cur.next_sid]
+    if next ~= nil then calculate_alteration_shift(next) end
+    calculate_punctum_mora_shift(cur, next)
     if cur.type == 'note' then
       note_syllable_spacing(cur, next)
     elseif cur.type == 'bar' or cur.type == 'clefchange' then
@@ -897,7 +963,9 @@ local function syllable_clearing()
       if prev.last_note and cur.text then
         local overlap = -(node.dimensions(prev.last_note.next, prev.last.next) +
                           node.dimensions(cur.first, cur.text))
-        if prev.mora_shift then overlap = overlap + prev.mora_shift end
+        if cur.type == 'bar' and prev.mora_shift then
+          overlap = overlap + prev.mora_shift[1]
+        end
         debugmessage('clear', ' text-note overlap %fpt', overlap/2^16)
         kern = math.max(kern, overlap)
       end

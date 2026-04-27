@@ -32,10 +32,6 @@
 \newif\ifgre@lastendswithmora %
 \gre@lastendswithmorafalse %
 
-% if this syllable ends with a punctum mora
-\newif\ifgre@thisendswithmora %
-\gre@thisendswithmorafalse %
-
 % a macro called each time we start something looking like a glyph, but not mandatorily called through the \GreGlyph macro, for example bars, flats, etc.
 
 \newcount\gre@generate@pointandclick\gre@generate@pointandclick=0\relax %
@@ -532,17 +528,7 @@
   \gre@debugmsg{spacing}{Width of notes: \the\wd\gre@box@syllablenotes}%
   \global\gre@boxingfalse%
   \global\gre@firstglyphtrue%
-  % now gre@lastendswithmora is true if this syllable ends with a
-  % punctum mora, but we still want to keep gre@lastendswithmora if we
-  % are on a bar, so:
-  %   - we set gre@thisendswithmora to gre@lastendswithmora
-  %   - when syllables will be really typeset, they will set gre@lastendswithmora
-  %       again
-  \ifgre@lastendswithmora %
-    \gre@thisendswithmoratrue %
-  \else %
-    \gre@thisendswithmorafalse %
-  \fi %
+  % now gre@lastendswithmora is true if this syllable ends with a punctum mora
   \let\ifgre@lastendswithmora\ifgre@saved@prenotes@lastendswithmora%
   \gre@lastoflinecount=\gre@saved@prenotes@lastoflinecount
   \gre@skip@bar@lastskip=\gre@saved@prenotes@bar@lastskip
@@ -1318,9 +1304,6 @@
   \gre@unsetfixednexttextformat %
   \gre@debugmsg{barspacing}{begindifference: \the\gre@dimen@begindifference}%
   \gre@debugmsg{barspacing}{enddifference: \the\gre@dimen@enddifference}%
-  \gre@punctummoraadjustment % sets \gre@skip@punctummorashift and inserts kern
-  \gre@debugmsg{barspacing}{Saving punctum mora shift: \the\gre@skip@punctummorashift}%
-  \directlua{gregoriotex.save_min_distance('mora_shift', 'gre@skip@punctummorashift')}%
   \ifgre@newbarspacing%
     %
     % New bar spacing algorithm
@@ -1493,6 +1476,11 @@
       -\wd\gre@box@syllablenotes)}% back up from end of bar line to beginning
     \GreNoBreak
     \gre@attr@part=10
+    % In case there are no notes, ensure that there is at least one
+    % box with the attribute.
+    \ifdim\wd\gre@box@syllablenotes=0pt
+      \hbox{}%
+    \fi
     \ifgre@shownotes
       #9%
     \else
