@@ -1000,9 +1000,9 @@ local function add_eol_hyphen(line)
     end
   end
 
-  if last_text and
+  if last_text and last_text_with_glyph and
     (has_attribute(last_text, dash_attr, dash_maybedash) or has_attribute(last_text, dash_attr, dash_forced)) then
-    local sid = has_attribute(last_text, syllable_id_attr)
+    local sid = has_attribute(last_text_with_glyph, syllable_id_attr)
     gregoriotex.add_hyphen(gregoriotex.syllables[sid])
   end
 end

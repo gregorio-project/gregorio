@@ -431,6 +431,7 @@ local function syllable_rewriting()
           syllables[sid].raw_text = nil
           head, tail = concat_list(head, tail, n, node.tail(n))
         end
+        syllables[start].raw_text = node.copy_list(head) -- in case it needs a hyphen
         head = shaping(head)
         for sid = start, stop do
           -- Rewrite text, inserting kerns to preserve widths
