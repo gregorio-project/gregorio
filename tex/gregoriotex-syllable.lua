@@ -41,7 +41,9 @@ local part_notes = 10
 
 local skip_type_attr = luatexbase.attributes['gre@attr@skip@type']
 local skip_type_syllablefinal = 1
-local skip_type_barspacing1 = 2
+local skip_type_before_text = 2
+local skip_type_text_notes = 3
+local skip_type_after_notes = 4
 local skip_type_clearsyllable = 5
 
 local dash_attr = luatexbase.attributes['gre@attr@dash']
@@ -161,12 +163,12 @@ gregoriotex.syllables = syllables
 
 --- Save information about syllables that is impossible or
 --- inconvenient to recover from node attributes.
-local function save_syllable_info()
+local function save_syllable_info(type)
   local sid = tex.getattribute(syllable_id_attr)
   if syllables[sid] == nil then syllables[sid] = {} end
   syllables[sid].sid = sid
+  syllables[sid].type = type
   syllables[sid].font = font.current()
-  log('saving font for syllable %s', sid)
 end
 
 --- Save syllable text before ligaturing and kerning happens. This
@@ -238,10 +240,14 @@ local function scan_syllables(head)
               syllables[sid].first_note = n
             end
             syllables[sid].last_note = n
+          elseif skip_type == skip_type_before_test then
+            syllables[sid].before_test_skip = n
+          elseif skip_type == skip_type_text_notes then
+            syllables[sid].text_notes_skip = n
+          elseif skip_type == skip_type_after_notes then
+            syllables[sid].after_notes_skip = n
           elseif skip_type == skip_type_syllablefinal then
             syllables[sid].syllablefinalskip = n
-          elseif skip_type == skip_type_barspacing1 then
-            syllables[sid].barspacing1 = n
           elseif skip_type == skip_type_clearsyllable then
             syllables[sid].clearsyllable = n
           end
@@ -307,12 +313,8 @@ local function add_hyphen(cur)
   -- Mark text as having a hyphen
   node.set_attribute(cur.text, dash_attr, dash_hasdash)
 
-  -- The text node is immediately followed by a kern whose size
-  -- is the text width. To keep the text and notes aligned, we
-  -- need to update this kern.
-  local k = cur.text.next
-  if k.id ~= kern then err('expected kern to follow syllable text') end
-  k.kern = k.kern - width_change
+  -- To keep the text and notes aligned, update the kern between text and notes.
+  cur.text_notes_skip.kern = cur.text_notes_skip.kern - width_change
 
   -- We also need to adjust the kern after the notes that moves
   -- to the right edge of the syllable. If this syllable ends up
@@ -339,7 +341,8 @@ local function syllable_spacing()
     -- shouldn't have syllablefinalskip. But (due to a bug, #1724)
     -- if the next syllable is a clef change, it is a bar syllable
     -- and this syllable does have syllablefinalskip; we ignore it.
-    if cur.syllablefinalskip and next ~= nil and not next.barspacing1 then
+    if (cur.type == 'note' and cur.syllablefinalskip ~= nil and
+        next ~= nil and not (next.type == 'bar' and gregoriotex.get_if('gre@newbarspacing'))) then
       adjust_syllablefinalskip(cur, next)
     end
 

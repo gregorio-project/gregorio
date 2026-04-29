@@ -926,7 +926,7 @@
   \gre@debugmsg{general}{New syllable: \expandafter\unexpanded{#1}}%
   \gre@debugmsg{general}{}%
   \global\advance\gre@attr@syllable@id by 1\relax %
-  \directlua{gregoriotex.save_syllable_info()}%
+  \directlua{gregoriotex.save_syllable_info('note')}%
   \gre@showhyphenafterthissyllablefalse%
   \ifcase#4\ifgre@forcehyphen%
     \gre@debugmsg{hyphen}{Forcing hyphen}%
@@ -1075,10 +1075,8 @@
     \gre@dotranslationcenterend %
     \gre@mustdotranslationcenterendfalse%
   \fi %
-  \gre@skip@temp@one = -\wd\gre@box@syllabletext %
-  \kern\gre@skip@temp@one%
-  \gre@skip@temp@one = -\gre@dimen@begindifference\relax%
-  \kern\gre@skip@temp@one %
+  {\gre@attr@skip@type=3
+  \kern\dimexpr-\wd\gre@box@syllabletext-\gre@dimen@begindifference}%
   % here we need to unset \gre@attr@dash for the typesetting of notes
   \unsetattribute{\gre@attr@dash}%
   \gre@attr@part=10
@@ -1294,7 +1292,7 @@
   \gre@debugmsg{general}{New bar syllable}%
   \gre@debugmsg{general}{}%
   \global\advance\gre@attr@syllable@id by 1\relax %
-  \directlua{gregoriotex.save_syllable_info()}%
+  \directlua{gregoriotex.save_syllable_info('bar')}%
   \gre@possibleluahyphenafterthissyllablefalse %
   \gre@showhyphenafterthissyllablefalse %
   % the algorithm of this function is *extremely* complex, and has been much painful to write... good luck to understand.
@@ -1369,13 +1367,12 @@
     \fi%
     \GreNoBreak %
     %move to the beginning of the text
-    \gre@attr@skip@type=2
+    {\gre@attr@skip@type=2
     \gre@hskip\glueexpr(\gre@skip@bar@allocation/2% right from end of previous notes to nominal middle of bar line
       +\gre@dimen@bar@shift% from nominal middle of bar line to actual middle
       -\wd\gre@box@syllablenotes/2% back up to beginning of bar line
       +\gre@dimen@begindifference% from beginning of bar line to beginning of text
-      +\gre@space@skip@bar@rubber)\relax % the rubber component
-    \unsetattribute{\gre@attr@skip@type}%
+      +\gre@space@skip@bar@rubber)}% the rubber component
     \GreNoBreak %
     % all that extra stuff (translations and the like)
     #8%
@@ -1390,10 +1387,9 @@
       \gre@mustdotranslationcenterendfalse%
     \fi %
     %move back to the beginning of the bar line
-    \gre@attr@skip@type=2
+    {\gre@attr@skip@type=3
     \kern\dimexpr(\gre@dimen@enddifference% move from end of text to end of bar line
-      -\wd\gre@box@syllablenotes)\relax % back up from end of bar line to beginning
-    \unsetattribute{\gre@attr@skip@type}%
+      -\wd\gre@box@syllablenotes)}% back up from end of bar line to beginning
     \GreNoBreak%
     \gre@attr@part=10
     \ifgre@shownotes%
@@ -1428,11 +1424,14 @@
     \global\let\gre@newlinecommon\gre@saved@prelinedelay@newlinecommon %
     \GreNoBreak%
     % get into position to place the penalty
+    {\gre@attr@skip@type=4
     \ifdim\gre@dimen@enddifference < 0pt\relax%
       % the text extends past the notes, so we need to get to the end of the text
       \kern-\gre@dimen@enddifference%
-      \GreNoBreak%
-    \fi%
+    \else
+      \kern0pt
+    \fi}%
+    \GreNoBreak
     \ifgre@eolshiftsenabled%
       \ifgre@endofscore%
         \kern\glueexpr(-\gre@skip@bar@lastskip)\relax%
@@ -1477,10 +1476,11 @@
       % adjustment for alterations:
       \kern-\gre@skip@alterationshift %
       %move to the beginning of the notes of the next syllable
+      {\gre@attr@skip@type=1
       \gre@hskip\glueexpr(-\wd\gre@box@syllablenotes/2% back up to middle of notes
         -\gre@dimen@bar@shift% go back from actual middle to nominal middle of bar line
         +\gre@skip@bar@allocation/2% go from nominal middle to the start of the next notes
-        +\gre@space@skip@bar@rubber)\relax % the rubber component
+        +\gre@space@skip@bar@rubber)}% the rubber component
       \ifdim\gre@skip@nextbegindifference < 0pt\relax%
         %we need to move back to where the text for the next syllable should start
         \GreNoBreak %

@@ -415,10 +415,10 @@ local function dump_nodes_helper(head, indent)
     if node.subtypes(n.id) ~= nil then
       subtype = node.subtypes(n.id)[n.subtype]
     end
-    local attrs = format("syllable=%s,part=%s,dash=%s",
+    local attrs = format("syllable=%s,part=%s,skip=%s",
                          has_attribute(n, syllable_id_attr),
                          has_attribute(n, part_attr),
-                         has_attribute(n, dash_attr)
+                         has_attribute(n, skip_type_attr)
     )
     if n.id == hlist or n.id == vlist then
       log(dots .. "%s [%s] width=%.2fpt height=%.2fpt depth=%.2fpt shift=%.2fpt {%s}", type, subtype, n.width/2^16, n.height/2^16, n.depth/2^16, n.shift/2^16, attrs)
