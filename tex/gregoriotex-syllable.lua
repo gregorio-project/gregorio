@@ -120,6 +120,40 @@ local function glue_add(a, b)
   return {a[1]+b[1], a[2]+b[2], a[3]+b[3]}
 end
 
+-- Miscellaneous helper functions
+
+--- Concatenate two node lists.
+--- @param head node The head of the first list.
+--- @param tail node The tail of the first list.
+--- @param newhead node The head of the second list.
+--- @param newtail node The tail of the second list.
+--- @return node The head of the concatenated list.
+--- @return node The tail of the concatenated list.
+local function concat_list(head, tail, newhead, newtail)
+  if head == nil then
+    return newhead, newtail
+  elseif newhead == nil then
+    return head, tail
+  else
+    tail.next = newhead
+    newhead.prev = tail
+    return head, newtail
+  end
+end
+
+--- Apply ligaturing and kerning to a node list.
+--- @param head node The head of the list to be processed.
+--- @return node The head of the processed list.
+local function shaping(head)
+  head = node.ligaturing(head)
+  head = node.kerning(head)
+  -- Under luaotfload, ligaturing and kerning are done inside the following
+  if nodes ~= nil and nodes.simple_font_handler ~= nil then
+    head = nodes.simple_font_handler(head)
+  end
+  return head
+end
+
 -- Table for storing information about syllables that is impossible or
 -- inconvenient to recover from node attributes.
 local syllables = {}
@@ -169,38 +203,6 @@ local function free_syllables()
     node.flush_list(syl.raw_text)
     syllables[sid] = nil
   end
-end
-
---- Concatenate two node lists.
---- @param head node The head of the first list.
---- @param tail node The tail of the first list.
---- @param newhead node The head of the second list.
---- @param newtail node The tail of the second list.
---- @return node The head of the concatenated list.
---- @return node The tail of the concatenated list.
-local function concat_list(head, tail, newhead, newtail)
-  if head == nil then
-    return newhead, newtail
-  elseif newhead == nil then
-    return head, tail
-  else
-    tail.next = newhead
-    newhead.prev = tail
-    return head, newtail
-  end
-end
-
---- Apply ligaturing and kerning to a node list.
---- @param head node The head of the list to be processed.
---- @return node The head of the processed list.
-local function shaping(head)
-  head = node.ligaturing(head)
-  head = node.kerning(head)
-  -- Under luaotfload, ligaturing and kerning are done inside the following
-  if nodes ~= nil and nodes.simple_font_handler ~= nil then
-    head = nodes.simple_font_handler(head)
-  end
-  return head
 end
 
 --- Find nodes corresponding to various parts of syllables and store them in a
