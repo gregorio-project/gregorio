@@ -968,7 +968,11 @@ end
 --- @param head node The list of nodes to be processed.
 --- @return node The processed list of nodes.
 local function pre_linebreak(head)
-  --dump_nodes(head)
+  -- There are some lists that are not scores (e.g., braces) that we
+  -- don't want to process. The current heuristic is to skip the list
+  -- if it has zero width.
+  if node.dimensions(head) == 0 then return head end
+  dump_nodes(head)
   gregoriotex.scan_syllables(head)
   gregoriotex.syllable_spacing()
   gregoriotex.syllable_clearing()

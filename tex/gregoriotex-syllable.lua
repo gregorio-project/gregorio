@@ -215,26 +215,38 @@ local function scan_syllables(head)
   for _, cur in pairs(syllables) do
     cur.first_note = nil
   end
+  local prev_sid
   local function visit(head)
     for n in node.traverse(head) do
-      -- to do: The two syllables in a discretionary are numbered
-      -- differently, meaning that in the output, the syllables are
-      -- not necessarily numbered consecutively.
       if n.id == disc then
+        -- Recurse into all three parts of a discretionary node.
+        local save_prev_sid = prev_sid
         visit(n.pre)
         visit(n.post)
+        prev_sid = save_prev_sid
         visit(n.replace)
       else
         local sid = has_attribute(n, syllable_id_attr)
         local part = has_attribute(n, part_attr)
         local skip_type = has_attribute(n, skip_type_attr)
-        if sid ~= nil then
-          if syllables[sid] == nil then syllables[sid] = {} end
+        if sid ~= nil and syllables[sid] ~= nil then
+          -- Record first and last node
+          if part ~= nil or skip_type ~= nil then
+            if syllables[sid].first == nil then
+              syllables[sid].first = n
+            end
+          end
+          syllables[sid].last = n
           if part == part_lyrics then
             if syllables[sid].text ~= nil then
               err(' syllable %d has more than one text node', sid)
             end
             syllables[sid].text = n
+            -- Since every syllable is guaranteed to have exactly one text node,
+            -- do some other bookkeeping here
+            syllables[sid].prev_sid = prev_sid
+            if prev_sid ~= nil then syllables[prev_sid].next_sid = sid end
+            prev_sid = sid
           elseif part == part_notes then
             if syllables[sid].first_note == nil then
               syllables[sid].first_note = n
@@ -263,14 +275,20 @@ end
 --- @param cur table The current syllable.
 --- @param next table The next syllable.
 local function adjust_syllablefinalskip(cur, next)
-  local text_distance = node.dimensions(cur.text.next, next.text)
+  local text_distance = (
+    node.dimensions(cur.text.next, cur.last.next) +
+    node.dimensions(next.first, next.text)
+  )
   debugmessage('syllablespacing', '  text distance = %s', glue_to_string(text_distance))
   local min_text_distance = cur.min_text_distance
   debugmessage('syllablespacing', '  min text distance = %s', glue_to_string(min_text_distance))
   local min_text_shift = glue_add(min_text_distance, -text_distance)
   debugmessage('syllablespacing', '  min text shift = %s', glue_to_string(min_text_shift))
   
-  local notes_distance = node.dimensions(cur.last_note.next, next.first_note)
+  local notes_distance = (
+    node.dimensions(cur.last_note.next, cur.last.next) +
+    node.dimensions(next.first, next.first_note)
+  )
   debugmessage('syllablespacing', '  notes distance = %s', glue_to_string(notes_distance))
   local min_notes_distance = cur.min_notes_distance
   debugmessage('syllablespacing', '  min notes distance = %s', glue_to_string(min_notes_distance))
@@ -335,7 +353,7 @@ end
 local function syllable_spacing()
   for sid, cur in pairs(syllables) do
     debugmessage('syllablespacing', 'after syllable %d', sid)
-    local next = syllables[sid+1] -- to do: correctly handle discretionaries
+    local next = syllables[cur.next_sid]
     
     -- If the next syllable is a bar syllable, then this syllable
     -- shouldn't have syllablefinalskip. But (due to a bug, #1724)
@@ -350,7 +368,10 @@ local function syllable_spacing()
     -- If there is too much space between text, add a hyphen
     if (cur.text ~= nil and has_attribute(cur.text, dash_attr, dash_maybedash) and
         next ~= nil and next.text ~= nil) then
-      local text_distance = node.dimensions(cur.text.next, next.text)
+      local text_distance = (
+        node.dimensions(cur.text.next, cur.last.next) +
+        node.dimensions(next.first, next.text)
+      )
       local max_distance = tex.sp(token.get_macro('gre@space@dimen@maximumspacewithoutdash'))
       if text_distance > max_distance then needs_hyphen = true end
     end
@@ -374,19 +395,21 @@ end
 --- Clear all syllables that are marked for clearing.
 local function syllable_clearing()
   for sid, cur in pairs(syllables) do
-    local prev = syllables[sid-1]
+    local prev = syllables[cur.prev_sid]
     if cur.clearsyllable and prev then
       debugmessage('clear', 'syllable %d', sid)
       local kern = 0
       -- current text must begin at or after prev notes' end
       if prev.last_note and cur.text then
-        local overlap = -node.dimensions(prev.last_note.next, cur.text)
+        local overlap = -(node.dimensions(prev.last_note.next, prev.last.next) +
+                          node.dimensions(cur.first, cur.text))
         debugmessage('clear', ' text-note overlap %fpt', overlap/2^16)
         kern = math.max(kern, overlap)
       end
       -- current notes must begin at or after prev text's end
       if prev.text and cur.first_note then
-        local overlap = -node.dimensions(prev.text.next, cur.first_note)
+        local overlap = -(node.dimensions(prev.text.next, prev.last.next) +
+                          node.dimensions(cur.first, cur.first_note))
         debugmessage('clear', ' note-text overlap %fpt', overlap/2^16)
         kern = math.max(kern, overlap)
       end
@@ -406,6 +429,9 @@ local function syllable_rewriting()
   while start <= num_syllables do
     -- Find longest run of syllables, starting from start, that have
     -- zero distance between their text boxes.
+    -- Note: It's safe to assume that consecutive syllables are numbered consecutively,
+    -- because we don't rewrite into or out of discretionaries. If this changes, then
+    -- the code below must be updated accordingly.
     if syllables[start].text == nil then
       debugmessage('syllablerewriting', 'syllable %d has no text node', start)
       start = start + 1

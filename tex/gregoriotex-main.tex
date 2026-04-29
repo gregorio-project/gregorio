@@ -1324,6 +1324,7 @@
 \def\gre@endafterbar#1{%
   \gre@trace{gre@endafterbar{#1}}%
   \gre@penalty{\the\gre@space@count@endafterbarpenalty }\relax %
+  {\gre@attr@skip@type=1
   \ifnum#1=1\relax %
     \gre@debugmsg{ifdim}{ enddifference > 0pt}%
     \ifdim\gre@dimen@enddifference > 0 pt\relax%
@@ -1345,7 +1346,7 @@
         \gre@hskip\gre@skip@temp@four %
       \fi %
     \fi %
-  \fi %
+  \fi}%
   %\gre@penalty{\the\gre@space@count@endafterbarpenalty }\relax
   %\global\gre@dimen@enddifference=0pt
   \relax %
