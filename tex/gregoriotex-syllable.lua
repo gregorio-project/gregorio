@@ -354,13 +354,11 @@ local function syllable_spacing()
   for sid, cur in pairs(syllables) do
     debugmessage('syllablespacing', 'after syllable %d', sid)
     local next = syllables[cur.next_sid]
-    
-    -- If the next syllable is a bar syllable, then this syllable
-    -- shouldn't have syllablefinalskip. But (due to a bug, #1724)
-    -- if the next syllable is a clef change, it is a bar syllable
-    -- and this syllable does have syllablefinalskip; we ignore it.
-    if (cur.type == 'note' and cur.syllablefinalskip ~= nil and
-        next ~= nil and not (next.type == 'bar' and gregoriotex.get_if('gre@newbarspacing'))) then
+
+    -- If the next syllable is a clef change without a bar, there is still a
+    -- syllablefinalskip in between. As far as the new bar spacing algorithm is concerned,
+    -- this skip is part of both the text and notes of the current syllable (issue #1724).
+    if (cur.type == 'note' and cur.syllablefinalskip ~= nil and next ~= nil) then
       adjust_syllablefinalskip(cur, next)
     end
 
