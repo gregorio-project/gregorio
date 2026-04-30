@@ -253,7 +253,7 @@ local function scan_syllables(head)
             end
             syllables[sid].last_note = n
           elseif skip_type == skip_type_before_test then
-            syllables[sid].before_test_skip = n
+            syllables[sid].before_text_skip = n
           elseif skip_type == skip_type_text_notes then
             syllables[sid].text_notes_skip = n
           elseif skip_type == skip_type_after_notes then
