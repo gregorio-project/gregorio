@@ -49,7 +49,6 @@ local skip_type_clearsyllable = 5
 local dash_attr = luatexbase.attributes['gre@attr@dash']
 local dash_maybedash = 1
 local dash_hasdash = 2
-local dash_barsyllable = 4
 local dash_forced = 5
 
 -- Functions for manipulating glue, which we just store as a 3-tuple
@@ -444,8 +443,7 @@ local function syllable_rewriting()
         -- don't rewrite across a hyphen
         if has_attribute(syllables[stop].text, dash_attr, dash_hasdash) then break end
         -- if either syllable is a \GreBarSyllable
-        if has_attribute(syllables[stop].text, dash_attr, dash_barsyllable) or
-          has_attribute(syllables[stop+1].text, dash_attr, dash_barsyllable) then break end
+        if not (syllables[stop].type == 'note' and syllables[stop+1].type == 'note') then break end
         -- don't rewrite across a nonzero space
         if node.dimensions(syllables[stop].text.next, syllables[stop+1].text) ~= 0 then break end
         stop = stop + 1
