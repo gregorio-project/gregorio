@@ -19,7 +19,7 @@
 
 -- This file contains Lua functions to support spacing of syllables.
 
--- GREGORIO_VERSION 6.1.0
+-- GREGORIO_VERSION 6.2.0
 
 local err = gregoriotex.module.err
 local warn = gregoriotex.module.warn
