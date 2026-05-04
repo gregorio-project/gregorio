@@ -344,8 +344,7 @@ local function add_hyphen(cur)
   -- adjust_syllablefinalskip do all the work.
 
   -- Bug: if this syllable gets a hyphen and the next syllable is a
-  -- bar (presumably rare in practice, but occurs in the tests), then
-  -- the bar will have the wrong previousenddifference.
+  -- bar, then the bar will have the wrong previousenddifference.
 end
 
 --- Determine the width of all syllables' horizontal spacing.

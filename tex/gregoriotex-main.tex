@@ -44,11 +44,6 @@
 
 %%%%%%%%%%%%%%%
 
-% an attribute to mark everything in the score
-% 1 = in score
-% undefined = not in score
-\newattribute\gre@attr@score
-
 % an attribute to mark various parts of the score
 % 1 = commentary, 2 = stafflines, 3 = initial
 % 4 = lyrics, 5 = translation, 6 = alt, 7 = nabc, 8 = nabc below
@@ -1263,7 +1258,6 @@
   \fi %
   \gre@computespaces%
   \gre@cancelpenalties %
-  \gre@attr@score=1
   \gre@generatelines %
   \noindent%
   \gre@calculate@additionalspaces
@@ -1311,7 +1305,6 @@
   \setbox\gre@box@commentary=\box\voidb@x%
   \directlua{gregoriotex.at_score_end()}%
   \gre@unset@glyph@heights
-  \unsetattribute{\gre@attr@score}%
   \xdef\gre@bolshiftcleftypelocal{\gre@bolshiftcleftypeglobal}%
   \ifnum\gre@count@lastline=0\relax
     \parfillskip=\gre@saved@parfillskip\relax%
