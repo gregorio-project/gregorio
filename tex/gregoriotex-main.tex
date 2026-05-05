@@ -228,7 +228,11 @@
   \ifgre@boxing\else%
     \global\gre@lastoflinecount=2\relax %
     \ifnum#2=0\relax %
-      % we have to repeat the end of syllable shifts here because the manual line breaks will occur before we get to the regular shifting code in \GreSyllable
+      % Place the penalty similarly to how the end-of-syllable penalty
+      % is placed.  However, if the line break occurs mid-syllable,
+      % these kerns as well as the end-of-syllable kerns will be
+      % incorrect because they use the enddifference of the whole
+      % syllable (issue #1738).
       \ifdim\gre@dimen@enddifference <0pt\relax%
         %% important, else we are not really at the end of the syllable
         \kern -\gre@dimen@enddifference\relax%
@@ -257,12 +261,11 @@
         \hfill
       \fi
       \gre@penalty{-10001}%
-      % Above, we emitted kerns of -enddifference and -eolshift early,
-      % and they will be emitted again later in \GreSyllable. The
-      % second set of kerns has no effect because they are at the
-      % beginning of a line. But in order that Lua pre_linebreak can
-      % measure distances accurately, we emit a third set of kerns to
-      % cancel out the second one.
+      % Having placed the penalty, we now return to where we were
+      % before. Because the penalty is guaranteed to cause a line
+      % break, these kerns will be discarded because they are at the
+      % beginning of a line. But we do this so that Lua pre_linebreak
+      % can measure distances accurately.
       \ifdim\gre@dimen@enddifference<0pt
         \kern \gre@dimen@enddifference
       \fi
