@@ -32,6 +32,7 @@ local kern = node.id('kern')
 local temp = node.id('temp')
 local disc = node.id('disc')
 local glyph = node.id('glyph')
+local whatsit = node.id('whatsit')
 
 local syllable_id_attr = luatexbase.attributes['gre@attr@syllable@id']
 
@@ -123,21 +124,26 @@ end
 
 -- Miscellaneous helper functions
 
---- Concatenate two node lists.
---- @param head node The head of the first list.
---- @param tail node The tail of the first list.
---- @param newhead node The head of the second list.
---- @param newtail node The tail of the second list.
---- @return node The head of the concatenated list.
---- @return node The tail of the concatenated list.
-local function concat_list(head, tail, newhead, newtail)
+--- Insert one node list into another.
+--- @param head node The head of the list to insert into.
+--- @param where node The node after which newhead will be inserted.
+--- @param newhead node The head of the list to insert.
+--- @param newtail node The tail of the list to insert.
+--- @return node The head of the new list.
+--- @return node The new insertion point.
+local function insert_list_after(head, where, newhead, newtail)
   if head == nil then
     return newhead, newtail
   elseif newhead == nil then
-    return head, tail
+    return head, where
   else
-    tail.next = newhead
-    newhead.prev = tail
+    local rest = where.next
+    where.next = newhead
+    newhead.prev = where
+    if rest ~= nil then
+      newtail.next = rest
+      rest.prev = newtail
+    end
     return head, newtail
   end
 end
@@ -161,7 +167,7 @@ local syllables = {}
 gregoriotex.syllables = syllables
 
 --- Return the data structure for the current syllable.
---- @return node The syllable.
+--- @return table The syllable.
 local function current_syllable()
   local sid = tex.getattribute(syllable_id_attr)
   if syllables[sid] == nil then syllables[sid] = {} end
@@ -313,6 +319,27 @@ local function adjust_syllablefinalskip(cur, next)
   node.setglue(cur.syllablefinalskip, table.unpack(syllablefinalskip))
 end
 
+--- Append material to the end of a syllable's raw_text.
+--- @param cur table The current syllable.
+--- @param head node The material to append.
+local function add_to_raw_text(cur, head)
+  -- Both cur.raw_text and head may be surrounded by markers (for
+  -- point-and-click links). To allow ligaturing and kerning to
+  -- occur, we need to discard head's markers and insert before
+  -- cur.raw_text's closing marker.
+  
+  local last = cur.raw_text and node.tail(cur.raw_text)
+  local tail = head and node.tail(head)
+  if last ~= nil and last.id == whatsit then last = last.prev end
+  if head ~= nil and head.id == whatsit then head = node.free(head) end
+  if tail ~= nil and tail.id == whatsit then
+    local del = tail
+    tail = tail.prev
+    node.free(del)
+  end
+  cur.raw_text = insert_list_after(cur.raw_text, last, head, tail)
+end
+
 --- Add a hyphen to the end of a syllable's text.
 --- @param cur table The current syllable.
 local function add_hyphen(cur)
@@ -320,10 +347,9 @@ local function add_hyphen(cur)
   local g = node.new(glyph)
   g.font = cur.font
   g.char = gregoriotex.hyphen
+  
   -- Find last glyph (because the last node may be a marker)
-  local last = node.tail(cur.raw_text)
-  while last ~= nil and last.id ~= glyph do last = last.prev end
-  cur.raw_text = node.insert_after(cur.raw_text, last, g)
+  add_to_raw_text(cur, g)
   
   -- Replace actual syllable text
   local old_width = cur.text.width
@@ -456,15 +482,13 @@ local function syllable_rewriting()
       -- Concatenate syllable text boxes into one box.
       if start < stop then
         debugmessage('syllablerewriting', 'merge syllables %d-%d', start, stop)
-        local head, tail
-        for sid = start, stop do
+        for sid = start+1, stop do
           -- Extend new text
           local n = syllables[sid].raw_text
           syllables[sid].raw_text = nil
-          head, tail = concat_list(head, tail, n, node.tail(n))
+          add_to_raw_text(syllables[start], n, node.tail(n))
         end
-        syllables[start].raw_text = node.copy_list(head) -- in case it needs a hyphen
-        head = shaping(head)
+        local head = shaping(node.copy_list(syllables[start].raw_text))
         for sid = start, stop do
           -- Rewrite text, inserting kerns to preserve widths
           local del = syllables[sid].text.head
@@ -475,7 +499,7 @@ local function syllable_rewriting()
           if sid == start then
             syllables[sid].text.head = head
             kern.kern = kern.kern - node.dimensions(head)
-            concat_list(head, tail, kern)
+            syllables[sid].text.head = node.insert_after(head, tail, kern)
           else
             syllables[sid].text.head = kern
             syllables[sid].is_merged = true
