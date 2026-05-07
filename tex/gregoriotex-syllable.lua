@@ -46,7 +46,7 @@ local skip_type_text_notes = 3
 local skip_type_after_notes = 4
 local skip_type_clearsyllable = 5
 
-local dash_attr = luatexbase.attributes['gre@attr@dash']
+--- Possible values of syllables[sid].dash
 local dash_maybedash = 1
 local dash_hasdash = 2
 local dash_forced = 5
@@ -160,8 +160,17 @@ end
 local syllables = {}
 gregoriotex.syllables = syllables
 
+--- Return the data structure for the current syllable.
+--- @return node The syllable.
+local function current_syllable()
+  local sid = tex.getattribute(syllable_id_attr)
+  if syllables[sid] == nil then syllables[sid] = {} end
+  return syllables[sid]
+end
+
 --- Save information about syllables that is impossible or
 --- inconvenient to recover from node attributes.
+--- @param type string Type of syllable ('bar' or 'note')
 local function save_syllable_info(type)
   local sid = tex.getattribute(syllable_id_attr)
   if syllables[sid] == nil then syllables[sid] = {} end
@@ -174,10 +183,7 @@ end
 --- is needed later during syllable rewriting.
 --- @param head node The syllable text.
 local function save_syllable_texts(head)
-  -- Because syllable_id_attr is set even for material not in the
-  -- syllable text, it's better to use dash_attr to detect whether
-  -- this box is really syllable text.
-  if tex.getattribute(dash_attr) > 0 then
+  if tex.getattribute(part_attr) == part_lyrics then
     local sid = tex.getattribute(syllable_id_attr)
     local cur = head
     while cur ~= nil and cur.id == temp do cur = cur.next end
@@ -299,7 +305,7 @@ local function adjust_syllablefinalskip(cur, next)
   syllablefinalskip = glue_add(syllablefinalskip, glue_max(min_text_shift, min_notes_shift))
   -- If this syllable has a hyphen, add some additional stretch.
   -- Note: This happens even if there is no text (\gresetlyrics{invisible}).
-  if cur.text and has_attribute(cur.text, dash_attr, dash_hasdash) then
+  if cur.text and cur.dash == dash_hasdash then
     debugmessage('syllablespacing', '  adding stretch for hyphen')
     syllablefinalskip = glue_add(syllablefinalskip, string_to_glue(token.get_macro('gre@space@skip@intersyllablespacestretchhyphen')))
   end
@@ -328,7 +334,7 @@ local function add_hyphen(cur)
   local width_change = new_width - old_width
 
   -- Mark text as having a hyphen
-  node.set_attribute(cur.text, dash_attr, dash_hasdash)
+  cur.dash = dash_hasdash
 
   -- To keep the text and notes aligned, update the kern between text and notes.
   cur.text_notes_skip.kern = cur.text_notes_skip.kern - width_change
@@ -362,7 +368,7 @@ local function syllable_spacing()
 
     local needs_hyphen = false
     -- If there is too much space between text, add a hyphen
-    if (cur.text ~= nil and has_attribute(cur.text, dash_attr, dash_maybedash) and
+    if (cur.text ~= nil and cur.dash == dash_maybedash and
         next ~= nil and next.text ~= nil) then
       local text_distance = (
         node.dimensions(cur.text.next, cur.last.next) +
@@ -372,7 +378,7 @@ local function syllable_spacing()
       if text_distance > max_distance then needs_hyphen = true end
     end
     -- If hyphen was forced, add a hyphen
-    if cur.text ~= nil and has_attribute(cur.text, dash_attr, dash_forced) then
+    if cur.text ~= nil and cur.dash == dash_forced then
       needs_hyphen = true
     end
     -- If lyrics are disabled, don't add a hyphen
@@ -440,7 +446,7 @@ local function syllable_rewriting()
         -- don't rewrite across a line break
         if gregoriotex.is_last_syllable_id_on_line(stop) then break end
         -- don't rewrite across a hyphen
-        if has_attribute(syllables[stop].text, dash_attr, dash_hasdash) then break end
+        if syllables[stop].dash == dash_hasdash then break end
         -- if either syllable is a \GreBarSyllable
         if not (syllables[stop].type == 'note' and syllables[stop+1].type == 'note') then break end
         -- don't rewrite across a nonzero space
@@ -472,6 +478,7 @@ local function syllable_rewriting()
             concat_list(head, tail, kern)
           else
             syllables[sid].text.head = kern
+            syllables[sid].is_merged = true
           end
         end
       end
@@ -483,6 +490,7 @@ end
 gregoriotex.save_syllable_info = save_syllable_info
 gregoriotex.save_syllable_texts = save_syllable_texts
 gregoriotex.save_min_distances = save_min_distances
+gregoriotex.current_syllable = current_syllable
 gregoriotex.free_syllables = free_syllables
 gregoriotex.scan_syllables = scan_syllables
 gregoriotex.syllable_spacing = syllable_spacing

@@ -1008,6 +1008,7 @@
   \global\gre@attr@alteration@id=\gre@saved@attr@alteration@id\relax %
   \gre@calculate@nextbegindifference{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{\gre@nextalignment}{\gre@nextalteration}%
   \gre@unsetfixednexttextformat %
+  \gre@attr@part=4
   \ifgre@showlyrics%
     \setbox\gre@box@syllabletext=\hbox{%
       \IfSubStr{\gre@debug}{,notespacing,}%
@@ -1027,6 +1028,7 @@
       \setbox\gre@box@syllabletext=\hbox{}%
     \fi
   \fi%
+  \unsetattribute{\gre@attr@part}%
   \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
   % gre@count@temp@one holds 1 if next is a bar, 2 if an alteration, else 0
   \gre@count@temp@one=0%
@@ -1039,25 +1041,21 @@
   \fi %
   \gre@debugmsg{spacing}{ gre@count@temp@one = \the\gre@count@temp@one}%
   \gre@calculate@syllablefinalskip{#4}{\gre@count@temp@one}%
-  \gre@attr@part=4 % text
   \ifcase#4
     \global\gre@possibleluahyphenafterthissyllabletrue
     \ifgre@showhyphenafterthissyllable
-      \gre@attr@dash=5 % needs forced hyphen
+      \directlua{gregoriotex.current_syllable().dash=5}% needs forced hyphen
     \else
-      \gre@attr@dash=1 % maybe needs hyphen
+      \directlua{gregoriotex.current_syllable().dash=1}% maybe needs hyphen
     \fi
   \else
     \global\gre@possibleluahyphenafterthissyllablefalse
     \ifgre@showhyphenafterthissyllable
-      \gre@attr@dash=5 % needs forced hyphen
+      \directlua{gregoriotex.current_syllable().dash=5}% needs forced hyphen
     \else
-      \gre@attr@dash=3 % end of word
+      \directlua{gregoriotex.current_syllable().dash=3}% end of word
     \fi
   \fi
-  \setbox\gre@box@syllabletext=\hbox{\unhbox\gre@box@syllabletext}%
-  \unsetattribute{\gre@attr@dash}%
-  \unsetattribute{\gre@attr@part}%
   \ifgre@textcleared%
     % Insert a zero kern that will be adjusted in the Lua function syllable_clearing.
     {\gre@attr@skip@type=5 \kern0pt}%
@@ -1079,8 +1077,6 @@
   \fi %
   {\gre@attr@skip@type=3
   \kern\dimexpr-\wd\gre@box@syllabletext-\gre@dimen@begindifference}%
-  % here we need to unset \gre@attr@dash for the typesetting of notes
-  \unsetattribute{\gre@attr@dash}%
   \gre@attr@part=10
   \GreNoBreak % no line breaks between text and notes
   \ifgre@shownotes%
@@ -1303,7 +1299,7 @@
   % first of all we need to calculate previousenddifference, begindifference, enddifference and nextbegindifference.
   #1%
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}%
-  \gre@attr@dash=4
+  \directlua{gregoriotex.current_syllable().dash=4}%
   \gre@attr@part=4
   \ifgre@showlyrics%
     \setbox\gre@box@syllabletext=\hbox{%
@@ -1324,7 +1320,6 @@
       \setbox\gre@box@syllabletext=\hbox{}%
     \fi
   \fi%
-  \unsetattribute{\gre@attr@dash}%
   \unsetattribute{\gre@attr@part}%
   \gre@debugmsg{barspacing}{Width of bar text: \the\wd\gre@box@syllabletext}%
   \global\let\gre@saved@prelinedelay@newlinecommon\gre@newlinecommon %

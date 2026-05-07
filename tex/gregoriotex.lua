@@ -78,11 +78,10 @@ local part_annotation = 9
 
 local skip_type_attr = luatexbase.attributes['gre@attr@skip@type']
 
-local dash_attr = luatexbase.attributes['gre@attr@dash']
+--- Possible values of syllables[sid].dash
 local dash_maybedash = 1
 local dash_hasdash = 2
 local dash_endofword = 3
-local dash_barsyllable = 4
 local dash_forced = 5
 
 local center_attr = luatexbase.attributes['gre@attr@center']
@@ -971,7 +970,7 @@ local function pre_linebreak(head)
   -- don't want to process. The current heuristic is to skip the list
   -- if it has zero width.
   if node.dimensions(head) == 0 then return head end
-  dump_nodes(head)
+  --dump_nodes(head)
   gregoriotex.scan_syllables(head)
   gregoriotex.syllable_spacing()
   gregoriotex.syllable_clearing()
@@ -985,28 +984,28 @@ end
 local function add_eol_hyphen(line)
   -- Add an end-of-line dash to line, if necessary.
 
-  local last_text, last_text_with_glyph
-  
-  -- Look for the last text node in the line that has
-  -- dash_attr. If it is dash_maybedash, then we may need to
-  -- append a dash.  Due to syllable rewriting, the actual text
-  -- may be in a node further to the left. So, we also look for
-  -- the last text node that actually contains a glyph, and the
-  -- last glyph in that node.
-  
+  -- Find the last syllable on the line.
+  local last_sid
   for n in traverse_id(hlist, line.head) do
-    if has_attribute(n, dash_attr) then
-      last_text = n
-      for g in node.traverse_id(glyph, n.head) do
-        last_text_with_glyph = n
-      end
+    if has_attribute(n, part_attr, part_lyrics) then
+      last_sid = has_attribute(n, syllable_id_attr)
     end
   end
 
-  if last_text and last_text_with_glyph and
-    (has_attribute(last_text, dash_attr, dash_maybedash) or has_attribute(last_text, dash_attr, dash_forced)) then
-    local sid = has_attribute(last_text_with_glyph, syllable_id_attr)
-    gregoriotex.add_hyphen(gregoriotex.syllables[sid])
+  if last_sid ~= nil then
+    debugmessage('hyphenation', 'last syllable on line: %d', last_sid)
+    -- Check if the last syllable needs a hyphen
+    if (gregoriotex.syllables[last_sid].dash == dash_maybedash or
+        gregoriotex.syllables[last_sid].dash == dash_forced) then
+      debugmessage('hyphenation', 'syllable %d needs hyphen', last_sid)
+      -- Due to syllable rewriting, the actual text may be in a syllable further to the left.
+      while last_sid ~= nil and gregoriotex.syllables[last_sid].is_merged do
+        debugmessage('hyphenation', 'syllable %d has been merged', last_sid)
+        last_sid = gregoriotex.syllables[last_sid].prev_sid
+      end
+      debugmessage('hyphenation', 'adding hyphen to syllable %d', last_sid)
+      gregoriotex.add_hyphen(gregoriotex.syllables[last_sid])
+    end
   end
 end
 
