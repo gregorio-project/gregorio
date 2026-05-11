@@ -343,12 +343,12 @@ end
 --- Add a hyphen to the end of a syllable's text.
 --- @param cur table The current syllable.
 local function add_hyphen(cur)
-  -- Append hyphen to saved syllable text (needed if the syllable gets rewritten)
+  -- Append hyphen to saved syllable text (needed if the syllable gets rewritten).
+  -- If the whole syllable has a style (\gre@fixedtextformat) then cur.font has this style too.
   local g = node.new(glyph)
   g.font = cur.font
   g.char = gregoriotex.hyphen
   
-  -- Find last glyph (because the last node may be a marker)
   add_to_raw_text(cur, g)
   
   -- Replace actual syllable text
