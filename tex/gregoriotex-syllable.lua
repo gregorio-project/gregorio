@@ -183,6 +183,12 @@ local function save_syllable_info(type)
   syllables[sid].sid = sid
   syllables[sid].type = type
   syllables[sid].font = font.current()
+  settings = {}
+  settings.syllablerewriting = gregoriotex.get_if('gre@rewritesyllables')
+  settings.showlyrics = gregoriotex.get_if('gre@showlyrics')
+  settings.intersyllablespacestretchhyphen = string_to_glue(token.get_macro('gre@space@skip@intersyllablespacestretchhyphen'))
+  settings.maximumspacewithoutdash = tex.sp(token.get_macro('gre@space@dimen@maximumspacewithoutdash'))
+  syllables[sid].settings = settings
 end
 
 --- Save syllable text before ligaturing and kerning happens. This
@@ -312,8 +318,8 @@ local function adjust_syllablefinalskip(cur, next)
   -- If this syllable has a hyphen, add some additional stretch.
   -- Note: This happens even if there is no text (\gresetlyrics{invisible}).
   if cur.text and cur.dash == dash_hasdash then
-    debugmessage('syllablespacing', '  adding stretch for hyphen')
-    syllablefinalskip = glue_add(syllablefinalskip, string_to_glue(token.get_macro('gre@space@skip@intersyllablespacestretchhyphen')))
+    debugmessage('syllablespacing', '  adding stretch for hyphen: %s', glue_to_string(cur.settings.intersyllablespacestretchhyphen))
+    syllablefinalskip = glue_add(syllablefinalskip, cur.settings.intersyllablespacestretchhyphen)
   end
   debugmessage('syllablespacing', '  syllable final skip = %s', glue_to_string(syllablefinalskip))
   node.setglue(cur.syllablefinalskip, table.unpack(syllablefinalskip))
@@ -401,7 +407,7 @@ local function syllable_spacing()
         node.dimensions(cur.text.next, cur.last.next) +
         node.dimensions(next.first, next.text)
       )
-      local max_distance = tex.sp(token.get_macro('gre@space@dimen@maximumspacewithoutdash'))
+      local max_distance = cur.settings.maximumspacewithoutdash
       if text_distance > max_distance then needs_hyphen = true end
     end
     -- If hyphen was forced, add a hyphen
@@ -409,7 +415,7 @@ local function syllable_spacing()
       needs_hyphen = true
     end
     -- If lyrics are disabled, don't add a hyphen
-    if not gregoriotex.get_if('gre@showlyrics') then needs_hyphen = false end
+    if not cur.settings.showlyrics then needs_hyphen = false end
 
     if needs_hyphen then
       add_hyphen(cur)
@@ -451,8 +457,6 @@ end
 --- Rewrite all syllable texts that have no space in between them, so that
 --- ligaturing and kerning can take place.
 local function syllable_rewriting()
-  if not gregoriotex.get_if('gre@rewritesyllables') then return end
-
   local start = 1
   local num_syllables = #syllables
   while start <= num_syllables do
@@ -461,13 +465,14 @@ local function syllable_rewriting()
     -- Note: It's safe to assume that consecutive syllables are numbered consecutively,
     -- because we don't rewrite into or out of discretionaries. If this changes, then
     -- the code below must be updated accordingly.
-    if syllables[start].text == nil then
-      debugmessage('syllablerewriting', 'syllable %d has no text node', start)
+    if not syllables[start].settings['syllablerewriting'] then
       start = start + 1
     else
       local stop = start
       while stop+1 <= num_syllables do
         -- There are several conditions that prevent syllable rewriting:
+        -- if syllablerewriting is disabled
+        if not syllables[stop+1].settings.syllablerewriting then break end
         -- if either text node is missing
         if syllables[stop+1].text == nil then break end
         -- don't rewrite across a line break
