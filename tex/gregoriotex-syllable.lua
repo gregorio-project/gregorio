@@ -371,16 +371,15 @@ local function add_hyphen(cur)
   -- To keep the text and notes aligned, update the kern between text and notes.
   cur.text_notes_skip.kern = cur.text_notes_skip.kern - width_change
 
-  -- Adjust the right edge of the syllable. adjust_syllablefinalskip
-  -- does this already, but in some cases (e.g. before a bar without
-  -- text, under the old bar spacing algorithm) there is no
-  -- syllablefinalskip.
-  if cur.syllablefinalskip == nil and next ~= nil then
-    local new_end = math.max(node.dimensions(cur.first, cur.text.next), node.dimensions(cur.first, cur.last_note.next))
-    local kern = node.new(kern, 'userkern')
-    kern.kern = node.dimensions(cur.first, cur.last.next) - new_end
-    node.insert_after(cur.first, cur.penalty, kern)
-  end
+  -- We also need to adjust the kern after the notes that moves
+  -- to the right edge of the syllable. If this syllable ends up
+  -- as the last of the line, \gre@calculateeolshift has already
+  -- allocated space for the hyphen, and this adjustment is not
+  -- necessary. So we want the adjustment to go after the
+  -- endofsyllablepenalty, where it will disappear in case of a
+  -- line break. But syllablefinalskip goes after the
+  -- endofsyllablepenalty, so we can just let
+  -- adjust_syllablefinalskip do all the work.
 
   -- Bug: if this syllable gets a hyphen and the next syllable is a
   -- bar, then the bar will have the wrong previousenddifference.
