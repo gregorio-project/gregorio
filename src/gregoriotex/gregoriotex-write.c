@@ -55,12 +55,6 @@ typedef struct gregoriotex_status {
     signed char top_height;
     signed char bottom_height;
 
-    /* indicates if there is a translation on the line */
-    bool translation; /* DEPRECATED */
-
-    /* indicates if there is "above lines text" on the line */
-    bool abovelinestext; /* DEPRECATED */
-
     bool suppressed_custos;
 } gregoriotex_status;
 
@@ -4431,7 +4425,6 @@ static void initialize_score(gregoriotex_status *const status,
 
     status->bottom_line = false;
     status->top_height = status->bottom_height = UNDETERMINED_HEIGHT;
-    status->abovelinestext = status->translation = false;
     status->suppressed_custos = false;
 
     /* first pass to compute positioning */
@@ -4450,14 +4443,6 @@ static void initialize_score(gregoriotex_status *const status,
             syllable = syllable->next_syllable) {
         int voice;
 
-        if (syllable->translation) {
-            status->translation = true;
-        }
-
-        if (syllable->abovelinestext) {
-            status->abovelinestext = true;
-        }
-
         /* simultaneously compute height extrema and determine the last "real"
          * element in each voice */
         for (voice = 0; voice < score->number_of_voices; ++voice) {
@@ -4468,10 +4453,6 @@ static void initialize_score(gregoriotex_status *const status,
                 gregorio_glyph *glyph;
 
                 switch (element->type) {
-                case GRE_ALT:
-                    status->abovelinestext = true;
-                    break;
-
                 case GRE_CUSTOS:
                     last_of_voice[voice] = element;
                     break;
@@ -4712,21 +4693,10 @@ void gregoriotex_write_score(FILE *const f, gregorio_score *const score,
     if (score->first_voice_info) {
         clef = score->first_voice_info->initial_clef;
     }
-    /* After removing deprecated arguments, this will become:
-    fprintf(f, "\\GreBeginScore{%s}{%s}{%u}{}%%\n",
+    fprintf(f, "\\GreBeginScore{%s}{%s}{%u}%%\n",
             digest_to_hex(score->digest),
             point_and_click_filename? point_and_click_filename : "",
-            score->staff_lines); */
-    fprintf(f, "\\GreBeginScore{%s}{%d}{%d}{%d}{%d}{%s}{%u}"
-            "{\\GreInitialClefPosition{%d}{%d}}%%\n", /* DEPRECATED */
-            digest_to_hex(score->digest),
-            status.top_height, /* DEPRECATED */
-            status.bottom_height, /* DEPRECATED */
-            bool_to_int(status.translation), /* DEPRECATED */
-            bool_to_int(status.abovelinestext), /* DEPRECATED */
-            point_and_click_filename? point_and_click_filename : "",
-            score->staff_lines,
-            clef.line, clef.secondary_line); /* DEPRECATED */
+            score->staff_lines);
     if (score->nabc_lines) {
         fprintf(f, "\\GreScoreNABCLines{%d}", (int)score->nabc_lines);
     }
