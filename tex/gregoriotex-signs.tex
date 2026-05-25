@@ -461,6 +461,7 @@
 \def\GreCustos#1#2{%
   \gre@trace{GreCustos{#1}{#2}}%
   \gre@in@custostrue %
+  \gre@attr@note@type=3 % custos
   \GreNoBreak %
   \ifdim\gre@skip@bar@lastskip=0pt\else % we're after a bar:
     \kern-\gre@skip@bar@lastskip %
@@ -509,7 +510,7 @@
     \kern\gre@skip@bar@lastskip %
     \GreNoBreak %
   \fi %
-  \relax %
+  \unsetattribute{\gre@attr@note@type}%
   \gre@in@custosfalse %
   \gre@trace@end%
 }%
@@ -2173,6 +2174,7 @@
     \fi %
   \fi %
   \gre@skip@temp@four=0pt\relax %
+  \gre@attr@note@type=2\relax
   \ifcase#1 % 0 : virgula
     \ifnum\gre@count@temp@one=1\relax %
       \gre@skip@temp@four = \csname gre@space@skip@bar@virgula\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
@@ -2536,6 +2538,7 @@
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \fi %
+  \unsetattribute{\gre@attr@note@type}%
   \global\gre@skip@bar@lastskip=\gre@skip@temp@four %
   \gre@debugmsg{spacing}{Width of bar just printed: \the\wd\gre@box@temp@width}%
   \gre@debugmsg{spacing}{Last bar space: \the\gre@skip@temp@four}%

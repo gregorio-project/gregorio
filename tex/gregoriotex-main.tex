@@ -71,6 +71,8 @@
 
 % attribute for special notes
 % 1 = punctum mora (including spacebeforesigns)
+% 2 = bar (including space before and after)
+% 3 = custos (including space and alteration)
 \newattribute\gre@attr@note@type
 
 % attributes for soft alterations
@@ -250,7 +252,6 @@
       \or
         \gre@warning{Ignoring forced line break ('Z') at end of score.\MessageBreak Please use \protect\gresetlastline{ragged} to set the last line ragged, or \protect\gresetlastline{trimmed} to set the last line ragged and trim the staff lines}%
       \fi
-      \par
     % Otherwise, force a line break
     \else
       \ifnum#1=1\relax

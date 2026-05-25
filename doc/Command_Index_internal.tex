@@ -582,15 +582,13 @@ The macro which needs to be called each time a new lines is started.
   & \texttt{1} & Do not adjust end of line (when already done by the new spacing algorithm)\\
 \end{argtable}
 
-\macroname{\textbackslash gre@endofsyllable}{\#1\#2\#3}{gregoriotex-syllable.tex}
+\macroname{\textbackslash gre@endofsyllable}{\#1\#2}{gregoriotex-syllable.tex}
 Macro called at end of a syllable, adds a penalty and a space.
 
 \begin{argtable}
-  \#1 & \texttt{0} & to only add the penalty\\
-  & \texttt{1} & adds both penalty and space\\
-  \#2 & \texttt{0} & if end of syllable\\
+  \#1 & \texttt{0} & if end of syllable\\
   & \texttt{1} & if end of word\\
-  \#3 & \texttt{1} & if next syllable is a bar\\
+  \#2 & \texttt{1} & if next syllable is a bar\\
   & \texttt{0} & otherwise\\
 \end{argtable}
 
@@ -985,16 +983,6 @@ is to allow text to go a bit further right, under the custos.  This shift is app
 
 \begin{argtable}
   \#1 & dimension & The \verb=enddifference= of the corresponding syllable\\
-\end{argtable}
-
-\macroname{\textbackslash gre@calculate@syllablefinalskip}{\#1\#2}{gregoriotex-spaces.tex}
-Macro computing the skip at the end of the syllable.
-
-\begin{argtable}
-  \#1 & \texttt{0} & if end of syllable\\
-  & \texttt{1} & if end of word\\
-  \#2 & \texttt{0} & if next syllable is normal\\
-  & \texttt{1} & if it’s a bar\\
 \end{argtable}
 
 \macroname{\textbackslash gre@convert}{}{gregoriotex-spaces.tex}
@@ -2317,9 +2305,6 @@ Minimum distance between notes.
 
 \macroname{\textbackslash gre@scaledist}{}{gregoriotex-spaces.tex}
 Working alias for \verb=\gre@skip@temp@one= or \verb=\gre@dimen@temp@one=, as appropriate, used when rescaling a distance due to a change in \verb=\gre@factor=.
-
-\macroname{\textbackslash gre@skip@syllablefinalskip}{}{gregoriotex-spaces.tex}
-The final distance to skip at the end of a syllable.
 
 \macroname{\textbackslash gre@dimen@nabcleftoverflow}{}{gregoriotex-nabc.tex}
 Dimension for communicating NABC left overflow from Lua to \TeX. When NABC alignment mode is \texttt{neume}, significative letters on the left side of a neume extend to the left of the neume body. This dimension holds the overflow width (set by Lua code during NABC rendering) so that the \TeX\ layer can reserve space at the note level to prevent overlap with previous elements. Reset to 0pt after each syllable.

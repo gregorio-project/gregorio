@@ -47,6 +47,8 @@ local part_penalty = 11
 
 local note_type_attr = luatexbase.attributes['gre@attr@note@type']
 local note_type_mora = 1
+local note_type_bar = 2
+local note_type_custos = 3
 
 local alteration_type_attr = luatexbase.attributes['gre@attr@alteration@type']
 
@@ -187,13 +189,16 @@ end
 --- Save information about syllables that is impossible or
 --- inconvenient to recover from node attributes.
 --- @param type string Type of syllable ('bar' or 'note')
-local function save_syllable_info(type)
+--- @param end_of_word int Whether the syllable ends a word (1) or not (0)
+local function save_syllable_info(type, end_of_word)
   local sid = tex.getattribute(syllable_id_attr)
   if syllables[sid] == nil then syllables[sid] = {} end
   syllables[sid].sid = sid
   syllables[sid].type = type
   syllables[sid].font = font.current()
   syllables[sid].in_disc = tonumber(token.get_macro('gre@insidediscretionary')) > 0
+  syllables[sid].in_euouae = gregoriotex.get_if('gre@in@euouae')
+  syllables[sid].end_of_word = end_of_word > 0
   settings = {}
   --- If these settings are changed mid-syllable, they do not affect the current syllable.
   settings.syllablerewriting = gregoriotex.get_if('gre@rewritesyllables')
@@ -333,14 +338,21 @@ end
 local function calculate_alteration_shift(cur)
   -- Skip over kerns and zero-width boxes (which are used both for debugging and for holes).
   local n = cur.first_note
-  while (n ~= nil and has_attribute(n, part_attr, part_attr_notes) and
-         n.id ~= hlist or n.id == hlist and n.width == 0) do
+  while (n ~= cur.last_note.next and
+         (n.id ~= hlist or n.id == hlist and n.width == 0)) do
     n = n.next
   end
   if has_attribute(n, alteration_type_attr) then
-    local adj = tex.sp(token.get_macro('gre@space@dimen@alterationadjustmentbar'))
-    debugmessage('syllablespacing', 'alteration adjustment for syllable %d: %fpt', cur.sid, adj/2^16)
-    cur.alteration_shift = adj
+    -- Now look for a note, because a lone accidental doesn't get the alteration shift
+    while (n ~= cur.last_note.next and
+           (n.id ~= hlist or n.id == hlist and n.width == 0 or has_attribute(n, alteration_type_attr))) do
+      n = n.next
+    end
+    if n ~= cur.last_note.next then
+      local adj = tex.sp(token.get_macro('gre@space@dimen@alterationadjustmentbar'))
+      debugmessage('syllablespacing', 'alteration adjustment for syllable %d: %fpt', cur.sid, adj/2^16)
+      cur.alteration_shift = adj
+    end
   end
 end
 
@@ -390,14 +402,140 @@ end
 --- @param cur table The current syllable.
 --- @param next table The next syllable.
 local function adjust_syllablefinalskip(cur, next)
+
+  -- Several decisions depend on whether the next syllable starts with
+  -- a bar or not.
+
+  local next_is_bar = false
+
+  if next ~= nil and next.type == 'bar' and not next.in_disc then
+    -- In general, if next is a \GreBarSyllable, then it recomputes
+    -- the space between cur and next, so cur doesn't need
+    -- syllablefinalskip. This includes no-note syllables, but
+    -- excludes clef changes (discretionaries), which are handled
+    -- below.
+    next_is_bar = true
+
+  elseif next ~= nil then
+    -- Otherwise, we check if next really starts with a bar (possibly
+    -- preceded by a custos).
+    
+    -- If next is a clef change without a bar, it is a
+    -- \GreBarSyllable, but we set next_is_bar to false, so there is
+    -- still a syllablefinalskip in between. As far as the new bar
+    -- spacing algorithm is concerned, this skip is part of both the
+    -- text and notes of the current syllable (issue #1724).
+    
+    -- If next is a clef change with a bar, we set next_is_bar to
+    -- true, even if a custos comes first (g+:c3).
+    
+    -- If next is a bar preceded by a custos (g+:), it is a
+    -- \GreSyllable, but we set next_is_bar to true, which means there
+    -- is no space in between (possibly a bug).
+    
+    local n = next.first_note
+    -- Skip over kerns, glue, zero-width boxes, and custoses
+    while n ~= next.last_note.next and
+      (
+        n.id ~= hlist or n.width == 0 or
+        has_attribute(n, note_type_attr, note_type_custos)
+      )
+    do
+      n = n.next
+    end
+    if n ~= next.last_note.next and has_attribute(n, note_type_attr, note_type_bar) then
+      next_is_bar = true
+    end
+  end
+  debugmessage('syllablespacing', 'next_is_bar = %s', next_is_bar)
+  
+  local next_is_alteration = next ~= nil and next.alteration_shift ~= nil
+
+  -- In a few situations, we just zero out the syllablefinalskip and
+  -- return. There is one more case below, after computing min_text_distance.
+  if (next == nil or
+      (next_is_bar and not gregoriotex.get_if('gre@newbarspacing') and
+       (cur.forced_line_break or next.text.width == 0)))
+  then
+    debugmessage('syllablespacing', '  syllable final skip = 0pt')
+    node.setglue(cur.syllablefinalskip, 0, 0, 0)
+    return
+  end
+
+  --- Compute minimum desired distances
+
+  -- The minimum distance from text right edge to next text left edge.
+  local min_text_distance
+  if cur.end_of_word then
+    if cur.in_euouae then
+      if gregoriotex.get_if('gre@newbarspacing') and next_is_bar then
+        min_text_distance = dimen_to_glue(tex.sp(token.get_macro('gre@space@dimen@interwordspacetext@bars@euouae')))
+      else
+        min_text_distance = string_to_glue(token.get_macro('gre@space@skip@interwordspacetext@euouae'))
+      end
+    else -- not in euouae
+      if gregoriotex.get_if('gre@newbarspacing') and next_is_bar then
+        min_text_distance = dimen_to_glue(tex.sp(token.get_macro('gre@space@dimen@interwordspacetext@bars')))
+      else
+        min_text_distance = string_to_glue(token.get_macro('gre@space@skip@interwordspacetext'))
+      end
+    end
+  else -- middle of word
+    min_text_distance = dimen_to_glue(0)
+  end
+  cur.min_text_distance = min_text_distance -- needed by bar_syllable_spacing
+  debugmessage('syllablespacing', '  min text distance = %s', glue_to_string(min_text_distance))
+  
+  -- One more case where there is no syllablefinalskip.
+  -- The reason we do this here is that bar_syllable_spacing still needs cur.min_text_distance.
+  if next_is_bar and gregoriotex.get_if('gre@newbarspacing') then
+    debugmessage('syllablespacing', '  syllable final skip = 0pt')
+    node.setglue(cur.syllablefinalskip, 0, 0, 0)
+    return
+  end
+
+  -- The minimum distance from notes right edge to next notes left edge.
+  local min_notes_distance
+  if not next_is_bar and not next_is_alteration then -- next note is ordinary
+    if cur.end_of_word then
+      if cur.in_euouae then
+        min_notes_distance = string_to_glue(token.get_macro('gre@space@skip@interwordspacenotes@euouae'))
+      else
+        min_notes_distance = string_to_glue(token.get_macro('gre@space@skip@interwordspacenotes'))
+      end
+    else
+      min_notes_distance = dimen_to_glue(tex.sp(token.get_macro('gre@space@dimen@intersyllablespacenotes')))
+    end
+    if cur.mora_shift ~= nil then
+      min_notes_distance = glue_add(min_notes_distance, cur.mora_shift)
+    end
+
+  elseif not next_is_alteration then -- next note is bar
+    if gregoriotex.get_if('gre@newbarspacing') then
+      min_notes_distance = 0
+    else
+      min_notes_distance = string_to_glue(token.get_macro('gre@space@skip@notebarspace'))
+    end
+    
+  else -- next note is alteration
+    if cur.end_of_word then
+      min_notes_distance = string_to_glue(token.get_macro('gre@space@skip@interwordspacenotes@alteration'))
+    else
+      min_notes_distance = dimen_to_glue(tex.sp(token.get_macro('gre@space@dimen@intersyllablespacenotes@alteration')))
+    end
+  end
+
+  debugmessage('syllablespacing', '  min notes distance = %s', glue_to_string(min_notes_distance))
+
+  --- Compute how much to adjust the skip by.
+  
   -- The distance from current text right edge to next text left edge.
   local text_distance = (
     node.dimensions(cur.text.next, cur.last.next) +
     node.dimensions(next.first, next.text)
   )
   debugmessage('syllablespacing', '  text distance = %s', glue_to_string(text_distance))
-  local min_text_distance = cur.min_text_distance
-  debugmessage('syllablespacing', '  min text distance = %s', glue_to_string(min_text_distance))
+  
   local min_text_shift = glue_add(min_text_distance, -text_distance)
   debugmessage('syllablespacing', '  min text shift = %s', glue_to_string(min_text_shift))
 
@@ -407,16 +545,7 @@ local function adjust_syllablefinalskip(cur, next)
     node.dimensions(next.first, next.first_note)
   )
   debugmessage('syllablespacing', '  notes distance = %s', glue_to_string(notes_distance))
-  local min_notes_distance = cur.min_notes_distance
-  if (
-    next.type == 'note' and -- not before bar syllable, because they have their own mora shift
-    cur.mora_shift ~= nil and
-    next.alteration_shift == nil -- not if next starts with alteration
-  )
-  then
-    min_notes_distance = glue_add(min_notes_distance, cur.mora_shift)
-  end
-  debugmessage('syllablespacing', '  min notes distance = %s', glue_to_string(min_notes_distance))
+  
   local min_notes_shift = glue_add(min_notes_distance, -notes_distance)
   debugmessage('syllablespacing', '  min notes shift = %s', glue_to_string(min_notes_shift))
   
@@ -499,12 +628,7 @@ end
 local function note_syllable_spacing(cur, next)
   debugmessage('syllablespacing', 'after syllable %d', cur.sid)
     
-  -- If the next syllable is a clef change without a bar, there is still a
-  -- syllablefinalskip in between. As far as the new bar spacing algorithm is concerned,
-  -- this skip is part of both the text and notes of the current syllable (issue #1724).
-  if (cur.type == 'note' and cur.syllablefinalskip ~= nil and next ~= nil) then
-    adjust_syllablefinalskip(cur, next)
-  end
+  adjust_syllablefinalskip(cur, next)
   
   local needs_hyphen = false
   -- If there is too much space between text, add a hyphen
@@ -639,7 +763,7 @@ local function bar_syllable_spacing(prev, cur, next)
 
   local space_before_text, space_after_text
   if cur.text.width > 0 then
-    space_before_text = prev and prev.min_text_distance[1] or 0
+    space_before_text = prev and prev.min_text_distance and prev.min_text_distance[1] or 0
     space_after_text = cur.min_text_distance[1]
   else
     -- If there is no text, ignore prev.min_text_distance and split
@@ -809,11 +933,14 @@ local function bar_syllable_spacing(prev, cur, next)
   cur.before_text_skip.kern = cur.before_text_skip.kern + text_shift
   cur.text_notes_skip.kern = cur.text_notes_skip.kern - text_shift + notes_shift
   cur.after_notes_skip.kern = cur.after_notes_skip.kern - notes_shift + penalty_shift
-  if cur.syllablefinalskip ~= nil then
+  if cur.syllablefinalskip ~= nil and not (next == nil or cur.forced_line_break) then
     if cur.syllablefinalskip.id == kern then -- possible inside discretionary
       cur.syllablefinalskip.kern = cur.syllablefinalskip.kern - penalty_shift + end_shift
     elseif cur.syllablefinalskip.id == glue then
-      cur.syllablefinalskip.width = cur.syllablefinalskip.width - penalty_shift + end_shift
+      local skip = table.pack(node.getglue(cur.syllablefinalskip))
+      skip = glue_add(skip, - penalty_shift + end_shift)
+      skip = glue_add(skip, string_to_glue(token.get_macro('gre@space@skip@bar@rubber')))
+      node.setglue(cur.syllablefinalskip, table.unpack(skip))
     end
   end
 end
