@@ -38,22 +38,13 @@ respecting the annotation value in the \texttt{main.tex} file.
   \#2 & string & Second line text to place above the initial.\\
 \end{argtable}
 
-\macroname{\textbackslash GreBeginScore}{\#1\#2\#3\#4\#5\#6\#7\#8}{gregoriotex-main.tex}
+\macroname{\textbackslash GreBeginScore}{\#1\#2\#3}{gregoriotex-main.tex}
 Macro to start a score.
 
 \begin{argtable}
   \#1 & string  & a unique identifier for the score (currently an SHA-1-based digest of the gabc file)\\
-  \#2 & integer & the height number of the top pitch of the entire score, including signs (DEPRECATED)\\
-  \#3 & integer & the height number of the bottom pitch of the entire score, including signs (DEPRECATED)\\
-  \#4 & integer & whether there is a translation line (DEPRECATED)\\
-      & 0 & there is no translation line in the score\\
-      & 1 & there is a translation line somewhere in the score\\
-  \#5 & integer & whether there is above lines text (DEPRECATED)\\
-      & 0 & there is no above lines text in the score\\
-      & 1 & there is above lines text somewhere in the score\\
-  \#6 & string  & the absolute filename of the gabc file if point-and-click is enabled\\
-  \#7 & integer & the number of staff lines\\
-  \#8 & \TeX\ code & macros to run before the score\\
+  \#2 & string  & the absolute filename of the gabc file if point-and-click is enabled\\
+  \#3 & integer & the number of staff lines\\
 \end{argtable}
 
 \macroname{\textbackslash GreEndScore}{}{gregoriotex-main.tex}

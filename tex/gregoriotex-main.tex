@@ -1214,14 +1214,9 @@
 
 %macro called at the beginning of a score
 % #1 is the gabc score id
-% #2 is the high height (DEPRECATED)
-% #3 is the low height (DEPRECATED)
-% #4 is 1 if there is a translation somewhere (DEPRECATED)
-% #5 is if 1 if we have space above the staff (DEPRECATED)
-% #6 is the point-and-click filename
-% #7 is the number of staff lines
-% #8 is to set the initial clef position
-\def\GreBeginScore#1#2#3#4#5#6#7#8{%
+% #2 is the point-and-click filename
+% #3 is the number of staff lines
+\def\GreBeginScore#1#2#3{%
   % scores must be new paragraphs!
   \ifhmode\par\fi %
   \gre@beginningofscoretrue%
@@ -1230,8 +1225,8 @@
   \gre@resetledgerlineheuristics%
   \global\setattribute\gre@attr@syllable@id{0}%
   \global\setattribute\gre@attr@alteration@id{0}%
-  \xdef\gre@gabcname{#6}%
-  \gre@setstafflines{#7}%
+  \xdef\gre@gabcname{#2}%
+  \gre@setstafflines{#3}%
   \ifnum\gre@count@lastline=0\relax
     \xdef\gre@saved@parfillskip{\the\parfillskip}%
     \parfillskip=0pt plus 0pt minus 0pt\relax%
@@ -1245,7 +1240,6 @@
   \gre@generatelines %
   \noindent%
   \gre@calculate@additionalspaces
-  #8%
   \directlua{gregoriotex.at_score_beginning([[#1]])}%
   %TODO do something like LaTeX's AtBeginDocument
   \ifdefined\optgabcAtScoreBeginning %
