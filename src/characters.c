@@ -207,8 +207,9 @@ static bool read_vowel_rules(char *const lang) {
     }
 
     free(filenames);
-
-    for (int i = 0; i < visited_count; ++i) {
+    
+    int i;
+    for (i = 0; i < visited_count; ++i) {
         free(visited[i]);
     }
 
