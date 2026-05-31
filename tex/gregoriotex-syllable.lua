@@ -193,6 +193,7 @@ local function save_syllable_info(type)
   syllables[sid].sid = sid
   syllables[sid].type = type
   syllables[sid].font = font.current()
+  syllables[sid].in_disc = tonumber(token.get_macro('gre@insidediscretionary')) > 0
   settings = {}
   --- If these settings are changed mid-syllable, they do not affect the current syllable.
   settings.syllablerewriting = gregoriotex.get_if('gre@rewritesyllables')
@@ -365,7 +366,7 @@ local function calculate_punctum_mora_shift(cur, next)
     local mora_width = node.dimensions(n.next, cur.last_note.next)
     debugmessage('syllablespacing', 'mora width: %fpt', mora_width/2^16)
     local code = cur.settings.shiftaftermora
-    if next ~= nil and (next.type == 'bar' or next.type == 'clefchange') then
+    if next ~= nil and next.type == 'bar' then
       if (code == 2 and next.text.width == 0 -- barsnotextonly
           or code == 3 -- barsonly
           or code == 5 -- always
@@ -516,7 +517,7 @@ local function note_syllable_spacing(cur, next)
 
     -- Replicate bug #1734: if next syllable is a bar, assume it has
     -- the bar and text centered, with no extra space.
-    if (next ~= nil and (next.type == 'bar' or next.type == 'clefchange') and gregoriotex.get_if('gre@newbarspacing')) then
+    if (next ~= nil and next.type == 'bar' and gregoriotex.get_if('gre@newbarspacing')) then
       local end_diff = node.dimensions(cur.text.next, cur.last_note.next)
       local next_notes_width = 0
       -- further bug: should the below ignore space around bar too?
@@ -686,11 +687,11 @@ local function bar_syllable_spacing(prev, cur, next)
       n = n.next
     end
     -- Replicate bug #1734: if next syllable is a bar, then ignore space before it
-    if next.type == 'bar' or next.type == 'clefchange' then
+    if next.type == 'bar' then
       next_notes_begin = next_notes_begin + node.dimensions(next.first_note, n)
     end
     -- Adjust if the next note has an alteration.
-    if cur.type == 'bar' and next.alteration_shift ~= nil then -- but not if cur.type == 'clefchange'
+    if cur.type == 'bar' and next.alteration_shift ~= nil and not cur.in_disc then
       debugmessage('barspacing', 'alteration shift: %fpt', next.alteration_shift/2^16)
       next_notes_begin = next_notes_begin + next.alteration_shift
     end
@@ -941,7 +942,7 @@ local function syllable_spacing()
     calculate_punctum_mora_shift(cur, next)
     if cur.type == 'note' then
       note_syllable_spacing(cur, next)
-    elseif cur.type == 'bar' or cur.type == 'clefchange' then
+    elseif cur.type == 'bar' then
       if gregoriotex.get_if('gre@newbarspacing') then
         bar_syllable_spacing(prev, cur, next)
       else

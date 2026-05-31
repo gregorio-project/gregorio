@@ -1244,11 +1244,7 @@
   \global\advance\gre@attr@syllable@id by 1\relax %
   \gre@beginningofscorefalse
   \gre@fixedtextformat{%
-  \ifnum\gre@insidediscretionary=0
-    \directlua{gregoriotex.save_syllable_info('bar')}%
-  \else
-    \directlua{gregoriotex.save_syllable_info('clefchange')}%
-  \fi
+  \directlua{gregoriotex.save_syllable_info('bar')}%
   }%
   \gre@possibleluahyphenafterthissyllablefalse %
   \gre@showhyphenafterthissyllablefalse %
