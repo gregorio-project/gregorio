@@ -939,17 +939,6 @@
     \GreNoBreak %
   \fi %
   #5%
-  % if the next glyph has an alteration, check if it is suppressed;
-  % if so, pretend there's no alteration
-  \def\gre@nextalignment{\gre@arg@oftwo@first#7}%
-  \def\gre@nextalteration{\gre@arg@oftwo@second#7}%
-  \ifnum\gre@nextalteration>0\relax
-    \gre@alteration@isvisible{1}{\gre@nextalteration}% if the notes contain an alteration, the id was incremented, so this checks the alteration after the notes
-    \ifgre@alteration@isvisible
-    \else
-      \def\gre@nextalteration{0}%
-    \fi
-  \fi
   % now we can restore the alteration id to typeset the notes for real
   \global\gre@attr@alteration@id=\gre@saved@attr@alteration@id\relax %
   \gre@unsetfixednexttextformat %
@@ -1060,8 +1049,7 @@
     \kern -\gre@dimen@enddifference\relax%
     \GreNoBreak %
   \fi%
-  % we call end of syllable
-  \gre@syllable@end{\gre@nextalignment}{\gre@nextalteration}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart}}{#4}%
+  \gre@endofsyllable{#4}%
   \global\gre@dimen@notesaligncenter=0pt\relax% very important, see flat and natural
   \gre@unsetfixedtextformat %
   \ifgre@blockeolcustos\ifnum\gre@insidediscretionary=0\relax %
@@ -1095,37 +1083,10 @@
 \def\GreLastSyllableBeforeEUOUAE#1#2{%
 }%
 
-%% @desc Macro to make a few checks and call the right macros between
-%%       \endbeforebar, \endofword, \endofsyllable
-%% @arg#1 next syllable alignment type (#7:1 of \GreSyllable)
-%% @arg#2 next syllable alteration type (#7:2 of \GreSyllable)
-%% @arg#3 next syllable text
-%% @arg#4 end of word or not (#4 of \GreSyllable)
-\def\gre@syllable@end#1#2#3#4{%
-  \gre@trace{gre@syllable@end{#1}{#2}{#3}{#4}}%
-  % gre@count@temp@one holds 0 if next is a not bar, 1 if it is
-  \gre@count@temp@one=0%
-  \ifnum#2=0\relax %
-    \ifnum#1>9\relax %
-      \gre@count@temp@one=1%
-    \fi %
-  \fi %
-  \gre@debugmsg{syllablespacing}{ gre@count@temp@one = \the\gre@count@temp@one}%
-  \ifnum\gre@count@temp@one=1\relax %
-    \gre@endofsyllable{1}{1}%
-  \else %
-    \gre@debugmsg{syllablespacing}{ calling endofsyllable with #4}%
-    \gre@endofsyllable{#4}{0}%
-  \fi %
-  \gre@trace@end%
-}
-
-%% @desc Macro called at end of a syllable, adds a penalty and a space
-%% @arg#1 0 if end of syllable, 1 if end of word
-%% @arg#2 1 if next syllable is a bar, 0 otherwise
-%%
-\def\gre@endofsyllable#1#2{%
-  \gre@trace{gre@endofsyllable{#1}{#2}}%
+%% @desc Macro called at end of a syllable, adds a penalty and a space.
+%% @arg#1 end of word or not (#4 of \GreSyllable)
+\def\gre@endofsyllable#1{%
+  \gre@trace{gre@endofsyllable{#1}}%
   \ifgre@eolshiftsenabled%
     %this shift will shorten the line somewhat to allow the lyrics to extend under the custos should TeX decide to insert a line break after the syllable being ended
     \GreNoBreak%
@@ -1133,17 +1094,12 @@
     \kern -\gre@dimen@eolshift\relax%
   \fi%
   {\gre@attr@part=11
-  \ifnum#2=1\relax %
-    \GreNoBreak %
-    \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@nobreakpenalty}%
-  \else %
-    \ifnum#1=1\relax
-      \gre@penalty{\the\gre@space@count@endofwordpenalty}%
-      \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@endofwordpenalty}%
-    \else
-      \gre@penalty{\the\gre@space@count@endofsyllablepenalty}%
-      \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@endofsyllablepenalty}%
-    \fi
+  \ifnum#1=1\relax
+    \gre@penalty{\the\gre@space@count@endofwordpenalty}%
+    \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@endofwordpenalty}%
+  \else
+    \gre@penalty{\the\gre@space@count@endofsyllablepenalty}%
+    \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@endofsyllablepenalty}%
   \fi}%
   \ifgre@eolshiftsenabled%
     %If the above penalties don't result in a line break, then we need to undo the eolshift to prevent the next syllable from overlapping with this one.  If the line break did occur, then this shift will occur at the beginning of a line and thus will be ignored automatically by TeX.
@@ -1234,17 +1190,6 @@
   \gre@dimen@begindifference=\dimexpr(\gre@dimen@notesaligncenter - \gre@dimen@textaligncenter)\relax%
   \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}%
   #5%
-  % if the next glyph has an alteration, check if it is suppressed;
-  % if so, pretend there's no alteration
-  \def\gre@nextalignment{\gre@arg@oftwo@first#7}%
-  \def\gre@nextalteration{\gre@arg@oftwo@second#7}%
-  \ifnum\gre@nextalteration>0\relax
-    \gre@alteration@isvisible{1}{\gre@nextalteration}%
-    \ifgre@alteration@isvisible
-    \else
-      \def\gre@nextalteration{0}%
-    \fi
-  \fi
   \gre@unsetfixednexttextformat %
   \gre@debugmsg{barspacing}{begindifference: \the\gre@dimen@begindifference}%
   \gre@debugmsg{barspacing}{enddifference: \the\gre@dimen@enddifference}%

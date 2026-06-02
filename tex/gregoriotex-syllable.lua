@@ -451,6 +451,12 @@ local function adjust_syllablefinalskip(cur, next)
   
   local next_is_alteration = next ~= nil and next.alteration_shift ~= nil
 
+  -- Just before the syllablefinalskip comes a penalty, which we adjust here.
+  -- If the next syllable is a bar, don't allow a line break
+  if next_is_bar then
+    cur.penalty.penalty = tex.count['gre@space@count@nobreakpenalty']
+  end
+
   -- In a few situations, we just zero out the syllablefinalskip and
   -- return. There is one more case below, after computing min_text_distance.
   if (next == nil or

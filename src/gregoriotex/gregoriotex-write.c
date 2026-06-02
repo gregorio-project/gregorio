@@ -2721,6 +2721,7 @@ static void write_note(FILE *f, gregorio_note *note,
     }
 }
 
+/* DEPRECATED */
 static void syllable_first_type(gregorio_syllable *syllable,
         gtex_alignment *type, gtex_alteration *alteration)
 {
@@ -4156,8 +4157,8 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
         }
         fprintf(f, "}{");
         write_syllable_point_and_click(f, syllable, status);
-        syllable_first_type(syllable->next_syllable, &alignment, &alteration);
-        fprintf(f, "}{{%d}{%d}}{", alignment, alteration);
+        syllable_first_type(syllable->next_syllable, &alignment, &alteration); /* DEPRECATED */
+        fprintf(f, "}{{%d}{%d}}{", alignment, alteration); /* DEPRECATED */
     } else {
         fprintf(f, "{\\GreSetNextSyllable{}{}{}{}{}");
         if (end_of_line || first_of_disc == 1) {
@@ -4165,8 +4166,10 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
         }
         fprintf(f, "}{");
         write_syllable_point_and_click(f, syllable, status);
-        fprintf(f, "}{{%d}{%d}}{", AT_EMPTY_SYLLABLE, ALT_NONE);
+        fprintf(f, "}{{%d}{%d}}{", AT_EMPTY_SYLLABLE, ALT_NONE); /* DEPRECATED */
     }
+    /* After removing the above deprecated lines, insert:
+    fprintf(f, "}{"); */
     if (syllable->translation) {
         if (syllable->translation_type == TR_WITH_CENTER_BEGINNING) {
             fprintf(f, "%%\n\\GreWriteTranslationWithCenterBeginning{");
