@@ -225,7 +225,6 @@
      \localrightbox{}%
   \fi\fi %
   \ifgre@boxing\else%
-    \global\gre@lastoflinecount=2\relax %
     \ifnum#2=0\relax %
       % Place the penalty similarly to how the end-of-syllable penalty
       % is placed.  However, if the line break occurs mid-syllable,
@@ -1263,14 +1262,12 @@
   \ifdefined\optgabcAtScoreBeginning %
     \optgabcAtScoreBeginning %
   \fi %
-  \global\gre@lastoflinecount=2\relax %
   \global\gre@endofscorefalse %
   \relax%
 }%
 
 %macro called at the end of a score
 \def\GreEndScore{%
-  \global\gre@lastoflinecount=0\relax %
   \gre@useautoeolcustos%
   \GreEndEUOUAE{}%
   \ifnum\gre@nlbstate=0\else %
@@ -1308,16 +1305,8 @@
   \relax%
 }%
 
-\newcount\gre@lastoflinecount%
-
-% called at syllable level. Indicates that the syllable is the last of the line (or score)
-% 0 if nothing
-% 1 if the syllable is the last of the line
-% 2 after it has finished the syllable, so when it is two it means that the syllable is the first of a line
+% DEPRECATED
 \def\GreLastOfLine{%
-  \global\gre@lastoflinecount=1\relax%
-  \gre@debugmsg{eolshift}{set lastoflinecount to 1}%
-  \relax%
 }%
 
 % Flag to mark the last syllable of the score

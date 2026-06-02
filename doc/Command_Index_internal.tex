@@ -569,9 +569,6 @@ Restores the staff dimensions (line height, inter-line space, staff height, and 
 \macroname{\textbackslash gre@staffdimensions@dozero}{}{gregoriotex-main.tex}
 Zeroes the staff dimensions (line height, inter-line space, staff height, and constant glyph raise) so that all vertical positioning collapses.  The pre-zeroed values are preserved in \verb=\gre@dimen@stafflineheight@saved=, \verb=\gre@dimen@interstafflinespace@saved=, and \verb=\gre@dimen@staffheight@saved= for later restoration.  Only takes effect when \verb=\ifgre@staffdimensions@zeroed= is false; otherwise it is a no-op.
 
-\macroname{\textbackslash gre@lastoflinecount}{}{gregoriotex-main.tex}
-Count to track where on the line we are.  Values are \texttt{0} (we are not near the end of a line), \texttt{1} (we’re at the last syllable of the line), and \texttt{2} (we just set the last syllable of the line and so are at the first syllable of a new line).
-
 \macroname{\textbackslash gre@newlinecommon}{\#1\#2}{gregoriotex-main.tex}
 The macro which needs to be called each time a new lines is started.
 
