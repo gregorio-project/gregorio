@@ -173,6 +173,15 @@ local function shaping(head)
   return head
 end
 
+--- Test whether a node is a note.
+--- @param n node The node to test.
+--- @return bool Whether it is a note.
+local function node_is_note(n)
+  return (n ~= nil and
+          has_attribute(n, part_attr, part_attr_notes) and
+          n.id == hlist and n.width > 0)
+end
+
 -- Table for storing information about syllables that is impossible or
 -- inconvenient to recover from node attributes.
 local syllables = {}
@@ -278,53 +287,63 @@ local function scan_syllables(head)
         local part = has_attribute(n, part_attr)
         local skip_type = has_attribute(n, skip_type_attr)
         if sid ~= nil and syllables[sid] ~= nil then
+          local cur = syllables[sid]
           -- Record first and last node
           if part ~= nil or skip_type ~= nil then
-            if syllables[sid].first == nil then
-              syllables[sid].first = n
+            if cur.first == nil then
+              cur.first = n
             end
           end
-          syllables[sid].last = n
+          cur.last = n
           if part == part_lyrics then
-            if syllables[sid].text ~= nil then
+            if cur.text ~= nil then
               err(' syllable %d has more than one text node', sid)
             end
-            syllables[sid].text = n
+            cur.text = n
             -- Since every syllable is guaranteed to have exactly one text node,
             -- do some other bookkeeping here
-            syllables[sid].prev_sid = prev_sid
+            cur.prev_sid = prev_sid
             if prev_sid ~= nil then syllables[prev_sid].next_sid = sid end
-            syllables[sid].custos_width = custos_width
+            cur.custos_width = custos_width
             prev_sid = sid
           elseif part == part_notes then
-            if syllables[sid].first_note == nil then
-              syllables[sid].first_note = n
-              syllables[sid].last_note_not_space = n
+            if cur.first_note == nil then
+              cur.first_note = n
             end
-            syllables[sid].last_note = n
-            -- Sometimes we want the last note not including spaces.
-            -- We ignore zero-width boxes because they are used during debugging.
-            if n.id == hlist and n.width > 0 then
-              syllables[sid].last_note_not_space = n
-            end
+            cur.last_note = n
           elseif skip_type == skip_type_before_text then
-            syllables[sid].before_text_skip = n
+            cur.before_text_skip = n
           elseif skip_type == skip_type_text_notes then
-            syllables[sid].text_notes_skip = n
+            cur.text_notes_skip = n
           elseif skip_type == skip_type_after_notes then
-            syllables[sid].after_notes_skip = n
+            cur.after_notes_skip = n
           elseif skip_type == skip_type_syllablefinal then
-            syllables[sid].syllablefinalskip = n
+            cur.syllablefinalskip = n
           elseif skip_type == skip_type_clearsyllable then
-            syllables[sid].clearsyllable = n
+            cur.clearsyllable = n
           elseif n.id == penalty and n.penalty <= -10000 then
             -- Forced line break, which occurs within the notes
-            syllables[sid].penalty = n
-            syllables[sid].forced_line_break = true
-          elseif part == part_penalty and not syllables[sid].forced_line_break then
+            cur.penalty = n
+            cur.forced_line_break = true
+          elseif part == part_penalty and not cur.forced_line_break then
             -- Ordinary end-of-syllable break
-            syllables[sid].penalty = n
+            cur.penalty = n
           end
+        
+          -- Sometimes we want the first or last note not including
+          -- spaces or any zero-width material, e.g., the zero-width
+          -- boxes used in debugging. If there are no such notes, let
+          -- both be the first node.
+          local n = cur.last_note
+          while n ~= cur.first_note and (n.id ~= hlist or n.width == 0) do
+            n = n.prev
+          end
+          cur.last_note_not_space = n
+          local n = cur.first_note
+          while n ~= cur.last_note_not_space and (n.id ~= hlist or n.width == 0) do
+            n = n.next
+          end
+          cur.first_note_not_space = n
         end
       end
     end
@@ -337,15 +356,10 @@ end
 --- @param cur node The syllable to compute the shift for.
 local function calculate_alteration_shift(cur)
   -- Skip over kerns and zero-width boxes (which are used both for debugging and for holes).
-  local n = cur.first_note
-  while (n ~= cur.last_note.next and
-         (n.id ~= hlist or n.id == hlist and n.width == 0)) do
-    n = n.next
-  end
+  local n = cur.first_note_not_space
   if has_attribute(n, alteration_type_attr) then
     -- Now look for a note, because a lone accidental doesn't get the alteration shift
-    while (n ~= cur.last_note.next and
-           (n.id ~= hlist or n.id == hlist and n.width == 0 or has_attribute(n, alteration_type_attr))) do
+    while n ~= cur.last_note.next and (not node_is_note(n) or has_attribute(n, alteration_type_attr)) do
       n = n.next
     end
     if n ~= cur.last_note.next then
@@ -363,13 +377,10 @@ end
 local function calculate_punctum_mora_shift(cur, next)
   debugmessage('syllablespacing', 'calculating punctum mora shift for syllable %d', cur.sid)
   -- Skip various things at the end of the notes. Zero-width boxes are used during debugging.
-  local n = cur.last_note
-  while has_attribute(n, part_attr, part_notes) and (n.id == hlist and n.width == 0 or n.id == penalty or n.id == local_par) do
-    n = n.prev
-  end
+  local n = cur.last_note_not_space
   -- Look for final punctum mora and measure it (including preceding spacebeforesigns).
   local has_mora = false
-  while has_attribute(n, note_type_attr, note_type_mora) do
+  while n.next ~= cur.first_note and has_attribute(n, note_type_attr, note_type_mora) do
     n = n.prev
     has_mora = true
   end
@@ -433,14 +444,9 @@ local function adjust_syllablefinalskip(cur, next)
     -- \GreSyllable, but we set next_is_bar to true, which means there
     -- is no space in between (possibly a bug).
     
-    local n = next.first_note
-    -- Skip over kerns, glue, zero-width boxes, and custoses
-    while n ~= next.last_note.next and
-      (
-        n.id ~= hlist or n.width == 0 or
-        has_attribute(n, note_type_attr, note_type_custos)
-      )
-    do
+    local n = next.first_note_not_space
+    -- Skip over non-notes and custoses
+    while n ~= next.last_note.next and (not node_is_note(n) or has_attribute(n, note_type_attr, note_type_custos)) do
       n = n.next
     end
     if n ~= next.last_note.next and has_attribute(n, note_type_attr, note_type_bar) then
@@ -810,15 +816,9 @@ local function bar_syllable_spacing(prev, cur, next)
   else
     next_text_begin = cur_end + node.dimensions(next.first, next.text) 
     next_notes_begin = cur_end + node.dimensions(next.first, next.first_note)
-    local n = next.first_note
-    -- Skip over kerns and zero-width boxes (which are used both for debugging and for holes).
-    while (n ~= nil and has_attribute(n, part_attr, part_attr_notes) and
-           n.id ~= hlist or n.id == hlist and n.width == 0) do
-      n = n.next
-    end
     -- Replicate bug #1734: if next syllable is a bar, then ignore space before it
     if next.type == 'bar' then
-      next_notes_begin = next_notes_begin + node.dimensions(next.first_note, n)
+      next_notes_begin = next_notes_begin + node.dimensions(next.first_note, next.first_note_not_space)
     end
     -- Adjust if the next note has an alteration.
     if cur.type == 'bar' and next.alteration_shift ~= nil and not cur.in_disc then
