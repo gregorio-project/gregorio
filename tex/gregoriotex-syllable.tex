@@ -1193,44 +1193,15 @@
   \gre@unsetfixednexttextformat %
   \gre@debugmsg{barspacing}{begindifference: \the\gre@dimen@begindifference}%
   \gre@debugmsg{barspacing}{enddifference: \the\gre@dimen@enddifference}%
+  \ifgre@textcleared
+    % Insert a zero kern that will be adjusted in the Lua function syllable_clearing.
+    {\gre@attr@skip@type=5 \kern0pt}%
+  \fi
+  \GreNoBreak
   \ifgre@newbarspacing%
     %
     % New bar spacing algorithm
     %
-    \gre@skip@minTextDistance=0pt
-    \ifdim\wd\gre@box@syllabletext > 0pt
-      \ifnum#4=1
-        \ifgre@in@euouae
-          \gre@skip@minTextDistance=\gre@space@dimen@interwordspacetext@bars@euouae
-        \else
-          \gre@skip@minTextDistance=\gre@space@dimen@interwordspacetext@bars
-        \fi
-      \fi
-    \else
-      \ifnum#4=1
-        \ifgre@in@euouae
-          \gre@skip@minTextDistance=\gre@space@dimen@interwordspacetext@bars@notext@euouae
-        \else
-          \gre@skip@minTextDistance=\gre@space@dimen@interwordspacetext@bars@notext
-        \fi
-      \fi
-    \fi
-    \gre@debugmsg{barspacing}{Saving minimum text distance: \the\gre@skip@minTextDistance}%
-    \directlua{gregoriotex.save_min_distance('text', 'gre@skip@minTextDistance')}%
-    \ifdim\wd\gre@box@syllablenotes > 0pt
-      % The box already has space built in, so don't add extra space
-      \gre@skip@minNotesDistance=0pt
-    \else
-      % If there are no notes, add extra space
-      \gre@skip@minNotesDistance=\gre@space@skip@interwordspacenotes
-    \fi
-    \gre@debugmsg{barspacing}{Saving minimum notes distance: \the\gre@skip@minNotesDistance}%
-    \directlua{gregoriotex.save_min_distance('notes', 'gre@skip@minNotesDistance')}%
-    \ifgre@textcleared%
-      % Insert a zero kern that will be adjusted in the Lua function syllable_clearing.
-      {\gre@attr@skip@type=5 \kern0pt}%
-    \fi%
-    \GreNoBreak
     \gre@hskip\glueexpr\gre@space@skip@bar@rubber
     % From left edge of syllable to left edge of text
     {\gre@attr@skip@type=2
@@ -1332,10 +1303,6 @@
     % Old spacing algorithm
     %
     %This is the old algorithm.  I've kept it in case people still want to use it.
-    \ifgre@textcleared%
-      % Insert a zero kern that will be adjusted in the Lua function syllable_clearing.
-      {\gre@attr@skip@type=5 \kern0pt}%
-    \fi%
     \global\let\gre@newlinecommon\gre@saved@prelinedelay@newlinecommon %
     {\gre@attr@skip@type=2
     \ifdim\gre@dimen@begindifference>0pt

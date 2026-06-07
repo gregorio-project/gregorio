@@ -240,20 +240,6 @@ local function save_syllable_texts(head)
   end
 end
 
---- Save the minimum distance between text/notes of a \GreSyllable and
---- the following syllable, or before and after the text/notes of a
---- \GreBarSyllable.
-local function save_min_distance(part, skip)
-  local sid = tex.getattribute(syllable_id_attr)
-  if syllables[sid] == nil then syllables[sid] = {} end
-  local g = tex.skip[skip]
-  if part == 'notes' then
-    syllables[sid].min_notes_distance = {g.width, g.stretch, g.shrink}
-  elseif part == 'text' then
-    syllables[sid].min_text_distance = {g.width, g.stretch, g.shrink}
-  end
-end
-
 --- Free all information saved about syllables.
 local function free_syllables()
   for sid, syl in pairs(syllables) do
@@ -773,16 +759,32 @@ local function bar_syllable_spacing(prev, cur, next)
   -- (possibly a bug); (2) if there are no notes, the space after can
   -- be \gre@space@skipinterwordspacenotes. We discard the stretch/shrink.
 
-  local space_before_text, space_after_text
+  local space_before_text = 0
+  local space_after_text = 0
   if cur.text.width > 0 then
     space_before_text = prev and prev.min_text_distance and prev.min_text_distance[1] or 0
-    space_after_text = cur.min_text_distance[1]
+    if cur.end_of_word then
+      if cur.in_euouae then
+        space_after_text = tex.sp(token.get_macro('gre@space@dimen@interwordspacetext@bars@euouae'))
+      else
+        space_after_text = tex.sp(token.get_macro('gre@space@dimen@interwordspacetext@bars'))
+      end
+    end
   else
     -- If there is no text, ignore prev.min_text_distance and split
-    -- cur.min_text_distance evenly before and after.
-    space_before_text = tex.round(cur.min_text_distance[1]/2)
-    space_after_text = cur.min_text_distance[1] - space_before_text
+    -- current min_text_distance evenly before and after.
+    local space_for_text
+    if cur.end_of_word then
+      if cur.in_euouae then
+        space_for_text = tex.sp(token.get_macro('gre@space@dimen@interwordspacetext@bars@notext@euouae'))
+      else
+        space_for_text = tex.sp(token.get_macro('gre@space@dimen@interwordspacetext@bars@notext'))
+      end
+    end
+    space_before_text = tex.round(space_for_text/2)
+    space_after_text = tex.round(space_for_text/2)
   end
+  cur.min_text_distance = dimen_to_glue(space_after_text)
   debugmessage('barspacing', 'space before text: %fpt', space_before_text/2^16)
   debugmessage('barspacing', 'space after text: %fpt', space_after_text/2^16)
   -- text_req includes space before and after
@@ -792,11 +794,15 @@ local function bar_syllable_spacing(prev, cur, next)
   debugmessage('barspacing', 'text center: %fpt', text_center/2^16)
 
   -- If there are notes, then notes_width does include the space
-  -- before and after. But if there are no notes, then notes_width is 0.
+  -- before and after, and we don't add extra space. But if there are
+  -- no notes, then notes_width is 0, and we add some extra space.
   local notes_width = node.dimensions(cur.first_note, cur.last_note.next)
   debugmessage('barspacing', 'width of notes: %fpt', notes_width/2^16)
   -- notes_req always includes the space before and after.
-  local notes_req = notes_width + cur.min_notes_distance[1]
+  local notes_req = notes_width
+  if notes_width == 0 then
+    notes_req = notes_req + string_to_glue(token.get_macro('gre@space@skip@interwordspacenotes'))[1]
+  end
   debugmessage('barspacing', 'space required for notes: %fpt', notes_req/2^16)
   local space_after_notes = node.dimensions(cur.last_note_not_space.next, cur.last_note.next)
   debugmessage('barspacing', 'space after notes: %fpt', space_after_notes/2^16)
@@ -871,7 +877,7 @@ local function bar_syllable_spacing(prev, cur, next)
     end
     debugmessage('barspacing', 'maximum offset to left: %fpt', max_offset_left/2^16)
     debugmessage('barspacing', 'maximum offset to right: %fpt', max_offset_right/2^16)
-  
+    
     if new_text_offset > max_offset_right then
       -- Move text to the left
       new_text_center = new_notes_center + max_offset_right
@@ -1182,7 +1188,6 @@ end
 gregoriotex.save_syllable_info = save_syllable_info
 gregoriotex.save_post_syllable = save_post_syllable
 gregoriotex.save_syllable_texts = save_syllable_texts
-gregoriotex.save_min_distance = save_min_distance
 gregoriotex.current_syllable = current_syllable
 gregoriotex.free_syllables = free_syllables
 gregoriotex.scan_syllables = scan_syllables
