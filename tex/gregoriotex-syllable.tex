@@ -1198,155 +1198,104 @@
     {\gre@attr@skip@type=5 \kern0pt}%
   \fi
   \GreNoBreak
-  \ifgre@newbarspacing%
-    %
-    % New bar spacing algorithm
-    %
+  \ifgre@newbarspacing
     \gre@hskip\glueexpr\gre@space@skip@bar@rubber
-    % From left edge of syllable to left edge of text
-    {\gre@attr@skip@type=2
-    \ifdim\gre@dimen@begindifference>0pt
-      \kern\gre@dimen@begindifference
-    \else
-      \kern0pt
-    \fi}%
-    \GreNoBreak %
-    % all that extra stuff (translations and the like)
-    #8%
-    \GreNoBreak %
-    %print the text, the raise is in case of a translation
-    \raise\gre@space@dimen@spacebeneathtext
-    \copy\gre@box@syllabletext
-    %and the code which handles translation centering
-    \ifgre@mustdotranslationcenterend%
-      % case of end of translation centering, we do it after the typesetting of the text
-      \gre@dotranslationcenterend %
-      \gre@mustdotranslationcenterendfalse%
-    \fi %
-    %move back to the beginning of the bar line
-    {\gre@attr@skip@type=3
-    \kern\dimexpr(\gre@dimen@enddifference% move from end of text to end of bar line
-      -\wd\gre@box@syllablenotes)}% back up from end of bar line to beginning
-    \GreNoBreak%
-    \gre@attr@part=10
-    % In case there are no notes, ensure that there is at least one
-    % box with the attribute.
-    \ifdim\wd\gre@box@syllablenotes=0pt
-      \hbox{}%
-    \fi
-    \ifgre@shownotes%
-      \IfSubStr{\gre@debug}{,barspacing,}%
-        % when debugging we add a zero-width line to mark the syllable bound
-        {\raise 12pt\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
-        {}% do nothing if not debugging
-      #9%
-      \IfSubStr{\gre@debug}{,barspacing,}%
-        % when debugging we add a zero-width line to mark the syllable bound
-        {\raise 12pt\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
-        {}% do nothing if not debugging
-    \else%
-      \ifnum\gre@notes@phantomwrapper>0\relax
-        \gre@applyphantomwrapper{\gre@notes@phantomwrapper}{#9}%
-      \else
-        \gre@check@nabc@needsspacing
-        \ifgre@nabc@needsspacing
-          % NABC visible: render with tight (NABC-only) spacing
-          \gre@notes@rendernabc@tight{#9}%
-          % Apply per-syllable NABC kern (computed in \gre@syllablenotes)
-          \ifdim\gre@dimen@nabc@extrakern>0pt\relax
-            \kern\gre@dimen@nabc@extrakern
-          \fi
-        \else
-          % Notes disabled: render NABC without affecting spacing
-          \hbox to 0pt{\gre@notes@rendernabc{#9}\hss}%
-        \fi
-      \fi
-    \fi%
-    \unsetattribute{\gre@attr@part}%
-    \global\let\gre@newlinecommon\gre@saved@prelinedelay@newlinecommon %
-    \GreNoBreak%
-    % get into position to place the penalty
-    {\gre@attr@skip@type=4
-    \ifdim\gre@dimen@enddifference < 0pt\relax%
-      % the text extends past the notes, so we need to get to the end of the text
-      \kern-\gre@dimen@enddifference%
-    \else
-      \kern0pt
-    \fi}%
-    \GreNoBreak
-    % gre@count@temp@one is "forced end of line or last of score"
-    \gre@count@temp@one=0\relax %
-    \ifnum\gre@newlinearg=-1\else %
-      \gre@count@temp@one=1\relax %
-    \fi %
-    \ifgre@endofscore %
-      \gre@count@temp@one=1\relax %
-    \fi %
-    % if no end of line or end of score
-    \ifnum\gre@count@temp@one=0\relax %
-      % add the penalty
-      \gre@debugmsg{barspacing}{after bar penalty: \the\gre@space@count@endafterbarpenalty}%
-      {\gre@attr@part=11
-      \gre@penalty{\the\gre@space@count@endafterbarpenalty}}%
-    \else %
-      \ifgre@endofscore %
-        \localleftbox{}%
-      \else %
-        \ifnum\gre@newlinearg=-1\else %
-          \gre@debugmsg{barspacing}{calling new line with argument: \gre@newlinearg}%
-          \gre@newlinecommon{\gre@newlinearg}{1}%
-        \fi %
-      \fi %
-    \fi%
+  \fi
+  % From left edge of syllable to left edge of text
+  {\gre@attr@skip@type=2
+  \ifdim\gre@dimen@begindifference>0pt
+    \kern\gre@dimen@begindifference
+  \else
+    \kern0pt
+  \fi}%
+  \GreNoBreak
+  % all that extra stuff (translations and the like)
+  #8%
+  \GreNoBreak
+  %print the text, the raise is in case of a translation
+  \raise\gre@space@dimen@spacebeneathtext
+  \copy\gre@box@syllabletext
+  %and the code which handles translation centering
+  \ifgre@mustdotranslationcenterend
+    % case of end of translation centering, we do it after the typesetting of the text
+    \gre@dotranslationcenterend
+    \gre@mustdotranslationcenterendfalse
+  \fi
+  %move back to the beginning of the bar line
+  {\gre@attr@skip@type=3
+  \kern\dimexpr(\gre@dimen@enddifference% move from end of text to end of bar line
+    -\wd\gre@box@syllablenotes)}% back up from end of bar line to beginning
+  \GreNoBreak
+  \gre@attr@part=10
+  % In case there are no notes, ensure that there is at least one
+  % box with the attribute.
+  \ifdim\wd\gre@box@syllablenotes=0pt
+    \hbox{}%
+  \fi
+  \ifgre@shownotes
+    \IfSubStr{\gre@debug}{,barspacing,}%
+      % when debugging we add a zero-width line to mark the syllable bound
+      {\raise 12pt\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
+      {}% do nothing if not debugging
+    #9%
+    \IfSubStr{\gre@debug}{,barspacing,}%
+      % when debugging we add a zero-width line to mark the syllable bound
+      {\raise 12pt\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
+      {}% do nothing if not debugging
   \else%
-    %
-    % Old spacing algorithm
-    %
-    %This is the old algorithm.  I've kept it in case people still want to use it.
-    \global\let\gre@newlinecommon\gre@saved@prelinedelay@newlinecommon %
-    {\gre@attr@skip@type=2
-    \ifdim\gre@dimen@begindifference>0pt
-      \kern\gre@dimen@begindifference
+    \ifnum\gre@notes@phantomwrapper>0\relax
+      \gre@applyphantomwrapper{\gre@notes@phantomwrapper}{#9}%
     \else
-      \kern0pt
-    \fi}%
-    \GreNoBreak
-    #8\relax
-    \ifdim\wd\gre@box@syllabletext=0pt
-      {\gre@attr@part=4\hbox{}}% don't print debugging marks
-    \else
-      \raise\gre@space@dimen@spacebeneathtext \copy\gre@box@syllabletext
+      \gre@check@nabc@needsspacing
+      \ifgre@nabc@needsspacing
+        % NABC visible: render with tight (NABC-only) spacing
+        \gre@notes@rendernabc@tight{#9}%
+        % Apply per-syllable NABC kern (computed in \gre@syllablenotes)
+        \ifdim\gre@dimen@nabc@extrakern>0pt\relax
+          \kern\gre@dimen@nabc@extrakern
+        \fi
+      \else
+        % Notes disabled: render NABC without affecting spacing
+        \hbox to 0pt{\gre@notes@rendernabc{#9}\hss}%
+      \fi
     \fi
-    \ifgre@mustdotranslationcenterend
-      % case of end of translation centering, we do it after the typesetting of the text
-      \gre@dotranslationcenterend
-      \gre@mustdotranslationcenterendfalse
-    \fi
-    {\gre@attr@skip@type=3
-    \kern\dimexpr(\gre@dimen@enddifference% move from end of text to end of bar line
-      -\wd\gre@box@syllablenotes)}% back up from end of bar line to beginning
-    \GreNoBreak
-    \gre@attr@part=10
-    % In case there are no notes, ensure that there is at least one
-    % box with the attribute.
-    \ifdim\wd\gre@box@syllablenotes=0pt
-      \hbox{}%
-    \fi
-    \ifgre@shownotes
-      #9%
-    \else
-      \hbox{}% ensure at least one node is marked as a note
-    \fi
-    \unsetattribute{\gre@attr@part}%
-    {\gre@attr@skip@type=4
-    \ifdim\gre@dimen@enddifference < 0pt\relax%
-      % the text extends past the notes, so we need to get to the end of the text
-      \kern-\gre@dimen@enddifference%
-    \else
-      \kern0pt
-    \fi}%
-    {\gre@attr@part=11\gre@penalty{\the\gre@space@count@endafterbarpenalty}}%
   \fi%
+  \unsetattribute{\gre@attr@part}%
+  \global\let\gre@newlinecommon\gre@saved@prelinedelay@newlinecommon
+  \GreNoBreak
+  % get into position to place the penalty
+  {\gre@attr@skip@type=4
+  \ifdim\gre@dimen@enddifference < 0pt\relax
+    % the text extends past the notes, so we need to get to the end of the text
+    \kern-\gre@dimen@enddifference
+  \else
+    \kern0pt
+  \fi}%
+  \GreNoBreak
+  % gre@count@temp@one is "forced end of line or last of score"
+  \gre@count@temp@one=0\relax
+  \ifnum\gre@newlinearg=-1\else
+    \gre@count@temp@one=1\relax
+  \fi
+  \ifgre@endofscore
+    \gre@count@temp@one=1\relax
+  \fi
+  % if no end of line or end of score
+  \ifnum\gre@count@temp@one=0\relax
+    % add the penalty
+    \gre@debugmsg{barspacing}{after bar penalty: \the\gre@space@count@endafterbarpenalty}%
+    {\gre@attr@part=11
+    \gre@penalty{\the\gre@space@count@endafterbarpenalty}}%
+  \else
+    \ifgre@endofscore
+      \localleftbox{}%
+    \else
+      \ifnum\gre@newlinearg=-1\else
+        \gre@debugmsg{barspacing}{calling new line with argument: \gre@newlinearg}%
+        \gre@newlinecommon{\gre@newlinearg}{1}%
+      \fi
+    \fi
+  \fi
   {\gre@attr@skip@type=1\gre@hskip0pt}%
   \global\gre@dimen@notesaligncenter= 0 pt\relax % very important, see flat and natural
   \gre@unsetfixedtextformat %
