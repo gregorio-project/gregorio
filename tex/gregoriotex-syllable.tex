@@ -362,6 +362,12 @@
     \setbox\gre@box@temp@width=\hbox{\gre@fontchar@naturalparen}%
   \or % 6 - parenthesized sharp
     \setbox\gre@box@temp@width=\hbox{\gre@fontchar@sharpparen}%
+  \or % 7 - soft flat
+    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@flat}%
+  \or % 8 - soft natural
+    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@natural}%
+  \or % 9 - soft sharp
+    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@sharp}%
   \fi %
   \ifnum#2>0\relax %
     \advance\gre@dimen@temp@five by \dimexpr(\wd\gre@box@temp@width+\gre@space@dimen@alterationspace)\relax %
