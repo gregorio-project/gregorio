@@ -4,6 +4,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 
 ## [Unreleased][develop]
 ### Fixed
+- Fixed a crash in `post_linebreak` when a syllable's text is produced by a nested hbox (e.g. `\stackon{…}{…}` inside `<v>…</v>` in GABC), which left `lastglyph` as `nil` and caused a nil-dereference on natural line breaks. See [#1762](https://github.com/gregorio-project/gregorio/issues/1762).
 - Fixed a bug that could cause problems with headers/footers by generalizing the fix for fancyhdr (see [#1610](https://github.com/gregorio-project/gregorio/pull/1610) to work with any headers/footers. In particular, it fixes a similar problem with the `memoir` class. See [#1753](https://github.com/gregorio-project/gregorio/pull/1753).
 - Fixed some typos that would cause a handful of spaces to be scaled incorrectly. See [PR #1746](https://github.com/gregorio-project/gregorio/pull/1746).
 - Fixed a few bugs related to horizontal spacing around bars and clef changes. See issues [#1191](https://github.com/gregorio-project/gregorio/issues/1191), case 3 of [#1724](https://github.com/gregorio-project/gregorio/issues/1724), [PR #1743](https://github.com/gregorio-project/gregorio/pull/1743), and [#1745](https://github.com/gregorio-project/gregorio/issues/1745).
