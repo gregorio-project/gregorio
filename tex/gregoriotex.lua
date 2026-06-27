@@ -951,6 +951,22 @@ local function adjust_additional_spaces(line, info, linenum)
   end
 end
 
+-- node.traverse_id does not recurse into sub-lists; this helper walks the
+-- full node tree so that the last glyph is found even inside nested hboxes
+-- produced by <v>…\hbox{…}…</v> or <v>…\stackon{…}{…}…</v> in GABC.
+local function find_last_glyph(head)
+  local result = nil
+  for n in node.traverse(head) do
+    if n.id == glyph then
+      result = n
+    elseif n.head then
+      local inner = find_last_glyph(n.head)
+      if inner then result = inner end
+    end
+  end
+  return result
+end
+
 local function post_linebreak(h, groupcode, glyphes)
   --dump_nodes(h)
   -- TODO: to be changed according to the font
@@ -1059,13 +1075,10 @@ local function post_linebreak(h, groupcode, glyphes)
 
     -- If the last syllable needed a dash, add it
     if adddash then
-      local lastglyph
-      -- we traverse the list, to detect the font to use,
-      -- and also not to add an hyphen if there is already one
-      for g in node.traverse_id(glyph, lastseennode.head) do
-        lastglyph = g
-      end
-      if not (lastglyph.char == hyphen or lastglyph.char == 45) then
+      -- use find_last_glyph so nested hboxes (e.g. from \stackon) are searched
+      local lastglyph = find_last_glyph(lastseennode.head)
+      -- guard nil: if no glyph is found at any level, skip hyphen insertion
+      if lastglyph and not (lastglyph.char == hyphen or lastglyph.char == 45) then
         local dashnode, hyphnode = getdashnnode()
         hyphnode.font = lastglyph.font
         insert_after(lastseennode.head, lastglyph, dashnode)
