@@ -606,41 +606,14 @@
 
 \let\gre@fixedtextformat\gre@textnormal %
 
-% The same but for the next syllable
-
+% The same but for the next syllable. DEPRECATED
 \def\GreSetFixedNextTextFormat#1{%
-  \ifcase#1\relax%
-    \global\let\gre@fixednexttextformat\gre@textnormal %
-  \or %
-    \global\let\gre@fixednexttextformat\GreItalic %
-  \or %
-    \global\let\gre@fixednexttextformat\GreBold %
-  \or %
-    \global\let\gre@fixednexttextformat\GreSmallCaps %
-  \or %
-    \global\let\gre@fixednexttextformat\GreTypewriter %
-  \or %
-    \global\let\gre@fixednexttextformat\GreUnderline %
-  \or %
-    \global\let\gre@fixednexttextformat\GreColored %
-  \fi %
 }%
-
-% a function to cancel the previous one
-\def\gre@unsetfixednexttextformat{%
-  \gre@trace{gre@unsetfixednexttextformat}%
-  \global\let\gre@fixednexttextformat\gre@textnormal %
-  \gre@trace@end%
-}%
-
-\let\gre@fixednexttextformat\gre@textnormal %
 
 \def\GreUnstyled#1{#1}%
 
 \newif\ifgre@forcedcentering%
 \gre@forcedcenteringfalse%
-\newif\ifgre@nextforcedcentering%
-\gre@nextforcedcenteringfalse%
 
 \def\GreGABCForceCenters{%
   \ifgre@gabcforcecenters%
@@ -650,12 +623,8 @@
   \fi%
 }%
 
+% DEPRECATED
 \def\GreGABCNextForceCenters{%
-  \ifgre@gabcforcecenters%
-    \gre@nextforcedcenteringtrue%
-  \else%
-    \gre@nextforcedcenteringfalse%
-  \fi%
 }%
 
 \newif\ifgre@gabcforcecenters%
@@ -703,27 +672,8 @@
   \gre@forcedcenteringfalse%
 }%
 
+% DEPRECATED
 \def\GreSetNextSyllable#1#2#3#4#5{%
-  \ifgre@nextforcedcentering%
-    \gdef\gre@nextfirstsyllablepart{#1}%
-    \gdef\gre@nextmiddlesyllablepart{#2}%
-    \gdef\gre@nextendsyllablepart{#3}%
-  \else%
-    \ifcase\gre@lyriccentering% 0 - syllable centering
-      \gdef\gre@nextfirstsyllablepart{}%
-      \gdef\gre@nextmiddlesyllablepart{#1#2#3}%
-      \gdef\gre@nextendsyllablepart{}%
-    \or % 1 - vowel centering
-      \gdef\gre@nextfirstsyllablepart{#1}%
-      \gdef\gre@nextmiddlesyllablepart{#2}%
-      \gdef\gre@nextendsyllablepart{#3}%
-    \or % 2 - first-letter centering
-      \gdef\gre@nextfirstsyllablepart{}%
-      \gdef\gre@nextmiddlesyllablepart{#4}%
-      \gdef\gre@nextendsyllablepart{#5}%
-    \fi %
-  \fi%
-  \gre@nextforcedcenteringfalse%
 }%
 
 %%%%%%%%%%%%%%%
@@ -785,24 +735,10 @@
     ]%
 }%
 
-\newif\ifgre@evaluatingnextsyllable%
-\gre@evaluatingnextsyllablefalse%
-\def\gre@evaluatenextsyllable#1{%
-  \gre@trace{gre@evaluatenextsyllable{#1}}%
-  \gre@evaluatingnextsyllabletrue%
-  #1%
-  \gre@evaluatingnextsyllablefalse%
-  \gre@trace@end%
-}%
-
 \newif\ifgre@showhyphenafterthissyllable%
 \def\GreForceHyphen{%
-  \ifgre@evaluatingnextsyllable%
-    -%
-  \else%
-    \global\gre@showhyphenafterthissyllabletrue%
-    \gre@debugmsg{hyphen}{Forcing hyphen in gabc}%
-  \fi%
+  \global\gre@showhyphenafterthissyllabletrue
+  \gre@debugmsg{hyphen}{Forcing hyphen in gabc}%
 }%
 \def\GreEmptyFirstSyllableHyphen{\ifgre@forceemptyfirstsyllablehyphen\GreForceHyphen\fi}%
 
@@ -848,9 +784,6 @@
   \gre@textclearedtrue%
 }%
 
-\def\gre@arg@oftwo@first#1#2{#1}%
-\def\gre@arg@oftwo@second#1#2{#2}%
-
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : macro setting the letters of this syllable
 % #2 : reserved (unused)
@@ -882,7 +815,7 @@
   #1%
   \gre@firstglyphtrue%
   \gre@dimen@bolextra = 0pt\relax%
-  \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
+  \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}% we first get the width between the alignment point and the end of the syllable
   % Before measuring the notes, save the alteration id. We will
   % restore it later, so that the measured notes and the actual notes
   % have the same alteration ids, if any.
@@ -941,7 +874,6 @@
   #5%
   % now we can restore the alteration id to typeset the notes for real
   \global\gre@attr@alteration@id=\gre@saved@attr@alteration@id\relax %
-  \gre@unsetfixednexttextformat %
   \gre@attr@part=4
   \ifgre@showlyrics%
     \setbox\gre@box@syllabletext=\hbox{%
@@ -1157,7 +1089,7 @@
   % there are two different cases that have almost nothing in common : the case where there is something written under the bar, and the case where there is nothing.
   % first of all we need to calculate begindifference and enddifference.
   #1%
-  \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}%
+  \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}%
   \directlua{gregoriotex.current_syllable().dash=4}%
   \gre@attr@part=4
   \ifgre@showlyrics%
@@ -1190,7 +1122,6 @@
   \gre@dimen@begindifference=\dimexpr(\gre@dimen@notesaligncenter - \gre@dimen@textaligncenter)\relax%
   \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}%
   #5%
-  \gre@unsetfixednexttextformat %
   \gre@debugmsg{barspacing}{begindifference: \the\gre@dimen@begindifference}%
   \gre@debugmsg{barspacing}{enddifference: \the\gre@dimen@enddifference}%
   \ifgre@textcleared

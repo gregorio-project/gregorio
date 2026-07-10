@@ -136,14 +136,12 @@ Macro to calculate \verb=\gre@constantglyphraise=
 \macroname{\textbackslash gre@calculate@additionalspaces}{}{gregoriotex-spaces.tex}
 Macro which initializes various dimensions and counts used for variable line height computation.
 
-\macroname{\textbackslash gre@calculate@textaligncenter}{\#1\#2\#3}{gregoriotex-spaces.tex}
+\macroname{\textbackslash gre@calculate@textaligncenter}{\#1\#2}{gregoriotex-spaces.tex}
 Macro for calculating \verb=\gre@textaligncenter=.
 
 \begin{argtable}
   \#1 & string & The first part of the syllable (any preceding consonants in Latin).\\
   \#2 & string & The middle part of the syllable (the vowel in Latin, the whole syllable in English).\\
-  \#3 & \texttt{0} & Calculation is being performed for the current syllable.\\
-  & \texttt{1} & Calculation is being performed for the next syllable.\\
 \end{argtable}
 
 \macroname{\textbackslash gre@calculate@annotationtrueraise}{}{gregoriotex-spaces.tex}
@@ -1074,15 +1072,6 @@ Macro which stores the first part of the current syllable (that which comes befo
 \macroname{\textbackslash gre@middlesyllablepart}{}{gregoriotex-syllable.tex}
 Macro which stores the middle part of the current syllable (the part which aligns with the notes).
 
-\macroname{\textbackslash gre@nextendsyllablepart}{}{gregoriotex-syllable.tex}
-Macro which stores the end part of the next syllable (that which comes after the alignment part).
-
-\macroname{\textbackslash gre@nextfirstsyllablepart}{}{gregoriotex-syllable.tex}
-Macro which stores the first part of the next syllable (that which comes before the alignment part).
-
-\macroname{\textbackslash gre@nextmiddlesyllablepart}{}{gregoriotex-syllable.tex}
-Macro which stores the middle part of the next syllable (the part which aligns with the notes).
-
 \macroname{\textbackslash gre@fixdebug}{}{gregoriotex-common.tex}
 Fixes the raw \verb=\gre@debug= value for use with \verb=\gre@debugmsg=.
 
@@ -1091,13 +1080,6 @@ A macro which applies formatting that needs to apply to the whole syllable (rath
 
 \begin{argtable}
   \#1 & string & The syllable (usually built as \texttt{\small\pmac{gre@firstsyllablepart}\linebreak[1]\pmac{gre@middlesyllablepart}\linebreak[1]\pmac{gre@endsyllablepart}})\\
-\end{argtable}
-
-\macroname{\textbackslash gre@fixednexttextformat}{\#1}{gregoriotex-syllable.tex}
-A macro which applies formatting that needs to apply to the whole syllable (rather than the parts individually) for the next syllable.  Necessary to preserve ligatures across parts within a syllable.
-
-\begin{argtable}
-  \#1 & string & The syllable (usually built as \texttt{\small\pmac{gre@nextfirstsyllablepart}\linebreak[1]\pmac{gre@nextmiddlesyllablepart}\linebreak[1]\pmac{gre@nextendsyllablepart}})\\
 \end{argtable}
 
 \macroname{\textbackslash gre@gabcname}{}{gregoriotex-main.tex}
@@ -1210,9 +1192,6 @@ Macro which points to \verb=\typeout= in \LaTeX\ or \verb=\message= in Plain \Te
 \macroname{\textbackslash gre@unsetfixedtextformat}{}{gregoriotex-syllable.tex}
 Macro which changes \verb=\gre@fixedtextformat= back to normal text.
 
-\macroname{\textbackslash gre@unsetfixednexttextformat}{}{gregoriotex-syllable.tex}
-Macro which changes \verb=\gre@fixednexttextformat= back to normal text.
-
 \macroname{\textbackslash gregoriotex@symbols@loaded}{}{gregoriotex-symbols.tex}
 Empty macro which is used to determine if the symbols have been loaded and prevent loading them again if they have.
 
@@ -1316,25 +1295,6 @@ Macro to typeset a punctum mora.
 
 \macroname{\textbackslash gre@changecavumhole}{\#1[\#2][\#3]}{gregoriotex-main.tex}
 Macro used by \verb=\grechangecavumglyph= to handle the optional arguments.
-
-\macroname{\textbackslash gre@evaluatenextsyllable}{\#1}{gregoriotex-syllable.tex}
-Evaluates its first argument as an advance computation against the next syllable.  Twiddles the \verb=ifgre@evaluatingnextsyllable= flag around evaluation of the macro argument.
-
-\macroname{\textbackslash gre@arg@oftwo@first}{\#1\#2}{gregoriotex-syllable.tex}
-Evaluates to the first of its arguments.
-
-\begin{argtable}
-  \#1 & any & the first argument\\
-  \#2 & any & the second argument\\
-\end{argtable}
-
-\macroname{\textbackslash gre@arg@oftwo@second}{\#1\#2}{gregoriotex-syllable.tex}
-Evaluates to the second of its arguments.
-
-\begin{argtable}
-  \#1 & any & the first argument\\
-  \#2 & any & the second argument\\
-\end{argtable}
 
 \macroname{\textbackslash gre@parsecommas}{\#1\#2}{gregoriotex-common.tex}
 Runs a command for each string in a comma-separated list of strings.
@@ -1910,9 +1870,6 @@ Boolean for determining whether forced centers in gabc are allowed to determine 
 \macroname{\textbackslash ifgre@forcedcentering}{}{gregoriotex-syllable.tex}
 Boolean indicating that the current syllable had a forced center in the gabc which is to be respected.
 
-\macroname{\textbackslash ifgre@nextforcedcentering}{}{gregoriotex-syllable.tex}
-Boolean indicating that the next syllable had a forced center in the gabc which is to be respected.
-
 \macroname{\textbackslash ifgre@unbreakableendofelement}{}{gregoriotex-main.tex}
 Boolean used by \verb=\GreEndOfElement= to store whether the line may be broken at that point.
 
@@ -2048,9 +2005,6 @@ Boolean indicating that a syllable should be rewritten to improve ligature rende
 
 \macroname{\textbackslash ifgre@textcleared}{}{gregoriotex-syllable.tex}
 Boolean indicating that the text of this syllable should not overlap any previous syllable.
-
-\macroname{\textbackslash ifgre@evaluatingnextsyllable}{}{gregoriotex-syllable.tex}
-Boolean indicating that some aspect of the next syllable is being evaluated in advance.
 
 \macroname{\textbackslash ifgre@noteadditionalspacelinestext}{}{gregoriotex-main.tex}
 Boolean indicating that the additional space needed between the notes and the lyrics due to really low notes should follow the user setting of noteadditionalspacelinestext (as opposed to being calculated automatically, the default).
