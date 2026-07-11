@@ -256,12 +256,8 @@
 \newskip\gre@skip@syllablefinalskip
 \newskip\gre@skip@minTextDistance%
 \newskip\gre@skip@minNotesDistance%
-\newdimen\gre@dimen@curTextDistance%
-\newdimen\gre@dimen@curNotesDistance%
-\newskip\gre@skip@minShiftText%
-\newskip\gre@skip@minShiftNotes%
 
-%% @desc Macro computing the skip at the end of the syllable
+%% @desc Macro computing minimum distances between notes/text of this syllable and next
 %% @arg#1 0 if end of syllable, 1 if end of word
 %% @arg#2 0 if next syllable is normal, 1 if it's a bar, 2 if it starts with
 %%        an alteration
@@ -277,19 +273,6 @@
 %%  min_notes_dist = space_between_notes
 %%  if (barres sur cur ou barres sur next):
 %%     min_notes_dist = space_between_bars
-%%  % space between end of syllable and current point for previous note
-%%  cur_dist_notes = cur_dist_text = 0
-%%  if (cur_end_diff < 0):
-%%     cur_dist_text += -cur_end_diff
-%%  else:
-%%     cur_dist_notes += cur_end_diff
-%%  if (next_begin_diff < 0):
-%%     cur_dist_notes += -next_begin_diff
-%%  else:
-%%     cur_dist_text += next_begin_diff
-%%  min_shift_text = min_dist_text - cur_dist_text
-%%  min_shift_notes = min_dist_notes - cur_dist_notes
-%%  shift = max(min_shift_text, min_shift_notes)
 \def\gre@calculate@syllablefinalskip#1#2{%
   \gre@trace{gre@calculate@syllablefinalskip{#1}{#2}}%
 %%  min_text_dist = prev_cur_word ? 0 : space_inter_words
@@ -352,51 +335,6 @@
     \fi %
   \fi %
   \gre@debugmsg{syllablespacing}{ minNotesDistance = \the\gre@skip@minNotesDistance}%
-  % determining current distance between notes and
-  % next notes, and current distance between text and next text
-  \gre@dimen@curTextDistance=0pt\relax%
-  \gre@dimen@curNotesDistance=0pt\relax%
-%%  cur_dist_notes = cur_dist_text = 0
-%%  if (cur_end_diff < 0):
-%%     cur_dist_notes += -cur_end_diff
-%%  else:
-%%     cur_dist_text += cur_end_diff
-%%  if (next_begin_diff < 0):
-%%     cur_dist_notes += -next_begin_diff
-%%  else:
-%%     cur_dist_text += next_begin_diff
-  \gre@debugmsg{syllablespacing}{ enddifference = \the\gre@dimen@enddifference}%
-  \gre@debugmsg{syllablespacing}{ nextbegindifference = \the\gre@skip@nextbegindifference}%
-  \ifdim\gre@dimen@enddifference < 0 pt\relax%
-    \gre@dimen@curNotesDistance = -\gre@dimen@enddifference\relax%
-  \else %
-    \gre@dimen@curTextDistance = \gre@dimen@enddifference\relax%
-  \fi %
-  \ifdim\gre@skip@nextbegindifference < 0 pt\relax%
-    \advance\gre@dimen@curNotesDistance by -\gre@skip@nextbegindifference\relax%
-  \else %
-    \advance\gre@dimen@curTextDistance by \gre@skip@nextbegindifference\relax%
-  \fi %
-  \gre@debugmsg{syllablespacing}{ curNotesDistance = \the\gre@dimen@curNotesDistance}%
-  \gre@debugmsg{syllablespacing}{ curTextDistance = \the\gre@dimen@curTextDistance}%
-%%  min_shift_text = min_dist_text - cur_dist_text
-%%  min_shift_notes = min_dist_notes - cur_dist_notes
-%%  shift = max(min_shift_text, min_shift_notes)
-  \gre@skip@minShiftText = \glueexpr(\gre@skip@minTextDistance - \gre@dimen@curTextDistance)\relax %
-  \gre@skip@minShiftNotes = \glueexpr(\gre@skip@minNotesDistance - \gre@dimen@curNotesDistance)\relax %
-  \gre@debugmsg{syllablespacing}{ minShiftNotes = \the\gre@skip@minShiftNotes}%
-  \gre@debugmsg{syllablespacing}{ minShiftText = \the\gre@skip@minShiftText}%
-  \ifdim\gre@skip@minShiftNotes < \gre@skip@minShiftText %
-    \global\gre@skip@syllablefinalskip = \gre@skip@minShiftText %
-  \else %
-    \global\gre@skip@syllablefinalskip = \gre@skip@minShiftNotes %
-  \fi %
-  \ifgre@showhyphenafterthissyllable %
-    \gre@debugmsg{syllablespacing}{ add intersyllablespacestretchhyphen (\gre@space@skip@intersyllablespacestretchhyphen)}%
-    \advance\gre@skip@syllablefinalskip by \gre@space@skip@intersyllablespacestretchhyphen\relax%
-  \fi %
-  \gre@debugmsg{syllablespacing}{ syllablefinalskip = \the\gre@skip@syllablefinalskip}%
-  \relax %
   \gre@trace@end%
 }
 
@@ -577,48 +515,47 @@
 \def\gre@calculate@eolshift#1{%
   \gre@trace{gre@calculate@eolshift{#1}}%
   \gre@skip@temp@two=0pt\relax%
-  % we only need a shift if the lyrics are longer than the notes
   \gre@debugmsg{eolshift}{eolshift called with enddifference: \the #1}%
   % dimen@temp@three is the length of the hyphen at the end of the syllable
+  % which is added afterwards in Lua and we need to make some room for
   \gre@dimen@temp@three=0pt\relax %
-  % if there is a possible hyphen (added afterwards in lua), we keep some room for it
   \ifgre@possibleluahyphenafterthissyllable %
     \setbox\gre@box@temp@width=\hbox{\GreHyph}%
     \gre@dimen@temp@three=\dimexpr(\wd\gre@box@temp@width-\gre@protrusionfactor@eolhyphen\wd\gre@box@temp@width)\relax%
-    \gre@debugmsg{eolshift}{widthof the potential hyphen: \the\gre@dimen@temp@three}%
+    \gre@debugmsg{eolshift}{width of the potential hyphen: \the\gre@dimen@temp@three}%
   \fi %
   % The basic value for the eol shift is -enddifference + width of the hyphen
   \gre@skip@temp@two=\glueexpr(\gre@dimen@temp@three-\the #1)\relax%
-  \gre@debugmsg{eolshift}{adjusted enddifference: \the\gre@skip@temp@two}%
-  % if tex+hyphen goes further than the notes:
-  \ifdim\gre@skip@temp@two>0pt\relax%
-    \gre@skip@temp@three = 0pt%
-    \ifgre@blockeolcustos\else%
+  \gre@debugmsg{eolshift}{hyphen-enddifference: \the\gre@skip@temp@two}%
+  \gre@skip@temp@three = 0pt
+  \ifgre@shownotes
+    \ifgre@blockeolcustos\else
       % The maximum value is wd(custos) + spacebeforeeolcustos
       % Were the eolshift larger than this the lyrics would stick out
       % into the margin
       \setbox\gre@box@temp@width=\hbox{\gre@pickcustos{\gre@pitch@g}{0}}%
       \gre@skip@temp@three = \glueexpr(\wd\gre@box@temp@width+\gre@space@skip@spacebeforeeolcustos)\relax%
-    \fi %
-    \gre@debugmsg{eolshift}{custos + space before custos = \the\gre@skip@temp@three}%
+    \fi
+  \fi
+  \gre@debugmsg{eolshift}{custos + space before custos = \the\gre@skip@temp@three}%
+  \ifdim#1<0pt
     % pick the smaller of the two values calculated above
     \ifdim\gre@skip@temp@two>\gre@skip@temp@three%
-      \gre@debugmsg{eolshift}{imposing limit}%
+      \gre@debugmsg{eolshift}{text longer than notes, hyphen past custos}%
       \global\gre@dimen@eolshift = \glueexpr(\gre@skip@temp@three-\gre@dimen@temp@three)\relax %
     \else%
-      \ifdim\gre@skip@temp@two<\gre@dimen@temp@three %
-        \global\gre@dimen@eolshift = \gre@skip@temp@two\relax %
-      \else %
-        \global\gre@dimen@eolshift = \glueexpr(\gre@skip@temp@two-\gre@dimen@temp@three)\relax %
-      \fi %
+      \gre@debugmsg{eolshift}{text longer than notes, hyphen not past custos}%
+      \global\gre@dimen@eolshift = \glueexpr(\gre@skip@temp@two-\gre@dimen@temp@three)\relax
     \fi%
-  \else%
-    \global\gre@dimen@eolshift=0pt\relax%
+  \else % enddifference > 0
+    \ifdim\gre@skip@temp@two>\gre@skip@temp@three
+      \gre@debugmsg{eolshift}{text shorter than notes, hyphen past custos}%
+      \global\gre@dimen@eolshift = \glueexpr(\gre@skip@temp@three-\gre@skip@temp@two)\relax
+    \else
+      \gre@debugmsg{eolshift}{text shorter than notes, hyphen not past custos}%
+      \global\gre@dimen@eolshift=0pt
+    \fi
   \fi %
-  % if the notes are not visible, then there's no shifting allowed.
-  \ifgre@shownotes\else%
-    \global\gre@dimen@eolshift=0pt\relax%
-  \fi%
   \gre@debugmsg{eolshift}{eolshift: \the\gre@dimen@eolshift}%
   \relax %
   \gre@trace@end%
@@ -907,24 +844,26 @@
 }%
 
 %% macro that typesets the text of the syllable, and sets textaligncenter to the middle of the middle letters, it is needed because we align the note (often the middle of the note) with the middle of the middle letters
-%% third argument is 0 if it's the current syllable, 1 if it's the alignment of the following one
+%% #1: The first part of the syllable
+%% #2: The middle part of the syllable
+%% #3: 0 if it's the current syllable, 1 if it's the following one
 %% warning: gretextaligncenter is the width from the beginning of the letters to the middle of the middle letters
 %% warning: value is approximative when a ligature appears
 
 \newdimen\gre@dimen@textaligncenter\relax%
 
-\def\gre@calculate@textaligncenter#1#2#3#4{%
-  \gre@trace{gre@calculate@textaligncenter{#1}{#2}{#3}{#4}}%
-  \ifnum#4=0\relax%
-    \gre@widthof{\gre@saved@syllable@fixedtextformat{#1}\gre@fixedtextformat{#2#3}}%
+\def\gre@calculate@textaligncenter#1#2#3{%
+  \gre@trace{gre@calculate@textaligncenter{#1}{#2}{#3}}%
+  \ifnum#3=0\relax
+    \gre@widthof{\gre@fixedtextformat{#1#2}}%
   \else %
-    \gre@widthof{\gre@fixedtextformat{#1}\gre@fixednexttextformat{#2#3}}%
+    \gre@widthof{\gre@fixednexttextformat{#1#2}}%
   \fi %
   \global\gre@dimen@textaligncenter=\the\gre@dimen@temp@three %
-  \ifnum#4=0\relax%
-    \gre@widthof{\gre@fixedtextformat{#3}}%
+  \ifnum#3=0\relax
+    \gre@widthof{\gre@fixedtextformat{#2}}%
   \else %
-    \gre@widthof{\gre@fixednexttextformat{#3}}%
+    \gre@widthof{\gre@fixednexttextformat{#2}}%
   \fi %
   \divide\gre@dimen@temp@three by 2 %
   \global\advance\gre@dimen@textaligncenter by -\the\gre@dimen@temp@three%
@@ -960,25 +899,24 @@
 \newskip\gre@skip@nextbegindifference\relax%
 
 % macro to set nextbegindifference
-%% 1 : the carry-over letters for the next syllable
-%% 2 : the first letters of the next syllable
-%% 3 : the middle letters of the next syllable
-%% 4 : the end letters of the next syllable
-%% 5 : the type of notes alignment
-%% 6 : alteration type (see \gre@alteration)
-\def\gre@calculate@nextbegindifference#1#2#3#4#5#6{%
-  \gre@trace{gre@calculate@nextbegindifference{#1}{#2}{#3}{#4}{#5}{#6}}%
+%% 1 : the first letters of the next syllable
+%% 2 : the middle letters of the next syllable
+%% 3 : the end letters of the next syllable
+%% 4 : the type of notes alignment
+%% 5 : alteration type (see \gre@alteration)
+\def\gre@calculate@nextbegindifference#1#2#3#4#5{%
+  \gre@trace{gre@calculate@nextbegindifference{#1}{#2}{#3}{#4}{#5}}%
   \ifnum\gre@lastoflinecount=1\relax %
     \global\gre@skip@nextbegindifference=0pt\relax%
   \else %
     %to prevent the pollution of the normal values, we stock them into a temp value
     \gre@dimen@temp@two=\gre@dimen@textaligncenter\relax%
-    \gre@calculate@textaligncenter{#1}{#2}{#3}{1}%
+    \gre@calculate@textaligncenter{#1}{#2}{1}%
     \gre@dimen@temp@four=\gre@dimen@notesaligncenter\relax%
     \global\gre@skip@nextbegindifference=-\gre@dimen@textaligncenter\relax%
     % caution: calculate@nextnotesaligncenter needs a properly set \gre@dimen@textaligncenter
     % (corresponding to the text align center of the next syllable)
-    \gre@calculate@nextnotesaligncenter{#5}{#6}% idem
+    \gre@calculate@nextnotesaligncenter{#4}{#5}% idem
     \global\advance\gre@skip@nextbegindifference by \the\gre@dimen@notesaligncenter\relax%
     \global\gre@dimen@textaligncenter=\gre@dimen@temp@two %
     \global\gre@dimen@notesaligncenter=\gre@dimen@temp@four %
@@ -1234,10 +1172,9 @@
     -\gre@dimen@begindifference% go from beginning of text to beginning of notes (opposite sense of begindifference so lead with negative)
     +\wd\gre@box@syllablenotes\relax% go from beginning of notes to end of notes (width is always positive so lead with positive to go right
   \gre@debugmsg{barspacing}{enddifference: \the\gre@dimen@enddifference}%
-  %we also need to correct syllablefinalskip to make sure it’s accurate because it depends on enddifference
-  \gre@debugmsg{barspacing}{Correcting syllablefinalskip}%
+  %we also need to correct minNotesDistance and minTextDistance because they depend on enddifference
+  \gre@debugmsg{barspacing}{Correcting minimum text and notes distances}%
   \gre@calculate@syllablefinalskip{#1}{\gre@count@temp@one}%
-  \gre@debugmsg{barspacing}{syllablefinalskip: \the\gre@skip@syllablefinalskip}%
   \gre@trace@end%
 }%
 
@@ -1301,61 +1238,33 @@
 }%
 
 % Clearing a syllable so it doesn't overlap with the previous one
+% Only used for \GreBarSyllables
 \def\gre@clearsyllable#1{%
   \gre@trace{gre@clearsyllable{#1}}%
-  % because the way mora shifts are implemented is different for bars and
-  % notes, we have to use a different set of dimensions depending on which
-  % kind of syllable we're dealing with.  We know this by looking at the
-  % argument of this function, which should be 'bar' for a bar syllable and 'note'
-  % for a note syllable.
-  \IfStrEq{#1}{bar}%
-    {%
-      \gre@debugmsg{clear}{adjustedpreviousenddifference = \the\gre@dimen@adjustedpreviousenddifference}%
-      \gre@dimen@temp@one=\gre@dimen@adjustedpreviousenddifference%
-    }%
-    {%
-      \gre@debugmsg{clear}{previousenddifference = \the\gre@dimen@previousenddifference}%
-      \gre@dimen@temp@one=\gre@dimen@previousenddifference%
-    }%
+  \gre@debugmsg{clear}{adjustedpreviousenddifference = \the\gre@dimen@adjustedpreviousenddifference}%
+  \gre@dimen@temp@one=\gre@dimen@adjustedpreviousenddifference%
   \gre@debugmsg{clear}{begindifference = \the\gre@dimen@begindifference}%
-  \gre@debugmsg{clear}{syllablefinalskip = \the\gre@skip@syllablefinalskip}%
   \ifdim\gre@dimen@temp@one > 0pt\relax%
     \ifdim\gre@dimen@begindifference < 0pt\relax%
       \ifdim\gre@dimen@temp@one > -\gre@dimen@begindifference\relax%
-        \gre@debugmsg{clear}{Case 1}%
+        \gre@debugmsg{clear}{Case 1: kern \the\dimexpr-\gre@dimen@begindifference\relax}%
         \kern -\gre@dimen@begindifference\relax%
       \else%
-        \gre@debugmsg{clear}{Case 2}%
+        \gre@debugmsg{clear}{Case 2: kern \the\gre@dimen@temp@one}%
         \kern \gre@dimen@temp@one\relax%
       \fi%
-      \IfStrEq{#1}{note}%
-        {% when dealing with notes we may have already skipped
-        % forward some, in which case we need to account for that
-          \ifdim\gre@skip@syllablefinalskip > 0pt\relax%
-            \gre@debugmsg{clear}{undo syllablefinalskip}%
-            \kern -\gre@skip@syllablefinalskip\relax%
-          \fi%
-        }{}%
     \else%
       \gre@debugmsg{clear}{Syllable already clear}%
     \fi%
   \else%
     \ifdim\gre@dimen@begindifference > 0pt\relax%
       \ifdim-\gre@dimen@temp@one > \gre@dimen@begindifference\relax%
-        \gre@debugmsg{clear}{Case 3}%
+        \gre@debugmsg{clear}{Case 3: kern \the\gre@dimen@begindifference}%
         \kern \gre@dimen@begindifference\relax%
       \else%
-        \gre@debugmsg{clear}{Case 4}%
+        \gre@debugmsg{clear}{Case 4: kern \the\dimexpr-\gre@dimen@temp@one\relax}%
         \kern -\gre@dimen@temp@one\relax%
       \fi%
-      \IfStrEq{#1}{note}%
-        {% when dealing with notes we may have already skipped
-        % forward some, in which case we need to account for that
-          \ifdim\gre@skip@syllablefinalskip > 0pt\relax%
-            \gre@debugmsg{clear}{undo syllablefinalskip}%
-            \kern -\gre@skip@syllablefinalskip\relax%
-          \fi%
-        }{}%
     \else%
       \gre@debugmsg{clear}{Syllable already clear}%
     \fi%

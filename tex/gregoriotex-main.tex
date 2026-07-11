@@ -47,19 +47,12 @@
 % an attribute to mark various parts of the score
 % 1 = commentary, 2 = stafflines, 3 = initial
 % 4 = lyrics, 5 = translation, 6 = alt, 7 = nabc, 8 = nabc below
+% 9 = annotation, 10 = notes
 \newattribute\gre@attr@part
   \edef\gre@attrid@part{\the\allocationnumber}
 
-% an attribute we put on the text nodes.
-% if it is 1, it means that there may be a dash here if this syllable is at the end of a line
-% if it is 2, it means that it's never useful to typeset a dash
-% if it is 0, it just means that we are in a score...
-\newattribute\gre@attr@dash
-
 % an attribute used for translation centering
 \newattribute\gre@attr@center
-
-\newattribute\GreScoreId
 
 % attributes for tracking glyph heights
 \newattribute\gre@attr@glyph@top
@@ -67,6 +60,14 @@
 
 % attribute for syllable tracking
 \newattribute\gre@attr@syllable@id
+
+% attributes for horizontal spacing
+% 1 = syllablefinalskip after syllable and penalty
+% 2 = from syllable left to text left
+% 3 = from text right to notes left
+% 4 = from notes right to syllable right
+% 5 = clearsyllable
+\newattribute\gre@attr@skip@type
 
 % attributes for soft alterations
 
@@ -220,7 +221,11 @@
   \ifgre@boxing\else%
     \global\gre@lastoflinecount=2\relax %
     \ifnum#2=0\relax %
-      % we have to repeat the end of syllable shifts here because the manual line breaks will occur before we get to the regular shifting code in \GreSyllable
+      % Place the penalty similarly to how the end-of-syllable penalty
+      % is placed.  However, if the line break occurs mid-syllable,
+      % these kerns as well as the end-of-syllable kerns will be
+      % incorrect because they use the enddifference of the whole
+      % syllable (issue #1738).
       \ifdim\gre@dimen@enddifference <0pt\relax%
         %% important, else we are not really at the end of the syllable
         \kern -\gre@dimen@enddifference\relax%
@@ -249,6 +254,17 @@
         \hfill
       \fi
       \gre@penalty{-10001}%
+      % Having placed the penalty, we now return to where we were
+      % before. Because the penalty is guaranteed to cause a line
+      % break, these kerns will be discarded because they are at the
+      % beginning of a line. But we do this so that Lua pre_linebreak
+      % can measure distances accurately.
+      \ifdim\gre@dimen@enddifference<0pt
+        \kern \gre@dimen@enddifference
+      \fi
+      \ifgre@eolshiftsenabled
+        \kern \gre@dimen@eolshift
+      \fi
     \fi
   \fi %
   %%
@@ -650,6 +666,7 @@
 % #2: 0 = text, 1 = nabc
 \def\gre@typesettextabovelines#1#2{%
   \gre@trace{gre@typesettextabovelines{#1}{#2}}%
+  {% localize change to \gre@attr@part
   \ifnum#2=0\relax%
     \gre@attr@part=6\relax
   \else%
@@ -681,7 +698,7 @@
       \endgre@style@abovelinestext
     \hss}%
   \fi%
-  \unsetattribute{\gre@attr@part}%
+  }% restore \gre@attr@part
   \gre@trace@end%
 }%
 
@@ -720,12 +737,10 @@
 
 % Phase 2: Place voice 1 (above staff)
 \def\gre@nabc@place@voice@i{%
-  \gre@attr@part=7\relax%
   \gre@dimen@temp@five=\dimexpr(\gre@dimen@staffheight %
     + \gre@space@dimen@spacebeneathtext %
     + \gre@space@dimen@spacelinestext)\relax%
-  \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\unhbox\gre@box@nabc@voice@i\hss}%
-  \unsetattribute{\gre@attr@part}%
+  \leavevmode\raise\gre@dimen@temp@five\hbox attr \gre@attrid@part=7 to 0pt{\unhbox\gre@box@nabc@voice@i\hss}%
 }%
 
 % Phase 2: Place voice 2 (below staff)
@@ -1118,8 +1133,6 @@
 }%
 \gresetnoteadditionalspacelinestext{automatic}%default setting
 
-% gre@attr@dash (see its definition in gregorio-syllable) is 0 when we are in a score, and unset when we are not
-
 \newif\ifgre@beginningofscore%
 
 \newcount\gre@count@stafflines
@@ -1236,7 +1249,6 @@
   \fi %
   \gre@computespaces%
   \gre@cancelpenalties %
-  \gre@attr@dash=0\relax %
   \gre@generatelines %
   \noindent%
   \gre@calculate@additionalspaces
@@ -1283,7 +1295,6 @@
   \setbox\gre@box@commentary=\box\voidb@x%
   \directlua{gregoriotex.at_score_end()}%
   \gre@unset@glyph@heights
-  \unsetattribute{\gre@attr@dash}%
   \xdef\gre@bolshiftcleftypelocal{\gre@bolshiftcleftypeglobal}%
   \ifnum\gre@count@lastline=0\relax
     \parfillskip=\gre@saved@parfillskip\relax%
@@ -1295,6 +1306,7 @@
 \def\gre@endafterbar#1{%
   \gre@trace{gre@endafterbar{#1}}%
   \gre@penalty{\the\gre@space@count@endafterbarpenalty }\relax %
+  {\gre@attr@skip@type=1
   \ifnum#1=1\relax %
     \gre@debugmsg{ifdim}{ enddifference > 0pt}%
     \ifdim\gre@dimen@enddifference > 0 pt\relax%
@@ -1316,7 +1328,7 @@
         \gre@hskip\gre@skip@temp@four %
       \fi %
     \fi %
-  \fi %
+  \fi}%
   %\gre@penalty{\the\gre@space@count@endafterbarpenalty }\relax
   %\global\gre@dimen@enddifference=0pt
   \relax %

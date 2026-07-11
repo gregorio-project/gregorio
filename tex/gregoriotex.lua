@@ -52,6 +52,7 @@ local rule = node.id('rule')
 local whatsit = node.id('whatsit')
 local rule = node.id('rule')
 local disc = node.id('disc')
+local temp = node.id('temp')
 
 local subtype_lineskip, subtype_baselineksip
 for i, t in ipairs(node.subtypes('glue')) do
@@ -61,6 +62,8 @@ for i, t in ipairs(node.subtypes('glue')) do
 end
 
 local hyphen = tex.defaulthyphenchar or 45
+
+local syllable_id_attr = luatexbase.attributes['gre@attr@syllable@id']
 
 local part_attr = luatexbase.attributes['gre@attr@part']
 local part_commentary = 1
@@ -73,9 +76,13 @@ local part_nabc = 7
 local part_blnabc = 8
 local part_annotation = 9
 
-local dash_attr = luatexbase.attributes['gre@attr@dash']
-local potentialdashvalue   = 1
-local nopotentialdashvalue = 2
+local skip_type_attr = luatexbase.attributes['gre@attr@skip@type']
+
+--- Possible values of syllables[sid].dash
+local dash_maybedash = 1
+local dash_hasdash = 2
+local dash_endofword = 3
+local dash_forced = 5
 
 local center_attr = luatexbase.attributes['gre@attr@center']
 local startcenter = 1
@@ -87,8 +94,6 @@ local glyph_bottom_attr = luatexbase.attributes['gre@attr@glyph@bottom']
 local alteration_type_attr = luatexbase.attributes['gre@attr@alteration@type']
 local alteration_pitch_attr = luatexbase.attributes['gre@attr@alteration@pitch']
 local alteration_id_attr = luatexbase.attributes['gre@attr@alteration@id']
-
-local syllable_id_attr = luatexbase.attributes['gre@attr@syllable@id']
 
 local cur_score_id = nil
 local score_inclusion = {}
@@ -399,53 +404,50 @@ local function init(arg)
   new_first_alterations = {}
 end
 
--- node factory
-local tmpnode = node.new(glyph, 0)
-tmpnode.font = 0
-tmpnode.char = hyphen
-local function gethyphennode()
-  return copy(tmpnode)
-end
-
-local function getdashnnode()
-  local hyphnode = gethyphennode()
-  local dashnode = hpack(hyphnode)
-  dashnode.shift = 0
-  return dashnode,hyphnode
-end
-
 -- a simple (for now) function to dump nodes for debugging
 local function dump_nodes_helper(head, indent)
   local dots = string.rep('..', indent)
   for n in traverse(head) do
-    local ids = format("g=%s,%s,a=%s,%s",
-                       has_attribute(n, glyph_top_attr),
-                       has_attribute(n, glyph_bottom_attr),
-                       has_attribute(n, alteration_pitch_attr),
-                       has_attribute(n, alteration_id_attr))
+    local type = node.type(n.id)
+    local subtype
+    if node.subtypes(n.id) ~= nil then
+      subtype = node.subtypes(n.id)[n.subtype]
+    end
+    local attrs = format("syllable=%s,part=%s,skip=%s",
+                         has_attribute(n, syllable_id_attr),
+                         has_attribute(n, part_attr),
+                         has_attribute(n, skip_type_attr)
+    )
     if n.id == hlist or n.id == vlist then
-      log(dots .. "%s [%s] width=%.2fpt height=%.2fpt depth=%.2fpt shift=%.2fpt {%s}", node.type(n.id), n.subtype, n.width/2^16, n.height/2^16, n.depth/2^16, n.shift/2^16, ids)
+      log(dots .. "%s [%s] width=%.2fpt height=%.2fpt depth=%.2fpt shift=%.2fpt {%s}", type, subtype, n.width/2^16, n.height/2^16, n.depth/2^16, n.shift/2^16, attrs)
     elseif n.id == rule then
-      log(dots .. "rule [%s] width=%.2fpt height=%.2fpt depth=%.2fpt", n.subtype, n.width/2^16, n.height/2^16, n.depth/2^16)
-    elseif n.id == whatsit and n.subtype == user_defined_subtype and n.user_id == marker_whatsit_id then
+      log(dots .. "rule [%s] width=%.2fpt height=%.2fpt depth=%.2fpt", subtype, n.width/2^16, n.height/2^16, n.depth/2^16)
+    elseif n.id == whatsit and subtype == user_defined_subtype and n.user_id == marker_whatsit_id then
       log(dots .. "marker-whatsit %s", n.value)
     elseif n.id == glue then
-      log(dots .. "glue [%s] width=%.2fpt", n.subtype, n.width/2^16)
-    elseif node.type(n.id) == 'penalty' then
-      log(dots .. "penalty %s {%s}", n.penalty, ids)
+      log(dots .. "glue [%s] width=%.2fpt stretch=%d shrink=%d {%s}", subtype, n.width/2^16, n.stretch, n.shrink, attrs)
+    elseif n.id == kern then
+      log(dots .. "kern [%s] kern=%.2fpt {%s}", subtype, n.kern/2^16, attrs)
+    elseif type == 'penalty' then
+      log(dots .. "penalty %s {%s}", n.penalty, attrs)
     elseif n.id == glyph then
       local f = font.fonts[n.font]
       local charname
       for k, v in pairs(f.resources.unicodes) do
         if v == n.char then charname = k end
       end
-      log(dots .. "glyph %s {%s}", charname, ids)
+      log(dots .. "glyph %s font=%d {%s}", charname, n.font, attrs)
     else
-      log(dots .. "node %s [%s] {%s}", node.type(n.id), n.subtype, ids)
+      log(dots .. "node %s [%s] {%s}", node.type(n.id), subtype, attrs)
     end
     if n.id == hlist or n.id == vlist then
       dump_nodes_helper(n.head, indent+1)
     elseif n.id == disc then
+      log(dots .. 'pre')
+      dump_nodes_helper(n.pre, indent+1)
+      log(dots .. 'post')
+      dump_nodes_helper(n.post, indent+1)
+      log(dots .. 'replace')
       dump_nodes_helper(n.replace, indent+1)
     end
   end
@@ -951,10 +953,65 @@ local function adjust_additional_spaces(line, info, linenum)
   end
 end
 
+--- Callback for processing before ligaturing or kerning takes place.
+--- @param head node The list of nodes to be processed.
+--- @return node The processed list of nodes.
+local function ligaturing(head)
+  gregoriotex.save_syllable_texts(head)
+  head = node.ligaturing(head)
+  return head
+end
+
+--- Callback for processing after a paragraph is built but before line-breaking takes place.
+--- @param head node The list of nodes to be processed.
+--- @return node The processed list of nodes.
+local function pre_linebreak(head)
+  -- There are some lists that are not scores (e.g., braces) that we
+  -- don't want to process. The current heuristic is to skip the list
+  -- if it has zero width.
+  if node.dimensions(head) == 0 then return head end
+  --dump_nodes(head)
+  gregoriotex.scan_syllables(head)
+  gregoriotex.syllable_spacing()
+  gregoriotex.syllable_clearing()
+  gregoriotex.syllable_rewriting()
+  --dump_nodes(head)
+  return head
+end
+
+--- Add a hyphen to the end of a line.
+--- @param line node The list of nodes for the line.
+local function add_eol_hyphen(line)
+  -- Add an end-of-line dash to line, if necessary.
+
+  -- Find the last syllable on the line.
+  local last_sid
+  for n in traverse_id(hlist, line.head) do
+    if has_attribute(n, part_attr, part_lyrics) then
+      last_sid = has_attribute(n, syllable_id_attr)
+    end
+  end
+
+  if last_sid ~= nil then
+    debugmessage('hyphenation', 'last syllable on line: %d', last_sid)
+    -- Check if the last syllable needs a hyphen
+    if (gregoriotex.syllables[last_sid].dash == dash_maybedash or
+        gregoriotex.syllables[last_sid].dash == dash_forced) then
+      debugmessage('hyphenation', 'syllable %d needs hyphen', last_sid)
+      -- Due to syllable rewriting, the actual text may be in a syllable further to the left.
+      while last_sid ~= nil and gregoriotex.syllables[last_sid].is_merged do
+        debugmessage('hyphenation', 'syllable %d has been merged', last_sid)
+        last_sid = gregoriotex.syllables[last_sid].prev_sid
+      end
+      debugmessage('hyphenation', 'adding hyphen to syllable %d', last_sid)
+      gregoriotex.add_hyphen(gregoriotex.syllables[last_sid])
+    end
+  end
+end
+
 local function post_linebreak(h, groupcode, glyphes)
   --dump_nodes(h)
   -- TODO: to be changed according to the font
-  local lastseennode            = nil
   local centerstartnode         = nil
   local linenum                 = 0
   local syl_id                  = nil
@@ -981,7 +1038,7 @@ local function post_linebreak(h, groupcode, glyphes)
       new_score_last_syllables[syl_id] = syl_id
     end
   end
-  
+
   -- Line height adjustment.
   if tex.count['gre@variableheightexpansion'] == 0 then -- uniform
     local info
@@ -1041,36 +1098,7 @@ local function post_linebreak(h, groupcode, glyphes)
 
   -- Look for words that are broken across lines and insert a hyphen
   for line in traverse_id(hlist, h) do
-    -- Look for the last node that has dash_attr > 0
-    local adddash=false
-    for n in traverse_id(hlist, line.head) do
-      -- If a syllable is not word-final, it may need a dash if it
-      -- ends up being line-final.
-      -- Note: This also loops over translations, but translations
-      -- come before lyrics, so they should never become lastseennode
-      if has_attribute(n, dash_attr, potentialdashvalue) then
-        adddash=true
-        lastseennode=n
-        -- if we encounter a text that doesn't need a dash, we acknowledge it
-      elseif has_attribute(n, dash_attr, nopotentialdashvalue) then
-        adddash=false
-      end
-    end
-
-    -- If the last syllable needed a dash, add it
-    if adddash then
-      local lastglyph
-      -- we traverse the list, to detect the font to use,
-      -- and also not to add an hyphen if there is already one
-      for g in node.traverse_id(glyph, lastseennode.head) do
-        lastglyph = g
-      end
-      if not (lastglyph.char == hyphen or lastglyph.char == 45) then
-        local dashnode, hyphnode = getdashnnode()
-        hyphnode.font = lastglyph.font
-        insert_after(lastseennode.head, lastglyph, dashnode)
-      end
-    end
+    add_eol_hyphen(line)
   end
 
   --dump_nodes(h)
@@ -1152,16 +1180,20 @@ end
 
 --- Add GregorioTeX callbacks.
 local function add_callbacks()
-  debugmessage('callbacks', 'adding post_linebreak and hyphenate callbacks')
+  debugmessage('callbacks', 'adding callbacks')
   luatexbase.add_to_callback('post_linebreak_filter', post_linebreak, 'gregoriotex.post_linebreak', 1)
   luatexbase.add_to_callback('hyphenate', disable_hyphenation, 'gregoriotex.disable_hyphenation', 1)
+  luatexbase.add_to_callback('ligaturing', ligaturing, 'gregoriotex.ligaturing')
+  luatexbase.add_to_callback('pre_linebreak_filter', pre_linebreak, 'gregoriotex.pre_linebreak', 1)
 end
 
 --- Remove GregorioTeX callbacks.
 local function remove_callbacks()
-  debugmessage('callbacks', 'removing post_linebreak and hyphenate callbacks')
+  debugmessage('callbacks', 'removing callbacks')
   luatexbase.remove_from_callback('post_linebreak_filter', 'gregoriotex.post_linebreak')
   luatexbase.remove_from_callback('hyphenate', 'gregoriotex.disable_hyphenation')
+  luatexbase.remove_from_callback('ligaturing', 'gregoriotex.ligaturing')
+  luatexbase.remove_from_callback('pre_linebreak_filter', 'gregoriotex.pre_linebreak')
 end
 
 --- Called when a page is full and is about to be shipped out.
@@ -1216,6 +1248,7 @@ local function at_score_beginning(score_id)
     new_score_first_alterations = {}
     new_first_alterations[score_id] = new_score_first_alterations
   end
+
   add_callbacks()
   luatexbase.add_to_callback('pre_output_filter', pre_output, 'gregoriotex.pre_output')
   luatexbase.add_to_callback('buildpage_filter', buildpage, 'gregoriotex.buildpage')
@@ -1229,6 +1262,7 @@ local function at_score_end()
   luatexbase.remove_from_callback('buildpage_filter', 'gregoriotex.buildpage')
   per_line_dims = {}
   per_line_counts = {}
+  gregoriotex.free_syllables()
 end
 
 -- Inserted copy of https://github.com/ToxicFrog/luautil/blob/master/lfs.lua
@@ -1923,6 +1957,14 @@ local function mode_part(part)
   end
 end
 
+--- Test whether a syllable is the last syllable in its line.
+--- Similar to is_last_syllable_on_line but meant to be called from Lua.
+--- @param sid number The id of the syllable to check.
+--- @return boolean Whether it is the last syllable in its line.
+local function is_last_syllable_id_on_line(sid)
+  return not score_last_syllables or score_last_syllables[sid]
+end
+
 -- this function is meant to be used from \ifcase; prints 0 for true and 1 for false
 local function is_last_syllable_on_line()
   if score_last_syllables then
@@ -1998,7 +2040,12 @@ gregoriotex.change_next_score_line_dim   = change_next_score_line_dim
 gregoriotex.change_next_score_line_count = change_next_score_line_count
 gregoriotex.set_base_output_dir          = set_base_output_dir
 gregoriotex.is_first_alteration          = is_first_alteration
+gregoriotex.get_if                       = get_if
+gregoriotex.is_last_syllable_id_on_line  = is_last_syllable_id_on_line
+gregoriotex.hyphen                       = hyphen
+gregoriotex.dump_nodes                   = dump_nodes
 
 dofile(kpse.find_file('gregoriotex-nabc.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-signs.lua', 'lua'))
+dofile(kpse.find_file('gregoriotex-syllable.lua', 'lua'))
 dofile(kpse.find_file('gregoriotex-symbols.lua', 'lua'))
