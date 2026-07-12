@@ -42,6 +42,8 @@ local syllable_id_attr = luatexbase.attributes['gre@attr@syllable@id']
 
 local part_attr = luatexbase.attributes['gre@attr@part']
 local part_lyrics = 4
+local part_nabc = 7
+local part_blnabc = 8
 local part_notes = 10
 local part_penalty = 11
 
@@ -236,6 +238,7 @@ local function save_syllable_info(type, end_of_word)
   settings.intersyllablespacenotes = get_space_dimen('intersyllablespacenotes')
   settings.intersyllablespacenotes_alteration = get_space_dimen('intersyllablespacenotes@alteration')
   settings.notebarspace = get_space_skip('notebarspace')
+  settings.nabcintersyllablemingap = get_space_dimen('nabcintersyllablemingap')
   if cur.in_euouae then
     settings.interwordspacetext = get_space_skip('interwordspacetext@euouae')
     settings.interwordspacetext_bars = get_space_dimen('interwordspacetext@bars@euouae')
@@ -299,6 +302,8 @@ end
 local function scan_syllables(head)
   for _, cur in pairs(syllables) do
     cur.first_note = nil
+    cur.nabc = nil
+    cur.blnabc = nil
   end
   local custos_width, prev_sid
   local function visit(head)
@@ -341,6 +346,13 @@ local function scan_syllables(head)
               cur.first_note = n
             end
             cur.last_note = n
+          elseif part == part_nabc then
+            -- Zero-width box holding the NABC neumes of voice 1 (above the
+            -- staff); emitted once per syllable at its first glyph.
+            cur.nabc = n
+          elseif part == part_blnabc then
+            -- Same, for voice 2 (below the staff).
+            cur.blnabc = n
           elseif skip_type == skip_type_before_text then
             cur.before_text_skip = n
           elseif skip_type == skip_type_text_notes then
@@ -436,6 +448,57 @@ local function calculate_punctum_mora_shift(cur, next)
     debugmessage('syllablespacing', 'punctum mora shift: %fpt', mora_shift[1]/2^16)
     cur.mora_shift = mora_shift
   end
+end
+
+-- NABC neumes sit in zero-width boxes (one per voice and syllable), so
+-- they can extend past the edges of their syllable's notes. The
+-- spacing functions below keep at least nabcintersyllablemingap
+-- between the NABC neumes of consecutive syllables in the same voice
+-- (issue #1715).
+local nabc_voices = {'nabc', 'blnabc'}
+
+--- Get the right edge of a syllable's NABC neumes, relative to the end of the syllable.
+--- @param syl table The syllable.
+--- @param voice string The NABC voice ('nabc' or 'blnabc').
+--- @return int The right edge, in sp (usually negative).
+local function get_nabc_end(syl, voice)
+  local box = syl[voice]
+  return node.dimensions(box.head) - node.dimensions(box.next, syl.last.next)
+end
+
+--- Get the left edge of a syllable's NABC neumes, relative to the beginning of the syllable.
+--- @param syl table The syllable.
+--- @param voice string The NABC voice ('nabc' or 'blnabc').
+--- @return int The left edge, in sp.
+local function get_nabc_begin(syl, voice)
+  return node.dimensions(syl.first, syl[voice])
+end
+
+--- Compute how far the end of a bar syllable must be shifted so that the
+--- NABC neumes of the syllables before and after it keep at least
+--- nabcintersyllablemingap between them.
+--- @param prev table The previous syllable.
+--- @param cur table The bar syllable.
+--- @param next table The next syllable.
+--- @param prev_skip int Width of the previous syllable's syllablefinalskip to be treated as part of it, in sp.
+--- @param cur_end int The end of the bar syllable, relative to its beginning, in sp.
+--- @return int|nil The minimum shift of the end of the syllable, in sp, or nil if there is no constraint.
+local function get_bar_nabc_end_shift(prev, cur, next, prev_skip, cur_end)
+  if prev == nil or next == nil or cur.forced_line_break then return nil end
+  local end_shift
+  for _, voice in ipairs(nabc_voices) do
+    -- Bar syllables normally carry no NABC of their own; if this one
+    -- does, its neumes are not taken into account.
+    if prev[voice] ~= nil and next[voice] ~= nil and cur[voice] == nil then
+      local prev_nabc_end = get_nabc_end(prev, voice) + prev_skip
+      local next_nabc_begin = cur_end + get_nabc_begin(next, voice)
+      debugmessage('barspacing', 'previous %s end: %fpt', voice, prev_nabc_end/2^16)
+      debugmessage('barspacing', 'next %s begin: %fpt', voice, next_nabc_begin/2^16)
+      local shift = prev_nabc_end + cur.settings.nabcintersyllablemingap - next_nabc_begin
+      end_shift = end_shift and math.max(end_shift, shift) or shift
+    end
+  end
+  return end_shift
 end
 
 --- Determine the width of a \GreSyllable's syllable-final skip, which is
@@ -578,10 +641,25 @@ local function adjust_syllablefinalskip(cur, next)
   
   local min_notes_shift = glue_add(min_notes_distance, -notes_distance)
   debugmessage('syllablespacing', '  min notes shift = %s', glue_to_string(min_notes_shift))
-  
+
+  local min_shift = glue_max(min_text_shift, min_notes_shift)
+
+  -- For each NABC voice present in both syllables, require at least
+  -- nabcintersyllablemingap between the end of this syllable's neumes
+  -- and the start of the next syllable's.
+  for _, voice in ipairs(nabc_voices) do
+    if cur[voice] ~= nil and next[voice] ~= nil then
+      local nabc_distance = get_nabc_begin(next, voice) - get_nabc_end(cur, voice)
+      debugmessage('syllablespacing', '  %s distance = %s', voice, glue_to_string(nabc_distance))
+      local min_nabc_shift = glue_add(cur.settings.nabcintersyllablemingap, -nabc_distance)
+      debugmessage('syllablespacing', '  min %s shift = %s', voice, glue_to_string(min_nabc_shift))
+      min_shift = glue_max(min_shift, min_nabc_shift)
+    end
+  end
+
   local syllablefinalskip = {cur.syllablefinalskip.width, cur.syllablefinalskip.stretch, cur.syllablefinalskip.shrink}
-  -- Ensure that min text shift and min notes shift are satisfied.
-  syllablefinalskip = glue_add(syllablefinalskip, glue_max(min_text_shift, min_notes_shift))
+  -- Ensure that min text shift, min notes shift, and min NABC shift are satisfied.
+  syllablefinalskip = glue_add(syllablefinalskip, min_shift)
   -- If this syllable has a hyphen, add some additional stretch.
   -- Note: This happens even if there is no text (\gresetlyrics{invisible}).
   if cur.text and cur.dash == dash_hasdash then
@@ -779,10 +857,11 @@ local function bar_syllable_spacing(prev, cur, next)
   -- syllablefinalskip as if it were part of the previous text and
   -- notes.
   -- Also, if the preceding syllable is a bar syllable, ignore its syllablefinalskip.
+  local prev_skip = 0
   if prev and prev.syllablefinalskip and prev.type == 'note' then
-    local width = prev.syllablefinalskip.width or prev.syllablefinalskip.kern
-    prev_text_end = prev_text_end + width
-    prev_notes_end = prev_notes_end + width
+    prev_skip = prev.syllablefinalskip.width or prev.syllablefinalskip.kern
+    prev_text_end = prev_text_end + prev_skip
+    prev_notes_end = prev_notes_end + prev_skip
   end
 
   -- The current syllable.
@@ -873,6 +952,11 @@ local function bar_syllable_spacing(prev, cur, next)
     prev_notes_end - next_text_begin, -- prev notes touch next text
     prev_text_end - next_notes_begin -- prev text touches next notes
   )
+  -- prev NABC neumes keep the minimum gap from next NABC neumes
+  local nabc_end_shift = get_bar_nabc_end_shift(prev, cur, next, prev_skip, cur_end)
+  if nabc_end_shift ~= nil then
+    end_shift = math.max(end_shift, nabc_end_shift)
+  end
   debugmessage('barspacing', 'new syllable width: %fpt', (cur_end+end_shift)/2^16)
   
   -- Center notes in its available space.
@@ -1031,6 +1115,9 @@ local function old_bar_syllable_spacing(prev, cur, next)
   -- useful for comparison with previous version:
   debugmessage('barspacing', 'next begin difference: %fpt', (next_text_begin-next_notes_begin)/2^16)
   
+  -- Minimum shift so that prev NABC neumes keep the minimum gap from next NABC neumes
+  local nabc_end_shift = get_bar_nabc_end_shift(prev, cur, next, 0, cur_end)
+
   local new_text_begin, new_notes_begin, end_shift
   local end_glue = dimen_to_glue(0)
   if cur.text.width == 0 then
@@ -1047,6 +1134,9 @@ local function old_bar_syllable_spacing(prev, cur, next)
     end
     debugmessage('barspacing', 'minimum space for syllable: %fpt', syllable_req/2^16)
     end_shift = math.max(prev_notes_end + notes_req - next_notes_begin, prev_end + syllable_req - cur_end)
+    if nabc_end_shift ~= nil then
+      end_shift = math.max(end_shift, nabc_end_shift)
+    end
     debugmessage('barspacing', 'shift end by: %fpt', end_shift/2^16)
     -- Move the (empty) text as far right as possible so as not to interfere with hyphenation
     new_text_begin = next_text_begin
@@ -1082,6 +1172,9 @@ local function old_bar_syllable_spacing(prev, cur, next)
       end
     end
     end_shift = glue_add(new_penalty_pos, final_skip)[1] - cur_end
+    if nabc_end_shift ~= nil then
+      end_shift = math.max(end_shift, nabc_end_shift)
+    end
     end_glue[2], end_glue[3] = final_skip[2], final_skip[3]
   end
   
