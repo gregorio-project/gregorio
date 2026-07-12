@@ -438,36 +438,6 @@
   \endgroup
 }%
 
-% Tracks the maximum NABC width for the current syllable across all voices.
-% Used to detect when NABC extends past the total glyph width and extra
-% horizontal space is needed at the end of the syllable to prevent overlap
-% with the next NABC.
-\newdimen\gre@dimen@nabc@maxwidth
-\gre@dimen@nabc@maxwidth=0pt\relax
-
-% Stores the extra kern needed at the end of the syllable to accommodate
-% NABC overflow.  Computed during the pre-measurement pass in
-% \gre@syllablenotes and applied after the real notes typesetting in
-% \GreSyllable.
-\newdimen\gre@dimen@nabc@extrakern
-\gre@dimen@nabc@extrakern=0pt\relax
-
-% If NABC extends past the total syllable notes width, compute and save
-% the extra kern, then widen \gre@box@syllablenotes accordingly.
-% Called after \gre@box@syllablenotes has been filled.  The kern is
-% applied at syllable level (not per-glyph) to avoid splitting
-% multi-glyph neumes like ce/fgf or f!gwh/ih/hf/fe~.
-\def\gre@compute@nabc@extrakern{%
-  \ifdim\gre@dimen@nabc@maxwidth>\wd\gre@box@syllablenotes\relax
-    \global\gre@dimen@nabc@extrakern=\dimexpr(
-      \gre@dimen@nabc@maxwidth - \wd\gre@box@syllablenotes)\relax
-    \setbox\gre@box@syllablenotes=\hbox{%
-      \unhbox\gre@box@syllablenotes
-      \kern\gre@dimen@nabc@extrakern
-    }%
-  \fi
-}%
-
 % Flag to track whether NABC visibility requires horizontal spacing
 % preservation when notes are invisible.
 \newif\ifgre@nabc@needsspacing
@@ -496,8 +466,9 @@
 }%
 
 % Render NABC without preserving any note glyph or inter-element spacing.
-% The total horizontal width comes entirely from \gre@compute@nabc@extrakern,
-% which expands the syllable box to the NABC width.  This produces tighter
+% The NABC neumes are placed in zero-width boxes, so the space they need
+% is provided by the syllable-spacing Lua filter, which enforces a minimum
+% gap between the NABC of consecutive syllables.  This produces tighter
 % spacing than the hphantom path because inter-glyph and inter-element glue
 % is suppressed.
 \def\gre@notes@rendernabc@tight#1{%
@@ -549,15 +520,11 @@
   \global\gre@count@lastglyphiscavum=0\relax %
   \global\gre@firstglyphtrue%
   \global\gre@boxingtrue%
-  % Reset NABC tracking for this syllable.
-  \global\gre@dimen@nabc@maxwidth=0pt\relax %
-  \global\gre@dimen@nabc@extrakern=0pt\relax %
   \let\ifgre@saved@prenotes@lastendswithmora\ifgre@lastendswithmora%
   \edef\gre@saved@prenotes@lastoflinecount{\number\gre@lastoflinecount}%
   \edef\gre@saved@prenotes@bar@lastskip{\the\gre@skip@bar@lastskip}%
   \ifgre@shownotes%
     \setbox\gre@box@syllablenotes=\hbox{#1}%
-    \gre@compute@nabc@extrakern
   \else%
     \ifnum\gre@notes@phantomwrapper>0\relax
       \setbox\gre@box@syllablenotes=\hbox{\gre@applynotesphantom{\gre@notes@phantomwrapper}{#1}}%
@@ -565,7 +532,6 @@
       \gre@check@nabc@needsspacing
       \ifgre@nabc@needsspacing
         \setbox\gre@box@syllablenotes=\hbox{\gre@notes@rendernabc@tight{#1}}%
-        \gre@compute@nabc@extrakern
       \else
         \setbox\gre@box@syllablenotes=\hbox{}%
       \fi
@@ -1093,10 +1059,6 @@
       {\raise 12pt\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
       {}% do nothing if not debugging
     #9% we do that instead of \unhbox\gre@syllablenotes, because it would not set the \localrightbox
-    % Apply per-syllable NABC kern computed in \gre@syllablenotes.
-    \ifdim\gre@dimen@nabc@extrakern>0pt\relax
-      \kern\gre@dimen@nabc@extrakern
-    \fi
     \IfSubStr{\gre@debug}{,notespacing,}%
       % when debugging we add a zero-width line to mark the syllable bound
       {\raise 12pt\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
@@ -1109,10 +1071,6 @@
       \ifgre@nabc@needsspacing
         % NABC visible: render with tight (NABC-only) spacing
         \gre@notes@rendernabc@tight{#9}%
-        % Apply per-syllable NABC kern (computed in \gre@syllablenotes)
-        \ifdim\gre@dimen@nabc@extrakern>0pt\relax
-          \kern\gre@dimen@nabc@extrakern
-        \fi
       \else
         % Notes disabled: render NABC without affecting spacing
         \hbox to 0pt{\gre@notes@rendernabc{#9}\hss}%
@@ -1418,10 +1376,6 @@
         \ifgre@nabc@needsspacing
           % NABC visible: render with tight (NABC-only) spacing
           \gre@notes@rendernabc@tight{#9}%
-          % Apply per-syllable NABC kern (computed in \gre@syllablenotes)
-          \ifdim\gre@dimen@nabc@extrakern>0pt\relax
-            \kern\gre@dimen@nabc@extrakern
-          \fi
         \else
           % Notes disabled: render NABC without affecting spacing
           \hbox to 0pt{\gre@notes@rendernabc{#9}\hss}%

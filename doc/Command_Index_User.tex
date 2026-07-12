@@ -1840,6 +1840,10 @@ Space between elements in ancient notation.
 Larger space between elements in ancient notation.
 \end{gdimension}
 
+\begin{gdimension}{nabcintersyllablemingap}
+Minimum gap between the NABC neumes of consecutive syllables.  NABC neumes are typeset in zero-width boxes and may extend past the notes of their syllable; when they do, the syllable-spacing algorithm widens the space after the syllable just enough to keep this minimum separation from the next syllable's neumes (in the same NABC voice).  The default value (0.06\,cm) is 25\% of \texttt{intersyllablespacenotes} and provides a comfortable visual margin.  Set it to \texttt{0pt} to allow the neumes of consecutive syllables to touch.
+\end{gdimension}
+
 \begin{gdimension}{clivisalignmentmin}
 When \verb=\gre@clivisalignment= is 2, this distance is the maximum length of the consonants after vowels for which the clivis will be aligned on its center.
 \end{gdimension}

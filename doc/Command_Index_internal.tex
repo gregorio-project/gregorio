@@ -795,9 +795,6 @@ Notes-specific phantom wrapper that keeps NABC visible while making notes invisi
   \#2 & content & The note material to render.\\
 \end{argtable}
 
-\macroname{\textbackslash gre@compute@nabc@extrakern}{}{gregoriotex-syllable.tex}
-Computes extra horizontal space needed when NABC neumes extend past the total width of the syllable notes.  If \verb=\gre@dimen@nabc@maxwidth= exceeds the width of \verb=\gre@box@syllablenotes=, the difference is stored in \verb=\gre@dimen@nabc@extrakern= and a kern of that amount is appended to the syllable notes box.
-
 \macroname{\textbackslash gre@check@nabc@needsspacing}{}{gregoriotex-syllable.tex}
 Checks if any NABC voice is visible and sets \verb=\ifgre@nabc@needsspacing= accordingly.  When true, horizontal spacing must be preserved even when notes are invisible, to prevent NABC neume overlap.
 
@@ -809,7 +806,7 @@ Zero-width glyph handler used by \verb=\gre@notes@rendernabc@tight=.  Triggers N
 \end{argtable}
 
 \macroname{\textbackslash gre@notes@rendernabc@tight}{\#1}{gregoriotex-syllable.tex}
-Renders NABC neumes without preserving any note glyph or inter-element spacing.  Uses \verb=\gre@nabconlyglyph= instead of \verb=\GreGlyph= and suppresses all end-of-element and end-of-glyph callbacks, as well as bar output.  The total horizontal width comes entirely from \verb=\gre@compute@nabc@extrakern=.  This produces tighter spacing than the hphantom path.
+Renders NABC neumes without preserving any note glyph or inter-element spacing.  Uses \verb=\gre@nabconlyglyph= instead of \verb=\GreGlyph= and suppresses all end-of-element and end-of-glyph callbacks, as well as bar output.  The horizontal space the NABC needs is provided by the syllable-spacing Lua filter, which enforces \texttt{nabcintersyllablemingap} between the NABC neumes of consecutive syllables.  This produces tighter spacing than the hphantom path.
 
 \begin{argtable}
   \#1 & content & The notes material to process for NABC rendering.\\
@@ -1440,7 +1437,7 @@ Prints the nabc glyphs for the given nabc string.
 \end{argtable}
 
 \macroname{\textbackslash gre@nabc@prepare}{\#1\#2}{gregoriotex-main.tex}
-Phase 1 of NABC two-phase processing: pre-evaluates NABC content, tracks the maximum NABC width in \verb=\gre@dimen@nabc@maxwidth= for right-overflow detection by \verb=\gre@compute@nabc@extrakern=, emits note-level kern for left overflow (in \texttt{neume} alignment mode) unless \verb=\ifgre@nabc@suppress@leftoverflow= is true, and saves the rendered content in a box register.
+Phase 1 of NABC two-phase processing: pre-evaluates NABC content, emits note-level kern for left overflow (in \texttt{neume} alignment mode) unless \verb=\ifgre@nabc@suppress@leftoverflow= is true, and saves the rendered content in a box register.
 
 \begin{argtable}
   \#1 & content & The NABC content (from \textbackslash GreNABCChar)\\
@@ -2324,11 +2321,6 @@ Saved (pre-zeroed) value of the inter-staff-line space.  This dimension always h
 \macroname{\textbackslash gre@dimen@staffheight@saved}{}{gregoriotex-main.tex}
 Saved (pre-zeroed) value of the total staff height.  This dimension always holds the true computed value of \verb=\gre@dimen@staffheight= regardless of whether staff dimensions have been zeroed.  Computed from \verb=\gre@dimen@stafflineheight@saved= and \verb=\gre@dimen@interstafflinespace@saved=.
 
-\macroname{\textbackslash gre@dimen@nabc@maxwidth}{}{gregoriotex-syllable.tex}
-Tracks the maximum NABC width for the current syllable across all voices.  Used to detect when NABC extends past the total glyph width and extra horizontal space is needed at the end of the syllable to prevent overlap with the next NABC.  Reset to 0pt at the start of each syllable.
-
-\macroname{\textbackslash gre@dimen@nabc@extrakern}{}{gregoriotex-syllable.tex}
-Stores the extra kern needed at the end of the syllable to accommodate NABC overflow.  Computed by \verb=\gre@compute@nabc@extrakern= during the pre-measurement pass in \verb=\gre@syllablenotes= and applied after the real notes typesetting in \verb=\GreSyllable=.  Reset to 0pt at the start of each syllable.
 
 \macroname{\textbackslash gre@dimen@glyphraisevalue}{}{gregoriotex-spaces.tex}
 The value that a particular glyph must be raised to be set in the correct position.
