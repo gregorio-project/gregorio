@@ -720,12 +720,6 @@
 % nodes do not carry a stray part=7 when preparing voice 2.
 \def\gre@nabc@prepare#1#2{%
   \setbox\gre@box@nabctemp=\hbox{#1}%
-  % Track maximum NABC width for right-overflow detection (extra kern at
-  % syllable end).  Without this, \gre@compute@nabc@extrakern cannot detect
-  % when NABC content extends past the syllable notes width.
-  \ifdim\wd\gre@box@nabctemp>\gre@dimen@nabc@maxwidth\relax%
-    \global\gre@dimen@nabc@maxwidth=\wd\gre@box@nabctemp\relax%
-  \fi%
   \ifgre@nabc@suppress@leftoverflow\else%
     \ifdim\gre@dimen@nabcleftoverflow>\gre@dimen@nabckernemitted\relax%
       \kern\dimexpr(\gre@dimen@nabcleftoverflow-\gre@dimen@nabckernemitted)\relax%

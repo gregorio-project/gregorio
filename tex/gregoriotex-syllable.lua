@@ -38,6 +38,8 @@ local syllable_id_attr = luatexbase.attributes['gre@attr@syllable@id']
 
 local part_attr = luatexbase.attributes['gre@attr@part']
 local part_lyrics = 4
+local part_nabc = 7
+local part_blnabc = 8
 local part_notes = 10
 
 local skip_type_attr = luatexbase.attributes['gre@attr@skip@type']
@@ -188,6 +190,7 @@ local function save_syllable_info(type)
   settings.showlyrics = gregoriotex.get_if('gre@showlyrics')
   settings.intersyllablespacestretchhyphen = string_to_glue(token.get_macro('gre@space@skip@intersyllablespacestretchhyphen'))
   settings.maximumspacewithoutdash = tex.sp(token.get_macro('gre@space@dimen@maximumspacewithoutdash'))
+  settings.nabcintersyllablemingap = tex.sp(token.get_macro('gre@space@dimen@nabcintersyllablemingap'))
   syllables[sid].settings = settings
 end
 
@@ -231,6 +234,8 @@ end
 local function scan_syllables(head)
   for _, cur in pairs(syllables) do
     cur.first_note = nil
+    cur.nabc = nil
+    cur.blnabc = nil
   end
   local prev_sid
   local function visit(head)
@@ -269,7 +274,14 @@ local function scan_syllables(head)
               syllables[sid].first_note = n
             end
             syllables[sid].last_note = n
-          elseif skip_type == skip_type_before_test then
+          elseif part == part_nabc then
+            -- Zero-width box holding the NABC neumes of voice 1 (above the
+            -- staff); emitted once per syllable at its first glyph.
+            syllables[sid].nabc = n
+          elseif part == part_blnabc then
+            -- Same, for voice 2 (below the staff).
+            syllables[sid].blnabc = n
+          elseif skip_type == skip_type_before_text then
             syllables[sid].before_text_skip = n
           elseif skip_type == skip_type_text_notes then
             syllables[sid].text_notes_skip = n
@@ -311,10 +323,31 @@ local function adjust_syllablefinalskip(cur, next)
   debugmessage('syllablespacing', '  min notes distance = %s', glue_to_string(min_notes_distance))
   local min_notes_shift = glue_add(min_notes_distance, -notes_distance)
   debugmessage('syllablespacing', '  min notes shift = %s', glue_to_string(min_notes_shift))
-  
+
+  local min_shift = glue_max(min_text_shift, min_notes_shift)
+
+  -- NABC neumes sit in zero-width boxes, so they can extend past the right
+  -- edge of their syllable's notes. For each NABC voice present in both
+  -- syllables, require at least nabcintersyllablemingap between the end of
+  -- this syllable's neumes and the start of the next syllable's (issue #1715).
+  for _, voice in ipairs({'nabc', 'blnabc'}) do
+    if cur[voice] ~= nil and next[voice] ~= nil then
+      local nabc_width = node.dimensions(cur[voice].head)
+      local nabc_distance = (
+        node.dimensions(cur[voice].next, cur.last.next) +
+        node.dimensions(next.first, next[voice]) -
+        nabc_width
+      )
+      debugmessage('syllablespacing', '  %s distance = %s', voice, glue_to_string(nabc_distance))
+      local min_nabc_shift = glue_add(cur.settings.nabcintersyllablemingap, -nabc_distance)
+      debugmessage('syllablespacing', '  min %s shift = %s', voice, glue_to_string(min_nabc_shift))
+      min_shift = glue_max(min_shift, min_nabc_shift)
+    end
+  end
+
   local syllablefinalskip = {cur.syllablefinalskip.width, cur.syllablefinalskip.stretch, cur.syllablefinalskip.shrink}
-  -- Ensure that min text shift and min notes shift are satisfied.
-  syllablefinalskip = glue_add(syllablefinalskip, glue_max(min_text_shift, min_notes_shift))
+  -- Ensure that min text shift, min notes shift, and min NABC shift are satisfied.
+  syllablefinalskip = glue_add(syllablefinalskip, min_shift)
   -- If this syllable has a hyphen, add some additional stretch.
   -- Note: This happens even if there is no text (\gresetlyrics{invisible}).
   if cur.text and cur.dash == dash_hasdash then
