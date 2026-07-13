@@ -846,14 +846,20 @@ local function bar_syllable_spacing(prev, cur, next)
   )
   debugmessage('barspacing', 'new syllable width: %fpt', (cur_end+end_shift)/2^16)
   
-  -- Center notes and text in their respective spaces.
-  local new_text_center = tex.round((prev_text_end + next_text_begin + end_shift)/2)
+  -- Center notes in its available space.
   local new_notes_center = tex.round((prev_notes_end + next_notes_begin + end_shift)/2)
-  debugmessage('barspacing', 'new text center: %fpt', new_text_center/2^16)
   debugmessage('barspacing', 'new notes center: %fpt', new_notes_center/2^16)
-
-  -- Don't let text offset exceed offset limits.
-  if cur.text.width > 0 then
+  local new_text_center
+  if cur.text.width == 0 then
+    -- If there is no text, just center it directly under the bar.
+    new_text_center = new_notes_center
+    debugmessage('barspacing', 'new text center: %fpt', new_text_center/2^16)
+  else
+    -- Don't let text offset exceed offset limits.
+    -- Center text in its available space.
+    new_text_center = tex.round((prev_text_end + next_text_begin + end_shift)/2)
+    debugmessage('barspacing', 'new text center: %fpt', new_text_center/2^16)
+    
     local new_text_offset = new_text_center - new_notes_center
     debugmessage('barspacing', 'new text offset: %fpt', new_text_offset/2^16)
     
