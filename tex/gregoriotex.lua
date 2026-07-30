@@ -863,7 +863,7 @@ local function adjust_additional_spaces(line, info, linenum, prev_stack_extra)
   end
   -- extra depth needed below the main lyrics for the additional lyric
   -- lines (stacked lyrics): each one already sits at its own fixed raise
-  -- from \GreWriteLyricLine, so only the deepest one needs accounting for
+  -- from \GreWriteStackedLyric, so only the deepest one needs accounting for
   local lyric_stack_extra = 0
   if info.max_lyric_level > 1 then
     lyric_stack_extra = (info.max_lyric_level - 1) * get_per_line_space('lyricstackseparation')

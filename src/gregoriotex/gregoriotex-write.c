@@ -3588,7 +3588,7 @@ static void write_text(FILE *const f, const gregorio_character *const text)
 }
 
 /* writes the additional lyric lines (levels 2+) of a stacked syllable, as
- * \GreWriteLyricLine{level}{end-of-word}{forced-center}{pre}{center}{post}
+ * \GreWriteStackedLyric{level}{end-of-word}{forced-center}{pre}{center}{post}
  * {first-letter}{rest}; goes into the eighth argument of \GreSyllable, like
  * the translation */
 static void write_extra_lyric_lines(FILE *const f,
@@ -3601,7 +3601,7 @@ static void write_extra_lyric_lines(FILE *const f,
     const grestyle_style saved_ignore_style = gregoriotex_ignore_style;
     gregoriotex_ignore_style = ST_NO_STYLE;
     for (line = syllable->extra_lyrics; line; line = line->next, ++level) {
-        fprintf(f, "%%\n\\GreWriteLyricLine{%d}{%d}{%d}", level,
+        fprintf(f, "%%\n\\GreWriteStackedLyric{%d}{%d}{%d}", level,
                 (line->position == WORD_END
                         || line->position == WORD_ONE_SYLLABLE) ? 1 : 0,
                 line->forced_center ? 1 : 0);

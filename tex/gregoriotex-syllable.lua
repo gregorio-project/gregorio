@@ -180,7 +180,7 @@ local function current_syllable()
 end
 
 --- Record whether an additional lyric line (level 2+) ends a word here,
---- called from \GreWriteLyricLine for each line of the current syllable.
+--- called from \GreWriteStackedLyric for each line of the current syllable.
 --- @param level number The lyric line level (2 for the first additional line).
 --- @param end_of_word number 1 if this level ends a word here, else 0.
 local function set_lyric_line_dash(level, end_of_word)
