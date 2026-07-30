@@ -274,7 +274,7 @@ Macro to change one of Gregorio\TeX’s distances.  This function will check to 
 \end{argtable}
 
 \macroname{\textbackslash grechangenextscorelinedim}{\{\#1\}\{\#2\}\{\#3\}\{\#4\}}{gregoriotex-spaces.tex}
-Changes one of Gregorio\TeX’s distances for a given line in the next included score.  This works with \texttt{abovelinestextheight}, \texttt{abovelinestextraise}, \texttt{spaceabovelines}, \texttt{spacelinestext}, \texttt{spacebeneathtext}, and \texttt{translationheight}.
+Changes one of Gregorio\TeX’s distances for a given line in the next included score.  This works with \texttt{abovelinestextheight}, \texttt{abovelinestextraise}, \texttt{spaceabovelines}, \texttt{spacelinestext}, \texttt{spacebeneathtext}, \texttt{translationheight}, and \texttt{lyricstackseparation}.
 
 \begin{argtable}
   \#1 & list of integers & A comma-separated list of line numbers in the next
@@ -2064,6 +2064,10 @@ The space between the baseline of the text and the baseline of the below-lines N
 
 \begin{gdimension}{translationheight}
 The space between the baseline of the translation and the baseline of the below-lines NABC neumes (if any) or text (otherwise). This space appears only if there actually is a translation.
+\end{gdimension}
+
+\begin{gdimension}{lyricstackseparation}
+The vertical separation between the baselines of two consecutive lyric lines when a score uses stacked lyrics (syllables with several lines of text separated by \texttt{|} in gabc). This space appears only if the score actually has more than one lyric line; the translation, if any, is placed below the whole stack.
 \end{gdimension}
 
 \begin{gdimension}{spacebeneathtext}

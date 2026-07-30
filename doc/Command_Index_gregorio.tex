@@ -1337,6 +1337,25 @@ the beginning of a line?).
   \#1 & string & Text to typeset in the translation (at the beginning of a line).\\
 \end{argtable}
 
+\macroname{\textbackslash GreWriteStackedLyric}{\#1\#2\#3\#4\#5\#6\#7\#8}{gregoriotex-main.tex}
+Macro to typeset one additional lyric line (level 2 or below) of a stacked
+syllable.  It is called inside the eighth argument of \verb=\GreSyllable=,
+where the current point is the left edge of the main syllable text, and
+centers the line's own alignment point under the main line's one.
+
+\begin{argtable}
+  \#1 & integer & The lyric line level (2 for the first additional line).\\
+  \#2 & \texttt{0} & This level does not end a word at this syllable.\\
+  & \texttt{1} & This level ends a word at this syllable.\\
+  \#3 & \texttt{0} & No forced center in this line.\\
+  & \texttt{1} & This line has a forced (\texttt{\{\}}) center.\\
+  \#4 & string & The first letters of the line, before the alignment point.\\
+  \#5 & string & The middle letters of the line (the alignment point).\\
+  \#6 & string & The end letters of the line.\\
+  \#7 & string & The very first letter (for first-letter centering).\\
+  \#8 & string & All the letters after the first one.\\
+\end{argtable}
+
 \macroname{\textbackslash GreForceBreak}{}{gregoriotex-spaces.tex}
 Macro used to force a line break to occur at a given position.
 

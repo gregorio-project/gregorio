@@ -1124,6 +1124,15 @@ Macro which stores the first part of the current syllable (that which comes befo
 \macroname{\textbackslash gre@middlesyllablepart}{}{gregoriotex-syllable.tex}
 Macro which stores the middle part of the current syllable (the part which aligns with the notes).
 
+\macroname{\textbackslash gre@stackedlyric@endpart}{}{gregoriotex-main.tex}
+Macro which stores the end part of the additional lyric line being typeset by \verb=\GreWriteStackedLyric= (that which comes after the alignment part).
+
+\macroname{\textbackslash gre@stackedlyric@firstpart}{}{gregoriotex-main.tex}
+Macro which stores the first part of the additional lyric line being typeset by \verb=\GreWriteStackedLyric= (that which comes before the alignment part).
+
+\macroname{\textbackslash gre@stackedlyric@middlepart}{}{gregoriotex-main.tex}
+Macro which stores the middle part of the additional lyric line being typeset by \verb=\GreWriteStackedLyric= (the part which aligns with the notes).
+
 \macroname{\textbackslash gre@nextendsyllablepart}{}{gregoriotex-syllable.tex}
 Macro which stores the end part of the next syllable (that which comes after the alignment part).
 
@@ -2144,6 +2153,12 @@ Boolean indicating that the additional space needed between the notes and the ly
 
 \macroname{\textbackslash gre@count@stafflines}{}{gregoriotex-main.tex}
 Count containing the number of staff lines.
+
+\macroname{\textbackslash gre@dimen@stackedlyriccenter}{}{gregoriotex-main.tex}
+Dimension used by \verb=\GreWriteStackedLyric= to hold the alignment center of the additional lyric line being typeset (the distance from the beginning of its letters to the middle of its middle part).
+
+\macroname{\textbackslash gre@dimen@stackedlyricraise}{}{gregoriotex-main.tex}
+Dimension used by \verb=\GreWriteStackedLyric= to hold the raise applied to the additional lyric line being typeset: \texttt{spacebeneathtext} minus (level $-$ 1) times \texttt{lyricstackseparation}.
 
 \macroname{\textbackslash ifgre@alteration@effect@note}{}{gregoriotex-signs.tex}
 Boolean indicating that soft alterations should last until they apply to a single note (i.e. all soft alterations will be printed).

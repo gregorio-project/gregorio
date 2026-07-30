@@ -311,7 +311,9 @@ These tags allow for a variety of special effects.
 Additionally, besides parentheses, there are a few other special characters in
 the syllable text.  Curly braces (\texttt{\{} and \texttt{\}}) are for
 \nameref{lyriccentering}.  Square brackets (\texttt{[} and \texttt{]}) are for
-\nameref{translationtext} that appears below the lyric text.  The tilde
+\nameref{translationtext} that appears below the lyric text.  The pipe
+(\texttt{|}) separates \nameref{multiplelyriclines}; a literal pipe must be
+escaped as \texttt{\$|}.  The tilde
 (\texttt{\textasciitilde}) produces a lyric tie, which is configurable via
 \verb=\gresetlyrictie= (default: \greundertie).  See the sections below for more
 information.
@@ -341,6 +343,68 @@ appears below the lyric text (by default) in italics.  It is aligned to the
 syllable where it appears in the gabc file unless the special sequence
 \texttt{[/]} appears in a later syllable indicating that the translation text
 should be centered between those two points.
+
+\subsubsection{Multiple Lyric Lines}\label{multiplelyriclines}
+
+A syllable may carry several stacked lines of lyrics, separated by pipes
+(\texttt{|}) in the syllable text:
+
+\begin{verbatim}
+Ma|Ma(f)ter|ter(g) pu| cas(h)rís|tís(g)si|si(f)ma|ma(g)
+\end{verbatim}
+
+{
+  \gresetinitiallines{0}%
+  \gregorioscore[a]{multiplelyriclines1}
+}
+
+The text before the first pipe is the main lyric line; each subsequent pipe
+starts a further line below it.  Each line is centered under the notes
+independently, following the current \nameref{lyriccentering} mode
+(including a forced center in curly braces, settable per line).
+Corresponding lines of neighboring syllables share a baseline, spaced by the
+\texttt{lyricstackseparation} distance; any translation text goes below the
+whole stack.
+
+Word boundaries are tracked per line, using the same rule everywhere: a
+space right before a line's text starts a new word on that line.  On the
+main line, that space is the usual one between two syllables; on the other
+lines, it is the space right after the pipe that starts the line.  A
+stacked word also ends when the following syllable does not reach that
+level of the stack at all, whether because it has no stack of its own or
+because its stack does not go that deep.  A level that \emph{is} present
+but left empty --- two consecutive pipes, as in \texttt{ca||ci(h)}, or a
+trailing empty line at the end of a stack --- does \emph{not} end the word:
+it resumes with the next syllable that actually carries text on that level.
+For example:
+
+\begin{verbatim}
+Do|Pa(h)mi|(g)nus|ter(h)
+\end{verbatim}
+
+{
+  \gresetinitiallines{0}%
+  \gregorioscore[a]{multiplelyriclines2}
+}
+
+The second line reads \textit{Pater}, continuing across \texttt{mi|}'s empty
+text since the pipe still reaches that level. When the following syllable's
+stack does not reach that level at all, the word ends there instead:
+
+\begin{verbatim}
+Im|San(h)ma|cta(g)cu(h)la|Ma(g)ta|ter(h)
+\end{verbatim}
+
+{
+  \gresetinitiallines{0}%
+  \gregorioscore[a]{multiplelyriclines3}
+}
+
+Here \texttt{cu} has no second line at all, so the second line reads two
+separate words, \textit{Sancta} and \textit{Mater}, instead of continuing as
+one. The same rule closes a trailing empty level at the end of the score
+without a spurious hyphen, and governs automatic hyphens at line breaks on
+every level.
 
 \subsubsection{Special Characters}\label{specialcharacters}
 
