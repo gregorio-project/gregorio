@@ -366,6 +366,10 @@ Corresponding lines of neighboring syllables share a baseline, spaced by the
 \texttt{lyricstackseparation} distance; any translation text goes below the
 whole stack.
 
+\textbf{Note:} \nameref{translationtext} is not itself stackable: a
+syllable has a single translation, shared by every lyric line in its
+stack.
+
 Word boundaries are tracked per line, using the same rule everywhere: a
 space right before a line's text starts a new word on that line.  On the
 main line, that space is the usual one between two syllables; on the other
