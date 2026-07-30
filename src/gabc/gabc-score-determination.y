@@ -719,6 +719,7 @@ static char *concatenate(char *first, char *const second) {
 %token CENTER_BEGIN CENTER_END
 %token ELISION_BEGIN ELISION_END
 %token LYRIC_TIE
+%token LYRIC_CUT
 %token TRANSLATION_BEGIN TRANSLATION_END TRANSLATION_CENTER_END
 %token ALT_BEGIN ALT_END
 %token NLBA_B NLBA_E
