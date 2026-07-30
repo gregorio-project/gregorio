@@ -75,6 +75,9 @@ local part_alt = 6
 local part_nabc = 7
 local part_blnabc = 8
 local part_annotation = 9
+-- additional lyric lines (stacked lyrics) use part_lyric_line_base + level,
+-- so they sort after every fixed part above; level 1 is part_lyrics itself
+local part_lyric_line_base = 9
 
 local skip_type_attr = luatexbase.attributes['gre@attr@skip@type']
 
@@ -686,6 +689,7 @@ local function compute_line_statistics(line, info)
       has_alt = false,
       has_nabc = false,
       has_blnabc = false,
+      max_lyric_level = 1,
       glyph_top = 7, -- e = \gre@pitch@dummy
       glyph_bottom = 7 -- e = \gre@pitch@dummy
     }
@@ -700,6 +704,11 @@ local function compute_line_statistics(line, info)
         info.has_nabc = true
       elseif has_attribute(n, part_attr, part_blnabc) then
         info.has_blnabc = true
+      elseif (has_attribute(n, part_attr) or 0) >= part_lyric_line_base + 2 then
+        local level = has_attribute(n, part_attr) - part_lyric_line_base
+        if level > info.max_lyric_level then
+          info.max_lyric_level = level
+        end
       else
         if has_attribute(n, glyph_top_attr) then
           if info.glyph_top == nil or has_attribute(n, glyph_top_attr) > info.glyph_top then
@@ -844,9 +853,22 @@ local function adjust_additional_spaces(line, info, linenum)
       blnabc_lower = get_per_line_space('belowlinesnabcheight')
     end
   end
+  -- extra depth needed below the main lyrics for the additional lyric
+  -- lines (stacked lyrics): each one already sits at its own fixed raise
+  -- from \GreWriteLyricLine, so only the deepest one needs accounting for
+  local lyric_stack_extra = 0
+  if info.max_lyric_level > 1 then
+    lyric_stack_extra = (info.max_lyric_level - 1) * get_per_line_space('lyricstackseparation')
+  end
+
   local lyrics_lower = blnabc_lower + extra_space_lines_text + additional_bottom_space
-  local translation_lower = lyrics_lower + translation_height
-  local everything_raise = translation_lower + extra_space_beneath_text
+  -- the translation sits below the whole stack of lyric lines
+  local translation_lower = lyrics_lower + lyric_stack_extra + translation_height
+  -- everything_raise must NOT include lyric_stack_extra: the deepest
+  -- stacked line is already positioned by its own raise, so folding that
+  -- distance in here too would shift the whole line (staff included)
+  -- instead of just growing the line's depth
+  local everything_raise = lyrics_lower + translation_height + extra_space_beneath_text
 
   -- When the staff is collapsed, adjust the annotation position so it sits
   -- at the correct distance from the lyrics/initial.
@@ -907,6 +929,12 @@ local function adjust_additional_spaces(line, info, linenum)
         changed = true
       elseif child_part_attr == part_lyrics or child_part_attr == part_initial then
         debugmessage('adjust_additional_spaces', 'shift lyrics/initial down by %spt', lyrics_lower/2^16)
+        child.shift = child.shift + lyrics_lower
+        changed = true
+      elseif child_part_attr ~= nil and child_part_attr >= part_lyric_line_base + 2 then
+        -- additional lyric lines: their own raise already accounts for
+        -- lyricstackseparation, so they shift down with the main lyrics
+        debugmessage('adjust_additional_spaces', 'shift lyric line %d down by %spt', child_part_attr - part_lyric_line_base, lyrics_lower/2^16)
         child.shift = child.shift + lyrics_lower
         changed = true
       elseif child_part_attr == part_translation then
@@ -994,6 +1022,17 @@ local function add_eol_hyphen(line)
 
   if last_sid ~= nil then
     debugmessage('hyphenation', 'last syllable on line: %d', last_sid)
+    -- The additional lyric lines (stacked lyrics) of the last syllable also
+    -- get an end-of-line hyphen when their word continues.
+    local levels = gregoriotex.syllables[last_sid].levels
+    if levels ~= nil then
+      for lev, cl in pairs(levels) do
+        if cl.dash == dash_maybedash or cl.dash == dash_forced then
+          debugmessage('hyphenation', 'lyric line %d of syllable %d needs hyphen', lev, last_sid)
+          gregoriotex.add_level_hyphen(gregoriotex.syllables[last_sid], lev)
+        end
+      end
+    end
     -- Check if the last syllable needs a hyphen
     if (gregoriotex.syllables[last_sid].dash == dash_maybedash or
         gregoriotex.syllables[last_sid].dash == dash_forced) then
