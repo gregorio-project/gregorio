@@ -3561,7 +3561,7 @@ static void write_fixed_text_styles(FILE *f, gregorio_character *syllable_text,
     }
 }
 
-static void write_text(FILE *const f, const gregorio_character *const text)
+static void write_text_pair(FILE *const f, const gregorio_character *const text)
 {
     if (text == NULL) {
         fprintf(f, "{}{}{}{}{}");
@@ -3575,9 +3575,40 @@ static void write_text(FILE *const f, const gregorio_character *const text)
     gregorio_write_first_letter_alignment_text(WTP_NORMAL, text,
             f, &gtex_write_verb, &gtex_print_char, &gtex_write_begin,
             &gtex_write_end, &gtex_write_special_char);
-    gregoriotex_ignore_style = gregoriotex_next_ignore_style;
-    gregoriotex_next_ignore_style = ST_NO_STYLE;
     fprintf(f, "}");
+}
+
+static void write_text(FILE *const f, const gregorio_character *const text)
+{
+    write_text_pair(f, text);
+    if (text != NULL) {
+        gregoriotex_ignore_style = gregoriotex_next_ignore_style;
+        gregoriotex_next_ignore_style = ST_NO_STYLE;
+    }
+}
+
+/* writes the additional lyric lines (levels 2+) of a stacked syllable, as
+ * \GreWriteLyricLine{level}{end-of-word}{forced-center}{pre}{center}{post}
+ * {first-letter}{rest}; goes into the eighth argument of \GreSyllable, like
+ * the translation */
+static void write_extra_lyric_lines(FILE *const f,
+        const gregorio_syllable *const syllable)
+{
+    const gregorio_lyric_line *line;
+    int level = 2;
+    /* the fixed-style optimization only applies to the level-1 text; make
+     * sure the styles of the extra lines are written in full */
+    const grestyle_style saved_ignore_style = gregoriotex_ignore_style;
+    gregoriotex_ignore_style = ST_NO_STYLE;
+    for (line = syllable->extra_lyrics; line; line = line->next, ++level) {
+        fprintf(f, "%%\n\\GreWriteLyricLine{%d}{%d}{%d}", level,
+                (line->position == WORD_END
+                        || line->position == WORD_ONE_SYLLABLE) ? 1 : 0,
+                line->forced_center ? 1 : 0);
+        write_text_pair(f, line->text);
+        fprintf(f, "%%\n");
+    }
+    gregoriotex_ignore_style = saved_ignore_style;
 }
 
 /*
@@ -4183,6 +4214,9 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     if (syllable->abovelinestext) {
         fprintf(f, "%%\n\\GreSetTextAboveLines{%s}%%\n",
                 syllable->abovelinestext);
+    }
+    if (syllable->extra_lyrics) {
+        write_extra_lyric_lines(f, syllable);
     }
     fprintf(f, "}{%%\n");
 
