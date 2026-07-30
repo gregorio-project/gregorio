@@ -33,12 +33,16 @@ local temp = node.id('temp')
 local disc = node.id('disc')
 local glyph = node.id('glyph')
 local whatsit = node.id('whatsit')
+local hlist = node.id('hlist')
 
 local syllable_id_attr = luatexbase.attributes['gre@attr@syllable@id']
 
 local part_attr = luatexbase.attributes['gre@attr@part']
 local part_lyrics = 4
 local part_notes = 10
+-- additional lyric lines (stacked lyrics, level 2+) use
+-- part_lyric_line_base + level, so they sort after every fixed part
+local part_lyric_line_base = 9
 
 local skip_type_attr = luatexbase.attributes['gre@attr@skip@type']
 local skip_type_syllablefinal = 1
@@ -50,6 +54,7 @@ local skip_type_clearsyllable = 5
 --- Possible values of syllables[sid].dash
 local dash_maybedash = 1
 local dash_hasdash = 2
+local dash_endofword = 3
 local dash_forced = 5
 
 -- Functions for manipulating glue, which we just store as a 3-tuple
@@ -174,6 +179,17 @@ local function current_syllable()
   return syllables[sid]
 end
 
+--- Record whether an additional lyric line (level 2+) ends a word here,
+--- called from \GreWriteLyricLine for each line of the current syllable.
+--- @param level number The lyric line level (2 for the first additional line).
+--- @param end_of_word number 1 if this level ends a word here, else 0.
+local function set_lyric_line_dash(level, end_of_word)
+  local cur = current_syllable()
+  if cur.levels == nil then cur.levels = {} end
+  if cur.levels[level] == nil then cur.levels[level] = {} end
+  cur.levels[level].dash = (end_of_word == 1) and dash_endofword or dash_maybedash
+end
+
 --- Save information about syllables that is impossible or
 --- inconvenient to recover from node attributes.
 --- @param type string Type of syllable ('bar' or 'note')
@@ -231,6 +247,11 @@ end
 local function scan_syllables(head)
   for _, cur in pairs(syllables) do
     cur.first_note = nil
+    if cur.levels ~= nil then
+      for _, cl in pairs(cur.levels) do
+        cl.box = nil
+      end
+    end
   end
   local prev_sid
   local function visit(head)
@@ -269,7 +290,12 @@ local function scan_syllables(head)
               syllables[sid].first_note = n
             end
             syllables[sid].last_note = n
-          elseif skip_type == skip_type_before_test then
+          elseif part ~= nil and part >= part_lyric_line_base + 2 then
+            local lev = part - part_lyric_line_base
+            if syllables[sid].levels == nil then syllables[sid].levels = {} end
+            if syllables[sid].levels[lev] == nil then syllables[sid].levels[lev] = {} end
+            syllables[sid].levels[lev].box = n
+          elseif skip_type == skip_type_before_text then
             syllables[sid].before_text_skip = n
           elseif skip_type == skip_type_text_notes then
             syllables[sid].text_notes_skip = n
@@ -285,6 +311,24 @@ local function scan_syllables(head)
     end
   end
   visit(head)
+end
+
+--- Find the left and right edges of an additional lyric line's text,
+--- relative to its zero-width outer box: a centering kern followed by the
+--- inner text hbox.
+--- @param box node The outer hbox of the lyric line.
+--- @return number The left edge, in sp.
+--- @return number The right edge, in sp.
+local function level_edges(box)
+  local left = 0
+  for m in node.traverse(box.head) do
+    if m.id == kern then
+      left = left + m.kern
+    elseif m.id == hlist then
+      return left, left + m.width
+    end
+  end
+  return left, left
 end
 
 --- Determine the width of a syllable's syllable-final skip, which is
@@ -517,6 +561,7 @@ local function syllable_rewriting()
 end
 
 gregoriotex.save_syllable_info = save_syllable_info
+gregoriotex.set_lyric_line_dash = set_lyric_line_dash
 gregoriotex.save_syllable_texts = save_syllable_texts
 gregoriotex.save_min_distances = save_min_distances
 gregoriotex.current_syllable = current_syllable
