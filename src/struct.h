@@ -653,9 +653,22 @@ typedef struct gregorio_character {
     union character_or_style cos;
 } gregorio_character;
 
+/* an additional lyric line under the main one (levels 2+ of a syllable
+ * "stack" written with the pipe syntax: ba|be|bi(fg)); the level number is
+ * given by the position in the singly-linked list (first node = level 2) */
+typedef struct gregorio_lyric_line {
+    struct gregorio_character *text;
+    struct gregorio_lyric_line *next;
+    ENUM_BITFIELD(gregorio_word_position) position:3;
+    bool first_word:1;
+    bool forced_center:1;
+} gregorio_lyric_line;
+
 typedef struct gregorio_syllable {
     /* pointer to a gregorio_text structure corresponding to the text. */
     struct gregorio_character *text;
+    /* additional lyric lines (levels 2+), NULL for a plain syllable */
+    struct gregorio_lyric_line *extra_lyrics;
     /* pointer to a gregorio_text structure corresponding to the
      * translation */
     struct gregorio_character *translation;
@@ -832,6 +845,7 @@ void gregorio_add_element(gregorio_element **current_element,
 void gregorio_add_syllable(gregorio_syllable **current_syllable,
         int number_of_voices, gregorio_element *elements[],
         gregorio_character *first_character,
+        gregorio_lyric_line *extra_lyrics,
         gregorio_character *first_translation_character,
         gregorio_word_position position, char *abovelinestext,
         gregorio_tr_centering translation_type, gregorio_nlba no_linebreak_area,
