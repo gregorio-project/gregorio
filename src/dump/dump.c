@@ -224,6 +224,24 @@ void dump_write_score(FILE *f, gregorio_score *score)
             }
             dump_write_characters(f, syllable->text);
         }
+        if (syllable->extra_lyrics) {
+            const gregorio_lyric_line *line;
+            int level = 2;
+            for (line = syllable->extra_lyrics; line;
+                    line = line->next, ++level) {
+                fprintf(f, "\n  Text (lyric line %d)\n", level);
+                fprintf(f, "   position                  %d (%s)\n",
+                        line->position,
+                        gregorio_word_position_to_string(line->position));
+                if (line->first_word) {
+                    fprintf(f, "   first word                true\n");
+                }
+                if (line->forced_center) {
+                    fprintf(f, "   forced center             true\n");
+                }
+                dump_write_characters(f, line->text);
+            }
+        }
         if ((syllable->translation
              && syllable->translation_type != TR_WITH_CENTER_END)
             || syllable->translation_type == TR_WITH_CENTER_END) {
