@@ -129,6 +129,8 @@ static bool protrusion_open;
 static unsigned char current_lyric_level;
 static gregorio_lyric_line *first_extra_lyric;
 static gregorio_lyric_line *last_extra_lyric;
+static gregorio_lyric_line *word_end_line[GABC_MAX_LYRIC_LINES];
+static char extra_position[GABC_MAX_LYRIC_LINES];
 static bool extra_started_first_word[GABC_MAX_LYRIC_LINES];
 static bool extra_lyric_seen[GABC_MAX_LYRIC_LINES];
 static bool extra_new_word[GABC_MAX_LYRIC_LINES];
@@ -205,6 +207,8 @@ static void initialize_variables(bool point_and_click)
     first_extra_lyric = NULL;
     last_extra_lyric = NULL;
     for (i = 0; i < GABC_MAX_LYRIC_LINES; i++) {
+        word_end_line[i] = NULL;
+        extra_position[i] = WORD_BEGINNING;
         extra_started_first_word[i] = false;
         extra_lyric_seen[i] = false;
         extra_new_word[i] = false;
@@ -500,6 +504,87 @@ static void save_stacked_text(void)
     }
 }
 
+static void check_elision_balance(const gregorio_character *const start)
+{
+    int i = 0;
+    const gregorio_character *ch;
+
+    for (ch = start; ch; ch = ch->next_character) {
+        if (!ch->is_character) {
+            switch (ch->cos.s.style) {
+            case ST_ELISION:
+                switch (ch->cos.s.type) {
+                case ST_T_BEGIN:
+                    ++i;
+                    gregorio_assert_only(i <= 1, check_elision_balance,
+                            "elisions may not be nested");
+                    break;
+
+                case ST_T_END:
+                    --i;
+                    gregorio_assert_only(i >= 0, check_elision_balance,
+                            "encountered elision end with no beginning");
+                    break;
+
+                case ST_T_NOTHING:
+                    /* LCOV_EXCL_START */
+                    gregorio_fail(check_elision_balance,
+                            "encountered ST_T_NOTHING");
+                    break;
+                    /* LCOV_EXCL_STOP */
+                }
+                break;
+
+            case ST_FORCED_CENTER:
+                if (i > 0) {
+                    gregorio_message(
+                            _("forced center may not be within an elision"),
+                            "check_elision_balance", VERBOSITY_ERROR, 0);
+                }
+                break;
+
+            default:
+                break;
+            }
+        }
+    }
+    gregorio_assert_only(i == 0, check_elision_balance,
+            "encountered elision beginning with no end");
+}
+
+/* closes the word that word_end_line[level - 2] was spelling, if any, and
+ * marks that level ready to start a fresh word */
+static void close_stacked_word_at_level(const int level)
+{
+    const int j = level - 2;
+    gregorio_lyric_line *const line = word_end_line[j];
+    if (line) {
+        if (line->position == WORD_MIDDLE) {
+            line->position = WORD_END;
+        } else if (line->position == WORD_BEGINNING) {
+            line->position = WORD_ONE_SYLLABLE;
+        }
+        extra_started_first_word[j] = false;
+        word_end_line[j] = NULL;
+    }
+    extra_position[j] = WORD_BEGINNING;
+}
+
+/* closes the stacked words of the levels the syllable being closed does not
+ * reach (its stack is shallower there, or it has no stack at all); a level
+ * that is present but left empty is still reached, so it does not close */
+static void end_stacked_levels_not_reached(void)
+{
+    const gregorio_lyric_line *line;
+    int k;
+    for (line = first_extra_lyric, k = 2; line; line = line->next, ++k) {
+        /* count depth only */
+    }
+    for (; k <= GABC_MAX_LYRIC_LINES; ++k) {
+        close_stacked_word_at_level(k);
+    }
+}
+
 /* a function called when we see a [, basically, all characters are added to
  * the translation pointer instead of the text pointer */
 static void start_translation(unsigned char asked_translation_type)
@@ -613,54 +698,37 @@ static void add_auto_protrusion(char *protrusion)
 
 static void close_syllable(YYLTYPE *loc)
 {
-    int i = 0;
-    gregorio_character *ch;
+    int i;
+    int k;
+    gregorio_lyric_line *line;
 
-    /* make sure any elisions that are opened are closed within the syllable */
-    for (ch = first_text_character; ch; ch = ch->next_character) {
-        if (!ch->is_character) {
-            switch (ch->cos.s.style) {
-            case ST_ELISION:
-                switch (ch->cos.s.type) {
-                case ST_T_BEGIN:
-                    ++i;
-                    /* the parser precludes this from falling here */
-                    gregorio_assert_only(i <= 1, close_syllable,
-                            "elisions may not be nested");
-                    break;
+    check_elision_balance(first_text_character);
+    for (line = first_extra_lyric; line; line = line->next) {
+        check_elision_balance(line->text);
+    }
 
-                case ST_T_END:
-                    --i;
-                    /* the parser precludes this from failing here */
-                    gregorio_assert_only(i >= 0, close_syllable,
-                            "encountered elision end with no beginning");
-                    break;
-
-                case ST_T_NOTHING:
-                    /* not reachable unless there's a programming error */
-                    /* LCOV_EXCL_START */
-                    gregorio_fail(close_syllable, "encountered ST_T_NOTHING");
-                    break;
-                    /* LCOV_EXCL_STOP */
-                }
-                break;
-
-            case ST_FORCED_CENTER:
-                if (i > 0) {
-                    gregorio_message(
-                            _("forced center may not be within an elision"),
-                            "close_syllable", VERBOSITY_ERROR, 0);
-                }
-                break;
-
-            default:
-                break;
-            }
+    /* a line starting a new word here ends the word the previous syllable
+     * was spelling on it, and so does a line this syllable does not reach */
+    for (line = first_extra_lyric, k = 2; line; line = line->next, ++k) {
+        if (line->text && extra_new_word[k - 2]) {
+            close_stacked_word_at_level(k);
         }
     }
-    /* the parser precludes this from failing here */
-    gregorio_assert_only(i == 0, close_syllable,
-            "encountered elision beginning with no end");
+    end_stacked_levels_not_reached();
+
+    /* only the beginnings and middles of the words are known here; the ends
+     * are filled in retroactively by close_stacked_word_at_level */
+    for (line = first_extra_lyric, k = 2; line; line = line->next, ++k) {
+        const int j = k - 2;
+        line->first_word = extra_started_first_word[j];
+        if (line->text == NULL) {
+            line->position = WORD_ONE_SYLLABLE;
+        } else {
+            line->position = extra_position[j];
+            extra_position[j] = WORD_MIDDLE;
+            word_end_line[j] = line;
+        }
+    }
 
     gregorio_add_syllable(&current_syllable, number_of_voices, elements,
             first_text_character, first_extra_lyric,
@@ -735,6 +803,7 @@ gregorio_score *gabc_read_score(FILE *f_in, bool point_and_click)
     /* the flex/bison main call, it will build the score (that we have
      * initialized) */
     gabc_score_determination_parse();
+    end_stacked_levels_not_reached();
     if (!score->legacy_oriscus_orientation) {
         gabc_determine_oriscus_orientation(score);
     }
