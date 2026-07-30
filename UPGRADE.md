@@ -2,6 +2,12 @@
 
 This file contains instructions to upgrade to a new release of Gregorio.  These instructions are cumulative; meaning that you should apply the instructions from all versions between the one you are upgrading from and the current version.
 
+## Unreleased
+
+### `|` is now reserved in syllable text
+
+The pipe character (`|`) in gabc syllable text now separates stacked lyric lines (multiple lines of lyrics under the staff). A literal `|` in lyrics must now be escaped as `$|`. Note that gabc files written by Gregorio itself have always escaped `|` in syllable text, so regenerated files are not affected.
+
 ## 6.2
 
 ### LuaTeX >= 1.0 required
