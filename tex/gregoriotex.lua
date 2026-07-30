@@ -573,8 +573,13 @@ local function find_attr(cur, attr, val)
   end
 end
 
--- Recompute interline glue
-local function adjust_glue(g)
+-- Recompute interline glue. forgive_depth is the previous line's own
+-- lyric_stack_extra (see adjust_additional_spaces): it needs room below
+-- that line, but must be excluded from the lineskiplimit check so it
+-- doesn't eat into unrelated headroom and collapse the glue to \lineskip.
+local function adjust_glue(g, forgive_depth)
+  forgive_depth = forgive_depth or 0
+
   -- Find previous line and its depth
   local prevline = g.prev
   while prevline ~= nil and prevline.id ~= hlist do
@@ -586,14 +591,14 @@ local function adjust_glue(g)
   else
     prevdepth = prevline.depth
   end
-    
-  debugmessage('adjust_glue', 'prev depth %.2f, cur height %.2f', prevdepth/2^16, g.next.height/2^16)
+
+  debugmessage('adjust_glue', 'prev depth %.2f, cur height %.2f, forgive_depth %.2f', prevdepth/2^16, g.next.height/2^16, forgive_depth/2^16)
   debugmessage('adjust_glue', 'baselineskip width=%.2f', tex.baselineskip.width/2^16)
 
   local subtype = 'baselineskip'
   debugmessage('adjust_glue', 'old glue is %s %spt plus %spt minus %spt', subtype, g.width/2^16, g.stretch/2^16, g.shrink/2^16)
-  
-  local new_width = tex.baselineskip.width - prevdepth - g.next.height
+
+  local new_width = tex.baselineskip.width - (prevdepth - forgive_depth) - g.next.height
   if new_width < tex.lineskiplimit then
     g.subtype = subtype_lineskip
     node.setglue(g, node.getglue(tex.lineskip))
@@ -742,10 +747,13 @@ local function get_if(name)
   return token.create('if'..name).mode == iftrue_token.mode
 end
 
-local function adjust_additional_spaces(line, info, linenum)
+local function adjust_additional_spaces(line, info, linenum, prev_stack_extra)
   -- Adjust the vertical positioning of all the parts of line, as well
   -- as its total height and the interline skip above the line.
-  
+  -- prev_stack_extra is the previous line's own lyric_stack_extra,
+  -- forwarded to adjust_glue as its forgive_depth. Returns this line's
+  -- lyric_stack_extra so the caller can pass it along for the next line.
+
   local function get_per_line_space(name)
     if per_line_dims[linenum] ~= nil and per_line_dims[linenum][name] ~= nil then
       return per_line_dims[linenum][name]
@@ -977,8 +985,10 @@ local function adjust_additional_spaces(line, info, linenum)
   _, line.height, line.depth = node.rangedimensions(line, line.head)
 
   if line.prev ~= nil and line.prev.id == glue then
-    adjust_glue(line.prev)
+    adjust_glue(line.prev, prev_stack_extra)
   end
+
+  return lyric_stack_extra
 end
 
 --- Callback for processing before ligaturing or kerning takes place.
@@ -1086,14 +1096,16 @@ local function post_linebreak(h, groupcode, glyphes)
       info = compute_line_statistics(line, info, linenum)
       linenum = linenum + 1
     end
+    local prev_stack_extra = 0
     for line in traverse_id(hlist, h) do
-      adjust_additional_spaces(line, info)
+      prev_stack_extra = adjust_additional_spaces(line, info, nil, prev_stack_extra)
     end
   elseif tex.count['gre@variableheightexpansion'] == 1 then -- variable
     local linenum = 1
+    local prev_stack_extra = 0
     for line in traverse_id(hlist, h) do
       local info = compute_line_statistics(line)
-      adjust_additional_spaces(line, info, linenum)
+      prev_stack_extra = adjust_additional_spaces(line, info, linenum, prev_stack_extra)
       linenum = linenum + 1
     end
   end
