@@ -1084,6 +1084,67 @@
   \gre@trace@end%
 }%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for stacked lyrics (multiple lyric lines)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newdimen\gre@dimen@lyriclinecenter%
+\newdimen\gre@dimen@lyriclineraise%
+
+% Writes one additional lyric line (level 2+) of a stacked syllable.  This is
+% expanded inside the eighth argument of \GreSyllable, where the current
+% point is the left edge of the level-1 syllable text and
+% \gre@dimen@textaligncenter still holds the level-1 alignment center, so
+% that kerning by the difference of the alignment centers puts this line's
+% center exactly under the level-1 center.
+% #1: level (2 for the first additional line)
+% #2: end of word: 1 if this level ends a word here, else 0
+% #3: forced center: 1 if the level has a {} forced center, else 0
+% #4: the first letters, they don't count for the alignment
+% #5: the middle letters, the alignment point
+% #6: the end letters, they don't count
+% #7: the very first letter (for first-letter centering)
+% #8: all the letters after the first letter
+\def\GreWriteLyricLine#1#2#3#4#5#6#7#8{%
+  \ifgre@showlyrics%
+    \ifcase#3\relax% no forced center: honor the centering mode
+      \ifcase\gre@lyriccentering% 0 - syllable centering
+        \def\gre@lyricline@firstpart{}%
+        \def\gre@lyricline@middlepart{#4#5#6}%
+        \def\gre@lyricline@endpart{}%
+      \or% 1 - vowel centering
+        \def\gre@lyricline@firstpart{#4}%
+        \def\gre@lyricline@middlepart{#5}%
+        \def\gre@lyricline@endpart{#6}%
+      \or% 2 - first-letter centering
+        \def\gre@lyricline@firstpart{}%
+        \def\gre@lyricline@middlepart{#7}%
+        \def\gre@lyricline@endpart{#8}%
+      \fi%
+    \else% forced center
+      \def\gre@lyricline@firstpart{#4}%
+      \def\gre@lyricline@middlepart{#5}%
+      \def\gre@lyricline@endpart{#6}%
+    \fi%
+    % this level's alignment center, as in \gre@calculate@textaligncenter
+    \gre@widthof{\gre@lyricline@firstpart\gre@lyricline@middlepart}%
+    \gre@dimen@lyriclinecenter=\gre@dimen@temp@three%
+    \gre@widthof{\gre@lyricline@middlepart}%
+    \divide\gre@dimen@temp@three by 2\relax%
+    \advance\gre@dimen@lyriclinecenter by -\gre@dimen@temp@three%
+    % each level sits lyricstackseparation below the previous one
+    \gre@dimen@lyriclineraise=\gre@space@dimen@lyricstackseparation\relax%
+    \multiply\gre@dimen@lyriclineraise by \numexpr#1-1\relax%
+    \gre@dimen@lyriclineraise=\dimexpr\gre@space@dimen@spacebeneathtext-\gre@dimen@lyriclineraise\relax%
+    \directlua{gregoriotex.set_lyric_line_dash(#1, #2)}%
+    \raise\gre@dimen@lyriclineraise%
+    \hbox attr \gre@attrid@part=\numexpr9+#1\relax to 0pt{%
+      \kern\dimexpr\gre@dimen@textaligncenter-\gre@dimen@lyriclinecenter\relax%
+      \hbox{\gre@lyricline@firstpart\gre@lyricline@middlepart\gre@lyricline@endpart}%
+      \hss}%
+  \fi%
+}%
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% other macros
