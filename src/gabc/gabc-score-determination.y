@@ -323,6 +323,7 @@ static void rebuild_score_characters(void)
         for (syllable = score->first_syllable; syllable;
                 syllable = syllable->next_syllable) {
             const gregorio_character *t;
+            gregorio_lyric_line *line;
 
             /* find out if there is a forced center */
             gregorio_center_determination center = CENTER_NOT_DETERMINED;
@@ -331,6 +332,23 @@ static void rebuild_score_characters(void)
                     syllable->forced_center = true;
                     center = CENTER_FULLY_DETERMINED;
                     break;
+                }
+            }
+
+            for (line = syllable->extra_lyrics; line; line = line->next) {
+                gregorio_center_determination line_center =
+                        CENTER_NOT_DETERMINED;
+                for (t = line->text; t; t = t->next_character) {
+                    if (!t->is_character
+                            && t->cos.s.style == ST_FORCED_CENTER) {
+                        line->forced_center = true;
+                        line_center = CENTER_FULLY_DETERMINED;
+                        break;
+                    }
+                }
+                gregorio_rebuild_characters(&(line->text), line_center, false);
+                if (line->first_word) {
+                    gregorio_set_first_word(&(line->text));
                 }
             }
 
