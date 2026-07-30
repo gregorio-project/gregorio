@@ -1060,7 +1060,6 @@ gregorio_character *gregorio_clone_characters(
 void gregorio_add_syllable(gregorio_syllable **current_syllable,
         int number_of_voices, gregorio_element *elements[],
         gregorio_character *first_character,
-        gregorio_lyric_line *extra_lyrics,
         gregorio_character *first_translation_character,
         gregorio_word_position position, char *abovelinestext,
         gregorio_tr_centering translation_type, gregorio_nlba no_linebreak_area,
@@ -1078,7 +1077,6 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
     next->no_linebreak_area = no_linebreak_area;
     next->euouae = euouae;
     next->text = first_character;
-    next->extra_lyrics = extra_lyrics;
     next->translation = first_translation_character;
     next->translation_type = translation_type;
     next->abovelinestext = abovelinestext;
