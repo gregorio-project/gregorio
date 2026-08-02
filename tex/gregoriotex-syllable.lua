@@ -134,6 +134,20 @@ local function glue_add(a, b)
   return {a[1]+b[1], a[2]+b[2], a[3]+b[3]}
 end
 
+--- Get a dimen which is defined as a macro \gre@space@dimen@...
+--- @param name The name of the dimen.
+--- @return number The value of the dimen, in sp.
+local function get_space_dimen(name)
+  return tex.sp(token.get_macro('gre@space@dimen@'..name))
+end
+
+--- Get a skip which is defined as a macro \gre@space@dimen@...
+--- @param name The name of the dimen.
+--- @return table The value of the skip, as a tuple.
+local function get_space_skip(name)
+  return string_to_glue(token.get_macro('gre@space@skip@'..name))
+end
+
 -- Miscellaneous helper functions
 
 --- Insert one node list into another.
@@ -202,19 +216,49 @@ end
 local function save_syllable_info(type, end_of_word)
   local sid = tex.getattribute(syllable_id_attr)
   if syllables[sid] == nil then syllables[sid] = {} end
-  syllables[sid].sid = sid
-  syllables[sid].type = type
-  syllables[sid].font = font.current()
-  syllables[sid].in_disc = tonumber(token.get_macro('gre@insidediscretionary')) > 0
-  syllables[sid].in_euouae = gregoriotex.get_if('gre@in@euouae')
-  syllables[sid].end_of_word = end_of_word > 0
+  local cur = syllables[sid]
+  cur.sid = sid
+  cur.type = type
+  cur.font = font.current()
+  cur.in_disc = tonumber(token.get_macro('gre@insidediscretionary')) > 0
+  cur.in_euouae = gregoriotex.get_if('gre@in@euouae')
+  cur.end_of_word = end_of_word > 0
   settings = {}
   --- If these settings are changed mid-syllable, they do not affect the current syllable.
   settings.syllablerewriting = gregoriotex.get_if('gre@rewritesyllables')
   settings.showlyrics = gregoriotex.get_if('gre@showlyrics')
-  settings.intersyllablespacestretchhyphen = string_to_glue(token.get_macro('gre@space@skip@intersyllablespacestretchhyphen'))
-  settings.maximumspacewithoutdash = tex.sp(token.get_macro('gre@space@dimen@maximumspacewithoutdash'))
-  syllables[sid].settings = settings
+  settings.eolshiftsenabled = gregoriotex.get_if('gre@eolshiftsenabled')
+  settings.newbarspacing = gregoriotex.get_if('gre@newbarspacing')
+  settings.intersyllablespacestretchhyphen = get_space_skip('intersyllablespacestretchhyphen')
+  settings.maximumspacewithoutdash = get_space_dimen('maximumspacewithoutdash')
+  settings.alterationadjustmentbar = get_space_dimen('alterationadjustmentbar')
+  settings.interwordspacenotes_alteration = get_space_skip('interwordspacenotes@alteration')
+  settings.intersyllablespacenotes = get_space_dimen('intersyllablespacenotes')
+  settings.intersyllablespacenotes_alteration = get_space_dimen('intersyllablespacenotes@alteration')
+  settings.notebarspace = get_space_skip('notebarspace')
+  if cur.in_euouae then
+    settings.interwordspacetext = get_space_skip('interwordspacetext@euouae')
+    settings.interwordspacetext_bars = get_space_dimen('interwordspacetext@bars@euouae')
+    settings.interwordspacetext_bars_notext = get_space_dimen('interwordspacetext@bars@notext@euouae')
+    settings.interwordspacenotes = get_space_skip('interwordspacenotes@euouae')
+  else
+    settings.interwordspacetext = get_space_skip('interwordspacetext')
+    settings.interwordspacetext_bars = get_space_dimen('interwordspacetext@bars')
+    settings.interwordspacetext_bars_notext = get_space_dimen('interwordspacetext@bars@notext')
+    settings.interwordspacenotes = get_space_skip('interwordspacenotes')
+  end
+  if settings.newbarspacing then
+    settings.bar_rubber = get_space_skip('bar@rubber')
+    settings.maxbaroffsettextleft = get_space_dimen('maxbaroffsettextleft')
+    settings.maxbaroffsettextright = get_space_dimen('maxbaroffsettextright')
+    settings.maxbaroffsettextleft_eol = get_space_dimen('maxbaroffsettextleft@eol')
+    settings.maxbaroffsettextright_eol = get_space_dimen('maxbaroffsettextright@eol')
+    settings.maxbaroffsettextleft_nobar = get_space_dimen('maxbaroffsettextleft@nobar')
+    settings.maxbaroffsettextright_nobar = get_space_dimen('maxbaroffsettextright@nobar')
+  else
+    settings.textbartextspace = get_space_skip('textbartextspace')
+  end
+  cur.settings = settings
 end
 
 --- Save settings after expanding the text and notes of a syllable.
@@ -223,8 +267,8 @@ local function save_post_syllable()
   local sid = tex.getattribute(syllable_id_attr)
   local settings = syllables[sid].settings
   settings.shiftaftermora = tex.count['gre@count@shiftaftermora']
-  settings.moraadjustment = string_to_glue(token.get_macro('gre@space@skip@moraadjustment'))
-  settings.moraadjustmentbar = string_to_glue(token.get_macro('gre@space@skip@moraadjustmentbar'))
+  settings.moraadjustment = get_space_skip('moraadjustment')
+  settings.moraadjustmentbar = get_space_skip('moraadjustmentbar')
 end
   
 --- Save syllable text before ligaturing and kerning happens. This
@@ -349,7 +393,7 @@ local function calculate_alteration_shift(cur)
       n = n.next
     end
     if n ~= cur.last_note.next then
-      local adj = tex.sp(token.get_macro('gre@space@dimen@alterationadjustmentbar'))
+      local adj = cur.settings.alterationadjustmentbar
       debugmessage('syllablespacing', 'alteration adjustment for syllable %d: %fpt', cur.sid, adj/2^16)
       cur.alteration_shift = adj
     end
@@ -452,7 +496,7 @@ local function adjust_syllablefinalskip(cur, next)
   -- In a few situations, we just zero out the syllablefinalskip and
   -- return. There is one more case below, after computing min_text_distance.
   if (next == nil or
-      (next_is_bar and not gregoriotex.get_if('gre@newbarspacing') and
+      (next_is_bar and not cur.settings.newbarspacing and
        (cur.forced_line_break or next.text.width == 0)))
   then
     debugmessage('syllablespacing', '  syllable final skip = 0pt')
@@ -465,18 +509,10 @@ local function adjust_syllablefinalskip(cur, next)
   -- The minimum distance from text right edge to next text left edge.
   local min_text_distance
   if cur.end_of_word then
-    if cur.in_euouae then
-      if gregoriotex.get_if('gre@newbarspacing') and next_is_bar then
-        min_text_distance = dimen_to_glue(tex.sp(token.get_macro('gre@space@dimen@interwordspacetext@bars@euouae')))
-      else
-        min_text_distance = string_to_glue(token.get_macro('gre@space@skip@interwordspacetext@euouae'))
-      end
-    else -- not in euouae
-      if gregoriotex.get_if('gre@newbarspacing') and next_is_bar then
-        min_text_distance = dimen_to_glue(tex.sp(token.get_macro('gre@space@dimen@interwordspacetext@bars')))
-      else
-        min_text_distance = string_to_glue(token.get_macro('gre@space@skip@interwordspacetext'))
-      end
+    if cur.settings.newbarspacing and next_is_bar then
+      min_text_distance = dimen_to_glue(cur.settings.interwordspacetext_bars)
+    else
+      min_text_distance = cur.settings.interwordspacetext
     end
   else -- middle of word
     min_text_distance = dimen_to_glue(0)
@@ -486,7 +522,7 @@ local function adjust_syllablefinalskip(cur, next)
   
   -- One more case where there is no syllablefinalskip.
   -- The reason we do this here is that bar_syllable_spacing still needs cur.min_text_distance.
-  if next_is_bar and gregoriotex.get_if('gre@newbarspacing') then
+  if next_is_bar and cur.settings.newbarspacing then
     debugmessage('syllablespacing', '  syllable final skip = 0pt')
     node.setglue(cur.syllablefinalskip, 0, 0, 0)
     return
@@ -496,30 +532,26 @@ local function adjust_syllablefinalskip(cur, next)
   local min_notes_distance
   if not next_is_bar and not next_is_alteration then -- next note is ordinary
     if cur.end_of_word then
-      if cur.in_euouae then
-        min_notes_distance = string_to_glue(token.get_macro('gre@space@skip@interwordspacenotes@euouae'))
-      else
-        min_notes_distance = string_to_glue(token.get_macro('gre@space@skip@interwordspacenotes'))
-      end
+      min_notes_distance = cur.settings.interwordspacenotes
     else
-      min_notes_distance = dimen_to_glue(tex.sp(token.get_macro('gre@space@dimen@intersyllablespacenotes')))
+      min_notes_distance = dimen_to_glue(cur.settings.intersyllablespacenotes)
     end
     if cur.mora_shift ~= nil then
       min_notes_distance = glue_add(min_notes_distance, cur.mora_shift)
     end
 
   elseif not next_is_alteration then -- next note is bar
-    if gregoriotex.get_if('gre@newbarspacing') then
+    if cur.settings.newbarspacing then
       min_notes_distance = 0
     else
-      min_notes_distance = string_to_glue(token.get_macro('gre@space@skip@notebarspace'))
+      min_notes_distance = cur.settings.notebarspace
     end
     
   else -- next note is alteration
     if cur.end_of_word then
-      min_notes_distance = string_to_glue(token.get_macro('gre@space@skip@interwordspacenotes@alteration'))
+      min_notes_distance = cur.settings.interwordspacenotes_alteration
     else
-      min_notes_distance = dimen_to_glue(tex.sp(token.get_macro('gre@space@dimen@intersyllablespacenotes@alteration')))
+      min_notes_distance = dimen_to_glue(cur.settings.intersyllablespacenotes_alteration)
     end
   end
 
@@ -639,7 +671,7 @@ local function note_syllable_spacing(cur, next)
 
     -- Replicate bug #1734: if next syllable is a bar, assume it has
     -- the bar and text centered, with no extra space.
-    if (next ~= nil and next.type == 'bar' and gregoriotex.get_if('gre@newbarspacing')) then
+    if (next ~= nil and next.type == 'bar' and cur.settings.newbarspacing) then
       local end_diff = node.dimensions(cur.text.next, cur.last_note.next)
       local next_notes_width = 0
       -- further bug: should the below ignore space around bar too?
@@ -661,7 +693,7 @@ local function note_syllable_spacing(cur, next)
     needs_hyphen = true
   end
   -- If lyrics are disabled, don't add a hyphen
-  if not gregoriotex.get_if('gre@showlyrics') then needs_hyphen = false end
+  if not cur.settings.showlyrics then needs_hyphen = false end
 
   if needs_hyphen then
     debugmessage('syllablespacing', 'text needs hyphen')
@@ -764,22 +796,14 @@ local function bar_syllable_spacing(prev, cur, next)
   if cur.text.width > 0 then
     space_before_text = prev and prev.min_text_distance and prev.min_text_distance[1] or 0
     if cur.end_of_word then
-      if cur.in_euouae then
-        space_after_text = tex.sp(token.get_macro('gre@space@dimen@interwordspacetext@bars@euouae'))
-      else
-        space_after_text = tex.sp(token.get_macro('gre@space@dimen@interwordspacetext@bars'))
-      end
+      space_after_text = cur.settings.interwordspacetext_bars
     end
   else
     -- If there is no text, ignore prev.min_text_distance and split
     -- current min_text_distance evenly before and after.
     local space_for_text
     if cur.end_of_word then
-      if cur.in_euouae then
-        space_for_text = tex.sp(token.get_macro('gre@space@dimen@interwordspacetext@bars@notext@euouae'))
-      else
-        space_for_text = tex.sp(token.get_macro('gre@space@dimen@interwordspacetext@bars@notext'))
-      end
+      space_for_text = cur.settings.interwordspacetext_bars_notext
     end
     space_before_text = tex.round(space_for_text/2)
     space_after_text = tex.round(space_for_text/2)
@@ -801,7 +825,7 @@ local function bar_syllable_spacing(prev, cur, next)
   -- notes_req always includes the space before and after.
   local notes_req = notes_width
   if notes_width == 0 then
-    notes_req = notes_req + string_to_glue(token.get_macro('gre@space@skip@interwordspacenotes'))[1]
+    notes_req = notes_req + cur.settings.interwordspacenotes[1]
   end
   debugmessage('barspacing', 'space required for notes: %fpt', notes_req/2^16)
   local space_after_notes = node.dimensions(cur.last_note_not_space.next, cur.last_note.next)
@@ -870,16 +894,16 @@ local function bar_syllable_spacing(prev, cur, next)
       max_offset_right = 0
     elseif cur.forced_line_break then
       -- Last syllable before forced break
-      max_offset_left = tex.sp(token.get_macro('gre@space@dimen@maxbaroffsettextleft@eol'))
-      max_offset_right = tex.sp(token.get_macro('gre@space@dimen@maxbaroffsettextright@eol'))
+      max_offset_left = cur.settings.maxbaroffsettextleft_eol
+      max_offset_right = cur.settings.maxbaroffsettextright_eol
     elseif notes_width > 0 then
       -- The most common case
-      max_offset_left = tex.sp(token.get_macro('gre@space@dimen@maxbaroffsettextleft'))
-      max_offset_right = tex.sp(token.get_macro('gre@space@dimen@maxbaroffsettextright'))
+      max_offset_left = cur.settings.maxbaroffsettextleft
+      max_offset_right = cur.settings.maxbaroffsettextright
     else
       -- A no-note syllable
-      max_offset_left = tex.sp(token.get_macro('gre@space@dimen@maxbaroffsettextleft@nobar'))
-      max_offset_right = tex.sp(token.get_macro('gre@space@dimen@maxbaroffsettextright@nobar'))
+      max_offset_left = cur.settings.maxbaroffsettextleft_nobar
+      max_offset_right = cur.settings.maxbaroffsettextright_nobar
     end
     debugmessage('barspacing', 'maximum offset to left: %fpt', max_offset_left/2^16)
     debugmessage('barspacing', 'maximum offset to right: %fpt', max_offset_right/2^16)
@@ -922,7 +946,7 @@ local function bar_syllable_spacing(prev, cur, next)
 
   -- Position of syllable-final penalty
   local new_penalty_pos
-  if gregoriotex.get_if('gre@eolshiftsenabled') then
+  if cur.settings.eolshiftsenabled then
     debugmessage('barspacing', 'custos width: %fpt', cur.custos_width/2^16)
     new_penalty_pos = math.max(
       new_text_center + tex.round(text_req/2) - space_after_text - cur.custos_width,
@@ -957,7 +981,7 @@ local function bar_syllable_spacing(prev, cur, next)
     elseif cur.syllablefinalskip.id == glue then
       local skip = table.pack(node.getglue(cur.syllablefinalskip))
       skip = glue_add(skip, - penalty_shift + end_shift)
-      skip = glue_add(skip, string_to_glue(token.get_macro('gre@space@skip@bar@rubber')))
+      skip = glue_add(skip, cur.settings.bar_rubber)
       node.setglue(cur.syllablefinalskip, table.unpack(skip))
     end
   end
@@ -1007,14 +1031,14 @@ local function old_bar_syllable_spacing(prev, cur, next)
   if cur.text.width == 0 then
     debugmessage('barspacing', 'bar has no text')
     -- The notes should have at least notebarspace around the notes on either side
-    local notes_req = notes_width + 2*string_to_glue(token.get_macro('gre@space@skip@notebarspace'))[1]
+    local notes_req = notes_width + 2*cur.settings.notebarspace[1]
     debugmessage('barspacing', 'minimum space for notes: %fpt', notes_req/2^16)
     -- Minimum distance between the previous and next syllable
     local syllable_req
     if prev_notes_end < prev_text_end then
-      syllable_req = string_to_glue(token.get_macro('gre@space@skip@interwordspacetext'))[1]
+      syllable_req = cur.settings.interwordspacetext[1]
     else
-      syllable_req = string_to_glue(token.get_macro('gre@space@skip@interwordspacenotes'))[1]
+      syllable_req = cur.settings.interwordspacenotes[1]
     end
     debugmessage('barspacing', 'minimum space for syllable: %fpt', syllable_req/2^16)
     end_shift = math.max(prev_notes_end + notes_req - next_notes_begin, prev_end + syllable_req - cur_end)
@@ -1041,15 +1065,15 @@ local function old_bar_syllable_spacing(prev, cur, next)
     local final_skip
     if text_end < notes_end then
       if next_notes_begin < next_text_begin then
-        final_skip = string_to_glue(token.get_macro('gre@space@skip@notebarspace'))
+        final_skip = cur.settings.notebarspace
       else
-        final_skip = string_to_glue(token.get_macro('gre@space@skip@textbartextspace'))
+        final_skip = cur.settings.textbartextspace
       end
     else
       if next_text_begin < next_notes_begin then
-        final_skip = string_to_glue(token.get_macro('gre@space@skip@textbartextspace'))
+        final_skip = cur.settings.textbartextspace
       else
-        final_skip = string_to_glue(token.get_macro('gre@space@skip@interwordspacetext'))
+        final_skip = cur.settings.interwordspacetext
       end
     end
     end_shift = glue_add(new_penalty_pos, final_skip)[1] - cur_end
@@ -1088,7 +1112,7 @@ local function syllable_spacing()
     if cur.type == 'note' then
       note_syllable_spacing(cur, next)
     elseif cur.type == 'bar' then
-      if gregoriotex.get_if('gre@newbarspacing') then
+      if cur.settings.newbarspacing then
         bar_syllable_spacing(prev, cur, next)
       else
         old_bar_syllable_spacing(prev, cur, next)
