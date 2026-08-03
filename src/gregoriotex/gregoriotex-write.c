@@ -2969,8 +2969,8 @@ static __inline bool _found(FILE *const f, const bool found)
 }
 
 static void compute_height_extrema(const gregorio_glyph *const glyph,
-        const gregorio_note *note, signed char *const top_height,
-        signed char *const bottom_height)
+        const gregorio_note *note, const gregorio_score *const score,
+        signed char *const top_height, signed char *const bottom_height)
 {
     signed char height;
     /* get the minima/maxima pitches */
@@ -2990,6 +2990,20 @@ static void compute_height_extrema(const gregorio_glyph *const glyph,
                 ++height;
             }
         }
+
+        if (note->special_sign) {
+            /* accentus, circulus, semicirculus and musica ficta always
+             * render above the note, at the same height
+             * gre@vepisemaorrare draws them at */
+            signed char sign_height = (signed char)(note->u.note.pitch + 1);
+            if (score->highest_pitch - 2 > sign_height) {
+                sign_height = (signed char)(score->highest_pitch - 2);
+            }
+            if (sign_height > height) {
+                height = sign_height;
+            }
+        }
+
         if (*top_height == UNDETERMINED_HEIGHT || height > *top_height) {
             *top_height = height;
         }
@@ -3043,7 +3057,8 @@ static void compute_height_extrema(const gregorio_glyph *const glyph,
 }
 
 static void compute_element_height_extrema(
-        const gregorio_element *const element, signed char *const top_height,
+        const gregorio_element *const element,
+        const gregorio_score *const score, signed char *const top_height,
         signed char *const bottom_height)
 {
     const gregorio_glyph *glyph;
@@ -3054,7 +3069,7 @@ static void compute_element_height_extrema(
     /* get the minima/maxima pitches */
     for (glyph = element->u.first_glyph; glyph; glyph = glyph->next) {
         if (glyph->type == GRE_GLYPH) {
-            compute_height_extrema(glyph, glyph->u.notes.first_note,
+            compute_height_extrema(glyph, glyph->u.notes.first_note, score,
                     top_height, bottom_height);
         }
     }
@@ -3088,7 +3103,7 @@ static void write_signs(FILE *f, gtex_type type,
     signed char high_pitch = UNDETERMINED_HEIGHT;
     signed char low_pitch = UNDETERMINED_HEIGHT;
     bool found = false;
-    compute_height_extrema(glyph, note, &high_pitch, &low_pitch);
+    compute_height_extrema(glyph, note, score, &high_pitch, &low_pitch);
     fixup_height_extrema(&high_pitch, &low_pitch);
     fprintf(f, "%%\n{%%\n\\GreGlyphHeights{%d}{%d}%%\n",
             pitch_value(high_pitch), pitch_value(low_pitch));
@@ -4197,7 +4212,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                 signed char low_pitch = UNDETERMINED_HEIGHT;
                 size_t i;
                 bool has_nabc = false;
-                compute_element_height_extrema(element, &high_pitch,
+                compute_element_height_extrema(element, score, &high_pitch,
                         &low_pitch);
                 fixup_height_extrema(&high_pitch, &low_pitch);
                 for (i = 0; i < element->nabc_lines; i++) {
@@ -4463,7 +4478,7 @@ static void initialize_score(gregoriotex_status *const status,
                         if (glyph->type == GRE_GLYPH) {
                             last_of_voice[voice] = element;
                             compute_height_extrema(glyph,
-                                    glyph->u.notes.first_note,
+                                    glyph->u.notes.first_note, score,
                                     &(status->top_height),
                                     &(status->bottom_height));
                         }
