@@ -767,16 +767,20 @@ local function adjust_additional_spaces(line, info, linenum)
   local alt_threshold = get_per_line_count('additionaltopspacealtthreshold')
   local nabc_threshold = get_per_line_count('additionaltopspacenabcthreshold')
   local bottom_threshold = get_per_line_count('noteadditionalspacelinestextthreshold')
-  
+  local blnabc_threshold = get_per_line_count('additionalbottomspacenabcthreshold')
+
   -- compute top and bottom pitches
-  local adjust_bottom = bottom_threshold + 3
+  local adjust_bottom = 3
   local adjust_top = 4 + 2*tex.count['gre@count@stafflines']
 
   -- compute additional top/bottom spaces
   local additional_top_space = math.max(0, info.glyph_top - adjust_top - top_threshold) * staffline_distance
   local additional_top_space_alt = math.max(0, info.glyph_top - adjust_top - alt_threshold) * staffline_distance
   local additional_top_space_nabc = math.max(0, info.glyph_top - adjust_top - nabc_threshold) * staffline_distance
-  local additional_bottom_space = math.max(0, adjust_bottom - info.glyph_bottom) * note_additional_space_lines_text
+  local additional_bottom_space = math.max(0, adjust_bottom + bottom_threshold - info.glyph_bottom) * note_additional_space_lines_text
+  -- blnabc gets the same treatment, but with its own threshold, the same
+  -- way nabc above the staff doesn't share additional_top_space's
+  local additional_bottom_space_nabc = math.max(0, adjust_bottom + blnabc_threshold - info.glyph_bottom) * note_additional_space_lines_text
 
   -- translation height
   local translation_height = 0
@@ -841,10 +845,18 @@ local function adjust_additional_spaces(line, info, linenum)
       -- as nabc (both raised by spacelinestext when staffheight=0).
       blnabc_lower = 0
     else
-      blnabc_lower = get_per_line_space('belowlinesnabcheight')
+      -- Low notes push blnabc down too, same as they already push nabc up
+      -- above the staff -- otherwise blnabc would stay put while the note
+      -- underneath it keeps dropping.
+      blnabc_lower = get_per_line_space('belowlinesnabcheight') + additional_bottom_space_nabc
     end
   end
-  local lyrics_lower = blnabc_lower + extra_space_lines_text + additional_bottom_space
+  -- Skip additional_bottom_space here if blnabc already carries it above,
+  -- so a low note doesn't push the lyrics down twice.
+  local lyrics_lower = blnabc_lower + extra_space_lines_text
+  if not info.has_blnabc or (staff_zeroed and not info.has_nabc) then
+    lyrics_lower = lyrics_lower + additional_bottom_space
+  end
   local translation_lower = lyrics_lower + translation_height
   local everything_raise = translation_lower + extra_space_beneath_text
 
