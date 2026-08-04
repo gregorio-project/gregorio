@@ -8,6 +8,8 @@ This file contains instructions to upgrade to a new release of Gregorio.  These 
 
 Rare signs (accentus, circulus, semicirculus, musica ficta) now reserve a bit more vertical space above the note, to avoid overlapping above-lines text, commentary, or the above-lines nabc line. Below-lines nabc neumes next to low notes now reserve a bit more space too, so they no longer overlap the note itself. If you'd rather keep the old below-lines nabc behavior, give `additionalbottomspacenabcthreshold` a low value, e.g. `\grechangecount{additionalbottomspacenabcthreshold}{-2}` (same convention as `noteadditionalspacelinestextthreshold`: lower means less reactive, not higher).
 
+`additionaltopspacenabcthreshold` default changed from `4` to `0`: above-lines nabc used to only grow taller for unusually tall content, leaving a gap right where a rare sign or a plain high note near the top of the staff would touch the nabc line without any extra space being reserved. Above-lines nabc now reacts as soon as content reaches that height, closing the gap. This slightly increases vertical spacing on lines where content reaches close to the top of the staff and nabc is present. If you'd rather keep the old behavior, use `\grechangecount{additionaltopspacenabcthreshold}{4}`.
+
 ## 6.2
 
 ### LuaTeX >= 1.0 required
