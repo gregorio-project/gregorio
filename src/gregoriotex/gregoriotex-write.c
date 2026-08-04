@@ -2996,8 +2996,8 @@ static void compute_height_extrema(const gregorio_glyph *const glyph,
              * render above the note, at the same height
              * gre@vepisemaorrare draws them at */
             signed char sign_height = (signed char)(note->u.note.pitch + 1);
-            if (score->highest_pitch - 2 > sign_height) {
-                sign_height = (signed char)(score->highest_pitch - 2);
+            if (score->above_staff_pitch > sign_height) {
+                sign_height = score->above_staff_pitch;
             }
             if (sign_height > height) {
                 height = sign_height;
