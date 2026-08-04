@@ -142,8 +142,44 @@ local catcode_at_letter = luatexbase.catcodetables['gre@atletter']
 
 local first_line_prevdepth = 0
 
+-- Single-quotes s for safe use as one word in a shell command line.
+local function gre_shellquote(s)
+  return "'" .. s:gsub("'", "'\\''") .. "'"
+end
+
+-- Unlike os.spawn(), which execs cmd's arguments directly, io.popen() only
+-- takes a single command line run through /bin/sh -c. Quote each argument so
+-- that paths with spaces stay intact and shell metacharacters in filenames
+-- (e.g. from the .tex source) aren't interpreted as shell syntax.
+local function gre_build_cmdstr(cmd)
+  local quoted = {}
+  for i, a in ipairs(cmd) do
+    quoted[i] = gre_shellquote(a)
+  end
+  return table.concat(quoted, ' ')
+end
+
+-- Returns exit code (0 = success, positive = failure, nil = could not
+-- launch — caller interprets nil as shell-escape disabled).
+local function gre_exec(cmd)
+  -- Workaround for a LuaTeX bug: os.spawn() leaks open fds to the child on
+  -- Unix, corrupting \input state (see #1757). Use io.popen() there instead;
+  -- Windows is unaffected and keeps os.spawn().
+  if os.type ~= 'windows' then
+    local handle = io.popen(gre_build_cmdstr(cmd), 'r')
+    if handle then
+      handle:read('*all')
+      local ok, _, code = handle:close()
+      return ok and 0 or (code or 1)
+    end
+    return nil
+  else
+    return os.spawn(cmd)
+  end
+end
+
 local function get_prog_output(cmd, tmpname, fmt)
-  local rc = os.spawn(cmd)
+  local rc = gre_exec(cmd) or 1
   local content = nil
   if rc == 0 then
     local f = io.open(tmpname, 'r');
@@ -1362,7 +1398,7 @@ local function compile_gabc(gabc_file, gtex_file, glog_file, allow_deprecated)
   kpse.record_input_file(gabc_file)
   kpse.record_output_file(glog_file)
   kpse.record_output_file(gtex_file)
-  local res = os.spawn(cmd)
+  local res = gre_exec(cmd)
 
   if res == nil then
     err("\nSomething went wrong when executing\n    '%s'.\n"
