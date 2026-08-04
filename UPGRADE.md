@@ -10,6 +10,8 @@ Rare signs (accentus, circulus, semicirculus, musica ficta) now reserve a bit mo
 
 `additionaltopspacenabcthreshold` default changed from `4` to `0`: above-lines nabc used to only grow taller for unusually tall content, leaving a gap right where a rare sign or a plain high note near the top of the staff would touch the nabc line without any extra space being reserved. Above-lines nabc now reacts as soon as content reaches that height, closing the gap. This slightly increases vertical spacing on lines where content reaches close to the top of the staff and nabc is present. If you'd rather keep the old behavior, use `\grechangecount{additionaltopspacenabcthreshold}{4}`.
 
+`abovelinesnabcraise` default changed from `0.17351cm` to `0.25cm`: even with the threshold fix above, the accentus glyph's tip extends a bit higher than the pitch-step reservation assumes, so above-lines nabc could still sit close enough to touch it. This adds a small, fixed amount of headroom to close that gap. This affects every line with above-lines nabc, not just ones with a rare sign, though the shift is small (about 0.03cm/0.8pt more than before). If you'd rather keep the old, tighter spacing, use `\grechangedim{abovelinesnabcraise}{0.17351cm}{scalable}`.
+
 ## 6.2
 
 ### LuaTeX >= 1.0 required
