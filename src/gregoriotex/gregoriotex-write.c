@@ -2969,8 +2969,8 @@ static __inline bool _found(FILE *const f, const bool found)
 }
 
 static void compute_height_extrema(const gregorio_glyph *const glyph,
-        const gregorio_note *note,
-        signed char *const top_height, signed char *const bottom_height)
+        const gregorio_note *note, signed char *const top_height,
+        signed char *const bottom_height)
 {
     signed char height;
     /* get the minima/maxima pitches */
@@ -2990,7 +2990,6 @@ static void compute_height_extrema(const gregorio_glyph *const glyph,
                 ++height;
             }
         }
-
         if (*top_height == UNDETERMINED_HEIGHT || height > *top_height) {
             *top_height = height;
         }
@@ -3044,8 +3043,8 @@ static void compute_height_extrema(const gregorio_glyph *const glyph,
 }
 
 static void compute_element_height_extrema(
-        const gregorio_element *const element,
-        signed char *const top_height, signed char *const bottom_height)
+        const gregorio_element *const element, signed char *const top_height,
+        signed char *const bottom_height)
 {
     const gregorio_glyph *glyph;
     gregorio_not_null(element, compute_element_height_extrema, return);
