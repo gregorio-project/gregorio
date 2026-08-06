@@ -6,9 +6,11 @@ This file contains instructions to upgrade to a new release of Gregorio.  These 
 
 ### Vertical spacing near rare signs and below-lines nabc
 
-Rare signs (accentus, circulus, semicirculus, musica ficta) now reserve a bit more vertical space above the note, to avoid overlapping above-lines text, commentary, or the above-lines nabc line. Below-lines nabc neumes next to low notes now reserve a bit more space too, so they no longer overlap the note itself. If you'd rather keep the old below-lines nabc behavior, give `additionalbottomspacenabcthreshold` a low value, e.g. `\grechangecount{additionalbottomspacenabcthreshold}{-2}` (same convention as `noteadditionalspacelinestextthreshold`: lower means less reactive, not higher).
+Rare signs (accentus, circulus, semicirculus, musica ficta) now reserve a bit more vertical space above the note, to avoid overlapping commentary or the above-lines nabc line. Below-lines nabc neumes next to low notes now reserve a bit more space too, so they no longer overlap the note itself. If you'd rather keep the old below-lines nabc behavior, give `additionalbottomspacenabcthreshold` a low value, e.g. `\grechangecount{additionalbottomspacenabcthreshold}{-2}` (same convention as `noteadditionalspacelinestextthreshold`: lower means less reactive, not higher).
 
 Above-lines nabc now reacts as soon as content reaches the top of the staff, instead of only growing for unusually tall content (`additionaltopspacenabcthreshold` default changed from `4` to `0`), and gained a bit more fixed headroom above the staff (`abovelinesnabcraise` default changed from `0.17351cm` to `0.25cm`). Together these close a gap where a rare sign or a plain high note near the top of the staff would otherwise touch the nabc line above it. This slightly increases vertical spacing on lines where content reaches close to the top of the staff and nabc is present. If you'd rather keep the old behavior, use `\grechangecount{additionaltopspacenabcthreshold}{4}` and `\grechangedim{abovelinesnabcraise}{0.17351cm}{scalable}`.
+
+Commentary (`\grecommentary`) gained a bigger increase in fixed headroom above the staff (`commentaryraise` default changed from `0.17351cm` to `0.35cm`), since a long enough commentary text can reach back over a rare sign regardless of which note it sits above, and clearing that needed more room than nabc's fix did. This slightly increases vertical spacing on any line using commentary. If you'd rather keep the old behavior, use `\grechangedim{commentaryraise}{0.17351cm}{scalable}`.
 
 ## 6.2
 
