@@ -13,6 +13,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 
 ### Added
 - Code for several features related to horizontal spacing (spacing between non-bar syllables, syllable rewriting, clearing, and hyphenation) was moved into Lua. This results in some changes in horizontal spacing, which, if perceptible, should be improvements. See [#1720](https://github.com/gregorio-project/gregorio/issues/1720).
+- Above lines text can now be centered or right-aligned relative to the note it is anchored to, in addition to the existing left alignment. Per-occurrence alignment is set with `<alt:l>`, `<alt:c>`, or `<alt:r>` (instead of `<alt>`) and `[alt:`*text*`;l]`, `[alt:`*text*`;c]`, or `[alt:`*text*`;r]` (instead of `[alt:`*text*`]`); the document-wide default is set with the new `\gresetabovelinestextalignment{left|center|right}`. See [#1768](https://github.com/gregorio-project/gregorio/issues/1768).
 
 ### Changed
 - Messages related to the use of the built-in Latin vowel rules have been clarified to make it more obvious when they are being used because they were requested and when they are being used because the desired language cannot be found.
