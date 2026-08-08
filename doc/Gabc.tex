@@ -299,7 +299,22 @@ These tags allow for a variety of special effects.
 
 \begin{description}
   \item[above lines text] Text between \texttt{<alt>} and \texttt{</alt>} is
-    ``above lines text'' and will be typeset above the staff lines.
+    ``above lines text'' and will be typeset above the staff lines.  By
+    default it is horizontally aligned with the left edge of the note it is
+    anchored to (or the document-wide default set by the command
+    \verb=\gresetabovelinestextalignment{<mode>}=, where \texttt{<mode>} is
+    \texttt{left}, \texttt{center}, or \texttt{right}).  \texttt{<alt:l>},
+    \texttt{<alt:c>}, or \texttt{<alt:r>} may be used instead of
+    \texttt{<alt>} to force left, center, or right alignment for that
+    occurrence, regardless of the document default.  Note that when the
+    anchor note is immediately followed by a bar line, center and right
+    alignment currently fall back to using the width of the previous note
+    instead of the bar.  Similarly, on a score's very first syllable,
+    center and right alignment may be thrown off by the extra spacing
+    reserved for a following drop initial (see
+    \verb=\gresetinitiallines=), since that spacing is applied after the
+    alignment has already been computed against the note's un-shifted
+    position.
   \item[special character] Text between \texttt{<sp>} and \texttt{</sp>} is a
     ``special character,'' as defined by \texttt{\textbackslash
     gresetspecial}.  There are also several special characters defined by default
@@ -1088,7 +1103,14 @@ completely omitted, allows the \texttt{:} to also be omitted.
 \subsubsection{Above Lines Text Within Notes}
 
 ``Above lines text'' may also be specified within the notes for better
-positioning.  To do this, use \texttt{[alt:}\textit{text}\texttt{]}.
+positioning.  To do this, use \texttt{[alt:}\textit{text}\texttt{]}.  As with
+the \texttt{<alt>} tag, this is left-aligned with the note by default (or
+uses the document-wide default set by
+\verb=\gresetabovelinestextalignment=); appending \texttt{;l}, \texttt{;c},
+or \texttt{;r} right before the closing \texttt{]} forces left, center, or
+right alignment for that occurrence, e.g.\ \texttt{[alt:}\textit{text}%
+\texttt{;c]} for centering or \texttt{[alt:}\textit{text}\texttt{;r]} for
+right alignment.
 
 \subsubsection{Verbatim \TeX}
 

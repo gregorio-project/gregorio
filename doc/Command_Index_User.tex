@@ -971,6 +971,22 @@ Sets the visibility of the above lines text.
   & \texttt{phantom} & Above lines text are invisible but space is preserved.
 \end{argtable}
 
+\macroname{\textbackslash gresetabovelinestextalignment}{\{\#1\}}{gregoriotex-main.tex}
+Macro to specify the document-wide default horizontal alignment of above
+lines text (\texttt{<alt></alt>} in gabc) relative to the note or glyph it is
+anchored to.  This is distinct from \textbackslash gresetabovelinestext
+above, which controls visibility rather than alignment.  A per-occurrence
+alignment specified in the gabc source (\texttt{<alt:l>}, \texttt{<alt:c>},
+\texttt{<alt:r>}, or the \texttt{[alt:}\textit{text}\texttt{;l]},
+\texttt{[alt:}\textit{text}\texttt{;c]}, \texttt{[alt:}\textit{text}%
+\texttt{;r]} note-level forms) overrides this default.
+
+\begin{argtable}
+  \#1 & \texttt{left} & Above lines text is left aligned with its anchor note (default).\\
+  & \texttt{center} & Above lines text is centered on its anchor note.\\
+  & \texttt{right} & Above lines text is right aligned with its anchor note.
+\end{argtable}
+
 
 \subsubsection{Text Alignment}
 Gregorio\TeX\ allows you to manipulate the global alignment behavior of some text elements using the following commands.
