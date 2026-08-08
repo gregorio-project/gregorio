@@ -340,6 +340,22 @@ semicolon. */
         return CENTER_END;
     }
 <score><alt> {
+        gabc_score_determination_lval.character = '\0';
+        BEGIN(alt);
+        return ALT_BEGIN;
+    }
+<score><alt:l> {
+        gabc_score_determination_lval.character = 'l';
+        BEGIN(alt);
+        return ALT_BEGIN;
+    }
+<score><alt:c> {
+        gabc_score_determination_lval.character = 'c';
+        BEGIN(alt);
+        return ALT_BEGIN;
+    }
+<score><alt:r> {
+        gabc_score_determination_lval.character = 'r';
         BEGIN(alt);
         return ALT_BEGIN;
     }

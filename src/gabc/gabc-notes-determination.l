@@ -23,6 +23,7 @@
 
 #include "config.h"
 #include <stdio.h>
+#include <string.h> /* for strlen */
 #include <ctype.h> /* for tolower */
 #include "bool.h"
 #include "struct.h"
@@ -1044,9 +1045,31 @@ void gabc_det_notes_finish(void)
                 GRE_TEXVERB_ELEMENT, &notes_lloc);
     }
 <alt>(\$.|[^\]])+ {
-        gregorio_add_texverb_as_note(&current_note,
-                gabc_unescape(gabc_notes_determination_text), GRE_ALT,
-                &notes_lloc);
+        gregorio_alt_alignment alignment = ALT_DEFAULT;
+        char *text = gabc_notes_determination_text;
+        size_t len = strlen(text);
+        /* a trailing, unescaped ";l"/";c"/";r" is an alignment suffix; '$'
+         * always escapes exactly the next character, so an even number of
+         * literal '$' immediately before the ';' (zero included) means the
+         * ';' itself is not escaped */
+        if (len >= 2 && text[len - 2] == ';') {
+            size_t dollars = 0;
+            size_t i = len - 2;
+            while (i > 0 && text[i - 1] == '$') {
+                ++dollars;
+                --i;
+            }
+            if (dollars % 2 == 0) {
+                gregorio_alt_alignment suffix =
+                        gregorio_char_to_alt_alignment(text[len - 1]);
+                if (suffix != ALT_DEFAULT) {
+                    alignment = suffix;
+                    text[len - 2] = '\0';
+                }
+            }
+        }
+        gregorio_add_alt_as_note(&current_note, gabc_unescape(text),
+                alignment, &notes_lloc);
     }
 <INITIAL>\/\[ {
         BEGIN(space);
