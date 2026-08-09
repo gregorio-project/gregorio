@@ -339,23 +339,10 @@ semicolon. */
 <score>\} {
         return CENTER_END;
     }
-<score><alt> {
-        gabc_score_determination_lval.character = '\0';
-        BEGIN(alt);
-        return ALT_BEGIN;
-    }
-<score><alt:l> {
-        gabc_score_determination_lval.character = 'l';
-        BEGIN(alt);
-        return ALT_BEGIN;
-    }
-<score><alt:c> {
-        gabc_score_determination_lval.character = 'c';
-        BEGIN(alt);
-        return ALT_BEGIN;
-    }
-<score><alt:r> {
-        gabc_score_determination_lval.character = 'r';
+<score><alt(:[lcr])?> {
+        gabc_score_determination_lval.character =
+                (gabc_score_determination_leng == 5) ? '\0'
+                : gabc_score_determination_text[5];
         BEGIN(alt);
         return ALT_BEGIN;
     }

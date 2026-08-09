@@ -1029,7 +1029,6 @@ static __inline char gregorio_alt_alignment_to_char(
         return 'c';
     case ALT_RIGHT:
         return 'r';
-    case ALT_DEFAULT:
     default:
         return '\0';
     }

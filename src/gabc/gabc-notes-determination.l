@@ -1053,17 +1053,15 @@ void gabc_det_notes_finish(void)
          * literal '$' immediately before the ';' (zero included) means the
          * ';' itself is not escaped */
         if (len >= 2 && text[len - 2] == ';') {
-            size_t dollars = 0;
+            bool unescaped = true;
             size_t i = len - 2;
             while (i > 0 && text[i - 1] == '$') {
-                ++dollars;
+                unescaped = !unescaped;
                 --i;
             }
-            if (dollars % 2 == 0) {
-                gregorio_alt_alignment suffix =
-                        gregorio_char_to_alt_alignment(text[len - 1]);
-                if (suffix != ALT_DEFAULT) {
-                    alignment = suffix;
+            if (unescaped) {
+                alignment = gregorio_char_to_alt_alignment(text[len - 1]);
+                if (alignment != ALT_DEFAULT) {
                     text[len - 2] = '\0';
                 }
             }
