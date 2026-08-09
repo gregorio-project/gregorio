@@ -2,6 +2,16 @@
 
 This file contains instructions to upgrade to a new release of Gregorio.  These instructions are cumulative; meaning that you should apply the instructions from all versions between the one you are upgrading from and the current version.
 
+## [Unreleased][develop]
+
+### Note-level `[alt:`*text*`]` field: trailing `;l`/`;c`/`;r` now means alignment
+
+The note-level `[alt:`*text*`]` field now recognizes a trailing, unescaped `;l`, `;c`, or `;r` (immediately before the closing `]`) as a per-occurrence alignment override, matching the new `<alt:l>`/`<alt:c>`/`<alt:r>` syllable tags.
+
+If an existing score has `[alt:`*text*`]` where *text* itself ends in a literal `;l`, `;c`, or `;r`, that suffix will now be stripped from the displayed text and treated as an alignment marker instead, changing the rendered output. To keep the old, literal behavior, escape the semicolon with `$` (e.g. `[alt:foo$;l]` instead of `[alt:foo;l]`).
+
+This does not affect the syllable-level `<alt>` tag: `<alt:l>`, `<alt:c>`, and `<alt:r>` are new tag names that were not valid gabc before this release, so no existing score using `<alt>` is affected.
+
 ## 6.2
 
 ### LuaTeX >= 1.0 required

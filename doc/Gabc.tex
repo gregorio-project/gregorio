@@ -1110,7 +1110,11 @@ uses the document-wide default set by
 or \texttt{;r} right before the closing \texttt{]} forces left, center, or
 right alignment for that occurrence, e.g.\ \texttt{[alt:}\textit{text}%
 \texttt{;c]} for centering or \texttt{[alt:}\textit{text}\texttt{;r]} for
-right alignment.
+right alignment.  Since a trailing \texttt{;l}, \texttt{;c}, or \texttt{;r}
+is given this special meaning, if \textit{text} itself needs to end that
+way literally, escape the semicolon with \texttt{\$} (\eg\
+\texttt{[alt:}\textit{text}\texttt{\$;l]}) to keep it from being
+interpreted as an alignment marker.
 
 \subsubsection{Verbatim \TeX}
 
