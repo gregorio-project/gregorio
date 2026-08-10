@@ -90,6 +90,7 @@ local endcenter   = 2
 
 local glyph_top_attr = luatexbase.attributes['gre@attr@glyph@top']
 local glyph_bottom_attr = luatexbase.attributes['gre@attr@glyph@bottom']
+local nabc_baseraise_attr = luatexbase.attributes['gre@attr@nabc@baseraise']
 
 local alteration_type_attr = luatexbase.attributes['gre@attr@alteration@type']
 local alteration_pitch_attr = luatexbase.attributes['gre@attr@alteration@pitch']
@@ -723,19 +724,26 @@ local function compute_line_statistics(line, info)
       has_nabc = false,
       has_blnabc = false,
       glyph_top = 7, -- e = \gre@pitch@dummy
-      glyph_bottom = 7 -- e = \gre@pitch@dummy
+      glyph_bottom = 7, -- e = \gre@pitch@dummy
+      nabc_baseraise_max = 0,
+      nabc_baseraise_min = 0,
+      blnabc_baseraise_max = 0,
+      blnabc_baseraise_min = 0
     }
   end
-  local function visit(list)
+  local function visit(list, voice)
     for n in traverse(list) do
+      local child_voice = voice
       if has_attribute(n, part_attr, part_translation) then
         info.has_translation = true
       elseif has_attribute(n, part_attr, part_alt) then
         info.has_alt = true
       elseif has_attribute(n, part_attr, part_nabc) then
         info.has_nabc = true
+        child_voice = 1
       elseif has_attribute(n, part_attr, part_blnabc) then
         info.has_blnabc = true
+        child_voice = 2
       else
         if has_attribute(n, glyph_top_attr) then
           if info.glyph_top == nil or has_attribute(n, glyph_top_attr) > info.glyph_top then
@@ -748,15 +756,28 @@ local function compute_line_statistics(line, info)
           end
         end
       end
+      -- Checked unconditionally: this lives on the inner \raise'd box, not
+      -- the outer part_nabc/part_blnabc-tagged one; voice (inherited from
+      -- whichever of those wraps it) tells us which nabc line it's on.
+      local br = has_attribute(n, nabc_baseraise_attr)
+      if br then
+        if voice == 1 then
+          if br > info.nabc_baseraise_max then info.nabc_baseraise_max = br end
+          if br < info.nabc_baseraise_min then info.nabc_baseraise_min = br end
+        elseif voice == 2 then
+          if br > info.blnabc_baseraise_max then info.blnabc_baseraise_max = br end
+          if br < info.blnabc_baseraise_min then info.blnabc_baseraise_min = br end
+        end
+      end
       if n.id == hlist then
-        visit(n.head)
+        visit(n.head, child_voice)
       elseif n.id == disc then
-        visit(n.replace)
+        visit(n.replace, child_voice)
       end
     end
   end
 
-  visit(line.head)
+  visit(line.head, nil)
   debugmessage('compute_line_statistics', 'has_alt %s has_nabc %s has_translation %s glyph_top %s glyph_bottom %s', info.has_alt, info.has_nabc, info.has_translation, info.glyph_top, info.glyph_bottom)
   return info
 end
@@ -840,15 +861,22 @@ local function adjust_additional_spaces(line, info, linenum)
   local cur = 0 -- vertical position without any additional space
   local add = 0 -- with additional space
 
+  -- Extra room for nabc glyphs shifted by an explicit hX pitch code:
+  -- extra_bottom compensates a glyph pulled toward the staff (the collision
+  -- fix), extra_top a glyph pushed away from it (grows the reservation
+  -- above nabc).
+  local nabc_baseraise_extra_top = math.max(0, info.nabc_baseraise_max or 0)
+  local nabc_baseraise_extra_bottom = math.max(0, -(info.nabc_baseraise_min or 0))
+
   local nabc_raise = 0
   if info.has_nabc then
     if not staff_zeroed then
       cur = cur + get_per_line_space('abovelinesnabcraise')
     end
-    add = math.max(add, cur + additional_top_space_nabc)
+    add = math.max(add, cur + additional_top_space_nabc + nabc_baseraise_extra_bottom)
     nabc_raise = add
-    cur = cur + get_per_line_space('abovelinesnabcheight')
-    add = add + get_per_line_space('abovelinesnabcheight')
+    cur = cur + get_per_line_space('abovelinesnabcheight') + nabc_baseraise_extra_top
+    add = add + get_per_line_space('abovelinesnabcheight') + nabc_baseraise_extra_top
   elseif info.has_blnabc and staff_zeroed then
     -- When only blnabc is visible and the staff is collapsed, treat it
     -- like nabc for stacking: reserve abovelinesnabcheight in the chain
@@ -873,6 +901,13 @@ local function adjust_additional_spaces(line, info, linenum)
   add = math.max(add, cur + additional_top_space)
   local height_increase = add - get_per_line_space('spaceabovelines')
 
+  -- Mirrors nabc_baseraise_extra_top/bottom above, but raise direction maps
+  -- to the opposite risk here: extra_top (glyph pulled toward the staff)
+  -- is the collision fix, extra_bottom (glyph pushed toward the lyrics)
+  -- grows the reservation below blnabc instead of above it.
+  local blnabc_baseraise_extra_top = math.max(0, info.blnabc_baseraise_max or 0)
+  local blnabc_baseraise_extra_bottom = math.max(0, -(info.blnabc_baseraise_min or 0))
+
   local blnabc_lower = 0
   if info.has_blnabc then
     if staff_zeroed and not info.has_nabc then
@@ -884,12 +919,12 @@ local function adjust_additional_spaces(line, info, linenum)
       -- Low notes push blnabc down too, same as they already push nabc up
       -- above the staff -- otherwise blnabc would stay put while the note
       -- underneath it keeps dropping.
-      blnabc_lower = get_per_line_space('belowlinesnabcheight') + additional_bottom_space_nabc
+      blnabc_lower = get_per_line_space('belowlinesnabcheight') + additional_bottom_space_nabc + blnabc_baseraise_extra_top
     end
   end
   -- Skip additional_bottom_space here if blnabc already carries it above,
   -- so a low note doesn't push the lyrics down twice.
-  local lyrics_lower = blnabc_lower + extra_space_lines_text
+  local lyrics_lower = blnabc_lower + extra_space_lines_text + blnabc_baseraise_extra_bottom
   if not info.has_blnabc or (staff_zeroed and not info.has_nabc) then
     lyrics_lower = lyrics_lower + additional_bottom_space
   end
