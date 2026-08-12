@@ -3590,7 +3590,11 @@ static void write_text(FILE *const f, const gregorio_character *const text)
 /* writes the additional lyric lines (levels 2+) of a stacked syllable, as
  * \GreWriteStackedLyric{level}{end-of-word}{forced-center}{pre}{center}{post}
  * {first-letter}{rest}; goes into the eighth argument of \GreSyllable, like
- * the translation */
+ * the translation.
+ *
+ * Fallback for syllable types other than \GreSyllable (e.g.
+ * \GreBarSyllable): those don't run \gre@dostackedlyriclevels, so they
+ * can't consume write_stacked_lyric_lines' stashed form below. */
 static void write_extra_lyric_lines(FILE *const f,
         const gregorio_syllable *const syllable)
 {
@@ -3602,6 +3606,32 @@ static void write_extra_lyric_lines(FILE *const f,
     gregoriotex_ignore_style = ST_NO_STYLE;
     for (line = syllable->lyric_lines->next; line; line = line->next, ++level) {
         fprintf(f, "%%\n\\GreWriteStackedLyric{%d}{%d}{%d}", level,
+                (line->position == WORD_END
+                        || line->position == WORD_ONE_SYLLABLE) ? 1 : 0,
+                line->forced_center ? 1 : 0);
+        write_text_pair(f, line->text);
+        fprintf(f, "%%\n");
+    }
+    gregoriotex_ignore_style = saved_ignore_style;
+}
+
+/* writes the additional lyric lines (levels 2+) of a stacked syllable, as
+ * \GreSetStackedSyllable{level}{end-of-word}{forced-center}{pre}{center}
+ * {post}{first-letter}{rest}, into \GreSyllable's first argument (unlike
+ * write_extra_lyric_lines, into its eighth). Only stashes each level's
+ * text; \GreSyllable builds them later via \gre@dostackedlyriclevels, once
+ * \gre@calculate@enddifference has freed \gre@dimen@textaligncenter. */
+static void write_stacked_lyric_lines(FILE *const f,
+        const gregorio_syllable *const syllable)
+{
+    const gregorio_lyric_line *line;
+    int level = 2;
+    /* the fixed-style optimization only applies to the level-1 text; make
+     * sure the styles of the extra lines are written in full */
+    const grestyle_style saved_ignore_style = gregoriotex_ignore_style;
+    gregoriotex_ignore_style = ST_NO_STYLE;
+    for (line = syllable->lyric_lines->next; line; line = line->next, ++level) {
+        fprintf(f, "%%\n\\GreSetStackedSyllable{%d}{%d}{%d}", level,
                 (line->position == WORD_END
                         || line->position == WORD_ONE_SYLLABLE) ? 1 : 0,
                 line->forced_center ? 1 : 0);
@@ -3745,6 +3775,10 @@ static void write_syllable_text(FILE *f, const char *const syllable_type,
                 syllable->lyric_lines->forced_center ?
                         "\\GreGABCForceCenters" : "");
         write_text(f, syllable->lyric_lines->text);
+        if (syllable->lyric_lines->next
+                && strcmp(syllable_type, "\\GreSyllable") == 0) {
+            write_stacked_lyric_lines(f, syllable);
+        }
         fprintf(f, "}");
     }
 }
@@ -3756,7 +3790,12 @@ static void write_first_syllable_text(FILE *f, const char *const syllable_type,
     const gregorio_character *const text = syllable->lyric_lines->text;
     gregorio_not_null(syllable_type, write_first_syllable_text, return);
     if (text == NULL) {
-        fprintf(f, "}{%s}{\\GreSetNoFirstSyllableText}", syllable_type);
+        fprintf(f, "}{%s}{\\GreSetNoFirstSyllableText", syllable_type);
+        if (syllable->lyric_lines->next
+                && strcmp(syllable_type, "\\GreSyllable") == 0) {
+            write_stacked_lyric_lines(f, syllable);
+        }
+        fprintf(f, "}");
     } else {
         gregorio_character *text_with_initial = gregorio_clone_characters(text),
                 *text_without_initial = gregorio_clone_characters(text);
@@ -3821,6 +3860,10 @@ static void write_first_syllable_text(FILE *f, const char *const syllable_type,
             fprintf(f, "{\\GreEmptyFirstSyllableHyphen}");
         }
 
+        if (syllable->lyric_lines->next
+                && strcmp(syllable_type, "\\GreSyllable") == 0) {
+            write_stacked_lyric_lines(f, syllable);
+        }
         fprintf(f, "}");
 
         gregorio_free_characters(text_with_initial);
@@ -4224,7 +4267,12 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
         fprintf(f, "%%\n\\GreSetTextAboveLines{%s}%%\n",
                 syllable->abovelinestext);
     }
-    if (syllable->lyric_lines->next) {
+    if (syllable->lyric_lines->next
+            && strcmp(syllable_type, "\\GreSyllable") != 0) {
+        /* \GreSyllable's own levels were already emitted inside its first
+         * argument (write_syllable_text/write_first_syllable_text); this
+         * fallback only fires for other syllable types, which don't run
+         * \gre@dostackedlyriclevels. */
         write_extra_lyric_lines(f, syllable);
     }
     fprintf(f, "}{%%\n");

@@ -1091,12 +1091,115 @@
 \newdimen\gre@dimen@stackedlyriccenter%
 \newdimen\gre@dimen@stackedlyricraise%
 
-% Writes one additional lyric line (level 2+) of a stacked syllable.  This is
-% expanded inside the eighth argument of \GreSyllable, where the current
-% point is the left edge of the level-1 syllable text and
-% \gre@dimen@textaligncenter still holds the level-1 alignment center, so
-% that kerning by the difference of the alignment centers puts this line's
-% center exactly under the level-1 center.
+% Number of lyric-line levels stashed so far for the current syllable by
+% \GreSetStackedSyllable (1 = no additional levels); reset to 1 at the top
+% of \GreSyllable (tex/gregoriotex-syllable.tex).
+\newcount\gre@count@stackedlyriclevels%
+\gre@count@stackedlyriclevels=1\relax%
+\newcount\gre@count@stackedlyricloop%
+
+% For the score's opening (first) syllable only: \GreScoreOpening's own
+% \GreSetStackedSyllable calls (tex/gregoriotex-syllable.tex) run before
+% \GreSyllable is even invoked, so \gre@count@stackedlyriclevels holds the
+% right value right after they run, but \GreSyllable then unconditionally
+% resets that counter to 1 as part of its own preamble (expecting its own
+% stash calls to come from inside its argument #1, which for every other
+% syllable is where they live). \gre@opening@syllabletext restores the
+% saved value once it is itself running as that argument #1, i.e. after
+% the reset -- see \GreScoreOpening and \gre@setfirstsyllabletext.
+\newcount\gre@count@openingstackedlyriclevels%
+\gre@count@openingstackedlyriclevels=1\relax%
+
+% Stashes one additional lyric line (level 2+) of the current syllable, to
+% be typeset later by \gre@dostackedlyriclevels. This is expanded inside
+% the FIRST argument of \GreSyllable, right after \GreSetThisSyllable /
+% \GreSetFirstSyllableText -- i.e. before \gre@dimen@textaligncenter has
+% even been computed for level 1, so this macro must not read it (only
+% \gre@buildstackedlyriclevel does, once it is safe to).
+% #1: level (2 for the first additional line)
+% #2: end of word: 1 if this level ends a word here, else 0
+% #3: forced center: 1 if the level has a {} forced center, else 0
+% #4: the first letters, they don't count for the alignment
+% #5: the middle letters, the alignment point
+% #6: the end letters, they don't count
+% #7: the very first letter (for first-letter centering)
+% #8: all the letters after the first letter
+\def\GreSetStackedSyllable#1#2#3#4#5#6#7#8{%
+  \ifnum#1>\gre@count@stackedlyriclevels\relax
+    \gre@count@stackedlyriclevels=#1\relax
+  \fi
+  \expandafter\gdef\csname gre@stackedlyric@level@#1@eow\endcsname{#2}%
+  \expandafter\gdef\csname gre@stackedlyric@level@#1@forced\endcsname{#3}%
+  \expandafter\gdef\csname gre@stackedlyric@level@#1@pre\endcsname{#4}%
+  \expandafter\gdef\csname gre@stackedlyric@level@#1@mid\endcsname{#5}%
+  \expandafter\gdef\csname gre@stackedlyric@level@#1@post\endcsname{#6}%
+  \expandafter\gdef\csname gre@stackedlyric@level@#1@first\endcsname{#7}%
+  \expandafter\gdef\csname gre@stackedlyric@level@#1@rest\endcsname{#8}%
+}%
+
+% Typesets every stacked lyric line stashed for the current syllable, in
+% level order. Called by \GreSyllable right after
+% \gre@calculate@enddifference, i.e. once level 1's note-relative
+% positioning no longer needs \gre@dimen@textaligncenter -- this must not
+% move earlier, or it would corrupt that positioning (see the comment at
+% its call site).
+\def\gre@dostackedlyriclevels{%
+  \ifnum\gre@count@stackedlyriclevels>1\relax
+    \gre@count@stackedlyricloop=1\relax
+    \loop
+      \advance\gre@count@stackedlyricloop by 1\relax
+      \gre@buildstackedlyriclevel{\the\gre@count@stackedlyricloop}%
+    \ifnum\gre@count@stackedlyricloop<\gre@count@stackedlyriclevels\relax
+    \repeat
+  \fi
+}%
+
+% Typesets one additional lyric line (level 2+), stashed earlier by
+% \GreSetStackedSyllable, the same way \GreWriteStackedLyric used to do it
+% directly: centers it under level 1's alignment center
+% (\gre@dimen@textaligncenter, read-only from here on -- see
+% \gre@measurecenter) and raises it by lyricstackseparation per level.
+% #1: level (2 for the first additional line)
+\def\gre@buildstackedlyriclevel#1{%
+  \ifgre@showlyrics%
+    \ifcase\csname gre@stackedlyric@level@#1@forced\endcsname\relax% no forced center: honor the centering mode
+      \gre@selectcenteringparts
+        {\csname gre@stackedlyric@level@#1@pre\endcsname}%
+        {\csname gre@stackedlyric@level@#1@mid\endcsname}%
+        {\csname gre@stackedlyric@level@#1@post\endcsname}%
+        {\csname gre@stackedlyric@level@#1@first\endcsname}%
+        {\csname gre@stackedlyric@level@#1@rest\endcsname}%
+        {\gre@stackedlyric@firstpart}{\gre@stackedlyric@middlepart}{\gre@stackedlyric@endpart}%
+    \else% forced center
+      \gdef\gre@stackedlyric@firstpart{\csname gre@stackedlyric@level@#1@pre\endcsname}%
+      \gdef\gre@stackedlyric@middlepart{\csname gre@stackedlyric@level@#1@mid\endcsname}%
+      \gdef\gre@stackedlyric@endpart{\csname gre@stackedlyric@level@#1@post\endcsname}%
+    \fi%
+    % this level's alignment center, as in \gre@calculate@textaligncenter
+    % (unwrapped: the fixed-style optimization only applies to level 1)
+    \gre@measurecenter{\gre@stackedlyric@firstpart\gre@stackedlyric@middlepart}%
+      {\gre@stackedlyric@middlepart}{\gre@dimen@stackedlyriccenter}%
+    % each level sits lyricstackseparation below the previous one
+    \gre@dimen@stackedlyricraise=\gre@space@dimen@lyricstackseparation\relax%
+    \multiply\gre@dimen@stackedlyricraise by \numexpr#1-1\relax%
+    \gre@dimen@stackedlyricraise=\dimexpr\gre@space@dimen@spacebeneathtext-\gre@dimen@stackedlyricraise\relax%
+    \directlua{gregoriotex.set_lyric_line_dash(#1, \csname gre@stackedlyric@level@#1@eow\endcsname)}%
+    % \gre@attr@part scoping: see \GreWriteStackedLyric below.
+    {\gre@attr@part=\numexpr9+#1\relax%
+    \raise\gre@dimen@stackedlyricraise%
+    \hbox attr \gre@attrid@part=\numexpr9+#1\relax to 0pt{%
+      \kern\dimexpr\gre@dimen@textaligncenter-\gre@dimen@stackedlyriccenter\relax%
+      \hbox{\gre@stackedlyric@firstpart\gre@stackedlyric@middlepart\gre@stackedlyric@endpart}%
+      \hss}}%
+  \fi%
+}%
+
+% Writes one additional lyric line (level 2+) of a stacked syllable
+% immediately, without going through the stash-and-defer mechanism above.
+% Kept only for syllable types other than \GreSyllable (see
+% write_extra_lyric_lines in gregoriotex-write.c): those don't call
+% \gre@dostackedlyriclevels, so \GreSetStackedSyllable's stashed data would
+% never get typeset for them.
 % #1: level (2 for the first additional line)
 % #2: end of word: 1 if this level ends a word here, else 0
 % #3: forced center: 1 if the level has a {} forced center, else 0
@@ -1108,30 +1211,17 @@
 \def\GreWriteStackedLyric#1#2#3#4#5#6#7#8{%
   \ifgre@showlyrics%
     \ifcase#3\relax% no forced center: honor the centering mode
-      \ifcase\gre@lyriccentering% 0 - syllable centering
-        \def\gre@stackedlyric@firstpart{}%
-        \def\gre@stackedlyric@middlepart{#4#5#6}%
-        \def\gre@stackedlyric@endpart{}%
-      \or% 1 - vowel centering
-        \def\gre@stackedlyric@firstpart{#4}%
-        \def\gre@stackedlyric@middlepart{#5}%
-        \def\gre@stackedlyric@endpart{#6}%
-      \or% 2 - first-letter centering
-        \def\gre@stackedlyric@firstpart{}%
-        \def\gre@stackedlyric@middlepart{#7}%
-        \def\gre@stackedlyric@endpart{#8}%
-      \fi%
+      \gre@selectcenteringparts{#4}{#5}{#6}{#7}{#8}%
+        {\gre@stackedlyric@firstpart}{\gre@stackedlyric@middlepart}{\gre@stackedlyric@endpart}%
     \else% forced center
       \def\gre@stackedlyric@firstpart{#4}%
       \def\gre@stackedlyric@middlepart{#5}%
       \def\gre@stackedlyric@endpart{#6}%
     \fi%
     % this level's alignment center, as in \gre@calculate@textaligncenter
-    \gre@widthof{\gre@stackedlyric@firstpart\gre@stackedlyric@middlepart}%
-    \gre@dimen@stackedlyriccenter=\gre@dimen@temp@three%
-    \gre@widthof{\gre@stackedlyric@middlepart}%
-    \divide\gre@dimen@temp@three by 2\relax%
-    \advance\gre@dimen@stackedlyriccenter by -\gre@dimen@temp@three%
+    % (unwrapped: the fixed-style optimization only applies to level 1)
+    \gre@measurecenter{\gre@stackedlyric@firstpart\gre@stackedlyric@middlepart}%
+      {\gre@stackedlyric@middlepart}{\gre@dimen@stackedlyriccenter}%
     % each level sits lyricstackseparation below the previous one
     \gre@dimen@stackedlyricraise=\gre@space@dimen@lyricstackseparation\relax%
     \multiply\gre@dimen@stackedlyricraise by \numexpr#1-1\relax%
