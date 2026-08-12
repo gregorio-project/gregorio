@@ -1160,6 +1160,22 @@ static bool gabc_write_gregorio_elements(FILE *f, gregorio_element *element,
     return linebreak_or_bar_in_element;
 }
 
+static bool lyric_line_has_text(const gregorio_syllable *const syllable,
+        const int level)
+{
+    const gregorio_lyric_line *line;
+    int k = 2;
+    if (!syllable) {
+        return false;
+    }
+    for (line = syllable->lyric_lines->next; line; line = line->next, ++k) {
+        if (k == level) {
+            return line->text != NULL;
+        }
+    }
+    return false;
+}
+
 /*
  *
  * Here it goes, we are writing a gregorio_syllable.
@@ -1182,12 +1198,35 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
     if (syllable->clear) {
         fprintf(f, "<clear>");
     }
-    if (syllable->text) {
+    if (syllable->lyric_lines->text) {
         /* we call the magic function (defined in struct_utils.c), that will
          * write our text. */
-        gregorio_write_text(WTP_NORMAL, syllable->text, f, &gabc_write_verb,
-                &gabc_print_char, &gabc_write_begin, &gabc_write_end,
-                &gabc_write_special_char);
+        gregorio_write_text(WTP_NORMAL, syllable->lyric_lines->text, f,
+                &gabc_write_verb, &gabc_print_char, &gabc_write_begin,
+                &gabc_write_end, &gabc_write_special_char);
+    }
+    if (syllable->lyric_lines->next) {
+        const gregorio_lyric_line *line;
+        const gregorio_syllable *const previous = syllable->previous_syllable;
+        int k;
+        for (line = syllable->lyric_lines->next, k = 2; line;
+                line = line->next, ++k) {
+            fprintf(f, "|");
+            if (line->text) {
+                if ((line->position == WORD_BEGINNING
+                            || line->position == WORD_ONE_SYLLABLE)
+                        && lyric_line_has_text(previous, k)) {
+                    fprintf(f, " ");
+                }
+                gregorio_write_text(WTP_NORMAL, line->text, f,
+                        &gabc_write_verb, &gabc_print_char,
+                        &gabc_write_begin, &gabc_write_end,
+                        &gabc_write_special_char);
+            }
+            if (line->forced_hyphen) {
+                fprintf(f, "-");
+            }
+        }
     }
     if (syllable->translation) {
         fprintf(f, "[");
@@ -1211,8 +1250,8 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
     {
         fprintf(f, ")\n");
     } else {
-        if (syllable->position == WORD_END
-            || syllable->position == WORD_ONE_SYLLABLE
+        if (syllable->lyric_lines->position == WORD_END
+            || syllable->lyric_lines->position == WORD_ONE_SYLLABLE
             || gregorio_is_only_special(syllable->elements[0]))
         {
             fprintf(f, ") ");

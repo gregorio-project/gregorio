@@ -2,6 +2,20 @@
 
 This file contains instructions to upgrade to a new release of Gregorio.  These instructions are cumulative; meaning that you should apply the instructions from all versions between the one you are upgrading from and the current version.
 
+## Unreleased
+
+### `|` is now reserved in syllable text
+
+The pipe character (`|`) in gabc syllable text now separates stacked lyric lines (multiple lines of lyrics under the staff). A literal `|` in lyrics must now be escaped as `$|`. Note that gabc files written by Gregorio itself have always escaped `|` in syllable text, so regenerated files are not affected.
+
+### A literal `-` immediately before `|` now forces a hyphen there
+
+A `-` right before the `|` that closes a stacked lyric line now forces a hyphen at that point (mirroring the existing behavior of `-` right before the notes' opening `(`), instead of being kept as a literal hyphen character. This only affects text that happened to end a stacked level with a literal `-` right before `|`; such text is rare, since it already visually reads as a hyphen there.
+
+### A textless syllable is no longer always exempt from automatic hyphenation
+
+A syllable with no lyric text (e.g. the `(g)` and `(h)` in `foo(f)(g)(h)bar(i)`) used to always be treated as ending a word, regardless of whether the gabc had a space around it, which made it ineligible for automatic hyphenation. It's now treated the same as a syllable with text: eligibility comes from its actual gabc word-position (whether there's a space before the next syllable), so a textless syllable written with no surrounding space, as in the example above, may now get an automatic hyphen (and the tighter, same-word spacing that comes with it) where it previously never could. To recover the old behavior, add an explicit space before the following syllable, e.g. `foo(f)(g)(h) bar(i)`.
+
 ## 6.2
 
 ### LuaTeX >= 1.0 required

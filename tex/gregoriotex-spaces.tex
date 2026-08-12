@@ -852,21 +852,31 @@
 
 \newdimen\gre@dimen@textaligncenter\relax%
 
+% Computes the "alignment center" of a piece of text -- the horizontal
+% distance from its left edge to the middle of its middle part -- and
+% stores it (globally) in dimen register #3. Shared by
+% \gre@calculate@textaligncenter (level 1, which wraps #1/#2 in
+% \gre@fixedtextformat/\gre@fixednexttextformat before calling this) and
+% \GreWriteStackedLyric's per-level centering (levels 2+, which wrap #1/#2
+% in \gre@fixedtextformat the same way).
+% #1: the first+middle text combined
+% #2: the middle text alone
+% #3: the dimen register to store the result into
+\def\gre@measurecenter#1#2#3{%
+  \gre@widthof{#1}%
+  \global#3=\the\gre@dimen@temp@three\relax%
+  \gre@widthof{#2}%
+  \divide\gre@dimen@temp@three by 2 %
+  \global\advance#3 by -\the\gre@dimen@temp@three\relax%
+}%
+
 \def\gre@calculate@textaligncenter#1#2#3{%
   \gre@trace{gre@calculate@textaligncenter{#1}{#2}{#3}}%
   \ifnum#3=0\relax
-    \gre@widthof{\gre@fixedtextformat{#1#2}}%
+    \gre@measurecenter{\gre@fixedtextformat{#1#2}}{\gre@fixedtextformat{#2}}{\gre@dimen@textaligncenter}%
   \else %
-    \gre@widthof{\gre@fixednexttextformat{#1#2}}%
+    \gre@measurecenter{\gre@fixednexttextformat{#1#2}}{\gre@fixednexttextformat{#2}}{\gre@dimen@textaligncenter}%
   \fi %
-  \global\gre@dimen@textaligncenter=\the\gre@dimen@temp@three %
-  \ifnum#3=0\relax
-    \gre@widthof{\gre@fixedtextformat{#2}}%
-  \else %
-    \gre@widthof{\gre@fixednexttextformat{#2}}%
-  \fi %
-  \divide\gre@dimen@temp@three by 2 %
-  \global\advance\gre@dimen@textaligncenter by -\the\gre@dimen@temp@three%
   \relax%
   \gre@trace@end%
 }%
@@ -912,8 +922,13 @@
     %to prevent the pollution of the normal values, we stock them into a temp value
     \gre@dimen@temp@two=\gre@dimen@textaligncenter\relax%
     \gre@calculate@textaligncenter{#1}{#2}{1}%
+    % if the next syllable itself has stacked lyric lines wider than its own
+    % level 1, widen the lookahead too (mirrors \gre@dimen@extraleftoverhang
+    % for the current syllable, tex/gregoriotex-syllable.tex)
+    \gre@measurenextoverhangs{\gre@dimen@textaligncenter}%
     \gre@dimen@temp@four=\gre@dimen@notesaligncenter\relax%
     \global\gre@skip@nextbegindifference=-\gre@dimen@textaligncenter\relax%
+    \global\advance\gre@skip@nextbegindifference by \gre@dimen@nextextraleftoverhang\relax%
     % caution: calculate@nextnotesaligncenter needs a properly set \gre@dimen@textaligncenter
     % (corresponding to the text align center of the next syllable)
     \gre@calculate@nextnotesaligncenter{#4}{#5}% idem
@@ -1463,8 +1478,8 @@
 % #1 : line number
 % #2-#4 : same as #1-#3 of \grechangedim
 \def\grechangenextscorelinedim#1#2#3#4{%
-  \IfStrEqCase{#2}{{abovelinestextheight}{}{abovelinestextraise}{}{abovelinesnabcheight}{}{abovelinesnabcraise}{}{spaceabovelines}{}{belowlinesnabcheight}{}{spacelinestext}{}{noteadditionalspacelinestext}{}{translationheight}{}{spacebeneathtext}{}}[%
-    \gre@error{Unrecognized option "#2" for \protect\grechangenextscorelinedim\MessageBreak Possible options are: 'spaceabovelines', 'abovelinestextheight', 'abovelinestextraise', 'abovelinesnabcheight', 'abovelinesnabcraise', 'belowlinesnabcheight', 'spacelinestext', 'noteadditionalspacelinestext', 'translationheight', 'spacebeneathtext'}%
+  \IfStrEqCase{#2}{{abovelinestextheight}{}{abovelinestextraise}{}{abovelinesnabcheight}{}{abovelinesnabcraise}{}{spaceabovelines}{}{belowlinesnabcheight}{}{spacelinestext}{}{noteadditionalspacelinestext}{}{translationheight}{}{lyricstackseparation}{}{spacebeneathtext}{}}[%
+    \gre@error{Unrecognized option "#2" for \protect\grechangenextscorelinedim\MessageBreak Possible options are: 'spaceabovelines', 'abovelinestextheight', 'abovelinestextraise', 'abovelinesnabcheight', 'abovelinesnabcraise', 'belowlinesnabcheight', 'spacelinestext', 'noteadditionalspacelinestext', 'translationheight', 'lyricstackseparation', 'spacebeneathtext'}%
   ]%
   {\grechangedim{#2}{#3}{#4}%
    \edef\gre@prefix{\gre@getprefix{#2}}%

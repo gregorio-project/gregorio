@@ -202,10 +202,11 @@ void dump_write_score(FILE *f, gregorio_score *score)
             syllable = syllable->next_syllable) {
         gregorio_element *element;
         fprintf(f, "   type                      0 (GRE_SYLLABLE)\n");
-        if (syllable->position) {
+        if (syllable->lyric_lines->position) {
             fprintf(f, "   position                  %d (%s)\n",
-                    syllable->position,
-                    gregorio_word_position_to_string(syllable->position));
+                    syllable->lyric_lines->position,
+                    gregorio_word_position_to_string(
+                            syllable->lyric_lines->position));
         }
         if (syllable->no_linebreak_area != NLBA_NORMAL) {
             fprintf(f, "   no line break area        %s\n",
@@ -218,11 +219,32 @@ void dump_write_score(FILE *f, gregorio_score *score)
         if (syllable->clear) {
             fprintf(f, "   clear                     true\n");
         }
-        if (syllable->text) {
+        if (syllable->lyric_lines->text) {
             if (syllable->translation) {
                 fprintf(f, "\n  Text\n");
             }
-            dump_write_characters(f, syllable->text);
+            dump_write_characters(f, syllable->lyric_lines->text);
+        }
+        if (syllable->lyric_lines->next) {
+            const gregorio_lyric_line *line;
+            int level = 2;
+            for (line = syllable->lyric_lines->next; line;
+                    line = line->next, ++level) {
+                fprintf(f, "\n  Text (lyric line %d)\n", level);
+                fprintf(f, "   position                  %d (%s)\n",
+                        line->position,
+                        gregorio_word_position_to_string(line->position));
+                if (line->first_word) {
+                    fprintf(f, "   first word                true\n");
+                }
+                if (line->forced_center) {
+                    fprintf(f, "   forced center             true\n");
+                }
+                if (line->forced_hyphen) {
+                    fprintf(f, "   forced hyphen             true\n");
+                }
+                dump_write_characters(f, line->text);
+            }
         }
         if ((syllable->translation
              && syllable->translation_type != TR_WITH_CENTER_END)

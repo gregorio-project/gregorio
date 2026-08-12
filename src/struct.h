@@ -653,9 +653,27 @@ typedef struct gregorio_character {
     union character_or_style cos;
 } gregorio_character;
 
-typedef struct gregorio_syllable {
-    /* pointer to a gregorio_text structure corresponding to the text. */
+/* an additional lyric line under the main one (levels 2+ of a syllable
+ * "stack" written with the pipe syntax: ba|be|bi(fg)); the level number is
+ * given by the position in the singly-linked list (first node = level 2) */
+typedef struct gregorio_lyric_line {
     struct gregorio_character *text;
+    struct gregorio_lyric_line *next;
+    ENUM_BITFIELD(gregorio_word_position) position:3;
+    bool first_word:1;
+    bool forced_center:1;
+    /* true if this level's text ended with an explicit "-" immediately
+     * before the "|" (or, for the last level, the "(") that closes it,
+     * forcing a hyphen there regardless of automatic hyphenation */
+    bool forced_hyphen:1;
+} gregorio_lyric_line;
+
+typedef struct gregorio_syllable {
+    /* the syllable's lyric lines: level 1 (the main line) is always the
+     * first node, even when its own text is NULL (e.g. a bar-only
+     * syllable); levels 2+ (stacked lines) follow via the existing next
+     * chain, NULL there for a plain syllable. */
+    struct gregorio_lyric_line *lyric_lines;
     /* pointer to a gregorio_text structure corresponding to the
      * translation */
     struct gregorio_character *translation;
@@ -678,12 +696,6 @@ typedef struct gregorio_syllable {
     ENUM_BITFIELD(gregorio_nlba) no_linebreak_area:2;
     /* beginning or end of euouae area */
     ENUM_BITFIELD(gregorio_euouae) euouae:2;
-    /* position is WORD_BEGINNING for the beginning of a multi-syllable
-     * word, WORD_ONE_SYLLABLE for syllable that are alone in their word,
-     * and i let you gess what are WORD_MIDDLE and WORD_END. */
-    ENUM_BITFIELD(gregorio_word_position) position:3;
-    bool first_word:1;
-    bool forced_center:1;
     bool clear:1;
 } gregorio_syllable;
 

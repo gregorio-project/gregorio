@@ -75,6 +75,12 @@ local part_alt = 6
 local part_nabc = 7
 local part_blnabc = 8
 local part_annotation = 9
+-- additional lyric lines (stacked lyrics) use part_lyric_line_base + level,
+-- so they sort after every fixed part above; level 1 is part_lyrics itself.
+-- Exported below so gregoriotex-syllable.lua (dofile'd separately, so it
+-- can't see this local) uses the same single value.
+local part_lyric_line_base = 9
+gregoriotex.part_lyric_line_base = part_lyric_line_base
 
 local skip_type_attr = luatexbase.attributes['gre@attr@skip@type']
 
@@ -606,8 +612,13 @@ local function find_attr(cur, attr, val)
   end
 end
 
--- Recompute interline glue
-local function adjust_glue(g)
+-- Recompute interline glue. forgive_depth is the previous line's own
+-- lyric_stack_extra (see adjust_additional_spaces): it needs room below
+-- that line, but must be excluded from the lineskiplimit check so it
+-- doesn't eat into unrelated headroom and collapse the glue to \lineskip.
+local function adjust_glue(g, forgive_depth)
+  forgive_depth = forgive_depth or 0
+
   -- Find previous line and its depth
   local prevline = g.prev
   while prevline ~= nil and prevline.id ~= hlist do
@@ -619,14 +630,14 @@ local function adjust_glue(g)
   else
     prevdepth = prevline.depth
   end
-    
-  debugmessage('adjust_glue', 'prev depth %.2f, cur height %.2f', prevdepth/2^16, g.next.height/2^16)
+
+  debugmessage('adjust_glue', 'prev depth %.2f, cur height %.2f, forgive_depth %.2f', prevdepth/2^16, g.next.height/2^16, forgive_depth/2^16)
   debugmessage('adjust_glue', 'baselineskip width=%.2f', tex.baselineskip.width/2^16)
 
   local subtype = 'baselineskip'
   debugmessage('adjust_glue', 'old glue is %s %spt plus %spt minus %spt', subtype, g.width/2^16, g.stretch/2^16, g.shrink/2^16)
-  
-  local new_width = tex.baselineskip.width - prevdepth - g.next.height
+
+  local new_width = tex.baselineskip.width - (prevdepth - forgive_depth) - g.next.height
   if new_width < tex.lineskiplimit then
     g.subtype = subtype_lineskip
     node.setglue(g, node.getglue(tex.lineskip))
@@ -722,6 +733,7 @@ local function compute_line_statistics(line, info)
       has_alt = false,
       has_nabc = false,
       has_blnabc = false,
+      max_lyric_level = 1,
       glyph_top = 7, -- e = \gre@pitch@dummy
       glyph_bottom = 7 -- e = \gre@pitch@dummy
     }
@@ -736,6 +748,11 @@ local function compute_line_statistics(line, info)
         info.has_nabc = true
       elseif has_attribute(n, part_attr, part_blnabc) then
         info.has_blnabc = true
+      elseif (has_attribute(n, part_attr) or 0) >= part_lyric_line_base + 2 then
+        local level = has_attribute(n, part_attr) - part_lyric_line_base
+        if level > info.max_lyric_level then
+          info.max_lyric_level = level
+        end
       else
         if has_attribute(n, glyph_top_attr) then
           if info.glyph_top == nil or has_attribute(n, glyph_top_attr) > info.glyph_top then
@@ -769,10 +786,13 @@ local function get_if(name)
   return token.create('if'..name).mode == iftrue_token.mode
 end
 
-local function adjust_additional_spaces(line, info, linenum)
+local function adjust_additional_spaces(line, info, linenum, prev_stack_extra)
   -- Adjust the vertical positioning of all the parts of line, as well
   -- as its total height and the interline skip above the line.
-  
+  -- prev_stack_extra is the previous line's own lyric_stack_extra,
+  -- forwarded to adjust_glue as its forgive_depth. Returns this line's
+  -- lyric_stack_extra so the caller can pass it along for the next line.
+
   local function get_per_line_space(name)
     if per_line_dims[linenum] ~= nil and per_line_dims[linenum][name] ~= nil then
       return per_line_dims[linenum][name]
@@ -880,9 +900,22 @@ local function adjust_additional_spaces(line, info, linenum)
       blnabc_lower = get_per_line_space('belowlinesnabcheight')
     end
   end
+  -- extra depth needed below the main lyrics for the additional lyric
+  -- lines (stacked lyrics): each one already sits at its own fixed raise
+  -- from \GreWriteStackedLyric, so only the deepest one needs accounting for
+  local lyric_stack_extra = 0
+  if info.max_lyric_level > 1 then
+    lyric_stack_extra = (info.max_lyric_level - 1) * get_per_line_space('lyricstackseparation')
+  end
+
   local lyrics_lower = blnabc_lower + extra_space_lines_text + additional_bottom_space
-  local translation_lower = lyrics_lower + translation_height
-  local everything_raise = translation_lower + extra_space_beneath_text
+  -- the translation sits below the whole stack of lyric lines
+  local translation_lower = lyrics_lower + lyric_stack_extra + translation_height
+  -- everything_raise must NOT include lyric_stack_extra: the deepest
+  -- stacked line is already positioned by its own raise, so folding that
+  -- distance in here too would shift the whole line (staff included)
+  -- instead of just growing the line's depth
+  local everything_raise = lyrics_lower + translation_height + extra_space_beneath_text
 
   -- When the staff is collapsed, adjust the annotation position so it sits
   -- at the correct distance from the lyrics/initial.
@@ -945,6 +978,12 @@ local function adjust_additional_spaces(line, info, linenum)
         debugmessage('adjust_additional_spaces', 'shift lyrics/initial down by %spt', lyrics_lower/2^16)
         child.shift = child.shift + lyrics_lower
         changed = true
+      elseif child_part_attr ~= nil and child_part_attr >= part_lyric_line_base + 2 then
+        -- additional lyric lines: their own raise already accounts for
+        -- lyricstackseparation, so they shift down with the main lyrics
+        debugmessage('adjust_additional_spaces', 'shift lyric line %d down by %spt', child_part_attr - part_lyric_line_base, lyrics_lower/2^16)
+        child.shift = child.shift + lyrics_lower
+        changed = true
       elseif child_part_attr == part_translation then
         debugmessage('adjust_additional_spaces', 'shift translation down by %spt', translation_lower/2^16)
         child.shift = child.shift + translation_lower
@@ -985,8 +1024,10 @@ local function adjust_additional_spaces(line, info, linenum)
   _, line.height, line.depth = node.rangedimensions(line, line.head)
 
   if line.prev ~= nil and line.prev.id == glue then
-    adjust_glue(line.prev)
+    adjust_glue(line.prev, prev_stack_extra)
   end
+
+  return lyric_stack_extra
 end
 
 --- Callback for processing before ligaturing or kerning takes place.
@@ -1030,17 +1071,27 @@ local function add_eol_hyphen(line)
 
   if last_sid ~= nil then
     debugmessage('hyphenation', 'last syllable on line: %d', last_sid)
-    -- Check if the last syllable needs a hyphen
-    if (gregoriotex.syllables[last_sid].dash == dash_maybedash or
-        gregoriotex.syllables[last_sid].dash == dash_forced) then
-      debugmessage('hyphenation', 'syllable %d needs hyphen', last_sid)
-      -- Due to syllable rewriting, the actual text may be in a syllable further to the left.
-      while last_sid ~= nil and gregoriotex.syllables[last_sid].is_merged do
-        debugmessage('hyphenation', 'syllable %d has been merged', last_sid)
-        last_sid = gregoriotex.syllables[last_sid].prev_sid
+    -- One pass per lyric line, the main one (level 1) included: they all
+    -- get an end-of-line hyphen when their own word continues past the
+    -- break. Iterating by number rather than with pairs() also makes the
+    -- order deterministic, which matters because hyphenating widens a
+    -- level's text.
+    local last = gregoriotex.syllables[last_sid]
+    for lev = 1, gregoriotex.num_levels(last) do
+      local dash = gregoriotex.level_dash(last, lev)
+      if dash == dash_maybedash or dash == dash_forced then
+        debugmessage('hyphenation', 'lyric line %d of syllable %d needs hyphen', lev, last_sid)
+        -- Due to syllable rewriting (done independently per level), this
+        -- level's actual text may be in a syllable further to the left,
+        -- even if another level's is not.
+        local sid = last_sid
+        while sid ~= nil and gregoriotex.level_merged(gregoriotex.syllables[sid], lev) do
+          debugmessage('hyphenation', 'lyric line %d of syllable %d has been merged', lev, sid)
+          sid = gregoriotex.syllables[sid].prev_sid
+        end
+        debugmessage('hyphenation', 'adding hyphen to lyric line %d of syllable %d', lev, sid)
+        gregoriotex.add_hyphen(gregoriotex.syllables[sid], lev)
       end
-      debugmessage('hyphenation', 'adding hyphen to syllable %d', last_sid)
-      gregoriotex.add_hyphen(gregoriotex.syllables[last_sid])
     end
   end
 end
@@ -1083,14 +1134,16 @@ local function post_linebreak(h, groupcode, glyphes)
       info = compute_line_statistics(line, info, linenum)
       linenum = linenum + 1
     end
+    local prev_stack_extra = 0
     for line in traverse_id(hlist, h) do
-      adjust_additional_spaces(line, info)
+      prev_stack_extra = adjust_additional_spaces(line, info, nil, prev_stack_extra)
     end
   elseif tex.count['gre@variableheightexpansion'] == 1 then -- variable
     local linenum = 1
+    local prev_stack_extra = 0
     for line in traverse_id(hlist, h) do
       local info = compute_line_statistics(line)
-      adjust_additional_spaces(line, info, linenum)
+      prev_stack_extra = adjust_additional_spaces(line, info, linenum, prev_stack_extra)
       linenum = linenum + 1
     end
   end

@@ -12,6 +12,7 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 - Worked around a LuaTeX bug (file descriptor inheritance in `os.spawn()`) that could corrupt LuaTeX's input state when `\gregorioscore` or `\gabcsnippet` was used inside an `\input`-ted file on a clean build. See [#1757](https://github.com/gregorio-project/gregorio/issues/1757).
 
 ### Added
+- Support for multiple (stacked) lyric lines: `ba|be|bi(fg)` typesets `be` and `bi` on additional lines below `ba`, each independently centered, word-bounded, and hyphenated (including a forced hyphen, e.g. `ba|be-|bi(fg)`), spaced by the new `lyricstackseparation` distance. A literal `|` in syllable text must now be escaped as `$|`. Stacked lines have full parity with the main lyric line: fixed text format, `\gresetgabcforcecenters`, and horizontal clearance around the notes all behave the same way. See [#374](https://github.com/gregorio-project/gregorio/issues/374).
 - Code for several features related to horizontal spacing (spacing between non-bar syllables, syllable rewriting, clearing, and hyphenation) was moved into Lua. This results in some changes in horizontal spacing, which, if perceptible, should be improvements. See [#1720](https://github.com/gregorio-project/gregorio/issues/1720).
 
 ### Changed

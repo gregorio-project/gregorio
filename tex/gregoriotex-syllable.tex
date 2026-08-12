@@ -737,6 +737,31 @@
     ]%
 }%
 
+% The \ifcase\gre@lyriccentering 3-way switch (syllable/vowel/first-letter
+% centering), shared by \GreSetThisSyllable, \GreSetNextSyllable, and
+% \GreWriteStackedLyric's per-level centering (tex/gregoriotex-main.tex).
+% Used only for the "not forced" case; each caller handles its own
+% forced-center case, since the trigger differs (a global \if for level 1,
+% an explicit arg for stacked lines).
+% #1: pre letters  #2: middle letters  #3: end letters
+% #4: the very first letter  #5: all letters after the first
+% #6,#7,#8: control sequences to \gdef to the first/middle/end parts
+\def\gre@selectcenteringparts#1#2#3#4#5#6#7#8{%
+  \ifcase\gre@lyriccentering% 0 - syllable centering
+    \gdef#6{}%
+    \gdef#7{#1#2#3}%
+    \gdef#8{}%
+  \or % 1 - vowel centering
+    \gdef#6{#1}%
+    \gdef#7{#2}%
+    \gdef#8{#3}%
+  \or % 2 - first-letter centering
+    \gdef#6{}%
+    \gdef#7{#4}%
+    \gdef#8{#5}%
+  \fi %
+}%
+
 % #1 : the first letters of the syllable, that don't count for the alignment
 % #2 : the middle letters of the syllable, we must align in the middle of them
 % #3 : the end letters, they don't count
@@ -748,19 +773,8 @@
     \gdef\gre@middlesyllablepart{#2}%
     \gdef\gre@endsyllablepart{#3}%
   \else%
-    \ifcase\gre@lyriccentering% 0 - syllable centering
-      \gdef\gre@firstsyllablepart{}%
-      \gdef\gre@middlesyllablepart{#1#2#3}%
-      \gdef\gre@endsyllablepart{}%
-    \or % 1 - vowel centering
-      \gdef\gre@firstsyllablepart{#1}%
-      \gdef\gre@middlesyllablepart{#2}%
-      \gdef\gre@endsyllablepart{#3}%
-    \or % 2 - first-letter centering
-      \gdef\gre@firstsyllablepart{}%
-      \gdef\gre@middlesyllablepart{#4}%
-      \gdef\gre@endsyllablepart{#5}%
-    \fi %
+    \gre@selectcenteringparts{#1}{#2}{#3}{#4}{#5}%
+      {\gre@firstsyllablepart}{\gre@middlesyllablepart}{\gre@endsyllablepart}%
   \fi%
   \gre@forcedcenteringfalse%
 }%
@@ -771,19 +785,8 @@
     \gdef\gre@nextmiddlesyllablepart{#2}%
     \gdef\gre@nextendsyllablepart{#3}%
   \else%
-    \ifcase\gre@lyriccentering% 0 - syllable centering
-      \gdef\gre@nextfirstsyllablepart{}%
-      \gdef\gre@nextmiddlesyllablepart{#1#2#3}%
-      \gdef\gre@nextendsyllablepart{}%
-    \or % 1 - vowel centering
-      \gdef\gre@nextfirstsyllablepart{#1}%
-      \gdef\gre@nextmiddlesyllablepart{#2}%
-      \gdef\gre@nextendsyllablepart{#3}%
-    \or % 2 - first-letter centering
-      \gdef\gre@nextfirstsyllablepart{}%
-      \gdef\gre@nextmiddlesyllablepart{#4}%
-      \gdef\gre@nextendsyllablepart{#5}%
-    \fi %
+    \gre@selectcenteringparts{#1}{#2}{#3}{#4}{#5}%
+      {\gre@nextfirstsyllablepart}{\gre@nextmiddlesyllablepart}{\gre@nextendsyllablepart}%
   \fi%
   \gre@nextforcedcenteringfalse%
 }%
@@ -929,6 +932,8 @@
 %% at the end we wall \greendofword or \gre@endofsyllable with #7, to reduce the space in case of a flat or natural
 \def\GreSyllable#1#2#3#4#5#6#7#8#9{%
   \gre@textclearedfalse%
+  \gre@count@stackedlyriclevels=1\relax% reset before #1 may stash new levels
+  \gre@count@nextstackedlyriclevels=1\relax% reset before #5 may stash new levels
   \gre@debugmsg{general}{}%
   \gre@debugmsg{general}{New syllable: \expandafter\unexpanded{#1}}%
   \gre@debugmsg{general}{}%
@@ -945,6 +950,10 @@
   \gre@firstglyphtrue%
   \gre@dimen@bolextra = 0pt\relax%
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
+  % A stacked lyric line (level 2+) wider than level 1 needs extra
+  % horizontal clearance around the shared alignment point; 0pt when there
+  % is no stacking or level 1 is already the widest.
+  \gre@measureoverhangs{\gre@firstsyllablepart}{\gre@middlesyllablepart}{\gre@endsyllablepart}%
   % Before measuring the notes, save the alteration id. We will
   % restore it later, so that the measured notes and the actual notes
   % have the same alteration ids, if any.
@@ -958,7 +967,16 @@
     \global\gre@dimen@nabckernemitted=0pt\relax%
   \fi%
   % now we calculate the begin difference, that is to say \gre@dimen@notesaligncenter - \gre@dimen@textaligncenter
+  % (stays based on level 1 alone -- extraleftoverhang must not shift text
+  % off the notes, so it's a separate \kern below instead)
   \gre@dimen@begindifference=\dimexpr(\gre@dimen@notesaligncenter - \gre@dimen@textaligncenter)\relax %
+  % Reserve a wider stacked level's extra room by shifting the whole
+  % syllable (notes included) right, so its left edge lands where level 1's
+  % own edge would have. Before the begin-of-line shift below so it is
+  % likewise discarded there, like \gre@dimen@bolshift.
+  \ifdim\gre@dimen@extraleftoverhang>0pt\relax
+    \kern\gre@dimen@extraleftoverhang\relax
+  \fi
   % Now, let's go for something I took years to figure out: we want to align
   % scores on the notes (see https://github.com/gregorio-project/gregorio/issues/221)
   % but it means we have to shift lines starting by text by \gre@dimen@bolshift
@@ -1037,7 +1055,9 @@
     \fi
   \fi%
   \unsetattribute{\gre@attr@part}%
-  \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
+  % fold extrarightoverhang into the text-width argument, so enddifference
+  % reserves room for whichever level extends furthest right
+  \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\dimexpr\wd\gre@box@syllabletext+\gre@dimen@extrarightoverhang\relax}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
   % gre@count@temp@one holds 1 if next is a bar, 2 if an alteration, else 0
   \gre@count@temp@one=0%
   \ifnum\gre@nextalteration=0\relax %
@@ -1076,6 +1096,12 @@
     \kern\gre@skip@temp@one %
   \fi}%
   #8\relax %
+  % Typeset any stacked lyric lines (level 2+) stashed by
+  % \GreSetStackedSyllable inside #1, now that \gre@dimen@textaligncenter
+  % is free to read (\gre@calculate@enddifference above has already
+  % consumed it for level 1's note-relative positioning). This must not
+  % move earlier in \GreSyllable, or it would corrupt that positioning.
+  \gre@dostackedlyriclevels%
   \raise\gre@space@dimen@spacebeneathtext
   \copy\gre@box@syllabletext
   \ifgre@mustdotranslationcenterend%
@@ -1671,6 +1697,10 @@
 \def\gre@setfirstsyllabletext#1#2#3#4#5#6{%
   \gre@trace{gre@setfirstsyllabletext{#1}{#2}{#3}{#4}{#5}{#6}}%
   \def\gre@opening@syllabletext{%
+    % Restore the stacked-lyric-level count \GreScoreOpening saved before
+    % \GreSyllable reset it to 1 -- see \gre@count@openingstackedlyriclevels
+    % (gregoriotex-main.tex) for why this is needed.
+    \gre@count@stackedlyriclevels=\gre@count@openingstackedlyriclevels\relax%
     \GreSetThisSyllable{#1}{#2}{#3}%
     {\GreFirstWord{\GreFirstSyllable{\GreFirstSyllableInitial{#4}}}}%
     {\GreFirstWord{\GreFirstSyllable{#5}}}%
@@ -1735,6 +1765,10 @@
   #3\relax % fixed styles, etc.
   \gre@printcommentary
   #5\relax % should emit the initial
+  % #5 may have called \GreSetStackedSyllable for the opening syllable's
+  % stacked lyric lines; save the count before #4 (\GreSyllable) resets it
+  % -- see \gre@count@openingstackedlyriclevels (gregoriotex-main.tex).
+  \gre@count@openingstackedlyriclevels=\gre@count@stackedlyriclevels\relax%
   #1\relax % score reference, voice info, etc.
   #2\relax % initial clef, etc.
   #4{\gre@opening@syllabletext}%
