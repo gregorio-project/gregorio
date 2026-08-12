@@ -922,8 +922,13 @@
     %to prevent the pollution of the normal values, we stock them into a temp value
     \gre@dimen@temp@two=\gre@dimen@textaligncenter\relax%
     \gre@calculate@textaligncenter{#1}{#2}{1}%
+    % if the next syllable itself has stacked lyric lines wider than its own
+    % level 1, widen the lookahead too (mirrors \gre@dimen@extraleftoverhang
+    % for the current syllable, tex/gregoriotex-syllable.tex)
+    \gre@measurenextoverhangs{\gre@dimen@textaligncenter}%
     \gre@dimen@temp@four=\gre@dimen@notesaligncenter\relax%
     \global\gre@skip@nextbegindifference=-\gre@dimen@textaligncenter\relax%
+    \global\advance\gre@skip@nextbegindifference by \gre@dimen@nextextraleftoverhang\relax%
     % caution: calculate@nextnotesaligncenter needs a properly set \gre@dimen@textaligncenter
     % (corresponding to the text align center of the next syllable)
     \gre@calculate@nextnotesaligncenter{#4}{#5}% idem

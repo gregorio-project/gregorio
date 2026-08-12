@@ -1035,35 +1035,27 @@ local function add_eol_hyphen(line)
 
   if last_sid ~= nil then
     debugmessage('hyphenation', 'last syllable on line: %d', last_sid)
-    -- The additional lyric lines (stacked lyrics) of the last syllable also
-    -- get an end-of-line hyphen when their word continues. Due to syllable
-    -- rewriting (now done independently per level), a level's actual text
-    -- may be in a syllable further to the left, even if level 1's is not.
-    local levels = gregoriotex.syllables[last_sid].levels
-    if levels ~= nil then
-      for lev, cl in pairs(levels) do
-        if cl.dash == dash_maybedash or cl.dash == dash_forced then
-          local lev_sid = last_sid
-          while lev_sid ~= nil and gregoriotex.level_merged(gregoriotex.syllables[lev_sid], lev) do
-            debugmessage('hyphenation', 'lyric line %d of syllable %d has been merged', lev, lev_sid)
-            lev_sid = gregoriotex.syllables[lev_sid].prev_sid
-          end
-          debugmessage('hyphenation', 'adding hyphen to lyric line %d of syllable %d', lev, lev_sid)
-          gregoriotex.add_hyphen(gregoriotex.syllables[lev_sid], lev)
+    -- One pass per lyric line, the main one (level 1) included: they all
+    -- get an end-of-line hyphen when their own word continues past the
+    -- break. Iterating by number rather than with pairs() also makes the
+    -- order deterministic, which matters because hyphenating widens a
+    -- level's text.
+    local last = gregoriotex.syllables[last_sid]
+    for lev = 1, gregoriotex.num_levels(last) do
+      local dash = gregoriotex.level_dash(last, lev)
+      if dash == dash_maybedash or dash == dash_forced then
+        debugmessage('hyphenation', 'lyric line %d of syllable %d needs hyphen', lev, last_sid)
+        -- Due to syllable rewriting (done independently per level), this
+        -- level's actual text may be in a syllable further to the left,
+        -- even if another level's is not.
+        local sid = last_sid
+        while sid ~= nil and gregoriotex.level_merged(gregoriotex.syllables[sid], lev) do
+          debugmessage('hyphenation', 'lyric line %d of syllable %d has been merged', lev, sid)
+          sid = gregoriotex.syllables[sid].prev_sid
         end
+        debugmessage('hyphenation', 'adding hyphen to lyric line %d of syllable %d', lev, sid)
+        gregoriotex.add_hyphen(gregoriotex.syllables[sid], lev)
       end
-    end
-    -- Check if the last syllable needs a hyphen
-    if (gregoriotex.syllables[last_sid].dash == dash_maybedash or
-        gregoriotex.syllables[last_sid].dash == dash_forced) then
-      debugmessage('hyphenation', 'syllable %d needs hyphen', last_sid)
-      -- Due to syllable rewriting, the actual text may be in a syllable further to the left.
-      while last_sid ~= nil and gregoriotex.syllables[last_sid].is_merged do
-        debugmessage('hyphenation', 'syllable %d has been merged', last_sid)
-        last_sid = gregoriotex.syllables[last_sid].prev_sid
-      end
-      debugmessage('hyphenation', 'adding hyphen to syllable %d', last_sid)
-      gregoriotex.add_hyphen(gregoriotex.syllables[last_sid])
     end
   end
 end

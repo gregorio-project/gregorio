@@ -933,6 +933,7 @@
 \def\GreSyllable#1#2#3#4#5#6#7#8#9{%
   \gre@textclearedfalse%
   \gre@count@stackedlyriclevels=1\relax% reset before #1 may stash new levels
+  \gre@count@nextstackedlyriclevels=1\relax% reset before #5 may stash new levels
   \gre@debugmsg{general}{}%
   \gre@debugmsg{general}{New syllable: \expandafter\unexpanded{#1}}%
   \gre@debugmsg{general}{}%
@@ -952,12 +953,7 @@
   % A stacked lyric line (level 2+) wider than level 1 needs extra
   % horizontal clearance around the shared alignment point; 0pt when there
   % is no stacking or level 1 is already the widest.
-  \ifnum\gre@count@stackedlyriclevels>1\relax
-    \gre@measureoverhangs{\gre@firstsyllablepart}{\gre@middlesyllablepart}{\gre@endsyllablepart}%
-  \else
-    \gre@dimen@extraleftoverhang=0pt\relax%
-    \gre@dimen@extrarightoverhang=0pt\relax%
-  \fi%
+  \gre@measureoverhangs{\gre@firstsyllablepart}{\gre@middlesyllablepart}{\gre@endsyllablepart}%
   % Before measuring the notes, save the alteration id. We will
   % restore it later, so that the measured notes and the actual notes
   % have the same alteration ids, if any.
@@ -1061,8 +1057,7 @@
   \unsetattribute{\gre@attr@part}%
   % fold extrarightoverhang into the text-width argument, so enddifference
   % reserves room for whichever level extends furthest right
-  \gre@dimen@enddifference@textwidth=\dimexpr\wd\gre@box@syllabletext+\gre@dimen@extrarightoverhang\relax%
-  \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\gre@dimen@enddifference@textwidth}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
+  \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\dimexpr\wd\gre@box@syllabletext+\gre@dimen@extrarightoverhang\relax}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
   % gre@count@temp@one holds 1 if next is a bar, 2 if an alteration, else 0
   \gre@count@temp@one=0%
   \ifnum\gre@nextalteration=0\relax %

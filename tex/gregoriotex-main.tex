@@ -1154,18 +1154,25 @@
   \fi
 }%
 
-% Typesets one additional lyric line (level 2+): resolves its stashed
-% fields and hands them to \GreWriteStackedLyric below.
+% Typesets one additional lyric line (level 2+) stashed earlier by
+% \GreSetStackedSyllable, reusing the alignment center that
+% \gre@measureoverhangs already computed for this level (see
+% \gre@stackedlyric@level@N@center there) instead of measuring it again.
+% Only valid inside \GreSyllable, where that measuring pass always runs
+% first and \gre@fixedtextformat cannot change in between.
 % #1: level (2 for the first additional line)
 \def\gre@buildstackedlyriclevel#1{%
-  \GreWriteStackedLyric{#1}%
-    {\csname gre@stackedlyric@level@#1@eow\endcsname}%
-    {\csname gre@stackedlyric@level@#1@forced\endcsname}%
-    {\csname gre@stackedlyric@level@#1@pre\endcsname}%
-    {\csname gre@stackedlyric@level@#1@mid\endcsname}%
-    {\csname gre@stackedlyric@level@#1@post\endcsname}%
-    {\csname gre@stackedlyric@level@#1@first\endcsname}%
-    {\csname gre@stackedlyric@level@#1@rest\endcsname}%
+  \ifgre@showlyrics%
+    \gre@dispatchlevelcentering
+      {\csname gre@stackedlyric@level@#1@forced\endcsname}%
+      {\csname gre@stackedlyric@level@#1@pre\endcsname}%
+      {\csname gre@stackedlyric@level@#1@mid\endcsname}%
+      {\csname gre@stackedlyric@level@#1@post\endcsname}%
+      {\csname gre@stackedlyric@level@#1@first\endcsname}%
+      {\csname gre@stackedlyric@level@#1@rest\endcsname}%
+    \gre@dimen@stackedlyriccenter=\csname gre@stackedlyric@level@#1@center\endcsname\relax%
+    \gre@typesetstackedlevel{#1}{\csname gre@stackedlyric@level@#1@eow\endcsname}%
+  \fi%
 }%
 
 % Dispatches one lyric level's centering into \gre@stackedlyric@
@@ -1209,7 +1216,35 @@
 \newdimen\gre@dimen@leveloverhang@right%
 \newdimen\gre@dimen@extraleftoverhang%
 \newdimen\gre@dimen@extrarightoverhang%
-\newdimen\gre@dimen@enddifference@textwidth%
+
+% Runs #4 once for each stacked level (2 up to #3), having dispatched that
+% level's centering into \gre@stackedlyric@firstpart/middlepart/endpart and
+% measured its own overhangs into \gre@dimen@leveloverhang@left/@right, so
+% #4 only has to aggregate them. Shared by \gre@measureoverhangs and
+% \gre@measurenextoverhangs. Callers must ensure #3 > 1: \loop runs its
+% body before testing.
+% #1: csname prefix of the level stash  #2: text-format wrapper
+% #3: count register holding the number of levels  #4: body to run per level
+\def\gre@foreachstackedlevel#1#2#3#4{%
+  \gre@count@stackedlyricloop=1\relax
+  \loop
+    \advance\gre@count@stackedlyricloop by 1\relax
+    \gre@dispatchlevelcentering
+      {\csname #1\the\gre@count@stackedlyricloop @forced\endcsname}%
+      {\csname #1\the\gre@count@stackedlyricloop @pre\endcsname}%
+      {\csname #1\the\gre@count@stackedlyricloop @mid\endcsname}%
+      {\csname #1\the\gre@count@stackedlyricloop @post\endcsname}%
+      {\csname #1\the\gre@count@stackedlyricloop @first\endcsname}%
+      {\csname #1\the\gre@count@stackedlyricloop @rest\endcsname}%
+    \gre@measureoverhang
+      {#2{\gre@stackedlyric@firstpart\gre@stackedlyric@middlepart}}%
+      {#2{\gre@stackedlyric@middlepart}}%
+      {#2{\gre@stackedlyric@endpart}}%
+      {\gre@dimen@leveloverhang@left}{\gre@dimen@leveloverhang@right}%
+    #4%
+  \ifnum\gre@count@stackedlyricloop<#3\relax
+  \repeat
+}%
 
 % Sets \gre@dimen@extraleftoverhang/@extrarightoverhang to how much more
 % clearance the widest lyric level needs than level 1 alone, so the notes
@@ -1218,37 +1253,28 @@
 % (tex/gregoriotex-syllable.tex).
 % #1: level 1's own pre/#2: mid/#3: post
 \def\gre@measureoverhangs#1#2#3{%
-  \gre@widthof{\gre@fixedtextformat{#1#2#3}}%
-  \gre@dimen@baselevelrightoverhang=\dimexpr\gre@dimen@temp@three-\gre@dimen@textaligncenter\relax%
-  \gre@dimen@maxleftoverhang=\gre@dimen@textaligncenter\relax%
-  \gre@dimen@maxrightoverhang=\gre@dimen@baselevelrightoverhang\relax%
+  \gre@dimen@extraleftoverhang=0pt\relax%
+  \gre@dimen@extrarightoverhang=0pt\relax%
   \ifnum\gre@count@stackedlyriclevels>1\relax
-    \gre@count@stackedlyricloop=1\relax
-    \loop
-      \advance\gre@count@stackedlyricloop by 1\relax
-      \gre@dispatchlevelcentering
-        {\csname gre@stackedlyric@level@\the\gre@count@stackedlyricloop @forced\endcsname}%
-        {\csname gre@stackedlyric@level@\the\gre@count@stackedlyricloop @pre\endcsname}%
-        {\csname gre@stackedlyric@level@\the\gre@count@stackedlyricloop @mid\endcsname}%
-        {\csname gre@stackedlyric@level@\the\gre@count@stackedlyricloop @post\endcsname}%
-        {\csname gre@stackedlyric@level@\the\gre@count@stackedlyricloop @first\endcsname}%
-        {\csname gre@stackedlyric@level@\the\gre@count@stackedlyricloop @rest\endcsname}%
-      \gre@measureoverhang
-        {\gre@fixedtextformat{\gre@stackedlyric@firstpart\gre@stackedlyric@middlepart}}%
-        {\gre@fixedtextformat{\gre@stackedlyric@middlepart}}%
-        {\gre@fixedtextformat{\gre@stackedlyric@endpart}}%
-        {\gre@dimen@leveloverhang@left}{\gre@dimen@leveloverhang@right}%
+    \gre@widthof{\gre@fixedtextformat{#1#2#3}}%
+    \gre@dimen@baselevelrightoverhang=\dimexpr\gre@dimen@temp@three-\gre@dimen@textaligncenter\relax%
+    \gre@dimen@maxleftoverhang=\gre@dimen@textaligncenter\relax%
+    \gre@dimen@maxrightoverhang=\gre@dimen@baselevelrightoverhang\relax%
+    \gre@foreachstackedlevel{gre@stackedlyric@level@}{\gre@fixedtextformat}%
+        {\gre@count@stackedlyriclevels}{%
+      % a level's left overhang IS its alignment center; stash it for
+      % \gre@buildstackedlyriclevel to reuse instead of measuring again
+      \expandafter\xdef\csname gre@stackedlyric@level@\the\gre@count@stackedlyricloop @center\endcsname{\the\gre@dimen@leveloverhang@left}%
       \ifdim\gre@dimen@leveloverhang@left>\gre@dimen@maxleftoverhang\relax
         \gre@dimen@maxleftoverhang=\gre@dimen@leveloverhang@left\relax
       \fi
       \ifdim\gre@dimen@leveloverhang@right>\gre@dimen@maxrightoverhang\relax
         \gre@dimen@maxrightoverhang=\gre@dimen@leveloverhang@right\relax
       \fi
-    \ifnum\gre@count@stackedlyricloop<\gre@count@stackedlyriclevels\relax
-    \repeat
-  \fi
-  \gre@dimen@extraleftoverhang=\dimexpr\gre@dimen@maxleftoverhang-\gre@dimen@textaligncenter\relax%
-  \gre@dimen@extrarightoverhang=\dimexpr\gre@dimen@maxrightoverhang-\gre@dimen@baselevelrightoverhang\relax%
+    }%
+    \gre@dimen@extraleftoverhang=\dimexpr\gre@dimen@maxleftoverhang-\gre@dimen@textaligncenter\relax%
+    \gre@dimen@extrarightoverhang=\dimexpr\gre@dimen@maxrightoverhang-\gre@dimen@baselevelrightoverhang\relax%
+  \fi%
 }%
 
 % Typesets one additional lyric line (level 2+): centers it under level 1's
@@ -1269,24 +1295,92 @@
   \ifgre@showlyrics%
     \gre@dispatchlevelcentering{#3}{#4}{#5}{#6}{#7}{#8}%
     % this level's alignment center, as in \gre@calculate@textaligncenter
-    % (same \gre@fixedtextformat wrap as level 1)
+    % (same \gre@fixedtextformat wrap as level 1). \gre@buildstackedlyriclevel
+    % skips this, reusing what \gre@measureoverhangs already measured; this
+    % path has no such measuring pass to draw on, so it measures here.
     \gre@measurecenter{\gre@fixedtextformat{\gre@stackedlyric@firstpart\gre@stackedlyric@middlepart}}%
       {\gre@fixedtextformat{\gre@stackedlyric@middlepart}}{\gre@dimen@stackedlyriccenter}%
-    % each level sits lyricstackseparation below the previous one
-    \gre@dimen@stackedlyricraise=\gre@space@dimen@lyricstackseparation\relax%
-    \multiply\gre@dimen@stackedlyricraise by \numexpr#1-1\relax%
-    \gre@dimen@stackedlyricraise=\dimexpr\gre@space@dimen@spacebeneathtext-\gre@dimen@stackedlyricraise\relax%
-    \directlua{gregoriotex.set_lyric_line_dash(#1, #2)}%
-    % \gre@attr@part must also be set here, not just the \hbox attr below:
-    % save_syllable_texts (the ligaturing callback) reads the ambient,
-    % propagating \gre@attr@part, not the per-node \hbox attr tag -- without
-    % this it stays part_lyrics (4) from the enclosing \GreSyllable.
-    {\gre@attr@part=\numexpr9+#1\relax%
-    \raise\gre@dimen@stackedlyricraise%
-    \hbox attr \gre@attrid@part=\numexpr9+#1\relax to 0pt{%
-      \kern\dimexpr\gre@dimen@textaligncenter-\gre@dimen@stackedlyriccenter\relax%
-      \hbox{\gre@fixedtextformat{\gre@stackedlyric@firstpart\gre@stackedlyric@middlepart\gre@stackedlyric@endpart}}%
-      \hss}}%
+    \gre@typesetstackedlevel{#1}{#2}%
+  \fi%
+}%
+
+% Typesets one stacked lyric line, given its centering already dispatched
+% into \gre@stackedlyric@firstpart/middlepart/endpart and its alignment
+% center already in \gre@dimen@stackedlyriccenter: raises it by
+% lyricstackseparation per level and centers it under level 1's own
+% alignment point (\gre@dimen@textaligncenter, read-only here). Shared by
+% \GreWriteStackedLyric and \gre@buildstackedlyriclevel, which differ only
+% in where that center comes from.
+% #1: level (2 for the first additional line)
+% #2: end of word: 1 if this level ends a word here, else 0
+\def\gre@typesetstackedlevel#1#2{%
+  % each level sits lyricstackseparation below the previous one
+  \gre@dimen@stackedlyricraise=\gre@space@dimen@lyricstackseparation\relax%
+  \multiply\gre@dimen@stackedlyricraise by \numexpr#1-1\relax%
+  \gre@dimen@stackedlyricraise=\dimexpr\gre@space@dimen@spacebeneathtext-\gre@dimen@stackedlyricraise\relax%
+  \directlua{gregoriotex.set_lyric_line_dash(#1, #2)}%
+  % \gre@attr@part must also be set here, not just the \hbox attr below:
+  % save_syllable_texts (the ligaturing callback) reads the ambient,
+  % propagating \gre@attr@part, not the per-node \hbox attr tag -- without
+  % this it stays part_lyrics (4) from the enclosing \GreSyllable.
+  {\gre@attr@part=\numexpr9+#1\relax%
+  \raise\gre@dimen@stackedlyricraise%
+  \hbox attr \gre@attrid@part=\numexpr9+#1\relax to 0pt{%
+    \kern\dimexpr\gre@dimen@textaligncenter-\gre@dimen@stackedlyriccenter\relax%
+    \hbox{\gre@fixedtextformat{\gre@stackedlyric@firstpart\gre@stackedlyric@middlepart\gre@stackedlyric@endpart}}%
+    \hss}}%
+}%
+
+% Number of the NEXT syllable's lyric-line levels stashed so far by
+% \GreSetNextStackedSyllable (1 = no additional levels); reset to 1 at the
+% top of \GreSyllable, alongside \gre@count@stackedlyriclevels.
+\newcount\gre@count@nextstackedlyriclevels%
+\gre@count@nextstackedlyriclevels=1\relax%
+
+% Stashes one of the NEXT syllable's lyric-line levels, so
+% \gre@calculate@nextbegindifference can measure it. Mirrors
+% \GreSetStackedSyllable but text-only (measured, never typeset) and under
+% its own csname prefix so it can't collide with the current syllable's own
+% stash for the same level number.
+% #1: level (2 for the first additional line)
+% #2: forced center: 1 if the level has a {} forced center, else 0
+% #3: the first letters, they don't count for the alignment
+% #4: the middle letters, the alignment point
+% #5: the end letters, they don't count
+% #6: the very first letter (for first-letter centering)
+% #7: all the letters after the first letter
+\def\GreSetNextStackedSyllable#1#2#3#4#5#6#7{%
+  \ifnum#1>\gre@count@nextstackedlyriclevels\relax
+    \gre@count@nextstackedlyriclevels=#1\relax
+  \fi
+  \expandafter\gdef\csname gre@nextstackedlyric@level@#1@forced\endcsname{#2}%
+  \expandafter\gdef\csname gre@nextstackedlyric@level@#1@pre\endcsname{#3}%
+  \expandafter\gdef\csname gre@nextstackedlyric@level@#1@mid\endcsname{#4}%
+  \expandafter\gdef\csname gre@nextstackedlyric@level@#1@post\endcsname{#5}%
+  \expandafter\gdef\csname gre@nextstackedlyric@level@#1@first\endcsname{#6}%
+  \expandafter\gdef\csname gre@nextstackedlyric@level@#1@rest\endcsname{#7}%
+}%
+
+\newdimen\gre@dimen@nextmaxleftoverhang%
+\newdimen\gre@dimen@nextextraleftoverhang%
+
+% Like \gre@measureoverhangs, but for the NEXT syllable's lyric levels
+% (used by \gre@calculate@nextbegindifference, gregoriotex-spaces.tex).
+% Only the left overhang matters: \gre@skip@nextbegindifference only ever
+% widens the gap before the next syllable's own notes.
+% #1: the next syllable's own left overhang (its own
+%     \gre@dimen@textaligncenter, as already computed by the caller)
+\def\gre@measurenextoverhangs#1{%
+  \gre@dimen@nextextraleftoverhang=0pt\relax%
+  \ifnum\gre@count@nextstackedlyriclevels>1\relax
+    \gre@dimen@nextmaxleftoverhang=#1\relax%
+    \gre@foreachstackedlevel{gre@nextstackedlyric@level@}{\gre@fixednexttextformat}%
+        {\gre@count@nextstackedlyriclevels}{%
+      \ifdim\gre@dimen@leveloverhang@left>\gre@dimen@nextmaxleftoverhang\relax
+        \gre@dimen@nextmaxleftoverhang=\gre@dimen@leveloverhang@left\relax
+      \fi
+    }%
+    \gre@dimen@nextextraleftoverhang=\dimexpr\gre@dimen@nextmaxleftoverhang-#1\relax%
   \fi%
 }%
 

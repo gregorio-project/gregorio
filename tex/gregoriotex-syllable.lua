@@ -803,3 +803,4 @@ gregoriotex.syllable_rewriting = syllable_rewriting
 gregoriotex.add_hyphen = add_hyphen
 gregoriotex.level_dash = level_dash
 gregoriotex.level_merged = level_merged
+gregoriotex.num_levels = num_levels
