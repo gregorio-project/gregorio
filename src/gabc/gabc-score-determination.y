@@ -134,6 +134,10 @@ static char extra_position[GABC_MAX_LYRIC_LINES];
 static bool extra_started_first_word[GABC_MAX_LYRIC_LINES];
 static bool extra_lyric_seen[GABC_MAX_LYRIC_LINES];
 static bool extra_new_word[GABC_MAX_LYRIC_LINES];
+/* true if the level currently being closed (by a "|" or by the notes'
+ * opening "(") had an explicit "-" right before that closing point, for
+ * levels 2+ only; consumed and reset by finish_lyric_level */
+static bool pending_forced_hyphen;
 
 /* punctum_inclinatum_orientation maintains the running punctum inclinatum
  * orientation in order to decide if the glyph needs to be cut when a punctum
@@ -204,6 +208,7 @@ static void initialize_variables(bool point_and_click)
     has_protrusion = false;
     protrusion_open = false;
     current_lyric_level = 1;
+    pending_forced_hyphen = false;
     first_extra_lyric = NULL;
     last_extra_lyric = NULL;
     for (i = 0; i < GABC_MAX_LYRIC_LINES; i++) {
@@ -362,6 +367,7 @@ static void rebuild_score_characters(void)
  */
 
 static void add_style(grestyle_style style, gabc_style_bits bit);
+static void add_text(char *mbcharacters);
 
 static void maybe_insert_open_styles(void)
 {
@@ -461,6 +467,42 @@ static bool strip_leading_space(gregorio_character **const first)
     return stripped;
 }
 
+/* Strips a trailing literal "-" from current_character, which (before
+ * ready_characters() rewinds it) always points to the last-added node --
+ * see add_text. Used to detect an explicit forced hyphen immediately
+ * before a "|". Returns true if one was found and stripped. */
+static bool strip_trailing_hyphen(void)
+{
+    gregorio_character *const hyphen = current_character;
+    if (!hyphen || !hyphen->is_character || hyphen->cos.character != '-') {
+        return false;
+    }
+    current_character = hyphen->previous_character;
+    if (current_character) {
+        current_character->next_character = NULL;
+    }
+    free(hyphen);
+    return true;
+}
+
+/* Handles an explicit "-" found immediately before a lyric-level boundary
+ * (a "|" ending a level mid-stack, or the notes' opening "(" ending the
+ * last level): for level 1, uses the existing runtime \GreForceHyphen
+ * macro (unaffected by this change -- it already works correctly there);
+ * for levels 2+, whose hyphen decision is baked in at compile time instead
+ * (gregorio_lyric_line.forced_hyphen), just remembers the flag for
+ * finish_lyric_level to record on the line about to be closed. */
+static void mark_forced_hyphen(void)
+{
+    if (current_lyric_level == 1) {
+        add_style(ST_VERBATIM, SB_IGNORE);
+        add_text(gregorio_strdup("\\GreForceHyphen"));
+        end_style(ST_VERBATIM, SB_IGNORE);
+    } else {
+        pending_forced_hyphen = true;
+    }
+}
+
 static void finish_lyric_level(bool next_level_follows)
 {
     close_open_protrusion();
@@ -478,6 +520,7 @@ static void finish_lyric_level(bool next_level_follows)
                 gregorio_calloc(1, sizeof(gregorio_lyric_line));
         extra_new_word[i] = strip_leading_space(&current_character);
         line->text = current_character;
+        line->forced_hyphen = pending_forced_hyphen;
         if (last_extra_lyric) {
             last_extra_lyric->next = line;
         } else {
@@ -489,6 +532,7 @@ static void finish_lyric_level(bool next_level_follows)
             extra_started_first_word[i] = true;
         }
     }
+    pending_forced_hyphen = false;
     current_character = NULL;
     center_is_determined = CENTER_NOT_DETERMINED;
     if (next_level_follows) {
@@ -776,6 +820,7 @@ static void close_syllable(YYLTYPE *loc)
     has_protrusion = false;
     protrusion_open = false;
     current_lyric_level = 1;
+    pending_forced_hyphen = false;
     first_extra_lyric = NULL;
     last_extra_lyric = NULL;
     for (i = 0; i < GABC_MAX_LYRIC_LINES; i++) {
@@ -1238,6 +1283,9 @@ character:
         add_text(gregorio_strdup("~"));
     }
     | LYRIC_CUT {
+        if (strip_trailing_hyphen()) {
+            mark_forced_hyphen();
+        }
         finish_lyric_level(true);
     }
     | style_beginning
@@ -1313,16 +1361,12 @@ syllable_with_notes:
         close_syllable(&@1);
     }
     | HYPHEN OPENING_BRACKET notes {
-        add_style(ST_VERBATIM, SB_IGNORE);
-        add_text(gregorio_strdup("\\GreForceHyphen"));
-        end_style(ST_VERBATIM, SB_IGNORE);
+        mark_forced_hyphen();
         save_stacked_text();
         close_syllable(&@1);
     }
     | text HYPHEN OPENING_BRACKET notes {
-        add_style(ST_VERBATIM, SB_IGNORE);
-        add_text(gregorio_strdup("\\GreForceHyphen"));
-        end_style(ST_VERBATIM, SB_IGNORE);
+        mark_forced_hyphen();
         save_stacked_text();
         close_syllable(&@1);
     }
@@ -1341,16 +1385,12 @@ syllable_with_notes:
         close_syllable(&@1);
     }
     | HYPHEN translation OPENING_BRACKET notes {
-        add_style(ST_VERBATIM, SB_IGNORE);
-        add_text(gregorio_strdup("\\GreForceHyphen"));
-        end_style(ST_VERBATIM, SB_IGNORE);
+        mark_forced_hyphen();
         save_stacked_text();
         close_syllable(&@1);
     }
     | text HYPHEN translation OPENING_BRACKET notes {
-        add_style(ST_VERBATIM, SB_IGNORE);
-        add_text(gregorio_strdup("\\GreForceHyphen"));
-        end_style(ST_VERBATIM, SB_IGNORE);
+        mark_forced_hyphen();
         save_stacked_text();
         close_syllable(&@1);
     }

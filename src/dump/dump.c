@@ -240,6 +240,9 @@ void dump_write_score(FILE *f, gregorio_score *score)
                 if (line->forced_center) {
                     fprintf(f, "   forced center             true\n");
                 }
+                if (line->forced_hyphen) {
+                    fprintf(f, "   forced hyphen             true\n");
+                }
                 dump_write_characters(f, line->text);
             }
         }

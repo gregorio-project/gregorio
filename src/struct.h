@@ -662,6 +662,10 @@ typedef struct gregorio_lyric_line {
     ENUM_BITFIELD(gregorio_word_position) position:3;
     bool first_word:1;
     bool forced_center:1;
+    /* true if this level's text ended with an explicit "-" immediately
+     * before the "|" (or, for the last level, the "(") that closes it,
+     * forcing a hyphen there regardless of automatic hyphenation */
+    bool forced_hyphen:1;
 } gregorio_lyric_line;
 
 typedef struct gregorio_syllable {

@@ -3589,11 +3589,12 @@ static void write_text(FILE *const f, const gregorio_character *const text)
 
 /* writes the additional lyric lines (levels 2+) of a stacked syllable, as
  * \<macro>{level}{end-of-word}{forced-center}{pre}{center}{post}
- * {first-letter}{rest}, one call per level. Shared by \GreSetStackedSyllable
- * (stashes into \GreSyllable's first argument, for \gre@dostackedlyriclevels
- * to build later) and \GreWriteStackedLyric (typesets immediately, into the
- * eighth argument -- the fallback for syllable types other than
- * \GreSyllable, which don't run \gre@dostackedlyriclevels). */
+ * {first-letter}{rest}{forced-hyphen}, one call per level. Shared by
+ * \GreSetStackedSyllable (stashes into \GreSyllable's first argument, for
+ * \gre@dostackedlyriclevels to build later) and \GreWriteStackedLyric
+ * (typesets immediately, into the eighth argument -- the fallback for
+ * syllable types other than \GreSyllable, which don't run
+ * \gre@dostackedlyriclevels). */
 static void write_lyric_lines_with(FILE *const f,
         const gregorio_syllable *const syllable, const char *const macro)
 {
@@ -3609,7 +3610,7 @@ static void write_lyric_lines_with(FILE *const f,
                         || line->position == WORD_ONE_SYLLABLE) ? 1 : 0,
                 line->forced_center ? 1 : 0);
         write_text_pair(f, line->text);
-        fprintf(f, "%%\n");
+        fprintf(f, "{%d}%%\n", line->forced_hyphen ? 1 : 0);
     }
     gregoriotex_ignore_style = saved_ignore_style;
 }

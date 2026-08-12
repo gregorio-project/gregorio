@@ -1223,6 +1223,9 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
                         &gabc_write_begin, &gabc_write_end,
                         &gabc_write_special_char);
             }
+            if (line->forced_hyphen) {
+                fprintf(f, "-");
+            }
         }
     }
     if (syllable->translation) {

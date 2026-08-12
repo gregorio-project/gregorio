@@ -1124,7 +1124,9 @@
 % #6: the end letters, they don't count
 % #7: the very first letter (for first-letter centering)
 % #8: all the letters after the first letter
-\def\GreSetStackedSyllable#1#2#3#4#5#6#7#8{%
+% #9: forced hyphen: 1 if this level's text had an explicit "-" right
+%     before the "|" that closed it, else 0
+\def\GreSetStackedSyllable#1#2#3#4#5#6#7#8#9{%
   \ifnum#1>\gre@count@stackedlyriclevels\relax
     \gre@count@stackedlyriclevels=#1\relax
   \fi
@@ -1135,6 +1137,7 @@
   \expandafter\gdef\csname gre@stackedlyric@level@#1@post\endcsname{#6}%
   \expandafter\gdef\csname gre@stackedlyric@level@#1@first\endcsname{#7}%
   \expandafter\gdef\csname gre@stackedlyric@level@#1@rest\endcsname{#8}%
+  \expandafter\gdef\csname gre@stackedlyric@level@#1@forcedhyphen\endcsname{#9}%
 }%
 
 % Typesets every stacked lyric line stashed for the current syllable, in
@@ -1172,6 +1175,7 @@
       {\csname gre@stackedlyric@level@#1@rest\endcsname}%
     \gre@dimen@stackedlyriccenter=\csname gre@stackedlyric@level@#1@center\endcsname\relax%
     \gre@typesetstackedlevel{#1}{\csname gre@stackedlyric@level@#1@eow\endcsname}%
+      {\csname gre@stackedlyric@level@#1@forcedhyphen\endcsname}%
   \fi%
 }%
 
@@ -1291,7 +1295,10 @@
 % #6: the end letters, they don't count
 % #7: the very first letter (for first-letter centering)
 % #8: all the letters after the first letter
-\def\GreWriteStackedLyric#1#2#3#4#5#6#7#8{%
+% #9: forced hyphen: 1 if this level's text had an explicit "-" right
+%     before the "|" (or the notes' opening "(", for the last level of a
+%     stack) that closed it, else 0
+\def\GreWriteStackedLyric#1#2#3#4#5#6#7#8#9{%
   \ifgre@showlyrics%
     \gre@dispatchlevelcentering{#3}{#4}{#5}{#6}{#7}{#8}%
     % this level's alignment center, as in \gre@calculate@textaligncenter
@@ -1300,7 +1307,7 @@
     % path has no such measuring pass to draw on, so it measures here.
     \gre@measurecenter{\gre@fixedtextformat{\gre@stackedlyric@firstpart\gre@stackedlyric@middlepart}}%
       {\gre@fixedtextformat{\gre@stackedlyric@middlepart}}{\gre@dimen@stackedlyriccenter}%
-    \gre@typesetstackedlevel{#1}{#2}%
+    \gre@typesetstackedlevel{#1}{#2}{#9}%
   \fi%
 }%
 
@@ -1313,12 +1320,13 @@
 % in where that center comes from.
 % #1: level (2 for the first additional line)
 % #2: end of word: 1 if this level ends a word here, else 0
-\def\gre@typesetstackedlevel#1#2{%
+% #3: forced hyphen: 1 if this level had an explicit forced hyphen, else 0
+\def\gre@typesetstackedlevel#1#2#3{%
   % each level sits lyricstackseparation below the previous one
   \gre@dimen@stackedlyricraise=\gre@space@dimen@lyricstackseparation\relax%
   \multiply\gre@dimen@stackedlyricraise by \numexpr#1-1\relax%
   \gre@dimen@stackedlyricraise=\dimexpr\gre@space@dimen@spacebeneathtext-\gre@dimen@stackedlyricraise\relax%
-  \directlua{gregoriotex.set_lyric_line_dash(#1, #2)}%
+  \directlua{gregoriotex.set_lyric_line_dash(#1, #2, #3)}%
   % \gre@attr@part must also be set here, not just the \hbox attr below:
   % save_syllable_texts (the ligaturing callback) reads the ambient,
   % propagating \gre@attr@part, not the per-node \hbox attr tag -- without

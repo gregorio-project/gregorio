@@ -289,13 +289,20 @@ local function max_level()
   return m
 end
 
---- Record whether an additional lyric line (level 2+) ends a word here,
---- called from \GreWriteStackedLyric for each line of the current syllable.
+--- Record whether an additional lyric line (level 2+) ends a word here, or
+--- had an explicit forced hyphen, called from \GreWriteStackedLyric for each
+--- line of the current syllable. A forced hyphen wins over end-of-word,
+--- mirroring how level 1's own dash decision treats \GreForceHyphen as
+--- taking priority over its own end-of-word state.
 --- @param level number The lyric line level (2 for the first additional line).
 --- @param end_of_word number 1 if this level ends a word here, else 0.
-local function set_lyric_line_dash(level, end_of_word)
+--- @param forced number 1 if this level had an explicit forced hyphen, else 0.
+local function set_lyric_line_dash(level, end_of_word, forced)
   local cur = current_syllable()
-  set_level_dash(cur, level, (end_of_word == 1) and dash_endofword or dash_maybedash)
+  local dash = dash_maybedash
+  if end_of_word == 1 then dash = dash_endofword end
+  if forced == 1 then dash = dash_forced end
+  set_level_dash(cur, level, dash)
 end
 
 --- Save information about syllables that is impossible or
@@ -641,12 +648,19 @@ local function syllable_spacing()
       adjust_syllablefinalskip(cur, next)
     end
 
-    -- A forced hyphen on the main lyric line is added unconditionally,
-    -- once; there is no equivalent "forced" hyphen for additional
-    -- (stacked) lyric lines.
-    if cur.text ~= nil and cur.dash == dash_forced and cur.settings.showlyrics then
-      add_hyphen(cur, 1)
-      if cur.syllablefinalskip and next ~= nil and not next.barspacing1 then
+    -- A forced hyphen (the main lyric line's \GreForceHyphen, or an
+    -- explicit "-" right before the "|"/"(" that closes a stacked line) is
+    -- added unconditionally, once, on every level that has one.
+    if cur.settings.showlyrics then
+      local forced_any = false
+      for lev = 1, num_levels(cur) do
+        if level_dash(cur, lev) == dash_forced and level_box(cur, lev) ~= nil then
+          add_hyphen(cur, lev)
+          forced_any = true
+        end
+      end
+      if forced_any and cur.syllablefinalskip and next ~= nil
+          and not next.barspacing1 then
         adjust_syllablefinalskip(cur, next)
       end
     end
