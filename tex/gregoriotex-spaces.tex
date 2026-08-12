@@ -857,8 +857,8 @@
 % stores it (globally) in dimen register #3. Shared by
 % \gre@calculate@textaligncenter (level 1, which wraps #1/#2 in
 % \gre@fixedtextformat/\gre@fixednexttextformat before calling this) and
-% \GreWriteStackedLyric's per-level centering (levels 2+, unwrapped: the
-% fixed-style optimization only applies to level 1's text).
+% \GreWriteStackedLyric's per-level centering (levels 2+, which wrap #1/#2
+% in \gre@fixedtextformat the same way).
 % #1: the first+middle text combined
 % #2: the middle text alone
 % #3: the dimen register to store the result into
