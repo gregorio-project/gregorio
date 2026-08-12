@@ -410,6 +410,21 @@ one. The same rule closes a trailing empty level at the end of the score
 without a spurious hyphen, and governs automatic hyphens at line breaks on
 every level.
 
+A hyphen can be forced on any level the same way it can on the main line: a
+literal \texttt{-} right before the \texttt{|} that closes a level (or,
+for a stack's last level, right before the notes' opening \texttt{(})
+forces a hyphen there regardless of what the automatic, width-based
+hyphenation would otherwise decide:
+
+\begin{verbatim}
+Ab|Cd-|Ef(gh)
+\end{verbatim}
+
+{
+  \gresetinitiallines{0}%
+  \gregorioscore[a]{multiplelyriclinesforcedhyphen}
+}
+
 \subsubsection{Special Characters}\label{specialcharacters}
 
 Special characters are specified between \texttt{<sp>} and \texttt{</sp>}.
