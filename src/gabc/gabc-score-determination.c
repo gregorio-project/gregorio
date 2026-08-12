@@ -174,7 +174,7 @@ bool gabc_check_score_integrity(gregorio_score *score_to_check)
             good = false;
         }
         /* check first syllable for elision at the beginning */
-        for (ch = score_to_check->first_syllable->text; ch;
+        for (ch = score_to_check->first_syllable->lyric_lines->text; ch;
                 ch = ch->next_character) {
             if (ch->is_character) {
                 break;

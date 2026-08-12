@@ -310,7 +310,7 @@ static void ready_characters(void)
         gregorio_go_to_first_character_c(&current_character);
         if (!score->first_syllable || (current_syllable
                 && !current_syllable->previous_syllable
-                && !current_syllable->text)) {
+                && !current_syllable->lyric_lines->text)) {
             started_first_word = true;
         }
     }
@@ -324,43 +324,31 @@ static void rebuild_score_characters(void)
                 syllable = syllable->next_syllable) {
             const gregorio_character *t;
             gregorio_lyric_line *line;
+            int level;
 
-            /* find out if there is a forced center */
-            gregorio_center_determination center = CENTER_NOT_DETERMINED;
-            for (t = syllable->text; t; t = t->next_character) {
-                if (!t->is_character && t->cos.s.style == ST_FORCED_CENTER) {
-                    syllable->forced_center = true;
-                    center = CENTER_FULLY_DETERMINED;
-                    break;
-                }
-            }
+            for (line = syllable->lyric_lines, level = 1; line;
+                    line = line->next, ++level) {
+                gregorio_center_determination center = CENTER_NOT_DETERMINED;
 
-            for (line = syllable->extra_lyrics; line; line = line->next) {
-                gregorio_center_determination line_center =
-                        CENTER_NOT_DETERMINED;
                 for (t = line->text; t; t = t->next_character) {
                     if (!t->is_character
                             && t->cos.s.style == ST_FORCED_CENTER) {
                         line->forced_center = true;
-                        line_center = CENTER_FULLY_DETERMINED;
+                        center = CENTER_FULLY_DETERMINED;
                         break;
                     }
                 }
-                gregorio_rebuild_characters(&(line->text), line_center, false);
+
+                if (level == 1 && syllable == score->first_syllable) {
+                    /* leave the first syllable's level 1 text untouched at
+                     * this time */
+                    continue;
+                }
+
+                gregorio_rebuild_characters(&(line->text), center, false);
                 if (line->first_word) {
                     gregorio_set_first_word(&(line->text));
                 }
-            }
-
-            if (syllable == score->first_syllable) {
-                /* leave the first syllable text untouched at this time */
-                continue;
-            }
-
-            gregorio_rebuild_characters(&(syllable->text), center, false);
-
-            if (syllable->first_word) {
-                gregorio_set_first_word(&(syllable->text));
             }
         }
     }
@@ -752,7 +740,7 @@ static void close_syllable(YYLTYPE *loc)
             first_text_character, first_translation_character, position,
             abovelinestext, translation_type, no_linebreak_area, euouae, loc,
             started_first_word, clear_syllable_text);
-    current_syllable->extra_lyrics = first_extra_lyric;
+    current_syllable->lyric_lines->next = first_extra_lyric;
     if (!score->first_syllable) {
         /* we rebuild the first syllable if we have to */
         score->first_syllable = current_syllable;

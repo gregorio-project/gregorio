@@ -1718,7 +1718,7 @@ static void write_bar(FILE *f, const gregorio_score *const score,
     const gregorio_sign signs = element->u.misc.unpitched.special_sign;
     const bool is_inside_bar = element->next && !is_manual_custos(element->next)
             && element->next->type != GRE_END_OF_LINE;
-    const bool has_text = !element->previous && syllable->text;
+    const bool has_text = !element->previous && syllable->lyric_lines->text;
     /* the type number of function vepisemaorrare */
     const char *offset_case = BarStandard;
     signed char far_pitch_adjustment = 0;
@@ -3600,7 +3600,7 @@ static void write_extra_lyric_lines(FILE *const f,
      * sure the styles of the extra lines are written in full */
     const grestyle_style saved_ignore_style = gregoriotex_ignore_style;
     gregoriotex_ignore_style = ST_NO_STYLE;
-    for (line = syllable->extra_lyrics; line; line = line->next, ++level) {
+    for (line = syllable->lyric_lines->next; line; line = line->next, ++level) {
         fprintf(f, "%%\n\\GreWriteStackedLyric{%d}{%d}{%d}", level,
                 (line->position == WORD_END
                         || line->position == WORD_ONE_SYLLABLE) ? 1 : 0,
@@ -3742,8 +3742,9 @@ static void write_syllable_text(FILE *f, const char *const syllable_type,
     if (syllable_type != NULL) {
         fprintf(f, "%s{%s%s\\GreSetThisSyllable", syllable_type,
                 syllable->clear? "\\GreClearSyllableText" : "",
-                syllable->forced_center? "\\GreGABCForceCenters" : "");
-        write_text(f, syllable->text);
+                syllable->lyric_lines->forced_center ?
+                        "\\GreGABCForceCenters" : "");
+        write_text(f, syllable->lyric_lines->text);
         fprintf(f, "}");
     }
 }
@@ -3752,7 +3753,7 @@ static void write_first_syllable_text(FILE *f, const char *const syllable_type,
         const gregorio_syllable *const syllable,
         const bool end_of_word)
 {
-    const gregorio_character *const text = syllable->text;
+    const gregorio_character *const text = syllable->lyric_lines->text;
     gregorio_not_null(syllable_type, write_first_syllable_text, return);
     if (text == NULL) {
         fprintf(f, "}{%s}{\\GreSetNoFirstSyllableText}", syllable_type);
@@ -3762,7 +3763,8 @@ static void write_first_syllable_text(FILE *f, const char *const syllable_type,
         const gregorio_character *t;
 
         /* find out if there is a forced center -> has_forced_center */
-        gregorio_center_determination center = syllable->forced_center?
+        gregorio_center_determination center =
+                syllable->lyric_lines->forced_center ?
                 CENTER_FULLY_DETERMINED : CENTER_NOT_DETERMINED;
 
         gregorio_rebuild_first_syllable(&text_with_initial, false);
@@ -3775,7 +3777,8 @@ static void write_first_syllable_text(FILE *f, const char *const syllable_type,
 
         fprintf(f, "}{%s}{%s%s\\GreSetFirstSyllableText", syllable_type,
                 syllable->clear? "\\GreClearSyllableText" : "",
-                syllable->forced_center? "\\GreGABCForceCenters" : "");
+                syllable->lyric_lines->forced_center ?
+                        "\\GreGABCForceCenters" : "");
 
         fprintf(f, "{");
         gregorio_write_first_letter_alignment_text(WTP_FIRST_SYLLABLE,
@@ -4072,8 +4075,9 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     gtex_alteration alteration = ALT_NONE;
 
     gregorio_not_null(syllable, write_syllable, return);
-    end_of_word = syllable->position == WORD_END
-            || syllable->position == WORD_ONE_SYLLABLE || !syllable->text
+    end_of_word = syllable->lyric_lines->position == WORD_END
+            || syllable->lyric_lines->position == WORD_ONE_SYLLABLE
+            || !syllable->lyric_lines->text
             || !syllable->next_syllable;
     /* Very first: before anything, if the syllable is the beginning of a
      * no-linebreak area: */
@@ -4130,18 +4134,21 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                 return;
             }
         }
-        write_fixed_text_styles(f, syllable->text,
-                syllable->next_syllable? syllable->next_syllable->text : NULL);
+        write_fixed_text_styles(f, syllable->lyric_lines->text,
+                syllable->next_syllable
+                        ? syllable->next_syllable->lyric_lines->text : NULL);
         if ((syllable->elements)[0]->type == GRE_BAR) {
             if (syllable != score->first_syllable) {
-                if (!syllable->next_syllable && !syllable->text
+                if (!syllable->next_syllable
+                        && !syllable->lyric_lines->text
                         && (syllable->elements)[0]->u.misc.unpitched.info.bar
                         == B_DIVISIO_FINALIS) {
                     handle_final_bar(f, "DivisioFinalis", syllable);
                     write_this_syllable_text(f, NULL, syllable, end_of_word);
                     return;
                 }
-                if (!syllable->next_syllable && !syllable->text
+                if (!syllable->next_syllable
+                        && !syllable->lyric_lines->text
                         && (syllable->elements)[0]->u.misc.unpitched.info.bar
                         == B_DIVISIO_MAIOR) {
                     handle_final_bar(f, "DivisioMaior", syllable);
@@ -4160,12 +4167,14 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             }
         }
     } else {
-        write_fixed_text_styles(f, syllable->text,
-                syllable->next_syllable? syllable->next_syllable->text : NULL);
+        write_fixed_text_styles(f, syllable->lyric_lines->text,
+                syllable->next_syllable
+                        ? syllable->next_syllable->lyric_lines->text : NULL);
         syllable_type = "\\GreNoNoteSyllable";
     }
     write_this_syllable_text(f, syllable_type, syllable, end_of_word);
-    fprintf(f, "{}{\\Gre%s}", syllable->first_word ? "FirstWord" : "Unstyled");
+    fprintf(f, "{}{\\Gre%s}",
+            syllable->lyric_lines->first_word ? "FirstWord" : "Unstyled");
     if (end_of_word) {
         fprintf(f, "{1}");
     } else {
@@ -4176,9 +4185,9 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             &next_euouae_id);
     if (syllable->next_syllable) {
         fprintf(f, "{%s\\GreSetNextSyllable",
-                syllable->next_syllable->forced_center?
+                syllable->next_syllable->lyric_lines->forced_center ?
                 "\\GreGABCNextForceCenters" : "");
-        write_text(f, syllable->next_syllable->text);
+        write_text(f, syllable->next_syllable->lyric_lines->text);
         if (end_of_line || first_of_disc == 1) {
             fprintf(f, "\\GreLastOfLine");
         } else if (euouae_follows) {
@@ -4215,7 +4224,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
         fprintf(f, "%%\n\\GreSetTextAboveLines{%s}%%\n",
                 syllable->abovelinestext);
     }
-    if (syllable->extra_lyrics) {
+    if (syllable->lyric_lines->next) {
         write_extra_lyric_lines(f, syllable);
     }
     fprintf(f, "}{%%\n");
@@ -4423,8 +4432,9 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                 next_euouae_id);
     }
     fprintf(f, "}%%\n");
-    if (syllable->position == WORD_END
-            || syllable->position == WORD_ONE_SYLLABLE || !syllable->text) {
+    if (syllable->lyric_lines->position == WORD_END
+            || syllable->lyric_lines->position == WORD_ONE_SYLLABLE
+            || !syllable->lyric_lines->text) {
         fprintf(f, "%%\n");
     }
     finish_syllable(f, syllable);

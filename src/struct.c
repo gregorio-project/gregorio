@@ -1067,20 +1067,24 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
         const bool first_word, const bool clear)
 {
     gregorio_syllable *next;
+    gregorio_lyric_line *lyric_line1;
     gregorio_element **tab;
     int i;
     gregorio_not_null(elements, gregorio_add_syllable, return);
     gregorio_assert(number_of_voices == 1, gregorio_add_syllable,
             "gregorio only supports one voice", return);
     next = gregorio_calloc(1, sizeof(gregorio_syllable));
-    next->position = position;
+    lyric_line1 = (gregorio_lyric_line *)
+            gregorio_calloc(1, sizeof(gregorio_lyric_line));
+    lyric_line1->text = first_character;
+    lyric_line1->position = position;
+    lyric_line1->first_word = first_word;
+    next->lyric_lines = lyric_line1;
     next->no_linebreak_area = no_linebreak_area;
     next->euouae = euouae;
-    next->text = first_character;
     next->translation = first_translation_character;
     next->translation_type = translation_type;
     next->abovelinestext = abovelinestext;
-    next->first_word = first_word;
     next->clear = clear;
     if (loc) {
         next->src_line = loc->first_line;
@@ -1111,12 +1115,9 @@ static void gregorio_free_one_syllable(gregorio_syllable **syllable,
         gregorio_free_elements((struct gregorio_element **)
                                &((*syllable)->elements[i]));
     }
-    if ((*syllable)->text) {
-        gregorio_free_characters((*syllable)->text);
-    }
-    while ((*syllable)->extra_lyrics) {
-        gregorio_lyric_line *line = (*syllable)->extra_lyrics;
-        (*syllable)->extra_lyrics = line->next;
+    while ((*syllable)->lyric_lines) {
+        gregorio_lyric_line *line = (*syllable)->lyric_lines;
+        (*syllable)->lyric_lines = line->next;
         if (line->text) {
             gregorio_free_characters(line->text);
         }
