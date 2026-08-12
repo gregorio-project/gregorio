@@ -949,6 +949,15 @@
   \gre@firstglyphtrue%
   \gre@dimen@bolextra = 0pt\relax%
   \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
+  % A stacked lyric line (level 2+) wider than level 1 needs extra
+  % horizontal clearance around the shared alignment point; 0pt when there
+  % is no stacking or level 1 is already the widest.
+  \ifnum\gre@count@stackedlyriclevels>1\relax
+    \gre@measureoverhangs{\gre@firstsyllablepart}{\gre@middlesyllablepart}{\gre@endsyllablepart}%
+  \else
+    \gre@dimen@extraleftoverhang=0pt\relax%
+    \gre@dimen@extrarightoverhang=0pt\relax%
+  \fi%
   % Before measuring the notes, save the alteration id. We will
   % restore it later, so that the measured notes and the actual notes
   % have the same alteration ids, if any.
@@ -962,7 +971,16 @@
     \global\gre@dimen@nabckernemitted=0pt\relax%
   \fi%
   % now we calculate the begin difference, that is to say \gre@dimen@notesaligncenter - \gre@dimen@textaligncenter
+  % (stays based on level 1 alone -- extraleftoverhang must not shift text
+  % off the notes, so it's a separate \kern below instead)
   \gre@dimen@begindifference=\dimexpr(\gre@dimen@notesaligncenter - \gre@dimen@textaligncenter)\relax %
+  % Reserve a wider stacked level's extra room by shifting the whole
+  % syllable (notes included) right, so its left edge lands where level 1's
+  % own edge would have. Before the begin-of-line shift below so it is
+  % likewise discarded there, like \gre@dimen@bolshift.
+  \ifdim\gre@dimen@extraleftoverhang>0pt\relax
+    \kern\gre@dimen@extraleftoverhang\relax
+  \fi
   % Now, let's go for something I took years to figure out: we want to align
   % scores on the notes (see https://github.com/gregorio-project/gregorio/issues/221)
   % but it means we have to shift lines starting by text by \gre@dimen@bolshift
@@ -1041,7 +1059,10 @@
     \fi
   \fi%
   \unsetattribute{\gre@attr@part}%
-  \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
+  % fold extrarightoverhang into the text-width argument, so enddifference
+  % reserves room for whichever level extends furthest right
+  \gre@dimen@enddifference@textwidth=\dimexpr\wd\gre@box@syllabletext+\gre@dimen@extrarightoverhang\relax%
+  \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\gre@dimen@enddifference@textwidth}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
   % gre@count@temp@one holds 1 if next is a bar, 2 if an alteration, else 0
   \gre@count@temp@one=0%
   \ifnum\gre@nextalteration=0\relax %
