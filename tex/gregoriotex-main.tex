@@ -1137,11 +1137,16 @@
     \multiply\gre@dimen@stackedlyricraise by \numexpr#1-1\relax%
     \gre@dimen@stackedlyricraise=\dimexpr\gre@space@dimen@spacebeneathtext-\gre@dimen@stackedlyricraise\relax%
     \directlua{gregoriotex.set_lyric_line_dash(#1, #2)}%
+    % \gre@attr@part must also be set here, not just the \hbox attr below:
+    % save_syllable_texts (the ligaturing callback) reads the ambient,
+    % propagating \gre@attr@part, not the per-node \hbox attr tag -- without
+    % this it stays part_lyrics (4) from the enclosing \GreSyllable.
+    {\gre@attr@part=\numexpr9+#1\relax%
     \raise\gre@dimen@stackedlyricraise%
     \hbox attr \gre@attrid@part=\numexpr9+#1\relax to 0pt{%
       \kern\dimexpr\gre@dimen@textaligncenter-\gre@dimen@stackedlyriccenter\relax%
       \hbox{\gre@stackedlyric@firstpart\gre@stackedlyric@middlepart\gre@stackedlyric@endpart}%
-      \hss}%
+      \hss}}%
   \fi%
 }%
 

@@ -76,8 +76,11 @@ local part_nabc = 7
 local part_blnabc = 8
 local part_annotation = 9
 -- additional lyric lines (stacked lyrics) use part_lyric_line_base + level,
--- so they sort after every fixed part above; level 1 is part_lyrics itself
+-- so they sort after every fixed part above; level 1 is part_lyrics itself.
+-- Exported below so gregoriotex-syllable.lua (dofile'd separately, so it
+-- can't see this local) uses the same single value.
 local part_lyric_line_base = 9
+gregoriotex.part_lyric_line_base = part_lyric_line_base
 
 local skip_type_attr = luatexbase.attributes['gre@attr@skip@type']
 
@@ -1033,13 +1036,20 @@ local function add_eol_hyphen(line)
   if last_sid ~= nil then
     debugmessage('hyphenation', 'last syllable on line: %d', last_sid)
     -- The additional lyric lines (stacked lyrics) of the last syllable also
-    -- get an end-of-line hyphen when their word continues.
+    -- get an end-of-line hyphen when their word continues. Due to syllable
+    -- rewriting (now done independently per level), a level's actual text
+    -- may be in a syllable further to the left, even if level 1's is not.
     local levels = gregoriotex.syllables[last_sid].levels
     if levels ~= nil then
       for lev, cl in pairs(levels) do
         if cl.dash == dash_maybedash or cl.dash == dash_forced then
-          debugmessage('hyphenation', 'lyric line %d of syllable %d needs hyphen', lev, last_sid)
-          gregoriotex.add_level_hyphen(gregoriotex.syllables[last_sid], lev)
+          local lev_sid = last_sid
+          while lev_sid ~= nil and gregoriotex.level_merged(gregoriotex.syllables[lev_sid], lev) do
+            debugmessage('hyphenation', 'lyric line %d of syllable %d has been merged', lev, lev_sid)
+            lev_sid = gregoriotex.syllables[lev_sid].prev_sid
+          end
+          debugmessage('hyphenation', 'adding hyphen to lyric line %d of syllable %d', lev, lev_sid)
+          gregoriotex.add_hyphen(gregoriotex.syllables[lev_sid], lev)
         end
       end
     end
