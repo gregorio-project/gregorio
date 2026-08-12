@@ -500,18 +500,85 @@ local function level_gap(cur, lev, next)
   end
 end
 
+--- Whether a syllable renders any glyphs at all at a given level. A
+--- syllable can say nothing at some level (several simultaneous
+--- invocations sharing one set of notes) yet still have an empty box.
+--- Doesn't go through level_store, which would create the level's table
+--- on demand and inflate num_levels/max_level.
+--- @param cur table A syllable.
+--- @param lev number The lyric line level.
+--- @return boolean
+local function level_has_text(cur, lev)
+  if lev == 1 then return cur.raw_text ~= nil end
+  local cl = cur.levels and cur.levels[lev]
+  return cl ~= nil and cl.raw_text ~= nil
+end
+
+--- The next syllable (after cur) whose text at a given level is
+--- non-empty, provided cur's word actually continues that far. Searches
+--- past syllables empty at that level, but stops short (returning nil)
+--- if one of them is itself marked dash_endofword: a real word boundary
+--- even on a textless syllable.
+--- @param cur table The syllable to start searching after.
+--- @param lev number The lyric line level.
+--- @return table|nil
+local function next_with_content(cur, lev)
+  local candidate = syllables[cur.next_sid]
+  while candidate ~= nil and not level_has_text(candidate, lev) do
+    if level_dash(candidate, lev) == dash_endofword then return nil end
+    candidate = syllables[candidate.next_sid]
+  end
+  return candidate
+end
+
+--- The gap between cur's text at a given level and the next text it must
+--- stay clear of, or nil if there is none. If cur's word continues
+--- through empty syllables at this level, their boxes render no glyphs
+--- and can't mark a real boundary -- treating them as one manufactures
+--- spacing pressure out of nothing. Look past them to the text cur's
+--- word really runs into; only done where the word continues (at a word
+--- end or under a bar, the following empty box is a genuine gap).
+--- @param cur table The current syllable.
+--- @param lev number The lyric line level.
+--- @param next table The immediately following syllable.
+--- @return number|nil The gap, in sp.
+local function clearance_gap(cur, lev, next)
+  local next_box = level_box(next, lev)
+  if next_box ~= nil and level_has_text(next, lev) then
+    return level_gap(cur, lev, next)
+  end
+  local dash = level_dash(cur, lev)
+  if dash ~= dash_maybedash and dash ~= dash_hasdash then
+    -- word ends here, so the following empty box (if any) is a real
+    -- interword gap; a level next doesn't reach has no box to measure to
+    if next_box == nil then return nil end
+    return level_gap(cur, lev, next)
+  end
+  local target = next_with_content(cur, lev)
+  if target == nil or level_box(target, lev) == nil then return nil end
+  -- level_gap's level-1 formula measures cur's trailing space and
+  -- target's leading space separately, which only add up to a real gap
+  -- for an adjacent pair; measure the whole span in one call instead.
+  -- Levels 2+ need no such special case (see level_gap).
+  if lev == 1 then return node.dimensions(cur.text.next, target.text) end
+  return level_gap(cur, lev, target)
+end
+
 --- Determine the width of a syllable's syllable-final skip, which is
 --- the last skip before the start of the next syllable.
 --- @param cur table The current syllable.
 --- @param next table The next syllable.
 local function adjust_syllablefinalskip(cur, next)
-  local text_distance = level_gap(cur, 1, next)
+  -- nil where the following syllables render nothing at all at this
+  -- level, so there is no text for cur's own to keep clear of
+  local text_distance = clearance_gap(cur, 1, next)
   debugmessage('syllablespacing', '  text distance = %s', glue_to_string(text_distance))
   local min_text_distance = cur.min_text_distance
   debugmessage('syllablespacing', '  min text distance = %s', glue_to_string(min_text_distance))
-  local min_text_shift = glue_add(min_text_distance, -text_distance)
+  local min_text_shift = text_distance
+      and glue_add(min_text_distance, -text_distance) or {0, 0, 0}
   debugmessage('syllablespacing', '  min text shift = %s', glue_to_string(min_text_shift))
-  
+
   local notes_distance = (
     node.dimensions(cur.last_note.next, cur.last.next) +
     node.dimensions(next.first, next.first_note)
@@ -527,15 +594,16 @@ local function adjust_syllablefinalskip(cur, next)
   -- Each additional lyric line has its own word position, independent of
   -- the main line, so its own minimum distance (interwordspacetext where
   -- it ends a word here, otherwise none) must be enforced separately.
-  if cur.levels ~= nil and next.levels ~= nil then
+  if cur.levels ~= nil then
     for lev = 2, num_levels(cur) do
       local cl = cur.levels[lev]
-      local nl = next.levels[lev]
-      if cl ~= nil and cl.box ~= nil and nl ~= nil and nl.box ~= nil then
-        local level_distance = level_gap(cur, lev, next)
-        debugmessage('syllablespacing', '  lyric line %d distance = %s', lev, glue_to_string(level_distance))
-        local min_level_distance = (cl.dash == dash_endofword) and cur.settings.interwordspacetext or {0, 0, 0}
-        min_shift = glue_max(min_shift, glue_add(min_level_distance, -level_distance))
+      if cl ~= nil and cl.box ~= nil then
+        local level_distance = clearance_gap(cur, lev, next)
+        if level_distance ~= nil then
+          debugmessage('syllablespacing', '  lyric line %d distance = %s', lev, glue_to_string(level_distance))
+          local min_level_distance = (cl.dash == dash_endofword) and cur.settings.interwordspacetext or {0, 0, 0}
+          min_shift = glue_max(min_shift, glue_add(min_level_distance, -level_distance))
+        end
       end
     end
   end
@@ -676,14 +744,21 @@ local function syllable_spacing()
       while added_this_round do
         added_this_round = false
         for lev = 1, num_levels(cur) do
-          if level_dash(cur, lev) == dash_maybedash
-              and level_box(cur, lev) ~= nil and level_box(next, lev) ~= nil then
-            local distance = level_gap(cur, lev, next)
-            debugmessage('hyphenation', 'syllable %d level %d distance %.5fpt', sid, lev, distance/2^16)
-            if distance > cur.settings.maximumspacewithoutdash then
-              debugmessage('hyphenation', 'adding hyphen to syllable %d level %d', sid, lev)
-              add_hyphen(cur, lev)
-              added_this_round = true
+          -- dash_maybedash means this level's word continues past cur;
+          -- level_has_text further restricts eligibility to syllables
+          -- with their own text to attach a hyphen to, so a textless
+          -- connector in the middle of a stacked word (also
+          -- dash_maybedash) doesn't get its own hyphen too.
+          if level_dash(cur, lev) == dash_maybedash and level_box(cur, lev) ~= nil
+              and level_has_text(cur, lev) then
+            local distance = clearance_gap(cur, lev, next)
+            if distance ~= nil then
+              debugmessage('hyphenation', 'syllable %d level %d distance %.5fpt', sid, lev, distance/2^16)
+              if distance > cur.settings.maximumspacewithoutdash then
+                debugmessage('hyphenation', 'adding hyphen to syllable %d level %d', sid, lev)
+                add_hyphen(cur, lev)
+                added_this_round = true
+              end
             end
           end
         end

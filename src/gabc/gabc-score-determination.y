@@ -602,17 +602,43 @@ static void check_elision_balance(const gregorio_character *const start)
             "encountered elision beginning with no end");
 }
 
+/* the given syllable's lyric_line for the given level (2 for the first
+ * additional line), or NULL if its stack does not reach that level */
+static gregorio_lyric_line *stacked_line_at(
+        const gregorio_syllable *const syllable, const int level)
+{
+    gregorio_lyric_line *line = syllable->lyric_lines;
+    int i;
+    for (i = 1; i < level && line; ++i) {
+        line = line->next;
+    }
+    return line;
+}
+
 /* closes the word that word_end_line[level - 2] was spelling, if any, and
  * marks that level ready to start a fresh word */
 static void close_stacked_word_at_level(const int level)
 {
     const int j = level - 2;
     gregorio_lyric_line *const line = word_end_line[j];
+    gregorio_syllable *s;
     if (line) {
         if (line->position == WORD_MIDDLE) {
             line->position = WORD_END;
         } else if (line->position == WORD_BEGINNING) {
             line->position = WORD_ONE_SYLLABLE;
+        }
+        /* undo close_syllable's provisional WORD_MIDDLE guess on any
+         * trailing empty lines at this level, now that the word is known
+         * to have ended back at word_end_line */
+        for (s = current_syllable; s; s = s->previous_syllable) {
+            gregorio_lyric_line *const l = stacked_line_at(s, level);
+            if (l == line) {
+                break;
+            }
+            if (l && l->position == WORD_MIDDLE) {
+                l->position = WORD_ONE_SYLLABLE;
+            }
         }
         extra_started_first_word[j] = false;
         word_end_line[j] = NULL;
@@ -772,7 +798,10 @@ static void close_syllable(YYLTYPE *loc)
         const int j = k - 2;
         line->first_word = extra_started_first_word[j];
         if (line->text == NULL) {
-            line->position = WORD_ONE_SYLLABLE;
+            /* an empty line still counts as reached; if a word is actively
+             * in progress at this level, this is a gap in the middle of
+             * it, fixed up retroactively by close_stacked_word_at_level */
+            line->position = word_end_line[j] ? WORD_MIDDLE : WORD_ONE_SYLLABLE;
         } else {
             line->position = extra_position[j];
             extra_position[j] = WORD_MIDDLE;

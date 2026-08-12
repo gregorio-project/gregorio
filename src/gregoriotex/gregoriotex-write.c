@@ -4116,7 +4116,6 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     gregorio_not_null(syllable, write_syllable, return);
     end_of_word = syllable->lyric_lines->position == WORD_END
             || syllable->lyric_lines->position == WORD_ONE_SYLLABLE
-            || !syllable->lyric_lines->text
             || !syllable->next_syllable;
     /* Very first: before anything, if the syllable is the beginning of a
      * no-linebreak area: */
