@@ -931,21 +931,12 @@ local function adjust_additional_spaces(line, info, linenum)
   local translation_lower = lyrics_lower + translation_height
   local everything_raise = translation_lower + extra_space_beneath_text
 
-  -- When the staff is collapsed, adjust the annotation position so it sits
-  -- at the correct distance from the lyrics/initial.
+  -- When the staff is collapsed (lines, notes, and clef all hidden -- see
+  -- \gre@staffdimensions@reevaluate), adjust the annotation position so it
+  -- sits at the correct distance from the lyrics/initial.
   local annotation_correction = 0
-  if staff_zeroed then
-    if not get_if('gre@shownotes') then
-      -- Fully collapsed (lines + notes hidden)
-      if info.has_blnabc and info.has_nabc then
-        annotation_correction = -get_per_line_space('belowlinesnabcheight')
-      end
-    else
-      -- Only staff lines collapsed, notes still visible
-      if not info.has_blnabc then
-        annotation_correction = get_per_line_space('belowlinesnabcheight')
-      end
-    end
+  if staff_zeroed and info.has_blnabc and info.has_nabc then
+    annotation_correction = -get_per_line_space('belowlinesnabcheight')
   end
 
   -- Recursively traverse the tree, shifting parts up or down. The notes stay put for now.
