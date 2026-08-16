@@ -856,22 +856,56 @@
 %% Helper macros for zeroing/restoring staff dimensions.
 %% The @saved values are maintained by the calculate functions, so toggling
 %% the flag and recalculating is sufficient; no manual save/restore needed.
+\def\gre@staffdimensions@recalculate{%
+  \gre@calculate@stafflineheight
+  \gre@calculate@interstafflinespace
+  \gre@calculate@staffheight
+  \gre@calculate@constantglyphraise
+}%
 \def\gre@staffdimensions@unzero{%
   \ifgre@staffdimensions@zeroed
     \global\gre@staffdimensions@zeroedfalse
-    \gre@calculate@stafflineheight
-    \gre@calculate@interstafflinespace
-    \gre@calculate@staffheight
-    \gre@calculate@constantglyphraise
+    \gre@staffdimensions@recalculate
   \fi
 }%
 \def\gre@staffdimensions@dozero{%
   \ifgre@staffdimensions@zeroed\else
     \global\gre@staffdimensions@zeroedtrue
-    \gre@calculate@stafflineheight
-    \gre@calculate@interstafflinespace
-    \gre@calculate@staffheight
-    \gre@calculate@constantglyphraise
+    \gre@staffdimensions@recalculate
+  \fi
+}%
+
+\newif\ifgre@staffdimensions@occupied%
+% Marks the staff as occupied if one element reserves vertical space.
+% #1 is its \ifgre@showX conditional (passed as a token, so that TeX's
+% conditional skipping still recognizes it) and #2 its phantom wrapper count.
+% Only visible (wrapper 0 with the flag set) and phantom (wrapper 1) reserve
+% space; invisible (wrapper 0, flag clear) and hphantom (wrapper 2) do not.
+\def\gre@staffdimensions@checkoccupied#1#2{%
+  \ifcase#2\relax
+    #1\gre@staffdimensions@occupiedtrue\fi
+  \or
+    \gre@staffdimensions@occupiedtrue
+  \fi
+}%
+
+% Re-evaluate whether the staff dimensions should be zeroed, from the current
+% combined visibility of staff lines, notes, and the clef.  Zeroing collapses
+% the shared pitch-grid origin (\gre@dimen@constantglyphraise), so it is only
+% correct when none of the three occupies vertical space; otherwise whatever
+% still sits on the pitch grid would be positioned against a collapsed
+% coordinate system.  Called from \gresetlines (below), \gresetnotes
+% (gregoriotex-syllable.tex) and \gresetclef (gregoriotex-signs.tex), so the
+% outcome never depends on the order in which the three are set.
+\def\gre@staffdimensions@reevaluate{%
+  \gre@staffdimensions@occupiedfalse
+  \gre@staffdimensions@checkoccupied{\ifgre@showlines}{\gre@lines@phantomwrapper}%
+  \gre@staffdimensions@checkoccupied{\ifgre@shownotes}{\gre@notes@phantomwrapper}%
+  \gre@staffdimensions@checkoccupied{\ifgre@showclef}{\gre@clef@phantomwrapper}%
+  \ifgre@staffdimensions@occupied
+    \gre@staffdimensions@unzero
+  \else
+    \gre@staffdimensions@dozero
   \fi
 }%
 
@@ -881,18 +915,7 @@
     {\gre@showlinesfalse}%
     {\gre@lines@phantomwrapper}%
     {\protect\gresetlines}%
-  % When lines are invisible or hphantom, zero the staff dimensions
-  % so that all vertical positioning collapses (notes flatten, NABC lowers).
-  % When lines are visible or phantom, restore the saved values.
-  \ifgre@showlines
-    \gre@staffdimensions@unzero
-  \else
-    \ifnum\gre@lines@phantomwrapper=1\relax
-      \gre@staffdimensions@unzero
-    \else
-      \gre@staffdimensions@dozero
-    \fi
-  \fi
+  \gre@staffdimensions@reevaluate
 }
 
 %% box containing the stafflines for other lines than the first
