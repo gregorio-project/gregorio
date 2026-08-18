@@ -25,6 +25,8 @@ gregoriotex = gregoriotex or {}
 local gregoriotex = gregoriotex
 
 local internalversion = '6.2.0' -- GREGORIO_VERSION (comment used by VersionManager.py)
+-- Version stamp put into the name of every generated file.
+local version_suffix = internalversion:gsub("%.", "_")
 
 local err, warn, info, log = luatexbase.provides_module({
     name               = "gregoriotex",
@@ -1457,6 +1459,16 @@ if lfs.mkdirp == nil then
   end
 end
 
+-- Create dir if it does not exist yet; returns whether it is usable.
+local function ensure_dir(dir)
+  if lfs.exists(dir) then return true end
+  local ok, message = lfs.mkdirp(dir)
+  if not ok then
+    info('Could not create directory %s: %s', dir, message)
+  end
+  return ok and true or false
+end
+
 local function include_score(gabc_file, force_gabccompile, allow_deprecated)
   gabc_file = lfs.normalize(gabc_file)
   
@@ -1488,18 +1500,11 @@ local function include_score(gabc_file, force_gabccompile, allow_deprecated)
   end
   output_dir = table.concat(output_dir, '/')
   info('Output directory: %s', output_dir)
-  if not lfs.exists(output_dir) then
-    local ok, message = lfs.mkdirp(output_dir)
-    if not ok then
-      info('Could not create directory %s: %s', output_dir, message)
-    end
-  end
-    
+  ensure_dir(output_dir)
+
   -- Choose output filenames
-  gtex_file = string.format("%s%s-%s.gtex", output_dir, base_cleaned,
-                            internalversion:gsub("%.", "_"))
-  glog_file = string.format("%s%s-%s.glog", output_dir, base_cleaned,
-                            internalversion:gsub("%.", "_"))
+  gtex_file = string.format("%s%s-%s.gtex", output_dir, base_cleaned, version_suffix)
+  glog_file = string.format("%s%s-%s.glog", output_dir, base_cleaned, version_suffix)
 
   -- Decide if we need to recompile
   local needs_compile = false
@@ -1548,13 +1553,59 @@ local function include_score(gabc_file, force_gabccompile, allow_deprecated)
   tex.print(string.format([[\input %s\relax]], gtex_file))
 end
 
+-- Compiled snippets, keyed by a digest of the gabc source.  Snippets are
+-- typically small and repeated (inline snippets in running text), and each
+-- compilation spawns a gregorio process, so the result is memoized for the
+-- run and, when the compilation was clean, kept in the output directory for
+-- subsequent runs.
+local snippet_cache = {}
+
+-- Name of the on-disk cache file for a snippet, or nil if the output
+-- directory is not usable.
+local function snippet_cache_file(key)
+  local dir = base_output_dir..'/'
+  if not ensure_dir(dir) then return nil end
+  return string.format("%ssnippet-%s-%s.gtex", dir, key, version_suffix)
+end
+
+-- Memoize a compiled snippet and hand it to TeX.
+local function print_snippet(key, content)
+  snippet_cache[key] = content:explode('\n')
+  tex.print(snippet_cache[key])
+end
+
 local function direct_gabc(gabc, header, allow_deprecated)
+  -- trims spaces on both ends (trim6 from http://lua-users.org/wiki/StringTrim)
+  gabc = gabc:match('^()%s*$') and '' or gabc:match('^%s*(.*%S)')
+  local source = 'name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par', '\n')
+  local key = md5.sumhexa(source..'\0'..(allow_deprecated and '1' or '0'))
+
+  local cached = snippet_cache[key]
+  if cached then
+    debugmessage('snippet', 'reusing snippet %s from memory', key)
+    tex.print(cached)
+    return
+  end
+
+  local cache_file = snippet_cache_file(key)
+  if cache_file and lfs.exists(cache_file) then
+    local cache = io.open(cache_file, 'r')
+    if cache then
+      local content = cache:read('*a')
+      cache:close()
+      if content and content ~= '' then
+        debugmessage('snippet', 'reusing snippet %s from %s', key, cache_file)
+        kpse.record_input_file(cache_file)
+        print_snippet(key, content)
+        return
+      end
+    end
+  end
+
   info('Processing gabc snippet...')
   kpse.record_output_file(snippet_filename)
   local f = io.open(snippet_filename, 'w')
-  -- trims spaces on both ends (trim6 from http://lua-users.org/wiki/StringTrim)
-  gabc = gabc:match('^()%s*$') and '' or gabc:match('^%s*(.*%S)')
-  f:write('name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par', '\n'))
+  f:write(source)
   f:close()
   cmd = {gregorio_exe(), '-W'}
   if not allow_deprecated then table.insert(cmd, '-D') end
@@ -1568,14 +1619,17 @@ local function direct_gabc(gabc, header, allow_deprecated)
         .."See the documentation of Gregorio or your TeX\n"
         .."distribution to automatize it.", cmd, tex.formatname, tex.jobname)
   else
-    tex.print(content:explode('\n'))
+    print_snippet(key, content)
   end
+  local clean = true
   local glog = io.open(snippet_logname, 'a+')
   if glog == nil then
     err("\n Unable to open %s", snippet_logname)
+    clean = false
   else
     local size = glog:seek('end')
     if size > 0 then
+      clean = false
       glog:seek('set')
       local line
       for line in glog:lines() do
@@ -1584,6 +1638,17 @@ local function direct_gabc(gabc, header, allow_deprecated)
       warn("*** end of warnings/errors processing snippet ***")
     end
     glog:close()
+  end
+  -- Only cache clean compilations on disk: a snippet which produced warnings
+  -- must be recompiled on every run so that its warnings keep being reported.
+  if content ~= nil and clean and cache_file then
+    delete_versioned_files(base_output_dir..'/', 'snippet%-'..key, 'gtex')
+    local cache = io.open(cache_file, 'w')
+    if cache then
+      cache:write(content)
+      cache:close()
+      kpse.record_output_file(cache_file)
+    end
   end
   if not (debug_types_activated['snippet'] or debug_types_activated['all']) then
     os.remove(snippet_filename)
