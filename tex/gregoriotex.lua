@@ -555,8 +555,28 @@ end
 
 gregoriotex.module.debugmessage = debugmessage
 
--- Find stafflines and commentary, which are meant to take up the full
--- line width, and adjust them to actually take up the full line
+-- Find stafflines and commentary, which are meant to take up the full line
+-- width, and set them to the given width.
+local function set_part_widths(cur, width)
+  for child in node.traverse_list(cur.head) do
+    local attr = has_attribute(child, part_attr)
+    if attr == part_commentary or attr == part_stafflines then
+      debugmessage("adjust_fullwidth", "width %spt -> %spt", child.width/2^16, width/2^16)
+      if child.id == hlist then
+        local repacked = node.hpack(child.head, width, 'exactly')
+        repacked.shift = child.shift
+        cur.head = node.insert_before(cur.head, child, repacked)
+        cur.head = node.remove(cur.head, child)
+      else
+        child.width = width
+      end
+    else
+      set_part_widths(child, width)
+    end
+  end
+end
+
+-- Adjust the full-width parts of a line to actually take up the full line
 -- width.
 local function adjust_fullwidth (line)
   -- Determine line width, ignoring \leftskip and \rightskip
@@ -573,26 +593,7 @@ local function adjust_fullwidth (line)
   end
   debugmessage("adjust_fullwidth", "line width %spt", line_width/2^16)
 
-  local function visit(cur)
-    for child in node.traverse_list(cur.head) do
-      local attr = has_attribute(child, part_attr)
-      if attr == part_commentary or attr == part_stafflines then
-        debugmessage("adjust_fullwidth", "width %spt -> %spt", child.width/2^16, line_width/2^16)
-        if child.id == hlist then
-          local new = node.hpack(child.head, line_width, 'exactly')
-          new.shift = child.shift
-          cur.head = node.insert_before(cur.head, child, new)
-          cur.head = node.remove(cur.head, child)
-        else
-          child.width = line_width
-        end
-      else
-        visit(child)
-      end
-    end
-  end
-
-  visit(line)
+  set_part_widths(line, line_width)
 end
 
 local function find_attr(cur, attr, val)
@@ -1656,6 +1657,89 @@ local function direct_gabc(gabc, header, allow_deprecated)
   end
 end
 
+-- Strip attributes that only make sense while a score is being typeset, so a
+-- finished snippet's box is inert if it ends up nested inside another
+-- score's paragraph (post_linebreak would otherwise stretch its staff lines).
+local function strip_score_attributes(n)
+  node.unset_attribute(n, part_attr)
+  node.unset_attribute(n, center_attr)
+  if n.id == hlist or n.id == vlist then
+    for child in traverse(n.head) do
+      strip_score_attributes(child)
+    end
+  end
+end
+
+-- Whether a node list leaves any mark on the page: an empty lyric box or an
+-- invisible staff still reaches down to the baseline, and must not be
+-- mistaken for the bottom of the snippet.
+local function has_ink(head)
+  for n in traverse(head) do
+    if n.id == glyph or n.id == rule then
+      return true
+    elseif (n.id == hlist or n.id == vlist) and has_ink(n.head) then
+      return true
+    end
+  end
+  return false
+end
+
+-- Pull a snippet box down onto its baseline. A score line reserves room
+-- below the notes for lyrics that a bare neume doesn't have, which would
+-- otherwise spoil the leading of the surrounding paragraph.
+local function drop_to_baseline(hbox)
+  local top, bottom = nil, nil
+  for n in traverse(hbox.head) do
+    if (n.id == hlist or n.id == vlist) and has_ink(n.head) then
+      -- shift is positive downwards
+      if top == nil or n.shift - n.height < top then top = n.shift - n.height end
+      if bottom == nil or n.shift + n.depth > bottom then bottom = n.shift + n.depth end
+    end
+  end
+  -- Nothing to do unless the whole snippet floats above the baseline.
+  if bottom == nil or bottom >= 0 then return end
+  debugmessage('snippet', 'dropping snippet contents by %spt', -bottom/2^16)
+  for n in traverse(hbox.head) do
+    if n.id == hlist or n.id == vlist then
+      n.shift = n.shift - bottom
+    end
+  end
+  hbox.height = bottom - top
+  hbox.depth = 0
+end
+
+-- Turn the vbox built by an inline snippet (an oversized-\hsize score
+-- paragraph, so it never breaks) into a single hbox of natural width.
+-- boxnum is the box register holding the vbox; it receives the hbox.
+local function finish_inline_snippet(boxnum)
+  local vbox = tex.getbox(boxnum)
+  if vbox == nil then
+    err("An inline gabc snippet produced no material")
+    return
+  end
+  local lines = count(hlist, vbox.head)
+  if lines == 0 then
+    warn("An inline gabc snippet produced no score line")
+    tex.setbox(boxnum, node.new(hlist))
+    return
+  end
+  if lines > 1 then
+    warn("An inline gabc snippet spans %d lines; keeping the first one only.\n"
+        .."Remove the 'z' or 'Z' line breaks from the snippet.", lines)
+  end
+  local line = vbox.head
+  while line.id ~= hlist do line = line.next end
+  local head = line.head
+  line.head = nil
+  local hbox = hpack(head)
+  -- Only needed for the multi-line fallback above: its staff was stretched
+  -- to the snippet's oversized \hsize instead of the discarded lines' width.
+  set_part_widths(hbox, hbox.width)
+  strip_score_attributes(hbox)
+  drop_to_baseline(hbox)
+  tex.setbox(boxnum, hbox)
+end
+
 local function get_gregoriotexluaversion()
   return internalversion
 end
@@ -2122,6 +2206,7 @@ gregoriotex.set_font_factor              = set_font_factor
 gregoriotex.def_symbol                   = def_symbol
 gregoriotex.font_size                    = font_size
 gregoriotex.direct_gabc                  = direct_gabc
+gregoriotex.finish_inline_snippet        = finish_inline_snippet
 gregoriotex.var_brace_len                = var_brace_len
 gregoriotex.save_length                  = save_length
 gregoriotex.width_to_bp                  = width_to_bp
