@@ -207,6 +207,90 @@ includes it directly in the document.
   \gabcsnippet{(c3) Al(eg~)le(gv.fhg)lu(efe___)ia(e.) (::)}
 \end{latexcode}
 
+Like a score included with \verb|\gregorioscore|, a \verb|\gabcsnippet| is a
+paragraph of its own.  Use \verb|\gabcinlinesnippet| or
+\verb|\gabcneumesnippet| (below) for a snippet which is to appear inside a
+paragraph of running text.
+
+
+\subsubsection{Inline snippets}
+\label{sec:inline-snippets}
+
+The macros in this section typeset a small score \emph{inside} a paragraph
+instead of starting a new one.  The snippet must fit on a single line; the
+staff lines, if any, are trimmed to the width actually taken up by the score,
+and the box is trimmed to the material it contains, so that the snippet
+disturbs the leading of the surrounding paragraph as little as possible.  The
+baseline of the snippet is the baseline of its lyrics, which therefore line up
+with the surrounding text.
+
+\macroname{\textbackslash gabcinlinesnippet}{[\optional{\#1}]\{\#2\}}{gregoriotex-snippet.tex}
+Converts the gabc notation specified in \texttt{\#2} to Gregorio\TeX\ and
+includes it inside the current paragraph.
+
+\begin{argtable}
+  \#1 & string & Optional. Extra gabc headers, written as they would be in a
+  gabc file (\texttt{name:value;}), for instance \texttt{nabc-lines:1;} or
+  \texttt{staff-lines:5;}.\\
+  \#2 & string & The gabc to insert into the document.\\
+\end{argtable}
+
+\medskip For example:\par\medskip
+\begin{latexcode}
+  The \gabcinlinesnippet{(c3) Al(eg~)le(gv.fhg)lu(efe___)ia(e.) (::)} of
+  the Mass of the day.
+\end{latexcode}
+
+If the snippet contains a forced line break (\texttt{z} or \texttt{Z}), only
+the first line is kept and a warning is issued.
+
+\macroname{\textbackslash gabcneumesnippet}{[\optional{\#1}]\{\#2\}}{gregoriotex-snippet.tex}
+Typesets a bare neume inside the current paragraph: no staff lines, no clef,
+and no lyrics.  The argument is the content of a single gabc note group, that
+is, what would appear between parentheses in a gabc file, so that
+\verb|\gabcneumesnippet{fgf}| is the equivalent of
+\verb|\gabcinlinesnippet{(fgf)}| with the staff lines and the clef made
+invisible.
+
+\begin{argtable}
+  \#1 & integer & Optional. The number of nabc voices, as in the
+  \texttt{nabc-lines} gabc header. Voice 1 is placed above the neume, voice 2
+  below it.\\
+  \#2 & string & The gabc note group, without its enclosing parentheses.
+  When \texttt{\#1} is given, the nabc voices follow, separated by
+  \texttt{\textbar} as usual.\\
+\end{argtable}
+
+\medskip For example:\par\medskip
+\begin{latexcode}
+  a torculus \gabcneumesnippet{fgf}, and the same with its
+  St.~Gall notation above and below: \gabcneumesnippet[2]{fgf|vi|ta}
+\end{latexcode}
+
+\macroname{\textbackslash gresetinlinesnippetraise}{\{\#1\}}{gregoriotex-snippet.tex}
+Sets the vertical offset applied to inline snippets.  The default is
+\texttt{0pt}, which puts the snippet on the baseline of the surrounding text.
+
+\begin{argtable}
+  \#1 & distance & The offset; positive values raise the snippet.\\
+\end{argtable}
+
+\macroname{\textbackslash gresetinlinesnippethook}{\{\#1\}}{gregoriotex-snippet.tex}
+Sets code to be run inside the group in which inline snippets are typeset,
+just before the score itself.  This is the place for settings which are to
+apply to snippets only, such as \verb|\grechangestaffsize| or
+\verb|\grechangedim|.
+
+\begin{argtable}
+  \#1 & code & The code to run. It replaces any previously set hook; an empty
+  argument removes the hook.\\
+\end{argtable}
+
+\medskip For example:\par\medskip
+\begin{latexcode}
+  \gresetinlinesnippethook{\grechangestaffsize{12}}
+\end{latexcode}
+
 
 \subsubsection{Point-and-click}
 
@@ -1486,6 +1570,37 @@ Macro to set the font to be used for the ancient notation.
   \#2 & string & the name of the font, either \texttt{gregall}, \texttt{grelaon}, or \texttt{gresgmodern}\\
   \#3 & integer & point size at which the font should be loaded\\
 \end{argtable}
+
+\macroname{\textbackslash grenabcfont}{[\#1]\{\#2\}\{\#3\}}{gregoriotex-nabc.tex}
+Same as \verb|\gresetnabcfont|, except that the selection is local to the
+current \TeX\ group.  This is what makes it possible to pick a font and a
+size for a single \verb|\nabcneumesnippet| without disturbing the rest of the
+document.  The metrics of the ancient notation fonts are scaled accordingly,
+so the same font may be used at several sizes in one document.
+
+\begin{argtable}
+  \#1 & integer & the nabc voice: 1 (default) = above staff, 2 = below staff.\\
+  \#2 & string & the name of the font, either \texttt{gregall}, \texttt{grelaon}, or \texttt{gresgmodern}\\
+  \#3 & integer & point size at which the font should be loaded\\
+\end{argtable}
+
+\macroname{\textbackslash nabcneumesnippet}{[\optional{\#1}]\{\#2\}}{gregoriotex-nabc.tex}
+Typesets ancient notation glyphs on their own, with no square notation and no
+staff, at the point where the macro appears.
+
+\begin{argtable}
+  \#1 & integer & Optional. The nabc voice whose font is to be used: 1
+  (default) or 2.\\
+  \#2 & string & The \texttt{nabc} syntax which indicates what neumes are to
+  be printed.\\
+\end{argtable}
+
+\medskip For example:\par\medskip
+\begin{latexcode}
+  the virga \nabcneumesnippet{vi} and the pes \nabcneumesnippet{pe}, and the
+  same in Laon: {\grenabcfont[1]{grelaon}{10}\nabcneumesnippet{vi}
+  \nabcneumesnippet{pe}}
+\end{latexcode}
 
 \subsubsection{Alterations (Flats, Naturals, and Sharps)}\label{setalterationeffect}
 

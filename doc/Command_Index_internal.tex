@@ -316,6 +316,61 @@ argument.
   \#2 & string & Relative or absolute path to the score.\\
 \end{argtable}
 
+\macroname{\textbackslash gre@snippet@build}{\#1\#2\#3}{gregoriotex-snippet.tex}
+The common engine of the inline snippet macros.  It typesets the snippet as an
+ordinary score paragraph inside a \verb=\vbox= whose \verb=\hsize= is huge
+(roughly \verb=\maxdimen= divided by two: wide enough that the paragraph cannot
+break, small enough that dimension arithmetic cannot overflow), so that
+\verb=\parfillskip= absorbs all the slack; the \texttt{trimmed} last line mode
+then makes the Lua layer set the staff lines to the natural width of the
+score.  \verb=gregoriotex.finish_inline_snippet= extracts the single line of
+that paragraph and repacks it as an \verb=\hbox= of natural width, which is
+finally placed in the enclosing paragraph.
+
+\begin{argtable}
+  \#1 & string & Extra gabc headers, or empty.\\
+  \#2 & code & Additional settings applied inside the snippet group.\\
+  \#3 & string & The gabc body of the snippet.\\
+\end{argtable}
+
+\macroname{\textbackslash gre@snippet@settings}{}{gregoriotex-snippet.tex}
+The paragraph settings applied inside the \verb=\vbox= in which a snippet is
+typeset.
+
+\macroname{\textbackslash gre@snippet@hook}{}{gregoriotex-snippet.tex}
+The user hook set by \verb=\gresetinlinesnippethook=, run inside the snippet
+group just before the score itself.
+
+\macroname{\textbackslash gre@snippet@savestate}{}{gregoriotex-snippet.tex}
+Records the settings which a snippet may change globally (the end-of-line
+custos, the staff size and whether the staff dimensions are zeroed), so that
+\verb=\gre@snippet@restorestate= can put them back.  A \TeX\ group is not
+enough, since those settings are set with \verb=\global=.
+
+\macroname{\textbackslash gre@snippet@restorestate}{}{gregoriotex-snippet.tex}
+Restores what \verb=\gre@snippet@savestate= recorded and recomputes the
+derived distances with the outer \verb=\hsize= in force.
+
+\macroname{\textbackslash gre@snippet@restorezero}{}{gregoriotex-snippet.tex}
+Set by \verb=\gre@snippet@savestate= to \verb=\gre@staffdimensions@dozero= or
+\verb=\gre@staffdimensions@unzero=, whichever puts back the staff dimension
+zeroing in force before the snippet.
+
+\macroname{\textbackslash gre@inlinesnippet@option}{[\#1]\#2}{gregoriotex-snippet.tex}
+Internal to \verb=\gabcinlinesnippet=.
+
+\macroname{\textbackslash gre@neumesnippet@option}{[\#1]\#2}{gregoriotex-snippet.tex}
+Internal to \verb=\gabcneumesnippet=.
+
+\macroname{\textbackslash gre@neumesnippet@settings}{}{gregoriotex-snippet.tex}
+The settings which turn a snippet into a bare neume: invisible staff lines,
+invisible clef, and no space reserved for the missing clef.  Making the staff
+lines invisible zeroes the staff dimensions, which collapses the score onto
+the text baseline without affecting the shape of the neume, since the pitch
+offsets computed by \verb=\gre@calculate@glyphraisevalue= derive from
+\verb=\gre@dimen@interstafflinedistancebase= rather than from
+\verb=\gre@dimen@interstafflinespace=.
+
 \macroname{\textbackslash gre@writemode}{\#1\#2\#3}{gregoriotex-main.tex}
 Macro that writes its arguments with \verb=\greannotation=.  This
 macro is typically called by \verb=\GreMode= in the gtex file.
@@ -1439,6 +1494,22 @@ Prints the nabc glyphs for the given nabc string.
   \#2 & string & The \texttt{nabc} syntax which indicates what neumes are to be printed.\\
 \end{argtable}
 
+\macroname{\textbackslash gre@nabc@printchar}{\#1\#2\#3}{gregoriotex-nabc.tex}
+Common implementation of \verb|\gre@nabcvoicechar| and
+\verb|\gre@nabcneumesnippet|: selects the font of a nabc voice and prints a
+nabc string with it.  The above-lines and below-lines styles are meant for
+positioning inside a score, so \verb|\nabcneumesnippet| asks for them to be
+skipped.
+
+\begin{argtable}
+  \#1 & integer & the voice whose above/below-lines style is applied, or \texttt{0} for none\\
+  \#2 & integer & the voice whose font is used\\
+  \#3 & string & The \texttt{nabc} syntax which indicates what neumes are to be printed.\\
+\end{argtable}
+
+\macroname{\textbackslash gre@nabcneumesnippet}{[\#1]\{\#2\}}{gregoriotex-nabc.tex}
+Internal to \verb|\nabcneumesnippet|.
+
 \macroname{\textbackslash gre@nabc@prepare}{\#1\#2}{gregoriotex-main.tex}
 Phase 1 of NABC two-phase processing: pre-evaluates NABC content, tracks the maximum NABC width in \verb=\gre@dimen@nabc@maxwidth= for right-overflow detection by \verb=\gre@compute@nabc@extrakern=, emits note-level kern for left overflow (in \texttt{neume} alignment mode) unless \verb=\ifgre@nabc@suppress@leftoverflow= is true, and saves the rendered content in a box register.
 
@@ -1556,12 +1627,34 @@ The font for some of the extra characters, such as the bar for barred letters.
 The font for ancient notation.
 
 \macroname{\textbackslash gre@setnabcvoicefont}{[\optional{\#1}]\{\#2\#3\}}{gregoriotex-nabc.tex}
-Prints the nabc glyphs for the given nabc string.
+Internal to \verb|\gresetnabcfont|: selects the font of a nabc voice globally.
 
 \begin{argtable}
   \#1 & integer & Optional. The nabc voice: 1 (default) = above staff, 2 = below staff.\\
   \#2 & string & the name of the font, either \texttt{gregall}, \texttt{grelaon}, or \texttt{gresgmodern}\\
   \#3 & integer & point size at which the font should be loaded\\
+\end{argtable}
+
+\macroname{\textbackslash gre@nabcvoicefont@local}{[\optional{\#1}]\{\#2\#3\}}{gregoriotex-nabc.tex}
+Internal to \verb|\grenabcfont|: same as \verb|\gre@setnabcvoicefont|, but the
+selection is local to the current \TeX\ group.
+
+\macroname{\textbackslash gre@nabcvoicefont@do}{\#1\#2\#3\#4}{gregoriotex-nabc.tex}
+Common implementation of \verb|\gre@setnabcvoicefont| and
+\verb|\gre@nabcvoicefont@local|.
+
+\begin{argtable}
+  \#1 & code & \verb|\global| for a global selection, empty for a local one\\
+  \#2 & integer & the nabc voice\\
+  \#3 & string & the name of the font\\
+  \#4 & integer & point size at which the font should be loaded\\
+\end{argtable}
+
+\macroname{\textbackslash gre@nabc@ensurefont}{\#1}{gregoriotex-nabc.tex}
+Loads the default font of a nabc voice if no font has been selected for it yet.
+
+\begin{argtable}
+  \#1 & integer & the nabc voice\\
 \end{argtable}
 
 
@@ -1756,14 +1849,14 @@ number of lines for the staff.
 Alias that will hold the character for the dotted divisio maior backing for the
 current number of lines for the staff.
 
-\macroname{\textbackslash gre@nabccharno}{\#1\#2\#3\#4}{gregoriotex-nabc.tex}
-Prints the nabc glyphs for the given nabc string.
+\macroname{\textbackslash gre@nabccharno}{\#1\#2\#3}{gregoriotex-nabc.tex}
+Prints the nabc glyphs for the given nabc string.  The scaling factor applied
+to the font metrics is derived from the size of the currently selected font.
 
 \begin{argtable}
   \#1 & string & nabc code representing the character\\
   \#2 & string & name of nabc font to use\\
-  \#3 & integer & scaling factor\\
-  \#4 & integer & voice number (1 = above staff, 2 = below staff)\\
+  \#3 & integer & voice number (1 = above staff, 2 = below staff)\\
 \end{argtable}
 
 
@@ -2243,6 +2336,12 @@ Box for saving NABC voice 1 (above staff) content between phase 1 (prepare) and 
 \macroname{\textbackslash gre@box@nabc@voice@ii}{}{gregoriotex-nabc.tex}
 Box for saving NABC voice 2 (below staff) content between phase 1 (prepare) and phase 2 (place) of the two-phase processing. The two-phase approach ensures all note-level kerns are emitted before any voice hbox is placed, guaranteeing correct horizontal alignment.
 
+\macroname{\textbackslash gre@box@snippet}{}{gregoriotex-snippet.tex}
+Box in which an inline snippet is built.  It first holds the \verb=\vbox= in
+which the snippet is typeset as an ordinary score paragraph, and is then
+replaced by the single line of that paragraph, repacked at its natural width
+by \verb=gregoriotex.finish_inline_snippet=.
+
 
 \subsection{Protrusion factors}
 
@@ -2399,6 +2498,10 @@ Dimension for communicating NABC left overflow from Lua to \TeX. When NABC align
 
 \macroname{\textbackslash gre@dimen@nabckernemitted}{}{gregoriotex-nabc.tex}
 Tracks the total kern emitted at the note level across all NABC voices for the current syllable. Used to coordinate left overflow handling between voice 1 (above staff) and voice 2 (below staff), ensuring that only the maximum overflow is applied. Reset to 0pt after each syllable.
+
+\macroname{\textbackslash gre@dimen@snippetraise}{}{gregoriotex-snippet.tex}
+The vertical offset applied to inline snippets, set by
+\verb=\gresetinlinesnippetraise=.
 
 \macroname{\textbackslash greslurheight}{}{gregoriotex-signs.tex}
 Stores the computed height of a variable-length slur.  The control sequence name
