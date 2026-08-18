@@ -57,11 +57,10 @@
 
 % #1: NABC string
 % #2: font name
-% #3: scale
-% #4: voice number
-\def\gre@nabccharno#1#2#3#4{%
-  \gre@trace{gre@nabccharno{#1}{#2}{#3}{#4}}%
-  {\directlua{gregoriotex.print_nabc(gregoriotex.parse_nabc("#1", "\luaescapestring{#2}", #3, #4))}}%
+% #3: voice number
+\def\gre@nabccharno#1#2#3{%
+  \gre@trace{gre@nabccharno{#1}{#2}{#3}}%
+  {\directlua{gregoriotex.print_nabc(gregoriotex.parse_nabc("#1", "\luaescapestring{#2}", #3))}}%
   \gre@trace@end%
 }
 
@@ -75,7 +74,7 @@
   \csname gre@font@nabcvoice@\romannumeral#1\endcsname
   \gre@style@nabc
   \ifcase#1\relax\or\gre@style@abovelinesnabc\or\gre@style@belowlinesnabc\fi
-  \gre@nabccharno{#2}{\csname gre@nabcvoice@\romannumeral#1@fontname\endcsname}{1}{#1}%
+  \gre@nabccharno{#2}{\csname gre@nabcvoice@\romannumeral#1@fontname\endcsname}{#1}%
   \ifcase#1\relax\or\endgre@style@abovelinesnabc\or\endgre@style@belowlinesnabc\fi
   \endgre@style@nabc
 }}
