@@ -774,7 +774,12 @@ local function bar_syllable_spacing(prev, cur, next)
   -- The end of the text and notes of the previous syllable.
   local prev_text_end, prev_notes_end = get_prev_ends(prev, cur)
 
-  if prev and prev.syllablefinalskip then
+  -- In most cases, the preceding syllable doesn't have
+  -- syllablefinalskip. In the few exceptional cases, we treat the
+  -- syllablefinalskip as if it were part of the previous text and
+  -- notes.
+  -- Also, if the preceding syllable is a bar syllable, ignore its syllablefinalskip.
+  if prev and prev.syllablefinalskip and prev.type == 'note' then
     local width = prev.syllablefinalskip.width or prev.syllablefinalskip.kern
     prev_text_end = prev_text_end + width
     prev_notes_end = prev_notes_end + width
