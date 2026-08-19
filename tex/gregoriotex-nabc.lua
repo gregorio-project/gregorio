@@ -108,16 +108,32 @@ local gregalltab = {}
 local gregallmetrics = {}
 local gregallfontsize = {}
 
+-- Design size of a loaded font, by font id.  nabc_font_scale runs once per
+-- parsed NABC string, i.e. once per neume, so the font table is looked up only
+-- the first time each font id is seen.  'false' records "this font has no
+-- size", so that a negative answer is cached too.
+local fontsize_by_id = {}
+local function current_font_size()
+  local id = font.current()
+  local size = fontsize_by_id[id]
+  if size == nil then
+    local fontdata = font.getfont(id)
+    size = fontdata and fontdata.size or false
+    fontsize_by_id[id] = size
+  end
+  return size
+end
+
 -- Factor by which the cached metrics of a NABC font must be multiplied to
 -- match the font currently selected.  This makes it possible to use the same
 -- NABC font at several sizes in one document.
 local function nabc_font_scale(fontname)
   local reference = gregallfontsize[fontname]
-  local current = font.getfont(font.current())
-  if not reference or reference == 0 or not current or not current.size then
+  local current = current_font_size()
+  if not reference or reference == 0 or not current then
     return 1
   end
-  return current.size / reference
+  return current / reference
 end
 
 -- NABC alignment mode (per-voice, with global default):

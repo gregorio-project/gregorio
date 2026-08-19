@@ -1467,7 +1467,7 @@ local function ensure_dir(dir)
   if not ok then
     info('Could not create directory %s: %s', dir, message)
   end
-  return ok and true or false
+  return ok
 end
 
 local function include_score(gabc_file, force_gabccompile, allow_deprecated)
@@ -1559,6 +1559,12 @@ end
 -- compilation spawns a gregorio process, so the result is memoized for the
 -- run and, when the compilation was clean, kept in the output directory for
 -- subsequent runs.
+--
+-- Editing a snippet changes its digest, hence its cache file name, so the file
+-- compiled from the previous text is left behind in the output directory: the
+-- on-disk cache only ever grows.  That directory is disposable, so this is not
+-- worth reference-counting, but it does mean its size tracks the number of
+-- distinct snippet revisions ever compiled, not the number in the document.
 local snippet_cache = {}
 
 -- Name of the on-disk cache file for a snippet, or nil if the output
@@ -1622,27 +1628,29 @@ local function direct_gabc(gabc, header, allow_deprecated)
   else
     print_snippet(key, content)
   end
-  local clean = true
+  -- Anything gregorio has to say about the snippet is appended to its log.
+  -- 'clean' starts false so that only the path which actually proves the log
+  -- empty enables caching below.
+  local clean = false
   local glog = io.open(snippet_logname, 'a+')
   if glog == nil then
     err("\n Unable to open %s", snippet_logname)
-    clean = false
   else
     local size = glog:seek('end')
     if size > 0 then
-      clean = false
       glog:seek('set')
-      local line
       for line in glog:lines() do
         warn(line)
       end
       warn("*** end of warnings/errors processing snippet ***")
+    else
+      clean = true
     end
     glog:close()
   end
   -- Only cache clean compilations on disk: a snippet which produced warnings
   -- must be recompiled on every run so that its warnings keep being reported.
-  if content ~= nil and clean and cache_file then
+  if clean and cache_file then
     delete_versioned_files(base_output_dir..'/', 'snippet%-'..key, 'gtex')
     local cache = io.open(cache_file, 'w')
     if cache then
@@ -1732,11 +1740,18 @@ local function finish_inline_snippet(boxnum)
   local head = line.head
   line.head = nil
   local hbox = hpack(head)
-  -- Only needed for the multi-line fallback above: its staff was stretched
-  -- to the snippet's oversized \hsize instead of the discarded lines' width.
-  set_part_widths(hbox, hbox.width)
+  if lines > 1 then
+    -- Only needed for the multi-line fallback above: the kept line's staff was
+    -- stretched to the snippet's oversized \hsize instead of stopping at the
+    -- discarded line break.  On a single line adjust_fullwidth has already
+    -- trimmed it to the natural width, which is exactly hbox.width.
+    set_part_widths(hbox, hbox.width)
+  end
   strip_score_attributes(hbox)
   drop_to_baseline(hbox)
+  -- Assigning the register flushes the vbox it held, which is what disposes of
+  -- the emptied line shell and, in the multi-line case, of the discarded lines.
+  -- Do not flush it here as well: that would be a double free.
   tex.setbox(boxnum, hbox)
 end
 
