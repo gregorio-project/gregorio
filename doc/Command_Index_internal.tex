@@ -316,6 +316,40 @@ argument.
   \#2 & string & Relative or absolute path to the score.\\
 \end{argtable}
 
+\macroname{\textbackslash gre@boxedscore@build}{\#1}{gregoriotex-main.tex}
+The common engine of \verb=\boxedgregorioscore=.  It sets \verb=\hsize= (to
+\verb=\gre@dimen@boxedscorewidth= unless \verb=\ifgre@boxedscorewidth@auto=
+is true, in which case the ambient \verb=\hsize= is kept) inside a
+\verb=\vtop=, then runs \#1 inside it.  Since \verb=\GreBeginScore= and
+\verb=\GreEndScore= make no assumption about \verb=\hsize= beyond using it,
+this is enough to confine an ordinary score paragraph, initial letter and
+all, to the given width.
+
+\begin{argtable}
+  \#1 & code & Code which typesets the score itself, e.g.\
+  \verb=\gregorioscore{name}=.\\
+\end{argtable}
+
+\macroname{\textbackslash gre@boxedgregorioscore}{\#1}{gregoriotex-main.tex}
+Macro that handles \verb=\boxedgregorioscore= calls when they do not have an
+optional argument.
+
+\begin{argtable}
+  \#1 & string & Relative or absolute path to the score.\\
+\end{argtable}
+
+\macroname{\textbackslash gre@boxedgregorioscore@option}{[\#1]\#2}{gregoriotex-main.tex}
+Macro that handles \verb=\boxedgregorioscore= calls when they have an
+optional argument.  Behaves exactly like \verb=\gre@gregorioscore@option=,
+forwarding \#1 and \#2 to \verb=\gregorioscore= inside
+\verb=\gre@boxedscore@build=.
+
+\begin{argtable}
+  \#1 & \texttt{n}/\texttt{a}/\texttt{f} & Same meaning as for
+  \verb=\gregorioscore=.\\
+  \#2 & string & Relative or absolute path to the score.\\
+\end{argtable}
+
 \macroname{\textbackslash gre@snippet@build}{\#1\#2\#3}{gregoriotex-snippet.tex}
 The common engine of the inline snippet macros.  It typesets the snippet as an
 ordinary score paragraph inside a \verb=\vbox= whose \verb=\hsize= is huge
@@ -1639,6 +1673,12 @@ Internal to \verb|\gresetnabcfont|: selects the font of a nabc voice globally.
 Internal to \verb|\grenabcfont|: same as \verb|\gre@setnabcvoicefont|, but the
 selection is local to the current \TeX\ group.
 
+\begin{argtable}
+  \#1 & integer & Optional. The nabc voice: 1 (default) = above staff, 2 = below staff.\\
+  \#2 & string & the name of the font\\
+  \#3 & integer & point size at which the font should be loaded\\
+\end{argtable}
+
 \macroname{\textbackslash gre@nabcvoicefont@do}{\#1\#2\#3\#4}{gregoriotex-nabc.tex}
 Common implementation of \verb|\gre@setnabcvoicefont| and
 \verb|\gre@nabcvoicefont@local|.
@@ -1876,6 +1916,12 @@ Count used to indicate which part of the annotation control line should be initi
 
 \macroname{\textbackslash ifgre@forcehyphen}{}{gregoriotex-main.tex}
 Boolean used to indicate if hyphens should be forced between all syllables in a polysyllabic word.
+
+\macroname{\textbackslash ifgre@boxedscorewidth@auto}{}{gregoriotex-main.tex}
+Boolean used to indicate whether \verb=\boxedgregorioscore= should use the
+ambient \verb=\hsize= (true, the default) or the width set by
+\verb=\gresetboxedscorewidth= (false).  Set by \verb=\gresetboxedscorewidth=
+and \verb=\gresetboxedscorewidthauto=.
 
 \macroname{\textbackslash ifgre@checklength}{}{gregoriotex-spaces.tex}
 Boolean used in \verb=\gresetdim= to indicate if we are attempting to set a rubber length.
@@ -2502,6 +2548,11 @@ Tracks the total kern emitted at the note level across all NABC voices for the c
 \macroname{\textbackslash gre@dimen@snippetraise}{}{gregoriotex-snippet.tex}
 The vertical offset applied to inline snippets, set by
 \verb=\gresetinlinesnippetraise=.
+
+\macroname{\textbackslash gre@dimen@boxedscorewidth}{}{gregoriotex-main.tex}
+The width at which \verb=\boxedgregorioscore= typesets its score, set by
+\verb=\gresetboxedscorewidth=.  Only used when \verb=\ifgre@boxedscorewidth@auto=
+is false.
 
 \macroname{\textbackslash greslurheight}{}{gregoriotex-signs.tex}
 Stores the computed height of a variable-length slur.  The control sequence name
