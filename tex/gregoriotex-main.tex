@@ -2044,6 +2044,63 @@
 % checked by the lua function 'include_score'. This does not bypass
 % the API version test done by '\GregorioTeXAPIVersion'.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% \boxedgregorioscore: a \gregorioscore confined to a given width, e.g. for
+%% use in a table cell or a list item, or anywhere else a score needs an
+%% explicit width other than the page's (\gresetboxedscorewidth).  A raw
+%% \gregorioscore does not typeset reliably in either of the first two: its
+%% staff lines can come out wrong in a table cell (tabularx/p{} column), and
+%% it ignores a list item's indentation altogether; this thin \vtop wrapper
+%% avoids both.  Line-breaking, the initial letter (including multi-line
+%% initials), illumination, and annotation all work exactly as they do for
+%% an ordinary \gregorioscore.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Whether \boxedgregorioscore should use \linewidth (true, the default) or
+%% the width set by \gresetboxedscorewidth (false).  \linewidth, not \hsize,
+%% is what LaTeX keeps in sync with the width actually available on the
+%% line: table cells and parboxes set both alike, but a list item narrows
+%% only \linewidth, doing its indentation with \leftskip instead of \hsize.
+\newif\ifgre@boxedscorewidth@auto
+\gre@boxedscorewidth@autotrue
+\newdimen\gre@dimen@boxedscorewidth
+
+% See Command_Index_User.tex for documentation.
+\def\gresetboxedscorewidth#1{%
+  \gre@boxedscorewidth@autofalse
+  \gre@dimen@boxedscorewidth=#1\relax
+}%
+% See Command_Index_User.tex for documentation.
+\def\gresetboxedscorewidthauto{%
+  \gre@boxedscorewidth@autotrue
+}%
+
+%% #1: code which typesets the score itself, e.g. \gregorioscore{name}
+\long\def\gre@boxedscore@build#1{%
+  \gre@trace{gre@boxedscore@build}%
+  \leavevmode
+  \vtop{%
+    \ifgre@boxedscorewidth@auto
+      \hsize=\linewidth\relax
+    \else
+      \hsize=\gre@dimen@boxedscorewidth\relax
+    \fi
+    #1%
+  }%
+  \gre@trace@end%
+}%
+
+% See Command_Index_User.tex for documentation.
+\def\boxedgregorioscore{\@ifnextchar[{\gre@boxedgregorioscore@option}%
+    {\gre@boxedgregorioscore}%
+}%
+\def\gre@boxedgregorioscore#1{%
+  \gre@boxedscore@build{\gregorioscore{#1}}%
+}%
+\def\gre@boxedgregorioscore@option[#1]#2{%
+  \gre@boxedscore@build{\gregorioscore[#1]{#2}}%
+}%
+
 % Macros for compiling short snippets of GABC directly expressed in TeX
 
 \long\def\gabcsnippet#1{%
@@ -2108,3 +2165,4 @@
 \greloadspaceconf{default}%
 
 \input gregoriotex-nabc.tex
+\input gregoriotex-snippet.tex

@@ -25,6 +25,8 @@ gregoriotex = gregoriotex or {}
 local gregoriotex = gregoriotex
 
 local internalversion = '6.2.0' -- GREGORIO_VERSION (comment used by VersionManager.py)
+-- Version stamp put into the name of every generated file.
+local version_suffix = internalversion:gsub("%.", "_")
 
 local err, warn, info, log = luatexbase.provides_module({
     name               = "gregoriotex",
@@ -553,8 +555,28 @@ end
 
 gregoriotex.module.debugmessage = debugmessage
 
--- Find stafflines and commentary, which are meant to take up the full
--- line width, and adjust them to actually take up the full line
+-- Find stafflines and commentary, which are meant to take up the full line
+-- width, and set them to the given width.
+local function set_part_widths(cur, width)
+  for child in node.traverse_list(cur.head) do
+    local attr = has_attribute(child, part_attr)
+    if attr == part_commentary or attr == part_stafflines then
+      debugmessage("adjust_fullwidth", "width %spt -> %spt", child.width/2^16, width/2^16)
+      if child.id == hlist then
+        local repacked = node.hpack(child.head, width, 'exactly')
+        repacked.shift = child.shift
+        cur.head = node.insert_before(cur.head, child, repacked)
+        cur.head = node.remove(cur.head, child)
+      else
+        child.width = width
+      end
+    else
+      set_part_widths(child, width)
+    end
+  end
+end
+
+-- Adjust the full-width parts of a line to actually take up the full line
 -- width.
 local function adjust_fullwidth (line)
   -- Determine line width, ignoring \leftskip and \rightskip
@@ -571,26 +593,7 @@ local function adjust_fullwidth (line)
   end
   debugmessage("adjust_fullwidth", "line width %spt", line_width/2^16)
 
-  local function visit(cur)
-    for child in node.traverse_list(cur.head) do
-      local attr = has_attribute(child, part_attr)
-      if attr == part_commentary or attr == part_stafflines then
-        debugmessage("adjust_fullwidth", "width %spt -> %spt", child.width/2^16, line_width/2^16)
-        if child.id == hlist then
-          local new = node.hpack(child.head, line_width, 'exactly')
-          new.shift = child.shift
-          cur.head = node.insert_before(cur.head, child, new)
-          cur.head = node.remove(cur.head, child)
-        else
-          child.width = line_width
-        end
-      else
-        visit(child)
-      end
-    end
-  end
-
-  visit(line)
+  set_part_widths(line, line_width)
 end
 
 local function find_attr(cur, attr, val)
@@ -1457,6 +1460,16 @@ if lfs.mkdirp == nil then
   end
 end
 
+-- Create dir if it does not exist yet; returns whether it is usable.
+local function ensure_dir(dir)
+  if lfs.exists(dir) then return true end
+  local ok, message = lfs.mkdirp(dir)
+  if not ok then
+    info('Could not create directory %s: %s', dir, message)
+  end
+  return ok
+end
+
 local function include_score(gabc_file, force_gabccompile, allow_deprecated)
   gabc_file = lfs.normalize(gabc_file)
   
@@ -1488,18 +1501,11 @@ local function include_score(gabc_file, force_gabccompile, allow_deprecated)
   end
   output_dir = table.concat(output_dir, '/')
   info('Output directory: %s', output_dir)
-  if not lfs.exists(output_dir) then
-    local ok, message = lfs.mkdirp(output_dir)
-    if not ok then
-      info('Could not create directory %s: %s', output_dir, message)
-    end
-  end
-    
+  ensure_dir(output_dir)
+
   -- Choose output filenames
-  gtex_file = string.format("%s%s-%s.gtex", output_dir, base_cleaned,
-                            internalversion:gsub("%.", "_"))
-  glog_file = string.format("%s%s-%s.glog", output_dir, base_cleaned,
-                            internalversion:gsub("%.", "_"))
+  gtex_file = string.format("%s%s-%s.gtex", output_dir, base_cleaned, version_suffix)
+  glog_file = string.format("%s%s-%s.glog", output_dir, base_cleaned, version_suffix)
 
   -- Decide if we need to recompile
   local needs_compile = false
@@ -1548,16 +1554,68 @@ local function include_score(gabc_file, force_gabccompile, allow_deprecated)
   tex.print(string.format([[\input %s\relax]], gtex_file))
 end
 
+-- Compiled snippets, keyed by a digest of the gabc source.  Snippets are
+-- typically small and repeated (inline snippets in running text), and each
+-- compilation spawns a gregorio process, so the result is memoized for the
+-- run and, when the compilation was clean, kept in the output directory for
+-- subsequent runs.
+--
+-- Editing a snippet changes its digest, hence its cache file name, so the file
+-- compiled from the previous text is left behind in the output directory: the
+-- on-disk cache only ever grows.  That directory is disposable, so this is not
+-- worth reference-counting, but it does mean its size tracks the number of
+-- distinct snippet revisions ever compiled, not the number in the document.
+local snippet_cache = {}
+
+-- Name of the on-disk cache file for a snippet, or nil if the output
+-- directory is not usable.
+local function snippet_cache_file(key)
+  local dir = base_output_dir..'/'
+  if not ensure_dir(dir) then return nil end
+  return string.format("%ssnippet-%s-%s.gtex", dir, key, version_suffix)
+end
+
+-- Memoize a compiled snippet and hand it to TeX.
+local function print_snippet(key, content)
+  snippet_cache[key] = content:explode('\n')
+  tex.print(snippet_cache[key])
+end
+
 local function direct_gabc(gabc, header, allow_deprecated)
+  -- trims spaces on both ends (trim6 from http://lua-users.org/wiki/StringTrim)
+  gabc = gabc:match('^()%s*$') and '' or gabc:match('^%s*(.*%S)')
+  local source = 'name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par', '\n')
+  local key = md5.sumhexa(source..'\0'..(allow_deprecated and '1' or '0'))
+
+  local cached = snippet_cache[key]
+  if cached then
+    debugmessage('snippet', 'reusing snippet %s from memory', key)
+    tex.print(cached)
+    return
+  end
+
+  local cache_file = snippet_cache_file(key)
+  if cache_file and lfs.exists(cache_file) then
+    local cache = io.open(cache_file, 'r')
+    if cache then
+      local content = cache:read('*a')
+      cache:close()
+      if content and content ~= '' then
+        debugmessage('snippet', 'reusing snippet %s from %s', key, cache_file)
+        kpse.record_input_file(cache_file)
+        print_snippet(key, content)
+        return
+      end
+    end
+  end
+
   info('Processing gabc snippet...')
   kpse.record_output_file(snippet_filename)
   local f = io.open(snippet_filename, 'w')
-  -- trims spaces on both ends (trim6 from http://lua-users.org/wiki/StringTrim)
-  gabc = gabc:match('^()%s*$') and '' or gabc:match('^%s*(.*%S)')
-  f:write('name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par', '\n'))
+  f:write(source)
   f:close()
   cmd = {gregorio_exe(), '-W'}
-  if allow_deprecated then table.insert(cmd, '-D') end
+  if not allow_deprecated then table.insert(cmd, '-D') end
   table.extend(cmd, {'-o', tmpname, '-l', snippet_logname, snippet_filename})
   info('Running %s', table.concat(cmd, ' '))
   local content = get_prog_output(cmd, tmpname, '*a')
@@ -1568,8 +1626,12 @@ local function direct_gabc(gabc, header, allow_deprecated)
         .."See the documentation of Gregorio or your TeX\n"
         .."distribution to automatize it.", cmd, tex.formatname, tex.jobname)
   else
-    tex.print(content:explode('\n'))
+    print_snippet(key, content)
   end
+  -- Anything gregorio has to say about the snippet is appended to its log.
+  -- 'clean' starts false so that only the path which actually proves the log
+  -- empty enables caching below.
+  local clean = false
   local glog = io.open(snippet_logname, 'a+')
   if glog == nil then
     err("\n Unable to open %s", snippet_logname)
@@ -1577,18 +1639,120 @@ local function direct_gabc(gabc, header, allow_deprecated)
     local size = glog:seek('end')
     if size > 0 then
       glog:seek('set')
-      local line
       for line in glog:lines() do
         warn(line)
       end
       warn("*** end of warnings/errors processing snippet ***")
+    else
+      clean = true
     end
     glog:close()
+  end
+  -- Only cache clean compilations on disk: a snippet which produced warnings
+  -- must be recompiled on every run so that its warnings keep being reported.
+  if clean and cache_file then
+    delete_versioned_files(base_output_dir..'/', 'snippet%-'..key, 'gtex')
+    local cache = io.open(cache_file, 'w')
+    if cache then
+      cache:write(content)
+      cache:close()
+      kpse.record_output_file(cache_file)
+    end
   end
   if not (debug_types_activated['snippet'] or debug_types_activated['all']) then
     os.remove(snippet_filename)
     os.remove(snippet_logname)
   end
+end
+
+-- Strip attributes that only make sense while a score is being typeset, so a
+-- finished snippet's box is inert if it ends up nested inside another
+-- score's paragraph (post_linebreak would otherwise stretch its staff lines).
+local function strip_score_attributes(n)
+  node.unset_attribute(n, part_attr)
+  node.unset_attribute(n, center_attr)
+  if n.id == hlist or n.id == vlist then
+    for child in traverse(n.head) do
+      strip_score_attributes(child)
+    end
+  end
+end
+
+-- Whether a node list leaves any mark on the page: an empty lyric box or an
+-- invisible staff still reaches down to the baseline, and must not be
+-- mistaken for the bottom of the snippet.
+local function has_ink(head)
+  for n in traverse(head) do
+    if n.id == glyph or n.id == rule then
+      return true
+    elseif (n.id == hlist or n.id == vlist) and has_ink(n.head) then
+      return true
+    end
+  end
+  return false
+end
+
+-- Pull a snippet box down onto its baseline. A score line reserves room
+-- below the notes for lyrics that a bare neume doesn't have, which would
+-- otherwise spoil the leading of the surrounding paragraph.
+local function drop_to_baseline(hbox)
+  local top, bottom = nil, nil
+  for n in traverse(hbox.head) do
+    if (n.id == hlist or n.id == vlist) and has_ink(n.head) then
+      -- shift is positive downwards
+      if top == nil or n.shift - n.height < top then top = n.shift - n.height end
+      if bottom == nil or n.shift + n.depth > bottom then bottom = n.shift + n.depth end
+    end
+  end
+  -- Nothing to do unless the whole snippet floats above the baseline.
+  if bottom == nil or bottom >= 0 then return end
+  debugmessage('snippet', 'dropping snippet contents by %spt', -bottom/2^16)
+  for n in traverse(hbox.head) do
+    if n.id == hlist or n.id == vlist then
+      n.shift = n.shift - bottom
+    end
+  end
+  hbox.height = bottom - top
+  hbox.depth = 0
+end
+
+-- Turn the vbox built by an inline snippet (an oversized-\hsize score
+-- paragraph, so it never breaks) into a single hbox of natural width.
+-- boxnum is the box register holding the vbox; it receives the hbox.
+local function finish_inline_snippet(boxnum)
+  local vbox = tex.getbox(boxnum)
+  if vbox == nil then
+    err("An inline gabc snippet produced no material")
+    return
+  end
+  local lines = count(hlist, vbox.head)
+  if lines == 0 then
+    warn("An inline gabc snippet produced no score line")
+    tex.setbox(boxnum, node.new(hlist))
+    return
+  end
+  if lines > 1 then
+    warn("An inline gabc snippet spans %d lines; keeping the first one only.\n"
+        .."Remove the 'z' or 'Z' line breaks from the snippet.", lines)
+  end
+  local line = vbox.head
+  while line.id ~= hlist do line = line.next end
+  local head = line.head
+  line.head = nil
+  local hbox = hpack(head)
+  if lines > 1 then
+    -- Only needed for the multi-line fallback above: the kept line's staff was
+    -- stretched to the snippet's oversized \hsize instead of stopping at the
+    -- discarded line break.  On a single line adjust_fullwidth has already
+    -- trimmed it to the natural width, which is exactly hbox.width.
+    set_part_widths(hbox, hbox.width)
+  end
+  strip_score_attributes(hbox)
+  drop_to_baseline(hbox)
+  -- Assigning the register flushes the vbox it held, which is what disposes of
+  -- the emptied line shell and, in the multi-line case, of the discarded lines.
+  -- Do not flush it here as well: that would be a double free.
+  tex.setbox(boxnum, hbox)
 end
 
 local function get_gregoriotexluaversion()
@@ -2057,6 +2221,7 @@ gregoriotex.set_font_factor              = set_font_factor
 gregoriotex.def_symbol                   = def_symbol
 gregoriotex.font_size                    = font_size
 gregoriotex.direct_gabc                  = direct_gabc
+gregoriotex.finish_inline_snippet        = finish_inline_snippet
 gregoriotex.var_brace_len                = var_brace_len
 gregoriotex.save_length                  = save_length
 gregoriotex.width_to_bp                  = width_to_bp

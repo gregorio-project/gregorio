@@ -103,8 +103,38 @@ local function gregallreadfont(fontname, font_id)
   return tab, metrics
 end
 
+-- The three tables below are indexed by font name; see init_font.
 local gregalltab = {}
 local gregallmetrics = {}
+local gregallfontsize = {}
+
+-- Design size of a loaded font, by font id.  nabc_font_scale runs once per
+-- parsed NABC string, i.e. once per neume, so the font table is looked up only
+-- the first time each font id is seen.  'false' records "this font has no
+-- size", so that a negative answer is cached too.
+local fontsize_by_id = {}
+local function current_font_size()
+  local id = font.current()
+  local size = fontsize_by_id[id]
+  if size == nil then
+    local fontdata = font.getfont(id)
+    size = fontdata and fontdata.size or false
+    fontsize_by_id[id] = size
+  end
+  return size
+end
+
+-- Factor by which the cached metrics of a NABC font must be multiplied to
+-- match the font currently selected.  This makes it possible to use the same
+-- NABC font at several sizes in one document.
+local function nabc_font_scale(fontname)
+  local reference = gregallfontsize[fontname]
+  local current = current_font_size()
+  if not reference or reference == 0 or not current then
+    return 1
+  end
+  return current / reference
+end
 
 -- NABC alignment mode (per-voice, with global default):
 -- 'full' = align to left of entire complex glyph descriptor (default)
@@ -302,7 +332,11 @@ local add_spacing = function(str, len, idx, ret)
   return idx, ret
 end
 
-local gregallparse_neumes = function(str, kind, scale, voice)
+local gregallparse_neumes = function(str, kind, voice)
+  -- The metrics of a NABC font are read once, at the size the font had when it
+  -- was first loaded (see init_font), so every metric-derived raise and kern
+  -- has to be scaled to the size of the font actually selected.
+  local scale = nabc_font_scale(kind)
   local len = str:len()
   local idx = 1
   local ret = ''
@@ -477,7 +511,10 @@ end
 
 local function init_font(fontname)
   if not gregalltab[fontname] then
-    gregalltab[fontname], gregallmetrics[fontname] = gregallreadfont(fontname, font.current())
+    local id = font.current()
+    gregalltab[fontname], gregallmetrics[fontname] = gregallreadfont(fontname, id)
+    local fontdata = font.getfont(id)
+    gregallfontsize[fontname] = fontdata and fontdata.size or 0
   end
 end
 

@@ -174,6 +174,57 @@ snippet does not have any corresponding \texttt{nabc} neumes.  With
 \texttt{nabc-lines: 2;} the snippets ordering could be
 e.g.\ \texttt{(gabc|nabc1|nabc2|gabc|nabc1)}.
 
+\noindent\textbf{NABC neumes in running text}
+
+Three macros make it possible to show a neume in the middle of a sentence
+rather than as a display; see the \textit{Inline snippets} section of
+\textit{Gregorio\TeX{}: Command Index} for their full description.
+
+\verb|\gabcneumesnippet| typesets a bare neume, without staff lines and
+without a clef, optionally accompanied by nabc notation above (voice~1)
+and below (voice~2) it.  Its argument is what would appear between
+parentheses in a \texttt{gabc} file:
+
+\begin{verbatim}
+a torculus \gabcneumesnippet{fgf}, the same with its St. Gall
+notation above it \gabcneumesnippet[1]{fgf|to}, and with a
+tractulus below as well \gabcneumesnippet[2]{fgf|to|ta}
+\end{verbatim}
+
+\noindent
+gives: a torculus \gabcneumesnippet{fgf}, the same with its St.\ Gall
+notation above it \gabcneumesnippet[1]{fgf|to}, and with a tractulus below as
+well \gabcneumesnippet[2]{fgf|to|ta}.
+
+\verb|\gabcinlinesnippet| does the same for a fragment of real score, staff
+lines and clef included; the staff lines are trimmed to the width of the
+music.  Extra \texttt{gabc} headers may be given in its optional argument:
+
+\begin{verbatim}
+the incipit \gabcinlinesnippet[nabc-lines:1;]{%
+  (c3) A(f|ta)le(gh|pe)lú(g|vi)ia(f|ta) (::)} of the day
+\end{verbatim}
+
+\noindent
+gives: the incipit \gabcinlinesnippet[nabc-lines:1;]{%
+  (c3) A(f|ta)le(gh|pe)lú(g|vi)ia(f|ta) (::)} of the day.
+
+\verb|\nabcneumesnippet| typesets nabc glyphs on their own, with no square
+notation at all.  The font and its size are those of the nabc voice given as
+optional argument, so \verb|\grenabcfont|, which selects them for the current
+\TeX\ group only, can be used to pick them on the spot:
+
+\begin{verbatim}
+gregall at 8pt: \nabcneumesnippet{vi} \nabcneumesnippet{pe} \nabcneumesnippet{to},
+grelaon at 12pt: {\grenabcfont[1]{grelaon}{12}%
+  \nabcneumesnippet{vi} \nabcneumesnippet{pe} \nabcneumesnippet{to}}
+\end{verbatim}
+
+\noindent
+gives: gregall at 8pt: \nabcneumesnippet{vi} \nabcneumesnippet{pe} \nabcneumesnippet{to},
+grelaon at 12pt: {\grenabcfont[1]{grelaon}{12}%
+  \nabcneumesnippet{vi} \nabcneumesnippet{pe} \nabcneumesnippet{to}}.
+
 Each \texttt{nabc} snippet consists of a sequence of \textit{complex neume
 descriptors}.  Each \textit{complex neume descriptor} consists of
 optional \textit{horizontal spacing adjustment descriptor}, then \textit{complex glyph
