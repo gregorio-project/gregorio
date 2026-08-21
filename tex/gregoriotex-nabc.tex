@@ -45,40 +45,78 @@
 % #3: font size
 \def\gresetnabcfont{\@ifnextchar[{\gre@setnabcvoicefont}{\gre@setnabcvoicefont[1]}}%
 
-\def\gre@setnabcvoicefont[#1]#2#3{%
-  \expandafter\xdef\csname gre@nabcvoice@\romannumeral#1@fontname\endcsname{#2}%
-  \expandafter\font\csname gre@font@nabcvoice@\romannumeral#1\endcsname={name:#2} at #3 pt\relax
-  \global\font\gre@font@nabc={name:#2} at #3 pt\relax %
+% \grenabcfont[#1]#2#3
+% Same as \gresetnabcfont, but the selection is local to the current TeX
+% group, which is what a standalone \nabcneumesnippet needs in order to pick
+% a font and a size on the spot without disturbing the rest of the document.
+% #1: voice
+% #2: font name
+% #3: font size
+\def\grenabcfont{\@ifnextchar[{\gre@nabcvoicefont@local}{\gre@nabcvoicefont@local[1]}}%
+
+\def\gre@setnabcvoicefont[#1]#2#3{\gre@nabcvoicefont@do{\global}{#1}{#2}{#3}}%
+\def\gre@nabcvoicefont@local[#1]#2#3{\gre@nabcvoicefont@do{}{#1}{#2}{#3}}%
+
+% #1: \global or empty
+% #2: voice
+% #3: font name
+% #4: font size
+\def\gre@nabcvoicefont@do#1#2#3#4{%
+  #1\expandafter\edef\csname gre@nabcvoice@\romannumeral#2@fontname\endcsname{#3}%
+  #1\expandafter\font\csname gre@font@nabcvoice@\romannumeral#2\endcsname={name:#3} at #4 pt\relax
+  #1\font\gre@font@nabc={name:#3} at #4 pt\relax %
   {%
-    \csname gre@font@nabcvoice@\romannumeral#1\endcsname
-    \directlua{gregoriotex.init_nabc_font("\luaescapestring{#2}")}%
+    \csname gre@font@nabcvoice@\romannumeral#2\endcsname
+    \directlua{gregoriotex.init_nabc_font("\luaescapestring{#3}")}%
   }%
+}
+
+% Make sure the font of a NABC voice is available, falling back on the
+% default one.  Used both by \GreScoreNABCLines and by \nabcneumesnippet.
+\def\gre@nabc@ensurefont#1{%
+  \ifcsname gre@font@nabcvoice@\romannumeral#1\endcsname\else
+    \gresetnabcfont[#1]{gregall}{8}%
+  \fi
 }
 
 % #1: NABC string
 % #2: font name
-% #3: scale
-% #4: voice number
-\def\gre@nabccharno#1#2#3#4{%
-  \gre@trace{gre@nabccharno{#1}{#2}{#3}{#4}}%
-  {\directlua{gregoriotex.print_nabc(gregoriotex.parse_nabc("#1", "\luaescapestring{#2}", #3, #4))}}%
+% #3: voice number
+\def\gre@nabccharno#1#2#3{%
+  \gre@trace{gre@nabccharno{#1}{#2}{#3}}%
+  {\directlua{gregoriotex.print_nabc(gregoriotex.parse_nabc("#1", "\luaescapestring{#2}", #3))}}%
   \gre@trace@end%
 }
+
+% #1: style voice, or 0 for no above/below-lines style
+% #2: voice whose font is used
+% #3: NABC string
+\def\gre@nabc@printchar#1#2#3{{%
+  \csname gre@font@nabcvoice@\romannumeral#2\endcsname
+  \gre@style@nabc
+  \ifcase#1\relax\or\gre@style@abovelinesnabc\or\gre@style@belowlinesnabc\fi
+  \gre@nabccharno{#3}{\csname gre@nabcvoice@\romannumeral#2@fontname\endcsname}{#2}%
+  \ifcase#1\relax\or\endgre@style@abovelinesnabc\or\endgre@style@belowlinesnabc\fi
+  \endgre@style@nabc
+}}%
 
 % \GreNABCChar[#1]#2
 % #1: voice
 % #2: char
 \def\GreNABCChar{\@ifnextchar[{\gre@nabcvoicechar}{\gre@nabcvoicechar[1]}}%
-\def\gre@nabcvoicechar[#1]#2{{%
-  %\catcode`\~=12{}%
-  %\catcode`\@=11{}%
-  \csname gre@font@nabcvoice@\romannumeral#1\endcsname
-  \gre@style@nabc
-  \ifcase#1\relax\or\gre@style@abovelinesnabc\or\gre@style@belowlinesnabc\fi
-  \gre@nabccharno{#2}{\csname gre@nabcvoice@\romannumeral#1@fontname\endcsname}{1}{#1}%
-  \ifcase#1\relax\or\endgre@style@abovelinesnabc\or\endgre@style@belowlinesnabc\fi
-  \endgre@style@nabc
-}}
+\def\gre@nabcvoicechar[#1]#2{\gre@nabc@printchar{#1}{#1}{#2}}%
+
+% See Command_Index_User.tex for documentation.
+% Unlike \GreNABCChar it does not apply the above-lines/below-lines styles,
+% which are meant for positioning inside a score.
+% #1: voice
+% #2: NABC string
+\def\nabcneumesnippet{\@ifnextchar[{\gre@nabcneumesnippet}{\gre@nabcneumesnippet[1]}}%
+\def\gre@nabcneumesnippet[#1]#2{%
+  \gre@nabc@ensurefont{#1}%
+  \leavevmode
+  \gre@nabc@printchar{0}{#1}{#2}%
+}
 
 \newif\ifgre@nabcvoice@i@visible
 \gre@nabcvoice@i@visibletrue
@@ -208,10 +246,6 @@
 \gre@nabcfontloadedfalse%
 
 \def\GreScoreNABCLines#1{%
-  \ifcsname gre@font@nabcvoice@i\endcsname\else%
-    \gresetnabcfont[1]{gregall}{8}%
-  \fi
-  \ifcsname gre@font@nabcvoice@ii\endcsname\else%
-    \gresetnabcfont[2]{gregall}{8}%
-  \fi
+  \gre@nabc@ensurefont{1}%
+  \gre@nabc@ensurefont{2}%
 }

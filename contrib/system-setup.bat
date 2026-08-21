@@ -93,6 +93,7 @@ set files=gregoriosyms.sty ^
 gregoriotex-chars.tex ^
 gregoriotex-main.tex ^
 gregoriotex-nabc.tex ^
+gregoriotex-snippet.tex ^
 gregoriotex-signs.tex ^
 gregoriotex-spaces.tex ^
 gregoriotex-syllable.tex ^

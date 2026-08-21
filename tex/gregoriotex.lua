@@ -25,6 +25,8 @@ gregoriotex = gregoriotex or {}
 local gregoriotex = gregoriotex
 
 local internalversion = '6.2.0' -- GREGORIO_VERSION (comment used by VersionManager.py)
+-- Version stamp put into the name of every generated file.
+local version_suffix = internalversion:gsub("%.", "_")
 
 local err, warn, info, log = luatexbase.provides_module({
     name               = "gregoriotex",
@@ -553,6 +555,27 @@ end
 
 gregoriotex.module.debugmessage = debugmessage
 
+-- Set the stafflines and commentary of a list, which are meant to span the
+-- whole line, to the given width.
+local function set_part_widths(cur, width)
+  for child in node.traverse_list(cur.head) do
+    local attr = has_attribute(child, part_attr)
+    if attr == part_commentary or attr == part_stafflines then
+      debugmessage("adjust_fullwidth", "width %spt -> %spt", child.width/2^16, width/2^16)
+      if child.id == hlist then
+        local new = node.hpack(child.head, width, 'exactly')
+        new.shift = child.shift
+        cur.head = node.insert_before(cur.head, child, new)
+        cur.head = node.remove(cur.head, child)
+      else
+        child.width = width
+      end
+    else
+      set_part_widths(child, width)
+    end
+  end
+end
+
 -- Find stafflines and commentary, which are meant to take up the full
 -- line width, and adjust them to actually take up the full line
 -- width.
@@ -571,26 +594,7 @@ local function adjust_fullwidth (line)
   end
   debugmessage("adjust_fullwidth", "line width %spt", line_width/2^16)
 
-  local function visit(cur)
-    for child in node.traverse_list(cur.head) do
-      local attr = has_attribute(child, part_attr)
-      if attr == part_commentary or attr == part_stafflines then
-        debugmessage("adjust_fullwidth", "width %spt -> %spt", child.width/2^16, line_width/2^16)
-        if child.id == hlist then
-          local new = node.hpack(child.head, line_width, 'exactly')
-          new.shift = child.shift
-          cur.head = node.insert_before(cur.head, child, new)
-          cur.head = node.remove(cur.head, child)
-        else
-          child.width = line_width
-        end
-      else
-        visit(child)
-      end
-    end
-  end
-
-  visit(line)
+  set_part_widths(line, line_width)
 end
 
 local function find_attr(cur, attr, val)
@@ -769,6 +773,86 @@ local function get_if(name)
   return token.create('if'..name).mode == iftrue_token.mode
 end
 
+-- The TeX state that the vertical adjustment of a score line depends on.  A
+-- score sets it inside its own group; an ordinary score is adjusted from
+-- post_linebreak, which runs while that group is still open, but an inline
+-- snippet is adjusted only once its box is closed, by which time TeX has
+-- restored everything.  score_state.capture therefore takes a copy while the
+-- snippet's score is still open, and the readers below prefer that copy for
+-- as long as one is held.  (Kept in one table because the main chunk is close
+-- to Lua's limit of 200 local variables.)
+local score_state = {
+  -- Whether a snippet's score is being typeset, which also tells at_score_end
+  -- to leave releasing the score's data to finish_snippet.  Not derivable from
+  -- 'saved': at_score_end runs inside the snippet's box, before the capture.
+  in_snippet = false,
+  -- The copy in force, if any.
+  saved = nil,
+  -- How each kind of state is read out of TeX, ...
+  readers = {
+    space = function(name) return tex.sp(token.get_macro('gre@space@dimen@'..name)) end,
+    count = function(name) return tex.count[name] end,
+    dimen = function(name) return tex.dimen[name] end,
+    flag = get_if,
+  },
+  -- ... and the names making it up.  Spaces go by their bare name, since the
+  -- reader knows the prefix; the others are spelled out in full.
+  names = {
+    space = {
+      'abovelinesnabcheight', 'abovelinesnabcraise', 'abovelinestextheight',
+      'abovelinestextraise', 'belowlinesnabcheight', 'noteadditionalspacelinestext',
+      'spaceabovelines', 'spacebeneathtext', 'spacelinestext', 'translationheight',
+    },
+    count = {
+      'gre@space@count@additionaltopspacethreshold',
+      'gre@space@count@additionaltopspacealtthreshold',
+      'gre@space@count@additionaltopspacenabcthreshold',
+      'gre@space@count@noteadditionalspacelinestextthreshold',
+      'gre@count@stafflines', 'gre@factor',
+    },
+    dimen = {
+      'gre@dimen@interstafflinedistancebase', 'gre@dimen@stafflinethicknessbase',
+    },
+    flag = {
+      'gre@noteadditionalspacelinestext', 'gre@shownotes',
+      'gre@staffdimensions@zeroed',
+    },
+  },
+}
+
+--- Copy the score state a snippet's box is about to take away with it.
+function score_state.capture()
+  local saved = {}
+  for kind, read in pairs(score_state.readers) do
+    local values = {}
+    for _, name in ipairs(score_state.names[kind]) do
+      values[name] = read(name)
+    end
+    saved[kind] = values
+  end
+  score_state.saved = saved
+end
+
+--- Release the copy, so that the live TeX state is read again.
+function score_state.release()
+  score_state.saved = nil
+end
+
+-- score_state.space, .count, .dimen and .flag: read one value, from the copy
+-- in force if there is one.  A name missing from the copy is a name missing
+-- from score_state.names, which would otherwise read as a silent nil.
+for kind, read in pairs(score_state.readers) do
+  score_state[kind] = function(name)
+    local saved = score_state.saved
+    if not saved then return read(name) end
+    local value = saved[kind][name]
+    if value == nil then
+      err("%s '%s' is read while adjusting a score line but is not captured\nfor snippets; add it to score_state.names.%s", kind, name, kind)
+    end
+    return value
+  end
+end
+
 local function adjust_additional_spaces(line, info, linenum)
   -- Adjust the vertical positioning of all the parts of line, as well
   -- as its total height and the interline skip above the line.
@@ -777,22 +861,22 @@ local function adjust_additional_spaces(line, info, linenum)
     if per_line_dims[linenum] ~= nil and per_line_dims[linenum][name] ~= nil then
       return per_line_dims[linenum][name]
     else
-      return tex.sp(token.get_macro('gre@space@dimen@'..name))
+      return score_state.space(name)
     end
   end
-  
+
   local function get_per_line_count(name)
     if per_line_counts[linenum] ~= nil and per_line_counts[linenum][name] ~= nil then
       return per_line_counts[linenum][name]
     else
-      return tex.count['gre@space@count@'..name]
+      return score_state.count('gre@space@count@'..name)
     end
   end
 
   -- distance between stafflines
-  local staffline_distance = tex.round((tex.dimen['gre@dimen@interstafflinedistancebase'] + tex.dimen['gre@dimen@stafflinethicknessbase'])/2) * tex.count['gre@factor']
+  local staffline_distance = tex.round((score_state.dimen('gre@dimen@interstafflinedistancebase') + score_state.dimen('gre@dimen@stafflinethicknessbase'))/2) * score_state.count('gre@factor')
   local note_additional_space_lines_text
-  if get_if('gre@noteadditionalspacelinestext') then
+  if score_state.flag('gre@noteadditionalspacelinestext') then
     note_additional_space_lines_text = get_per_line_space('noteadditionalspacelinestext') -- this may be different from staffline_distance under the legacy option \gresetnoteadditionalspacelinestext{manual}
   else
     note_additional_space_lines_text = staffline_distance
@@ -806,7 +890,7 @@ local function adjust_additional_spaces(line, info, linenum)
   
   -- compute top and bottom pitches
   local adjust_bottom = bottom_threshold + 3
-  local adjust_top = 4 + 2*tex.count['gre@count@stafflines']
+  local adjust_top = 4 + 2*score_state.count('gre@count@stafflines')
 
   -- compute additional top/bottom spaces
   local additional_top_space = math.max(0, info.glyph_top - adjust_top - top_threshold) * staffline_distance
@@ -821,8 +905,8 @@ local function adjust_additional_spaces(line, info, linenum)
   end
 
   -- per-line changes to other spaces
-  local extra_space_lines_text = get_per_line_space('spacelinestext') - tex.sp(token.get_macro('gre@space@dimen@spacelinestext'))
-  local extra_space_beneath_text = get_per_line_space('spacebeneathtext') - tex.sp(token.get_macro('gre@space@dimen@spacebeneathtext'))
+  local extra_space_lines_text = get_per_line_space('spacelinestext') - score_state.space('spacelinestext')
+  local extra_space_beneath_text = get_per_line_space('spacebeneathtext') - score_state.space('spacebeneathtext')
 
   -- how much to raise/lower each part
   local commentary_raise = additional_top_space_alt
@@ -831,7 +915,7 @@ local function adjust_additional_spaces(line, info, linenum)
   -- abovelinesnabcraise gap between the (invisible) staff top and NABC
   -- is unnecessary whitespace.  Skip it so the NABC lines sit closer
   -- to the lyrics/below-lines content.
-  local staff_zeroed = get_if('gre@staffdimensions@zeroed')
+  local staff_zeroed = score_state.flag('gre@staffdimensions@zeroed')
 
   local cur = 0 -- vertical position without any additional space
   local add = 0 -- with additional space
@@ -888,7 +972,7 @@ local function adjust_additional_spaces(line, info, linenum)
   -- at the correct distance from the lyrics/initial.
   local annotation_correction = 0
   if staff_zeroed then
-    if not get_if('gre@shownotes') then
+    if not score_state.flag('gre@shownotes') then
       -- Fully collapsed (lines + notes hidden)
       if info.has_blnabc and info.has_nabc then
         annotation_correction = -get_per_line_space('belowlinesnabcheight')
@@ -998,6 +1082,21 @@ local function ligaturing(head)
   return head
 end
 
+--- Process the horizontal list of a score before it is broken into lines.
+--- Nothing here depends on line breaking, so a score which is never broken
+--- into lines (an inline snippet) can call this directly.
+--- @param head node The list of nodes to be processed.
+--- @return node The processed list of nodes.
+local function process_score_list(head)
+  --dump_nodes(head)
+  gregoriotex.scan_syllables(head)
+  gregoriotex.syllable_spacing()
+  gregoriotex.syllable_clearing()
+  gregoriotex.syllable_rewriting()
+  --dump_nodes(head)
+  return head
+end
+
 --- Callback for processing after a paragraph is built but before line-breaking takes place.
 --- @param head node The list of nodes to be processed.
 --- @return node The processed list of nodes.
@@ -1006,13 +1105,7 @@ local function pre_linebreak(head)
   -- don't want to process. The current heuristic is to skip the list
   -- if it has zero width.
   if node.dimensions(head) == 0 then return head end
-  --dump_nodes(head)
-  gregoriotex.scan_syllables(head)
-  gregoriotex.syllable_spacing()
-  gregoriotex.syllable_clearing()
-  gregoriotex.syllable_rewriting()
-  --dump_nodes(head)
-  return head
+  return process_score_list(head)
 end
 
 --- Add a hyphen to the end of a line.
@@ -1045,34 +1138,76 @@ local function add_eol_hyphen(line)
   end
 end
 
+--- Center the translations of one score line and note its last syllable.
+--- @param line node The hlist holding the line.
+--- @param syl_id number The last syllable seen so far, or nil.
+--- @return number The last syllable seen after this line.
+local function center_line_translations(line, syl_id)
+  local centerstartnode = nil
+
+  for n in traverse_id(hlist, line.head) do
+    syl_id = has_attribute(n, syllable_id_attr) or syl_id
+    if has_attribute(n, center_attr, startcenter) then
+      centerstartnode = n
+    elseif has_attribute(n, center_attr, endcenter) then
+      if not centerstartnode then
+        warn("End of a translation centering area encountered on a\nline without translation centering beginning,\nskipping translation...")
+      else
+        center_translation(centerstartnode, n, line.glue_set, line.glue_sign, line.glue_order)
+      end
+    end
+  end
+
+  if new_score_last_syllables and syl_id then
+    new_score_last_syllables[syl_id] = syl_id
+  end
+  return syl_id
+end
+
+--- Collect information about each alteration (flat, sharp, or natural) of one
+--- score line:
+---   1 if it is the first alteration on the line (on the same pitch)
+---   2 if it has a different type from the previous alteration on the line (on the same pitch)
+---   3 otherwise.
+--- @param line node The hlist holding the line.
+local function record_line_alterations(line)
+  local seen = {}
+  for n in traverse_id(hlist, line.head) do
+    -- This skips custos alterations because they're one level
+    -- deeper. As a result, they are always printed.
+    local t = has_attribute(n, alteration_type_attr)
+    if t ~= nil and t > 0 then
+      local i = has_attribute(n, alteration_id_attr)
+      local h = has_attribute(n, alteration_pitch_attr)
+      if seen[h] == nil then
+        new_score_first_alterations[i] = 1
+      elseif seen[h] ~= t then
+        new_score_first_alterations[i] = 2
+      else
+        new_score_first_alterations[i] = 3
+      end
+      new_score_first_alterations['last'] = i
+      debugmessage("alteration", "id=%s type=%s height=%s seen=%s first=%s", i, t, h, seen[t], new_score_first_alterations[i])
+      seen[h] = t
+    end
+  end
+end
+
+-- The passes below cannot be a single per-line function shared with
+-- finish_snippet, because uniform height expansion needs the statistics of
+-- every line before any line is adjusted.  A pass added here which is not
+-- specific to having been broken into lines belongs in finish_snippet too,
+-- where an inline snippet's lone line is processed.
 local function post_linebreak(h, groupcode, glyphes)
   --dump_nodes(h)
   -- TODO: to be changed according to the font
-  local centerstartnode         = nil
   local linenum                 = 0
   local syl_id                  = nil
-  
+
   for line in traverse_id(hlist, h) do
     linenum = linenum + 1
     debugmessage('linesglues', 'line %d: %s factor %.0f%%', linenum, glue_sign_name[line.glue_sign], line.glue_set*100)
-    centerstartnode = nil
-
-    for n in traverse_id(hlist, line.head) do
-      syl_id = has_attribute(n, syllable_id_attr) or syl_id
-      if has_attribute(n, center_attr, startcenter) then
-        centerstartnode = n
-      elseif has_attribute(n, center_attr, endcenter) then
-        if not centerstartnode then
-          warn("End of a translation centering area encountered on a\nline without translation centering beginning,\nskipping translation...")
-        else
-          center_translation(centerstartnode, n, line.glue_set, line.glue_sign, line.glue_order)
-        end
-      end
-    end
-
-    if new_score_last_syllables and syl_id then
-      new_score_last_syllables[syl_id] = syl_id
-    end
+    syl_id = center_line_translations(line, syl_id)
   end
 
   -- Line height adjustment.
@@ -1105,31 +1240,8 @@ local function post_linebreak(h, groupcode, glyphes)
     adjust_fullwidth(line)
   end
 
-  -- Collect information about each alteration (flat, sharp, or natural):
-  --   1 if it is the first alteration on the line (on the same pitch)
-  --   2 if it has a different type from the previous alteration on the line (on the same pitch)
-  --   3 otherwise.
   for line in traverse_id(hlist, h) do
-    local seen = {}
-    for n in traverse_id(hlist, line.head) do
-      -- This skips custos alterations because they're one level
-      -- deeper. As a result, they are always printed.
-      local t = has_attribute(n, alteration_type_attr)
-      if t ~= nil and t > 0 then
-        local i = has_attribute(n, alteration_id_attr)
-        local h = has_attribute(n, alteration_pitch_attr)
-        if seen[h] == nil then
-          new_score_first_alterations[i] = 1
-        elseif seen[h] ~= t then
-          new_score_first_alterations[i] = 2
-        else
-          new_score_first_alterations[i] = 3
-        end
-        new_score_first_alterations['last'] = i
-        debugmessage("alteration", "id=%s type=%s height=%s seen=%s first=%s", i, t, h, seen[t], new_score_first_alterations[i])
-        seen[h] = t
-      end
-    end
+    record_line_alterations(line)
   end
 
   -- Look for words that are broken across lines and insert a hyphen
@@ -1290,15 +1402,22 @@ local function at_score_beginning(score_id)
   luatexbase.add_to_callback('buildpage_filter', buildpage, 'gregoriotex.buildpage')
 end
 
+--- Discard the data a score's lines are processed with.  This outlives the
+--- score itself for an inline snippet, whose lone line is processed only once
+--- its box is closed, i.e. after \GreEndScore: there, finish_snippet calls it.
+local function release_score_data()
+  per_line_dims = {}
+  per_line_counts = {}
+  gregoriotex.free_syllables()
+end
+
 --- Finish a score
 -- Reset variables to out of score state and remove our callbacks
 local function at_score_end()
   remove_callbacks()
   luatexbase.remove_from_callback('pre_output_filter', 'gregoriotex.pre_output')
   luatexbase.remove_from_callback('buildpage_filter', 'gregoriotex.buildpage')
-  per_line_dims = {}
-  per_line_counts = {}
-  gregoriotex.free_syllables()
+  if not score_state.in_snippet then release_score_data() end
 end
 
 -- Inserted copy of https://github.com/ToxicFrog/luautil/blob/master/lfs.lua
@@ -1457,6 +1576,16 @@ if lfs.mkdirp == nil then
   end
 end
 
+-- Create dir if it does not exist yet; returns whether it is usable.
+local function ensure_dir(dir)
+  if lfs.exists(dir) then return true end
+  local ok, message = lfs.mkdirp(dir)
+  if not ok then
+    info('Could not create directory %s: %s', dir, message)
+  end
+  return ok
+end
+
 local function include_score(gabc_file, force_gabccompile, allow_deprecated)
   gabc_file = lfs.normalize(gabc_file)
   
@@ -1488,18 +1617,11 @@ local function include_score(gabc_file, force_gabccompile, allow_deprecated)
   end
   output_dir = table.concat(output_dir, '/')
   info('Output directory: %s', output_dir)
-  if not lfs.exists(output_dir) then
-    local ok, message = lfs.mkdirp(output_dir)
-    if not ok then
-      info('Could not create directory %s: %s', output_dir, message)
-    end
-  end
-    
+  ensure_dir(output_dir)
+
   -- Choose output filenames
-  gtex_file = string.format("%s%s-%s.gtex", output_dir, base_cleaned,
-                            internalversion:gsub("%.", "_"))
-  glog_file = string.format("%s%s-%s.glog", output_dir, base_cleaned,
-                            internalversion:gsub("%.", "_"))
+  gtex_file = string.format("%s%s-%s.gtex", output_dir, base_cleaned, version_suffix)
+  glog_file = string.format("%s%s-%s.glog", output_dir, base_cleaned, version_suffix)
 
   -- Decide if we need to recompile
   local needs_compile = false
@@ -1548,16 +1670,68 @@ local function include_score(gabc_file, force_gabccompile, allow_deprecated)
   tex.print(string.format([[\input %s\relax]], gtex_file))
 end
 
+-- Compiled snippets, keyed by a digest of the gabc source.  Snippets are
+-- typically small and repeated (inline snippets in running text), and each
+-- compilation spawns a gregorio process, so the result is memoized for the
+-- run and, when the compilation was clean, kept in the output directory for
+-- subsequent runs.
+--
+-- Editing a snippet changes its digest, hence its cache file name, so the file
+-- compiled from the previous text is left behind in the output directory: the
+-- on-disk cache only ever grows.  That directory is disposable, so this is not
+-- worth reference-counting, but it does mean its size tracks the number of
+-- distinct snippet revisions ever compiled, not the number in the document.
+local snippet_cache = {}
+
+-- Name of the on-disk cache file for a snippet, or nil if the output
+-- directory is not usable.
+local function snippet_cache_file(key)
+  local dir = base_output_dir..'/'
+  if not ensure_dir(dir) then return nil end
+  return string.format("%ssnippet-%s-%s.gtex", dir, key, version_suffix)
+end
+
+-- Memoize a compiled snippet and hand it to TeX.
+local function print_snippet(key, content)
+  snippet_cache[key] = content:explode('\n')
+  tex.print(snippet_cache[key])
+end
+
 local function direct_gabc(gabc, header, allow_deprecated)
+  -- trims spaces on both ends (trim6 from http://lua-users.org/wiki/StringTrim)
+  gabc = gabc:match('^()%s*$') and '' or gabc:match('^%s*(.*%S)')
+  local source = 'name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par', '\n')
+  local key = md5.sumhexa(source..'\0'..(allow_deprecated and '1' or '0'))
+
+  local cached = snippet_cache[key]
+  if cached then
+    debugmessage('snippet', 'reusing snippet %s from memory', key)
+    tex.print(cached)
+    return
+  end
+
+  local cache_file = snippet_cache_file(key)
+  if cache_file and lfs.exists(cache_file) then
+    local cache = io.open(cache_file, 'r')
+    if cache then
+      local content = cache:read('*a')
+      cache:close()
+      if content and content ~= '' then
+        debugmessage('snippet', 'reusing snippet %s from %s', key, cache_file)
+        kpse.record_input_file(cache_file)
+        print_snippet(key, content)
+        return
+      end
+    end
+  end
+
   info('Processing gabc snippet...')
   kpse.record_output_file(snippet_filename)
   local f = io.open(snippet_filename, 'w')
-  -- trims spaces on both ends (trim6 from http://lua-users.org/wiki/StringTrim)
-  gabc = gabc:match('^()%s*$') and '' or gabc:match('^%s*(.*%S)')
-  f:write('name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par', '\n'))
+  f:write(source)
   f:close()
   cmd = {gregorio_exe(), '-W'}
-  if allow_deprecated then table.insert(cmd, '-D') end
+  if not allow_deprecated then table.insert(cmd, '-D') end
   table.extend(cmd, {'-o', tmpname, '-l', snippet_logname, snippet_filename})
   info('Running %s', table.concat(cmd, ' '))
   local content = get_prog_output(cmd, tmpname, '*a')
@@ -1568,8 +1742,12 @@ local function direct_gabc(gabc, header, allow_deprecated)
         .."See the documentation of Gregorio or your TeX\n"
         .."distribution to automatize it.", cmd, tex.formatname, tex.jobname)
   else
-    tex.print(content:explode('\n'))
+    print_snippet(key, content)
   end
+  -- Anything gregorio has to say about the snippet is appended to its log.
+  -- 'clean' starts false so that only the path which actually proves the log
+  -- empty enables caching below.
+  local clean = false
   local glog = io.open(snippet_logname, 'a+')
   if glog == nil then
     err("\n Unable to open %s", snippet_logname)
@@ -1577,17 +1755,118 @@ local function direct_gabc(gabc, header, allow_deprecated)
     local size = glog:seek('end')
     if size > 0 then
       glog:seek('set')
-      local line
       for line in glog:lines() do
         warn(line)
       end
       warn("*** end of warnings/errors processing snippet ***")
+    else
+      clean = true
     end
     glog:close()
+  end
+  -- Only cache clean compilations on disk: a snippet which produced warnings
+  -- must be recompiled on every run so that its warnings keep being reported.
+  if clean and cache_file then
+    delete_versioned_files(base_output_dir..'/', 'snippet%-'..key, 'gtex')
+    local cache = io.open(cache_file, 'w')
+    if cache then
+      cache:write(content)
+      cache:close()
+      kpse.record_output_file(cache_file)
+    end
   end
   if not (debug_types_activated['snippet'] or debug_types_activated['all']) then
     os.remove(snippet_filename)
     os.remove(snippet_logname)
+  end
+end
+
+-- The inline snippet machinery.  Its helpers live in a block scope so that
+-- only what \TeX calls ends up in the gregoriotex table, without spending
+-- chunk-level locals: the main chunk is close to Lua's limit of 200.
+do
+  -- Strip attributes that only make sense while a score is being typeset, so a
+  -- finished snippet's box is inert if it ends up nested inside another
+  -- score's paragraph (post_linebreak would otherwise stretch its staff lines).
+  local function strip_score_attributes(n)
+    node.unset_attribute(n, part_attr)
+    node.unset_attribute(n, center_attr)
+    if n.id == hlist or n.id == vlist then
+      for child in traverse(n.head) do
+        strip_score_attributes(child)
+      end
+    end
+  end
+
+  -- Whether a node list leaves any mark on the page: an empty lyric box or an
+  -- invisible staff still reaches down to the baseline, and must not be
+  -- mistaken for the bottom of a snippet.
+  local function has_ink(head)
+    for n in traverse(head) do
+      if n.id == glyph or n.id == rule then
+        return true
+      elseif (n.id == hlist or n.id == vlist) and has_ink(n.head) then
+        return true
+      end
+    end
+    return false
+  end
+
+  -- Pull a snippet box down onto its baseline.  A score reserves room below
+  -- the notes for lyrics that a bare neume does not have, which would
+  -- otherwise spoil the leading of the surrounding paragraph.
+  local function drop_to_baseline(hbox)
+    local top, bottom = nil, nil
+    for n in traverse(hbox.head) do
+      if (n.id == hlist or n.id == vlist) and has_ink(n.head) then
+        -- shift is positive downwards
+        if top == nil or n.shift - n.height < top then top = n.shift - n.height end
+        if bottom == nil or n.shift + n.depth > bottom then bottom = n.shift + n.depth end
+      end
+    end
+    -- Nothing to do unless the whole snippet floats above the baseline.
+    if bottom == nil or bottom >= 0 then return end
+    debugmessage('snippet', 'dropping snippet contents by %spt', -bottom/2^16)
+    for n in traverse(hbox.head) do
+      if n.id == hlist or n.id == vlist then
+        n.shift = n.shift - bottom
+      end
+    end
+    hbox.height = bottom - top
+    hbox.depth = 0
+  end
+
+  --- Called before the box of an inline snippet is opened.
+  function gregoriotex.begin_snippet()
+    score_state.in_snippet = true
+  end
+
+  --- Finish a snippet typeset in restricted horizontal mode.  Its score never
+  --- became a paragraph, so neither of the line-break callbacks ran on it:
+  --- apply here what a score line gets from them and what an inline box needs.
+  --- A snippet is one line by construction (\GreNewLine cannot break a
+  --- restricted horizontal list), so 'natural width' is the width of the whole
+  --- music, which is what the staff lines must be stretched to.
+  --- @param boxnum number Box register holding the snippet; it receives the result.
+  function gregoriotex.finish_snippet(boxnum)
+    -- Take the contents out of the box so that hpack can own them, then hand
+    -- the repacked box back to the register, which disposes of the empty shell.
+    local box = tex.getbox(boxnum)
+    local head = box.head
+    box.head = nil
+    local hbox = hpack(process_score_list(head))
+    center_line_translations(hbox)
+    adjust_additional_spaces(hbox, compute_line_statistics(hbox))
+    record_line_alterations(hbox)
+    set_part_widths(hbox, hbox.width)
+    strip_score_attributes(hbox)
+    drop_to_baseline(hbox)
+    tex.setbox(boxnum, hbox)
+    -- The score is over for good now: put back the live TeX state and run the
+    -- clean-up at_score_end left to us.
+    score_state.in_snippet = false
+    score_state.release()
+    release_score_data()
   end
 end
 
@@ -2057,6 +2336,7 @@ gregoriotex.set_font_factor              = set_font_factor
 gregoriotex.def_symbol                   = def_symbol
 gregoriotex.font_size                    = font_size
 gregoriotex.direct_gabc                  = direct_gabc
+gregoriotex.capture_score_state          = score_state.capture
 gregoriotex.var_brace_len                = var_brace_len
 gregoriotex.save_length                  = save_length
 gregoriotex.width_to_bp                  = width_to_bp

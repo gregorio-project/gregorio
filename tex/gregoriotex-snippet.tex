@@ -1,0 +1,131 @@
+%GregorioTeX file.
+%
+% Copyright (C) 2014-2026 The Gregorio Project (see CONTRIBUTORS.md)
+%
+% This file is part of Gregorio.
+%
+% Gregorio is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% Gregorio is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with Gregorio.  If not, see <http://www.gnu.org/licenses/>.
+
+% This file contains the macros for inline gabc+nabc snippets, i.e. small
+% scores meant to be set inside a paragraph of running text rather than as a
+% display.  See \gre@snippet@build in Command_Index_internal.tex for how it
+% works.
+
+\gre@declarefileversion{gregoriotex-snippet.tex}{6.2.0}% GREGORIO_VERSION
+
+%% Vertical offset applied to the finished inline box.
+\newdimen\gre@dimen@snippetraise
+\gre@dimen@snippetraise=0pt\relax
+
+%% Box holding the snippet while it is being built.
+\newbox\gre@box@snippet
+
+%% User hook, run inside the snippet group just before the score is read.
+\def\gre@snippet@hook{}
+
+% See Command_Index_User.tex for documentation.
+\def\gresetinlinesnippetraise#1{%
+  \gre@dimen@snippetraise=#1\relax
+}%
+
+% See Command_Index_User.tex for documentation.
+\long\def\gresetinlinesnippethook#1{%
+  \def\gre@snippet@hook{#1}%
+}%
+
+%% What a snippet's own settings and the user hook may change globally, so
+%% that a TeX group is not enough to contain it: see Command_Index_internal.tex.
+%% \gre@snippet@restorezero is the action which puts the staff dimension
+%% zeroing back, not a saved value.
+\def\gre@snippet@savestate{%
+  \edef\gre@saved@snippet@factor{\the\gre@factor}%
+  \ifgre@staffdimensions@zeroed
+    \let\gre@snippet@restorezero\gre@staffdimensions@dozero
+  \else
+    \let\gre@snippet@restorezero\gre@staffdimensions@unzero
+  \fi
+}%
+
+\def\gre@snippet@restorestate{%
+  \ifnum\gre@factor=\gre@saved@snippet@factor\relax\else
+    \grechangestaffsize{\gre@saved@snippet@factor}%
+  \fi
+  \gre@snippet@restorezero
+  \gre@computespaces
+}%
+
+%% The common engine.  The score is typeset in restricted horizontal mode, so
+%% it is not a paragraph and never reaches the line breaker: the \hbox comes
+%% out at the natural width of the music, which is what an inline snippet
+%% wants, and gregoriotex.finish_snippet applies to it the score processing
+%% that the pre/post line-break callbacks would have applied to a paragraph.
+%% #1: extra gabc headers (may be empty)
+%% #2: additional settings applied inside the snippet group
+%% #3: gabc body
+\long\def\gre@snippet@build#1#2#3{%
+  \gre@trace{gre@snippet@build}%
+  \leavevmode
+  \gre@snippet@savestate
+  \setbox\gre@box@snippet=\hbox{%
+    %% A snippet is one line and has no line end, so a dropped initial has
+    %% nothing to be dropped into.  Nothing else has to be turned off: an
+    %% end-of-line custos reaches the page only through \localrightbox, which
+    %% a list that is never broken into lines never consumes.
+    \gresetinitiallines{0}%
+    #2%
+    \gre@snippet@hook
+    %% Announced only now, so that a score typeset by the hook is an ordinary
+    %% one: from here to finish_snippet, at_score_end holds off its clean-up.
+    \directlua{gregoriotex.begin_snippet()%
+      gregoriotex.direct_gabc(%
+      "\luaescapestring{\unexpanded\expandafter{#3}}",%
+      "\luaescapestring{\unexpanded\expandafter{#1}}",%
+      \gre@allowdeprecated@asboolean)}%
+    %% Last thing inside the box: the score's settings are still in force
+    %% here, but not once the box is closed, and they are what says how its
+    %% contents must be positioned vertically.
+    \directlua{gregoriotex.capture_score_state()}%
+  }%
+  \gre@snippet@restorestate
+  \directlua{gregoriotex.finish_snippet(\number\gre@box@snippet)}%
+  \raise\gre@dimen@snippetraise\box\gre@box@snippet
+  \gre@trace@end%
+}%
+
+% See Command_Index_User.tex for documentation.
+\def\gabcinlinesnippet{%
+  \@ifnextchar[{\gre@inlinesnippet@option}{\gre@inlinesnippet@option[]}%
+}%
+\long\def\gre@inlinesnippet@option[#1]#2{%
+  \gre@snippet@build{#1}{}{#2}%
+}%
+
+%% Settings turning a snippet into a bare neume: no staff lines, no clef, and
+%% no space reserved for the missing clef.  See Command_Index_internal.tex for
+%% why this does not distort the neume itself.
+\def\gre@neumesnippet@settings{%
+  \gresetlines{invisible}%
+  \gresetclef{invisible}%
+  \grechangedim{noclefspace}{0pt}{scalable}%
+}%
+
+% See Command_Index_User.tex for documentation.
+\def\gabcneumesnippet{%
+  \@ifnextchar[{\gre@neumesnippet@option}{\gre@neumesnippet@option[]}%
+}%
+\long\def\gre@neumesnippet@option[#1]#2{%
+  \IfStrEq{#1}{}%
+    {\gre@snippet@build{}{\gre@neumesnippet@settings}{(#2)}}%
+    {\gre@snippet@build{nabc-lines:#1;}{\gre@neumesnippet@settings}{(#2)}}%
+}%

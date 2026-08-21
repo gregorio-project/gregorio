@@ -21,4 +21,4 @@ EXTRA_DIST = gregoriotex.tex gregoriotex.lua gregoriotex.sty \
 			 gregoriosyms.sty gregoriotex-gsp-default.tex gregoriotex-chars.tex \
 			 gregoriotex-main.tex gregoriotex-nabc.tex gregoriotex-nabc.lua \
 			 gregoriotex-signs.lua gregoriotex-symbols.lua gregorio-vowels.dat \
-			 gregoriotex-common.tex
+			 gregoriotex-common.tex gregoriotex-snippet.tex

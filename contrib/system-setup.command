@@ -126,6 +126,7 @@ gregoriotex-nabc.lua
 gregoriotex-nabc.tex
 gregoriotex-signs.lua
 gregoriotex-signs.tex
+gregoriotex-snippet.tex
 gregoriotex-spaces.tex
 gregoriotex-syllable.tex
 gregoriotex-symbols.lua
