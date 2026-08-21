@@ -773,6 +773,86 @@ local function get_if(name)
   return token.create('if'..name).mode == iftrue_token.mode
 end
 
+-- The TeX state that the vertical adjustment of a score line depends on.  A
+-- score sets it inside its own group; an ordinary score is adjusted from
+-- post_linebreak, which runs while that group is still open, but an inline
+-- snippet is adjusted only once its box is closed, by which time TeX has
+-- restored everything.  score_state.capture therefore takes a copy while the
+-- snippet's score is still open, and the readers below prefer that copy for
+-- as long as one is held.  (Kept in one table because the main chunk is close
+-- to Lua's limit of 200 local variables.)
+local score_state = {
+  -- Whether a snippet's score is being typeset, which also tells at_score_end
+  -- to leave releasing the score's data to finish_snippet.  Not derivable from
+  -- 'saved': at_score_end runs inside the snippet's box, before the capture.
+  in_snippet = false,
+  -- The copy in force, if any.
+  saved = nil,
+  -- How each kind of state is read out of TeX, ...
+  readers = {
+    space = function(name) return tex.sp(token.get_macro('gre@space@dimen@'..name)) end,
+    count = function(name) return tex.count[name] end,
+    dimen = function(name) return tex.dimen[name] end,
+    flag = get_if,
+  },
+  -- ... and the names making it up.  Spaces go by their bare name, since the
+  -- reader knows the prefix; the others are spelled out in full.
+  names = {
+    space = {
+      'abovelinesnabcheight', 'abovelinesnabcraise', 'abovelinestextheight',
+      'abovelinestextraise', 'belowlinesnabcheight', 'noteadditionalspacelinestext',
+      'spaceabovelines', 'spacebeneathtext', 'spacelinestext', 'translationheight',
+    },
+    count = {
+      'gre@space@count@additionaltopspacethreshold',
+      'gre@space@count@additionaltopspacealtthreshold',
+      'gre@space@count@additionaltopspacenabcthreshold',
+      'gre@space@count@noteadditionalspacelinestextthreshold',
+      'gre@count@stafflines', 'gre@factor',
+    },
+    dimen = {
+      'gre@dimen@interstafflinedistancebase', 'gre@dimen@stafflinethicknessbase',
+    },
+    flag = {
+      'gre@noteadditionalspacelinestext', 'gre@shownotes',
+      'gre@staffdimensions@zeroed',
+    },
+  },
+}
+
+--- Copy the score state a snippet's box is about to take away with it.
+function score_state.capture()
+  local saved = {}
+  for kind, read in pairs(score_state.readers) do
+    local values = {}
+    for _, name in ipairs(score_state.names[kind]) do
+      values[name] = read(name)
+    end
+    saved[kind] = values
+  end
+  score_state.saved = saved
+end
+
+--- Release the copy, so that the live TeX state is read again.
+function score_state.release()
+  score_state.saved = nil
+end
+
+-- score_state.space, .count, .dimen and .flag: read one value, from the copy
+-- in force if there is one.  A name missing from the copy is a name missing
+-- from score_state.names, which would otherwise read as a silent nil.
+for kind, read in pairs(score_state.readers) do
+  score_state[kind] = function(name)
+    local saved = score_state.saved
+    if not saved then return read(name) end
+    local value = saved[kind][name]
+    if value == nil then
+      err("%s '%s' is read while adjusting a score line but is not captured\nfor snippets; add it to score_state.names.%s", kind, name, kind)
+    end
+    return value
+  end
+end
+
 local function adjust_additional_spaces(line, info, linenum)
   -- Adjust the vertical positioning of all the parts of line, as well
   -- as its total height and the interline skip above the line.
@@ -781,22 +861,22 @@ local function adjust_additional_spaces(line, info, linenum)
     if per_line_dims[linenum] ~= nil and per_line_dims[linenum][name] ~= nil then
       return per_line_dims[linenum][name]
     else
-      return tex.sp(token.get_macro('gre@space@dimen@'..name))
+      return score_state.space(name)
     end
   end
-  
+
   local function get_per_line_count(name)
     if per_line_counts[linenum] ~= nil and per_line_counts[linenum][name] ~= nil then
       return per_line_counts[linenum][name]
     else
-      return tex.count['gre@space@count@'..name]
+      return score_state.count('gre@space@count@'..name)
     end
   end
 
   -- distance between stafflines
-  local staffline_distance = tex.round((tex.dimen['gre@dimen@interstafflinedistancebase'] + tex.dimen['gre@dimen@stafflinethicknessbase'])/2) * tex.count['gre@factor']
+  local staffline_distance = tex.round((score_state.dimen('gre@dimen@interstafflinedistancebase') + score_state.dimen('gre@dimen@stafflinethicknessbase'))/2) * score_state.count('gre@factor')
   local note_additional_space_lines_text
-  if get_if('gre@noteadditionalspacelinestext') then
+  if score_state.flag('gre@noteadditionalspacelinestext') then
     note_additional_space_lines_text = get_per_line_space('noteadditionalspacelinestext') -- this may be different from staffline_distance under the legacy option \gresetnoteadditionalspacelinestext{manual}
   else
     note_additional_space_lines_text = staffline_distance
@@ -810,7 +890,7 @@ local function adjust_additional_spaces(line, info, linenum)
   
   -- compute top and bottom pitches
   local adjust_bottom = bottom_threshold + 3
-  local adjust_top = 4 + 2*tex.count['gre@count@stafflines']
+  local adjust_top = 4 + 2*score_state.count('gre@count@stafflines')
 
   -- compute additional top/bottom spaces
   local additional_top_space = math.max(0, info.glyph_top - adjust_top - top_threshold) * staffline_distance
@@ -825,8 +905,8 @@ local function adjust_additional_spaces(line, info, linenum)
   end
 
   -- per-line changes to other spaces
-  local extra_space_lines_text = get_per_line_space('spacelinestext') - tex.sp(token.get_macro('gre@space@dimen@spacelinestext'))
-  local extra_space_beneath_text = get_per_line_space('spacebeneathtext') - tex.sp(token.get_macro('gre@space@dimen@spacebeneathtext'))
+  local extra_space_lines_text = get_per_line_space('spacelinestext') - score_state.space('spacelinestext')
+  local extra_space_beneath_text = get_per_line_space('spacebeneathtext') - score_state.space('spacebeneathtext')
 
   -- how much to raise/lower each part
   local commentary_raise = additional_top_space_alt
@@ -835,7 +915,7 @@ local function adjust_additional_spaces(line, info, linenum)
   -- abovelinesnabcraise gap between the (invisible) staff top and NABC
   -- is unnecessary whitespace.  Skip it so the NABC lines sit closer
   -- to the lyrics/below-lines content.
-  local staff_zeroed = get_if('gre@staffdimensions@zeroed')
+  local staff_zeroed = score_state.flag('gre@staffdimensions@zeroed')
 
   local cur = 0 -- vertical position without any additional space
   local add = 0 -- with additional space
@@ -892,7 +972,7 @@ local function adjust_additional_spaces(line, info, linenum)
   -- at the correct distance from the lyrics/initial.
   local annotation_correction = 0
   if staff_zeroed then
-    if not get_if('gre@shownotes') then
+    if not score_state.flag('gre@shownotes') then
       -- Fully collapsed (lines + notes hidden)
       if info.has_blnabc and info.has_nabc then
         annotation_correction = -get_per_line_space('belowlinesnabcheight')
@@ -1322,15 +1402,22 @@ local function at_score_beginning(score_id)
   luatexbase.add_to_callback('buildpage_filter', buildpage, 'gregoriotex.buildpage')
 end
 
+--- Discard the data a score's lines are processed with.  This outlives the
+--- score itself for an inline snippet, whose lone line is processed only once
+--- its box is closed, i.e. after \GreEndScore: there, finish_snippet calls it.
+local function release_score_data()
+  per_line_dims = {}
+  per_line_counts = {}
+  gregoriotex.free_syllables()
+end
+
 --- Finish a score
 -- Reset variables to out of score state and remove our callbacks
 local function at_score_end()
   remove_callbacks()
   luatexbase.remove_from_callback('pre_output_filter', 'gregoriotex.pre_output')
   luatexbase.remove_from_callback('buildpage_filter', 'gregoriotex.buildpage')
-  per_line_dims = {}
-  per_line_counts = {}
-  gregoriotex.free_syllables()
+  if not score_state.in_snippet then release_score_data() end
 end
 
 -- Inserted copy of https://github.com/ToxicFrog/luautil/blob/master/lfs.lua
@@ -1691,6 +1778,95 @@ local function direct_gabc(gabc, header, allow_deprecated)
   if not (debug_types_activated['snippet'] or debug_types_activated['all']) then
     os.remove(snippet_filename)
     os.remove(snippet_logname)
+  end
+end
+
+-- The inline snippet machinery.  Its helpers live in a block scope so that
+-- only what \TeX calls ends up in the gregoriotex table, without spending
+-- chunk-level locals: the main chunk is close to Lua's limit of 200.
+do
+  -- Strip attributes that only make sense while a score is being typeset, so a
+  -- finished snippet's box is inert if it ends up nested inside another
+  -- score's paragraph (post_linebreak would otherwise stretch its staff lines).
+  local function strip_score_attributes(n)
+    node.unset_attribute(n, part_attr)
+    node.unset_attribute(n, center_attr)
+    if n.id == hlist or n.id == vlist then
+      for child in traverse(n.head) do
+        strip_score_attributes(child)
+      end
+    end
+  end
+
+  -- Whether a node list leaves any mark on the page: an empty lyric box or an
+  -- invisible staff still reaches down to the baseline, and must not be
+  -- mistaken for the bottom of a snippet.
+  local function has_ink(head)
+    for n in traverse(head) do
+      if n.id == glyph or n.id == rule then
+        return true
+      elseif (n.id == hlist or n.id == vlist) and has_ink(n.head) then
+        return true
+      end
+    end
+    return false
+  end
+
+  -- Pull a snippet box down onto its baseline.  A score reserves room below
+  -- the notes for lyrics that a bare neume does not have, which would
+  -- otherwise spoil the leading of the surrounding paragraph.
+  local function drop_to_baseline(hbox)
+    local top, bottom = nil, nil
+    for n in traverse(hbox.head) do
+      if (n.id == hlist or n.id == vlist) and has_ink(n.head) then
+        -- shift is positive downwards
+        if top == nil or n.shift - n.height < top then top = n.shift - n.height end
+        if bottom == nil or n.shift + n.depth > bottom then bottom = n.shift + n.depth end
+      end
+    end
+    -- Nothing to do unless the whole snippet floats above the baseline.
+    if bottom == nil or bottom >= 0 then return end
+    debugmessage('snippet', 'dropping snippet contents by %spt', -bottom/2^16)
+    for n in traverse(hbox.head) do
+      if n.id == hlist or n.id == vlist then
+        n.shift = n.shift - bottom
+      end
+    end
+    hbox.height = bottom - top
+    hbox.depth = 0
+  end
+
+  --- Called before the box of an inline snippet is opened.
+  function gregoriotex.begin_snippet()
+    score_state.in_snippet = true
+  end
+
+  --- Finish a snippet typeset in restricted horizontal mode.  Its score never
+  --- became a paragraph, so neither of the line-break callbacks ran on it:
+  --- apply here what a score line gets from them and what an inline box needs.
+  --- A snippet is one line by construction (\GreNewLine cannot break a
+  --- restricted horizontal list), so 'natural width' is the width of the whole
+  --- music, which is what the staff lines must be stretched to.
+  --- @param boxnum number Box register holding the snippet; it receives the result.
+  function gregoriotex.finish_snippet(boxnum)
+    -- Take the contents out of the box so that hpack can own them, then hand
+    -- the repacked box back to the register, which disposes of the empty shell.
+    local box = tex.getbox(boxnum)
+    local head = box.head
+    box.head = nil
+    local hbox = hpack(process_score_list(head))
+    center_line_translations(hbox)
+    adjust_additional_spaces(hbox, compute_line_statistics(hbox))
+    record_line_alterations(hbox)
+    set_part_widths(hbox, hbox.width)
+    strip_score_attributes(hbox)
+    drop_to_baseline(hbox)
+    tex.setbox(boxnum, hbox)
+    -- The score is over for good now: put back the live TeX state and run the
+    -- clean-up at_score_end left to us.
+    score_state.in_snippet = false
+    score_state.release()
+    release_score_data()
   end
 end
 
@@ -2160,6 +2336,7 @@ gregoriotex.set_font_factor              = set_font_factor
 gregoriotex.def_symbol                   = def_symbol
 gregoriotex.font_size                    = font_size
 gregoriotex.direct_gabc                  = direct_gabc
+gregoriotex.capture_score_state          = score_state.capture
 gregoriotex.var_brace_len                = var_brace_len
 gregoriotex.save_length                  = save_length
 gregoriotex.width_to_bp                  = width_to_bp
