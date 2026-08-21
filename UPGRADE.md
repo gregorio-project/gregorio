@@ -2,6 +2,16 @@
 
 This file contains instructions to upgrade to a new release of Gregorio.  These instructions are cumulative; meaning that you should apply the instructions from all versions between the one you are upgrading from and the current version.
 
+## Unreleased
+
+### `\gabcsnippet` now honors `allowdeprecated`
+
+Since 6.1, `\gabcsnippet` passed `gregorio`'s `--deprecation-errors` option exactly the other way round from `\gregorioscore`: deprecated constructs were treated as errors when they were *allowed*, and merely warned about when they were forbidden.  This has been corrected, so `\gabcsnippet` and `\gregorioscore` now behave alike.
+
+If you load GregorioTeX with `allowdeprecated=false`, a `\gabcsnippet` containing a deprecated construct now raises an error where it previously only produced a warning.  This is the behavior the option asks for, but it may stop a document that used to compile; either update the gabc in the snippet, or drop the `allowdeprecated=false` option.
+
+With the default `allowdeprecated=true` there is nothing to do: snippets that previously failed to compile now succeed.
+
 ## 6.2
 
 ### LuaTeX >= 1.0 required
