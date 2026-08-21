@@ -555,6 +555,27 @@ end
 
 gregoriotex.module.debugmessage = debugmessage
 
+-- Set the stafflines and commentary of a list, which are meant to span the
+-- whole line, to the given width.
+local function set_part_widths(cur, width)
+  for child in node.traverse_list(cur.head) do
+    local attr = has_attribute(child, part_attr)
+    if attr == part_commentary or attr == part_stafflines then
+      debugmessage("adjust_fullwidth", "width %spt -> %spt", child.width/2^16, width/2^16)
+      if child.id == hlist then
+        local new = node.hpack(child.head, width, 'exactly')
+        new.shift = child.shift
+        cur.head = node.insert_before(cur.head, child, new)
+        cur.head = node.remove(cur.head, child)
+      else
+        child.width = width
+      end
+    else
+      set_part_widths(child, width)
+    end
+  end
+end
+
 -- Find stafflines and commentary, which are meant to take up the full
 -- line width, and adjust them to actually take up the full line
 -- width.
@@ -573,26 +594,7 @@ local function adjust_fullwidth (line)
   end
   debugmessage("adjust_fullwidth", "line width %spt", line_width/2^16)
 
-  local function visit(cur)
-    for child in node.traverse_list(cur.head) do
-      local attr = has_attribute(child, part_attr)
-      if attr == part_commentary or attr == part_stafflines then
-        debugmessage("adjust_fullwidth", "width %spt -> %spt", child.width/2^16, line_width/2^16)
-        if child.id == hlist then
-          local new = node.hpack(child.head, line_width, 'exactly')
-          new.shift = child.shift
-          cur.head = node.insert_before(cur.head, child, new)
-          cur.head = node.remove(cur.head, child)
-        else
-          child.width = line_width
-        end
-      else
-        visit(child)
-      end
-    end
-  end
-
-  visit(line)
+  set_part_widths(line, line_width)
 end
 
 local function find_attr(cur, attr, val)
@@ -1000,6 +1002,21 @@ local function ligaturing(head)
   return head
 end
 
+--- Process the horizontal list of a score before it is broken into lines.
+--- Nothing here depends on line breaking, so a score which is never broken
+--- into lines (an inline snippet) can call this directly.
+--- @param head node The list of nodes to be processed.
+--- @return node The processed list of nodes.
+local function process_score_list(head)
+  --dump_nodes(head)
+  gregoriotex.scan_syllables(head)
+  gregoriotex.syllable_spacing()
+  gregoriotex.syllable_clearing()
+  gregoriotex.syllable_rewriting()
+  --dump_nodes(head)
+  return head
+end
+
 --- Callback for processing after a paragraph is built but before line-breaking takes place.
 --- @param head node The list of nodes to be processed.
 --- @return node The processed list of nodes.
@@ -1008,13 +1025,7 @@ local function pre_linebreak(head)
   -- don't want to process. The current heuristic is to skip the list
   -- if it has zero width.
   if node.dimensions(head) == 0 then return head end
-  --dump_nodes(head)
-  gregoriotex.scan_syllables(head)
-  gregoriotex.syllable_spacing()
-  gregoriotex.syllable_clearing()
-  gregoriotex.syllable_rewriting()
-  --dump_nodes(head)
-  return head
+  return process_score_list(head)
 end
 
 --- Add a hyphen to the end of a line.
@@ -1047,34 +1058,76 @@ local function add_eol_hyphen(line)
   end
 end
 
+--- Center the translations of one score line and note its last syllable.
+--- @param line node The hlist holding the line.
+--- @param syl_id number The last syllable seen so far, or nil.
+--- @return number The last syllable seen after this line.
+local function center_line_translations(line, syl_id)
+  local centerstartnode = nil
+
+  for n in traverse_id(hlist, line.head) do
+    syl_id = has_attribute(n, syllable_id_attr) or syl_id
+    if has_attribute(n, center_attr, startcenter) then
+      centerstartnode = n
+    elseif has_attribute(n, center_attr, endcenter) then
+      if not centerstartnode then
+        warn("End of a translation centering area encountered on a\nline without translation centering beginning,\nskipping translation...")
+      else
+        center_translation(centerstartnode, n, line.glue_set, line.glue_sign, line.glue_order)
+      end
+    end
+  end
+
+  if new_score_last_syllables and syl_id then
+    new_score_last_syllables[syl_id] = syl_id
+  end
+  return syl_id
+end
+
+--- Collect information about each alteration (flat, sharp, or natural) of one
+--- score line:
+---   1 if it is the first alteration on the line (on the same pitch)
+---   2 if it has a different type from the previous alteration on the line (on the same pitch)
+---   3 otherwise.
+--- @param line node The hlist holding the line.
+local function record_line_alterations(line)
+  local seen = {}
+  for n in traverse_id(hlist, line.head) do
+    -- This skips custos alterations because they're one level
+    -- deeper. As a result, they are always printed.
+    local t = has_attribute(n, alteration_type_attr)
+    if t ~= nil and t > 0 then
+      local i = has_attribute(n, alteration_id_attr)
+      local h = has_attribute(n, alteration_pitch_attr)
+      if seen[h] == nil then
+        new_score_first_alterations[i] = 1
+      elseif seen[h] ~= t then
+        new_score_first_alterations[i] = 2
+      else
+        new_score_first_alterations[i] = 3
+      end
+      new_score_first_alterations['last'] = i
+      debugmessage("alteration", "id=%s type=%s height=%s seen=%s first=%s", i, t, h, seen[t], new_score_first_alterations[i])
+      seen[h] = t
+    end
+  end
+end
+
+-- The passes below cannot be a single per-line function shared with
+-- finish_snippet, because uniform height expansion needs the statistics of
+-- every line before any line is adjusted.  A pass added here which is not
+-- specific to having been broken into lines belongs in finish_snippet too,
+-- where an inline snippet's lone line is processed.
 local function post_linebreak(h, groupcode, glyphes)
   --dump_nodes(h)
   -- TODO: to be changed according to the font
-  local centerstartnode         = nil
   local linenum                 = 0
   local syl_id                  = nil
-  
+
   for line in traverse_id(hlist, h) do
     linenum = linenum + 1
     debugmessage('linesglues', 'line %d: %s factor %.0f%%', linenum, glue_sign_name[line.glue_sign], line.glue_set*100)
-    centerstartnode = nil
-
-    for n in traverse_id(hlist, line.head) do
-      syl_id = has_attribute(n, syllable_id_attr) or syl_id
-      if has_attribute(n, center_attr, startcenter) then
-        centerstartnode = n
-      elseif has_attribute(n, center_attr, endcenter) then
-        if not centerstartnode then
-          warn("End of a translation centering area encountered on a\nline without translation centering beginning,\nskipping translation...")
-        else
-          center_translation(centerstartnode, n, line.glue_set, line.glue_sign, line.glue_order)
-        end
-      end
-    end
-
-    if new_score_last_syllables and syl_id then
-      new_score_last_syllables[syl_id] = syl_id
-    end
+    syl_id = center_line_translations(line, syl_id)
   end
 
   -- Line height adjustment.
@@ -1107,31 +1160,8 @@ local function post_linebreak(h, groupcode, glyphes)
     adjust_fullwidth(line)
   end
 
-  -- Collect information about each alteration (flat, sharp, or natural):
-  --   1 if it is the first alteration on the line (on the same pitch)
-  --   2 if it has a different type from the previous alteration on the line (on the same pitch)
-  --   3 otherwise.
   for line in traverse_id(hlist, h) do
-    local seen = {}
-    for n in traverse_id(hlist, line.head) do
-      -- This skips custos alterations because they're one level
-      -- deeper. As a result, they are always printed.
-      local t = has_attribute(n, alteration_type_attr)
-      if t ~= nil and t > 0 then
-        local i = has_attribute(n, alteration_id_attr)
-        local h = has_attribute(n, alteration_pitch_attr)
-        if seen[h] == nil then
-          new_score_first_alterations[i] = 1
-        elseif seen[h] ~= t then
-          new_score_first_alterations[i] = 2
-        else
-          new_score_first_alterations[i] = 3
-        end
-        new_score_first_alterations['last'] = i
-        debugmessage("alteration", "id=%s type=%s height=%s seen=%s first=%s", i, t, h, seen[t], new_score_first_alterations[i])
-        seen[h] = t
-      end
-    end
+    record_line_alterations(line)
   end
 
   -- Look for words that are broken across lines and insert a hyphen
