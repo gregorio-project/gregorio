@@ -487,7 +487,7 @@
 % alignment center for the first glyph, but does not advance the cursor.
 % Used by \gre@notes@rendernabc@tight for NABC-only horizontal spacing.
 % #5 (\GreGlyphHeights plus ledger lines, see \GreGlyph) is still run, in a
-% zero-width phantom, so that collision avoidance keeps seeing this glyph's
+% zero-width phantom, so that overlap avoidance keeps seeing this glyph's
 % real pitch extrema.  The box is load-bearing: \GreGlyphHeights only sets
 % attributes, which are picked up by the next node created, so dropping the
 % box would leave the extrema unreported.
@@ -506,7 +506,7 @@
 % which expands the syllable box to the NABC width.  This produces tighter
 % spacing than the hphantom path because inter-glyph and inter-element glue
 % is suppressed.  \GreGlyphHeights is deliberately left alive here so that
-% \gre@nabconlyglyph can still report pitch extrema for collision avoidance.
+% \gre@nabconlyglyph can still report pitch extrema for overlap avoidance.
 \def\gre@notes@rendernabc@tight#1{%
   \begingroup
     \let\GreGlyph\gre@nabconlyglyph
