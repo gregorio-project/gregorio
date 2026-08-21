@@ -1557,7 +1557,7 @@ local function direct_gabc(gabc, header, allow_deprecated)
   f:write('name:direct-gabc;\n'..(header or '')..'\n%%\n'..gabc:gsub('\\par', '\n'))
   f:close()
   cmd = {gregorio_exe(), '-W'}
-  if allow_deprecated then table.insert(cmd, '-D') end
+  if not allow_deprecated then table.insert(cmd, '-D') end
   table.extend(cmd, {'-o', tmpname, '-l', snippet_logname, snippet_filename})
   info('Running %s', table.concat(cmd, ' '))
   local content = get_prog_output(cmd, tmpname, '*a')
