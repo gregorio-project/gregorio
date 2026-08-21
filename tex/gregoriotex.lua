@@ -862,9 +862,8 @@ local function adjust_additional_spaces(line, info, linenum)
   local add = 0 -- with additional space
 
   -- Extra room for nabc glyphs shifted by an explicit hX pitch code:
-  -- extra_bottom compensates a glyph pulled toward the staff (the collision
-  -- fix), extra_top a glyph pushed away from it (grows the reservation
-  -- above nabc).
+  -- extra_bottom keeps a glyph pulled toward the staff from overlapping it,
+  -- extra_top a glyph pushed away from it (grows the reservation above nabc).
   local nabc_baseraise_extra_top = math.max(0, info.nabc_baseraise_max or 0)
   local nabc_baseraise_extra_bottom = math.max(0, -(info.nabc_baseraise_min or 0))
 
@@ -902,9 +901,10 @@ local function adjust_additional_spaces(line, info, linenum)
   local height_increase = add - get_per_line_space('spaceabovelines')
 
   -- Mirrors nabc_baseraise_extra_top/bottom above, but raise direction maps
-  -- to the opposite risk here: extra_top (glyph pulled toward the staff)
-  -- is the collision fix, extra_bottom (glyph pushed toward the lyrics)
-  -- grows the reservation below blnabc instead of above it.
+  -- to the opposite risk here: extra_top keeps a glyph pulled toward the
+  -- staff (blnabc sits below it) from overlapping it, extra_bottom (glyph
+  -- pushed toward the lyrics) grows the reservation below blnabc instead
+  -- of above it.
   local blnabc_baseraise_extra_top = math.max(0, info.blnabc_baseraise_max or 0)
   local blnabc_baseraise_extra_bottom = math.max(0, -(info.blnabc_baseraise_min or 0))
 
