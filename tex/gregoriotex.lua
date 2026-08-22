@@ -728,7 +728,8 @@ local function compute_line_statistics(line, info)
       nabc_baseraise_max = 0,
       nabc_baseraise_min = 0,
       blnabc_baseraise_max = 0,
-      blnabc_baseraise_min = 0
+      blnabc_baseraise_min = 0,
+      nabc_max_depth = 0
     }
   end
   local function visit(list, voice)
@@ -741,6 +742,13 @@ local function compute_line_statistics(line, info)
       elseif has_attribute(n, part_attr, part_nabc) then
         info.has_nabc = true
         child_voice = 1
+        -- A neume's own shape (e.g. a long chain of compound St. Gall
+        -- neumes) can reach deeper than the abovelinesnabcheight budget,
+        -- independently of any explicit hX pitch code.  Track the worst
+        -- case so adjust_additional_spaces can reserve room for it too.
+        if n.depth and n.depth > info.nabc_max_depth then
+          info.nabc_max_depth = n.depth
+        end
       elseif has_attribute(n, part_attr, part_blnabc) then
         info.has_blnabc = true
         child_voice = 2
@@ -861,18 +869,26 @@ local function adjust_additional_spaces(line, info, linenum)
   local cur = 0 -- vertical position without any additional space
   local add = 0 -- with additional space
 
-  -- Extra room for nabc glyphs shifted by an explicit hX pitch code:
-  -- extra_bottom keeps a glyph pulled toward the staff from overlapping it,
-  -- extra_top a glyph pushed away from it (grows the reservation above nabc).
+  -- Extra room above nabc for a glyph pushed away from the staff by an
+  -- explicit hX pitch code (grows the reservation above nabc).
   local nabc_baseraise_extra_top = math.max(0, info.nabc_baseraise_max or 0)
-  local nabc_baseraise_extra_bottom = math.max(0, -(info.nabc_baseraise_min or 0))
 
   local nabc_raise = 0
   if info.has_nabc then
     if not staff_zeroed then
       cur = cur + get_per_line_space('abovelinesnabcraise')
     end
-    add = math.max(add, cur + additional_top_space_nabc + nabc_baseraise_extra_bottom)
+    -- Room needed below nabc to keep it clear of the staff.  A glyph's
+    -- rendered .depth already reflects any explicit hX pitch code that
+    -- pulls it toward the staff (lowering a glyph via '\raise' increases
+    -- its reported depth), as well as any depth intrinsic to the neume's
+    -- own shape (e.g. long chains of compound St. Gall neumes).  So the
+    -- line's worst-case depth against a safety-margined budget is all
+    -- that is needed here -- no separate hX-only term, which would just
+    -- reserve the same overlap risk twice.
+    local nabc_depth_safe_budget = math.max(0, get_per_line_space('abovelinesnabcheight') - staffline_distance)
+    local nabc_depth_extra_bottom = math.max(0, (info.nabc_max_depth or 0) - nabc_depth_safe_budget)
+    add = math.max(add, cur + additional_top_space_nabc + nabc_depth_extra_bottom)
     nabc_raise = add
     cur = cur + get_per_line_space('abovelinesnabcheight') + nabc_baseraise_extra_top
     add = add + get_per_line_space('abovelinesnabcheight') + nabc_baseraise_extra_top
