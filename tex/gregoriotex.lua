@@ -726,10 +726,9 @@ local function compute_line_statistics(line, info)
       glyph_top = 7, -- e = \gre@pitch@dummy
       glyph_bottom = 7, -- e = \gre@pitch@dummy
       nabc_baseraise_max = 0,
-      nabc_baseraise_min = 0,
-      blnabc_baseraise_max = 0,
       blnabc_baseraise_min = 0,
-      nabc_max_depth = 0
+      nabc_max_depth = 0,
+      blnabc_max_height = 0
     }
   end
   local function visit(list, voice)
@@ -739,19 +738,24 @@ local function compute_line_statistics(line, info)
         info.has_translation = true
       elseif has_attribute(n, part_attr, part_alt) then
         info.has_alt = true
+      -- Worst-case extent of each nabc row toward the staff -- depth for
+      -- nabc (the staff is below it), height for blnabc (above it).  This
+      -- is what adjust_additional_spaces measures to keep the row clear;
+      -- see nabc_overshoot there.  The nil guards matter: the traversal
+      -- descends into the tagged box, and the glue/kern nodes inside it
+      -- carry the same attribute but have no height/depth.
       elseif has_attribute(n, part_attr, part_nabc) then
         info.has_nabc = true
         child_voice = 1
-        -- A neume's own shape (e.g. a long chain of compound St. Gall
-        -- neumes) can reach deeper than the abovelinesnabcheight budget,
-        -- independently of any explicit hX pitch code.  Track the worst
-        -- case so adjust_additional_spaces can reserve room for it too.
         if n.depth and n.depth > info.nabc_max_depth then
           info.nabc_max_depth = n.depth
         end
       elseif has_attribute(n, part_attr, part_blnabc) then
         info.has_blnabc = true
         child_voice = 2
+        if n.height and n.height > info.blnabc_max_height then
+          info.blnabc_max_height = n.height
+        end
       else
         if has_attribute(n, glyph_top_attr) then
           if info.glyph_top == nil or has_attribute(n, glyph_top_attr) > info.glyph_top then
@@ -767,13 +771,16 @@ local function compute_line_statistics(line, info)
       -- Checked unconditionally: this lives on the inner \raise'd box, not
       -- the outer part_nabc/part_blnabc-tagged one; voice (inherited from
       -- whichever of those wraps it) tells us which nabc line it's on.
+      -- Only the shift away from the staff is tracked per voice: nabc sits
+      -- above it, so an upward hX push (max) is what grows the row; blnabc
+      -- sits below, so a downward one (min) does.  The shift toward the
+      -- staff needs no accumulator -- it is already part of the glyph's
+      -- rendered extent, which nabc_overshoot measures directly.
       local br = has_attribute(n, nabc_baseraise_attr)
       if br then
         if voice == 1 then
           if br > info.nabc_baseraise_max then info.nabc_baseraise_max = br end
-          if br < info.nabc_baseraise_min then info.nabc_baseraise_min = br end
         elseif voice == 2 then
-          if br > info.blnabc_baseraise_max then info.blnabc_baseraise_max = br end
           if br < info.blnabc_baseraise_min then info.blnabc_baseraise_min = br end
         end
       end
@@ -827,6 +834,19 @@ local function adjust_additional_spaces(line, info, linenum)
     note_additional_space_lines_text = staffline_distance
   end
 
+  -- How much extra room a nabc row needs beyond its nominal gap to the
+  -- staff, given the worst-case extent its glyphs reach toward the staff.
+  -- That extent already includes any explicit hX pitch shift, because
+  -- '\raise'ing a glyph moves the ink into the box's height or depth, so
+  -- measuring it is enough -- adding a separate hX term on top would
+  -- reserve the same overlap risk twice.  clearance is the white space to
+  -- keep between the staff and the nearest ink: it is held back from the
+  -- nominal budget, so a glyph that would eat into it pushes the row away
+  -- by the difference instead.
+  local function nabc_overshoot(extent, budget_name, clearance)
+    return math.max(0, extent - math.max(0, get_per_line_space(budget_name) - clearance))
+  end
+
   -- thresholds for additional top/bottom spaces
   local top_threshold = get_per_line_count('additionaltopspacethreshold')
   local alt_threshold = get_per_line_count('additionaltopspacealtthreshold')
@@ -869,26 +889,17 @@ local function adjust_additional_spaces(line, info, linenum)
   local cur = 0 -- vertical position without any additional space
   local add = 0 -- with additional space
 
-  -- Extra room above nabc for a glyph pushed away from the staff by an
-  -- explicit hX pitch code (grows the reservation above nabc).
-  local nabc_baseraise_extra_top = math.max(0, info.nabc_baseraise_max or 0)
+  -- Room above nabc for a glyph pushed away from the staff by an hX code.
+  local nabc_baseraise_extra_top = math.max(0, info.nabc_baseraise_max)
 
   local nabc_raise = 0
   if info.has_nabc then
     if not staff_zeroed then
       cur = cur + get_per_line_space('abovelinesnabcraise')
     end
-    -- Room needed below nabc to keep it clear of the staff.  A glyph's
-    -- rendered .depth already reflects any explicit hX pitch code that
-    -- pulls it toward the staff (lowering a glyph via '\raise' increases
-    -- its reported depth), as well as any depth intrinsic to the neume's
-    -- own shape (e.g. long chains of compound St. Gall neumes).  So the
-    -- line's worst-case depth against a safety-margined budget is all
-    -- that is needed here -- no separate hX-only term, which would just
-    -- reserve the same overlap risk twice.
-    local nabc_depth_safe_budget = math.max(0, get_per_line_space('abovelinesnabcheight') - staffline_distance)
-    local nabc_depth_extra_bottom = math.max(0, (info.nabc_max_depth or 0) - nabc_depth_safe_budget)
-    add = math.max(add, cur + additional_top_space_nabc + nabc_depth_extra_bottom)
+    local nabc_extra_bottom = nabc_overshoot(info.nabc_max_depth,
+      'abovelinesnabcheight', staffline_distance)
+    add = math.max(add, cur + additional_top_space_nabc + nabc_extra_bottom)
     nabc_raise = add
     cur = cur + get_per_line_space('abovelinesnabcheight') + nabc_baseraise_extra_top
     add = add + get_per_line_space('abovelinesnabcheight') + nabc_baseraise_extra_top
@@ -916,13 +927,15 @@ local function adjust_additional_spaces(line, info, linenum)
   add = math.max(add, cur + additional_top_space)
   local height_increase = add - get_per_line_space('spaceabovelines')
 
-  -- Mirrors nabc_baseraise_extra_top/bottom above, but raise direction maps
-  -- to the opposite risk here: extra_top keeps a glyph pulled toward the
-  -- staff (blnabc sits below it) from overlapping it, extra_bottom (glyph
-  -- pushed toward the lyrics) grows the reservation below blnabc instead
-  -- of above it.
-  local blnabc_baseraise_extra_top = math.max(0, info.blnabc_baseraise_max or 0)
-  local blnabc_baseraise_extra_bottom = math.max(0, -(info.blnabc_baseraise_min or 0))
+  -- Mirror of nabc_extra_bottom above, for the staff blnabc hangs under.
+  -- The clearance is half of what the above-lines side asks for because
+  -- belowlinesnabcheight is a far more generous nominal gap than
+  -- abovelinesnabcheight: holding back a full staffline_distance there
+  -- pushed the row away from an already-comfortable staff.
+  local blnabc_extra_top = nabc_overshoot(info.blnabc_max_height,
+    'belowlinesnabcheight', staffline_distance/2)
+  -- Room below blnabc for a glyph pushed toward the lyrics by an hX code.
+  local blnabc_baseraise_extra_bottom = math.max(0, -info.blnabc_baseraise_min)
 
   local blnabc_lower = 0
   if info.has_blnabc then
@@ -935,7 +948,7 @@ local function adjust_additional_spaces(line, info, linenum)
       -- Low notes push blnabc down too, same as they already push nabc up
       -- above the staff -- otherwise blnabc would stay put while the note
       -- underneath it keeps dropping.
-      blnabc_lower = get_per_line_space('belowlinesnabcheight') + additional_bottom_space_nabc + blnabc_baseraise_extra_top
+      blnabc_lower = get_per_line_space('belowlinesnabcheight') + additional_bottom_space_nabc + blnabc_extra_top
     end
   end
   -- Skip additional_bottom_space here if blnabc already carries it above,
