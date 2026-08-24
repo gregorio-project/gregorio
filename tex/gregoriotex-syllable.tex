@@ -32,10 +32,6 @@
 \newif\ifgre@lastendswithmora %
 \gre@lastendswithmorafalse %
 
-% if this syllable ends with a punctum mora
-\newif\ifgre@thisendswithmora %
-\gre@thisendswithmorafalse %
-
 % a macro called each time we start something looking like a glyph, but not mandatorily called through the \GreGlyph macro, for example bars, flats, etc.
 
 \newcount\gre@generate@pointandclick\gre@generate@pointandclick=0\relax %
@@ -90,10 +86,6 @@
 
 \def\gre@newglyphcommon{%
   \gre@trace{gre@newglyphcommon}%
-  % first there is something we must do: setting \gre@lastoflinecount to 0 if its value is 2. The reason of this is that in ab(abzcd), we cannot let \grelastoflinecount set to 2 after the end of line... the only way I found to achieve it is to reset \grelastoflinecount to 0 after each glyph or bar.
-  \ifnum\gre@lastoflinecount=2\relax %
-    \global\gre@lastoflinecount=0\relax %
-  \fi %
   \global\gre@skip@bar@lastskip=0pt\relax %
   \gre@currenttextabovelines %
   % NABC two-phase processing: first pre-evaluate all voices and emit
@@ -221,9 +213,8 @@
 % the first 10 (0-9) possible values are the same as in glyph
 % see the cases below
 % there is a tricky here : if notesaligncenter is not 0, it means that there is a flat before, so we simply add notes aligncenter
-% #2 is 0 if we are in the context of current syllable, 1 if we are in the context of next syllable
-\def\gre@calculate@simplenotesaligncenter#1#2{%
-  \gre@trace{gre@calculate@simplenotesaligncenter{#1}{#2}}%
+\def\gre@calculate@simplenotesaligncenter#1{%
+  \gre@trace{gre@calculate@simplenotesaligncenter{#1}}%
   \ifcase#1% 0: punctum
     % one-note glyph or more than two notes glyph except porrectus : here
     % we must put the aligncenter in the middle of the first note
@@ -231,7 +222,7 @@
   \or% 1: flexus
     % two notes glyph (podatus is considered as a one-note glyph) : here
     % we put the aligncenter in the middle of the glyph
-    \gre@handleclivisspecialalignment{\gre@font@music\GreCPPesQuadratumLongqueueThreeNothing}{\gre@font@music\GreCPPunctum}{#2}%
+    \gre@handleclivisspecialalignment{\gre@font@music\GreCPPesQuadratumLongqueueThreeNothing}{\gre@font@music\GreCPPunctum}%
   \or% 2: porrectus
     % we consider it to have the same alignment as punctum
     \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPPunctum}%
@@ -247,9 +238,9 @@
   \or% 7: stropha
     \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\GreCPStropha}%
   \or% 8: flexus with ambitus of one
-    \gre@handleclivisspecialalignment{\gre@font@music\GreCPPesQuadratumLongqueueOneNothing}{\gre@font@music\GreCPPunctum}{#2}%
+    \gre@handleclivisspecialalignment{\gre@font@music\GreCPPesQuadratumLongqueueOneNothing}{\gre@font@music\GreCPPunctum}%
   \or% 9: flexus deminutus
-    \gre@handleclivisspecialalignment{\gre@font@music\GreCPFlexusTwoDeminutus}{\gre@font@music\GreCPPunctum}{#2}%
+    \gre@handleclivisspecialalignment{\gre@font@music\GreCPFlexusTwoDeminutus}{\gre@font@music\GreCPPunctum}%
   \or% 10: virgula
     \global\setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@char@bar@virgula}%
   \or% 11: divisio minima
@@ -290,10 +281,8 @@
 %     if (\gre@dimen@textaligncenter) > \gre@space@dimen@clivisalignmentmin -> #2 else #1
 %   else:
 %     if wd(\gre@endsyllablepart) > \gre@space@dimen@clivisalignmentmin -> #2 else #1
-%
-% #3 is the same as #2 of previous function
-\def\gre@handleclivisspecialalignment#1#2#3{%
-  \gre@trace{gre@handleclivisspecialalignment{#1}{#2}{#3}}%
+\def\gre@handleclivisspecialalignment#1#2{%
+  \gre@trace{gre@handleclivisspecialalignment{#1}{#2}}%
   \ifcase\gre@clivisalignment%
     \global\setbox\gre@box@temp@width=\hbox{#1}%
   \or%
@@ -313,13 +302,9 @@
           \global\setbox\gre@box@temp@width=\hbox{#1}%
         \fi%
       \else% vowel or first-letter centering
-        \ifcase#3%
-          % *always* emit end syllable part for proper determination of
-          % clivis alignment
-          \gre@widthof{\gre@endsyllablepart}%
-        \else%
-          \gre@widthof{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}%
-        \fi%
+        % *always* emit end syllable part for proper determination of
+        % clivis alignment
+        \gre@widthof{\gre@endsyllablepart}%
         \gre@debugmsg{ifdim}{ temp@three > clivisalignmentmin}%
         \ifdim\gre@dimen@temp@three >\gre@space@dimen@clivisalignmentmin\relax%
           \global\setbox\gre@box@temp@width=\hbox{#2}%
@@ -336,43 +321,8 @@
 % warning: the behaviour of all this is quite difficult to understand: this function is called with simple arguments (between 0 and 20) by the glyph function. In this case we add the align center of the argument to notesaligncenter ; and notesaligncenter can be already set to something by flat and natural.
 \def\gre@calculate@notesaligncenter#1{%
   \gre@trace{gre@calculate@notesaligncenter{#1}}%
-  \gre@calculate@simplenotesaligncenter{#1}{0}%
+  \gre@calculate@simplenotesaligncenter{#1}%
   \global\advance\gre@dimen@notesaligncenter by \dimexpr(\wd\gre@box@temp@width / 2)\relax %
-  \relax %
-  \gre@trace@end%
-}%
-
-% this is the function that we call when we try to determine the next aligncenter of the notes.
-% #1 is the note type
-% #2 is the alteration type (see \gre@alteration)
-\def\gre@calculate@nextnotesaligncenter#1#2{%
-  \gre@trace{gre@calculate@nextnotesaligncenter{#1}{#2}}%
-  \gre@calculate@simplenotesaligncenter{#1}{1}%
-  \gre@dimen@temp@five=\dimexpr(\wd\gre@box@temp@width / 2)\relax %
-  \ifcase#2\relax% 0 - none
-  \or % 1 - flat
-    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@flat}%
-  \or % 2 - natural
-    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@natural}%
-  \or % 3 - sharp
-    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@sharp}%
-  \or % 4 - parenthesized flat
-    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@flatparen}%
-  \or % 5 - parenthesized natural
-    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@naturalparen}%
-  \or % 6 - parenthesized sharp
-    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@sharpparen}%
-  \or % 7 - soft flat
-    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@flat}%
-  \or % 8 - soft natural
-    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@natural}%
-  \or % 9 - soft sharp
-    \setbox\gre@box@temp@width=\hbox{\gre@fontchar@sharp}%
-  \fi %
-  \ifnum#2>0\relax %
-    \advance\gre@dimen@temp@five by \dimexpr(\wd\gre@box@temp@width+\gre@space@dimen@alterationspace)\relax %
-  \fi %
-  \global\gre@dimen@notesaligncenter=\gre@dimen@temp@five %
   \relax %
   \gre@trace@end%
 }%
@@ -553,7 +503,6 @@
   \global\gre@dimen@nabc@maxwidth=0pt\relax %
   \global\gre@dimen@nabc@extrakern=0pt\relax %
   \let\ifgre@saved@prenotes@lastendswithmora\ifgre@lastendswithmora%
-  \edef\gre@saved@prenotes@lastoflinecount{\number\gre@lastoflinecount}%
   \edef\gre@saved@prenotes@bar@lastskip{\the\gre@skip@bar@lastskip}%
   \ifgre@shownotes%
     \setbox\gre@box@syllablenotes=\hbox{#1}%
@@ -574,19 +523,8 @@
   \gre@debugmsg{spacing}{Width of notes: \the\wd\gre@box@syllablenotes}%
   \global\gre@boxingfalse%
   \global\gre@firstglyphtrue%
-  % now gre@lastendswithmora is true if this syllable ends with a
-  % punctum mora, but we still want to keep gre@lastendswithmora if we
-  % are on a bar, so:
-  %   - we set gre@thisendswithmora to gre@lastendswithmora
-  %   - when syllables will be really typeset, they will set gre@lastendswithmora
-  %       again
-  \ifgre@lastendswithmora %
-    \gre@thisendswithmoratrue %
-  \else %
-    \gre@thisendswithmorafalse %
-  \fi %
+  % now gre@lastendswithmora is true if this syllable ends with a punctum mora
   \let\ifgre@lastendswithmora\ifgre@saved@prenotes@lastendswithmora%
-  \gre@lastoflinecount=\gre@saved@prenotes@lastoflinecount
   \gre@skip@bar@lastskip=\gre@saved@prenotes@bar@lastskip
   \global\gre@count@lastglyphiscavum=0\relax %
   \global\gre@endofscorefalse %
@@ -668,41 +606,14 @@
 
 \let\gre@fixedtextformat\gre@textnormal %
 
-% The same but for the next syllable
-
+% The same but for the next syllable. DEPRECATED
 \def\GreSetFixedNextTextFormat#1{%
-  \ifcase#1\relax%
-    \global\let\gre@fixednexttextformat\gre@textnormal %
-  \or %
-    \global\let\gre@fixednexttextformat\GreItalic %
-  \or %
-    \global\let\gre@fixednexttextformat\GreBold %
-  \or %
-    \global\let\gre@fixednexttextformat\GreSmallCaps %
-  \or %
-    \global\let\gre@fixednexttextformat\GreTypewriter %
-  \or %
-    \global\let\gre@fixednexttextformat\GreUnderline %
-  \or %
-    \global\let\gre@fixednexttextformat\GreColored %
-  \fi %
 }%
-
-% a function to cancel the previous one
-\def\gre@unsetfixednexttextformat{%
-  \gre@trace{gre@unsetfixednexttextformat}%
-  \global\let\gre@fixednexttextformat\gre@textnormal %
-  \gre@trace@end%
-}%
-
-\let\gre@fixednexttextformat\gre@textnormal %
 
 \def\GreUnstyled#1{#1}%
 
 \newif\ifgre@forcedcentering%
 \gre@forcedcenteringfalse%
-\newif\ifgre@nextforcedcentering%
-\gre@nextforcedcenteringfalse%
 
 \def\GreGABCForceCenters{%
   \ifgre@gabcforcecenters%
@@ -712,12 +623,8 @@
   \fi%
 }%
 
+% DEPRECATED
 \def\GreGABCNextForceCenters{%
-  \ifgre@gabcforcecenters%
-    \gre@nextforcedcenteringtrue%
-  \else%
-    \gre@nextforcedcenteringfalse%
-  \fi%
 }%
 
 \newif\ifgre@gabcforcecenters%
@@ -765,27 +672,8 @@
   \gre@forcedcenteringfalse%
 }%
 
+% DEPRECATED
 \def\GreSetNextSyllable#1#2#3#4#5{%
-  \ifgre@nextforcedcentering%
-    \gdef\gre@nextfirstsyllablepart{#1}%
-    \gdef\gre@nextmiddlesyllablepart{#2}%
-    \gdef\gre@nextendsyllablepart{#3}%
-  \else%
-    \ifcase\gre@lyriccentering% 0 - syllable centering
-      \gdef\gre@nextfirstsyllablepart{}%
-      \gdef\gre@nextmiddlesyllablepart{#1#2#3}%
-      \gdef\gre@nextendsyllablepart{}%
-    \or % 1 - vowel centering
-      \gdef\gre@nextfirstsyllablepart{#1}%
-      \gdef\gre@nextmiddlesyllablepart{#2}%
-      \gdef\gre@nextendsyllablepart{#3}%
-    \or % 2 - first-letter centering
-      \gdef\gre@nextfirstsyllablepart{}%
-      \gdef\gre@nextmiddlesyllablepart{#4}%
-      \gdef\gre@nextendsyllablepart{#5}%
-    \fi %
-  \fi%
-  \gre@nextforcedcenteringfalse%
 }%
 
 %%%%%%%%%%%%%%%
@@ -847,24 +735,10 @@
     ]%
 }%
 
-\newif\ifgre@evaluatingnextsyllable%
-\gre@evaluatingnextsyllablefalse%
-\def\gre@evaluatenextsyllable#1{%
-  \gre@trace{gre@evaluatenextsyllable{#1}}%
-  \gre@evaluatingnextsyllabletrue%
-  #1%
-  \gre@evaluatingnextsyllablefalse%
-  \gre@trace@end%
-}%
-
 \newif\ifgre@showhyphenafterthissyllable%
 \def\GreForceHyphen{%
-  \ifgre@evaluatingnextsyllable%
-    -%
-  \else%
-    \global\gre@showhyphenafterthissyllabletrue%
-    \gre@debugmsg{hyphen}{Forcing hyphen in gabc}%
-  \fi%
+  \global\gre@showhyphenafterthissyllabletrue
+  \gre@debugmsg{hyphen}{Forcing hyphen in gabc}%
 }%
 \def\GreEmptyFirstSyllableHyphen{\ifgre@forceemptyfirstsyllablehyphen\GreForceHyphen\fi}%
 
@@ -910,9 +784,6 @@
   \gre@textclearedtrue%
 }%
 
-\def\gre@arg@oftwo@first#1#2{#1}%
-\def\gre@arg@oftwo@second#1#2{#2}%
-
 %% general macro : it will typeset the syllable : arguments are :
 % #1 : macro setting the letters of this syllable
 % #2 : reserved (unused)
@@ -934,7 +805,7 @@
   \gre@debugmsg{general}{}%
   \global\advance\gre@attr@syllable@id by 1\relax %
   \gre@fixedtextformat{%
-  \directlua{gregoriotex.save_syllable_info('note')}%
+  \directlua{gregoriotex.save_syllable_info('note', #4)}%
   }%
   \gre@showhyphenafterthissyllablefalse%
   \ifcase#4\ifgre@forcehyphen%
@@ -944,7 +815,7 @@
   #1%
   \gre@firstglyphtrue%
   \gre@dimen@bolextra = 0pt\relax%
-  \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}% we first get the width between the alignment point and the end of the syllable
+  \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}% we first get the width between the alignment point and the end of the syllable
   % Before measuring the notes, save the alteration id. We will
   % restore it later, so that the measured notes and the actual notes
   % have the same alteration ids, if any.
@@ -1001,21 +872,8 @@
     \GreNoBreak %
   \fi %
   #5%
-  % if the next glyph has an alteration, check if it is suppressed;
-  % if so, pretend there's no alteration
-  \def\gre@nextalignment{\gre@arg@oftwo@first#7}%
-  \def\gre@nextalteration{\gre@arg@oftwo@second#7}%
-  \ifnum\gre@nextalteration>0\relax
-    \gre@alteration@isvisible{1}{\gre@nextalteration}% if the notes contain an alteration, the id was incremented, so this checks the alteration after the notes
-    \ifgre@alteration@isvisible
-    \else
-      \def\gre@nextalteration{0}%
-    \fi
-  \fi
   % now we can restore the alteration id to typeset the notes for real
   \global\gre@attr@alteration@id=\gre@saved@attr@alteration@id\relax %
-  \gre@calculate@nextbegindifference{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{\gre@nextalignment}{\gre@nextalteration}%
-  \gre@unsetfixednexttextformat %
   \gre@attr@part=4
   \ifgre@showlyrics%
     \setbox\gre@box@syllabletext=\hbox{%
@@ -1037,18 +895,7 @@
     \fi
   \fi%
   \unsetattribute{\gre@attr@part}%
-  \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
-  % gre@count@temp@one holds 1 if next is a bar, 2 if an alteration, else 0
-  \gre@count@temp@one=0%
-  \ifnum\gre@nextalteration=0\relax %
-    \ifnum\gre@nextalignment>9\relax %
-      \gre@count@temp@one=1\relax %
-    \fi %
-  \else %
-    \gre@count@temp@one=2\relax %
-  \fi %
-  \gre@debugmsg{spacing}{ gre@count@temp@one = \the\gre@count@temp@one}%
-  \gre@calculate@syllablefinalskip{#4}{\gre@count@temp@one}%
+  \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}%
   \ifcase#4
     \global\gre@possibleluahyphenafterthissyllabletrue
     \ifgre@showhyphenafterthissyllable
@@ -1074,6 +921,8 @@
   \ifdim\gre@dimen@begindifference > 0 pt\relax%
     \gre@skip@temp@one = \gre@dimen@begindifference\relax%
     \kern\gre@skip@temp@one %
+  \else
+    \kern0pt
   \fi}%
   #8\relax %
   \raise\gre@space@dimen@spacebeneathtext
@@ -1085,8 +934,13 @@
   \fi %
   {\gre@attr@skip@type=3
   \kern\dimexpr-\wd\gre@box@syllabletext-\gre@dimen@begindifference}%
-  \gre@attr@part=10
   \GreNoBreak % no line breaks between text and notes
+  \gre@attr@part=10
+  % In case there are no notes, ensure that there is at least one
+  % box with the attribute.
+  \ifdim\wd\gre@box@syllablenotes=0pt
+    \hbox{}%
+  \fi
   \ifgre@shownotes%
     \IfSubStr{\gre@debug}{,notespacing,}%
       % when debugging we add a zero-width line to mark the syllable bound
@@ -1127,14 +981,13 @@
     \kern -\gre@dimen@enddifference\relax%
     \GreNoBreak %
   \fi%
-  % we call end of syllable
-  \gre@syllable@end{\gre@nextalignment}{\gre@nextalteration}{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart\gre@nextmiddlesyllablepart\gre@nextendsyllablepart}}{#4}%
+  \gre@endofsyllable{#4}%
   \global\gre@dimen@notesaligncenter=0pt\relax% very important, see flat and natural
   \gre@unsetfixedtextformat %
   \ifgre@blockeolcustos\ifnum\gre@insidediscretionary=0\relax %
      \localrightbox{}%
   \fi\fi %
-  \relax %
+  \directlua{gregoriotex.save_post_syllable()}%
   \gre@trace@end%
 }%
 
@@ -1158,110 +1011,37 @@
 % #1 is the id of the euouae block (assigned by the C code)
 % #2 is whether there is a line break between here and the actuall beginning of
 %      the euouae block. 1 if there is a linebreak, 0 in the general case.
+% DEPRECATED
 \def\GreLastSyllableBeforeEUOUAE#1#2{%
-  \ifcase#2\ifcase\directlua{gregoriotex.is_ypos_different(#1)}\relax%
-    \GreLastOfLine%
-  \fi\fi %
 }%
 
-%% @desc Macro to make a few checks and call the right macros between
-%%       \endbeforebar, \endofword, \endofsyllable
-%% @arg#1 next syllable alignment type (#7:1 of \GreSyllable)
-%% @arg#2 next syllable alteration type (#7:2 of \GreSyllable)
-%% @arg#3 next syllable text
-%% @arg#4 end of word or not (#4 of \GreSyllable)
-\def\gre@syllable@end#1#2#3#4{%
-  \gre@trace{gre@syllable@end{#1}{#2}{#3}{#4}}%
-  % gre@count@temp@one holds 0 if next is a not bar, 1 if it is
-  \gre@count@temp@one=0%
-  \ifnum#2=0\relax %
-    \ifnum#1>9\relax %
-      \gre@count@temp@one=1%
-    \fi %
-  \fi %
-  \gre@debugmsg{syllablespacing}{ gre@count@temp@one = \the\gre@count@temp@one}%
-  \ifnum\gre@count@temp@one=1\relax %
-    \ifnum\gre@lastoflinecount=1\relax %
-      \gre@endofsyllable{0}{1}{1}%
-    \else %
-      % otherwise we call it with 1 only if there is no letters after (we can see it with nextbegindifference)
-      \setbox\gre@box@temp@width=\hbox{#3}%
-      \ifdim\wd\gre@box@temp@width=0pt\relax%
-        \gre@endofsyllable{0}{1}{1}%
-      \else %
-        \gre@endofsyllable{1}{1}{1}%
-      \fi %
-    \fi %
-  \else %
-    \ifnum\gre@lastoflinecount=1\relax %
-      \global\gre@lastoflinecount=2\relax %
-    \fi %
-    \gre@debugmsg{syllablespacing}{ calling endofsyllable with #4}%
-    \gre@endofsyllable{1}{#4}{0}%
-  \fi %
-  \gre@trace@end%
-}
-
-%% @desc Macro called at end of a syllable, adds a penalty and a space
-%% @arg#1 0 to only add the penalty, 1 otherwise
-%% @arg#2 0 if end of syllable, 1 if end of word
-%% @arg#3 1 if next syllable is a bar, 0 otherwise
-%%
-\def\gre@endofsyllable#1#2#3{%
-  \gre@trace{gre@endofsyllable{#1}{#2}{#3}}%
+%% @desc Macro called at end of a syllable, adds a penalty and a space.
+%% @arg#1 end of word or not (#4 of \GreSyllable)
+\def\gre@endofsyllable#1{%
+  \gre@trace{gre@endofsyllable{#1}}%
   \ifgre@eolshiftsenabled%
     %this shift will shorten the line somewhat to allow the lyrics to extend under the custos should TeX decide to insert a line break after the syllable being ended
     \GreNoBreak%
     \gre@calculate@eolshift{\gre@dimen@enddifference}%
     \kern -\gre@dimen@eolshift\relax%
   \fi%
-  \ifnum#3=1\relax %
-    \GreNoBreak %
-    \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@nobreakpenalty}%
-  \else %
-    \gre@count@temp@one=0\relax %
-    \ifnum#2=1\relax
-      \gre@penalty{\the\gre@space@count@endofwordpenalty}%
-      \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@endofwordpenalty}%
-    \else
-      \gre@penalty{\the\gre@space@count@endofsyllablepenalty}%
-      \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@endofsyllablepenalty}%
-    \fi
-    \gre@count@temp@one=0\relax %
-  \fi %
+  {\gre@attr@part=11
+  \ifnum#1=1\relax
+    \gre@penalty{\the\gre@space@count@endofwordpenalty}%
+    \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@endofwordpenalty}%
+  \else
+    \gre@penalty{\the\gre@space@count@endofsyllablepenalty}%
+    \gre@debugmsg{syllablespacing}{ set penalty \the\gre@space@count@endofsyllablepenalty}%
+  \fi}%
   \ifgre@eolshiftsenabled%
     %If the above penalties don't result in a line break, then we need to undo the eolshift to prevent the next syllable from overlapping with this one.  If the line break did occur, then this shift will occur at the beginning of a line and thus will be ignored automatically by TeX.
     \kern \gre@dimen@eolshift\relax%
     \GreNoBreak%
   \fi%
-  \ifnum#1=1\relax %
-    \ifgre@newbarspacing%
-      %the new bar spacing algorithms take care of this for us when the next syllable is a bar
-      \relax%
-    \else%
-      \gre@syllablefinalskip
-    \fi%
-    \ifnum#3=1\relax %
-      \GreNoBreak %
-    \else%
-      \ifgre@newbarspacing%
-        %the new bar spacing algorithm still needs the syllablefinalskip when the next syllable is not a bar
-        \gre@syllablefinalskip
-      \fi%
-    \fi %
-  \fi %
-  \relax%
+  {\gre@attr@skip@type=1
+   \gre@hskip0pt}%
   \gre@trace@end%
 }%
-
-\def\gre@syllablefinalskip{%
-  % Save the computed minNotesDistance and minTextDistance
-  \directlua{gregoriotex.save_min_distances()}%
-  % Emit a zero-width skip, which will be resized in the Lua pre-linebreak filter.
-  {\gre@attr@skip@type=1
-   \gre@hskip0pt
-  }%
-}
 
 \def\gresetbarspacing#1{%
   \IfStrEqCase{#1}{%
@@ -1298,18 +1078,18 @@
   \gre@debugmsg{general}{New bar syllable}%
   \gre@debugmsg{general}{}%
   \global\advance\gre@attr@syllable@id by 1\relax %
-  \gre@fixedtextformat{%
-  \directlua{gregoriotex.save_syllable_info('bar')}%
-  }%
   \gre@beginningofscorefalse
+  \gre@fixedtextformat{%
+  \directlua{gregoriotex.save_syllable_info('bar', #4)}%
+  }%
   \gre@possibleluahyphenafterthissyllablefalse %
   \gre@showhyphenafterthissyllablefalse %
   % the algorithm of this function is *extremely* complex, and has been much painful to write... good luck to understand.
   % the main goal is, when there is no text under the bar, to put the bar in the middle of the space between the last note of the previous syllable and the first note of the next syllable. But there are limits : a bar can't go very far above text. For example if there is "nuncncncncn" with a punctum on the u, the bar can't go above the fourth n, the most far position is the position where the end of the bar is above the end of the word. The same limitation applies for the syllable after the bar.
   % there are two different cases that have almost nothing in common : the case where there is something written under the bar, and the case where there is nothing.
-  % first of all we need to calculate previousenddifference, begindifference, enddifference and nextbegindifference.
+  % first of all we need to calculate begindifference and enddifference.
   #1%
-  \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}{0}%
+  \gre@calculate@textaligncenter{\gre@firstsyllablepart}{\gre@middlesyllablepart}%
   \directlua{gregoriotex.current_syllable().dash=4}%
   \gre@attr@part=4
   \ifgre@showlyrics%
@@ -1340,319 +1120,120 @@
   \gre@debugmsg{barspacing}{Width of bar line: \the\wd\gre@box@syllablenotes}%
   \gre@dimen@notesaligncenter=\dimexpr(\wd\gre@box@syllablenotes / 2)\relax %
   \gre@dimen@begindifference=\dimexpr(\gre@dimen@notesaligncenter - \gre@dimen@textaligncenter)\relax%
-  \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}{1}%
+  \gre@calculate@enddifference{\wd\gre@box@syllablenotes}{\wd\gre@box@syllabletext}{\gre@dimen@textaligncenter}{\gre@dimen@notesaligncenter}%
   #5%
-  % if the next glyph has an alteration, check if it is suppressed;
-  % if so, pretend there's no alteration
-  \def\gre@nextalignment{\gre@arg@oftwo@first#7}%
-  \def\gre@nextalteration{\gre@arg@oftwo@second#7}%
-  \ifnum\gre@nextalteration>0\relax
-    \gre@alteration@isvisible{1}{\gre@nextalteration}%
-    \ifgre@alteration@isvisible
-    \else
-      \def\gre@nextalteration{0}%
-    \fi
-  \fi
-  \gre@calculate@nextbegindifference{\gre@evaluatenextsyllable{\gre@nextfirstsyllablepart}}{\gre@evaluatenextsyllable{\gre@nextmiddlesyllablepart}}{\gre@evaluatenextsyllable{\gre@nextendsyllablepart}}{\gre@nextalignment}{\gre@nextalteration}%
-  \gre@unsetfixednexttextformat %
-  \gre@debugmsg{barspacing}{previousenddifference: \the\gre@dimen@previousenddifference}%
   \gre@debugmsg{barspacing}{begindifference: \the\gre@dimen@begindifference}%
   \gre@debugmsg{barspacing}{enddifference: \the\gre@dimen@enddifference}%
-  \gre@debugmsg{barspacing}{nextbegindifference: \the\gre@skip@nextbegindifference}%
-  \ifgre@newbarspacing%
-    %
-    % New bar spacing algorithm
-    %
-    \gre@calculate@barposition{#4}{\gre@nextalteration}%
-    \ifgre@textcleared%
-      \gre@clearsyllable{bar}%
-    \fi%
-    %now we can place the text and bar
-    %we're going to use the bar line to control positioning, so we need to start by getting to the end of the notes of the previous syllable
-    \ifdim\gre@dimen@adjustedpreviousenddifference < 0pt\relax%
-      %we need to move back to where the previous notes ended
-      \kern\gre@dimen@adjustedpreviousenddifference\relax%
-    \fi%
-    \GreNoBreak %
-    %move to the beginning of the text
-    {\gre@attr@skip@type=2
-    \gre@hskip\glueexpr(\gre@skip@bar@allocation/2% right from end of previous notes to nominal middle of bar line
-      +\gre@dimen@bar@shift% from nominal middle of bar line to actual middle
-      -\wd\gre@box@syllablenotes/2% back up to beginning of bar line
-      +\gre@dimen@begindifference% from beginning of bar line to beginning of text
-      +\gre@space@skip@bar@rubber)}% the rubber component
-    \GreNoBreak %
-    % all that extra stuff (translations and the like)
-    #8%
-    \GreNoBreak %
-    %print the text, the raise is in case of a translation
-    \raise\gre@space@dimen@spacebeneathtext
-    \copy\gre@box@syllabletext
-    %and the code which handles translation centering
-    \ifgre@mustdotranslationcenterend%
-      % case of end of translation centering, we do it after the typesetting of the text
-      \gre@dotranslationcenterend %
-      \gre@mustdotranslationcenterendfalse%
-    \fi %
-    %move back to the beginning of the bar line
-    {\gre@attr@skip@type=3
-    \kern\dimexpr(\gre@dimen@enddifference% move from end of text to end of bar line
-      -\wd\gre@box@syllablenotes)}% back up from end of bar line to beginning
-    \GreNoBreak%
-    \gre@attr@part=10
-    \ifgre@shownotes%
-      \IfSubStr{\gre@debug}{,barspacing,}%
-        % when debugging we add a zero-width line to mark the syllable bound
-        {\raise 12pt\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
-        {}% do nothing if not debugging
-      #9%
-      \IfSubStr{\gre@debug}{,barspacing,}%
-        % when debugging we add a zero-width line to mark the syllable bound
-        {\raise 12pt\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
-        {}% do nothing if not debugging
-    \else%
-      \ifnum\gre@notes@phantomwrapper>0\relax
-        \gre@applyphantomwrapper{\gre@notes@phantomwrapper}{#9}%
-      \else
-        \gre@check@nabc@needsspacing
-        \ifgre@nabc@needsspacing
-          % NABC visible: render with tight (NABC-only) spacing
-          \gre@notes@rendernabc@tight{#9}%
-          % Apply per-syllable NABC kern (computed in \gre@syllablenotes)
-          \ifdim\gre@dimen@nabc@extrakern>0pt\relax
-            \kern\gre@dimen@nabc@extrakern
-          \fi
-        \else
-          % Notes disabled: render NABC without affecting spacing
-          \hbox to 0pt{\gre@notes@rendernabc{#9}\hss}%
-        \fi
-      \fi
-    \fi%
-    \unsetattribute{\gre@attr@part}%
-    \global\let\gre@newlinecommon\gre@saved@prelinedelay@newlinecommon %
-    \GreNoBreak%
-    % get into position to place the penalty
-    {\gre@attr@skip@type=4
-    \ifdim\gre@dimen@enddifference < 0pt\relax%
-      % the text extends past the notes, so we need to get to the end of the text
-      \kern-\gre@dimen@enddifference%
-    \else
-      \kern0pt
-    \fi}%
-    \GreNoBreak
-    \ifgre@eolshiftsenabled%
-      \ifgre@endofscore%
-        \kern\glueexpr(-\gre@skip@bar@lastskip)\relax%
-      \else%
-        %this shift will shorten the line somewhat to allow the lyrics to extend under the custos should TeX decide to insert a line break after the syllable being ended
-        \gre@calculate@eolshift{\dimexpr(\gre@dimen@enddifference-\gre@skip@bar@lastskip)\relax }%
-        \gre@debugmsg{barspacing}{End of line shift: \the\gre@dimen@eolshift}%
-        \ifdim\gre@dimen@eolshift<\gre@skip@bar@lastskip %
-          \gre@dimen@eolshift=\gre@skip@bar@lastskip\relax %
-        \fi %
-        \kern\glueexpr(-\gre@dimen@eolshift)\relax%
-      \fi%
-    \fi%
-    % gre@count@temp@one is "forced end of line or last of score"
-    \gre@count@temp@one=0\relax %
-    \ifnum\gre@newlinearg=-1\else %
-      \gre@count@temp@one=1\relax %
-    \fi %
-    \ifnum\gre@lastoflinecount=1\relax %
-      \gre@count@temp@one=1\relax %
-    \fi %
-    \ifgre@endofscore %
-      \gre@count@temp@one=1\relax %
-    \fi %
-    % if no end of line or end of score
-    \ifnum\gre@count@temp@one=0\relax %
-      % add the penalty
-      \gre@debugmsg{barspacing}{after bar penalty: \the\gre@space@count@endafterbarpenalty}%
-      \gre@penalty{\the\gre@space@count@endafterbarpenalty}%
-      \ifgre@eolshiftsenabled%
-        \ifgre@endofscore\else%
-          %If the above penalties don't result in a line break, then we need to undo the eolshift to prevent the next syllable from overlapping with this one.  If the line break did occur, then this shift will occur at the beginning of a line and thus will be ignored automatically by TeX.
-          \kern \dimexpr(\gre@dimen@eolshift)\relax%
-          \GreNoBreak%
-        \fi%
-      \fi%
-      \ifdim\gre@dimen@enddifference < 0pt\relax%
-        %undo the earlier shift
-        \kern\gre@dimen@enddifference%
-        \GreNoBreak%
-      \fi%
-      % adjustment for alterations:
-      \kern-\gre@skip@alterationshift %
-      \GreNoBreak
-      %move to the beginning of the notes of the next syllable
-      {\gre@attr@skip@type=1
-      \gre@hskip\glueexpr(-\wd\gre@box@syllablenotes/2% back up to middle of notes
-        -\gre@dimen@bar@shift% go back from actual middle to nominal middle of bar line
-        +\gre@skip@bar@allocation/2% go from nominal middle to the start of the next notes
-        +\gre@space@skip@bar@rubber)}% the rubber component
-      \ifdim\gre@skip@nextbegindifference < 0pt\relax%
-        %we need to move back to where the text for the next syllable should start
-        \GreNoBreak %
-        \kern\gre@skip@nextbegindifference\relax%
-      \fi%
-    \else %
-      \ifgre@endofscore %
-        \localleftbox{}%
-      \else %
-        \ifnum\gre@newlinearg=-1\else %
-          \gre@debugmsg{barspacing}{calling new line with argument: \gre@newlinearg}%
-          \gre@newlinecommon{\gre@newlinearg}{1}%
-        \fi %
-      \fi %
-    \fi%
+  \ifgre@textcleared
+    % Insert a zero kern that will be adjusted in the Lua function syllable_clearing.
+    {\gre@attr@skip@type=5 \kern0pt}%
+  \fi
+  \GreNoBreak
+  \ifgre@newbarspacing
+    \gre@hskip\glueexpr\gre@space@skip@bar@rubber
+  \fi
+  % From left edge of syllable to left edge of text
+  {\gre@attr@skip@type=2
+  \ifdim\gre@dimen@begindifference>0pt
+    \kern\gre@dimen@begindifference
+  \else
+    \kern0pt
+  \fi}%
+  \GreNoBreak
+  % all that extra stuff (translations and the like)
+  #8%
+  \GreNoBreak
+  %print the text, the raise is in case of a translation
+  \raise\gre@space@dimen@spacebeneathtext
+  \copy\gre@box@syllabletext
+  %and the code which handles translation centering
+  \ifgre@mustdotranslationcenterend
+    % case of end of translation centering, we do it after the typesetting of the text
+    \gre@dotranslationcenterend
+    \gre@mustdotranslationcenterendfalse
+  \fi
+  %move back to the beginning of the bar line
+  {\gre@attr@skip@type=3
+  \kern\dimexpr(\gre@dimen@enddifference% move from end of text to end of bar line
+    -\wd\gre@box@syllablenotes)}% back up from end of bar line to beginning
+  \GreNoBreak
+  \gre@attr@part=10
+  % In case there are no notes, ensure that there is at least one
+  % box with the attribute.
+  \ifdim\wd\gre@box@syllablenotes=0pt
+    \hbox{}%
+  \fi
+  \ifgre@shownotes
+    \IfSubStr{\gre@debug}{,barspacing,}%
+      % when debugging we add a zero-width line to mark the syllable bound
+      {\raise 12pt\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
+      {}% do nothing if not debugging
+    #9%
+    \IfSubStr{\gre@debug}{,barspacing,}%
+      % when debugging we add a zero-width line to mark the syllable bound
+      {\raise 12pt\hbox to 0pt{\rule{0.4pt}{12pt}\hss}}%
+      {}% do nothing if not debugging
   \else%
-    %
-    % Old spacing algorithm
-    %
-    %This is the old algorithm.  I've kept it in case people still want to use it.
-    \gre@punctummoraadjustment%
-    \ifgre@textcleared%
-      \gre@clearsyllable{bar}%
-    \fi%
-    % then we check if there is something to write
-    \global\let\gre@newlinecommon\gre@saved@prelinedelay@newlinecommon %
-    \gre@debugmsg{ifdim}{ wd(gre@box@syllabletext) = 0pt}%
-    \ifdim\wd\gre@box@syllabletext = 0 pt\relax %
-      % the most difficult case : when there is nothing to write
-      % first we need to determine the real space that there will be between the notes. Here again it is not so simple... let's consider these two kinds of spaces :
-      %% 1/ the minimal space between a note and the bar + the width of the bar + the minimal space between the bar and the note (that's the global idea, in fact there are nuances) : we assign skip@temp@three to it
-      %% 2/ enddifference + begindifference + space between notes and word : we assign skip@temp@two to it
-      \gre@skip@temp@three=\glueexpr(\gre@space@skip@notebarspace %
-        + \gre@space@skip@notebarspace %
-        + \wd\gre@box@syllablenotes)\relax %
-      % now let's get skip@temp@two
-      \gre@debugmsg{ifdim}{ nextbegindifference < 0pt}%
-      \ifdim\gre@skip@nextbegindifference < 0 pt\relax%
-        \gre@skip@temp@two=-\gre@skip@nextbegindifference\relax%
-      \else %
-        \gre@skip@temp@two=0 pt\relax%
-      \fi %
-      \gre@debugmsg{ifdim}{ adjustedpreviousenddifference < 0pt}%
-      \ifdim\gre@dimen@adjustedpreviousenddifference < 0 pt\relax%
-        \advance\gre@skip@temp@two by %
-          \glueexpr(-\gre@dimen@adjustedpreviousenddifference %
-          + \gre@space@skip@interwordspacetext)\relax%
-      \else %
-        \advance\gre@skip@temp@two by \gre@space@skip@interwordspacenotes\relax%
-      \fi%
-      % we take the max of it, then we divide it by two and we substract half of the width of the bar
-      \gre@debugmsg{ifdim}{ temp@skip@three < temp@skip@two}%
-      \ifdim\gre@skip@temp@three <\gre@skip@temp@two %
-        \gre@skip@temp@three=\gre@skip@temp@two %
-      \fi %
-      \divide\gre@skip@temp@three by 2\relax %
-      \advance\gre@skip@temp@three by \dimexpr(\wd\gre@box@syllablenotes / -2)\relax %
-      % now we have our skipone
-      \gre@skip@temp@two=\gre@skip@temp@three %
-      \gre@debugmsg{ifdim}{ adjustedpreviousenddifference < 0pt}%
-      \ifdim\gre@dimen@adjustedpreviousenddifference < 0 pt\relax%
-        \advance\gre@skip@temp@two by \gre@dimen@adjustedpreviousenddifference\relax%
-      \fi %
-      \GreNoBreak %
-      \gre@debugmsg{ifdim}{ temp@skip@two > -wd(gre@box@syllablenotes)}%
-      {\gre@attr@skip@type=2
-      \ifdim\gre@skip@temp@two > -\wd\gre@box@syllablenotes %
-        \kern\gre@skip@temp@two %
-      \else %
-        \gre@skip@temp@one = -\wd\gre@box@syllablenotes %
-        \kern\gre@skip@temp@one%
-      \fi}%
-      \GreNoBreak %
-      #8\relax %
-      \ifgre@mustdotranslationcenterend%
-        % case of end of translation centering, we do it after the typesetting of the text
-        \gre@dotranslationcenterend %
-        \gre@mustdotranslationcenterendfalse%
-      \fi %
-      \gre@attr@part=10
-      % In case there are no notes, ensure that there is at least one
-      % box with the attribute.
-      \ifdim\wd\gre@box@syllablenotes=0pt
-        \hbox{}%
+    \ifnum\gre@notes@phantomwrapper>0\relax
+      \gre@applyphantomwrapper{\gre@notes@phantomwrapper}{#9}%
+    \else
+      \gre@check@nabc@needsspacing
+      \ifgre@nabc@needsspacing
+        % NABC visible: render with tight (NABC-only) spacing
+        \gre@notes@rendernabc@tight{#9}%
+        % Apply per-syllable NABC kern (computed in \gre@syllablenotes)
+        \ifdim\gre@dimen@nabc@extrakern>0pt\relax
+          \kern\gre@dimen@nabc@extrakern
+        \fi
+      \else
+        % Notes disabled: render NABC without affecting spacing
+        \hbox to 0pt{\gre@notes@rendernabc{#9}\hss}%
       \fi
-      \ifgre@shownotes%
-        #9\relax %
-      \fi%
-      \unsetattribute{\gre@attr@part}%
-      \gre@penalty{\the\gre@space@count@endafterbaraltpenalty }% TODO: isn't it a bit buggy?
-      % end of same code as syllable
-      \ifnum\gre@lastoflinecount=1\relax %
-        \global\gre@lastoflinecount=2\relax %
-      \else %
-        \gre@debugmsg{ifdim}{ temp@skip@two < -wd(gre@box@syllablenotes)}%
-        {\gre@attr@skip@type=1
-        \ifdim\gre@skip@temp@two < -\wd\gre@box@syllablenotes %
-          \gre@debugmsg{ifdim}{ nextbegindifference > 0pt}%
-          \ifdim\gre@skip@nextbegindifference > 0 pt\relax%
-            \gre@skip@temp@one = \gre@space@skip@interwordspacetext\relax%
-            \gre@hskip\gre@skip@temp@one %
-          \else % \ifdim\gre@skip@nextbegindifference > 0 pt
-            \gre@skip@temp@one = \gre@space@skip@interwordspacetext\relax%
-            \gre@hskip\gre@skip@temp@one %
-          \fi %
-        \else %
-          \gre@skip@temp@two=\gre@skip@temp@three %
-          \gre@debugmsg{ifdim}{ nextbegindifference < 0pt}%
-          \ifdim\gre@skip@nextbegindifference < 0 pt\relax%
-            \advance\gre@skip@temp@two by \gre@skip@nextbegindifference\relax%
-          \fi %
-          \gre@debugmsg{ifdim}{ temp@skip@two > -wd(gre@box@syllablenotes)}%
-          \ifdim\gre@skip@temp@two > -\wd\gre@box@syllablenotes %
-            \kern\gre@skip@temp@two %
-          \else % \ifdim\gre@dimen@temp@five > -\wd\gre@box@syllablenotes
-            \gre@skip@temp@one = -\wd\gre@box@syllablenotes %
-            \gre@hskip\gre@skip@temp@one %
-          \fi %
-        \fi}%
-      \fi %
-    % then the most simple : the case where there is something to write under the bar. We just need to adjust the spaces.
-    \else %ifdim\wd\gre@box@syllabletext = 0 pt
-      #8\relax %
-      \raise\gre@space@dimen@spacebeneathtext \copy\gre@box@syllabletext %
-      \ifgre@mustdotranslationcenterend%
-        % case of end of translation centering, we do it after the typesetting of the text
-        \gre@dotranslationcenterend %
-        \gre@mustdotranslationcenterendfalse%
-      \fi %
-      {\gre@attr@skip@type=3
-      \gre@skip@temp@one = -\wd\gre@box@syllabletext %
-      \kern\gre@skip@temp@one %
-      \gre@skip@temp@one = -\gre@dimen@begindifference\relax%
-      \kern\gre@skip@temp@one}%
-      \gre@attr@part=10
-      \ifgre@shownotes%
-        #9%
-      \fi%
-      \unsetattribute{\gre@attr@part}%
-      \gre@debugmsg{ifdim}{ enddifference < 0pt}%
-      \ifdim\gre@dimen@enddifference <0pt\relax%
-        %% important, else we are not really at the end of the syllable
-        {\gre@attr@skip@type=4
-        \gre@skip@temp@one = -\gre@dimen@enddifference\relax%
-        \kern\gre@skip@temp@one}%
-      \fi%
-      % end of same code as syllable
-      \ifnum\gre@lastoflinecount=1\relax %
-        \global\gre@lastoflinecount=2\relax %
-        \gre@endafterbar{0}%
-      \else %
-        \global\gre@lastoflinecount=0\relax %
-        \gre@endafterbar{1}%
-      \fi %
-      %and that's it !!
-    \fi %
+    \fi
   \fi%
+  \unsetattribute{\gre@attr@part}%
+  \global\let\gre@newlinecommon\gre@saved@prelinedelay@newlinecommon
+  \GreNoBreak
+  % get into position to place the penalty
+  {\gre@attr@skip@type=4
+  \ifdim\gre@dimen@enddifference < 0pt\relax
+    % the text extends past the notes, so we need to get to the end of the text
+    \kern-\gre@dimen@enddifference
+  \else
+    \kern0pt
+  \fi}%
+  \GreNoBreak
+  % gre@count@temp@one is "forced end of line or last of score"
+  \gre@count@temp@one=0\relax
+  \ifnum\gre@newlinearg=-1\else
+    \gre@count@temp@one=1\relax
+  \fi
+  \ifgre@endofscore
+    \gre@count@temp@one=1\relax
+  \fi
+  % if no end of line or end of score
+  \ifnum\gre@count@temp@one=0\relax
+    % add the penalty
+    \gre@debugmsg{barspacing}{after bar penalty: \the\gre@space@count@endafterbarpenalty}%
+    {\gre@attr@part=11
+    \gre@penalty{\the\gre@space@count@endafterbarpenalty}}%
+  \else
+    \ifgre@endofscore
+      \localleftbox{}%
+    \else
+      \ifnum\gre@newlinearg=-1\else
+        \gre@debugmsg{barspacing}{calling new line with argument: \gre@newlinearg}%
+        \gre@newlinecommon{\gre@newlinearg}{1}%
+      \fi
+    \fi
+  \fi
+  {\gre@attr@skip@type=1\gre@hskip0pt}%
   \global\gre@dimen@notesaligncenter= 0 pt\relax % very important, see flat and natural
   \gre@unsetfixedtextformat %
   \ifgre@blockeolcustos\ifnum\gre@insidediscretionary=0\relax %
      \localrightbox{}%
   \fi\fi %
-  \relax%
+  \directlua{gregoriotex.save_post_syllable()}%
   \gre@trace@end%
 }
 

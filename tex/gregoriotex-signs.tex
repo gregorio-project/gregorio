@@ -115,18 +115,13 @@
   \gre@debugmsg{barspacing}{save last skip: \the\gre@skip@bar@lastskip}%
   \edef\gre@saved@predisc@lastskip{\the\gre@skip@bar@lastskip}%
   \discretionary{%
-    \global\gre@lastoflinecount=1\relax % (a good magic trick)
-    \gre@debugmsg{bolshift}{discretionary pre lastoflinecount: \the\gre@lastoflinecount}%
     #2%
     }{%
-    \global\gre@lastoflinecount=2\relax % (a good magic trick)
-    \gre@debugmsg{bolshift}{discretionary post lastoflinecount: \the\gre@lastoflinecount}%
     }{%
     \gre@debugmsg{barspacing}{restore end diff: \gre@saved@predisc@enddifference}%
     \gre@dimen@enddifference=\gre@saved@predisc@enddifference
     \gre@debugmsg{barspacing}{restore last skip: \gre@saved@predisc@lastskip}%
     \gre@skip@bar@lastskip=\gre@saved@predisc@lastskip
-    \gre@debugmsg{bolshift}{discretionary no lastoflinecount: \the\gre@lastoflinecount}%
     #3%
     }%
   \global\xdef\gre@insidediscretionary{\number 0}%
@@ -461,6 +456,7 @@
 \def\GreCustos#1#2{%
   \gre@trace{GreCustos{#1}{#2}}%
   \gre@in@custostrue %
+  \gre@attr@note@type=3 % custos
   \GreNoBreak %
   \ifdim\gre@skip@bar@lastskip=0pt\else % we're after a bar:
     \kern-\gre@skip@bar@lastskip %
@@ -509,7 +505,7 @@
     \kern\gre@skip@bar@lastskip %
     \GreNoBreak %
   \fi %
-  \relax %
+  \unsetattribute{\gre@attr@note@type}%
   \gre@in@custosfalse %
   \gre@trace@end%
 }%
@@ -1187,10 +1183,11 @@
     \gre@dimen@temp@five=\wd\gre@box@temp@width %
     \kern-\gre@dimen@temp@five %
   \fi %
-  \kern\gre@space@dimen@spacebeforesigns
   \ifnum#2=0\relax %
     \global\gre@lastendswithmoratrue%
+    \gre@attr@note@type=1
   \fi %
+  \kern\gre@space@dimen@spacebeforesigns
   \ifcase#3\relax % 0
     \gre@calculate@glyphraisevalue{#1}{4}{}%
   \or% 1
@@ -1213,7 +1210,9 @@
   \GreNoBreak %
   \raise \gre@dimen@glyphraisevalue \hbox{\gre@fontchar@punctummora}%
   \GreNoBreak %
-  \ifcase#2\relax\or %
+  \ifcase#2\relax
+    \unsetattribute\gre@attr@note@type
+  \or
     \setbox\gre@box@temp@width=\hbox{\gre@fontchar@punctummora}%
     \gre@skip@temp@four = -\wd\gre@box@temp@width %
     \kern\gre@skip@temp@four%
@@ -2095,20 +2094,13 @@
 % sets gre@skip@punctummorashift to the (usually negative) shift to apply before
 % a syllable following a punctum mora, to cancel its taking into account into
 % horizontal placement.
-% First argument is:
-%   - 1 for the general case
-%   - 2 when the punctum mora is before a bar
-\def\gre@get@unkern@aftermora#1{%
-  \gre@trace{gre@get@unkern@aftermora{#1}}%
+\def\gre@get@unkern@aftermora{%
+  \gre@trace{gre@get@unkern@aftermora}%
   \ifdim\gre@dimen@morawidth=0pt\relax %
     \setbox\gre@box@temp@width=\hbox{\gre@font@music\gre@fontchar@punctummora}%
     \global\gre@dimen@morawidth=\wd\gre@box@temp@width %
   \fi %
-  \ifnum #1=1%
-    \global\gre@skip@punctummorashift=\glueexpr - \gre@dimen@morawidth - \gre@space@dimen@spacebeforesigns + \gre@space@skip@moraadjustment\relax
-  \else %
-    \global\gre@skip@punctummorashift=\glueexpr - \gre@dimen@morawidth - \gre@space@dimen@spacebeforesigns + \gre@space@skip@moraadjustmentbar\relax
-  \fi %
+  \global\gre@skip@punctummorashift=\glueexpr - \gre@dimen@morawidth - \gre@space@dimen@spacebeforesigns + \gre@space@skip@moraadjustmentbar\relax
   \relax %
   \gre@trace@end%
 }
@@ -2120,15 +2112,15 @@
     % while boxing, otherwise the box width will be wrong
     \ifgre@firstglyph %
       \ifgre@boxing\else %
-        \gre@get@unkern@aftermora{2}%
+        \gre@get@unkern@aftermora
         \kern\gre@skip@punctummorashift %
       \fi %
     \else %
-      \gre@get@unkern@aftermora{2}%
+      \gre@get@unkern@aftermora
       \kern\gre@skip@punctummorashift %
     \fi %
   \else%
-    \gre@get@unkern@aftermora{2}%
+    \gre@get@unkern@aftermora
     \kern\gre@skip@punctummorashift %
   \fi%
   \relax %
@@ -2177,6 +2169,7 @@
     \fi %
   \fi %
   \gre@skip@temp@four=0pt\relax %
+  \gre@attr@note@type=2\relax
   \ifcase#1 % 0 : virgula
     \ifnum\gre@count@temp@one=1\relax %
       \gre@skip@temp@four = \csname gre@space@skip@bar@virgula\gre@bar@space@suffix{#2}{#3}{#5}\endcsname\relax%
@@ -2540,6 +2533,7 @@
       \gre@hskip\gre@skip@temp@four %
     \fi %
   \fi %
+  \unsetattribute{\gre@attr@note@type}%
   \global\gre@skip@bar@lastskip=\gre@skip@temp@four %
   \gre@debugmsg{spacing}{Width of bar just printed: \the\wd\gre@box@temp@width}%
   \gre@debugmsg{spacing}{Last bar space: \the\gre@skip@temp@four}%
