@@ -819,7 +819,7 @@ local function bar_syllable_spacing(prev, cur, next)
   -- text_req includes space before and after
   local text_req = space_before_text + cur.text.width + space_after_text
   debugmessage('barspacing', 'space required for text: %fpt', text_req/2^16)
-  local text_center = node.dimensions(cur.first, cur.text) - space_before_text + tex.round(text_req/2)
+  local text_center = node.dimensions(cur.first, cur.text) + tex.round(cur.text.width/2)
   debugmessage('barspacing', 'text center: %fpt', text_center/2^16)
 
   -- If there are notes, then notes_width does include the space
