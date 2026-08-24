@@ -311,7 +311,7 @@ Macro to change one of Gregorio\TeX’s counts or penalties (numeric values).
 \end{argtable}
 
 \macroname{\textbackslash grechangenextscorelinecount}{\{\#1\}\{\#2\}\{\#3\}}{gregoriotex-spaces.tex}
-Changes one of Gregorio\TeX’s counts or penalties for a given line in the next included score. This works with \texttt{additionaltopspacethreshold}, \texttt{additionaltopspacealtthreshold}, \texttt{additionaltopspacenabcthreshold}, and \texttt{noteadditionalspacelinestextthreshold}. 
+Changes one of Gregorio\TeX’s counts or penalties for a given line in the next included score. This works with \texttt{additionaltopspacethreshold}, \texttt{additionaltopspacealtthreshold}, \texttt{additionaltopspacenabcthreshold}, \texttt{noteadditionalspacelinestextthreshold}, and \texttt{additionalbottomspacenabcthreshold}.
 
 \begin{argtable}
   \#1 & list of integers & A comma-separated list of line numbers in the next
@@ -1533,6 +1533,12 @@ The number of low notes which will add space between the lines and the lyrics.  
 \texttt{2}, every note below \texttt{c} will add space for each pitch needed below \texttt{c}, accounting for the various signs. See \S\ref{sec:vertical-spacing}.
 \end{gcount}
 
+\begin{gcount}{additionalbottomspacenabcthreshold}
+Same as \texttt{noteadditionalspacelinestextthreshold} but setting the
+threshold for notes taken into account with below lines nabc neume
+vertical placement. See \S\ref{sec:vertical-spacing}.
+\end{gcount}
+
 \subsection{Distances}\label{distances}
 
 Each of the following distances controls some aspect of the spacing of the Gregorio\TeX\ score.  They are changed using \verb=\grechangedim=, documented above.  If the distance permits a rubber value, then the default value will indicate the stretch and shrink (even if they are zero by default).  Distances whose default value does not include a stretch or shrink may not take a rubber value.
@@ -2170,6 +2176,8 @@ Additional space below the staff works in much the same way. The count \texttt{n
 \end{center}
 
 The minimum value of \texttt{noteadditionalspacelinestextthreshold} is~$-2$ (no additional bottom space) and the maximum value is $4$ (additional bottom space for anything below the bottom staff line).
+
+Below-lines nabc neumes use their own threshold, \texttt{additionalbottomspacenabcthreshold}, the same way above-lines nabc neumes use \texttt{additionaltopspacenabcthreshold} instead of \texttt{additionaltopspacealtthreshold}. It defaults to $2$, the same as \texttt{noteadditionalspacelinestextthreshold}, so the below-lines nabc line moves away from a low note at the same point the lyrics do, rather than staying at a fixed distance from the staff while the note keeps dropping below it.
 
 A legacy option is to change the amount of additional bottom space per step by setting \verb|\gresetnoteadditionalspacelinestext{manual}| and the following:
 

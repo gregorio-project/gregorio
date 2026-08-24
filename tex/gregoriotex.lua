@@ -90,6 +90,7 @@ local endcenter   = 2
 
 local glyph_top_attr = luatexbase.attributes['gre@attr@glyph@top']
 local glyph_bottom_attr = luatexbase.attributes['gre@attr@glyph@bottom']
+local nabc_baseraise_attr = luatexbase.attributes['gre@attr@nabc@baseraise']
 
 local alteration_type_attr = luatexbase.attributes['gre@attr@alteration@type']
 local alteration_pitch_attr = luatexbase.attributes['gre@attr@alteration@pitch']
@@ -723,19 +724,38 @@ local function compute_line_statistics(line, info)
       has_nabc = false,
       has_blnabc = false,
       glyph_top = 7, -- e = \gre@pitch@dummy
-      glyph_bottom = 7 -- e = \gre@pitch@dummy
+      glyph_bottom = 7, -- e = \gre@pitch@dummy
+      nabc_baseraise_max = 0,
+      blnabc_baseraise_min = 0,
+      nabc_max_depth = 0,
+      blnabc_max_height = 0
     }
   end
-  local function visit(list)
+  local function visit(list, voice)
     for n in traverse(list) do
+      local child_voice = voice
       if has_attribute(n, part_attr, part_translation) then
         info.has_translation = true
       elseif has_attribute(n, part_attr, part_alt) then
         info.has_alt = true
+      -- Worst-case extent of each nabc row toward the staff -- depth for
+      -- nabc (the staff is below it), height for blnabc (above it).  This
+      -- is what adjust_additional_spaces measures to keep the row clear;
+      -- see nabc_overshoot there.  The nil guards matter: the traversal
+      -- descends into the tagged box, and the glue/kern nodes inside it
+      -- carry the same attribute but have no height/depth.
       elseif has_attribute(n, part_attr, part_nabc) then
         info.has_nabc = true
+        child_voice = 1
+        if n.depth and n.depth > info.nabc_max_depth then
+          info.nabc_max_depth = n.depth
+        end
       elseif has_attribute(n, part_attr, part_blnabc) then
         info.has_blnabc = true
+        child_voice = 2
+        if n.height and n.height > info.blnabc_max_height then
+          info.blnabc_max_height = n.height
+        end
       else
         if has_attribute(n, glyph_top_attr) then
           if info.glyph_top == nil or has_attribute(n, glyph_top_attr) > info.glyph_top then
@@ -748,15 +768,31 @@ local function compute_line_statistics(line, info)
           end
         end
       end
+      -- Checked unconditionally: this lives on the inner \raise'd box, not
+      -- the outer part_nabc/part_blnabc-tagged one; voice (inherited from
+      -- whichever of those wraps it) tells us which nabc line it's on.
+      -- Only the shift away from the staff is tracked per voice: nabc sits
+      -- above it, so an upward hX push (max) is what grows the row; blnabc
+      -- sits below, so a downward one (min) does.  The shift toward the
+      -- staff needs no accumulator -- it is already part of the glyph's
+      -- rendered extent, which nabc_overshoot measures directly.
+      local br = has_attribute(n, nabc_baseraise_attr)
+      if br then
+        if voice == 1 then
+          if br > info.nabc_baseraise_max then info.nabc_baseraise_max = br end
+        elseif voice == 2 then
+          if br < info.blnabc_baseraise_min then info.blnabc_baseraise_min = br end
+        end
+      end
       if n.id == hlist then
-        visit(n.head)
+        visit(n.head, child_voice)
       elseif n.id == disc then
-        visit(n.replace)
+        visit(n.replace, child_voice)
       end
     end
   end
 
-  visit(line.head)
+  visit(line.head, nil)
   debugmessage('compute_line_statistics', 'has_alt %s has_nabc %s has_translation %s glyph_top %s glyph_bottom %s', info.has_alt, info.has_nabc, info.has_translation, info.glyph_top, info.glyph_bottom)
   return info
 end
@@ -798,21 +834,38 @@ local function adjust_additional_spaces(line, info, linenum)
     note_additional_space_lines_text = staffline_distance
   end
 
+  -- How much extra room a nabc row needs beyond its nominal gap to the
+  -- staff, given the worst-case extent its glyphs reach toward the staff.
+  -- That extent already includes any explicit hX pitch shift, because
+  -- '\raise'ing a glyph moves the ink into the box's height or depth, so
+  -- measuring it is enough -- adding a separate hX term on top would
+  -- reserve the same overlap risk twice.  clearance is the white space to
+  -- keep between the staff and the nearest ink: it is held back from the
+  -- nominal budget, so a glyph that would eat into it pushes the row away
+  -- by the difference instead.
+  local function nabc_overshoot(extent, budget_name, clearance)
+    return math.max(0, extent - math.max(0, get_per_line_space(budget_name) - clearance))
+  end
+
   -- thresholds for additional top/bottom spaces
   local top_threshold = get_per_line_count('additionaltopspacethreshold')
   local alt_threshold = get_per_line_count('additionaltopspacealtthreshold')
   local nabc_threshold = get_per_line_count('additionaltopspacenabcthreshold')
   local bottom_threshold = get_per_line_count('noteadditionalspacelinestextthreshold')
-  
+  local blnabc_threshold = get_per_line_count('additionalbottomspacenabcthreshold')
+
   -- compute top and bottom pitches
-  local adjust_bottom = bottom_threshold + 3
+  local adjust_bottom = 3
   local adjust_top = 4 + 2*tex.count['gre@count@stafflines']
 
   -- compute additional top/bottom spaces
   local additional_top_space = math.max(0, info.glyph_top - adjust_top - top_threshold) * staffline_distance
   local additional_top_space_alt = math.max(0, info.glyph_top - adjust_top - alt_threshold) * staffline_distance
   local additional_top_space_nabc = math.max(0, info.glyph_top - adjust_top - nabc_threshold) * staffline_distance
-  local additional_bottom_space = math.max(0, adjust_bottom - info.glyph_bottom) * note_additional_space_lines_text
+  local additional_bottom_space = math.max(0, adjust_bottom + bottom_threshold - info.glyph_bottom) * note_additional_space_lines_text
+  -- blnabc gets the same treatment, but with its own threshold, the same
+  -- way nabc above the staff doesn't share additional_top_space's
+  local additional_bottom_space_nabc = math.max(0, adjust_bottom + blnabc_threshold - info.glyph_bottom) * note_additional_space_lines_text
 
   -- translation height
   local translation_height = 0
@@ -836,15 +889,20 @@ local function adjust_additional_spaces(line, info, linenum)
   local cur = 0 -- vertical position without any additional space
   local add = 0 -- with additional space
 
+  -- Room above nabc for a glyph pushed away from the staff by an hX code.
+  local nabc_baseraise_extra_top = math.max(0, info.nabc_baseraise_max)
+
   local nabc_raise = 0
   if info.has_nabc then
     if not staff_zeroed then
       cur = cur + get_per_line_space('abovelinesnabcraise')
     end
-    add = math.max(add, cur + additional_top_space_nabc)
+    local nabc_extra_bottom = nabc_overshoot(info.nabc_max_depth,
+      'abovelinesnabcheight', staffline_distance)
+    add = math.max(add, cur + additional_top_space_nabc + nabc_extra_bottom)
     nabc_raise = add
-    cur = cur + get_per_line_space('abovelinesnabcheight')
-    add = add + get_per_line_space('abovelinesnabcheight')
+    cur = cur + get_per_line_space('abovelinesnabcheight') + nabc_baseraise_extra_top
+    add = add + get_per_line_space('abovelinesnabcheight') + nabc_baseraise_extra_top
   elseif info.has_blnabc and staff_zeroed then
     -- When only blnabc is visible and the staff is collapsed, treat it
     -- like nabc for stacking: reserve abovelinesnabcheight in the chain
@@ -869,6 +927,16 @@ local function adjust_additional_spaces(line, info, linenum)
   add = math.max(add, cur + additional_top_space)
   local height_increase = add - get_per_line_space('spaceabovelines')
 
+  -- Mirror of nabc_extra_bottom above, for the staff blnabc hangs under.
+  -- The clearance is half of what the above-lines side asks for because
+  -- belowlinesnabcheight is a far more generous nominal gap than
+  -- abovelinesnabcheight: holding back a full staffline_distance there
+  -- pushed the row away from an already-comfortable staff.
+  local blnabc_extra_top = nabc_overshoot(info.blnabc_max_height,
+    'belowlinesnabcheight', staffline_distance/2)
+  -- Room below blnabc for a glyph pushed toward the lyrics by an hX code.
+  local blnabc_baseraise_extra_bottom = math.max(0, -info.blnabc_baseraise_min)
+
   local blnabc_lower = 0
   if info.has_blnabc then
     if staff_zeroed and not info.has_nabc then
@@ -877,28 +945,27 @@ local function adjust_additional_spaces(line, info, linenum)
       -- as nabc (both raised by spacelinestext when staffheight=0).
       blnabc_lower = 0
     else
-      blnabc_lower = get_per_line_space('belowlinesnabcheight')
+      -- Low notes push blnabc down too, same as they already push nabc up
+      -- above the staff -- otherwise blnabc would stay put while the note
+      -- underneath it keeps dropping.
+      blnabc_lower = get_per_line_space('belowlinesnabcheight') + additional_bottom_space_nabc + blnabc_extra_top
     end
   end
-  local lyrics_lower = blnabc_lower + extra_space_lines_text + additional_bottom_space
+  -- Skip additional_bottom_space here if blnabc already carries it above,
+  -- so a low note doesn't push the lyrics down twice.
+  local lyrics_lower = blnabc_lower + extra_space_lines_text + blnabc_baseraise_extra_bottom
+  if not info.has_blnabc or (staff_zeroed and not info.has_nabc) then
+    lyrics_lower = lyrics_lower + additional_bottom_space
+  end
   local translation_lower = lyrics_lower + translation_height
   local everything_raise = translation_lower + extra_space_beneath_text
 
-  -- When the staff is collapsed, adjust the annotation position so it sits
-  -- at the correct distance from the lyrics/initial.
+  -- When the staff is collapsed (lines, notes, and clef all hidden -- see
+  -- \gre@staffdimensions@reevaluate), adjust the annotation position so it
+  -- sits at the correct distance from the lyrics/initial.
   local annotation_correction = 0
-  if staff_zeroed then
-    if not get_if('gre@shownotes') then
-      -- Fully collapsed (lines + notes hidden)
-      if info.has_blnabc and info.has_nabc then
-        annotation_correction = -get_per_line_space('belowlinesnabcheight')
-      end
-    else
-      -- Only staff lines collapsed, notes still visible
-      if not info.has_blnabc then
-        annotation_correction = get_per_line_space('belowlinesnabcheight')
-      end
-    end
+  if staff_zeroed and info.has_blnabc and info.has_nabc then
+    annotation_correction = -get_per_line_space('belowlinesnabcheight')
   end
 
   -- Recursively traverse the tree, shifting parts up or down. The notes stay put for now.
