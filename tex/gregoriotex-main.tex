@@ -724,19 +724,19 @@
       \gre@count@temp@one=\gre@count@abovelinestextalignment\relax%
     \fi%
     \leavevmode%
+    % Align the text within the anchor glyph's own width: \hss before it
+    % pushes it rightward (center, right), \hss after it absorbs the slack
+    % (left, center).  The inner box is exactly as wide as the glyph, so the
+    % glue does the alignment arithmetic; the outer \hbox to 0pt keeps the
+    % whole thing from occupying any horizontal space of its own.
     \raise\gre@dimen@temp@five\hbox to 0pt{%
-      \ifnum\gre@count@temp@one>1\relax% center (2) or right (3): align
-                                        % within the width of the anchor glyph
-        \hbox to \gre@dimen@lastglyphwidth{\hss
-          \gre@style@abovelinestext
-            \gre@applyphantomwrapper{\gre@abovelinestext@phantomwrapper}{#2}%
-          \endgre@style@abovelinestext
-          \ifnum\gre@count@temp@one=2\relax\hss\fi}%
-      \else% left: flush against the anchor point
+      \hbox to \gre@dimen@lastglyphwidth{%
+        \ifnum\gre@count@temp@one>1\relax\hss\fi%
         \gre@style@abovelinestext
           \gre@applyphantomwrapper{\gre@abovelinestext@phantomwrapper}{#2}%
         \endgre@style@abovelinestext
-      \fi%
+        \ifnum\gre@count@temp@one<3\relax\hss\fi%
+      }%
     \hss}%
   \fi%
   }% restore \gre@attr@part

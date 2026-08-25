@@ -1066,19 +1066,10 @@ static void gabc_write_gregorio_element(FILE *f, gregorio_element *element,
         if (element->texverb) {
             char alignment_char = gregorio_alt_alignment_to_char(
                     element->u.misc.unpitched.info.alt_alignment);
-            switch (alignment_char) {
-            case 'l':
-                fprintf(f, "[alt-l:");
-                break;
-            case 'c':
-                fprintf(f, "[alt-c:");
-                break;
-            case 'r':
-                fprintf(f, "[alt-r:");
-                break;
-            default:
+            if (alignment_char) {
+                fprintf(f, "[alt-%c:", alignment_char);
+            } else {
                 fprintf(f, "[alt:");
-                break;
             }
             gabc_print_string(f, gregorio_texverb(element->texverb));
             fprintf(f, "]");
@@ -1200,34 +1191,16 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
     if (syllable->abovelinestext) {
         char alignment_char = gregorio_alt_alignment_to_char(
                 syllable->abovelinestext_alignment);
-        switch (alignment_char) {
-        case 'l':
-            fprintf(f, "<alt-l>");
-            break;
-        case 'c':
-            fprintf(f, "<alt-c>");
-            break;
-        case 'r':
-            fprintf(f, "<alt-r>");
-            break;
-        default:
+        if (alignment_char) {
+            fprintf(f, "<alt-%c>", alignment_char);
+        } else {
             fprintf(f, "<alt>");
-            break;
         }
         gabc_print_string(f, syllable->abovelinestext);
-        switch (alignment_char) {
-        case 'l':
-            fprintf(f, "</alt-l>");
-            break;
-        case 'c':
-            fprintf(f, "</alt-c>");
-            break;
-        case 'r':
-            fprintf(f, "</alt-r>");
-            break;
-        default:
+        if (alignment_char) {
+            fprintf(f, "</alt-%c>", alignment_char);
+        } else {
             fprintf(f, "</alt>");
-            break;
         }
     }
     if (syllable->text) {
