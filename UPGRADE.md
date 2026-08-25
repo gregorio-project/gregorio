@@ -12,6 +12,10 @@ If an existing score has `[alt:`*text*`]` where *text* itself ends in a literal 
 
 This does not affect the syllable-level `<alt>` tag: `<alt:l>`, `<alt:c>`, and `<alt:r>` are new tag names that were not valid gabc before this release, so no existing score using `<alt>` is affected.
 
+### Vertical spacing near rare signs and below-lines nabc
+
+Rare signs (accentus, circulus, semicirculus, musica ficta) now reserve a bit more vertical space above the note, to avoid overlapping above-lines text. Below-lines nabc neumes next to low notes now reserve a bit more space too, so they no longer overlap the note itself. If you'd rather keep the old below-lines nabc behavior, give `additionalbottomspacenabcthreshold` a low value, e.g. `\grechangecount{additionalbottomspacenabcthreshold}{-2}` (same convention as `noteadditionalspacelinestextthreshold`: lower means less reactive, not higher).
+
 ## 6.2
 
 ### LuaTeX >= 1.0 required

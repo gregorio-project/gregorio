@@ -836,6 +836,9 @@
 \newcount\gre@space@count@noteadditionalspacelinestextthreshold\relax%
 \gre@space@count@noteadditionalspacelinestextthreshold=2
 
+\newcount\gre@space@count@additionalbottomspacenabcthreshold\relax%
+\gre@space@count@additionalbottomspacenabcthreshold=2
+
 \def\gre@calculate@additionalspaces{%
   \gre@trace{gre@calculate@additionalspaces}%
   \gre@generatelines %
@@ -1485,8 +1488,8 @@
 % #1 : line number
 % #2-#3 : same as #1-#2 of \grechangecount
 \def\grechangenextscorelinecount#1#2#3{%
-  \IfStrEqCase{#2}{{additionaltopspacethreshold}{}{additionaltopspacealtthreshold}{}{additionaltopspacenabcthreshold}{}{noteadditionalspacelinestextthreshold}{}}[%
-    \gre@error{Unrecognized option "#2" for \protect\grechangenextscorelinecount\MessageBreak Possible options are: 'additionaltopspacethreshold', 'additionaltopspacealtthreshold', 'additionaltopspacenabcthreshold', 'noteadditionalspacelinestextthreshold'}%
+  \IfStrEqCase{#2}{{additionaltopspacethreshold}{}{additionaltopspacealtthreshold}{}{additionaltopspacenabcthreshold}{}{noteadditionalspacelinestextthreshold}{}{additionalbottomspacenabcthreshold}{}}[%
+    \gre@error{Unrecognized option "#2" for \protect\grechangenextscorelinecount\MessageBreak Possible options are: 'additionaltopspacethreshold', 'additionaltopspacealtthreshold', 'additionaltopspacenabcthreshold', 'noteadditionalspacelinestextthreshold', 'additionalbottomspacenabcthreshold'}%
   ]%
   \directlua{
     gregoriotex.change_next_score_line_count(

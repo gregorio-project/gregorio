@@ -431,7 +431,10 @@ local gregallparse_neumes = function(str, kind, scale, voice)
         local baseraise = 0
         if heights[0] ~= 5 then
           baseraise = (heights[0] - 5) * gregallmetrics[kind].cl.height / 4
-          base = '\\raise '..string.format("%.3f",baseraise * scale)..'sp\\hbox{'..base..'}'
+          local attrval = tex.round(baseraise * scale)
+          base = '\\global\\setattribute\\gre@attr@nabc@baseraise{'..attrval..'}'
+              ..'\\raise '..string.format("%.3f",baseraise * scale)..'sp\\hbox{'..base..'}'
+              ..'\\global\\unsetattribute{\\gre@attr@nabc@baseraise}'
         end
         local lwidths = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
         local curlwidths = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
