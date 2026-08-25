@@ -1002,9 +1002,8 @@ static __inline char gregorio_clef_to_char(gregorio_clef clef)
     return (clef == CLEF_C)? 'c' : 'f';
 }
 
-/* used by both the syllable-level <alt:l/c/r> tag and the note-level
- * [alt:text;l/c/r] field, in two separate gabc grammars, plus gabc-write.c's
- * round-trip serialization (in the opposite direction) */
+/* used by the syllable-level <alt-l/c/r> tag's gabc grammar action, plus
+ * gabc-write.c's round-trip serialization (in the opposite direction) */
 static __inline gregorio_alt_alignment gregorio_char_to_alt_alignment(char c)
 {
     switch (c) {

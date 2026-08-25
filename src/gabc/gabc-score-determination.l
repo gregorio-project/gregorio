@@ -95,6 +95,9 @@ static bool eof_found = false;
 %x comments
 %x inicomments
 %x alt
+%x alt_l
+%x alt_c
+%x alt_r
 %x protrusion_value
 %x protrusion_end
 
@@ -327,10 +330,10 @@ semicolon. */
         BEGIN(score);
         return VERB_END;
     }
-<verb,alt>(\$.|[^<])+ {
+<verb,alt,alt_l,alt_c,alt_r>(\$.|[^<])+ {
         RETURN_CHARACTERS;
     }
-<verb,score,alt>< {
+<verb,score,alt,alt_l,alt_c,alt_r>< {
         RETURN_CHARACTERS;
     }
 <score>\{ {
@@ -339,14 +342,39 @@ semicolon. */
 <score>\} {
         return CENTER_END;
     }
-<score><alt(:[lcr])?> {
-        gabc_score_determination_lval.character =
-                (gabc_score_determination_leng == 5) ? '\0'
-                : gabc_score_determination_text[5];
+<score><alt> {
+        gabc_score_determination_lval.character = '\0';
         BEGIN(alt);
         return ALT_BEGIN;
     }
+<score><alt-l> {
+        gabc_score_determination_lval.character = 'l';
+        BEGIN(alt_l);
+        return ALT_BEGIN;
+    }
+<score><alt-c> {
+        gabc_score_determination_lval.character = 'c';
+        BEGIN(alt_c);
+        return ALT_BEGIN;
+    }
+<score><alt-r> {
+        gabc_score_determination_lval.character = 'r';
+        BEGIN(alt_r);
+        return ALT_BEGIN;
+    }
 <alt><\/alt> {
+        BEGIN(score);
+        return ALT_END;
+    }
+<alt_l><\/alt-l> {
+        BEGIN(score);
+        return ALT_END;
+    }
+<alt_c><\/alt-c> {
+        BEGIN(score);
+        return ALT_END;
+    }
+<alt_r><\/alt-r> {
         BEGIN(score);
         return ALT_END;
     }

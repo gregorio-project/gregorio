@@ -1066,11 +1066,21 @@ static void gabc_write_gregorio_element(FILE *f, gregorio_element *element,
         if (element->texverb) {
             char alignment_char = gregorio_alt_alignment_to_char(
                     element->u.misc.unpitched.info.alt_alignment);
-            fprintf(f, "[alt:");
-            gabc_print_string(f, gregorio_texverb(element->texverb));
-            if (alignment_char) {
-                fprintf(f, ";%c", alignment_char);
+            switch (alignment_char) {
+            case 'l':
+                fprintf(f, "[alt-l:");
+                break;
+            case 'c':
+                fprintf(f, "[alt-c:");
+                break;
+            case 'r':
+                fprintf(f, "[alt-r:");
+                break;
+            default:
+                fprintf(f, "[alt:");
+                break;
             }
+            gabc_print_string(f, gregorio_texverb(element->texverb));
             fprintf(f, "]");
         }
         break;
@@ -1190,13 +1200,35 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
     if (syllable->abovelinestext) {
         char alignment_char = gregorio_alt_alignment_to_char(
                 syllable->abovelinestext_alignment);
-        if (alignment_char) {
-            fprintf(f, "<alt:%c>", alignment_char);
-        } else {
+        switch (alignment_char) {
+        case 'l':
+            fprintf(f, "<alt-l>");
+            break;
+        case 'c':
+            fprintf(f, "<alt-c>");
+            break;
+        case 'r':
+            fprintf(f, "<alt-r>");
+            break;
+        default:
             fprintf(f, "<alt>");
+            break;
         }
         gabc_print_string(f, syllable->abovelinestext);
-        fprintf(f, "</alt>");
+        switch (alignment_char) {
+        case 'l':
+            fprintf(f, "</alt-l>");
+            break;
+        case 'c':
+            fprintf(f, "</alt-c>");
+            break;
+        case 'r':
+            fprintf(f, "</alt-r>");
+            break;
+        default:
+            fprintf(f, "</alt>");
+            break;
+        }
     }
     if (syllable->text) {
         /* we call the magic function (defined in struct_utils.c), that will
