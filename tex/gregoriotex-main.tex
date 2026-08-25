@@ -283,12 +283,6 @@
 
 \newbox\gre@box@temp@width%
 
-% a throwaway box used only to measure the width of above-lines text for
-% center/right alignment; must NOT reuse \gre@box@temp@width, since that
-% register holds the anchor glyph's own (not yet placed) ink when
-% \gre@typesettextabovelines is invoked from \gre@newglyphcommon.
-\newbox\gre@box@abovelinestexttemp%
-
 \def\gre@widthof#1{%
   \gre@trace{gre@widthof{#1}}%
   \setbox\gre@box@temp@width=\hbox{#1}%
@@ -729,44 +723,21 @@
     \ifnum\gre@count@temp@one=0\relax%
       \gre@count@temp@one=\gre@count@abovelinestextalignment\relax%
     \fi%
-    \gre@dimen@abovelinestextoffset=0pt\relax%
-    \ifnum\gre@count@temp@one>1\relax% center (2) or right (3): measure the
-                                      % text once, so it can be placed via
-                                      % \unhbox below instead of being
-                                      % typeset a second time
-      \setbox\gre@box@abovelinestexttemp=\hbox{%
-        \gre@style@abovelinestext
-          \gre@applyphantomwrapper{\gre@abovelinestext@phantomwrapper}{#2}%
-        \endgre@style@abovelinestext}%
-      \ifnum\gre@count@temp@one=2\relax% center
-        \gre@dimen@abovelinestextoffset=\dimexpr(
-          (\gre@dimen@lastglyphwidth - \wd\gre@box@abovelinestexttemp) / 2)\relax%
-      \else% right
-        \gre@dimen@abovelinestextoffset=\dimexpr(
-          \gre@dimen@lastglyphwidth - \wd\gre@box@abovelinestexttemp)\relax%
-      \fi%
-    \fi%
     \leavevmode%
-    \ifdim\gre@dimen@abovelinestextoffset=0pt\relax\else%
-      % the kern must NOT carry the "alt" part attribute, otherwise the Lua
-      % post_linebreak filter will try to shift it (kerns have no shift field)
-      \unsetattribute{\gre@attr@part}%
-      \kern\gre@dimen@abovelinestextoffset %
-      \gre@attr@part=6\relax%
-    \fi%
     \raise\gre@dimen@temp@five\hbox to 0pt{%
-      \ifnum\gre@count@temp@one>1\relax%
-        \unhbox\gre@box@abovelinestexttemp%
-      \else% left: nothing was measured above, typeset directly
+      \ifnum\gre@count@temp@one>1\relax% center (2) or right (3): align
+                                        % within the width of the anchor glyph
+        \hbox to \gre@dimen@lastglyphwidth{\hss
+          \gre@style@abovelinestext
+            \gre@applyphantomwrapper{\gre@abovelinestext@phantomwrapper}{#2}%
+          \endgre@style@abovelinestext
+          \ifnum\gre@count@temp@one=2\relax\hss\fi}%
+      \else% left: flush against the anchor point
         \gre@style@abovelinestext
           \gre@applyphantomwrapper{\gre@abovelinestext@phantomwrapper}{#2}%
         \endgre@style@abovelinestext
       \fi%
     \hss}%
-    \ifdim\gre@dimen@abovelinestextoffset=0pt\relax\else%
-      \unsetattribute{\gre@attr@part}%
-      \kern-\gre@dimen@abovelinestextoffset %
-    \fi%
   \fi%
   }% restore \gre@attr@part
   \gre@trace@end%
