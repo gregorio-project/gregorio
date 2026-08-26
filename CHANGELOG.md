@@ -14,12 +14,11 @@ As of v3.0.0 this project adheres to [Semantic Versioning](http://semver.org/). 
 
 ### Added
 - Code for several features related to horizontal spacing (spacing between non-bar syllables, syllable rewriting, clearing, and hyphenation) was moved into Lua. This results in some changes in horizontal spacing, which, if perceptible, should be improvements. See [#1720](https://github.com/gregorio-project/gregorio/issues/1720).
-- Above lines text can now be centered or right-aligned relative to the note it is anchored to, in addition to the existing left alignment. Per-occurrence alignment is set with `<alt:l>`, `<alt:c>`, or `<alt:r>` (instead of `<alt>`) and `[alt:`*text*`;l]`, `[alt:`*text*`;c]`, or `[alt:`*text*`;r]` (instead of `[alt:`*text*`]`); the document-wide default is set with the new `\gresetabovelinestextalignment{left|center|right}`. See [#1768](https://github.com/gregorio-project/gregorio/issues/1768).
+- Above-lines text can now be centered or right-aligned relative to the note it's anchored to, instead of always sitting flush left. Force a one-off alignment with `<alt-l>`/`</alt-l>`, `<alt-c>`/`</alt-c>`, or `<alt-r>`/`</alt-r>`, or with `[alt-l:`*text*`]`, `[alt-c:`*text*`]`, or `[alt-r:`*text*`]`, or change the document-wide default with the new `\gresetabovelinestextalignment{left|center|right}`. See [#1768](https://github.com/gregorio-project/gregorio/issues/1768).
 
 ### Changed
 - Messages related to the use of the built-in Latin vowel rules have been clarified to make it more obvious when they are being used because they were requested and when they are being used because the desired language cannot be found.
 - The logic around resolving alias chains has been clarified.  All messages related to reading vowel files should be clearer.  The improved logic has allowed the maximum alias depth to be increased considerably.
-- The note-level `[alt:`*text*`]` field now treats a trailing, unescaped `;l`, `;c`, or `;r` as an alignment marker rather than literal text (see the "Added" entry above). If an existing score's *text* already ended that way, escape the semicolon (`$;`) to keep the old, literal behavior. See UPGRADE.md and [#1768](https://github.com/gregorio-project/gregorio/issues/1768) for details.
 
 ### Removed
 - `\gresethyphenprotrusion`

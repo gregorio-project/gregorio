@@ -976,10 +976,11 @@ Macro to specify the document-wide default horizontal alignment of above
 lines text (\texttt{<alt></alt>} in gabc) relative to the note or glyph it is
 anchored to.  This is distinct from \textbackslash gresetabovelinestext
 above, which controls visibility rather than alignment.  A per-occurrence
-alignment specified in the gabc source (\texttt{<alt:l>}, \texttt{<alt:c>},
-\texttt{<alt:r>}, or the \texttt{[alt:}\textit{text}\texttt{;l]},
-\texttt{[alt:}\textit{text}\texttt{;c]}, \texttt{[alt:}\textit{text}%
-\texttt{;r]} note-level forms) overrides this default.
+alignment specified in the gabc source (\texttt{<alt-l></alt-l>},
+\texttt{<alt-c></alt-c>}, \texttt{<alt-r></alt-r>}, or the
+\texttt{[alt-l:}\textit{text}\texttt{]}, \texttt{[alt-c:}\textit{text}%
+\texttt{]}, \texttt{[alt-r:}\textit{text}\texttt{]} note-level forms)
+overrides this default.
 
 \begin{argtable}
   \#1 & \texttt{left} & Above lines text is left aligned with its anchor note (default).\\

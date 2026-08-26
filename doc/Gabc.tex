@@ -303,10 +303,12 @@ These tags allow for a variety of special effects.
     default it is horizontally aligned with the left edge of the note it is
     anchored to (or the document-wide default set by the command
     \verb=\gresetabovelinestextalignment{<mode>}=, where \texttt{<mode>} is
-    \texttt{left}, \texttt{center}, or \texttt{right}).  \texttt{<alt:l>},
-    \texttt{<alt:c>}, or \texttt{<alt:r>} may be used instead of
-    \texttt{<alt>} to force left, center, or right alignment for that
-    occurrence, regardless of the document default.  Note that when the
+    \texttt{left}, \texttt{center}, or \texttt{right}).  \texttt{<alt-l>}\dots
+    \texttt{</alt-l>}, \texttt{<alt-c>}\dots\texttt{</alt-c>}, or
+    \texttt{<alt-r>}\dots\texttt{</alt-r>} may be used instead of
+    \texttt{<alt>}\dots\texttt{</alt>} to force left, center, or right
+    alignment for that occurrence, regardless of the document default.  Note
+    that when the
     anchor note is immediately followed by a bar line, center and right
     alignment currently fall back to using the width of the previous note
     instead of the bar.  Similarly, on a score's very first syllable,
@@ -1106,15 +1108,11 @@ completely omitted, allows the \texttt{:} to also be omitted.
 positioning.  To do this, use \texttt{[alt:}\textit{text}\texttt{]}.  As with
 the \texttt{<alt>} tag, this is left-aligned with the note by default (or
 uses the document-wide default set by
-\verb=\gresetabovelinestextalignment=); appending \texttt{;l}, \texttt{;c},
-or \texttt{;r} right before the closing \texttt{]} forces left, center, or
-right alignment for that occurrence, e.g.\ \texttt{[alt:}\textit{text}%
-\texttt{;c]} for centering or \texttt{[alt:}\textit{text}\texttt{;r]} for
-right alignment.  Since a trailing \texttt{;l}, \texttt{;c}, or \texttt{;r}
-is given this special meaning, if \textit{text} itself needs to end that
-way literally, escape the semicolon with \texttt{\$} (\eg\
-\texttt{[alt:}\textit{text}\texttt{\$;l]}) to keep it from being
-interpreted as an alignment marker.
+\verb=\gresetabovelinestextalignment=); use \texttt{[alt-l:}\textit{text}%
+\texttt{]}, \texttt{[alt-c:}\textit{text}\texttt{]}, or
+\texttt{[alt-r:}\textit{text}\texttt{]} instead of \texttt{[alt:}\textit{text}%
+\texttt{]} to force left, center, or right alignment for that occurrence,
+regardless of the document default.
 
 \subsubsection{Verbatim \TeX}
 
