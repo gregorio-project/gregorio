@@ -363,6 +363,19 @@ ENUM(grestyle_type, GRESTYLE_TYPE);
 ENUM(gregorio_tr_centering, GREGORIO_TR_CENTERING);
 
 /*
+ * The horizontal alignment of above-lines-text relative to the note/glyph
+ * it is anchored to.  ALT_DEFAULT means "inherit the document-wide default"
+ * (see \gresetabovelinestextalignment), which itself defaults to left.
+ */
+
+#define GREGORIO_ALT_ALIGNMENT(A,E,X,L) \
+    A(ALT_DEFAULT, 0) \
+    E(ALT_LEFT) \
+    E(ALT_CENTER) \
+    L(ALT_RIGHT)
+ENUM(gregorio_alt_alignment, GREGORIO_ALT_ALIGNMENT);
+
+/*
  * Nothing, beginning or end of area without linebreak
  */
 
@@ -414,6 +427,8 @@ typedef struct gregorio_extra_info {
     ENUM_BITFIELD(gregorio_bar) bar:5;
     ENUM_BITFIELD(gregorio_space) space:4;
     ENUM_BITFIELD(gregorio_nlba) nlba:2;
+    /* only meaningful when the note/element type is GRE_ALT */
+    ENUM_BITFIELD(gregorio_alt_alignment) alt_alignment:2;
     bool eol_ragged:1;
     bool eol_forces_custos:1;
     bool eol_forces_custos_on:1;
@@ -661,6 +676,9 @@ typedef struct gregorio_syllable {
     struct gregorio_character *translation;
     /* a string representing the text above the lines (raw TeX) */
     char *abovelinestext;
+    /* alignment of abovelinestext relative to the note/glyph it is
+     * anchored to; ALT_DEFAULT means "inherit the document default" */
+    ENUM_BITFIELD(gregorio_alt_alignment) abovelinestext_alignment:2;
     /* pointer to the next and previous syllable */
     struct gregorio_syllable *next_syllable;
     struct gregorio_syllable *previous_syllable;
@@ -834,6 +852,7 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
         gregorio_character *first_character,
         gregorio_character *first_translation_character,
         gregorio_word_position position, char *abovelinestext,
+        gregorio_alt_alignment abovelinestext_alignment,
         gregorio_tr_centering translation_type, gregorio_nlba no_linebreak_area,
         gregorio_euouae euouae, const gregorio_scanner_location *loc,
         bool first_word, bool clear);
@@ -889,6 +908,9 @@ void gregorio_add_space_as_note(gregorio_note **current_note,
         const gregorio_scanner_location *loc);
 unsigned short gregorio_add_texverb_as_note(gregorio_note **current_note,
         char *str, gregorio_type type, const gregorio_scanner_location *loc);
+unsigned short gregorio_add_alt_as_note(gregorio_note **current_note,
+        char *str, gregorio_alt_alignment alignment,
+        const gregorio_scanner_location *loc);
 void gregorio_add_nlba_as_note(gregorio_note **current_note,
         gregorio_nlba type, const gregorio_scanner_location *loc);
 void gregorio_start_autofuse(gregorio_note **current_note,
@@ -978,6 +1000,37 @@ static __inline const gregorio_glyph *gregorio_previous_non_texverb_glyph(
 static __inline char gregorio_clef_to_char(gregorio_clef clef)
 {
     return (clef == CLEF_C)? 'c' : 'f';
+}
+
+/* used by the syllable-level <alt-l/c/r> tag's gabc grammar action, plus
+ * gabc-write.c's round-trip serialization (in the opposite direction) */
+static __inline gregorio_alt_alignment gregorio_char_to_alt_alignment(char c)
+{
+    switch (c) {
+    case 'l':
+        return ALT_LEFT;
+    case 'c':
+        return ALT_CENTER;
+    case 'r':
+        return ALT_RIGHT;
+    default:
+        return ALT_DEFAULT;
+    }
+}
+
+static __inline char gregorio_alt_alignment_to_char(
+        gregorio_alt_alignment alignment)
+{
+    switch (alignment) {
+    case ALT_LEFT:
+        return 'l';
+    case ALT_CENTER:
+        return 'c';
+    case ALT_RIGHT:
+        return 'r';
+    default:
+        return '\0';
+    }
 }
 
 static __inline signed char gregorio_adjust_pitch_into_staff(

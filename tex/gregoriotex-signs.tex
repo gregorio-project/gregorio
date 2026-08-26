@@ -2796,13 +2796,17 @@
     \else
       \gre@pointandclick{\gre@alteration@char}{#6}%
     \fi}%
+  % Record the width before \gre@newglyphcommon (which may typeset pending
+  % above-lines text anchored to this accidental) so \gre@dimen@lastglyphwidth
+  % is already correct when that fires; preserve the existing rule that
+  % accidentals inside a custos do not update it.
+  \ifgre@in@custos\else\relax %
+    \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
+  \fi %
   \ifnum#3=0\relax %
     \gre@nabc@in@alterationtrue%
     \gre@newglyphcommon %
     \gre@nabc@in@alterationfalse%
-  \fi %
-  \ifgre@in@custos\else\relax %
-    \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
   \fi %
   % the three next lines are a trick to get the additional lines below the glyphs
   \gre@skip@temp@one = \gre@dimen@lastglyphwidth\relax%
@@ -2968,8 +2972,9 @@
 % #4 is the point-and-click string
 \def\GreBracket#1#2#3#4{%
   \gre@trace{GreBracket{#1}{#2}{#3}{#4}}%
-  \gre@newglyphcommon %
-  \ifcase\numexpr#1\relax\else\GreNoBreak\fi% no break before right bracket
+  % Measure the bracket glyph and record its width before \gre@newglyphcommon
+  % (which may typeset pending above-lines text anchored to it) so
+  % \gre@dimen@lastglyphwidth is already correct when that fires.
   \setbox\gre@box@temp@width=\hbox{\gre@pointandclick{\gre@font@music %
     \csname GreCPBracket%
       \ifcase\numexpr#1\relax Left\else Right\fi%
@@ -3031,6 +3036,8 @@
     \endcsname %
   }{#4}}%
   \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
+  \gre@newglyphcommon %
+  \ifcase\numexpr#1\relax\else\GreNoBreak\fi% no break before right bracket
   \gre@calculate@glyphraisevalue{#2}{17}{}%
   \raise\gre@dimen@glyphraisevalue%
   \copy\gre@box@temp@width%

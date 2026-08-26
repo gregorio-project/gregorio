@@ -23,6 +23,7 @@
 
 #include "config.h"
 #include <stdio.h>
+#include <string.h> /* for strlen */
 #include <ctype.h> /* for tolower */
 #include "bool.h"
 #include "struct.h"
@@ -39,6 +40,7 @@
 static gregorio_scanner_location notes_lloc;
 static gregorio_note *current_note;
 static char char_for_brace;
+static gregorio_alt_alignment current_alt_alignment;
 static unsigned int nbof_isolated_episema;
 static char *notesmacros[10];
 static char tempstr[256];
@@ -983,6 +985,19 @@ void gabc_det_notes_finish(void)
         BEGIN(texverbelement);
     }
 <INITIAL>\[alt: {
+        current_alt_alignment = ALT_DEFAULT;
+        BEGIN(alt);
+    }
+<INITIAL>\[alt-l: {
+        current_alt_alignment = ALT_LEFT;
+        BEGIN(alt);
+    }
+<INITIAL>\[alt-c: {
+        current_alt_alignment = ALT_CENTER;
+        BEGIN(alt);
+    }
+<INITIAL>\[alt-r: {
+        current_alt_alignment = ALT_RIGHT;
         BEGIN(alt);
     }
 <INITIAL><nlba> {
@@ -1044,9 +1059,9 @@ void gabc_det_notes_finish(void)
                 GRE_TEXVERB_ELEMENT, &notes_lloc);
     }
 <alt>(\$.|[^\]])+ {
-        gregorio_add_texverb_as_note(&current_note,
-                gabc_unescape(gabc_notes_determination_text), GRE_ALT,
-                &notes_lloc);
+        gregorio_add_alt_as_note(&current_note,
+                gabc_unescape(gabc_notes_determination_text),
+                current_alt_alignment, &notes_lloc);
     }
 <INITIAL>\/\[ {
         BEGIN(space);

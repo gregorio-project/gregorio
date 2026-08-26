@@ -1064,7 +1064,13 @@ static void gabc_write_gregorio_element(FILE *f, gregorio_element *element,
         break;
     case GRE_ALT:
         if (element->texverb) {
-            fprintf(f, "[alt:");
+            char alignment_char = gregorio_alt_alignment_to_char(
+                    element->u.misc.unpitched.info.alt_alignment);
+            if (alignment_char) {
+                fprintf(f, "[alt-%c:", alignment_char);
+            } else {
+                fprintf(f, "[alt:");
+            }
             gabc_print_string(f, gregorio_texverb(element->texverb));
             fprintf(f, "]");
         }
@@ -1181,6 +1187,21 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
     }
     if (syllable->clear) {
         fprintf(f, "<clear>");
+    }
+    if (syllable->abovelinestext) {
+        char alignment_char = gregorio_alt_alignment_to_char(
+                syllable->abovelinestext_alignment);
+        if (alignment_char) {
+            fprintf(f, "<alt-%c>", alignment_char);
+        } else {
+            fprintf(f, "<alt>");
+        }
+        gabc_print_string(f, syllable->abovelinestext);
+        if (alignment_char) {
+            fprintf(f, "</alt-%c>", alignment_char);
+        } else {
+            fprintf(f, "</alt>");
+        }
     }
     if (syllable->text) {
         /* we call the magic function (defined in struct_utils.c), that will
