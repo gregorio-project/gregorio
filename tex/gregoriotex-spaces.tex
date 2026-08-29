@@ -1394,15 +1394,15 @@
 }%
 
 \def\grechangecount#1#2{%
-  \IfStrEqCase{#1}{% DEPRECATED
-    {finalpenalty}{\gre@warning{The count 'finalpenalty' no longer has any effect and will be removed in a future release}}% DEPRECATED
-  }[% DEPRECATED
+  \IfStrEqCase{#1}{% OBSOLETE
+    {finalpenalty}{\gre@error{The count 'finalpenalty' no longer has any effect}}% OBSOLETE
+  }[% OBSOLETE
     \ifcsname gre@space@count@#1\endcsname
       \expandafter\csname gre@space@count@#1\endcsname=#2\relax
     \else
       \gre@error{Unknown count '#1'}%
     \fi
-  ]% DEPRECATED
+  ]% OBSOLETE
 }
 
 % The common internals for \gre@createdim and \grechangedim.
@@ -1502,7 +1502,6 @@
 \newcount\gre@space@count@endofsyllablepenalty%
 \newcount\gre@space@count@endafterbarpenalty%
 \newcount\gre@space@count@endafterbaraltpenalty%
-\newcount\gre@space@count@finalpenalty% DEPRECATED
 \newcount\gre@space@count@endofelementpenalty%
 \newcount\gre@space@count@hyphenpenalty%
 \newcount\gre@space@count@brokenpenalty%
