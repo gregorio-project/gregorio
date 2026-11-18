@@ -617,6 +617,11 @@ static gregorio_note *close_normal_glyph(gregorio_glyph **last_glyph,
                     break;
                 }
             }
+            /* added_notes is the last replacement note, which takes the signs
+             * of the old note. its texverb (which may hold a slur whose start
+             * the notes lexer refers to by texverb index) goes there too */
+            added_notes->texverb = current_note->texverb;
+            current_note->texverb = 0;
             next_note = current_note->next;
             /* now we have what we want, we set up the links and free the old
              * note */
