@@ -61,13 +61,18 @@ static unsigned short left_bracket_texverb = 0;
         current_note->WHICH##_ledger_specificity = LEDGER_##SPECIFICITY; \
     }
 
+/* A variable slur may end in a later syllable, by which time the note on
+ * which it started belongs to the glyph structure and may have been replaced
+ * (a bivirga, for example, is split into two virgas), so the start note is
+ * remembered by its pitch and texverb index rather than by pointer. */
 typedef struct slur_info {
     unsigned short var;
     char shift;
-    gregorio_note *start;
+    signed char start_pitch;
+    unsigned short start_texverb;
 } slur_info;
 
-static slur_info slur[2] = { { 0, '\0', NULL }, { 0, '\0', NULL } };
+static slur_info slur[2] = { { 0, '\0', 0, 0 }, { 0, '\0', 0, 0 } };
 
 static __inline gregorio_sign_orientation letter_to_sign_orientation(
         const char letter) {
@@ -467,9 +472,15 @@ static void start_var_slur(void)
         return;
     }
 
+    if (!current_note->texverb) {
+        /* the slur text is appended here when the slur ends */
+        gregorio_add_texverb_to_note(current_note, gregorio_strdup(""));
+    }
+
     slur[index].var = ++tex_position_id;
     parse_slur_shift(&(slur[index].shift));
-    slur[index].start = current_note;
+    slur[index].start_pitch = current_note->u.note.pitch;
+    slur[index].start_texverb = current_note->texverb;
 }
 
 static void end_var_slur(void)
@@ -479,6 +490,8 @@ static void end_var_slur(void)
     const gregorio_sign_orientation index = letter_to_sign_orientation(
             gabc_notes_determination_text[1]);
     char shift;
+    const char *start_texverb;
+    char *new_start_texverb;
 
     if (!current_note || current_note->type != GRE_NOTE) {
         gregorio_message(
@@ -487,7 +500,7 @@ static void end_var_slur(void)
         return;
     }
 
-    if (!slur[index].var || !slur[index].shift || !slur[index].start) {
+    if (!slur[index].var || !slur[index].shift || !slur[index].start_texverb) {
         gregorio_messagef("end_var_slur", VERBOSITY_ERROR, 0,
                 _("variable %s-note slur end without start"),
                 over_or_under(index));
@@ -500,10 +513,15 @@ static void end_var_slur(void)
             "\\GreVarBraceSavePos{%hu}{%c}{1}"
             "\\GreSlur{%d}{%d}{%c}{\\GreVarBraceLength{%hu}}{}{%d}",
             slur[index].var, slur[index].shift,
-            slur[index].start->u.note.pitch + direction, direction,
+            slur[index].start_pitch + direction, direction,
             slur[index].shift, slur[index].var,
             current_note->u.note.pitch + direction);
-    gregorio_add_texverb_to_note(slur[index].start, gregorio_strdup(tempstr));
+    start_texverb = gregorio_texverb(slur[index].start_texverb);
+    new_start_texverb = gregorio_malloc(strlen(start_texverb)
+            + strlen(tempstr) + 1);
+    strcpy(new_start_texverb, start_texverb);
+    strcat(new_start_texverb, tempstr);
+    gregorio_change_texverb(slur[index].start_texverb, new_start_texverb);
 
     gregorio_snprintf(tempstr, sizeof tempstr,
             "\\GreVarBraceSavePos{%hu}{%c}{2}", slur[index].var, shift);
@@ -512,7 +530,7 @@ static void end_var_slur(void)
 
     slur[index].var = 0;
     slur[index].shift = '\0';
-    slur[index].start = NULL;
+    slur[index].start_texverb = 0;
 }
 
 static void left_bracket(void)
@@ -729,7 +747,7 @@ void gabc_det_notes_finish(void)
                     _("unclosed variable %s-note slur"), name);
             slur[orientation].var = 0;
             slur[orientation].shift = '\0';
-            slur[orientation].start = NULL;
+            slur[orientation].start_texverb = 0;
         }
         if (he_adjustment_index[orientation]) {
             gregorio_messagef("gabc_det_notes_finish", VERBOSITY_ERROR, 0,
