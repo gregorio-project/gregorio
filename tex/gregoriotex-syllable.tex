@@ -486,12 +486,18 @@
 % Zero-width glyph handler that triggers NABC rendering and computes the
 % alignment center for the first glyph, but does not advance the cursor.
 % Used by \gre@notes@rendernabc@tight for NABC-only horizontal spacing.
+% #5 (\GreGlyphHeights plus ledger lines, see \GreGlyph) is still run, in a
+% zero-width phantom, so that overlap avoidance keeps seeing this glyph's
+% real pitch extrema.  The box is load-bearing: \GreGlyphHeights only sets
+% attributes, which are picked up by the next node created, so dropping the
+% box would leave the extrema unreported.
 \def\gre@nabconlyglyph#1#2#3#4#5#6#7{%
   \gre@newglyphcommon
   \ifgre@firstglyph
     \gre@calculate@notesaligncenter{#4}%
     \global\gre@firstglyphfalse
   \fi
+  \hbox to 0pt{\phantom{#5}\hss}%
   \gre@endofglyphcommon
 }%
 
@@ -499,11 +505,11 @@
 % The total horizontal width comes entirely from \gre@compute@nabc@extrakern,
 % which expands the syllable box to the NABC width.  This produces tighter
 % spacing than the hphantom path because inter-glyph and inter-element glue
-% is suppressed.
+% is suppressed.  \GreGlyphHeights is deliberately left alive here so that
+% \gre@nabconlyglyph can still report pitch extrema for overlap avoidance.
 \def\gre@notes@rendernabc@tight#1{%
   \begingroup
     \let\GreGlyph\gre@nabconlyglyph
-    \let\GreGlyphHeights\gre@noopglyphheights
     \gre@suppress@bars
     \def\GreEndOfElement##1##2##3{}%
     \def\GreEndOfGlyph##1{}%
@@ -517,6 +523,7 @@
     {\gre@shownotesfalse}%
     {\gre@notes@phantomwrapper}%
     {\protect\gresetnotes}%
+  \gre@staffdimensions@reevaluate
 }%
 
 % Notes-specific phantom wrapper that keeps NABC visible by using

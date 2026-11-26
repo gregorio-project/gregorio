@@ -372,6 +372,10 @@
 % note below c will add noteadditionalspacelinestext space for each pitch needed
 % below c, accounting for the various signs.
 \grechangecount{noteadditionalspacelinestextthreshold}{2}%
+% same idea, but for the below-lines nabc line. Defaults to the same value
+% as the lyrics threshold above, since blnabc sits right next to them and
+% should react to low notes at the same point they do.
+\grechangecount{additionalbottomspacenabcthreshold}{2}%
 %the space for below-lines nabc
 \gre@createdim{dimen}{belowlinesnabcheight}{0.6cm}{scalable}%
 %the space beneath the text

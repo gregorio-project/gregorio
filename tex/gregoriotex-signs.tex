@@ -156,6 +156,7 @@
   \ifnum\gre@clef@phantomwrapper>0\relax
     \gre@showcleftrue%
   \fi
+  \gre@staffdimensions@reevaluate
   \gre@trace@end%
 }%
 
@@ -1372,9 +1373,11 @@
       % if it is not, we call it with 6 as second argument, it will give us the height of the rare signs (accentus, etc.) the first argument is m if the pitch is < k, otherwise it's n.
       \ifnum#1<\gre@pitch@raresign\relax %
         \gre@calculate@glyphraisevalue{\gre@pitch@raresign}{6}{}%
+        \GreGlyphHeights{\gre@pitch@raresign}{\gre@pitch@raresign}%
       \else %
         {%
           \gre@count@temp@three=\numexpr(#1 + 1)\relax %
+          \GreGlyphHeights{\gre@count@temp@three}{\gre@count@temp@three}%
           \gre@calculate@glyphraisevalue{\gre@count@temp@three}{6}{}%
         }%
       \fi %
