@@ -138,7 +138,7 @@ Some headers have special meaning to Gregorio:
 Although Gregorio ascribes no special meaning to them, other suggested headers are:
 
 \begin{description}
-\item[office-part] The office-part is the category of chant (in Latin), according to its liturgical role. Examples are: antiphona, hymnus, responsorium brevium, responsorium prolixum, introitus, graduale, tractus, offertorium, communio, kyrie, gloria, credo, sanctus, benedictus, agnus dei.
+\item[office-part] The office-part is the category of chant (in Latin), according to its liturgical role. Examples are: antiphona, hymnus, responsorium breve, responsorium prolixum, introitus, graduale, tractus, offertorium, communio, kyrie, gloria, credo, sanctus, benedictus, agnus dei.
 \item[occasion] The occasion is the liturgical occasion, in Latin. For example, Dominica II Adventus, Commune doctorum, Feria secunda.
 \item[meter] For hymns and anything else with repetitive stanzas, the meter, the numbers of syllables in each line of a stanza. For example, 8.8.8.8 for typical Ambrosian-style hymns: 4 lines each of 8 syllables.
 \item[commentary] This is intended for notes about the source of the text, such as references to the Bible.
@@ -280,7 +280,7 @@ These tags are used to control the interaction between the syllable in which the
     considered an elision (by default typeset in italics), with special
     consideration given when placing the syllable under the notes above.
   \item[Euouae] Text between \texttt{<eu>} and \texttt{</eu>} is considered
-    ``Euouae'' (\textit{s\ae{}culorem, Amen} of the lesser doxology) for
+    ``Euouae'' (\textit{s\ae{}culorum, Amen} of the lesser doxology) for
     marking tone \textit{differentia}, with special typographic consideration
     for line breaks.
   \item[no line break] Text between \texttt{<nlba>} and \texttt{</nlba>} is a
@@ -299,7 +299,24 @@ These tags allow for a variety of special effects.
 
 \begin{description}
   \item[above lines text] Text between \texttt{<alt>} and \texttt{</alt>} is
-    ``above lines text'' and will be typeset above the staff lines.
+    ``above lines text'' and will be typeset above the staff lines.  By
+    default it is horizontally aligned with the left edge of the note it is
+    anchored to (or the document-wide default set by the command
+    \verb=\gresetabovelinestextalignment{<mode>}=, where \texttt{<mode>} is
+    \texttt{left}, \texttt{center}, or \texttt{right}).  \texttt{<alt-l>}\dots
+    \texttt{</alt-l>}, \texttt{<alt-c>}\dots\texttt{</alt-c>}, or
+    \texttt{<alt-r>}\dots\texttt{</alt-r>} may be used instead of
+    \texttt{<alt>}\dots\texttt{</alt>} to force left, center, or right
+    alignment for that occurrence, regardless of the document default.  Note
+    that when the
+    anchor note is immediately followed by a bar line, center and right
+    alignment currently fall back to using the width of the previous note
+    instead of the bar.  Similarly, on a score's very first syllable,
+    center and right alignment may be thrown off by the extra spacing
+    reserved for a following drop initial (see
+    \verb=\gresetinitiallines=), since that spacing is applied after the
+    alignment has already been computed against the note's un-shifted
+    position.
   \item[special character] Text between \texttt{<sp>} and \texttt{</sp>} is a
     ``special character,'' as defined by \texttt{\textbackslash
     gresetspecial}.  There are also several special characters defined by default
@@ -1171,7 +1188,14 @@ completely omitted, allows the \texttt{:} to also be omitted.
 \subsubsection{Above Lines Text Within Notes}
 
 ``Above lines text'' may also be specified within the notes for better
-positioning.  To do this, use \texttt{[alt:}\textit{text}\texttt{]}.
+positioning.  To do this, use \texttt{[alt:}\textit{text}\texttt{]}.  As with
+the \texttt{<alt>} tag, this is left-aligned with the note by default (or
+uses the document-wide default set by
+\verb=\gresetabovelinestextalignment=); use \texttt{[alt-l:}\textit{text}%
+\texttt{]}, \texttt{[alt-c:}\textit{text}\texttt{]}, or
+\texttt{[alt-r:}\textit{text}\texttt{]} instead of \texttt{[alt:}\textit{text}%
+\texttt{]} to force left, center, or right alignment for that occurrence,
+regardless of the document default.
 
 \subsubsection{Verbatim \TeX}
 

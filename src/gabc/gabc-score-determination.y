@@ -265,6 +265,7 @@ static void end_definitions(void)
 static char position = WORD_BEGINNING;
 static gregorio_syllable *current_syllable = NULL;
 static char *abovelinestext = NULL;
+static gregorio_alt_alignment abovelinestext_alignment = ALT_DEFAULT;
 
 /*
  * Function called each time we find a space, it updates the current position.
@@ -811,7 +812,8 @@ static void close_syllable(YYLTYPE *loc)
 
     gregorio_add_syllable(&current_syllable, number_of_voices, elements,
             first_text_character, first_translation_character, position,
-            abovelinestext, translation_type, no_linebreak_area, euouae, loc,
+            abovelinestext, abovelinestext_alignment, translation_type,
+            no_linebreak_area, euouae, loc,
             started_first_word, clear_syllable_text);
     current_syllable->lyric_lines->next = first_extra_lyric;
     if (!score->first_syllable) {
@@ -841,6 +843,7 @@ static void close_syllable(YYLTYPE *loc)
     no_linebreak_area = NLBA_NORMAL;
     euouae = EUOUAE_NORMAL;
     abovelinestext = NULL;
+    abovelinestext_alignment = ALT_DEFAULT;
     for (i = 0; i < number_of_voices; i++) {
         elements[i] = NULL;
     }
@@ -1381,6 +1384,7 @@ translation:
 above_line_text:
     ALT_BEGIN CHARACTERS ALT_END {
         abovelinestext = $2.text;
+        abovelinestext_alignment = gregorio_char_to_alt_alignment($1.character);
     }
     ;
 

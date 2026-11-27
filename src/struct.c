@@ -318,10 +318,20 @@ unsigned short gregorio_add_texverb_as_note(gregorio_note **current_note,
     gregorio_note *element;
     /* gregorio_not_null(str, gregorio_add_texverb_as_note, return NULL); */
     element = create_and_link_note(current_note, loc);
-    assert(type == GRE_TEXVERB_GLYPH || type == GRE_TEXVERB_ELEMENT
-           || type == GRE_ALT);
+    assert(type == GRE_TEXVERB_GLYPH || type == GRE_TEXVERB_ELEMENT);
     element->type = type;
     element->texverb = register_texverb(str);
+    return element->texverb;
+}
+
+unsigned short gregorio_add_alt_as_note(gregorio_note **current_note,
+        char *str, gregorio_alt_alignment alignment,
+        const gregorio_scanner_location *const loc)
+{
+    gregorio_note *element = create_and_link_note(current_note, loc);
+    element->type = GRE_ALT;
+    element->texverb = register_texverb(str);
+    element->u.other.alt_alignment = alignment;
     return element->texverb;
 }
 
@@ -1062,6 +1072,7 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
         gregorio_character *first_character,
         gregorio_character *first_translation_character,
         gregorio_word_position position, char *abovelinestext,
+        gregorio_alt_alignment abovelinestext_alignment,
         gregorio_tr_centering translation_type, gregorio_nlba no_linebreak_area,
         gregorio_euouae euouae, const gregorio_scanner_location *const loc,
         const bool first_word, const bool clear)
@@ -1085,6 +1096,7 @@ void gregorio_add_syllable(gregorio_syllable **current_syllable,
     next->translation = first_translation_character;
     next->translation_type = translation_type;
     next->abovelinestext = abovelinestext;
+    next->abovelinestext_alignment = abovelinestext_alignment;
     next->clear = clear;
     if (loc) {
         next->src_line = loc->first_line;
@@ -1633,6 +1645,7 @@ ENUM_TO_STRING(gregorio_vposition, GREGORIO_VPOSITION)
 ENUM_TO_STRING(gregorio_glyph_type, GREGORIO_GLYPH_TYPE)
 ENUM_TO_STRING(grestyle_style, GRESTYLE_STYLE)
 ENUM_TO_STRING(gregorio_tr_centering, GREGORIO_TR_CENTERING)
+ENUM_TO_STRING(gregorio_alt_alignment, GREGORIO_ALT_ALIGNMENT)
 ENUM_TO_STRING(gregorio_nlba, GREGORIO_NLBA)
 ENUM_TO_STRING(gregorio_euouae, GREGORIO_EUOUAE)
 ENUM_TO_STRING(gregorio_word_position, GREGORIO_WORD_POSITION)

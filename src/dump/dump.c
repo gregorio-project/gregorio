@@ -262,6 +262,11 @@ void dump_write_score(FILE *f, gregorio_score *score)
         }
         if (syllable->abovelinestext) {
             fprintf(f, "\n  Abovelinestext\n    %s", syllable->abovelinestext);
+            if (syllable->abovelinestext_alignment != ALT_DEFAULT) {
+                fprintf(f, "\n  Abovelinestext alignment      %s",
+                        gregorio_alt_alignment_to_string(
+                                syllable->abovelinestext_alignment));
+            }
         }
         for (element = *syllable->elements; element; element = element->next) {
             gregorio_glyph *glyph;
@@ -308,6 +313,13 @@ void dump_write_score(FILE *f, gregorio_score *score)
             case GRE_ALT:
                 fprintf(f, "     Above lines text        \"%s\"\n",
                         gregorio_texverb(element->texverb));
+                if (element->u.misc.unpitched.info.alt_alignment
+                        != ALT_DEFAULT) {
+                    fprintf(f, "     Above lines alignment   %s\n",
+                            gregorio_alt_alignment_to_string(
+                                    element->u.misc.unpitched.info.
+                                    alt_alignment));
+                }
                 break;
             case GRE_BAR:
                 if (element->u.misc.unpitched.info.bar) {
