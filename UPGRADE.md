@@ -2,7 +2,7 @@
 
 This file contains instructions to upgrade to a new release of Gregorio.  These instructions are cumulative; meaning that you should apply the instructions from all versions between the one you are upgrading from and the current version.
 
-## Unreleased
+## [Unreleased][develop]
 
 ### Vertical spacing near rare signs and below-lines nabc
 

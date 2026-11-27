@@ -175,10 +175,13 @@
 % #6 are the signs to typeset after the glyph (almost all signs)
 % #7 is the line:char:column for a textedit link
 \def\GreGlyph#1#2#3#4#5#6#7{%
-  \gre@newglyphcommon %
-  % Create box containing the new glyph.
+  % Create box containing the new glyph, and record its width, before
+  % \gre@newglyphcommon so that \gre@dimen@lastglyphwidth (used to
+  % center/right-align any pending above-lines text against this glyph) is
+  % correct when \gre@currenttextabovelines fires from within it.
   \setbox\gre@box@temp@width=\hbox{\gre@pointandclick{\gre@font@music #1}{#7}}%
   \global\gre@dimen@lastglyphwidth=\wd\gre@box@temp@width %
+  \gre@newglyphcommon %
   % the three next lines are a trick to get the additional lines below the glyphs
   \gre@skip@temp@one = \gre@dimen@lastglyphwidth\relax%
   \kern\gre@skip@temp@one %

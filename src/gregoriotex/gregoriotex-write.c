@@ -4181,7 +4181,8 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
             fprintf(f, "%%\n\\GreTranslationCenterEnd %%\n");
     }
     if (syllable->abovelinestext) {
-        fprintf(f, "%%\n\\GreSetTextAboveLines{%s}%%\n",
+        fprintf(f, "%%\n\\GreSetTextAboveLines{%d}{%s}%%\n",
+                (int) syllable->abovelinestext_alignment,
                 syllable->abovelinestext);
     }
     fprintf(f, "}{%%\n");
@@ -4283,7 +4284,8 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
 
             case GRE_ALT:
                 if (element->texverb) {
-                    fprintf(f, "\\GreSetTextAboveLines{%s}%%\n",
+                    fprintf(f, "\\GreSetTextAboveLines{%d}{%s}%%\n",
+                            (int) element->u.misc.unpitched.info.alt_alignment,
                             gregorio_texverb(element->texverb));
                 }
                 break;
