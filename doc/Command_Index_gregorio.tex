@@ -1101,8 +1101,9 @@ Macro to place argument above the lines and empty
 Macro to store one additional lyric line (level 2 or below) of the current
 syllable.  It is written right after the macro setting the syllable's own
 text (\verb=\GreSetThisSyllable=, or the text macros of the first syllable),
-once per additional line.  The syllable macro then typesets the stored lines
-(\verb=\gre@dostackedlyriclevels=).
+once per additional line.  The syllable macro then measures the stored lines,
+to make room for one wider than the main line (\verb=\gre@measureoverhangs=),
+and typesets them (\verb=\gre@dostackedlyriclevels=).
 
 \begin{argtable}
   \#1 & integer & The lyric line level (2 for the first additional line).\\
@@ -1120,6 +1121,16 @@ once per additional line.  The syllable macro then typesets the stored lines
   before the \texttt{|} (or, for the last line, the opening \texttt{(} of
   the notes) that closed it.\\
 \end{argtable}
+
+\macroname{\textbackslash GreSetNextStackedSyllable}{\#1\#2\#3\#4\#5\#6\#7\#8\#9}{gregoriotex-main.tex}
+Macro to store one additional lyric line of the \emph{next} syllable, so that
+\verb=\gre@calculate@nextbegindifference= can take its width into account.  It
+is written right after \verb=\GreSetNextSyllable=, once per additional line,
+and only for syllable types other than \verb=\GreSyllable= (in practice
+\verb=\GreBarSyllable=): \verb=\GreSyllable= never reads
+\verb=\gre@skip@nextbegindifference=.  Its arguments are the same as those of
+\verb=\GreSetStackedSyllable=; the stored line is only measured, so \#2 and
+\#9 are ignored.
 
 \macroname{\textbackslash GreSetThisSyllable}{\#1\#2\#3}{gregoriotex-syllable.tex}
 Macro to set the text of the current syllable.

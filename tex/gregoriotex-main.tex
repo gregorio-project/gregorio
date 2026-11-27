@@ -1154,13 +1154,17 @@
 
 % gregorio writes the additional lyric lines (levels 2 and below) of a
 % syllable as \GreSetStackedSyllable calls right after the syllable's own
-% text macro.  They only store the lines; the syllable macro typesets them
-% (\gre@dostackedlyriclevels).
+% text macro.  They only store the lines; the syllable macro measures them
+% (\gre@measureoverhangs) and typesets them (\gre@dostackedlyriclevels).
+% The lines of the next syllable are stored by \GreSetNextStackedSyllable,
+% for \gre@calculate@nextbegindifference.
 
-% Number of lyric lines stored for the current syllable (1 when there are
-% no additional lines).
+% Number of lyric lines stored for the current and for the next syllable
+% (1 when there are no additional lines).
 \newcount\gre@count@stackedlyriclevels%
 \gre@count@stackedlyriclevels=1\relax%
+\newcount\gre@count@nextstackedlyriclevels%
+\gre@count@nextstackedlyriclevels=1\relax%
 % The level being processed by \gre@foreachstackedlevel.
 \newcount\gre@count@stackedlyricloop%
 
@@ -1177,15 +1181,24 @@
   \expandafter\gdef\csname gre@stackedlyric@#1\endcsname{{#2}{#3}{#4}{#5}{#6}{#7}{#8}{#9}}%
 }%
 
-% Runs #1 once for each line stored for the current syllable, with that
-% line's #2 to #9 as its arguments; the level is in
+% Same as \GreSetStackedSyllable, for a line of the next syllable.  Its count
+% is reset by \GreSetNextSyllable, which always comes first.
+\def\GreSetNextStackedSyllable#1#2#3#4#5#6#7#8#9{%
+  \ifnum#1>\gre@count@nextstackedlyriclevels\relax%
+    \global\gre@count@nextstackedlyriclevels=#1\relax%
+  \fi%
+  \expandafter\gdef\csname gre@nextstackedlyric@#1\endcsname{{#2}{#3}{#4}{#5}{#6}{#7}{#8}{#9}}%
+}%
+
+% Runs #2 once for each line stored for the current (#1 empty) or next (#1 =
+% next) syllable, with that line's #2 to #9 as its arguments; the level is in
 % \gre@count@stackedlyricloop.
-\def\gre@foreachstackedlevel#1{%
+\def\gre@foreachstackedlevel#1#2{%
   \gre@count@stackedlyricloop=1\relax%
-  \loop\ifnum\gre@count@stackedlyricloop<\gre@count@stackedlyriclevels%
+  \loop\ifnum\gre@count@stackedlyricloop<\csname gre@count@#1stackedlyriclevels\endcsname%
     \advance\gre@count@stackedlyricloop by 1\relax%
-    \expandafter\expandafter\expandafter#1%
-      \csname gre@stackedlyric@\the\gre@count@stackedlyricloop\endcsname%
+    \expandafter\expandafter\expandafter#2%
+      \csname gre@#1stackedlyric@\the\gre@count@stackedlyricloop\endcsname%
   \repeat%
 }%
 
@@ -1212,7 +1225,7 @@
 \def\gre@dostackedlyriclevels{%
   \ifnum\gre@count@stackedlyriclevels>1\relax%
     \ifgre@showlyrics%
-      \gre@foreachstackedlevel\gre@typesetstackedlevel%
+      \gre@foreachstackedlevel{}\gre@typesetstackedlevel%
     \fi%
     \global\gre@count@stackedlyriclevels=1\relax%
   \fi%
@@ -1238,6 +1251,69 @@
     \hbox{\gre@fixedtextformat{\gre@stackedlyric@firstpart\gre@stackedlyric@middlepart\gre@stackedlyric@endpart}}%
     \hss}}%
 }%
+
+\newdimen\gre@dimen@leveloverhang%
+\newdimen\gre@dimen@maxleftoverhang%
+\newdimen\gre@dimen@maxrightoverhang%
+
+% Widens \gre@dimen@maxleftoverhang and \gre@dimen@maxrightoverhang to how far
+% a stored line (same arguments as \gre@typesetstackedlevel), formatted with
+% \gre@stackedlyricformat, extends left and right of its alignment center.
+\def\gre@measurestackedlevel#1#2#3#4#5#6#7#8{%
+  \gre@dispatchlevelcentering{#2}{#3}{#4}{#5}{#6}{#7}%
+  \gre@measurecenter{\gre@stackedlyricformat{\gre@stackedlyric@firstpart\gre@stackedlyric@middlepart}}%
+    {\gre@stackedlyricformat{\gre@stackedlyric@middlepart}}{\gre@dimen@leveloverhang}%
+  \ifdim\gre@dimen@leveloverhang>\gre@dimen@maxleftoverhang\relax%
+    \gre@dimen@maxleftoverhang=\gre@dimen@leveloverhang\relax%
+  \fi%
+  \gre@widthof{\gre@stackedlyricformat{\gre@stackedlyric@firstpart\gre@stackedlyric@middlepart\gre@stackedlyric@endpart}}%
+  \advance\gre@dimen@temp@three by -\gre@dimen@leveloverhang\relax%
+  \ifdim\gre@dimen@temp@three>\gre@dimen@maxrightoverhang\relax%
+    \gre@dimen@maxrightoverhang=\gre@dimen@temp@three\relax%
+  \fi%
+}%
+
+\newdimen\gre@dimen@extraleftoverhang%
+\newdimen\gre@dimen@extrarightoverhang%
+\newdimen\gre@dimen@nextextraleftoverhang%
+
+% Sets \gre@dimen@extraleftoverhang and \gre@dimen@extrarightoverhang to how
+% much further the widest lyric line of the current syllable extends left and
+% right of the shared alignment point than the main line (0pt if none does),
+% so that \GreSyllable can make room for it.  Must run after
+% \gre@calculate@textaligncenter for the main line.
+% #1, #2, #3: the first, middle and end parts of the main line
+\def\gre@measureoverhangs#1#2#3{%
+  \gre@dimen@extraleftoverhang=0pt\relax%
+  \gre@dimen@extrarightoverhang=0pt\relax%
+  \ifnum\gre@count@stackedlyriclevels>1\relax%
+    \gre@widthof{\gre@fixedtextformat{#1#2#3}}%
+    % until the end, \gre@dimen@extrarightoverhang holds the main line's own
+    % right overhang
+    \gre@dimen@extrarightoverhang=\dimexpr\gre@dimen@temp@three-\gre@dimen@textaligncenter\relax%
+    \gre@dimen@maxleftoverhang=\gre@dimen@textaligncenter\relax%
+    \gre@dimen@maxrightoverhang=\gre@dimen@extrarightoverhang\relax%
+    \let\gre@stackedlyricformat\gre@fixedtextformat%
+    \gre@foreachstackedlevel{}\gre@measurestackedlevel%
+    \gre@dimen@extraleftoverhang=\dimexpr\gre@dimen@maxleftoverhang-\gre@dimen@textaligncenter\relax%
+    \gre@dimen@extrarightoverhang=\dimexpr\gre@dimen@maxrightoverhang-\gre@dimen@extrarightoverhang\relax%
+  \fi%
+}%
+
+% Like \gre@measureoverhangs, but for the next syllable and its left side only
+% (all \gre@calculate@nextbegindifference needs): sets
+% \gre@dimen@nextextraleftoverhang.
+% #1: the alignment center of the main line of the next syllable
+\def\gre@measurenextoverhangs#1{%
+  \gre@dimen@nextextraleftoverhang=0pt\relax%
+  \ifnum\gre@count@nextstackedlyriclevels>1\relax%
+    \gre@dimen@maxleftoverhang=#1\relax%
+    \let\gre@stackedlyricformat\gre@fixednexttextformat%
+    \gre@foreachstackedlevel{next}\gre@measurestackedlevel%
+    \gre@dimen@nextextraleftoverhang=\dimexpr\gre@dimen@maxleftoverhang-#1\relax%
+  \fi%
+}%
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% other macros

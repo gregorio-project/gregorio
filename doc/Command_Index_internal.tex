@@ -1136,8 +1136,17 @@ Macro which stores the middle part of an additional lyric line (the part which a
 \macroname{\textbackslash gre@stackedlyric@endpart}{}{gregoriotex-main.tex}
 Macro which stores the end part of an additional lyric line (that which comes after the alignment part), as set by \verb=\gre@dispatchlevelcentering=.
 
-\macroname{\textbackslash gre@foreachstackedlevel}{\#1}{gregoriotex-main.tex}
-Macro which runs \#1 (a macro taking eight arguments) once for each additional lyric line stored by \verb=\GreSetStackedSyllable=, with the line's stored arguments (\#2 to \#9 of that macro) as its own.  The level of the line is in \verb=\gre@count@stackedlyricloop=.
+\macroname{\textbackslash gre@stackedlyricformat}{}{gregoriotex-main.tex}
+Text format wrapper (\verb=\gre@fixedtextformat= or \verb=\gre@fixednexttextformat=) used by \verb=\gre@measurestackedlevel=.
+
+\macroname{\textbackslash gre@foreachstackedlevel}{\#1\#2}{gregoriotex-main.tex}
+Macro which runs \#2 once for each additional lyric line stored by \verb=\GreSetStackedSyllable= or \verb=\GreSetNextStackedSyllable=, with the line's stored arguments (\#2 to \#9 of those macros) as its own.  The level of the line is in \verb=\gre@count@stackedlyricloop=.
+
+\begin{argtable}
+  \#1 & empty & The lines of the current syllable.\\
+  & \texttt{next} & The lines of the next syllable.\\
+  \#2 & control sequence & The macro to run, taking eight arguments.\\
+\end{argtable}
 
 \macroname{\textbackslash gre@dispatchlevelcentering}{\#1\#2\#3\#4\#5\#6}{gregoriotex-main.tex}
 Macro which splits the letters of an additional lyric line into \verb=\gre@stackedlyric@firstpart=, \verb=\gre@stackedlyric@middlepart= and \verb=\gre@stackedlyric@endpart=, by its forced center if it has one and \verb=\ifgre@gabcforcecenters= is true, else according to the lyric centering mode (via \verb=\gre@selectcenteringparts=).
@@ -1158,6 +1167,25 @@ Macro which typesets one stored additional lyric line, whose level is in \verb=\
   \#2 & \texttt{0} or \texttt{1} & Whether the line has a forced center.\\
   \#3--\#7 & strings & The letters of the line, as \#4--\#8 of \verb=\GreSetStackedSyllable=.\\
   \#8 & \texttt{0} or \texttt{1} & Whether the line has a forced hyphen.\\
+\end{argtable}
+
+\macroname{\textbackslash gre@measurestackedlevel}{\#1\#2\#3\#4\#5\#6\#7\#8}{gregoriotex-main.tex}
+Macro which widens \verb=\gre@dimen@maxleftoverhang= and \verb=\gre@dimen@maxrightoverhang= to how far one stored additional lyric line, formatted with \verb=\gre@stackedlyricformat=, extends left and right of its own alignment center.  Same arguments as \verb=\gre@typesetstackedlevel=.
+
+\macroname{\textbackslash gre@measureoverhangs}{\#1\#2\#3}{gregoriotex-main.tex}
+Macro which sets \verb=\gre@dimen@extraleftoverhang= and \verb=\gre@dimen@extrarightoverhang= to how much further the widest lyric line of the current syllable extends left and right of the shared alignment point than the main line (both are 0\,pt if none does).  It must run after \verb=\gre@calculate@textaligncenter= for the main line.
+
+\begin{argtable}
+  \#1 & string & The first part of the main lyric line.\\
+  \#2 & string & The middle part of the main lyric line.\\
+  \#3 & string & The end part of the main lyric line.\\
+\end{argtable}
+
+\macroname{\textbackslash gre@measurenextoverhangs}{\#1}{gregoriotex-main.tex}
+Macro like \verb=\gre@measureoverhangs=, but for the additional lyric lines of the next syllable and for the left side only: it sets \verb=\gre@dimen@nextextraleftoverhang=, which \verb=\gre@calculate@nextbegindifference= adds to \verb=\gre@skip@nextbegindifference=.
+
+\begin{argtable}
+  \#1 & dimension & The alignment center of the main lyric line of the next syllable.\\
 \end{argtable}
 
 \macroname{\textbackslash gre@selectcenteringparts}{\#1\#2\#3\#4\#5\#6\#7\#8}{gregoriotex-syllable.tex}
@@ -2207,6 +2235,9 @@ Count containing the number of staff lines.
 \macroname{\textbackslash gre@count@stackedlyriclevels}{}{gregoriotex-main.tex}
 Count containing the number of lyric lines stored for the current syllable (1 when it has no additional lines).  Raised by \verb=\GreSetStackedSyllable= and reset to 1 by \verb=\gre@dostackedlyriclevels=.
 
+\macroname{\textbackslash gre@count@nextstackedlyriclevels}{}{gregoriotex-main.tex}
+Count containing the number of lyric lines stored for the next syllable (1 when it has no additional lines).  Raised by \verb=\GreSetNextStackedSyllable= and reset to 1 by \verb=\GreSetNextSyllable=.
+
 \macroname{\textbackslash gre@count@stackedlyricloop}{}{gregoriotex-main.tex}
 Count holding the level of the lyric line being processed by \verb=\gre@foreachstackedlevel=.
 
@@ -2367,6 +2398,24 @@ neumes and syllables.
 
 \macroname{\textbackslash gre@dimen@stackedlyriccenter}{}{gregoriotex-main.tex}
 Dimension used by \verb=\gre@typesetstackedlevel= to hold the alignment center of the additional lyric line being typeset (the distance from the beginning of its letters to the middle of its middle part).
+
+\macroname{\textbackslash gre@dimen@leveloverhang}{}{gregoriotex-main.tex}
+Dimension used by \verb=\gre@measurestackedlevel= to hold the left overhang (i.e.\ the alignment center) of the additional lyric line being measured.
+
+\macroname{\textbackslash gre@dimen@maxleftoverhang}{}{gregoriotex-main.tex}
+Dimension holding the largest left overhang among the lyric lines being measured by \verb=\gre@measureoverhangs= or \verb=\gre@measurenextoverhangs=.
+
+\macroname{\textbackslash gre@dimen@maxrightoverhang}{}{gregoriotex-main.tex}
+Dimension holding the largest right overhang among the lyric lines being measured by \verb=\gre@measureoverhangs=.
+
+\macroname{\textbackslash gre@dimen@extraleftoverhang}{}{gregoriotex-main.tex}
+Extra room needed to the left of the current syllable because one of its additional lyric lines extends further left than the main line (0\,pt otherwise).  \verb=\GreSyllable= kerns the whole syllable right by this amount, leaving \verb=\gre@dimen@begindifference= unchanged.
+
+\macroname{\textbackslash gre@dimen@extrarightoverhang}{}{gregoriotex-main.tex}
+Extra room needed to the right of the current syllable because one of its additional lyric lines extends further right than the main line (0\,pt otherwise).  \verb=\GreSyllable= adds it to the text width it passes to \verb=\gre@calculate@enddifference=.
+
+\macroname{\textbackslash gre@dimen@nextextraleftoverhang}{}{gregoriotex-main.tex}
+Extra room needed to the left of the next syllable because one of its additional lyric lines extends further left than its main line (0\,pt otherwise).  Added to \verb=\gre@skip@nextbegindifference= by \verb=\gre@calculate@nextbegindifference=.
 
 \macroname{\textbackslash gre@dimen@initialwidth}{}{gregoriotex-spaces.tex}
 Dimension representing the width of the initial (and the space after).

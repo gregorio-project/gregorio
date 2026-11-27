@@ -3588,10 +3588,12 @@ static void write_text(FILE *const f, const gregorio_character *const text)
 }
 
 /* writes the additional lyric lines (levels 2+) of a syllable, one
- * \GreSetStackedSyllable{level}{end-of-word}{forced-center}{pre}{center}
- * {post}{first-letter}{rest}{forced-hyphen} per line */
+ * <macro>{level}{end-of-word}{forced-center}{pre}{center}{post}
+ * {first-letter}{rest}{forced-hyphen} per line; <macro> is
+ * \GreSetStackedSyllable for the current syllable, or
+ * \GreSetNextStackedSyllable for the next one */
 static void write_stacked_lyric_lines(FILE *const f,
-        const gregorio_syllable *const syllable)
+        const gregorio_syllable *const syllable, const char *const macro)
 {
     const gregorio_lyric_line *line;
     int level = 2;
@@ -3600,7 +3602,7 @@ static void write_stacked_lyric_lines(FILE *const f,
     const grestyle_style saved_ignore_style = gregoriotex_ignore_style;
     gregoriotex_ignore_style = ST_NO_STYLE;
     for (line = syllable->lyric_lines->next; line; line = line->next, ++level) {
-        fprintf(f, "%%\n\\GreSetStackedSyllable{%d}{%d}{%d}", level,
+        fprintf(f, "%%\n%s{%d}{%d}{%d}", macro, level,
                 (line->position == WORD_END
                         || line->position == WORD_ONE_SYLLABLE) ? 1 : 0,
                 line->forced_center ? 1 : 0);
@@ -3744,7 +3746,7 @@ static void write_syllable_text(FILE *f, const char *const syllable_type,
                 syllable->lyric_lines->forced_center ?
                         "\\GreGABCForceCenters" : "");
         write_text(f, syllable->lyric_lines->text);
-        write_stacked_lyric_lines(f, syllable);
+        write_stacked_lyric_lines(f, syllable, "\\GreSetStackedSyllable");
         fprintf(f, "}");
     }
 }
@@ -3757,7 +3759,7 @@ static void write_first_syllable_text(FILE *f, const char *const syllable_type,
     gregorio_not_null(syllable_type, write_first_syllable_text, return);
     if (text == NULL) {
         fprintf(f, "}{%s}{\\GreSetNoFirstSyllableText", syllable_type);
-        write_stacked_lyric_lines(f, syllable);
+        write_stacked_lyric_lines(f, syllable, "\\GreSetStackedSyllable");
         fprintf(f, "}");
     } else {
         gregorio_character *text_with_initial = gregorio_clone_characters(text),
@@ -3823,7 +3825,7 @@ static void write_first_syllable_text(FILE *f, const char *const syllable_type,
             fprintf(f, "{\\GreEmptyFirstSyllableHyphen}");
         }
 
-        write_stacked_lyric_lines(f, syllable);
+        write_stacked_lyric_lines(f, syllable, "\\GreSetStackedSyllable");
         fprintf(f, "}");
 
         gregorio_free_characters(text_with_initial);
@@ -4196,6 +4198,12 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
                 syllable->next_syllable->lyric_lines->forced_center ?
                 "\\GreGABCNextForceCenters" : "");
         write_text(f, syllable->next_syllable->lyric_lines->text);
+        /* only \GreBarSyllable needs the next syllable's additional lines
+         * (for \gre@skip@nextbegindifference) */
+        if (strcmp(syllable_type, "\\GreSyllable") != 0) {
+            write_stacked_lyric_lines(f, syllable->next_syllable,
+                    "\\GreSetNextStackedSyllable");
+        }
         if (end_of_line || first_of_disc == 1) {
             fprintf(f, "\\GreLastOfLine");
         } else if (euouae_follows) {
