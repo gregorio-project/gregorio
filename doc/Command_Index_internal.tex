@@ -1539,9 +1539,9 @@ Sets the NABC alignment reference mode for a specific voice.
   & \texttt{full} & Align to the entire complex glyph descriptor (default)\\
 \end{argtable}
 
-\macroname{\textbackslash gre@setnabchalign@global}{\#1}{gregoriotex-nabc.tex}
+\macroname{\textbackslash gre@setnabchalign@global}{[\#1]}{gregoriotex-nabc.tex}
 Sets the default NABC horizontal alignment for all voices.  Called by
-\verb=\gresetnabcalignment= when an optional second argument is provided
+\verb=\gresetnabcalignment= when the trailing optional argument is provided
 without a voice specifier.
 
 \begin{argtable}
@@ -1549,10 +1549,10 @@ without a voice specifier.
   & \texttt{center} & Center the NABC neume on the GABC glyph\\
 \end{argtable}
 
-\macroname{\textbackslash gre@setnabchalign@voice}{[\#1]\{\#2\}}{gregoriotex-nabc.tex}
+\macroname{\textbackslash gre@setnabchalign@voice}{\{\#1\}[\#2]}{gregoriotex-nabc.tex}
 Sets the NABC horizontal alignment for a specific voice.  Called by
-\verb=\gresetnabcalignment= when both a voice specifier and a second argument
-are provided.
+\verb=\gresetnabcalignment= when both a voice specifier and the trailing optional
+argument are provided.
 
 \begin{argtable}
   \#1 & integer & The nabc voice number: 1 = above staff, 2 = below staff\\

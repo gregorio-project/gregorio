@@ -1294,12 +1294,12 @@ Sets the visibility of an NABC voice.
 
 \textbf{Important:} NABC glyphs visibility is controlled independently from notes visibility (\verb=\gresetnotes=). This allows you to hide the main notes (i.e. using \verb=\gresetnotes{invisible}= or some \verb=\gresetnotes{?phantom}= variant) while keeping NABC glyphs visible, which is useful for producing NABC-only output with lyrics.
 
-\macroname{\textbackslash gresetnabcalignment}{[\#1]\{\#2\}\{\#3\}}{gregoriotex-nabc.tex}
+\macroname{\textbackslash gresetnabcalignment}{[\#1]\{\#2\}[\#3]}{gregoriotex-nabc.tex}
 Sets the alignment reference and horizontal alignment of nabc neumes relative to the gabc notes below.
 
-The first mandatory argument (\#2) controls the \emph{alignment reference}: which part of the nabc complex glyph descriptor is used as anchor.  By default, the entire complex glyph descriptor (including significative letters) is used; with \texttt{neume}, only the neume body (basic glyph descriptor + prepunctis) is considered, which avoids visual misalignment caused by significative letters.
+The mandatory argument (\#2) controls the \emph{alignment reference}: which part of the nabc complex glyph descriptor is used as anchor.  By default, the entire complex glyph descriptor (including significative letters) is used; with \texttt{neume}, only the neume body (basic glyph descriptor + prepunctis) is considered, which avoids visual misalignment caused by significative letters.
 
-The second argument (\#3) is \emph{optional}: if omitted, the current horizontal alignment is not changed.  This allows calling \verb=\gresetnabcalignment{full}= to change only the alignment reference while preserving the horizontal setting.  When provided, it controls the \emph{horizontal alignment} of the nabc neume relative to the gabc note group.
+The trailing argument (\#3) is \emph{optional}: if omitted, the current horizontal alignment is not changed.  This allows calling \verb=\gresetnabcalignment{full}= to change only the alignment reference while preserving the horizontal setting.  When provided, it controls the \emph{horizontal alignment} of the nabc neume relative to the gabc note group.
 
 When \texttt{center} is combined with \texttt{neume} mode, both left-side and right-side significative letters are excluded from the centering calculation, so that the neume body is centered on the gabc glyph.
 
