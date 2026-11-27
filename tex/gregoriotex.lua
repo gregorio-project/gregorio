@@ -734,9 +734,10 @@ local function compute_line_statistics(line, info)
   local function visit(list, voice)
     for n in traverse(list) do
       local child_voice = voice
-      if has_attribute(n, part_attr, part_translation) then
+      local part = has_attribute(n, part_attr)
+      if part == part_translation then
         info.has_translation = true
-      elseif has_attribute(n, part_attr, part_alt) then
+      elseif part == part_alt then
         info.has_alt = true
       -- Worst-case extent of each nabc row toward the staff -- depth for
       -- nabc (the staff is below it), height for blnabc (above it).  This
@@ -744,13 +745,13 @@ local function compute_line_statistics(line, info)
       -- see nabc_overshoot there.  The nil guards matter: the traversal
       -- descends into the tagged box, and the glue/kern nodes inside it
       -- carry the same attribute but have no height/depth.
-      elseif has_attribute(n, part_attr, part_nabc) then
+      elseif part == part_nabc then
         info.has_nabc = true
         child_voice = 1
         if n.depth and n.depth > info.nabc_max_depth then
           info.nabc_max_depth = n.depth
         end
-      elseif has_attribute(n, part_attr, part_blnabc) then
+      elseif part == part_blnabc then
         info.has_blnabc = true
         child_voice = 2
         if n.height and n.height > info.blnabc_max_height then

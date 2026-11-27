@@ -1127,6 +1127,29 @@ Macro which stores the first part of the current syllable (that which comes befo
 \macroname{\textbackslash gre@middlesyllablepart}{}{gregoriotex-syllable.tex}
 Macro which stores the middle part of the current syllable (the part which aligns with the notes).
 
+\macroname{\textbackslash gre@selectcenteringparts}{\#1\#2\#3\#4\#5\#6\#7\#8}{gregoriotex-syllable.tex}
+Macro which globally defines the first, middle and end parts of a piece of lyric text according to \verb=\gre@lyriccentering= (syllable, vowel or first-letter centering).  It handles only the non-forced case; each caller handles the forced center itself.  Shared by \verb=\GreSetThisSyllable= and \verb=\GreSetNextSyllable=.
+
+\begin{argtable}
+  \#1 & string & The first letters, before the alignment point.\\
+  \#2 & string & The middle letters (the alignment point).\\
+  \#3 & string & The end letters.\\
+  \#4 & string & The very first letter (for first-letter centering).\\
+  \#5 & string & All the letters after the first one.\\
+  \#6 & control sequence & Macro to define to the first part.\\
+  \#7 & control sequence & Macro to define to the middle part.\\
+  \#8 & control sequence & Macro to define to the end part.\\
+\end{argtable}
+
+\macroname{\textbackslash gre@measurecenter}{\#1\#2\#3}{gregoriotex-spaces.tex}
+Macro which computes the alignment center of a piece of text (the distance from its left edge to the middle of its middle part) and stores it globally in a dimension register.  Used by \verb=\gre@calculate@textaligncenter=.
+
+\begin{argtable}
+  \#1 & \TeX\ code & The first and middle parts of the text, already formatted.\\
+  \#2 & \TeX\ code & The middle part of the text alone, already formatted.\\
+  \#3 & dimension register & Where to store the result.\\
+\end{argtable}
+
 \macroname{\textbackslash gre@nextendsyllablepart}{}{gregoriotex-syllable.tex}
 Macro which stores the end part of the next syllable (that which comes after the alignment part).
 

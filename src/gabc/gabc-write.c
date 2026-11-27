@@ -1203,12 +1203,12 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
             fprintf(f, "</alt>");
         }
     }
-    if (syllable->text) {
+    if (syllable->lyric_lines->text) {
         /* we call the magic function (defined in struct_utils.c), that will
          * write our text. */
-        gregorio_write_text(WTP_NORMAL, syllable->text, f, &gabc_write_verb,
-                &gabc_print_char, &gabc_write_begin, &gabc_write_end,
-                &gabc_write_special_char);
+        gregorio_write_text(WTP_NORMAL, syllable->lyric_lines->text, f,
+                &gabc_write_verb, &gabc_print_char, &gabc_write_begin,
+                &gabc_write_end, &gabc_write_special_char);
     }
     if (syllable->translation) {
         fprintf(f, "[");
@@ -1232,8 +1232,8 @@ static void gabc_write_gregorio_syllable(FILE *f, gregorio_syllable *syllable,
     {
         fprintf(f, ")\n");
     } else {
-        if (syllable->position == WORD_END
-            || syllable->position == WORD_ONE_SYLLABLE
+        if (syllable->lyric_lines->position == WORD_END
+            || syllable->lyric_lines->position == WORD_ONE_SYLLABLE
             || gregorio_is_only_special(syllable->elements[0]))
         {
             fprintf(f, ") ");
