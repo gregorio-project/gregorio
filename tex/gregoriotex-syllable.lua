@@ -544,6 +544,13 @@ end
 --- @return number|nil The gap, in sp.
 local function clearance_gap(cur, lev, next)
   local next_box = level_box(next, lev)
+  -- Invisible lyrics (\gresetlyrics{invisible}) save no raw text, so
+  -- level_has_text can't tell text from no text; keep measuring the plain
+  -- adjacent-pair gap, as the main lyric line always did.
+  if lev == 1 and not cur.settings.showlyrics then
+    if next_box == nil then return nil end
+    return level_gap(cur, lev, next)
+  end
   if next_box ~= nil and level_has_text(next, lev) then
     return level_gap(cur, lev, next)
   end
