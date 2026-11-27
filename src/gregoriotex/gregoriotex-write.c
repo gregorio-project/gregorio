@@ -4114,8 +4114,14 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     gtex_alteration alteration = ALT_NONE;
 
     gregorio_not_null(syllable, write_syllable, return);
+    /* A textless syllable with no stacked lyric lines has nothing a hyphen
+     * could attach to, so treat it as the end of a word (as before stacked
+     * lyrics existed); otherwise TeX would reserve room for an end-of-line
+     * hyphen that Lua never adds.  With stacked lines, the word position
+     * alone decides, so a stacked word can continue past an empty level 1. */
     end_of_word = syllable->lyric_lines->position == WORD_END
             || syllable->lyric_lines->position == WORD_ONE_SYLLABLE
+            || (!syllable->lyric_lines->text && !syllable->lyric_lines->next)
             || !syllable->next_syllable;
     /* Very first: before anything, if the syllable is the beginning of a
      * no-linebreak area: */
