@@ -1127,8 +1127,41 @@ Macro which stores the first part of the current syllable (that which comes befo
 \macroname{\textbackslash gre@middlesyllablepart}{}{gregoriotex-syllable.tex}
 Macro which stores the middle part of the current syllable (the part which aligns with the notes).
 
+\macroname{\textbackslash gre@stackedlyric@firstpart}{}{gregoriotex-main.tex}
+Macro which stores the first part of an additional lyric line (that which comes before the alignment part), as set by \verb=\gre@dispatchlevelcentering=.
+
+\macroname{\textbackslash gre@stackedlyric@middlepart}{}{gregoriotex-main.tex}
+Macro which stores the middle part of an additional lyric line (the part which aligns with the notes), as set by \verb=\gre@dispatchlevelcentering=.
+
+\macroname{\textbackslash gre@stackedlyric@endpart}{}{gregoriotex-main.tex}
+Macro which stores the end part of an additional lyric line (that which comes after the alignment part), as set by \verb=\gre@dispatchlevelcentering=.
+
+\macroname{\textbackslash gre@foreachstackedlevel}{\#1}{gregoriotex-main.tex}
+Macro which runs \#1 (a macro taking eight arguments) once for each additional lyric line stored by \verb=\GreSetStackedSyllable=, with the line's stored arguments (\#2 to \#9 of that macro) as its own.  The level of the line is in \verb=\gre@count@stackedlyricloop=.
+
+\macroname{\textbackslash gre@dispatchlevelcentering}{\#1\#2\#3\#4\#5\#6}{gregoriotex-main.tex}
+Macro which splits the letters of an additional lyric line into \verb=\gre@stackedlyric@firstpart=, \verb=\gre@stackedlyric@middlepart= and \verb=\gre@stackedlyric@endpart=, by its forced center if it has one and \verb=\ifgre@gabcforcecenters= is true, else according to the lyric centering mode (via \verb=\gre@selectcenteringparts=).
+
+\begin{argtable}
+  \#1 & \texttt{0} or \texttt{1} & Whether the line has a forced center.\\
+  \#2--\#6 & strings & The letters of the line, as \#4--\#8 of \verb=\GreSetStackedSyllable=.\\
+\end{argtable}
+
+\macroname{\textbackslash gre@dostackedlyriclevels}{}{gregoriotex-main.tex}
+Macro which typesets, with \verb=\gre@typesetstackedlevel=, the additional lyric lines stored for the current syllable, and then forgets them.  The syllable macros call it right after their \#8, where the current point is the left edge of the main lyric line and \verb=\gre@dimen@textaligncenter= is its alignment center.
+
+\macroname{\textbackslash gre@typesetstackedlevel}{\#1\#2\#3\#4\#5\#6\#7\#8}{gregoriotex-main.tex}
+Macro which typesets one stored additional lyric line, whose level is in \verb=\gre@count@stackedlyricloop=: it puts the line's alignment center under the main line's, lowers it by \texttt{lyricstackseparation} per level, and tags it with the part attribute of its level so that the Lua code can space and hyphenate it.
+
+\begin{argtable}
+  \#1 & \texttt{0} or \texttt{1} & Whether the line ends a word here.\\
+  \#2 & \texttt{0} or \texttt{1} & Whether the line has a forced center.\\
+  \#3--\#7 & strings & The letters of the line, as \#4--\#8 of \verb=\GreSetStackedSyllable=.\\
+  \#8 & \texttt{0} or \texttt{1} & Whether the line has a forced hyphen.\\
+\end{argtable}
+
 \macroname{\textbackslash gre@selectcenteringparts}{\#1\#2\#3\#4\#5\#6\#7\#8}{gregoriotex-syllable.tex}
-Macro which globally defines the first, middle and end parts of a piece of lyric text according to \verb=\gre@lyriccentering= (syllable, vowel or first-letter centering).  It handles only the non-forced case; each caller handles the forced center itself.  Shared by \verb=\GreSetThisSyllable= and \verb=\GreSetNextSyllable=.
+Macro which globally defines the first, middle and end parts of a piece of lyric text according to \verb=\gre@lyriccentering= (syllable, vowel or first-letter centering).  It handles only the non-forced case; each caller handles the forced center itself.  Shared by \verb=\GreSetThisSyllable=, \verb=\GreSetNextSyllable= and \verb=\gre@dispatchlevelcentering=.
 
 \begin{argtable}
   \#1 & string & The first letters, before the alignment point.\\
@@ -1142,7 +1175,7 @@ Macro which globally defines the first, middle and end parts of a piece of lyric
 \end{argtable}
 
 \macroname{\textbackslash gre@measurecenter}{\#1\#2\#3}{gregoriotex-spaces.tex}
-Macro which computes the alignment center of a piece of text (the distance from its left edge to the middle of its middle part) and stores it globally in a dimension register.  Used by \verb=\gre@calculate@textaligncenter=.
+Macro which computes the alignment center of a piece of text (the distance from its left edge to the middle of its middle part) and stores it globally in a dimension register.  Shared by \verb=\gre@calculate@textaligncenter= (main lyric line) and the macros handling additional lyric lines.
 
 \begin{argtable}
   \#1 & \TeX\ code & The first and middle parts of the text, already formatted.\\
@@ -2171,6 +2204,12 @@ Boolean indicating that the additional space needed between the notes and the ly
 \macroname{\textbackslash gre@count@stafflines}{}{gregoriotex-main.tex}
 Count containing the number of staff lines.
 
+\macroname{\textbackslash gre@count@stackedlyriclevels}{}{gregoriotex-main.tex}
+Count containing the number of lyric lines stored for the current syllable (1 when it has no additional lines).  Raised by \verb=\GreSetStackedSyllable= and reset to 1 by \verb=\gre@dostackedlyriclevels=.
+
+\macroname{\textbackslash gre@count@stackedlyricloop}{}{gregoriotex-main.tex}
+Count holding the level of the lyric line being processed by \verb=\gre@foreachstackedlevel=.
+
 \macroname{\textbackslash ifgre@alteration@effect@note}{}{gregoriotex-signs.tex}
 Boolean indicating that soft alterations should last until they apply to a single note (i.e. all soft alterations will be printed).
 
@@ -2325,6 +2364,9 @@ Dimension representing the width of the score (including initial).
 Dimension representing the width from the beginning of the letters in
 a syllable to the middle of the middle letters.  Used for lining up
 neumes and syllables.
+
+\macroname{\textbackslash gre@dimen@stackedlyriccenter}{}{gregoriotex-main.tex}
+Dimension used by \verb=\gre@typesetstackedlevel= to hold the alignment center of the additional lyric line being typeset (the distance from the beginning of its letters to the middle of its middle part).
 
 \macroname{\textbackslash gre@dimen@initialwidth}{}{gregoriotex-spaces.tex}
 Dimension representing the width of the initial (and the space after).

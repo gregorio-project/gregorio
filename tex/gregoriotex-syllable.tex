@@ -748,8 +748,9 @@
 }%
 
 % Splits a syllable's letters according to the lyric centering mode
-% (syllable, vowel or first-letter centering), for \GreSetThisSyllable and
-% \GreSetNextSyllable.  Each of them handles the forced center itself.
+% (syllable, vowel or first-letter centering), for \GreSetThisSyllable,
+% \GreSetNextSyllable and \gre@dispatchlevelcentering.  Each of them handles
+% the forced center itself.
 % #1: pre letters  #2: middle letters  #3: end letters
 % #4: the very first letter  #5: all letters after the first
 % #6,#7,#8: control sequences to \gdef to the first/middle/end parts
@@ -1086,6 +1087,7 @@
     \kern\gre@skip@temp@one %
   \fi}%
   #8\relax %
+  \gre@dostackedlyriclevels%
   \raise\gre@space@dimen@spacebeneathtext
   \copy\gre@box@syllabletext
   \ifgre@mustdotranslationcenterend%
@@ -1394,6 +1396,7 @@
     \GreNoBreak %
     % all that extra stuff (translations and the like)
     #8%
+    \gre@dostackedlyriclevels%
     \GreNoBreak %
     %print the text, the raise is in case of a translation
     \raise\gre@space@dimen@spacebeneathtext
@@ -1574,6 +1577,7 @@
       \fi}%
       \GreNoBreak %
       #8\relax %
+      \gre@dostackedlyriclevels%
       \ifgre@mustdotranslationcenterend%
         % case of end of translation centering, we do it after the typesetting of the text
         \gre@dotranslationcenterend %
@@ -1623,6 +1627,7 @@
     % then the most simple : the case where there is something to write under the bar. We just need to adjust the spaces.
     \else %ifdim\wd\gre@box@syllabletext = 0 pt
       #8\relax %
+      \gre@dostackedlyriclevels%
       \raise\gre@space@dimen@spacebeneathtext \copy\gre@box@syllabletext %
       \ifgre@mustdotranslationcenterend%
         % case of end of translation centering, we do it after the typesetting of the text

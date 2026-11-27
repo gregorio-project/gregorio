@@ -671,7 +671,7 @@ typedef struct gregorio_character {
 /* a line of lyrics of a syllable */
 typedef struct gregorio_lyric_line {
     struct gregorio_character *text;
-    /* the next line below this one (always NULL for now) */
+    /* the next line below this one (written ba|be|bi(fg) in gabc) */
     struct gregorio_lyric_line *next;
     /* position is WORD_BEGINNING for the beginning of a multi-syllable
      * word, WORD_ONE_SYLLABLE for syllable that are alone in their word,
@@ -679,6 +679,10 @@ typedef struct gregorio_lyric_line {
     ENUM_BITFIELD(gregorio_word_position) position:3;
     bool first_word:1;
     bool forced_center:1;
+    /* true if a "-" right before the "|" (or, for the last line, the "(")
+     * closing this line forces a hyphen there; always false for the main
+     * line, which uses \GreForceHyphen instead */
+    bool forced_hyphen:1;
 } gregorio_lyric_line;
 
 typedef struct gregorio_syllable {

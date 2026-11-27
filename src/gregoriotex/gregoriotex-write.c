@@ -3561,7 +3561,7 @@ static void write_fixed_text_styles(FILE *f, gregorio_character *syllable_text,
     }
 }
 
-static void write_text(FILE *const f, const gregorio_character *const text)
+static void write_text_pair(FILE *const f, const gregorio_character *const text)
 {
     if (text == NULL) {
         fprintf(f, "{}{}{}{}{}");
@@ -3575,9 +3575,39 @@ static void write_text(FILE *const f, const gregorio_character *const text)
     gregorio_write_first_letter_alignment_text(WTP_NORMAL, text,
             f, &gtex_write_verb, &gtex_print_char, &gtex_write_begin,
             &gtex_write_end, &gtex_write_special_char);
-    gregoriotex_ignore_style = gregoriotex_next_ignore_style;
-    gregoriotex_next_ignore_style = ST_NO_STYLE;
     fprintf(f, "}");
+}
+
+static void write_text(FILE *const f, const gregorio_character *const text)
+{
+    write_text_pair(f, text);
+    if (text != NULL) {
+        gregoriotex_ignore_style = gregoriotex_next_ignore_style;
+        gregoriotex_next_ignore_style = ST_NO_STYLE;
+    }
+}
+
+/* writes the additional lyric lines (levels 2+) of a syllable, one
+ * \GreSetStackedSyllable{level}{end-of-word}{forced-center}{pre}{center}
+ * {post}{first-letter}{rest}{forced-hyphen} per line */
+static void write_stacked_lyric_lines(FILE *const f,
+        const gregorio_syllable *const syllable)
+{
+    const gregorio_lyric_line *line;
+    int level = 2;
+    /* the fixed-style optimization only applies to the main line; make
+     * sure the styles of the extra lines are written in full */
+    const grestyle_style saved_ignore_style = gregoriotex_ignore_style;
+    gregoriotex_ignore_style = ST_NO_STYLE;
+    for (line = syllable->lyric_lines->next; line; line = line->next, ++level) {
+        fprintf(f, "%%\n\\GreSetStackedSyllable{%d}{%d}{%d}", level,
+                (line->position == WORD_END
+                        || line->position == WORD_ONE_SYLLABLE) ? 1 : 0,
+                line->forced_center ? 1 : 0);
+        write_text_pair(f, line->text);
+        fprintf(f, "{%d}%%\n", line->forced_hyphen ? 1 : 0);
+    }
+    gregoriotex_ignore_style = saved_ignore_style;
 }
 
 /*
@@ -3714,6 +3744,7 @@ static void write_syllable_text(FILE *f, const char *const syllable_type,
                 syllable->lyric_lines->forced_center ?
                         "\\GreGABCForceCenters" : "");
         write_text(f, syllable->lyric_lines->text);
+        write_stacked_lyric_lines(f, syllable);
         fprintf(f, "}");
     }
 }
@@ -3725,7 +3756,9 @@ static void write_first_syllable_text(FILE *f, const char *const syllable_type,
     const gregorio_character *const text = syllable->lyric_lines->text;
     gregorio_not_null(syllable_type, write_first_syllable_text, return);
     if (text == NULL) {
-        fprintf(f, "}{%s}{\\GreSetNoFirstSyllableText}", syllable_type);
+        fprintf(f, "}{%s}{\\GreSetNoFirstSyllableText", syllable_type);
+        write_stacked_lyric_lines(f, syllable);
+        fprintf(f, "}");
     } else {
         gregorio_character *text_with_initial = gregorio_clone_characters(text),
                 *text_without_initial = gregorio_clone_characters(text);
@@ -3790,6 +3823,7 @@ static void write_first_syllable_text(FILE *f, const char *const syllable_type,
             fprintf(f, "{\\GreEmptyFirstSyllableHyphen}");
         }
 
+        write_stacked_lyric_lines(f, syllable);
         fprintf(f, "}");
 
         gregorio_free_characters(text_with_initial);
@@ -4044,9 +4078,15 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     gtex_alteration alteration = ALT_NONE;
 
     gregorio_not_null(syllable, write_syllable, return);
+    /* A textless syllable with no stacked lyric lines has nothing a hyphen
+     * could attach to, so treat it as the end of a word (as before stacked
+     * lyrics existed); otherwise TeX would reserve room for an end-of-line
+     * hyphen that Lua never adds.  With stacked lines, the word position
+     * alone decides, so a stacked word can continue past an empty level 1. */
     end_of_word = syllable->lyric_lines->position == WORD_END
             || syllable->lyric_lines->position == WORD_ONE_SYLLABLE
-            || !syllable->lyric_lines->text || !syllable->next_syllable;
+            || (!syllable->lyric_lines->text && !syllable->lyric_lines->next)
+            || !syllable->next_syllable;
     /* Very first: before anything, if the syllable is the beginning of a
      * no-linebreak area: */
     if (syllable->no_linebreak_area == NLBA_BEGINNING) {

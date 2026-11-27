@@ -1097,6 +1097,30 @@ Macro to place argument above the lines and empty
   \#1 & string & Text to be placed above the lines.\\
 \end{argtable}
 
+\macroname{\textbackslash GreSetStackedSyllable}{\#1\#2\#3\#4\#5\#6\#7\#8\#9}{gregoriotex-main.tex}
+Macro to store one additional lyric line (level 2 or below) of the current
+syllable.  It is written right after the macro setting the syllable's own
+text (\verb=\GreSetThisSyllable=, or the text macros of the first syllable),
+once per additional line.  The syllable macro then typesets the stored lines
+(\verb=\gre@dostackedlyriclevels=).
+
+\begin{argtable}
+  \#1 & integer & The lyric line level (2 for the first additional line).\\
+  \#2 & \texttt{0} & This line does not end a word at this syllable.\\
+  & \texttt{1} & This line ends a word at this syllable.\\
+  \#3 & \texttt{0} & No forced center in this line.\\
+  & \texttt{1} & This line has a forced (\texttt{\{\}}) center.\\
+  \#4 & string & The first letters of the line, before the alignment point.\\
+  \#5 & string & The middle letters of the line (the alignment point).\\
+  \#6 & string & The end letters of the line.\\
+  \#7 & string & The very first letter (for first-letter centering).\\
+  \#8 & string & All the letters after the first one.\\
+  \#9 & \texttt{0} & This line has no forced hyphen.\\
+  & \texttt{1} & This line's text ended with an explicit \texttt{-} right
+  before the \texttt{|} (or, for the last line, the opening \texttt{(} of
+  the notes) that closed it.\\
+\end{argtable}
+
 \macroname{\textbackslash GreSetThisSyllable}{\#1\#2\#3}{gregoriotex-syllable.tex}
 Macro to set the text of the current syllable.
 

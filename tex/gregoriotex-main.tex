@@ -1148,6 +1148,96 @@
   \gre@trace@end%
 }%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% macros for stacked lyrics (multiple lyric lines)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% gregorio writes the additional lyric lines (levels 2 and below) of a
+% syllable as \GreSetStackedSyllable calls right after the syllable's own
+% text macro.  They only store the lines; the syllable macro typesets them
+% (\gre@dostackedlyriclevels).
+
+% Number of lyric lines stored for the current syllable (1 when there are
+% no additional lines).
+\newcount\gre@count@stackedlyriclevels%
+\gre@count@stackedlyriclevels=1\relax%
+% The level being processed by \gre@foreachstackedlevel.
+\newcount\gre@count@stackedlyricloop%
+
+% #1: the level (2 for the first additional line)
+% #2: 1 if this line ends a word here, else 0
+% #3: 1 if this line has a forced ({}) center, else 0
+% #4, #5, #6: the first, middle (aligned) and end letters
+% #7, #8: the first letter and the letters after it (first-letter centering)
+% #9: 1 if this line has a forced hyphen, else 0
+\def\GreSetStackedSyllable#1#2#3#4#5#6#7#8#9{%
+  \ifnum#1>\gre@count@stackedlyriclevels\relax%
+    \global\gre@count@stackedlyriclevels=#1\relax%
+  \fi%
+  \expandafter\gdef\csname gre@stackedlyric@#1\endcsname{{#2}{#3}{#4}{#5}{#6}{#7}{#8}{#9}}%
+}%
+
+% Runs #1 once for each line stored for the current syllable, with that
+% line's #2 to #9 as its arguments; the level is in
+% \gre@count@stackedlyricloop.
+\def\gre@foreachstackedlevel#1{%
+  \gre@count@stackedlyricloop=1\relax%
+  \loop\ifnum\gre@count@stackedlyricloop<\gre@count@stackedlyriclevels%
+    \advance\gre@count@stackedlyricloop by 1\relax%
+    \expandafter\expandafter\expandafter#1%
+      \csname gre@stackedlyric@\the\gre@count@stackedlyricloop\endcsname%
+  \repeat%
+}%
+
+% Splits a line's letters into \gre@stackedlyric@firstpart, middlepart and
+% endpart, by its forced center if it has one and they are honored
+% (\ifgre@gabcforcecenters), else by the lyric centering mode.
+% #1: 1 if the line has a forced center, else 0; #2 to #6: its letters, as
+% #4 to #8 of \GreSetStackedSyllable
+\def\gre@dispatchlevelcentering#1#2#3#4#5#6{%
+  \ifnum\ifgre@gabcforcecenters#1\else0\fi=1\relax%
+    \gdef\gre@stackedlyric@firstpart{#2}%
+    \gdef\gre@stackedlyric@middlepart{#3}%
+    \gdef\gre@stackedlyric@endpart{#4}%
+  \else%
+    \gre@selectcenteringparts{#2}{#3}{#4}{#5}{#6}%
+      {\gre@stackedlyric@firstpart}{\gre@stackedlyric@middlepart}{\gre@stackedlyric@endpart}%
+  \fi%
+}%
+
+% Typesets the lines stored for the current syllable, then forgets them.
+% Called right after the syllable's #8, where the current point is the left
+% edge of the main lyric line and \gre@dimen@textaligncenter its alignment
+% center.
+\def\gre@dostackedlyriclevels{%
+  \ifnum\gre@count@stackedlyriclevels>1\relax%
+    \ifgre@showlyrics%
+      \gre@foreachstackedlevel\gre@typesetstackedlevel%
+    \fi%
+    \global\gre@count@stackedlyriclevels=1\relax%
+  \fi%
+}%
+
+\newdimen\gre@dimen@stackedlyriccenter%
+
+% Typesets one stored line (#1 to #8: #2 to #9 of \GreSetStackedSyllable),
+% with its alignment center under the main line's and lowered by
+% lyricstackseparation per level.
+\def\gre@typesetstackedlevel#1#2#3#4#5#6#7#8{%
+  \gre@dispatchlevelcentering{#2}{#3}{#4}{#5}{#6}{#7}%
+  \gre@measurecenter{\gre@fixedtextformat{\gre@stackedlyric@firstpart\gre@stackedlyric@middlepart}}%
+    {\gre@fixedtextformat{\gre@stackedlyric@middlepart}}{\gre@dimen@stackedlyriccenter}%
+  \directlua{gregoriotex.set_lyric_line_dash(\the\gre@count@stackedlyricloop, #1, #8)}%
+  % the ligaturing callback (save_syllable_texts) reads the ambient
+  % \gre@attr@part, not the one of the box
+  {\gre@attr@part=\numexpr9+\gre@count@stackedlyricloop\relax%
+  \raise\dimexpr\gre@space@dimen@spacebeneathtext%
+    -(\gre@space@dimen@lyricstackseparation)*(\gre@count@stackedlyricloop-1)\relax%
+  \hbox attr \gre@attrid@part=\numexpr9+\gre@count@stackedlyricloop\relax to 0pt{%
+    \kern\dimexpr\gre@dimen@textaligncenter-\gre@dimen@stackedlyriccenter\relax%
+    \hbox{\gre@fixedtextformat{\gre@stackedlyric@firstpart\gre@stackedlyric@middlepart\gre@stackedlyric@endpart}}%
+    \hss}}%
+}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% other macros
