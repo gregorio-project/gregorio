@@ -855,21 +855,27 @@
 
 \newdimen\gre@dimen@textaligncenter\relax%
 
+% Computes the alignment center of a piece of text (the distance from its
+% left edge to the middle of its middle part) and stores it globally in the
+% dimension register #3.  Used for the main lyric line by
+% \gre@calculate@textaligncenter and for the additional ones.
+% #1: the first and middle parts of the text
+% #2: the middle part of the text
+\def\gre@measurecenter#1#2#3{%
+  \gre@widthof{#1}%
+  \global#3=\the\gre@dimen@temp@three\relax%
+  \gre@widthof{#2}%
+  \divide\gre@dimen@temp@three by 2 %
+  \global\advance#3 by -\the\gre@dimen@temp@three\relax%
+}%
+
 \def\gre@calculate@textaligncenter#1#2#3{%
   \gre@trace{gre@calculate@textaligncenter{#1}{#2}{#3}}%
   \ifnum#3=0\relax
-    \gre@widthof{\gre@fixedtextformat{#1#2}}%
+    \gre@measurecenter{\gre@fixedtextformat{#1#2}}{\gre@fixedtextformat{#2}}{\gre@dimen@textaligncenter}%
   \else %
-    \gre@widthof{\gre@fixednexttextformat{#1#2}}%
+    \gre@measurecenter{\gre@fixednexttextformat{#1#2}}{\gre@fixednexttextformat{#2}}{\gre@dimen@textaligncenter}%
   \fi %
-  \global\gre@dimen@textaligncenter=\the\gre@dimen@temp@three %
-  \ifnum#3=0\relax
-    \gre@widthof{\gre@fixedtextformat{#2}}%
-  \else %
-    \gre@widthof{\gre@fixednexttextformat{#2}}%
-  \fi %
-  \divide\gre@dimen@temp@three by 2 %
-  \global\advance\gre@dimen@textaligncenter by -\the\gre@dimen@temp@three%
   \relax%
   \gre@trace@end%
 }%
@@ -1466,8 +1472,8 @@
 % #1 : line number
 % #2-#4 : same as #1-#3 of \grechangedim
 \def\grechangenextscorelinedim#1#2#3#4{%
-  \IfStrEqCase{#2}{{abovelinestextheight}{}{abovelinestextraise}{}{abovelinesnabcheight}{}{abovelinesnabcraise}{}{spaceabovelines}{}{belowlinesnabcheight}{}{spacelinestext}{}{noteadditionalspacelinestext}{}{translationheight}{}{spacebeneathtext}{}}[%
-    \gre@error{Unrecognized option "#2" for \protect\grechangenextscorelinedim\MessageBreak Possible options are: 'spaceabovelines', 'abovelinestextheight', 'abovelinestextraise', 'abovelinesnabcheight', 'abovelinesnabcraise', 'belowlinesnabcheight', 'spacelinestext', 'noteadditionalspacelinestext', 'translationheight', 'spacebeneathtext'}%
+  \IfStrEqCase{#2}{{abovelinestextheight}{}{abovelinestextraise}{}{abovelinesnabcheight}{}{abovelinesnabcraise}{}{spaceabovelines}{}{belowlinesnabcheight}{}{spacelinestext}{}{noteadditionalspacelinestext}{}{translationheight}{}{lyricstackseparation}{}{spacebeneathtext}{}}[%
+    \gre@error{Unrecognized option "#2" for \protect\grechangenextscorelinedim\MessageBreak Possible options are: 'spaceabovelines', 'abovelinestextheight', 'abovelinestextraise', 'abovelinesnabcheight', 'abovelinesnabcraise', 'belowlinesnabcheight', 'spacelinestext', 'noteadditionalspacelinestext', 'translationheight', 'lyricstackseparation', 'spacebeneathtext'}%
   ]%
   {\grechangedim{#2}{#3}{#4}%
    \edef\gre@prefix{\gre@getprefix{#2}}%

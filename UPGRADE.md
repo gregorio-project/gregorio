@@ -8,6 +8,14 @@ This file contains instructions to upgrade to a new release of Gregorio.  These 
 
 Rare signs (accentus, circulus, semicirculus, musica ficta) now reserve a bit more vertical space above the note, to avoid overlapping above-lines text. Below-lines nabc neumes next to low notes now reserve a bit more space too, so they no longer overlap the note itself. If you'd rather keep the old below-lines nabc behavior, give `additionalbottomspacenabcthreshold` a low value, e.g. `\grechangecount{additionalbottomspacenabcthreshold}{-2}` (same convention as `noteadditionalspacelinestextthreshold`: lower means less reactive, not higher).
 
+### `|` is now reserved in syllable text
+
+The pipe character (`|`) in gabc syllable text now separates stacked lyric lines (multiple lines of lyrics under the staff). A literal `|` in lyrics must now be escaped as `$|`. Note that gabc files written by Gregorio itself have always escaped `|` in syllable text, so regenerated files are not affected.
+
+### A literal `-` immediately before `|` now forces a hyphen there
+
+A `-` right before the `|` that closes a stacked lyric line now forces a hyphen at that point (mirroring the existing behavior of `-` right before the notes' opening `(`), instead of being kept as a literal hyphen character. This only affects text that happened to end a stacked level with a literal `-` right before `|`; such text is rare, since it already visually reads as a hyphen there.
+
 ## 6.2
 
 ### LuaTeX >= 1.0 required
