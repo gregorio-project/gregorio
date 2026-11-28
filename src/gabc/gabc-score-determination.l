@@ -240,8 +240,11 @@ semicolon. */
 <score>~ {
         return LYRIC_TIE;
     }
-<score>(\$.|[^-,;:.\{\}\(\[\]<%~\n\r])+ {
+<score>(\$.|[^-,;:.\{\}\(\[\]<%~|\n\r])+ {
         RETURN_CHARACTERS;
+    }
+<score>\| {
+        return LYRIC_CUT;
     }
 <score>- {
         return HYPHEN;
