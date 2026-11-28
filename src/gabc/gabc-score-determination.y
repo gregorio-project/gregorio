@@ -289,7 +289,7 @@ static void ready_characters(void)
         gregorio_go_to_first_character_c(&current_character);
         if (!score->first_syllable || (current_syllable
                 && !current_syllable->previous_syllable
-                && !current_syllable->text)) {
+                && !current_syllable->lyric_lines->text)) {
             started_first_word = true;
         }
     }
@@ -305,9 +305,9 @@ static void rebuild_score_characters(void)
 
             /* find out if there is a forced center */
             gregorio_center_determination center = CENTER_NOT_DETERMINED;
-            for (t = syllable->text; t; t = t->next_character) {
+            for (t = syllable->lyric_lines->text; t; t = t->next_character) {
                 if (!t->is_character && t->cos.s.style == ST_FORCED_CENTER) {
-                    syllable->forced_center = true;
+                    syllable->lyric_lines->forced_center = true;
                     center = CENTER_FULLY_DETERMINED;
                     break;
                 }
@@ -318,10 +318,11 @@ static void rebuild_score_characters(void)
                 continue;
             }
 
-            gregorio_rebuild_characters(&(syllable->text), center, false);
+            gregorio_rebuild_characters(&(syllable->lyric_lines->text), center,
+                    false);
 
-            if (syllable->first_word) {
-                gregorio_set_first_word(&(syllable->text));
+            if (syllable->lyric_lines->first_word) {
+                gregorio_set_first_word(&(syllable->lyric_lines->text));
             }
         }
     }
@@ -398,6 +399,58 @@ static __inline void save_text(void)
     }
     ready_characters();
     first_text_character = current_character;
+}
+
+static void check_elision_balance(const gregorio_character *const start)
+{
+    int i = 0;
+    const gregorio_character *ch;
+
+    for (ch = start; ch; ch = ch->next_character) {
+        if (!ch->is_character) {
+            switch (ch->cos.s.style) {
+            case ST_ELISION:
+                switch (ch->cos.s.type) {
+                case ST_T_BEGIN:
+                    ++i;
+                    /* the parser precludes this from falling here */
+                    gregorio_assert_only(i <= 1, check_elision_balance,
+                            "elisions may not be nested");
+                    break;
+
+                case ST_T_END:
+                    --i;
+                    /* the parser precludes this from failing here */
+                    gregorio_assert_only(i >= 0, check_elision_balance,
+                            "encountered elision end with no beginning");
+                    break;
+
+                case ST_T_NOTHING:
+                    /* not reachable unless there's a programming error */
+                    /* LCOV_EXCL_START */
+                    gregorio_fail(check_elision_balance,
+                            "encountered ST_T_NOTHING");
+                    break;
+                    /* LCOV_EXCL_STOP */
+                }
+                break;
+
+            case ST_FORCED_CENTER:
+                if (i > 0) {
+                    gregorio_message(
+                            _("forced center may not be within an elision"),
+                            "check_elision_balance", VERBOSITY_ERROR, 0);
+                }
+                break;
+
+            default:
+                break;
+            }
+        }
+    }
+    /* the parser precludes this from failing here */
+    gregorio_assert_only(i == 0, check_elision_balance,
+            "encountered elision beginning with no end");
 }
 
 /* a function called when we see a [, basically, all characters are added to
@@ -512,54 +565,9 @@ static void add_auto_protrusion(char *protrusion)
 
 static void close_syllable(YYLTYPE *loc)
 {
-    int i = 0;
-    gregorio_character *ch;
+    int i;
 
-    /* make sure any elisions that are opened are closed within the syllable */
-    for (ch = first_text_character; ch; ch = ch->next_character) {
-        if (!ch->is_character) {
-            switch (ch->cos.s.style) {
-            case ST_ELISION:
-                switch (ch->cos.s.type) {
-                case ST_T_BEGIN:
-                    ++i;
-                    /* the parser precludes this from falling here */
-                    gregorio_assert_only(i <= 1, close_syllable,
-                            "elisions may not be nested");
-                    break;
-
-                case ST_T_END:
-                    --i;
-                    /* the parser precludes this from failing here */
-                    gregorio_assert_only(i >= 0, close_syllable,
-                            "encountered elision end with no beginning");
-                    break;
-
-                case ST_T_NOTHING:
-                    /* not reachable unless there's a programming error */
-                    /* LCOV_EXCL_START */
-                    gregorio_fail(close_syllable, "encountered ST_T_NOTHING");
-                    break;
-                    /* LCOV_EXCL_STOP */
-                }
-                break;
-
-            case ST_FORCED_CENTER:
-                if (i > 0) {
-                    gregorio_message(
-                            _("forced center may not be within an elision"),
-                            "close_syllable", VERBOSITY_ERROR, 0);
-                }
-                break;
-
-            default:
-                break;
-            }
-        }
-    }
-    /* the parser precludes this from failing here */
-    gregorio_assert_only(i == 0, close_syllable,
-            "encountered elision beginning with no end");
+    check_elision_balance(first_text_character);
 
     gregorio_add_syllable(&current_syllable, number_of_voices, elements,
             first_text_character, first_translation_character, position,
