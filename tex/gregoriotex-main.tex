@@ -47,7 +47,7 @@
 % an attribute to mark various parts of the score
 % 1 = commentary, 2 = stafflines, 3 = initial
 % 4 = lyrics, 5 = translation, 6 = alt, 7 = nabc, 8 = nabc below
-% 9 = annotation, 10 = notes
+% 9 = annotation, 10 = notes, 11 = syllable-final penalty
 \newattribute\gre@attr@part
   \edef\gre@attrid@part{\the\allocationnumber}
 
@@ -66,11 +66,17 @@
 
 % attributes for horizontal spacing
 % 1 = syllablefinalskip after syllable and penalty
-% 2 = from syllable left to text left
-% 3 = from text right to notes left
-% 4 = from notes right to syllable right
+% 2 = between syllable left and text left
+% 3 = between text right and notes left
+% 4 = between notes right and syllable right
 % 5 = clearsyllable
 \newattribute\gre@attr@skip@type
+
+% attribute for special notes
+% 1 = punctum mora (including spacebeforesigns)
+% 2 = bar (including space before and after)
+% 3 = custos (including space and alteration)
+\newattribute\gre@attr@note@type
 
 % attributes for soft alterations
 
@@ -222,7 +228,6 @@
      \localrightbox{}%
   \fi\fi %
   \ifgre@boxing\else%
-    \global\gre@lastoflinecount=2\relax %
     \ifnum#2=0\relax %
       % Place the penalty similarly to how the end-of-syllable penalty
       % is placed.  However, if the line break occurs mid-syllable,
@@ -235,6 +240,7 @@
       \fi%
       \ifgre@eolshiftsenabled%
         \GreNoBreak% we want to make sure this shift doesn't get separated from the previous one if both occur
+        % bug: if the break occurs between notes, like (gzg), the enddifference is wrong (#1738)
         \gre@calculate@eolshift{\gre@dimen@enddifference}%
         \gre@debugmsg{eolshift}{Manual end of line shift: \the\gre@dimen@eolshift}%
         \kern -\gre@dimen@eolshift\relax%
@@ -248,7 +254,6 @@
       \or
         \gre@warning{Ignoring forced line break ('Z') at end of score.\MessageBreak Please use \protect\gresetlastline{ragged} to set the last line ragged, or \protect\gresetlastline{trimmed} to set the last line ragged and trim the staff lines}%
       \fi
-      \par
     % Otherwise, force a line break
     \else
       \ifnum#1=1\relax
@@ -653,12 +658,34 @@
     {\protect\gresetabovelinestext}%
 }%
 
+% document-wide default horizontal alignment of above-lines text relative to
+% the note/glyph it is anchored to; per-occurrence <alt-l/c/r> and
+% [alt-l/c/r:text] override this. 1=left, 2=center, 3=right.
+\newcount\gre@count@abovelinestextalignment%
+\gre@count@abovelinestextalignment=1\relax %
+
+\def\gresetabovelinestextalignment#1{%
+  \IfStrEqCase{#1}{%
+    {left}%
+      {\gre@count@abovelinestextalignment=1\relax}%
+    {center}%
+      {\gre@count@abovelinestextalignment=2\relax}%
+    {right}%
+      {\gre@count@abovelinestextalignment=3\relax}%
+    }[% all other cases
+      \gre@error{Unrecognized option "#1" for \protect\gresetabovelinestextalignment\MessageBreak Possible options are: 'left', 'center', and 'right'}%
+    ]%
+}%
+
 \xdef\gre@currenttextabovelines{}%
 
-\def\GreSetTextAboveLines#1{%
+% #1: alignment code, 0-3 (0 = inherit \gre@count@abovelinestextalignment,
+%     1 = left, 2 = center, 3 = right)
+% #2: the text
+\def\GreSetTextAboveLines#1#2{%
   \ifgre@showabovelinestext%
     \gdef\gre@currenttextabovelines{%
-      \gre@typesettextabovelines{#1}{0}%
+      \gre@typesettextabovelines{#1}{#2}{0}%
       \gdef\gre@currenttextabovelines{}%
       \relax %
     }%
@@ -666,11 +693,13 @@
 }%
 
 % typesets the text or nabc neumes above the line
-% #2: 0 = text, 1 = nabc
-\def\gre@typesettextabovelines#1#2{%
-  \gre@trace{gre@typesettextabovelines{#1}{#2}}%
+% #1: alignment code (text only; ignored for nabc), see \GreSetTextAboveLines
+% #2: text (or nabc neumes)
+% #3: 0 = text, 1 = nabc
+\def\gre@typesettextabovelines#1#2#3{%
+  \gre@trace{gre@typesettextabovelines{#1}{#2}{#3}}%
   {% localize change to \gre@attr@part
-  \ifnum#2=0\relax%
+  \ifnum#3=0\relax%
     \gre@attr@part=6\relax
   \else%
     \gre@attr@part=7\relax
@@ -679,10 +708,10 @@
     + \gre@space@dimen@spacebeneathtext %
     + \gre@space@dimen@spacelinestext)\relax%
   \gre@debugmsg{spacing}{Raise alt text: \the\gre@dimen@temp@five}%
-  \ifnum#2=1\relax%
+  \ifnum#3=1\relax%
     % For NABC: pre-evaluate content in a box to trigger Lua execution,
     % which may set \gre@dimen@nabcleftoverflow for 'neume' alignment mode.
-    \setbox\gre@box@nabctemp=\hbox{#1}%
+    \setbox\gre@box@nabctemp=\hbox{#2}%
     % Reserve space at the note level for left-extending significative letters.
     % Only emit additional kern beyond what was already emitted (by a previous
     % voice).  The kern must NOT carry the nabc part attribute, otherwise the
@@ -695,10 +724,24 @@
     \fi%
     \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{\unhbox\gre@box@nabctemp\hss}%
   \else%
-    \leavevmode\raise\gre@dimen@temp@five\hbox to 0pt{%
-      \gre@style@abovelinestext
-        \gre@applyphantomwrapper{\gre@abovelinestext@phantomwrapper}{#1}%
-      \endgre@style@abovelinestext
+    \gre@count@temp@one=#1\relax%
+    \ifnum\gre@count@temp@one=0\relax%
+      \gre@count@temp@one=\gre@count@abovelinestextalignment\relax%
+    \fi%
+    \leavevmode%
+    % Align the text within the anchor glyph's own width: \hss before it
+    % pushes it rightward (center, right), \hss after it absorbs the slack
+    % (left, center).  The inner box is exactly as wide as the glyph, so the
+    % glue does the alignment arithmetic; the outer \hbox to 0pt keeps the
+    % whole thing from occupying any horizontal space of its own.
+    \raise\gre@dimen@temp@five\hbox to 0pt{%
+      \hbox to \gre@dimen@lastglyphwidth{%
+        \ifnum\gre@count@temp@one>1\relax\hss\fi%
+        \gre@style@abovelinestext
+          \gre@applyphantomwrapper{\gre@abovelinestext@phantomwrapper}{#2}%
+        \endgre@style@abovelinestext
+        \ifnum\gre@count@temp@one<3\relax\hss\fi%
+      }%
     \hss}%
   \fi%
   }% restore \gre@attr@part
@@ -1283,14 +1326,12 @@
   \ifdefined\optgabcAtScoreBeginning %
     \optgabcAtScoreBeginning %
   \fi %
-  \global\gre@lastoflinecount=2\relax %
   \global\gre@endofscorefalse %
   \relax%
 }%
 
 %macro called at the end of a score
 \def\GreEndScore{%
-  \global\gre@lastoflinecount=0\relax %
   \gre@useautoeolcustos%
   \GreEndEUOUAE{}%
   \ifnum\gre@nlbstate=0\else %
@@ -1328,49 +1369,8 @@
   \relax%
 }%
 
-% macro called at the end of a bar (old bar spacing algorithm only).
-\def\gre@endafterbar#1{%
-  \gre@trace{gre@endafterbar{#1}}%
-  \gre@penalty{\the\gre@space@count@endafterbarpenalty }\relax %
-  {\gre@attr@skip@type=1
-  \ifnum#1=1\relax %
-    \gre@debugmsg{ifdim}{ enddifference > 0pt}%
-    \ifdim\gre@dimen@enddifference > 0 pt\relax%
-      \gre@debugmsg{ifdim}{ nextbegindifference > 0pt}%
-      \ifdim\gre@skip@nextbegindifference > 0 pt\relax%
-        \gre@skip@temp@four = \gre@space@skip@notebarspace\relax%
-        \gre@hskip\gre@skip@temp@four %
-      \else % (next begin difference >0pt)
-        \gre@skip@temp@four = \gre@space@skip@textbartextspace\relax%
-        \gre@hskip\gre@skip@temp@four %
-      \fi %
-    \else%(enddifference < 0pt)
-      \gre@debugmsg{ifdim}{ nextbegindifference < 0pt}%
-      \ifdim\gre@skip@nextbegindifference < 0 pt\relax%
-        \gre@skip@temp@four = \gre@space@skip@textbartextspace\relax%
-        \gre@hskip\gre@skip@temp@four %
-      \else %(next begin difference < 0 pt)
-        \gre@skip@temp@four = \gre@space@skip@interwordspacetext\relax%
-        \gre@hskip\gre@skip@temp@four %
-      \fi %
-    \fi %
-  \fi}%
-  %\gre@penalty{\the\gre@space@count@endafterbarpenalty }\relax
-  %\global\gre@dimen@enddifference=0pt
-  \relax %
-  \gre@trace@end%
-}%
-
-\newcount\gre@lastoflinecount%
-
-% called at syllable level. Indicates that the syllable is the last of the line (or score)
-% 0 if nothing
-% 1 if the syllable is the last of the line
-% 2 after it has finished the syllable, so when it is two it means that the syllable is the first of a line
+% DEPRECATED
 \def\GreLastOfLine{%
-  \global\gre@lastoflinecount=1\relax%
-  \gre@debugmsg{eolshift}{set lastoflinecount to 1}%
-  \relax%
 }%
 
 % Flag to mark the last syllable of the score

@@ -110,7 +110,7 @@ Macro for typesetting a bar syllable.
   & \texttt{1} & this syllable is the end of a word\\
   \#5 & \TeX\ code & macros setting syllable letters for the next syllable\\
   \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
-  \#7 & pair of integers & a pair containing alignment type and alteration type of the next glyph\\
+  \#7 & empty & unused (DEPRECATED) \\
   \#8 &\TeX\ code & other macros (translation, double text, etc.) that don't fit in the limitation of the number of arguments\\
   \#9 & \TeX\ code & The bar line (usually a \textit{writebar} call).
 \end{argtable}
@@ -720,13 +720,13 @@ in gabc.
 \end{argtable}
 
 \macroname{\textbackslash GreLastOfLine}{}{gregoriotex-main.tex}
-Macro to set \verb=\gre@lastoflinecount= to 1 (\ie, mark that this syllable is the last of the line).
+Macro to mark that this syllable is the last of the line). Deprecated.
 
 \macroname{\textbackslash GreLastOfScore}{}{gregoriotex-main.tex}
 Macro to mark the syllable as the last of the score.
 
 \macroname{\textbackslash GreLastSyllableBeforeEUOUAE}{\#1\#2}{gregoriotex-syllable.tex}
-Indicates that this syllable is the last syllable before a EUOUAE block.
+Indicates that this syllable is the last syllable before a EUOUAE block. Deprecated
 
 \begin{argtable}
   \#1 & integer & The identifier of the EUOUAE block.\\
@@ -969,7 +969,7 @@ Sets the first syllable text.
 \end{argtable}
 
 \macroname{\textbackslash GreSetFixedNextTextFormat}{\#1}{gregoriotex-syllable.tex}
-Same as \verb=\GreSetFixedTextFormat= except for next syllable.
+Same as \verb=\GreSetFixedTextFormat= except for next syllable. Deprecated.
 
 \macroname{\textbackslash GreSetFixedTextFormat}{\#1}{gregoriotex-syllable.tex}
 Macro to specify a text which is different from \verb=#1#2#3= (of \verb=\GreSyllable=). It is useful for styles, for instance with:
@@ -1078,7 +1078,7 @@ and the \verb=\gre@nabc@*@voice@ii= macros.
 \end{argtable}
 
 \macroname{\textbackslash GreSetNextSyllable}{\#1\#2\#3}{gregoriotex-syllable.tex}
-Macro to set the text of the next syllable for spacing purposes.
+Macro to set the text of the next syllable for spacing purposes. Deprecated.
 
 \begin{argtable}
   \#1 & string & the first letters of the syllable, that don't count for the alignment\\
@@ -1194,7 +1194,7 @@ Macro to typeset the syllable.
   & \texttt{1} & this syllable is the end of a word\\
   \#5 & \TeX\ code & macros setting syllable letters for the next syllable\\
   \#6 & string & the line, byte offset, and column address for textedit links when point-and-click is enabled\\
-  \#7 & pair of integers & a pair containing alignment type and alteration type of the next glyph\\
+  \#7 & empty & unused (DEPRECATED) \\
   \#8 &\TeX\ code & other macros (translation, double text, etc.) that don't fit in the limitation of the number of arguments\\
   \#9 & Gregorio\TeX\ glyphs & all the notes
 \end{argtable}
@@ -1389,7 +1389,7 @@ Alias for \verb=\GreSyllable= or \verb=\GreBarSyllable= depending on whether the
 Macro inserted into \verb=\GreSyllable= and \verb=\GreBarSyllable= to indicate that the center of the of the current syllable was forced in the gabc with curly braces (``\{'' and ``\}'').
 
 \macroname{\textbackslash GreGABCNextForceCenters}{}{gregoriotex-syllable.tex}
-Macro inserted into \verb=\GreSyllable= and \verb=\GreBarSyllable= to indicate that the center of the of the next syllable was forced in the gabc with curly braces (``\{'' and ``\}'').
+Macro inserted into \verb=\GreSyllable= and \verb=\GreBarSyllable= to indicate that the center of the of the next syllable was forced in the gabc with curly braces (``\{'' and ``\}''). Deprecated.
 
 
 %%% Local Variables:
