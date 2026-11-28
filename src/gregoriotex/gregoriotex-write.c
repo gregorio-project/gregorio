@@ -2721,6 +2721,7 @@ static void write_note(FILE *f, gregorio_note *note,
     }
 }
 
+/* DEPRECATED */
 static void syllable_first_type(gregorio_syllable *syllable,
         gtex_alignment *type, gtex_alteration *alteration)
 {
@@ -3550,6 +3551,7 @@ static void write_fixed_text_styles(FILE *f, gregorio_character *syllable_text,
                     (gregoriotex_ignore_style));
         }
     }
+    /* DEPRECATED: Delete the following if statement */
     if (next_syllable_text) {
         gregoriotex_next_ignore_style = gregoriotex_fix_style(
                 next_syllable_text);
@@ -4143,6 +4145,7 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
     end_of_line = is_last_of_line(syllable);
     anticipate_event(syllable, &euouae_follows, &eol_forces_custos,
             &next_euouae_id);
+    /* DEPRECATED: Delete the following if/else statement */
     if (syllable->next_syllable) {
         fprintf(f, "{%s\\GreSetNextSyllable",
                 syllable->next_syllable->forced_center?
@@ -4167,6 +4170,10 @@ static void write_syllable(FILE *f, gregorio_syllable *syllable,
         write_syllable_point_and_click(f, syllable, status);
         fprintf(f, "}{{%d}{%d}}{", AT_EMPTY_SYLLABLE, ALT_NONE);
     }
+    /* After removing the above DEPRECATED lines, insert:
+    fprintf(f, "{}{");
+    write_syllable_point_and_click(f, syllable, status);
+    fprintf(f, "}{}{"); */
     if (syllable->translation) {
         if (syllable->translation_type == TR_WITH_CENTER_BEGINNING) {
             fprintf(f, "%%\n\\GreWriteTranslationWithCenterBeginning{");
